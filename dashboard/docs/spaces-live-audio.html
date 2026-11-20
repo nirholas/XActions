@@ -14,6 +14,7 @@
   <meta property="og:title" content="Spaces &amp; Live Audio — XActions">
   <meta property="og:description" content="Scrape, monitor, and interact with X/Twitter Spaces and live audio events.">
   <meta property="og:url" content="https://xactions.app/docs/spaces-live-audio">
+  <meta property="og:image" content="https://xactions.app/og-docs.png">
   <meta property="og:site_name" content="XActions">
 
   <!-- Twitter Card -->
@@ -21,6 +22,7 @@
   <meta name="twitter:site" content="@nichxbt">
   <meta name="twitter:title" content="Spaces &amp; Live Audio — Free X/Twitter Tool">
   <meta name="twitter:description" content="Scrape, monitor, and interact with X/Twitter Spaces and live audio events.">
+  <meta name="twitter:image" content="https://xactions.app/og-docs.png">
 
   <link rel="canonical" href="https://xactions.app/docs/spaces-live-audio">
   <link rel="manifest" href="/manifest.json">
@@ -226,7 +228,7 @@
 })();
 </code></pre>
 <h2>📦 Node.js Module</h2>
-<pre><code class="language-javascript">import { getLiveSpaces, getScheduledSpaces, scrapeSpace } from &#39;xactions&#39;;
+<pre><code class="language-javascript">import { getLiveSpaces, getScheduledSpaces, scrapeSpace } from &#39;xactions/src/spacesManager.js&#39;;
 
 // Get live Spaces
 const live = await getLiveSpaces(page, { topic: &#39;crypto&#39; });
@@ -384,7 +386,7 @@ Input: { &quot;url&quot;: &quot;https://x.com/i/spaces/1abc...&quot; }
       </div>
     </div>
     <div class="footer-bottom">
-      <p>© 2024-2026 XActions. MIT License. No API fees. No limits.</p>
+      <p>© 2024-2026 XActions. Apache-2.0 licensed. No API fees. No limits.</p>
     </div>
   </footer>
 </body>

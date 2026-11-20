@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>XActions v5.0.0: Complete Feature Inventory — XActions Docs</title>
 <meta name="description" content="Every surface this repository ships, with the file that implements each one.">
-<meta name="keywords" content="xactions, twitter automation, x automation, free, open source, feature_inventory, v3.5.0:, complete, feature, inventory, guides &amp; reference">
+<meta name="keywords" content="xactions, twitter automation, x automation, free, open source, feature_inventory, v5.0.0:, complete, feature, inventory, guides &amp; reference">
 <meta name="author" content="nich (@nichxbt)">
 <meta name="robots" content="index, follow, max-image-preview:large">
 <meta name="color-scheme" content="light dark">
@@ -47,7 +47,7 @@
   "license": "https://www.apache.org/licenses/LICENSE-2.0",
   "mainEntityOfPage": "https://xactions.app/docs/guides/feature_inventory",
   "articleSection": "Guides & Reference",
-  "keywords": "xactions, twitter automation, x automation, free, open source, feature_inventory, v3.5.0:, complete, feature, inventory, guides & reference"
+  "keywords": "xactions, twitter automation, x automation, free, open source, feature_inventory, v5.0.0:, complete, feature, inventory, guides & reference"
 }
 </script>
 <script type="application/ld+json">
@@ -88,9 +88,9 @@
   <aside class="sidebar" aria-label="Documentation sections">
     <div class="sidebar__group">
       <div class="sidebar__heading">Guides &amp; Reference</div>
-      <a class="sidebar__link" href="/docs/guides/scheduler">⏰ Scheduler &amp; Webhook Triggers</a>
       <a class="sidebar__link" href="/docs/guides/a2a-api-reference">A2A API Reference — XActions</a>
       <a class="sidebar__link" href="/docs/guides/a2a-protocol">A2A Protocol — XActions</a>
+      <a class="sidebar__link" href="/docs/guides/brief">Account briefs: research the accounts you are about to tag</a>
       <a class="sidebar__link" href="/docs/guides/portability">Account Portability — Export, Migrate &amp; Diff</a>
       <a class="sidebar__link" href="/docs/guides/algorithm-builder">Algorithm Builder — 24/7 Niche Growth Automation</a>
       <a class="sidebar__link" href="/docs/guides/analytics-advanced">Analytics &amp; Sentiment Analysis</a>
@@ -117,12 +117,14 @@
       <a class="sidebar__link" href="/docs/guides/media-archive">Media archive</a>
       <a class="sidebar__link" href="/docs/guides/monitoring">Monitoring Guide</a>
       <a class="sidebar__link" href="/docs/guides/notifications">Notifications</a>
+      <a class="sidebar__link" href="/docs/guides/orgs">Organizations: run a family of X accounts as a team</a>
       <a class="sidebar__link" href="/docs/guides/x402">Paying for XActions: x402 and MCP</a>
       <a class="sidebar__link" href="/docs/guides/plugins">Plugin System</a>
       <a class="sidebar__link" href="/docs/guides/streaming">Real-Time Streaming</a>
       <a class="sidebar__link" href="/docs/guides/streams">Real-time Streams — Live Twitter Monitoring</a>
       <a class="sidebar__link" href="/docs/guides/reputation-audit">Reputation audit: AI-score your own timeline, get a shareable card</a>
       <a class="sidebar__link" href="/docs/guides/rss-monitor">Rss Monitor</a>
+      <a class="sidebar__link" href="/docs/guides/scheduler">Scheduler &amp; Webhook Triggers</a>
       <a class="sidebar__link" href="/docs/guides/scrapers">Scrapers</a>
       <a class="sidebar__link" href="/docs/guides/scraping-infrastructure">Scraping Infrastructure</a>
       <a class="sidebar__link" href="/docs/guides/scraping">Scraping Infrastructure</a>
@@ -156,6 +158,7 @@
       <a class="sidebar__link" href="/docs/guides/ai-api">XActions AI API Documentation</a>
       <a class="sidebar__link" href="/docs/guides/api-reference">XActions API Reference</a>
       <a class="sidebar__link" href="/docs/guides/automation">XActions Automation Framework Guide</a>
+      <a class="sidebar__link" href="/docs/guides/chat">XActions Chat</a>
       <a class="sidebar__link" href="/docs/guides/cli-reference">XActions CLI Reference</a>
       <a class="sidebar__link" href="/docs/guides/xactions-reference">XActions Complete Function Reference</a>
       <a class="sidebar__link" href="/docs/guides/readme">XActions Documentation</a>
@@ -265,11 +268,11 @@
     <span class="eyebrow">📖 Guides &amp; Reference</span>
 
     <article class="prose">
-<h1 id="xactions-v350-complete-feature-inventory">XActions v5.0.0: Complete Feature Inventory</h1>
+<h1 id="xactions-v500-complete-feature-inventory">XActions v5.0.0: Complete Feature Inventory</h1>
 <blockquote>
 <p>Every surface this repository ships, with the file that implements each one.
 Package: <code>xactions</code> on npm | Author: nichxbt (<a target="_blank" rel="noopener noreferrer" href="https://x.com/nichxbt">@nichxbt</a>)
-Apache-2.0 | Node.js &gt;= 20 (CI runs 20, 22 and 24) | Vitest suite runs offline</p>
+Apache-2.0 | Node.js &gt;= 22.19 (CI runs 22 and 24) | Vitest suite runs offline</p>
 </blockquote>
 <p>The counted tables below (MCP tools, CLI commands, skills) are transcribed from
 the code that defines them: <code>src/mcp/server.js</code>, <code>src/cli/help-groups.js</code> and
@@ -280,15 +283,15 @@ here is a build failure rather than a surprise for a reader.</p>
 <h2 id="table-of-contents">Table of Contents</h2>
 <ol>
 <li><a href="#1-architecture-overview">Architecture Overview</a></li>
-<li><a href="#2-browser-console-scripts">Browser Console Scripts (<code>src/</code>)</a></li>
+<li><a href="#2-browser-console-scripts">Browser Console Scripts (<code>browser/</code>)</a></li>
 <li><a href="#3-automation-framework">Automation Framework (<code>src/automation/</code>)</a></li>
 <li><a href="#4-scrapers">Scrapers (<code>src/scrapers/</code>)</a></li>
 <li><a href="#5-puppeteer-manager-modules">Puppeteer Manager Modules (<code>src/*.js</code> ES exports)</a></li>
 <li><a href="#6-mcp-server">MCP Server (<code>src/mcp/</code>)</a></li>
 <li><a href="#7-cli">CLI (<code>src/cli/</code>)</a></li>
 <li><a href="#8-devtools-console-scripts">DevTools Console Scripts (<code>scripts/twitter/</code>)</a></li>
-<li><a href="#9-skills-reference">Skills Reference (<code>skills/</code>)</a></li>
-<li><a href="#10-api-backend">API Backend (<code>api/</code>)</a></li>
+<li><a href="#9-skills-reference-skills">Skills Reference (<code>skills/</code>)</a></li>
+<li><a href="#10-api-backend-api">API Backend (<code>api/</code>)</a></li>
 <li><a href="#11-transport-and-sessions">Transport and sessions (<code>src/scrapers/twitter/http/</code>)</a></li>
 <li><a href="#12-delivery-streams-notifications-webhooks">Delivery: streams, notifications, webhooks</a></li>
 <li><a href="#13-portability-the-x-archive-export-migrate">Portability: the X archive, export, migrate</a></li>
@@ -478,7 +481,7 @@ that genuinely need a browser.</p>
 <td>None</td>
 </tr>
 </tbody></table>
-<h3 id="23-blocking-amp-muting">2.3 Blocking &amp; Muting</h3>
+<h3 id="23-blocking--muting">2.3 Blocking &amp; Muting</h3>
 <table>
 <thead>
 <tr>
@@ -718,7 +721,7 @@ that genuinely need a browser.</p>
 <td>sessionStorage tracking of left communities</td>
 </tr>
 </tbody></table>
-<h3 id="29-lists-amp-profile">2.9 Lists &amp; Profile</h3>
+<h3 id="29-lists--profile">2.9 Lists &amp; Profile</h3>
 <table>
 <thead>
 <tr>
@@ -744,7 +747,7 @@ that genuinely need a browser.</p>
 <td><code>displayName</code> (50 chars), <code>bio</code> (160 chars), <code>location</code>, <code>website</code>, <code>autoSave</code></td>
 </tr>
 </tbody></table>
-<h3 id="210-data-export-amp-backup">2.10 Data Export &amp; Backup</h3>
+<h3 id="210-data-export--backup">2.10 Data Export &amp; Backup</h3>
 <table>
 <thead>
 <tr>
@@ -885,7 +888,7 @@ that genuinely need a browser.</p>
 <td><code>DAYS_TO_WAIT</code> (default 3), <code>WHITELIST[]</code>, <code>DRY_RUN</code>, <code>ONLY_TRACKED</code>; reads keywordFollow tracking data</td>
 </tr>
 </tbody></table>
-<h3 id="34-growth-amp-business">3.4 Growth &amp; Business</h3>
+<h3 id="34-growth--business">3.4 Growth &amp; Business</h3>
 <table>
 <thead>
 <tr>
@@ -925,7 +928,7 @@ that genuinely need a browser.</p>
 <td><code>addAccount()</code>, <code>removeAccount()</code>, <code>switchAccount()</code>, <code>getNextAccount()</code> rotation; localStorage storage, per-account stats</td>
 </tr>
 </tbody></table>
-<h3 id="35-safety-amp-utilities">3.5 Safety &amp; Utilities</h3>
+<h3 id="35-safety--utilities">3.5 Safety &amp; Utilities</h3>
 <table>
 <thead>
 <tr>
@@ -1031,9 +1034,9 @@ that genuinely need a browser.</p>
 <hr>
 <h2 id="5-puppeteer-manager-modules">5. Puppeteer Manager Modules</h2>
 <blockquote>
-<p><strong>How to use:</strong> <code>import { functionName } from &#39;xactions&#39;</code>: these are ES module exports from <code>src/index.js</code>. All take a Puppeteer <code>page</code> as first argument.</p>
+<p><strong>How to use:</strong> each module is exported from <code>src/index.js</code> as a namespace, so <code>import { profileManager } from &#39;xactions&#39;</code> and call <code>profileManager.getProfile(page, username)</code>. The functions are also named exports of their own file (<code>xactions/src/profileManager.js</code>). All take a Puppeteer <code>page</code> as first argument.</p>
 </blockquote>
-<h3 id="51-profile-amp-settings">5.1 Profile &amp; Settings</h3>
+<h3 id="51-profile--settings">5.1 Profile &amp; Settings</h3>
 <table>
 <thead>
 <tr>
@@ -1058,7 +1061,7 @@ that genuinely need a browser.</p>
 <td><code>checkPremiumStatus(page, username)</code>, <code>getTierFeatures(tier)</code>, <code>compareTiers(tier1, tier2)</code>, <code>checkRevenueEligibility(page, username)</code></td>
 </tr>
 </tbody></table>
-<h3 id="52-content-creation-amp-management">5.2 Content Creation &amp; Management</h3>
+<h3 id="52-content-creation--management">5.2 Content Creation &amp; Management</h3>
 <table>
 <thead>
 <tr>
@@ -1083,7 +1086,7 @@ that genuinely need a browser.</p>
 <td><code>createPoll(page, question, choices, options)</code>, <code>getPollResults(page, tweetUrl)</code></td>
 </tr>
 </tbody></table>
-<h3 id="53-engagement-amp-interaction">5.3 Engagement &amp; Interaction</h3>
+<h3 id="53-engagement--interaction">5.3 Engagement &amp; Interaction</h3>
 <table>
 <thead>
 <tr>
@@ -1108,7 +1111,7 @@ that genuinely need a browser.</p>
 <td><code>getNotifications(page, options)</code>, <code>muteUser(page, username)</code>, <code>unmuteUser(page, username)</code>, <code>muteWord(page, word, options)</code>, <code>getNotificationSettings(page)</code></td>
 </tr>
 </tbody></table>
-<h3 id="54-discovery-amp-search">5.4 Discovery &amp; Search</h3>
+<h3 id="54-discovery--search">5.4 Discovery &amp; Search</h3>
 <table>
 <thead>
 <tr>
@@ -1128,7 +1131,7 @@ that genuinely need a browser.</p>
 <td><code>getBookmarks(page, options)</code>, <code>createFolder(page, folderName)</code>, <code>clearAllBookmarks(page)</code></td>
 </tr>
 </tbody></table>
-<h3 id="55-spaces-amp-communities">5.5 Spaces &amp; Communities</h3>
+<h3 id="55-spaces--communities">5.5 Spaces &amp; Communities</h3>
 <table>
 <thead>
 <tr>
@@ -1143,7 +1146,7 @@ that genuinely need a browser.</p>
 <td><code>getLiveSpaces(page, options)</code>, <code>getScheduledSpaces(page, username)</code>, <code>scrapeSpace(page, spaceUrl)</code>, <code>createEvent(page, event)</code></td>
 </tr>
 </tbody></table>
-<h3 id="56-analytics-amp-business">5.6 Analytics &amp; Business</h3>
+<h3 id="56-analytics--business">5.6 Analytics &amp; Business</h3>
 <table>
 <thead>
 <tr>
@@ -1249,7 +1252,7 @@ call that would exceed it is refused before anything reaches X.</p>
 <p><strong>Bundle.</strong> <code>node scripts/build-mcpb.mjs</code> produces the <code>.mcpb</code> a user drags
 onto Claude Desktop &gt; Settings &gt; Extensions; it prompts for the session cookie
 and tool groups at install time.</p>
-<h3 id="62-complete-mcp-tool-list-153-tools">6.2 Complete MCP Tool List (153 tools)</h3>
+<h3 id="62-complete-mcp-tool-list-160-tools">6.2 Complete MCP Tool List (160 tools)</h3>
 <p>Grouped by tool group, alphabetical within each group. &quot;Write&quot; marks the tools
 the approval gate holds and the daily caps charge.</p>
 <table>
@@ -2486,8 +2489,8 @@ the approval gate holds and the daily caps charge.</p>
 <p><strong>How to use:</strong> <code>npx xactions &lt;command&gt;</code>, or <code>npm run cli -- &lt;command&gt;</code> from a clone.
 <strong>Auth:</strong> stored under <code>~/.xactions</code> (override with <code>XACTIONS_HOME</code>).</p>
 </blockquote>
-<p>56 commands, grouped by task exactly as <code>xactions</code> with no arguments prints
-them, plus 85 subcommands. Two more are registered but ungrouped: <code>completion</code>,
+<p>59 commands, grouped by task exactly as <code>xactions</code> with no arguments prints
+them, plus 106 subcommands. Two more are registered but ungrouped: <code>completion</code>,
 which prints a shell completion script generated from the live command tree,
 and <code>ask</code>.</p>
 <h3 id="global-output-flags">Global output flags</h3>
@@ -2981,7 +2984,7 @@ generated from the script headers themselves into
 hand-kept list of a hundred files is a list that is wrong within a month, so
 this section covers only what is unique to <code>scripts/twitter/</code>.</p>
 </blockquote>
-<h3 id="81-scripts-unique-to-scriptstwitter-not-in-src">8.1 Scripts UNIQUE to <code>scripts/twitter/</code> (not in <code>src/</code>)</h3>
+<h3 id="81-scripts-unique-to-scriptstwitter-not-in-browser">8.1 Scripts UNIQUE to <code>scripts/twitter/</code> (not in <code>browser/</code>)</h3>
 <table>
 <thead>
 <tr>
@@ -3154,7 +3157,7 @@ this section covers only what is unique to <code>scripts/twitter/</code>.</p>
 <td>Any timeline (profile, search, list, likes, bookmarks, home)</td>
 </tr>
 </tbody></table>
-<h3 id="82-scripts-that-mirror-src-features-shared-as-standalone-versions">8.2 Scripts that MIRROR <code>src/</code> features (shared as standalone versions)</h3>
+<h3 id="82-scripts-that-mirror-browser-features-shared-as-standalone-versions">8.2 Scripts that MIRROR <code>browser/</code> features (shared as standalone versions)</h3>
 <p><code>unfollow-everyone.js</code>, <code>unfollow-non-followers.js</code>, <code>unfollow-with-log.js</code>, <code>smart-unfollow.js</code>, <code>detect-unfollowers.js</code>, <code>monitor-account.js</code>, <code>continuous-monitor.js</code>, <code>new-followers-alert.js</code>, <code>auto-liker.js</code>, <code>auto-commenter.js</code>, <code>follow-engagers.js</code>, <code>follow-target-users.js</code>, <code>keyword-follow.js</code>, <code>protect-active-users.js</code>, <code>growth-suite.js</code>, <code>multi-account.js</code>, <code>audit-followers.js</code>, <code>block-bots.js</code>, <code>mass-block.js</code>, <code>mass-unblock.js</code>, <code>mass-unmute.js</code>, <code>mute-by-keywords.js</code>, <code>report-spam.js</code>, <code>clear-all-bookmarks.js</code>, <code>clear-all-likes.js</code>, <code>clear-all-retweets.js</code>, <code>leave-all-communities.js</code>, <code>join-communities.js</code>, <code>send-direct-message.js</code>, <code>backup-account.js</code>, <code>best-time-to-post.js</code>, <code>competitor-analysis.js</code>, <code>engagement-analytics.js</code>, <code>hashtag-analytics.js</code>, <code>bookmark-exporter.js</code>, <code>thread-unroller.js</code>, <code>video-downloader.js</code>, <code>viral-tweets-scraper.js</code>, <code>link-scraper.js</code></p>
 <hr>
 <h2 id="9-skills-reference-skills">9. Skills Reference (<code>skills/</code>)</h2>
@@ -3168,7 +3171,7 @@ xactions skills show follower-monitoring        # read one without installing it
 xactions skills install --all --global          # ~/.claude/skills/&lt;id&gt;/
 xactions skills install --all --target cursor   # or project, codex, windsurf
 </code></pre>
-<p>The machine-readable index is <a href="../skills/index.json"><code>skills/index.json</code></a>, and
+<p>The machine-readable index is <a href="https://github.com/nirholas/XActions/blob/main/skills/index.json"><code>skills/index.json</code></a>, and
 the narrative catalogue is <a href="/docs/guides/skills">skills.md</a>.</p>
 <table>
 <thead>
@@ -3447,7 +3450,7 @@ the narrative catalogue is <a href="/docs/guides/skills">skills.md</a>.</p>
 </tr>
 <tr>
 <td><code>api/routes/</code></td>
-<td>40 route modules</td>
+<td>41 route modules</td>
 </tr>
 <tr>
 <td><code>api/services/</code></td>
@@ -3630,17 +3633,17 @@ rows on every run and fails the build when one has drifted.</p>
 </thead>
 <tbody><tr>
 <td>MCP tools *</td>
-<td>152</td>
+<td>160</td>
 <td>the <code>TOOLS</code> array in <code>src/mcp/server.js</code></td>
 </tr>
 <tr>
 <td>CLI commands *</td>
-<td>56</td>
+<td>59</td>
 <td>the <code>GROUPS</code> arrays in <code>src/cli/help-groups.js</code>, which is what <code>xactions --help</code> prints</td>
 </tr>
 <tr>
 <td>CLI subcommands</td>
-<td>85</td>
+<td>106</td>
 <td>the subcommands registered under those commands</td>
 </tr>
 <tr>
@@ -3650,7 +3653,7 @@ rows on every run and fails the build when one has drifted.</p>
 </tr>
 <tr>
 <td>API route modules *</td>
-<td>40</td>
+<td>41</td>
 <td><code>.js</code> files in <code>api/routes/</code></td>
 </tr>
 <tr>
@@ -3665,8 +3668,13 @@ rows on every run and fails the build when one has drifted.</p>
 </tr>
 <tr>
 <td>Library modules at <code>src/</code> top level</td>
-<td>131</td>
-<td><code>.js</code> files directly in <code>src/</code></td>
+<td>19</td>
+<td><code>.js</code> files directly in <code>src/</code>: <code>index.js</code>, <code>version.js</code> and the Puppeteer manager modules</td>
+</tr>
+<tr>
+<td>Top-level browser scripts</td>
+<td>112</td>
+<td><code>.js</code> files in <code>browser/</code>, moved out of <code>src/</code> so they stay out of the npm package</td>
 </tr>
 <tr>
 <td>Automation framework modules</td>
@@ -3781,7 +3789,7 @@ number that no longer matches the tree.</p>
     <div class="page-meta">
       <span>52 min read</span>
       <a href="https://github.com/nirholas/XActions/edit/main/docs/FEATURE_INVENTORY.md" target="_blank" rel="noopener">Edit this page</a>
-      <a href="https://github.com/nirholas/XActions/issues/new?title=Docs%3A%20XActions%20v3.5.0%3A%20Complete%20Feature%20Inventory" target="_blank" rel="noopener">Report a problem</a>
+      <a href="https://github.com/nirholas/XActions/issues/new?title=Docs%3A%20XActions%20v5.0.0%3A%20Complete%20Feature%20Inventory" target="_blank" rel="noopener">Report a problem</a>
     </div>
 
     <nav class="page-nav" aria-label="Previous and next">

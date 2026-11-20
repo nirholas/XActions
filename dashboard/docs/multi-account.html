@@ -14,6 +14,7 @@
   <meta property="og:title" content="Multi-Account Management — XActions">
   <meta property="og:description" content="Manage and automate multiple X (Twitter) accounts from a single interface with intelligent rotation, per-account rate limiting, and comprehensive logging.">
   <meta property="og:url" content="https://xactions.app/docs/multi-account">
+  <meta property="og:image" content="https://xactions.app/og-docs.png">
   <meta property="og:site_name" content="XActions">
 
   <!-- Twitter Card -->
@@ -21,6 +22,7 @@
   <meta name="twitter:site" content="@nichxbt">
   <meta name="twitter:title" content="Multi-Account Management — Free X/Twitter Tool">
   <meta name="twitter:description" content="Manage and automate multiple X (Twitter) accounts from a single interface with intelligent rotation, per-account rate limiting, and comprehensive logging.">
+  <meta name="twitter:image" content="https://xactions.app/og-docs.png">
 
   <link rel="canonical" href="https://xactions.app/docs/multi-account">
   <link rel="manifest" href="/manifest.json">
@@ -218,15 +220,15 @@
 <li>Social media agencies managing client accounts</li>
 <li>Brand accounts across multiple regions</li>
 <li>Personal + business account management</li>
-<li>Growth automation across account networks</li>
-<li>A/B testing engagement strategies</li>
+<li>Newsrooms with main, breaking and regional handles</li>
+<li>Companies with main, dev, status and support accounts</li>
 </ul>
-<p><strong>⚠️ Important Considerations:</strong></p>
+<p><strong>⚠️ Before you start:</strong></p>
 <ul>
-<li>Always comply with X&#39;s Terms of Service</li>
-<li>Use different IPs/proxies for each account</li>
-<li>Never link accounts through similar behavior patterns</li>
-<li>This is an advanced feature for professional users</li>
+<li>Run only accounts you or your client own, or that their owner connected and can disconnect.</li>
+<li>These accounts belong together in public. Nothing on this page is for making them look unrelated: X treats a network of accounts presented as independent as platform manipulation and suspends the whole network.</li>
+<li>Do not post the same or nearly the same text from several accounts. X&#39;s automation rules forbid it even for accounts one organization openly runs; have the other accounts repost instead.</li>
+<li>For a team running an account family, use <a href="/docs/guides/orgs"><code>xactions org</code></a>. It gives you roles, approval before anything ships, a duplicate-content check, disclosure on affiliate posts, and an audit log.</li>
 </ul>
 <hr>
 <h2>🗂️ Example 1: Configuration File Format</h2>
@@ -886,47 +888,26 @@ module.exports = {
 </code></pre>
 <hr>
 <h2>🛡️ Safety Tips</h2>
-<p>Managing multiple accounts requires careful attention to avoid detection and account suspensions:</p>
-<h3>🌐 Use Different IPs/Proxies</h3>
-<pre><code class="language-javascript">// Each account should use a unique proxy
-const accounts = [
-  {
-    username: &#39;account1&#39;,
-    proxy: &#39;http://user:pass@us-proxy.example.com:8080&#39;,   // US IP
-  },
-  {
-    username: &#39;account2&#39;,
-    proxy: &#39;http://user:pass@uk-proxy.example.com:8080&#39;,   // UK IP
-  },
-  {
-    username: &#39;account3&#39;,
-    proxy: &#39;http://user:pass@de-proxy.example.com:8080&#39;,   // Germany IP
-  },
-];
+<p>Managing several accounts is ordinary for an agency, a newsroom or a company. What gets accounts suspended is automation that acts faster than a person, duplicate content across accounts, and accounts that pretend not to be connected.</p>
+<h3>🏷️ Run Them in the Open</h3>
+<ul>
+<li>✅ Make the relationship visible: a shared brand in the name or bio, and X&#39;s affiliate badges if you use Verified Organizations.</li>
+<li>✅ Have affiliate and sponsored accounts disclose every promotional post (<code>#ad</code>, or X&#39;s paid-partnership label).</li>
+<li>✅ Keep one session per account, saved from a login by someone who is allowed to run it.</li>
+<li>❌ Do not buy accounts, take over accounts, or present accounts you run as independent people.</li>
+<li>❌ Do not use proxies or browser fingerprints to stop X from linking accounts. If the accounts would get suspended once X sees they are linked, the problem is the plan, not the network setup.</li>
+</ul>
+<h3>📣 Cross-Post Without Duplicating</h3>
+<p>X&#39;s automation rules forbid posting identical or substantially similar content across accounts you operate. To put one announcement on several accounts:</p>
+<ul>
+<li>Post it once from the account it belongs to, and <strong>repost</strong> it from the others.</li>
+<li>Or write a <strong>different variant</strong> for each audience: the main account gets the headline, the dev account the technical detail.</li>
+</ul>
+<p><code>xactions org draft</code> checks every cross-post for this before it can be approved:</p>
+<pre><code class="language-bash">xactions org draft acme --account acme --text &quot;Acme 2.0 is here. Builds are twice as fast.&quot; \
+  --variant &quot;acmedev=Devs: 2.0 ships incremental compiles and a new CLI. Migration guide in the docs.&quot; \
+  --repost acmestatus
 </code></pre>
-<p><strong>Recommended proxy types:</strong></p>
-<ul>
-<li>✅ Residential proxies (best, looks like real users)</li>
-<li>✅ Mobile proxies (excellent, uses mobile carrier IPs)</li>
-<li>⚠️ Datacenter proxies (risky, easily detected)</li>
-</ul>
-<h3>🔗 Don&#39;t Link Accounts</h3>
-<p><strong>Never do these things that link accounts:</strong></p>
-<ul>
-<li>❌ Follow the same accounts from multiple accounts</li>
-<li>❌ Like/retweet the same content from all accounts</li>
-<li>❌ Use similar usernames, bios, or profile pictures</li>
-<li>❌ Post similar content or at similar times</li>
-<li>❌ Use the same device/browser fingerprint</li>
-<li>❌ Access from the same IP address</li>
-</ul>
-<p><strong>Instead:</strong></p>
-<ul>
-<li>✅ Give each account unique behavior patterns</li>
-<li>✅ Use different niches/interests per account</li>
-<li>✅ Randomize action timing significantly</li>
-<li>✅ Use different browser profiles/fingerprints</li>
-</ul>
 <h3>⏱️ Proper Delays</h3>
 <pre><code class="language-javascript">// Conservative delay configuration
 const SAFE_DELAYS = {
@@ -944,7 +925,7 @@ const SAFE_DELAYS = {
     comments: 15,
   },
   
-  // Working hours (to appear human)
+  // Working hours, so posts land when your audience is awake
   activeHours: { start: 8, end: 22 },        // 8 AM - 10 PM
   
   // Rest days
@@ -1090,7 +1071,7 @@ async function checkAccountHealth(page, username, logger) {
 </ul>
 <hr>
 <h2>📄 License</h2>
-<p>Apache 2.0 License - See <a href="../../LICENSE">LICENSE</a></p>
+<p>Apache 2.0 License - See <a href="https://github.com/nirholas/XActions/blob/main/LICENSE">LICENSE</a></p>
 <hr>
 <p><em>Author: nich (<a href="https://x.com/nichxbt">@nichxbt</a>)</em><br><em>Part of the <a href="https://github.com/nirholas/XActions">XActions</a> toolkit</em></p>
 
@@ -1159,7 +1140,7 @@ async function checkAccountHealth(page, username, logger) {
       </div>
     </div>
     <div class="footer-bottom">
-      <p>© 2024-2026 XActions. MIT License. No API fees. No limits.</p>
+      <p>© 2024-2026 XActions. Apache-2.0 licensed. No API fees. No limits.</p>
     </div>
   </footer>
 </body>

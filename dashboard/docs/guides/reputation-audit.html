@@ -88,9 +88,9 @@
   <aside class="sidebar" aria-label="Documentation sections">
     <div class="sidebar__group">
       <div class="sidebar__heading">Guides &amp; Reference</div>
-      <a class="sidebar__link" href="/docs/guides/scheduler">⏰ Scheduler &amp; Webhook Triggers</a>
       <a class="sidebar__link" href="/docs/guides/a2a-api-reference">A2A API Reference — XActions</a>
       <a class="sidebar__link" href="/docs/guides/a2a-protocol">A2A Protocol — XActions</a>
+      <a class="sidebar__link" href="/docs/guides/brief">Account briefs: research the accounts you are about to tag</a>
       <a class="sidebar__link" href="/docs/guides/portability">Account Portability — Export, Migrate &amp; Diff</a>
       <a class="sidebar__link" href="/docs/guides/algorithm-builder">Algorithm Builder — 24/7 Niche Growth Automation</a>
       <a class="sidebar__link" href="/docs/guides/analytics-advanced">Analytics &amp; Sentiment Analysis</a>
@@ -117,12 +117,14 @@
       <a class="sidebar__link" href="/docs/guides/media-archive">Media archive</a>
       <a class="sidebar__link" href="/docs/guides/monitoring">Monitoring Guide</a>
       <a class="sidebar__link" href="/docs/guides/notifications">Notifications</a>
+      <a class="sidebar__link" href="/docs/guides/orgs">Organizations: run a family of X accounts as a team</a>
       <a class="sidebar__link" href="/docs/guides/x402">Paying for XActions: x402 and MCP</a>
       <a class="sidebar__link" href="/docs/guides/plugins">Plugin System</a>
       <a class="sidebar__link" href="/docs/guides/streaming">Real-Time Streaming</a>
       <a class="sidebar__link" href="/docs/guides/streams">Real-time Streams — Live Twitter Monitoring</a>
       <a class="sidebar__link" href="/docs/guides/reputation-audit" aria-current="page">Reputation audit: AI-score your own timeline, get a shareable card</a>
       <a class="sidebar__link" href="/docs/guides/rss-monitor">Rss Monitor</a>
+      <a class="sidebar__link" href="/docs/guides/scheduler">Scheduler &amp; Webhook Triggers</a>
       <a class="sidebar__link" href="/docs/guides/scrapers">Scrapers</a>
       <a class="sidebar__link" href="/docs/guides/scraping-infrastructure">Scraping Infrastructure</a>
       <a class="sidebar__link" href="/docs/guides/scraping">Scraping Infrastructure</a>
@@ -156,6 +158,7 @@
       <a class="sidebar__link" href="/docs/guides/ai-api">XActions AI API Documentation</a>
       <a class="sidebar__link" href="/docs/guides/api-reference">XActions API Reference</a>
       <a class="sidebar__link" href="/docs/guides/automation">XActions Automation Framework Guide</a>
+      <a class="sidebar__link" href="/docs/guides/chat">XActions Chat</a>
       <a class="sidebar__link" href="/docs/guides/cli-reference">XActions CLI Reference</a>
       <a class="sidebar__link" href="/docs/guides/xactions-reference">XActions Complete Function Reference</a>
       <a class="sidebar__link" href="/docs/guides/readme">XActions Documentation</a>
@@ -275,7 +278,7 @@ doxxed a coworker&#39;s title by accident. Scrolling your own history to find
 those is slow and you miss most of them. This scores every post the same way
 a careful reviewer would, then rolls the verdicts into one number.</p>
 <p>Three surfaces, one scoring engine
-(<a href="../src/ai/reputationScorer.js"><code>src/ai/reputationScorer.js</code></a>):</p>
+(<a href="https://github.com/nirholas/XActions/blob/main/src/ai/reputationScorer.js"><code>src/ai/reputationScorer.js</code></a>):</p>
 <table>
 <thead>
 <tr>
@@ -286,12 +289,12 @@ a careful reviewer would, then rolls the verdicts into one number.</p>
 </thead>
 <tbody><tr>
 <td>Browser console</td>
-<td><a href="../scripts/reputationAudit.js"><code>scripts/reputationAudit.js</code></a></td>
+<td><a href="https://github.com/nirholas/XActions/blob/main/scripts/reputationAudit.js"><code>scripts/reputationAudit.js</code></a></td>
 <td>You want the shareable score card, or a one-click cleanup of what got flagged</td>
 </tr>
 <tr>
 <td>CLI</td>
-<td><code>xactions reputation &lt;username&gt;</code> (<a href="../src/cli/commands/reputation.js"><code>src/cli/commands/reputation.js</code></a>)</td>
+<td><code>xactions reputation &lt;username&gt;</code> (<a href="https://github.com/nirholas/XActions/blob/main/src/cli/commands/reputation.js"><code>src/cli/commands/reputation.js</code></a>)</td>
 <td>You want to script it, run it in a cron, or pipe <code>--json</code> somewhere</td>
 </tr>
 <tr>
@@ -350,7 +353,7 @@ average as the solid fill and the peak as the faded extension behind it.</p>
 <li>Open your own profile: <code>x.com/YOUR_USERNAME</code>, or <code>/with_replies</code> to
 include your replies, usually the largest source of risk on an account.</li>
 <li>DevTools (<kbd>F12</kbd>), Console tab.</li>
-<li>Paste <a href="../scripts/reputationAudit.js"><code>scripts/reputationAudit.js</code></a>. A
+<li>Paste <a href="https://github.com/nirholas/XActions/blob/main/scripts/reputationAudit.js"><code>scripts/reputationAudit.js</code></a>. A
 panel appears bottom-right with all four dimensions on.</li>
 <li>Adjust the rubric or provider if you want, then click <strong>Scan</strong>.</li>
 <li>Read the score. <strong>Download card</strong> or <strong>Copy image</strong> to get the PNG.
@@ -418,7 +421,7 @@ have no CSP to work around and take any of them directly.</p>
 <h2 id="related">Related</h2>
 <ul>
 <li><a href="/docs/guides/search-sweep"><code>scripts/searchSweep.js</code></a> deletes by search query instead of AI-judged risk.</li>
-<li><a href="../browser/bulkDeleteTweets.js"><code>browser/bulkDeleteTweets.js</code></a> deletes by age, keyword, or engagement.</li>
+<li><a href="https://github.com/nirholas/XActions/blob/main/browser/bulkDeleteTweets.js"><code>browser/bulkDeleteTweets.js</code></a> deletes by age, keyword, or engagement.</li>
 <li><a href="/docs/guides/browser-scripts"><code>docs/browser-scripts.md</code></a> is the full script catalog.</li>
 <li><a href="/docs/guides/skills">Skills Reference</a> — the <code>reputation-audit</code> skill an AI assistant reads to use this.</li>
 </ul>

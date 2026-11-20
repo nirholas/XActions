@@ -88,9 +88,9 @@
   <aside class="sidebar" aria-label="Documentation sections">
     <div class="sidebar__group">
       <div class="sidebar__heading">Guides &amp; Reference</div>
-      <a class="sidebar__link" href="/docs/guides/scheduler">⏰ Scheduler &amp; Webhook Triggers</a>
       <a class="sidebar__link" href="/docs/guides/a2a-api-reference">A2A API Reference — XActions</a>
       <a class="sidebar__link" href="/docs/guides/a2a-protocol">A2A Protocol — XActions</a>
+      <a class="sidebar__link" href="/docs/guides/brief">Account briefs: research the accounts you are about to tag</a>
       <a class="sidebar__link" href="/docs/guides/portability">Account Portability — Export, Migrate &amp; Diff</a>
       <a class="sidebar__link" href="/docs/guides/algorithm-builder">Algorithm Builder — 24/7 Niche Growth Automation</a>
       <a class="sidebar__link" href="/docs/guides/analytics-advanced">Analytics &amp; Sentiment Analysis</a>
@@ -117,12 +117,14 @@
       <a class="sidebar__link" href="/docs/guides/media-archive">Media archive</a>
       <a class="sidebar__link" href="/docs/guides/monitoring">Monitoring Guide</a>
       <a class="sidebar__link" href="/docs/guides/notifications">Notifications</a>
+      <a class="sidebar__link" href="/docs/guides/orgs">Organizations: run a family of X accounts as a team</a>
       <a class="sidebar__link" href="/docs/guides/x402">Paying for XActions: x402 and MCP</a>
       <a class="sidebar__link" href="/docs/guides/plugins">Plugin System</a>
       <a class="sidebar__link" href="/docs/guides/streaming">Real-Time Streaming</a>
       <a class="sidebar__link" href="/docs/guides/streams">Real-time Streams — Live Twitter Monitoring</a>
       <a class="sidebar__link" href="/docs/guides/reputation-audit">Reputation audit: AI-score your own timeline, get a shareable card</a>
       <a class="sidebar__link" href="/docs/guides/rss-monitor">Rss Monitor</a>
+      <a class="sidebar__link" href="/docs/guides/scheduler">Scheduler &amp; Webhook Triggers</a>
       <a class="sidebar__link" href="/docs/guides/scrapers">Scrapers</a>
       <a class="sidebar__link" href="/docs/guides/scraping-infrastructure">Scraping Infrastructure</a>
       <a class="sidebar__link" href="/docs/guides/scraping">Scraping Infrastructure</a>
@@ -156,6 +158,7 @@
       <a class="sidebar__link" href="/docs/guides/ai-api">XActions AI API Documentation</a>
       <a class="sidebar__link" href="/docs/guides/api-reference">XActions API Reference</a>
       <a class="sidebar__link" href="/docs/guides/automation">XActions Automation Framework Guide</a>
+      <a class="sidebar__link" href="/docs/guides/chat">XActions Chat</a>
       <a class="sidebar__link" href="/docs/guides/cli-reference">XActions CLI Reference</a>
       <a class="sidebar__link" href="/docs/guides/xactions-reference">XActions Complete Function Reference</a>
       <a class="sidebar__link" href="/docs/guides/readme">XActions Documentation</a>
@@ -324,15 +327,16 @@
 │   │   ├── threadExtractor.js    # Thread unrolling
 │   │   ├── followerScanner.js    # Follower change detection
 │   │   ├── jobQueue.js           # Bull queue for background jobs
+│   │   ├── processors/           # One run(ctx) per queued job type
 │   │   ├── licenseManager.js     # License key management
 │   │   └── operations/           # Operation implementations
 │   └── utils/              # Shared utilities
 │
 ├── src/                    # Core source code
 │   ├── cli/                # CLI entry point
-│   │   └── index.js        # 56 commands
+│   │   └── index.js        # 59 commands
 │   ├── mcp/                # MCP server
-│   │   └── server.js       # 144 tools
+│   │   └── server.js       # 160 tools
 │   ├── scrapers/           # Multi-platform scrapers
 │   │   ├── twitter/        # Twitter Puppeteer scrapers
 │   │   ├── bluesky/        # Bluesky AT Protocol scrapers
@@ -348,7 +352,9 @@
 │   ├── plugins/            # Plugin system
 │   ├── agents/             # Thought leader agent
 │   ├── graph/              # Social network graph
-│   └── *.js                # 80+ browser scripts
+│   └── *.js                # index.js (library entry) and Node modules
+│
+├── browser/                # 112 standalone browser console scripts (IIFEs)
 │
 ├── dashboard/              # Static HTML frontend
 │   ├── index.html          # Main dashboard
@@ -411,7 +417,7 @@
 <li><strong>Operations</strong> are tracked in PostgreSQL for async monitoring</li>
 </ul>
 <h3 id="browser-script-independence">Browser Script Independence</h3>
-<p>Scripts in <code>src/</code> are designed to run standalone in a browser DevTools console — no build step, no bundler. They use:</p>
+<p>Scripts in <code>browser/</code> (and <code>scripts/</code>, <code>src/automation/</code>) are designed to run standalone in a browser DevTools console — no build step, no bundler. They use:</p>
 <ul>
 <li><code>sessionStorage</code> for persistence (lost on tab close)</li>
 <li>DOM selectors from <code>docs/dom-selectors.md</code></li>
@@ -471,6 +477,41 @@
 <td>Stripe + x402 micropayments</td>
 </tr>
 </tbody></table>
+<h2 id="background-jobs">Background jobs</h2>
+<p>Routes that take longer than a request (bulk follows, scrapes, monitors) queue
+a job and answer with an <code>operationId</code>. The worker (<code>npm run worker</code>, or the API
+process itself) runs it:</p>
+<ul>
+<li><strong>One processor per job type.</strong> Each <code>api/services/processors/*.processors.js</code>
+maps job types to a <code>run(ctx)</code> function. The queue registers exactly those
+and refuses any other type with a <code>501</code>, so a route cannot accept, or be
+paid for, work that nothing runs. <code>tests/api/processors/coverage.test.js</code>
+fails the build when a route queues a type with no processor.</li>
+<li><strong>The context carries the session.</strong> <code>ctx.http()</code> is a logged-in
+<code>TwitterHttpClient</code>, <code>ctx.scraper()</code> the client library, <code>ctx.page()</code> a
+Puppeteer page for what the HTTP API cannot do. The session is the cookie the
+caller sent (AI routes) or the dashboard user&#39;s saved session, decrypted.</li>
+<li><strong>Writes are capped.</strong> <code>ctx.charge()</code> records write actions against the same
+rolling 24 hour per-account caps as the MCP server.</li>
+<li><strong>One queue per concurrency class.</strong> Most types share the <code>operations</code>
+queue, <code>XACTIONS_WORKER_CONCURRENCY</code> (default 8) jobs at a time, each type
+also held to its own <code>concurrency</code> (default 2). A type that runs one at a
+time (<code>concurrency: 1</code>: <code>smartUnfollow</code>, <code>bulkExecute</code>, <code>autoFollow</code>,
+<code>spaceJoin</code> and the rest), or that declares <code>ownQueue: true</code> because it runs
+for hours (<code>personaRun</code>, <code>discoveryTrendingMonitor</code>), gets a queue of its
+own, <code>operations-&lt;type&gt;</code>, with its limit as the queue&#39;s concurrency. A
+backlog of one such type waits on its own queue instead of in the shared
+queue&#39;s slots, so it cannot hold up every other type. A worker process runs
+up to 8 shared jobs plus each own-queue type&#39;s limit at once. The queues
+share one command and one pub/sub Redis connection, and each adds one
+blocking connection: 28 queues today, 30 connections per process (the API
+process and each <code>npm run worker</code>).</li>
+<li><strong>Status for 24 hours.</strong> <code>GET /api/ai/action/status/:operationId</code> and
+<code>GET /api/operations/status/:operationId</code> read the job by the id the route
+returned. An agent&#39;s <code>GET /api/ai/action/history</code> lists only operations
+queued with its own session, and the session is removed from Redis once a
+job will not run again.</li>
+</ul>
 <h2 id="environment-variables">Environment Variables</h2>
 <table>
 <thead>
@@ -506,9 +547,14 @@
 <td><code>development</code> or <code>production</code></td>
 </tr>
 <tr>
-<td><code>REDIS_URL</code></td>
+<td><code>REDIS_HOST</code> / <code>REDIS_PORT</code> / <code>REDIS_PASSWORD</code></td>
 <td>No</td>
-<td>Redis for Bull queue</td>
+<td>Redis for the Bull job queue</td>
+</tr>
+<tr>
+<td><code>XACTIONS_WORKER_CONCURRENCY</code></td>
+<td>No</td>
+<td>Jobs one worker process runs at once on the shared queue (default 8); types with a queue of their own run on top of this</td>
 </tr>
 <tr>
 <td><code>STRIPE_SECRET_KEY</code></td>
@@ -621,7 +667,7 @@
 </tr>
 <tr>
 <td><a href="/docs/guides/cli-reference">cli-reference.md</a></td>
-<td>56 CLI commands</td>
+<td>59 CLI commands</td>
 </tr>
 <tr>
 <td><a href="/docs/guides/rest-api">rest-api.md</a></td>
@@ -690,7 +736,7 @@
     </article>
 
     <div class="page-meta">
-      <span>3 min read</span>
+      <span>4 min read</span>
       <a href="https://github.com/nirholas/XActions/edit/main/docs/architecture.md" target="_blank" rel="noopener">Edit this page</a>
       <a href="https://github.com/nirholas/XActions/issues/new?title=Docs%3A%20Architecture" target="_blank" rel="noopener">Report a problem</a>
     </div>

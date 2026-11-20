@@ -88,12 +88,12 @@
   <aside class="sidebar" aria-label="Documentation sections">
     <div class="sidebar__group">
       <div class="sidebar__heading">Guides &amp; Reference</div>
-      <a class="sidebar__link" href="/docs/guides/scheduler">⏰ Scheduler &amp; Webhook Triggers</a>
       <a class="sidebar__link" href="/docs/guides/a2a-api-reference">A2A API Reference — XActions</a>
       <a class="sidebar__link" href="/docs/guides/a2a-protocol">A2A Protocol — XActions</a>
+      <a class="sidebar__link" href="/docs/guides/brief">Account briefs: research the accounts you are about to tag</a>
       <a class="sidebar__link" href="/docs/guides/portability">Account Portability — Export, Migrate &amp; Diff</a>
       <a class="sidebar__link" href="/docs/guides/algorithm-builder">Algorithm Builder — 24/7 Niche Growth Automation</a>
-      <a class="sidebar__link" href="/docs">+ 72 more…</a>
+      <a class="sidebar__link" href="/docs">+ 75 more…</a>
     </div>
     <div class="sidebar__group">
       <div class="sidebar__heading">Tutorials</div>
@@ -303,6 +303,8 @@
 <ol>
 <li>Navigate to <code>x.com/i/bookmarks</code> → paste in DevTools → Enter</li>
 </ol>
+<p>If X redirects that page to <code>x.com/i/history</code> for your account, run the script there; it accepts both.</p>
+<p>The MCP tool <code>x_clear_bookmarks</code> does the same job from an agent. X no longer has a &quot;Clear all&quot; menu item, so it removes bookmarks one at a time with 1 to 3 second pauses, counts a removal only after the post has left the feed, and stops rather than retry a removal X did not confirm.</p>
 <h3 id="features">Features</h3>
 <ul>
 <li><code>keepKeywords: []</code> — protect bookmarks containing specific words</li>
@@ -372,7 +374,7 @@
 <td><code>[data-testid=&quot;confirmationSheetConfirm&quot;]</code></td>
 </tr>
 </tbody></table>
-<h2 id="rate-limiting-amp-safety">Rate Limiting &amp; Safety</h2>
+<h2 id="rate-limiting--safety">Rate Limiting &amp; Safety</h2>
 <ul>
 <li>1.5s scroll delay between pagination cycles</li>
 <li>0.8–2.2s delay between individual removals (gaussian randomized)</li>
@@ -408,7 +410,7 @@
     </article>
 
     <div class="page-meta">
-      <span>2 min read</span>
+      <span>3 min read</span>
       <a href="https://github.com/nirholas/XActions/edit/main/skills/bookmarks-management/SKILL.md" target="_blank" rel="noopener">Edit this page</a>
       <a href="https://github.com/nirholas/XActions/issues/new?title=Docs%3A%20Bookmarks%20Management" target="_blank" rel="noopener">Report a problem</a>
     </div>

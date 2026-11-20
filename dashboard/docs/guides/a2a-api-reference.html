@@ -88,9 +88,9 @@
   <aside class="sidebar" aria-label="Documentation sections">
     <div class="sidebar__group">
       <div class="sidebar__heading">Guides &amp; Reference</div>
-      <a class="sidebar__link" href="/docs/guides/scheduler">⏰ Scheduler &amp; Webhook Triggers</a>
       <a class="sidebar__link" href="/docs/guides/a2a-api-reference" aria-current="page">A2A API Reference — XActions</a>
       <a class="sidebar__link" href="/docs/guides/a2a-protocol">A2A Protocol — XActions</a>
+      <a class="sidebar__link" href="/docs/guides/brief">Account briefs: research the accounts you are about to tag</a>
       <a class="sidebar__link" href="/docs/guides/portability">Account Portability — Export, Migrate &amp; Diff</a>
       <a class="sidebar__link" href="/docs/guides/algorithm-builder">Algorithm Builder — 24/7 Niche Growth Automation</a>
       <a class="sidebar__link" href="/docs/guides/analytics-advanced">Analytics &amp; Sentiment Analysis</a>
@@ -117,12 +117,14 @@
       <a class="sidebar__link" href="/docs/guides/media-archive">Media archive</a>
       <a class="sidebar__link" href="/docs/guides/monitoring">Monitoring Guide</a>
       <a class="sidebar__link" href="/docs/guides/notifications">Notifications</a>
+      <a class="sidebar__link" href="/docs/guides/orgs">Organizations: run a family of X accounts as a team</a>
       <a class="sidebar__link" href="/docs/guides/x402">Paying for XActions: x402 and MCP</a>
       <a class="sidebar__link" href="/docs/guides/plugins">Plugin System</a>
       <a class="sidebar__link" href="/docs/guides/streaming">Real-Time Streaming</a>
       <a class="sidebar__link" href="/docs/guides/streams">Real-time Streams — Live Twitter Monitoring</a>
       <a class="sidebar__link" href="/docs/guides/reputation-audit">Reputation audit: AI-score your own timeline, get a shareable card</a>
       <a class="sidebar__link" href="/docs/guides/rss-monitor">Rss Monitor</a>
+      <a class="sidebar__link" href="/docs/guides/scheduler">Scheduler &amp; Webhook Triggers</a>
       <a class="sidebar__link" href="/docs/guides/scrapers">Scrapers</a>
       <a class="sidebar__link" href="/docs/guides/scraping-infrastructure">Scraping Infrastructure</a>
       <a class="sidebar__link" href="/docs/guides/scraping">Scraping Infrastructure</a>
@@ -156,6 +158,7 @@
       <a class="sidebar__link" href="/docs/guides/ai-api">XActions AI API Documentation</a>
       <a class="sidebar__link" href="/docs/guides/api-reference">XActions API Reference</a>
       <a class="sidebar__link" href="/docs/guides/automation">XActions Automation Framework Guide</a>
+      <a class="sidebar__link" href="/docs/guides/chat">XActions Chat</a>
       <a class="sidebar__link" href="/docs/guides/cli-reference">XActions CLI Reference</a>
       <a class="sidebar__link" href="/docs/guides/xactions-reference">XActions Complete Function Reference</a>
       <a class="sidebar__link" href="/docs/guides/readme">XActions Documentation</a>
@@ -348,6 +351,12 @@
 <p>Force re-scan of available skills (including plugins).</p>
 <hr>
 <h2 id="tasks">Tasks</h2>
+<p>A task belongs to the agent that created it (its API key label or bearer
+token subject). Reading, streaming, cancelling or messaging another agent&#39;s
+task answers the same 404 as a task that does not exist, so task ids cannot be
+probed; an agent with the <code>admin</code> permission can reach every task. With
+authentication explicitly off there are no identities and every caller sees
+every task.</p>
 <h3 id="post-a2atasks"><code>POST /a2a/tasks</code></h3>
 <p>Create and optionally execute a task.</p>
 <p><strong>Request body (JSON-RPC 2.0):</strong></p>
@@ -484,7 +493,7 @@
 </code></pre>
 <hr>
 <h2 id="authentication">Authentication</h2>
-<p>Requests can be authenticated using:</p>
+<p>Every <code>/a2a</code> route requires one of these; only <code>/.well-known/agent.json</code> is public.</p>
 <table>
 <thead>
 <tr>
@@ -495,8 +504,8 @@
 </thead>
 <tbody><tr>
 <td>API Key</td>
-<td><code>X-Api-Key</code></td>
-<td><code>xa2a_...</code></td>
+<td><code>Authorization</code></td>
+<td><code>ApiKey xa2a_...</code></td>
 </tr>
 <tr>
 <td>JWT</td>
@@ -504,8 +513,11 @@
 <td><code>Bearer &lt;token&gt;</code></td>
 </tr>
 </tbody></table>
-<p>When <code>enableAuth: false</code>, all requests are accepted.</p>
-<hr>
+<h2 id="a-missing-or-invalid-credential-answers-401-a-valid-one-without-the-needed-permission-for-example-write-for-a-write-tool-admin-for-discovery-answers-403-issue-keys-with-node-srca2aindexjs---create-key-label---preset-readonlystandardfull-authentication-is-off-only-with-enableauth-false---no-auth-or-xactions_a2a_allow_unauthenticated1-and-the-server-warns-when-it-is">A missing or invalid credential answers 401; a valid one without the needed
+permission (for example <code>write</code> for a write tool, <code>admin</code> for discovery)
+answers 403. Issue keys with <code>node src/a2a/index.js --create-key &lt;label&gt; --preset readonly|standard|full</code>.
+Authentication is off only with <code>enableAuth: false</code>, <code>--no-auth</code>, or
+<code>XACTIONS_A2A_ALLOW_UNAUTHENTICATED=1</code>, and the server warns when it is.</h2>
 <h2 id="error-codes">Error Codes</h2>
 <table>
 <thead>
@@ -561,7 +573,7 @@
     </div>
 
     <nav class="page-nav" aria-label="Previous and next">
-      <a class="page-nav__link" href="/docs/guides/scheduler"><span class="page-nav__dir">← Previous</span><span class="page-nav__title">⏰ Scheduler &amp; Webhook Triggers</span></a>
+      <span></span>
       <a class="page-nav__link page-nav__link--next" href="/docs/guides/a2a-protocol"><span class="page-nav__dir">Next →</span><span class="page-nav__title">A2A Protocol — XActions</span></a>
     </nav>
 

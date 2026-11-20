@@ -88,9 +88,9 @@
   <aside class="sidebar" aria-label="Documentation sections">
     <div class="sidebar__group">
       <div class="sidebar__heading">Guides &amp; Reference</div>
-      <a class="sidebar__link" href="/docs/guides/scheduler">⏰ Scheduler &amp; Webhook Triggers</a>
       <a class="sidebar__link" href="/docs/guides/a2a-api-reference">A2A API Reference — XActions</a>
       <a class="sidebar__link" href="/docs/guides/a2a-protocol">A2A Protocol — XActions</a>
+      <a class="sidebar__link" href="/docs/guides/brief">Account briefs: research the accounts you are about to tag</a>
       <a class="sidebar__link" href="/docs/guides/portability">Account Portability — Export, Migrate &amp; Diff</a>
       <a class="sidebar__link" href="/docs/guides/algorithm-builder">Algorithm Builder — 24/7 Niche Growth Automation</a>
       <a class="sidebar__link" href="/docs/guides/analytics-advanced">Analytics &amp; Sentiment Analysis</a>
@@ -117,12 +117,14 @@
       <a class="sidebar__link" href="/docs/guides/media-archive">Media archive</a>
       <a class="sidebar__link" href="/docs/guides/monitoring">Monitoring Guide</a>
       <a class="sidebar__link" href="/docs/guides/notifications">Notifications</a>
+      <a class="sidebar__link" href="/docs/guides/orgs">Organizations: run a family of X accounts as a team</a>
       <a class="sidebar__link" href="/docs/guides/x402">Paying for XActions: x402 and MCP</a>
       <a class="sidebar__link" href="/docs/guides/plugins">Plugin System</a>
       <a class="sidebar__link" href="/docs/guides/streaming">Real-Time Streaming</a>
       <a class="sidebar__link" href="/docs/guides/streams">Real-time Streams — Live Twitter Monitoring</a>
       <a class="sidebar__link" href="/docs/guides/reputation-audit">Reputation audit: AI-score your own timeline, get a shareable card</a>
       <a class="sidebar__link" href="/docs/guides/rss-monitor">Rss Monitor</a>
+      <a class="sidebar__link" href="/docs/guides/scheduler">Scheduler &amp; Webhook Triggers</a>
       <a class="sidebar__link" href="/docs/guides/scrapers">Scrapers</a>
       <a class="sidebar__link" href="/docs/guides/scraping-infrastructure">Scraping Infrastructure</a>
       <a class="sidebar__link" href="/docs/guides/scraping">Scraping Infrastructure</a>
@@ -156,6 +158,7 @@
       <a class="sidebar__link" href="/docs/guides/ai-api">XActions AI API Documentation</a>
       <a class="sidebar__link" href="/docs/guides/api-reference">XActions API Reference</a>
       <a class="sidebar__link" href="/docs/guides/automation">XActions Automation Framework Guide</a>
+      <a class="sidebar__link" href="/docs/guides/chat">XActions Chat</a>
       <a class="sidebar__link" href="/docs/guides/cli-reference" aria-current="page">XActions CLI Reference</a>
       <a class="sidebar__link" href="/docs/guides/xactions-reference">XActions Complete Function Reference</a>
       <a class="sidebar__link" href="/docs/guides/readme">XActions Documentation</a>
@@ -335,7 +338,13 @@ echo &quot;how do I download a video&quot; | xactions ask
 <li><a href="#xactions-search">xactions search</a></li>
 <li><a href="#xactions-hashtag">xactions hashtag</a></li>
 <li><a href="#xactions-thread">xactions thread</a></li>
+<li><a href="#xactions-article">xactions article</a></li>
 <li><a href="#xactions-media">xactions media</a></li>
+<li><a href="#xactions-analyze">xactions analyze</a></li>
+<li><a href="#xactions-brief">xactions brief</a></li>
+<li><a href="#xactions-download">xactions download</a></li>
+<li><a href="#xactions-reputation">xactions reputation</a></li>
+<li><a href="#xactions-engage">xactions engage</a></li>
 <li><a href="#xactions-info">xactions info</a></li>
 </ul>
 </li>
@@ -348,6 +357,7 @@ echo &quot;how do I download a video&quot; | xactions ask
 <li><a href="#xactions-persona-delete">xactions persona delete</a></li>
 </ul>
 </li>
+<li><a href="#organization-commands">Organization Commands</a></li>
 <li><a href="#agent-commands">Agent Commands</a></li>
 <li><a href="#plugin-commands">Plugin Commands</a></li>
 <li><a href="#stream-commands">Stream Commands</a></li>
@@ -400,6 +410,7 @@ xactions doctor              # verify the install and see which tier you are on
 xactions profile NASA        # works with no account
 xactions tweets NASA --limit 20
 xactions analyze NASA        # engagement rate, cadence, content mix, best posting hour
+xactions brief base CoinbaseDev --topic x402   # research accounts before tagging them
 
 xactions connect             # log in once, in a real browser, to unlock the rest
 xactions search &quot;your topic&quot; --limit 50
@@ -1108,6 +1119,60 @@ xactions thread https://x.com/nichxbt/status/1234567890123456789
 xactions thread https://x.com/user/status/123456789 -o thread.json
 </code></pre>
 <hr>
+<h3 id="xactions-article">xactions article</h3>
+<p>Read the full text of an X long-form Article in one GraphQL request, with no browser.</p>
+<p>X&#39;s own web client asks for articles with <code>withArticlePlainText: false</code> and gets only the short preview back. This command sets it to <code>true</code>, so the response carries the whole body. If X still answers with the preview only, the command fails rather than printing a teaser as if it were the article.</p>
+<p><strong>Syntax:</strong></p>
+<pre><code class="language-bash">xactions article &lt;url&gt; [options]
+</code></pre>
+<p><strong>Arguments:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Argument</th>
+<th>Description</th>
+<th>Required</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>url</code></td>
+<td><code>x.com/i/article/&lt;id&gt;</code> URL, a status URL, or the numeric id</td>
+<td>Yes</td>
+</tr>
+</tbody></table>
+<p><strong>Options:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Alias</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>--output &lt;file&gt;</code></td>
+<td><code>-o</code></td>
+<td>Write the article as JSON to a file</td>
+<td>stdout</td>
+</tr>
+<tr>
+<td><code>--json</code></td>
+<td></td>
+<td>Print the full JSON object</td>
+<td></td>
+</tr>
+</tbody></table>
+<p><code>--compact</code> prints <code>id username date likes views title url text</code> on one line.</p>
+<p><strong>Examples:</strong></p>
+<pre><code class="language-bash"># Title, author and the whole body
+xactions article https://x.com/i/article/1234567890123456789
+
+# Just the body, for piping
+xactions article https://x.com/i/article/1234567890123456789 --json | jq -r .text
+</code></pre>
+<p>From Node, the same read is <code>scrapeArticle(client, url)</code> from <code>xactions/scrapers/twitter/http</code>, and the MCP tool is <code>x_get_article</code>.</p>
+<hr>
 <h3 id="xactions-media">xactions media</h3>
 <p>Scrape media (images, videos, GIFs) from a user&#39;s timeline.</p>
 <p><strong>Syntax:</strong></p>
@@ -1174,6 +1239,214 @@ xactions media artist -l 200 -o artist-media.json
 ]
 </code></pre>
 <hr>
+<h3 id="xactions-analyze">xactions analyze</h3>
+<p>Account report from a sample of recent posts: engagement rate, cadence, content mix, best posting hour and weekday. Several usernames print a side-by-side comparison. No login needed.</p>
+<pre><code class="language-bash">xactions analyze &lt;usernames...&gt; [options]
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>-l, --limit &lt;number&gt;</code></td>
+<td>Posts to sample per account, clamped to 5..200 (default 50)</td>
+</tr>
+<tr>
+<td><code>-o, --output &lt;file&gt;</code></td>
+<td>Write the raw report to <code>.json</code>, <code>.csv</code> or <code>.xlsx</code>. Always writes, also alongside <code>--json</code> or <code>--compact</code></td>
+</tr>
+<tr>
+<td><code>--json</code></td>
+<td>Print the raw report as JSON instead of the formatted one</td>
+</tr>
+</tbody></table>
+<pre><code class="language-bash">xactions analyze NASA
+xactions analyze NASA SpaceX --fields username,followers,engagementRate,bestHourUTC --compact
+xactions analyze NASA --json -o reports/nasa.json
+</code></pre>
+<h3 id="xactions-brief">xactions brief</h3>
+<p>Research accounts before tagging them in a post: recent posts, the figures they publish with source links, their stats, who they tag, and who else the list keeps mentioning. Timelines are cached for six hours under <code>$XACTIONS_HOME/cache/brief/</code>. Full guide: <a href="/docs/guides/brief">brief.md</a>.</p>
+<pre><code class="language-bash">xactions brief [usernames...] [options]
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>-f, --file &lt;path&gt;</code></td>
+<td>Read accounts from a file: one per line or comma separated, <code>#</code> for comments</td>
+</tr>
+<tr>
+<td><code>-t, --topic &lt;keywords&gt;</code></td>
+<td>Comma-separated keywords that make a post on topic</td>
+</tr>
+<tr>
+<td><code>-l, --limit &lt;number&gt;</code></td>
+<td>Posts to read per account, 10..400 (default 100)</td>
+</tr>
+<tr>
+<td><code>-d, --days &lt;number&gt;</code></td>
+<td>Only list posts and figures from the last N days (default 30)</td>
+</tr>
+<tr>
+<td><code>--recent &lt;number&gt;</code></td>
+<td>Recent posts to list per account (default 5)</td>
+</tr>
+<tr>
+<td><code>-o, --output &lt;file&gt;</code></td>
+<td>Write the brief: <code>.md</code> for Markdown, <code>.json</code> for the full data</td>
+</tr>
+<tr>
+<td><code>--json</code></td>
+<td>Print the full brief as JSON instead of Markdown</td>
+</tr>
+<tr>
+<td><code>--refresh</code></td>
+<td>Ignore cached timelines and fetch everything again</td>
+</tr>
+<tr>
+<td><code>--cache-hours &lt;number&gt;</code></td>
+<td>Reuse timelines fetched within this many hours, <code>0</code> turns the cache off (default 6)</td>
+</tr>
+</tbody></table>
+<p>Exits 0 when every account was read, 2 when some failed (listed under &quot;Not included&quot;), 1 when none could be read. An empty timeline counts as a failure.</p>
+<pre><code class="language-bash">xactions brief coinbasedev base --topic x402
+xactions brief --file accounts.txt --topic &quot;x402,agent payments&quot; -o brief.md
+xactions brief --file accounts.txt --json | jq -r &#39;.alsoTag[].username&#39;
+</code></pre>
+<h3 id="xactions-download">xactions download</h3>
+<p>Download photos, videos and GIFs from a profile, a tweet, a search or a community (alias <code>dl</code>). Targets: <code>@user</code> (media tab), <code>@user:avatar</code>, <code>@user:banner</code>, <code>@user:all</code>, a tweet id or status URL, <code>search:&lt;query&gt;</code>, <code>community:&lt;id&gt;</code>.</p>
+<pre><code class="language-bash">xactions download &lt;target&gt; [options]
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>-o, --output &lt;dir&gt;</code></td>
+<td>Where files land (default <code>./media</code>)</td>
+</tr>
+<tr>
+<td><code>-f, --filename &lt;template&gt;</code></td>
+<td>Filename template (default <code>{username}/{tweet_id}_{num}.{ext}</code>; <code>xactions download --help</code> lists the keys)</td>
+</tr>
+<tr>
+<td><code>-a, --archive [path]</code></td>
+<td>Record what was downloaded so re-runs skip it (default path: beside the files)</td>
+</tr>
+<tr>
+<td><code>-l, --limit &lt;n&gt;</code></td>
+<td>How many source items to walk (default 100)</td>
+</tr>
+<tr>
+<td><code>-c, --concurrency &lt;n&gt;</code></td>
+<td>Parallel downloads (default 4)</td>
+</tr>
+<tr>
+<td><code>-t, --type &lt;type...&gt;</code></td>
+<td>Only these types: <code>photo</code>, <code>video</code>, <code>gif</code></td>
+</tr>
+<tr>
+<td><code>--since &lt;date&gt;</code> / <code>--until &lt;date&gt;</code></td>
+<td>Date window, <code>YYYY-MM-DD</code></td>
+</tr>
+<tr>
+<td><code>--overwrite</code></td>
+<td>Re-download even when the file or archive entry exists</td>
+</tr>
+<tr>
+<td><code>--dry-run</code></td>
+<td>List what would be downloaded, write nothing</td>
+</tr>
+<tr>
+<td><code>--json</code></td>
+<td>Print the plan and results as JSON</td>
+</tr>
+<tr>
+<td><code>-q, --quiet</code></td>
+<td>Summary only, no per-file lines</td>
+</tr>
+</tbody></table>
+<p>Exits 1 when nothing matched or any file failed.</p>
+<pre><code class="language-bash">xactions download @nichxbt --archive
+xactions download @nichxbt:all -o ./archive -f &#39;{username}/{kind}/{date}_{media_filename}.{ext}&#39;
+xactions download &quot;search:from:nichxbt filter:videos&quot; -t video
+xactions download https://x.com/nichxbt/status/123 --dry-run
+</code></pre>
+<h3 id="xactions-reputation">xactions reputation</h3>
+<p>AI risk-score an account&#39;s posts on four dimensions (professional, hostile, legal, spam) and print a 0-100 reputation score, a grade and the posts worth a look. Needs an LLM key.</p>
+<pre><code class="language-bash">xactions reputation [username] [options]
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>--replies</code></td>
+<td>Include the replies tab</td>
+</tr>
+<tr>
+<td><code>--reposts</code></td>
+<td>Also score posts the account reposted from others</td>
+</tr>
+<tr>
+<td><code>-l, --limit &lt;number&gt;</code></td>
+<td>Maximum posts to scan (default 60)</td>
+</tr>
+<tr>
+<td><code>--dimensions &lt;list&gt;</code></td>
+<td>Subset of <code>professional,hostile,legal,spam</code> (default all four)</td>
+</tr>
+<tr>
+<td><code>--custom-question &lt;text&gt;</code></td>
+<td>An extra risk question scored alongside the built-ins</td>
+</tr>
+<tr>
+<td><code>--provider &lt;name&gt;</code></td>
+<td><code>openrouter</code> (default), <code>openai</code>, <code>xai</code>, <code>anthropic</code>, <code>ollama</code>, <code>custom</code></td>
+</tr>
+<tr>
+<td><code>--model &lt;name&gt;</code></td>
+<td>Model override</td>
+</tr>
+<tr>
+<td><code>--api-key &lt;key&gt;</code></td>
+<td>Or the provider&#39;s env var (<code>OPENROUTER_API_KEY</code>, <code>OPENAI_API_KEY</code>, <code>XAI_API_KEY</code>, <code>ANTHROPIC_API_KEY</code>)</td>
+</tr>
+<tr>
+<td><code>--base-url &lt;url&gt;</code></td>
+<td>Chat-completions URL for <code>custom</code></td>
+</tr>
+<tr>
+<td><code>--concurrency &lt;number&gt;</code></td>
+<td>Posts scored in parallel (default 4)</td>
+</tr>
+<tr>
+<td><code>--top &lt;number&gt;</code></td>
+<td>How many flagged or review posts to print (default 10)</td>
+</tr>
+<tr>
+<td><code>--json</code></td>
+<td>Print the report as JSON on stdout</td>
+</tr>
+</tbody></table>
+<p>If no post could be scored (a bad key, an unreachable provider), the command prints the first model error and exits 1 rather than reporting a score.</p>
+<pre><code class="language-bash">xactions reputation nichxbt
+xactions reputation nichxbt --replies --limit 200
+XAI_API_KEY=xai-... xactions reputation nichxbt --provider xai --json
+</code></pre>
 <h3 id="xactions-engage">xactions engage</h3>
 <p>Like, repost, and reply across a profile, a search, or a list, with replies from templates or from an LLM given a brief. Needs a logged-in session (<code>xactions connect</code>) for anything but <code>--dry-run</code>.</p>
 <pre><code class="language-bash">xactions engage [username] [options]
@@ -1662,6 +1935,88 @@ $ xactions persona edit persona_123 --target-accounts &quot;elonmusk,sama,karpat
 ? Delete persona persona_1234567890? This cannot be undone. (y/N) y
 ✅ Persona persona_1234567890 deleted
 </code></pre>
+<hr>
+<h2 id="organization-commands">Organization Commands</h2>
+<p>Run a family of X accounts as a team: roles, approval, cross-posting checked against X&#39;s
+duplicate-content rule, affiliate disclosure, daily caps, and a hash-chained audit log.
+Full guide: <a href="/docs/guides/orgs">orgs.md</a>.</p>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Does</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>xactions org create &lt;org&gt; --owner &lt;name&gt;</code></td>
+<td>create an organization</td>
+</tr>
+<tr>
+<td><code>xactions org list</code></td>
+<td>list organizations</td>
+</tr>
+<tr>
+<td><code>xactions org show &lt;org&gt;</code></td>
+<td>members, accounts, settings</td>
+</tr>
+<tr>
+<td><code>xactions org settings &lt;org&gt; [--two-person on|off] [--threshold n] [--disclosure tag]</code></td>
+<td>owner only</td>
+</tr>
+<tr>
+<td><code>xactions org member add &lt;org&gt; &lt;name&gt; --role &lt;role&gt;</code></td>
+<td>add a member or change their role</td>
+</tr>
+<tr>
+<td><code>xactions org member remove &lt;org&gt; &lt;name&gt;</code></td>
+<td>remove a member</td>
+</tr>
+<tr>
+<td><code>xactions org account add &lt;org&gt; &lt;handle&gt; (--cookies-file p | --from-browser [b] | --from-saved) [--label l] [--kind owned|affiliate]</code></td>
+<td>connect an account; the session is checked against the handle</td>
+</tr>
+<tr>
+<td><code>xactions org account remove &lt;org&gt; &lt;handle&gt;</code></td>
+<td>disconnect and delete the session</td>
+</tr>
+<tr>
+<td><code>xactions org draft &lt;org&gt; --account h --text t [--variant h=t]... [--repost h]... [--at iso]</code></td>
+<td>draft a post</td>
+</tr>
+<tr>
+<td><code>xactions org edit &lt;org&gt; &lt;id&gt; [--account h] [--text t] [--at iso|none]</code></td>
+<td>change a post; it returns to draft</td>
+</tr>
+<tr>
+<td><code>xactions org posts &lt;org&gt; [--status s]</code></td>
+<td>the queue</td>
+</tr>
+<tr>
+<td><code>xactions org post &lt;org&gt; &lt;id&gt;</code></td>
+<td>one post in full</td>
+</tr>
+<tr>
+<td><code>xactions org approve &lt;org&gt; &lt;id&gt;</code> / <code>reject &lt;org&gt; &lt;id&gt; [--reason r]</code></td>
+<td>editor or above</td>
+</tr>
+<tr>
+<td><code>xactions org publish &lt;org&gt; [--id id] [--dry-run] [--retry-failed] [--delay s]</code></td>
+<td>publish what is due</td>
+</tr>
+<tr>
+<td><code>xactions org calendar &lt;org&gt; [--days n]</code></td>
+<td>posts by day</td>
+</tr>
+<tr>
+<td><code>xactions org stats &lt;org&gt; [--days n]</code></td>
+<td>per-account and total numbers</td>
+</tr>
+<tr>
+<td><code>xactions org log &lt;org&gt; [--limit n] [--verify]</code></td>
+<td>the audit log</td>
+</tr>
+</tbody></table>
+<p>Every command takes <code>--as &lt;member&gt;</code> (default <code>$XACTIONS_ORG_MEMBER</code>, or the only member) and <code>--json</code>.</p>
 <hr>
 <h2 id="agent-commands">Agent Commands</h2>
 <h3 id="xactions-agent-setup">xactions agent setup</h3>
@@ -2426,6 +2781,7 @@ xactions scrape trending -p twitter
 <p>Generate a reputation report for a monitored username.</p>
 <pre><code class="language-bash">xactions report &lt;username&gt; [options]
 </code></pre>
+<p>Monitors and their history live in memory inside the <code>xactions monitor</code> process and are not written to disk, so a separate <code>xactions report</code> process cannot see them and exits 1 with that explanation. For a one-off report on an account, use <a href="#xactions-analyze"><code>xactions analyze</code></a> or <a href="#xactions-reputation"><code>xactions reputation</code></a>.</p>
 <table>
 <thead>
 <tr>
@@ -2954,90 +3310,77 @@ xactions followers nichxbt | wc -l
 </code></pre>
 <hr>
 <h2 id="environment-variables">Environment Variables</h2>
-<p>XActions supports the following environment variables:</p>
+<p>Only these are read. Anything else you may have seen in an older copy of this
+page (<code>XACTIONS_AUTH_TOKEN</code>, <code>XACTIONS_CONFIG_DIR</code>, <code>XACTIONS_HEADLESS</code>,
+<code>XACTIONS_TIMEOUT</code>, <code>XACTIONS_PROXY</code>) was never implemented and has no effect.</p>
 <table>
 <thead>
 <tr>
 <th>Variable</th>
-<th>Description</th>
-<th>Default</th>
+<th>Read by</th>
+<th>Effect</th>
 </tr>
 </thead>
 <tbody><tr>
-<td><code>XACTIONS_AUTH_TOKEN</code></td>
-<td>X/Twitter auth_token cookie (alternative to login)</td>
-<td>—</td>
+<td><code>XACTIONS_HOME</code></td>
+<td>every command</td>
+<td>Where the config, the saved session (<code>config.json</code>, <code>cookies.json</code>), the brief cache, the query-ID cache and drafts live. Default <code>~/.xactions</code>. The MCP server honours the same variable, so one setting points both lanes at the same account</td>
 </tr>
 <tr>
-<td><code>XACTIONS_CONFIG_DIR</code></td>
-<td>Custom config directory path</td>
-<td><code>~/.xactions</code></td>
+<td><code>XACTIONS_SESSION_COOKIE</code></td>
+<td><code>persona run</code>, <code>workflow run</code>, the MCP server</td>
+<td>An <code>auth_token</code> used when no <code>--token</code> / <code>--auth</code> is passed and nothing is saved</td>
 </tr>
 <tr>
-<td><code>XACTIONS_HEADLESS</code></td>
-<td>Run browser in headless mode</td>
-<td><code>true</code></td>
+<td><code>TWITTER_AUTH_TOKEN</code></td>
+<td><code>ai analyze</code>, <code>ai generate</code>, <code>ai rewrite</code>, <code>ai calendar</code></td>
+<td>Fallback <code>auth_token</code> when <code>xactions login</code> has not saved one</td>
 </tr>
 <tr>
-<td><code>XACTIONS_TIMEOUT</code></td>
-<td>Request timeout in milliseconds</td>
-<td><code>30000</code></td>
+<td><code>OPENROUTER_API_KEY</code>, <code>OPENROUTER_MODEL</code></td>
+<td><code>ai</code>, <code>optimize</code> and the other AI commands</td>
+<td>Key and model for OpenRouter</td>
 </tr>
 <tr>
-<td><code>XACTIONS_PROXY</code></td>
-<td>HTTP/SOCKS proxy URL</td>
-<td>—</td>
+<td><code>OPENAI_API_KEY</code>, <code>XAI_API_KEY</code> (or <code>GROK_API_KEY</code>), <code>ANTHROPIC_API_KEY</code></td>
+<td><code>engage</code>, <code>reputation</code>, <code>ask --provider</code></td>
+<td>Key for the matching <code>--provider</code> when <code>--api-key</code> / <code>--key</code> is not passed</td>
 </tr>
 <tr>
-<td><code>DEBUG</code></td>
-<td>Enable debug logging (<code>xactions:*</code>)</td>
-<td>—</td>
+<td><code>XACTIONS_DEBUG</code></td>
+<td>the HTTP scrapers</td>
+<td>Log how each request&#39;s <code>x-client-transaction-id</code> was computed</td>
 </tr>
 </tbody></table>
 <h3 id="examples">Examples</h3>
-<pre><code class="language-bash"># Use auth token from environment
-export XACTIONS_AUTH_TOKEN=&quot;your_auth_token_here&quot;
-xactions followers nichxbt
+<pre><code class="language-bash"># Keep a second account&#39;s session, caches and drafts apart from the first
+XACTIONS_HOME=~/.xactions-work xactions login --from-browser chrome
+XACTIONS_HOME=~/.xactions-work xactions followers nichxbt --limit 200 --compact
 
-# Use a proxy
-export XACTIONS_PROXY=&quot;http://proxy.example.com:8080&quot;
-xactions profile elonmusk
-
-# Enable debug mode
-DEBUG=xactions:* xactions followers nichxbt
-
-# Custom config directory
-XACTIONS_CONFIG_DIR=/custom/path xactions login
-
-# Inline environment variables
-XACTIONS_HEADLESS=false xactions profile nichxbt
+# Score posts with xAI without passing the key on the command line
+XAI_API_KEY=xai-... xactions reputation nichxbt --provider xai
 </code></pre>
 <hr>
 <h2 id="configuration">Configuration</h2>
-<p>XActions stores configuration in <code>~/.xactions/config.json</code>.</p>
+<p><code>xactions login</code> and <code>xactions connect</code> write the session under
+<code>$XACTIONS_HOME</code> (default <code>~/.xactions</code>).</p>
 <h3 id="config-file-location">Config File Location</h3>
-<pre><code>~/.xactions/
-├── config.json      # Authentication and settings
-├── personas/        # Saved persona configurations
-│   ├── persona_123.json
-│   └── persona_456.json
-└── cache/           # Temporary cache (optional)
+<pre><code>~/.xactions/              # or $XACTIONS_HOME
+├── config.json           # auth_token and ct0 saved by `xactions login`
+├── cookies.json          # the full cookie jar from --from-browser, --cookies-file or `connect` (read first)
+├── cache/brief/          # `xactions brief` timelines, six hours
+└── personas/             # saved persona configurations
 </code></pre>
 <h3 id="config-file-structure">Config File Structure</h3>
 <pre><code class="language-json">{
   &quot;authToken&quot;: &quot;your_auth_token_here&quot;,
-  &quot;headless&quot;: true,
-  &quot;timeout&quot;: 30000,
-  &quot;proxy&quot;: null
+  &quot;csrfToken&quot;: &quot;your_ct0_here&quot;,
+  &quot;openrouter_api_key&quot;: &quot;optional, used by the ai commands&quot;
 }
 </code></pre>
 <h3 id="manual-configuration">Manual Configuration</h3>
 <p>You can manually edit the config file:</p>
-<pre><code class="language-bash"># View current config
-cat ~/.xactions/config.json
-
-# Edit config
-nano ~/.xactions/config.json
+<pre><code class="language-bash">cat &quot;${XACTIONS_HOME:-$HOME/.xactions}/config.json&quot;
 </code></pre>
 <hr>
 <h2 id="troubleshooting">Troubleshooting</h2>
@@ -3046,9 +3389,9 @@ nano ~/.xactions/config.json
 <pre><code class="language-bash"># Solution: Run login command
 xactions login
 </code></pre>
-<p><strong>2. &quot;Timeout&quot; errors</strong></p>
-<pre><code class="language-bash"># Increase timeout
-XACTIONS_TIMEOUT=60000 xactions followers nichxbt
+<p><strong>2. Empty results or &quot;No ... returned&quot;</strong></p>
+<pre><code class="language-bash"># See what works right now and what each failure needs
+xactions doctor
 </code></pre>
 <p><strong>3. &quot;Browser not found&quot; error</strong></p>
 <p>XActions requires Chromium/Chrome. Install it:</p>
@@ -3069,13 +3412,15 @@ npm install puppeteer
 <li>Consider using a proxy</li>
 </ul>
 <p><strong>5. &quot;Page not loading&quot; issues</strong></p>
-<pre><code class="language-bash"># Run with visible browser for debugging
-XACTIONS_HEADLESS=false xactions profile nichxbt
+<pre><code class="language-bash"># Run the persona builder with a visible browser
+xactions persona run &lt;id&gt; --no-headless
 </code></pre>
 <h3 id="debug-mode">Debug Mode</h3>
-<p>Enable verbose logging for troubleshooting:</p>
-<pre><code class="language-bash">DEBUG=xactions:* xactions followers nichxbt
+<p>Log how each HTTP request was signed:</p>
+<pre><code class="language-bash">XACTIONS_DEBUG=1 xactions tweets nichxbt --limit 5
 </code></pre>
+<p>Every command exits non-zero when it fails, so <code>xactions ... || echo failed</code>
+and <code>set -e</code> scripts see the failure.</p>
 <h3 id="getting-help">Getting Help</h3>
 <ul>
 <li><strong>Documentation</strong>: <a href="https://xactions.app/docs">https://xactions.app/docs</a></li>
@@ -3585,15 +3930,13 @@ XACTIONS_HEADLESS=false xactions profile nichxbt
 </tbody></table>
 <hr>
 <h2 id="license">License</h2>
-<p>Apache 2.0 License - see <a href="../LICENSE">LICENSE</a> for details.</p>
+<p>Apache 2.0 License - see <a href="https://github.com/nirholas/XActions/blob/main/LICENSE">LICENSE</a> for details.</p>
 <hr>
 <p align="center">
   <strong>⚡ XActions</strong><br>
   Built by <a href="https://x.com/nichxbt">nich (@nichxbt)</a><br>
   <a href="https://xactions.app">https://xactions.app</a>
-</p>
-
-<hr>
+</p><hr>
 <h2 id="skills">Skills</h2>
 <h3 id="xactions-skills">xactions skills</h3>
 <p>Install the bundled agent skills (the <code>skills/*/SKILL.md</code> files) where your coding agent reads them. Resolves the skills directory relative to the package, so it works from a global npm install.</p>
@@ -3793,13 +4136,13 @@ xactions archive migrate twitter-2026-01-01-abc123.zip --to mastodon --execute -
     </article>
 
     <div class="page-meta">
-      <span>33 min read</span>
+      <span>40 min read</span>
       <a href="https://github.com/nirholas/XActions/edit/main/docs/cli-reference.md" target="_blank" rel="noopener">Edit this page</a>
       <a href="https://github.com/nirholas/XActions/issues/new?title=Docs%3A%20XActions%20CLI%20Reference" target="_blank" rel="noopener">Report a problem</a>
     </div>
 
     <nav class="page-nav" aria-label="Previous and next">
-      <a class="page-nav__link" href="/docs/guides/automation"><span class="page-nav__dir">← Previous</span><span class="page-nav__title">XActions Automation Framework Guide</span></a>
+      <a class="page-nav__link" href="/docs/guides/chat"><span class="page-nav__dir">← Previous</span><span class="page-nav__title">XActions Chat</span></a>
       <a class="page-nav__link page-nav__link--next" href="/docs/guides/xactions-reference"><span class="page-nav__dir">Next →</span><span class="page-nav__title">XActions Complete Function Reference</span></a>
     </nav>
 

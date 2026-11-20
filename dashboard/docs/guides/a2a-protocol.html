@@ -88,9 +88,9 @@
   <aside class="sidebar" aria-label="Documentation sections">
     <div class="sidebar__group">
       <div class="sidebar__heading">Guides &amp; Reference</div>
-      <a class="sidebar__link" href="/docs/guides/scheduler">⏰ Scheduler &amp; Webhook Triggers</a>
       <a class="sidebar__link" href="/docs/guides/a2a-api-reference">A2A API Reference — XActions</a>
       <a class="sidebar__link" href="/docs/guides/a2a-protocol" aria-current="page">A2A Protocol — XActions</a>
+      <a class="sidebar__link" href="/docs/guides/brief">Account briefs: research the accounts you are about to tag</a>
       <a class="sidebar__link" href="/docs/guides/portability">Account Portability — Export, Migrate &amp; Diff</a>
       <a class="sidebar__link" href="/docs/guides/algorithm-builder">Algorithm Builder — 24/7 Niche Growth Automation</a>
       <a class="sidebar__link" href="/docs/guides/analytics-advanced">Analytics &amp; Sentiment Analysis</a>
@@ -117,12 +117,14 @@
       <a class="sidebar__link" href="/docs/guides/media-archive">Media archive</a>
       <a class="sidebar__link" href="/docs/guides/monitoring">Monitoring Guide</a>
       <a class="sidebar__link" href="/docs/guides/notifications">Notifications</a>
+      <a class="sidebar__link" href="/docs/guides/orgs">Organizations: run a family of X accounts as a team</a>
       <a class="sidebar__link" href="/docs/guides/x402">Paying for XActions: x402 and MCP</a>
       <a class="sidebar__link" href="/docs/guides/plugins">Plugin System</a>
       <a class="sidebar__link" href="/docs/guides/streaming">Real-Time Streaming</a>
       <a class="sidebar__link" href="/docs/guides/streams">Real-time Streams — Live Twitter Monitoring</a>
       <a class="sidebar__link" href="/docs/guides/reputation-audit">Reputation audit: AI-score your own timeline, get a shareable card</a>
       <a class="sidebar__link" href="/docs/guides/rss-monitor">Rss Monitor</a>
+      <a class="sidebar__link" href="/docs/guides/scheduler">Scheduler &amp; Webhook Triggers</a>
       <a class="sidebar__link" href="/docs/guides/scrapers">Scrapers</a>
       <a class="sidebar__link" href="/docs/guides/scraping-infrastructure">Scraping Infrastructure</a>
       <a class="sidebar__link" href="/docs/guides/scraping">Scraping Infrastructure</a>
@@ -156,6 +158,7 @@
       <a class="sidebar__link" href="/docs/guides/ai-api">XActions AI API Documentation</a>
       <a class="sidebar__link" href="/docs/guides/api-reference">XActions API Reference</a>
       <a class="sidebar__link" href="/docs/guides/automation">XActions Automation Framework Guide</a>
+      <a class="sidebar__link" href="/docs/guides/chat">XActions Chat</a>
       <a class="sidebar__link" href="/docs/guides/cli-reference">XActions CLI Reference</a>
       <a class="sidebar__link" href="/docs/guides/xactions-reference">XActions Complete Function Reference</a>
       <a class="sidebar__link" href="/docs/guides/readme">XActions Documentation</a>
@@ -271,16 +274,16 @@
 </blockquote>
 <h2 id="overview">Overview</h2>
 <p>XActions implements the <a target="_blank" rel="noopener noreferrer" href="https://github.com/google/A2A">A2A protocol</a> to allow AI agents (Claude, GPT, Gemini, custom agents) to communicate with the XActions X/Twitter automation toolkit using a standardized protocol.</p>
-<p>The A2A server exposes all 140+ XActions tools as A2A skills, supports real-time streaming via SSE, push notifications via webhooks, inter-agent authentication, multi-agent discovery, and complex task orchestration.</p>
+<p>The A2A server exposes every XActions MCP tool as an A2A skill, supports real-time streaming via SSE, push notifications via webhooks, inter-agent authentication, multi-agent discovery, and complex task orchestration.</p>
 <h2 id="quick-start">Quick Start</h2>
-<pre><code class="language-bash"># Start the A2A server
-node src/a2a/server.js
+<pre><code class="language-bash"># Issue a key for the calling agent (printed once)
+node src/a2a/index.js --create-key my-agent --preset standard
 
-# Or via CLI
+# Start the A2A server (binds 127.0.0.1:3100)
 node src/a2a/server.js
 
 # Verify it&#39;s running
-curl http://localhost:3100/a2a/health
+curl -H &quot;Authorization: ApiKey xa2a_...&quot; http://localhost:3100/a2a/health
 </code></pre>
 <h2 id="agent-card">Agent Card</h2>
 <p>Every A2A-compatible agent publishes a card at <code>/.well-known/agent.json</code>:</p>
@@ -352,17 +355,74 @@ curl -X POST http://localhost:3100/a2a/tasks \
 curl -N http://localhost:3100/a2a/tasks/&lt;taskId&gt;/stream
 </code></pre>
 <h2 id="authentication">Authentication</h2>
-<p>Two schemes are supported:</p>
-<h3 id="api-key">API Key</h3>
-<pre><code class="language-bash"># Generate a key
-node -e &quot;import(&#39;./src/a2a/auth.js&#39;).then(m =&gt; m.generateApiKey(&#39;my-agent&#39;).then(k =&gt; console.log(k)))&quot;
-
-# Use it
-curl -H &quot;X-Api-Key: xa2a_...&quot; http://localhost:3100/a2a/health
+<p>Every <code>/a2a</code> route requires a credential, <code>/a2a/health</code> included. Only the
+agent card at <code>/.well-known/agent.json</code> is public. A server that anyone could
+reach would let any web page, or anyone on the network, post and follow as the
+account, so authentication is on unless you switch it off explicitly.</p>
+<p>Issue an API key for each calling agent. It is printed once and stored only as
+a hash under <code>XACTIONS_HOME</code>:</p>
+<pre><code class="language-bash">node src/a2a/index.js --create-key my-agent --preset standard
 </code></pre>
-<h3 id="jwt">JWT</h3>
-<pre><code class="language-bash">curl -H &quot;Authorization: Bearer &lt;jwt-token&gt;&quot; http://localhost:3100/a2a/tasks
+<p>Send it as <code>Authorization: ApiKey &lt;key&gt;</code>; a JWT goes in
+<code>Authorization: Bearer &lt;token&gt;</code>:</p>
+<pre><code class="language-bash">curl -H &quot;Authorization: ApiKey xa2a_...&quot; http://localhost:3100/a2a/health
 </code></pre>
+<table>
+<thead>
+<tr>
+<th>Preset</th>
+<th>Permissions</th>
+<th>Can run write tools</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>readonly</code> (default)</td>
+<td><code>read</code>, <code>scrape</code>, <code>analytics</code></td>
+<td>no</td>
+</tr>
+<tr>
+<td><code>standard</code></td>
+<td>adds <code>write</code>, <code>follow</code></td>
+<td>yes</td>
+</tr>
+<tr>
+<td><code>full</code></td>
+<td>every permission, including <code>admin</code> (needed for discovery and skill refresh)</td>
+<td>yes</td>
+</tr>
+</tbody></table>
+<p>Write tools go through the same safety net as the MCP server: with
+<code>XACTIONS_MCP_REQUIRE_APPROVAL=1</code> each write is saved as a draft for
+<code>xactions drafts approve</code>, and every write is charged against the daily action
+caps.</p>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>Effect</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>A2A_HOST</code></td>
+<td>Interface to bind. Default <code>127.0.0.1</code>; anything else logs a warning</td>
+</tr>
+<tr>
+<td><code>A2A_CORS_ORIGINS</code></td>
+<td>Comma-separated browser origins allowed to call the API. Default none</td>
+</tr>
+<tr>
+<td><code>XACTIONS_A2A_ALLOW_UNAUTHENTICATED=1</code></td>
+<td>Turn authentication off (same as <code>enableAuth: false</code> or <code>--no-auth</code>). Never on a reachable interface</td>
+</tr>
+<tr>
+<td><code>XACTIONS_A2A_ALLOW_PRIVATE=true</code></td>
+<td>Allow push-notification and discovery URLs on private or loopback addresses (refused by default)</td>
+</tr>
+<tr>
+<td><code>XACTIONS_A2A_KEY</code></td>
+<td>The key the client helpers in <code>src/a2a/index.js</code> send to a running agent</td>
+</tr>
+</tbody></table>
 <h2 id="multi-agent-orchestration">Multi-Agent Orchestration</h2>
 <p>Complex tasks are automatically decomposed:</p>
 <pre><code class="language-bash">curl -X POST http://localhost:3100/a2a/orchestrate \
@@ -480,14 +540,14 @@ const result = await agent.orchestrator.execute(&#39;analyze @nichxbt and post f
     </article>
 
     <div class="page-meta">
-      <span>1 min read</span>
+      <span>3 min read</span>
       <a href="https://github.com/nirholas/XActions/edit/main/docs/a2a-protocol.md" target="_blank" rel="noopener">Edit this page</a>
       <a href="https://github.com/nirholas/XActions/issues/new?title=Docs%3A%20A2A%20Protocol%20%E2%80%94%20XActions" target="_blank" rel="noopener">Report a problem</a>
     </div>
 
     <nav class="page-nav" aria-label="Previous and next">
       <a class="page-nav__link" href="/docs/guides/a2a-api-reference"><span class="page-nav__dir">← Previous</span><span class="page-nav__title">A2A API Reference — XActions</span></a>
-      <a class="page-nav__link page-nav__link--next" href="/docs/guides/portability"><span class="page-nav__dir">Next →</span><span class="page-nav__title">Account Portability — Export, Migrate &amp; Diff</span></a>
+      <a class="page-nav__link page-nav__link--next" href="/docs/guides/brief"><span class="page-nav__dir">Next →</span><span class="page-nav__title">Account briefs: research the accounts you are about to tag</span></a>
     </nav>
 
     <div class="callout">

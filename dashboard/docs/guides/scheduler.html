@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>⏰ Scheduler &amp; Webhook Triggers — XActions Docs</title>
+<title>Scheduler &amp; Webhook Triggers — XActions Docs</title>
 <meta name="description" content="Cron-based task scheduling with job history, retries, templates, and external webhook triggers. Competes with Hypefury, Buffer, and Zapier.">
 <meta name="keywords" content="xactions, twitter automation, x automation, free, open source, scheduler, webhook, triggers, guides &amp; reference">
 <meta name="author" content="nich (@nichxbt)">
@@ -11,7 +11,7 @@
 <meta name="color-scheme" content="light dark">
 
 <meta property="og:type" content="article">
-<meta property="og:title" content="⏰ Scheduler &amp; Webhook Triggers — XActions">
+<meta property="og:title" content="Scheduler &amp; Webhook Triggers — XActions">
 <meta property="og:description" content="Cron-based task scheduling with job history, retries, templates, and external webhook triggers. Competes with Hypefury, Buffer, and Zapier.">
 <meta property="og:url" content="https://xactions.app/docs/guides/scheduler">
 <meta property="og:image" content="https://xactions.app/og-docs.png">
@@ -19,7 +19,7 @@
 
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:site" content="@nichxbt">
-<meta name="twitter:title" content="⏰ Scheduler &amp; Webhook Triggers — XActions">
+<meta name="twitter:title" content="Scheduler &amp; Webhook Triggers — XActions">
 <meta name="twitter:description" content="Cron-based task scheduling with job history, retries, templates, and external webhook triggers. Competes with Hypefury, Buffer, and Zapier.">
 <meta name="twitter:image" content="https://xactions.app/og-docs.png">
 
@@ -37,7 +37,7 @@
 {
   "@context": "https://schema.org",
   "@type": "TechArticle",
-  "headline": "⏰ Scheduler & Webhook Triggers — XActions Docs",
+  "headline": "Scheduler & Webhook Triggers — XActions Docs",
   "description": "Cron-based task scheduling with job history, retries, templates, and external webhook triggers. Competes with Hypefury, Buffer, and Zapier.",
   "url": "https://xactions.app/docs/guides/scheduler",
   "image": "https://xactions.app/og-docs.png",
@@ -58,7 +58,7 @@
     { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
     { "@type": "ListItem", "position": 2, "name": "Docs", "item": "https://xactions.app/docs" },
     { "@type": "ListItem", "position": 3, "name": "Guides & Reference", "item": "https://xactions.app/docs" },
-    { "@type": "ListItem", "position": 4, "name": "⏰ Scheduler & Webhook Triggers", "item": "https://xactions.app/docs/guides/scheduler" }
+    { "@type": "ListItem", "position": 4, "name": "Scheduler & Webhook Triggers", "item": "https://xactions.app/docs/guides/scheduler" }
   ]
 }
 </script>
@@ -88,9 +88,9 @@
   <aside class="sidebar" aria-label="Documentation sections">
     <div class="sidebar__group">
       <div class="sidebar__heading">Guides &amp; Reference</div>
-      <a class="sidebar__link" href="/docs/guides/scheduler" aria-current="page">⏰ Scheduler &amp; Webhook Triggers</a>
       <a class="sidebar__link" href="/docs/guides/a2a-api-reference">A2A API Reference — XActions</a>
       <a class="sidebar__link" href="/docs/guides/a2a-protocol">A2A Protocol — XActions</a>
+      <a class="sidebar__link" href="/docs/guides/brief">Account briefs: research the accounts you are about to tag</a>
       <a class="sidebar__link" href="/docs/guides/portability">Account Portability — Export, Migrate &amp; Diff</a>
       <a class="sidebar__link" href="/docs/guides/algorithm-builder">Algorithm Builder — 24/7 Niche Growth Automation</a>
       <a class="sidebar__link" href="/docs/guides/analytics-advanced">Analytics &amp; Sentiment Analysis</a>
@@ -117,12 +117,14 @@
       <a class="sidebar__link" href="/docs/guides/media-archive">Media archive</a>
       <a class="sidebar__link" href="/docs/guides/monitoring">Monitoring Guide</a>
       <a class="sidebar__link" href="/docs/guides/notifications">Notifications</a>
+      <a class="sidebar__link" href="/docs/guides/orgs">Organizations: run a family of X accounts as a team</a>
       <a class="sidebar__link" href="/docs/guides/x402">Paying for XActions: x402 and MCP</a>
       <a class="sidebar__link" href="/docs/guides/plugins">Plugin System</a>
       <a class="sidebar__link" href="/docs/guides/streaming">Real-Time Streaming</a>
       <a class="sidebar__link" href="/docs/guides/streams">Real-time Streams — Live Twitter Monitoring</a>
       <a class="sidebar__link" href="/docs/guides/reputation-audit">Reputation audit: AI-score your own timeline, get a shareable card</a>
       <a class="sidebar__link" href="/docs/guides/rss-monitor">Rss Monitor</a>
+      <a class="sidebar__link" href="/docs/guides/scheduler" aria-current="page">Scheduler &amp; Webhook Triggers</a>
       <a class="sidebar__link" href="/docs/guides/scrapers">Scrapers</a>
       <a class="sidebar__link" href="/docs/guides/scraping-infrastructure">Scraping Infrastructure</a>
       <a class="sidebar__link" href="/docs/guides/scraping">Scraping Infrastructure</a>
@@ -156,6 +158,7 @@
       <a class="sidebar__link" href="/docs/guides/ai-api">XActions AI API Documentation</a>
       <a class="sidebar__link" href="/docs/guides/api-reference">XActions API Reference</a>
       <a class="sidebar__link" href="/docs/guides/automation">XActions Automation Framework Guide</a>
+      <a class="sidebar__link" href="/docs/guides/chat">XActions Chat</a>
       <a class="sidebar__link" href="/docs/guides/cli-reference">XActions CLI Reference</a>
       <a class="sidebar__link" href="/docs/guides/xactions-reference">XActions Complete Function Reference</a>
       <a class="sidebar__link" href="/docs/guides/readme">XActions Documentation</a>
@@ -259,13 +262,13 @@
 
   <main class="content" id="main">
     <nav class="breadcrumb" aria-label="Breadcrumb">
-      <a href="https://xactions.app">Home</a> <span aria-hidden="true">›</span> <a href="https://xactions.app/docs">Docs</a> <span aria-hidden="true">›</span> <a href="https://xactions.app/docs">Guides &amp; Reference</a> <span aria-hidden="true">›</span> <span>⏰ Scheduler &amp; Webhook Triggers</span>
+      <a href="https://xactions.app">Home</a> <span aria-hidden="true">›</span> <a href="https://xactions.app/docs">Docs</a> <span aria-hidden="true">›</span> <a href="https://xactions.app/docs">Guides &amp; Reference</a> <span aria-hidden="true">›</span> <span>Scheduler &amp; Webhook Triggers</span>
     </nav>
 
     <span class="eyebrow">📖 Guides &amp; Reference</span>
 
     <article class="prose">
-<h1 id="-scheduler-amp-webhook-triggers">⏰ Scheduler &amp; Webhook Triggers</h1>
+<h1 id="-scheduler--webhook-triggers">⏰ Scheduler &amp; Webhook Triggers</h1>
 <blockquote>
 <p>Cron-based task scheduling with job history, retries, templates, and external webhook triggers. Competes with <strong>Hypefury</strong>, <strong>Buffer</strong>, and <strong>Zapier</strong>.</p>
 </blockquote>
@@ -448,22 +451,31 @@ dashboard/calendar.html → Visual calendar UI
 </tbody></table>
 <hr>
 <h2 id="webhook-triggers">Webhook Triggers</h2>
-<p>External services (Zapier, n8n, IFTTT) can trigger scheduler jobs via HTTP:</p>
+<p>External services (Zapier, n8n, IFTTT) can trigger scheduler jobs via HTTP,
+once the routes are mounted with <code>mountWebhookRoutes(app)</code> from
+<code>src/scheduler/webhookTrigger.js</code>. Every route needs a secret, sent in the
+<code>X-Webhook-Secret</code> header (or <code>Authorization: Bearer &lt;secret&gt;</code>).</p>
 <h3 id="trigger-a-job">Trigger a Job</h3>
+<p>A job is triggerable only once it has a secret: <code>scheduler.setWebhookSecret(&#39;daily-snapshot&#39;)</code>
+generates one (or pass <code>webhookSecret</code>, at least 16 characters, to <code>addJob</code>).
+A job without one answers 403.</p>
 <pre><code class="language-bash">POST /api/webhooks/trigger/daily-snapshot
 Content-Type: application/json
+X-Webhook-Secret: &lt;the job&#39;s secret&gt;
 
 {
   &quot;data&quot;: { &quot;username&quot;: &quot;nichxbt&quot; }
 }
 </code></pre>
-<p>Optional secret: <code>POST /api/webhooks/trigger/daily-snapshot?secret=your-secret</code></p>
-<h3 id="list-webhook-endpoints">List Webhook Endpoints</h3>
-<pre><code class="language-bash">GET /api/webhooks
-</code></pre>
+<p><code>?secret=</code> in the query string is still read for old callers, but query
+strings end up in proxy and access logs. Send the header.</p>
 <h3 id="generic-data-ingestion">Generic Data Ingestion</h3>
+<p>Emits <code>webhook:received</code> on the scheduler. Needs the ingest secret, set with
+<code>XACTIONS_SCHEDULER_INGEST_SECRET</code> (or <code>mountWebhookRoutes(app, { ingestSecret })</code>),
+at least 16 characters; with none set the route answers 403.</p>
 <pre><code class="language-bash">POST /api/webhooks/ingest
 Content-Type: application/json
+X-Webhook-Secret: &lt;the ingest secret&gt;
 
 {
   &quot;source&quot;: &quot;zapier&quot;,
@@ -471,6 +483,8 @@ Content-Type: application/json
   &quot;data&quot;: { &quot;username&quot;: &quot;newuser123&quot; }
 }
 </code></pre>
+<p>There is no route that lists jobs: <code>GET /api/webhooks</code> answered every job&#39;s
+name to anyone who asked, and was removed.</p>
 <hr>
 <h2 id="function-reference">Function Reference</h2>
 <h3 id="scheduler-class">Scheduler Class</h3>
@@ -548,7 +562,7 @@ Content-Type: application/json
 </tr>
 <tr>
 <td><code>webhook:received</code></td>
-<td><code>{ source, data }</code></td>
+<td><code>{ source, event, data, receivedAt }</code></td>
 <td>Webhook data received</td>
 </tr>
 </tbody></table>
@@ -582,14 +596,14 @@ Content-Type: application/json
     </article>
 
     <div class="page-meta">
-      <span>2 min read</span>
+      <span>3 min read</span>
       <a href="https://github.com/nirholas/XActions/edit/main/docs/scheduler.md" target="_blank" rel="noopener">Edit this page</a>
-      <a href="https://github.com/nirholas/XActions/issues/new?title=Docs%3A%20%E2%8F%B0%20Scheduler%20%26%20Webhook%20Triggers" target="_blank" rel="noopener">Report a problem</a>
+      <a href="https://github.com/nirholas/XActions/issues/new?title=Docs%3A%20Scheduler%20%26%20Webhook%20Triggers" target="_blank" rel="noopener">Report a problem</a>
     </div>
 
     <nav class="page-nav" aria-label="Previous and next">
-      <span></span>
-      <a class="page-nav__link page-nav__link--next" href="/docs/guides/a2a-api-reference"><span class="page-nav__dir">Next →</span><span class="page-nav__title">A2A API Reference — XActions</span></a>
+      <a class="page-nav__link" href="/docs/guides/rss-monitor"><span class="page-nav__dir">← Previous</span><span class="page-nav__title">Rss Monitor</span></a>
+      <a class="page-nav__link page-nav__link--next" href="/docs/guides/scrapers"><span class="page-nav__dir">Next →</span><span class="page-nav__title">Scrapers</span></a>
     </nav>
 
     <div class="callout">

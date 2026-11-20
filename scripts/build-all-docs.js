@@ -233,6 +233,10 @@ function headingSlug(text) {
     .trim()
     .toLowerCase()
     .replace(/<[^>]*>/g, '')
+    // The text arrives HTML-escaped: "A & B" is "A &amp; B" here. GitHub
+    // drops the "&" and keeps both spaces ("a--b"), so drop the entity whole
+    // rather than letting it leave "amp" behind.
+    .replace(/&(?:[a-z]+|#\d+|#x[\da-f]+);/gi, '')
     .replace(/[^\w\s-]/g, '')
     .replace(/\s/g, '-');
 }

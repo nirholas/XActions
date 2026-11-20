@@ -88,9 +88,9 @@
   <aside class="sidebar" aria-label="Documentation sections">
     <div class="sidebar__group">
       <div class="sidebar__heading">Guides &amp; Reference</div>
-      <a class="sidebar__link" href="/docs/guides/scheduler">⏰ Scheduler &amp; Webhook Triggers</a>
       <a class="sidebar__link" href="/docs/guides/a2a-api-reference">A2A API Reference — XActions</a>
       <a class="sidebar__link" href="/docs/guides/a2a-protocol">A2A Protocol — XActions</a>
+      <a class="sidebar__link" href="/docs/guides/brief">Account briefs: research the accounts you are about to tag</a>
       <a class="sidebar__link" href="/docs/guides/portability">Account Portability — Export, Migrate &amp; Diff</a>
       <a class="sidebar__link" href="/docs/guides/algorithm-builder">Algorithm Builder — 24/7 Niche Growth Automation</a>
       <a class="sidebar__link" href="/docs/guides/analytics-advanced">Analytics &amp; Sentiment Analysis</a>
@@ -117,12 +117,14 @@
       <a class="sidebar__link" href="/docs/guides/media-archive">Media archive</a>
       <a class="sidebar__link" href="/docs/guides/monitoring">Monitoring Guide</a>
       <a class="sidebar__link" href="/docs/guides/notifications">Notifications</a>
+      <a class="sidebar__link" href="/docs/guides/orgs">Organizations: run a family of X accounts as a team</a>
       <a class="sidebar__link" href="/docs/guides/x402">Paying for XActions: x402 and MCP</a>
       <a class="sidebar__link" href="/docs/guides/plugins">Plugin System</a>
       <a class="sidebar__link" href="/docs/guides/streaming">Real-Time Streaming</a>
       <a class="sidebar__link" href="/docs/guides/streams">Real-time Streams — Live Twitter Monitoring</a>
       <a class="sidebar__link" href="/docs/guides/reputation-audit">Reputation audit: AI-score your own timeline, get a shareable card</a>
       <a class="sidebar__link" href="/docs/guides/rss-monitor">Rss Monitor</a>
+      <a class="sidebar__link" href="/docs/guides/scheduler">Scheduler &amp; Webhook Triggers</a>
       <a class="sidebar__link" href="/docs/guides/scrapers">Scrapers</a>
       <a class="sidebar__link" href="/docs/guides/scraping-infrastructure">Scraping Infrastructure</a>
       <a class="sidebar__link" href="/docs/guides/scraping">Scraping Infrastructure</a>
@@ -156,6 +158,7 @@
       <a class="sidebar__link" href="/docs/guides/ai-api">XActions AI API Documentation</a>
       <a class="sidebar__link" href="/docs/guides/api-reference">XActions API Reference</a>
       <a class="sidebar__link" href="/docs/guides/automation">XActions Automation Framework Guide</a>
+      <a class="sidebar__link" href="/docs/guides/chat">XActions Chat</a>
       <a class="sidebar__link" href="/docs/guides/cli-reference">XActions CLI Reference</a>
       <a class="sidebar__link" href="/docs/guides/xactions-reference">XActions Complete Function Reference</a>
       <a class="sidebar__link" href="/docs/guides/readme">XActions Documentation</a>
@@ -317,8 +320,8 @@
 <li><strong>Windows/Linux:</strong> <code>Ctrl + Shift + J</code></li>
 <li><strong>Mac:</strong> <code>Cmd + Option + J</code></li>
 </ul>
-<h3 id="3-copy-amp-paste-a-script">3. Copy &amp; Paste a Script</h3>
-<p>Go to the <a target="_blank" rel="noopener noreferrer" href="https://github.com/nirholas/XActions/tree/main/src">src/ folder</a> on GitHub, open a script, click <strong>Copy raw file</strong>, paste into the console, and press Enter.</p>
+<h3 id="3-copy--paste-a-script">3. Copy &amp; Paste a Script</h3>
+<p>Go to the <a target="_blank" rel="noopener noreferrer" href="https://github.com/nirholas/XActions/tree/main/browser">browser/ folder</a> on GitHub, open a script, click <strong>Copy raw file</strong>, paste into the console, and press Enter.</p>
 <p><strong>Popular scripts:</strong></p>
 <table>
 <thead>
@@ -359,7 +362,7 @@ xactions profile elonmusk --json
 xactions followers elonmusk --limit 500 --output followers.csv
 xactions non-followers myhandle
 </code></pre>
-<p>See the full <a href="/docs/guides/cli-reference">CLI Reference</a> for all 56 commands.</p>
+<p>See the full <a href="/docs/guides/cli-reference">CLI Reference</a> for all 59 commands.</p>
 <p>Two global flags make the CLI easy to pipe into another program: <code>--compact</code>
 prints one record per line with no colours or spinners, and <code>--fields</code> picks
 the columns.</p>
@@ -437,7 +440,7 @@ const masto = await scrape(&#39;mastodon&#39;, &#39;profile&#39;, {
 <p>Generate this config automatically:</p>
 <pre><code class="language-bash">xactions mcp-config
 </code></pre>
-<p>153 MCP tools are available: scraping, posting, engagement, analytics, streaming, and more. See <a href="/docs/guides/mcp-setup">MCP Setup</a>.</p>
+<p>160 MCP tools are available: scraping, posting, engagement, analytics, streaming, and more. See <a href="/docs/guides/mcp-setup">MCP Setup</a>.</p>
 <p>Three flags shape what an agent gets. Run <code>npx xactions-mcp --help</code> for the full list.</p>
 <pre><code class="language-bash">npx xactions-mcp --list-groups                 # every tool group and its tools
 npx xactions-mcp --tools read,analytics        # expose only these groups (or tool names, or prefix* patterns)
@@ -525,7 +528,7 @@ Or, in DevTools (Application, then Cookies, then <code>https://x.com</code>), co
 </tr>
 </tbody></table>
 <hr>
-<h2 id="rate-limits-amp-safety">Rate Limits &amp; Safety</h2>
+<h2 id="rate-limits--safety">Rate Limits &amp; Safety</h2>
 <p>X/Twitter enforces aggressive rate limits. All XActions tools include built-in delays, but follow these guidelines:</p>
 <ul>
 <li><strong>Start small.</strong> Test with 10-20 actions before scaling up.</li>
@@ -539,7 +542,7 @@ persistent per-account daily budget (400 follows, 500 likes, 500 DMs, 2,400
 posts by default), and a call that would go over is refused before it reaches
 X. Ask an agent to call <code>x_action_budget</code> to see what is left.</p>
 <hr>
-<h2 id="what39s-next">What&#39;s Next?</h2>
+<h2 id="whats-next">What&#39;s Next?</h2>
 <table>
 <thead>
 <tr>
@@ -549,7 +552,7 @@ X. Ask an agent to call <code>x_action_budget</code> to see what is left.</p>
 </thead>
 <tbody><tr>
 <td><a href="/docs/guides/cli-reference">CLI Reference</a></td>
-<td>All 56 CLI commands</td>
+<td>All 59 CLI commands</td>
 </tr>
 <tr>
 <td><a href="/docs/guides/api-reference">API Reference</a></td>
@@ -601,9 +604,9 @@ X. Ask an agent to call <code>x_action_budget</code> to see what is left.</p>
 <hr>
 <h2 id="where-to-go-next">Where to go next</h2>
 <ul>
-<li><strong><a href="../tutorials/">Tutorials</a></strong>: guided walkthroughs, starting with
+<li><strong><a href="https://github.com/nirholas/XActions/tree/main/tutorials">Tutorials</a></strong>: guided walkthroughs, starting with
 <a href="/docs/learn/your-first-scrape">your first scrape</a></li>
-<li><strong><a href="../examples/">Examples</a></strong>: runnable Node.js programs, each verified
+<li><strong><a href="https://github.com/nirholas/XActions/tree/main/examples">Examples</a></strong>: runnable Node.js programs, each verified
 against the live API</li>
 <li><strong><a href="/docs/guides/browser-scripts">Browser scripts</a></strong>: the full catalog of console scripts</li>
 <li><strong><a href="/docs/guides/troubleshooting">Troubleshooting</a></strong>: when something does not work</li>

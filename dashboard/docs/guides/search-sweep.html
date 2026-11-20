@@ -88,9 +88,9 @@
   <aside class="sidebar" aria-label="Documentation sections">
     <div class="sidebar__group">
       <div class="sidebar__heading">Guides &amp; Reference</div>
-      <a class="sidebar__link" href="/docs/guides/scheduler">⏰ Scheduler &amp; Webhook Triggers</a>
       <a class="sidebar__link" href="/docs/guides/a2a-api-reference">A2A API Reference — XActions</a>
       <a class="sidebar__link" href="/docs/guides/a2a-protocol">A2A Protocol — XActions</a>
+      <a class="sidebar__link" href="/docs/guides/brief">Account briefs: research the accounts you are about to tag</a>
       <a class="sidebar__link" href="/docs/guides/portability">Account Portability — Export, Migrate &amp; Diff</a>
       <a class="sidebar__link" href="/docs/guides/algorithm-builder">Algorithm Builder — 24/7 Niche Growth Automation</a>
       <a class="sidebar__link" href="/docs/guides/analytics-advanced">Analytics &amp; Sentiment Analysis</a>
@@ -117,12 +117,14 @@
       <a class="sidebar__link" href="/docs/guides/media-archive">Media archive</a>
       <a class="sidebar__link" href="/docs/guides/monitoring">Monitoring Guide</a>
       <a class="sidebar__link" href="/docs/guides/notifications">Notifications</a>
+      <a class="sidebar__link" href="/docs/guides/orgs">Organizations: run a family of X accounts as a team</a>
       <a class="sidebar__link" href="/docs/guides/x402">Paying for XActions: x402 and MCP</a>
       <a class="sidebar__link" href="/docs/guides/plugins">Plugin System</a>
       <a class="sidebar__link" href="/docs/guides/streaming">Real-Time Streaming</a>
       <a class="sidebar__link" href="/docs/guides/streams">Real-time Streams — Live Twitter Monitoring</a>
       <a class="sidebar__link" href="/docs/guides/reputation-audit">Reputation audit: AI-score your own timeline, get a shareable card</a>
       <a class="sidebar__link" href="/docs/guides/rss-monitor">Rss Monitor</a>
+      <a class="sidebar__link" href="/docs/guides/scheduler">Scheduler &amp; Webhook Triggers</a>
       <a class="sidebar__link" href="/docs/guides/scrapers">Scrapers</a>
       <a class="sidebar__link" href="/docs/guides/scraping-infrastructure">Scraping Infrastructure</a>
       <a class="sidebar__link" href="/docs/guides/scraping">Scraping Infrastructure</a>
@@ -156,6 +158,7 @@
       <a class="sidebar__link" href="/docs/guides/ai-api">XActions AI API Documentation</a>
       <a class="sidebar__link" href="/docs/guides/api-reference">XActions API Reference</a>
       <a class="sidebar__link" href="/docs/guides/automation">XActions Automation Framework Guide</a>
+      <a class="sidebar__link" href="/docs/guides/chat">XActions Chat</a>
       <a class="sidebar__link" href="/docs/guides/cli-reference">XActions CLI Reference</a>
       <a class="sidebar__link" href="/docs/guides/xactions-reference">XActions Complete Function Reference</a>
       <a class="sidebar__link" href="/docs/guides/readme">XActions Documentation</a>
@@ -273,7 +276,7 @@
 does find those posts, though:</p>
 <pre><code>https://x.com/search?q=from%3Acryptopumps%20%40nichxbt&amp;src=typed_query&amp;f=live
 </code></pre>
-<p><a href="../scripts/searchSweep.js"><code>scripts/searchSweep.js</code></a> takes that result list and
+<p><a href="https://github.com/nirholas/XActions/blob/main/scripts/searchSweep.js"><code>scripts/searchSweep.js</code></a> takes that result list and
 applies one action to every post in it: <strong>delete</strong>, <strong>like</strong>, <strong>repost</strong>, or
 <strong>reply</strong>. It runs in the browser console on x.com, with a floating panel, a dry
 run that touches nothing, and a memory of what it already did.</p>
@@ -284,7 +287,7 @@ run that touches nothing, and a memory of what it already did.</p>
 <code>https://x.com/search?q=from%3Ayou%20%40someone&amp;src=typed_query&amp;f=live</code>.
 Or open any search at all: the panel can build and run the query for you.</li>
 <li>Open DevTools (<kbd>F12</kbd>), Console tab.</li>
-<li>Paste <a href="../scripts/searchSweep.js"><code>scripts/searchSweep.js</code></a>. A panel appears bottom-right.</li>
+<li>Paste <a href="https://github.com/nirholas/XActions/blob/main/scripts/searchSweep.js"><code>scripts/searchSweep.js</code></a>. A panel appears bottom-right.</li>
 <li>It picks up whatever query is already in the address bar. Pick your action.
 Leave <strong>Dry run</strong> ticked. Click <strong>Start</strong>.</li>
 <li>Read the log. When it looks right, untick <strong>Dry run</strong> and start again.</li>
@@ -474,7 +477,7 @@ is replying to. x.com&#39;s Content-Security-Policy only lets the page reach a
 short list of hosts, and <code>https://api.x.ai</code> is one of them, so <strong>xAI (Grok)
 works straight from the console</strong> with your key from
 <a target="_blank" rel="noopener noreferrer" href="https://console.x.ai">console.x.ai</a>. For OpenAI, Anthropic, OpenRouter, or
-Ollama, install the <a href="../extension/">browser extension</a> and switch the provider
+Ollama, install the <a href="https://github.com/nirholas/XActions/tree/main/extension">browser extension</a> and switch the provider
 to the bridge. The key is only stored in the browser if you tick &quot;Remember&quot;,
 and it shares one slot with <code>engageProfile.js</code>.</li>
 </ul>
@@ -486,7 +489,7 @@ prints what it wrote, before any of it is published.</p>
 author, timestamp, first 200 characters, which actions ran, and any errors.
 <strong>Export</strong> in the panel writes the same file mid-run.</p>
 <p>If you are deleting, export your posts first. There is no undo.
-<a href="../scripts/backupAccount.js"><code>scripts/backupAccount.js</code></a> writes the archive.</p>
+<a href="https://github.com/nirholas/XActions/blob/main/scripts/backupAccount.js"><code>scripts/backupAccount.js</code></a> writes the archive.</p>
 <hr>
 <h2 id="console-api">Console API</h2>
 <p><code>window.XSearchSweep</code> is available once the panel is up:</p>
@@ -530,7 +533,7 @@ author, timestamp, first 200 characters, which actions ran, and any errors.
 <h2 id="related">Related</h2>
 <ul>
 <li><a href="/docs/guides/engage"><code>scripts/engageProfile.js</code></a> sweeps one profile&#39;s timeline instead of a search.</li>
-<li><a href="../browser/bulkDeleteTweets.js"><code>browser/bulkDeleteTweets.js</code></a> and <a href="../scripts/twitter/delete-tweets.js"><code>scripts/twitter/delete-tweets.js</code></a> delete from your own profile timeline, filtered by age, keywords, or engagement.</li>
+<li><a href="https://github.com/nirholas/XActions/blob/main/browser/bulkDeleteTweets.js"><code>browser/bulkDeleteTweets.js</code></a> and <a href="https://github.com/nirholas/XActions/blob/main/scripts/twitter/delete-tweets.js"><code>scripts/twitter/delete-tweets.js</code></a> delete from your own profile timeline, filtered by age, keywords, or engagement.</li>
 <li><a href="/docs/guides/browser-scripts"><code>docs/browser-scripts.md</code></a> is the full catalog.</li>
 <li><a href="/docs/guides/dom-selectors"><code>docs/dom-selectors.md</code></a> if X changes its markup and something stops finding the button.</li>
 </ul>

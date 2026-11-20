@@ -88,9 +88,9 @@
   <aside class="sidebar" aria-label="Documentation sections">
     <div class="sidebar__group">
       <div class="sidebar__heading">Guides &amp; Reference</div>
-      <a class="sidebar__link" href="/docs/guides/scheduler">⏰ Scheduler &amp; Webhook Triggers</a>
       <a class="sidebar__link" href="/docs/guides/a2a-api-reference">A2A API Reference — XActions</a>
       <a class="sidebar__link" href="/docs/guides/a2a-protocol">A2A Protocol — XActions</a>
+      <a class="sidebar__link" href="/docs/guides/brief">Account briefs: research the accounts you are about to tag</a>
       <a class="sidebar__link" href="/docs/guides/portability">Account Portability — Export, Migrate &amp; Diff</a>
       <a class="sidebar__link" href="/docs/guides/algorithm-builder">Algorithm Builder — 24/7 Niche Growth Automation</a>
       <a class="sidebar__link" href="/docs/guides/analytics-advanced">Analytics &amp; Sentiment Analysis</a>
@@ -117,12 +117,14 @@
       <a class="sidebar__link" href="/docs/guides/media-archive">Media archive</a>
       <a class="sidebar__link" href="/docs/guides/monitoring">Monitoring Guide</a>
       <a class="sidebar__link" href="/docs/guides/notifications">Notifications</a>
+      <a class="sidebar__link" href="/docs/guides/orgs">Organizations: run a family of X accounts as a team</a>
       <a class="sidebar__link" href="/docs/guides/x402">Paying for XActions: x402 and MCP</a>
       <a class="sidebar__link" href="/docs/guides/plugins">Plugin System</a>
       <a class="sidebar__link" href="/docs/guides/streaming">Real-Time Streaming</a>
       <a class="sidebar__link" href="/docs/guides/streams">Real-time Streams — Live Twitter Monitoring</a>
       <a class="sidebar__link" href="/docs/guides/reputation-audit">Reputation audit: AI-score your own timeline, get a shareable card</a>
       <a class="sidebar__link" href="/docs/guides/rss-monitor">Rss Monitor</a>
+      <a class="sidebar__link" href="/docs/guides/scheduler">Scheduler &amp; Webhook Triggers</a>
       <a class="sidebar__link" href="/docs/guides/scrapers">Scrapers</a>
       <a class="sidebar__link" href="/docs/guides/scraping-infrastructure">Scraping Infrastructure</a>
       <a class="sidebar__link" href="/docs/guides/scraping">Scraping Infrastructure</a>
@@ -156,6 +158,7 @@
       <a class="sidebar__link" href="/docs/guides/ai-api">XActions AI API Documentation</a>
       <a class="sidebar__link" href="/docs/guides/api-reference">XActions API Reference</a>
       <a class="sidebar__link" href="/docs/guides/automation">XActions Automation Framework Guide</a>
+      <a class="sidebar__link" href="/docs/guides/chat">XActions Chat</a>
       <a class="sidebar__link" href="/docs/guides/cli-reference">XActions CLI Reference</a>
       <a class="sidebar__link" href="/docs/guides/xactions-reference">XActions Complete Function Reference</a>
       <a class="sidebar__link" href="/docs/guides/readme">XActions Documentation</a>
@@ -275,21 +278,21 @@
 <h2 id="quick-start">Quick Start</h2>
 <h3 id="nodejs">Node.js</h3>
 <pre><code class="language-javascript">import {
-  createTeam, getTeam, inviteMember, removeMember,
+  createTeam, inviteUser, acceptInvite, removeUser, listTeamMembers,
   updateRole, checkPermission, getActivityLog
 } from &#39;xactions/src/auth/teamManager.js&#39;;
 
-// Create a team
-const team = await createTeam({
-  name: &#39;Growth Team&#39;,
-  owner: &#39;nichxbt&#39;
-});
+// Create a team (the owner is its first member)
+const team = await createTeam(&#39;Growth Team&#39;, &#39;nichxbt&#39;);
 
-// Invite a member
-await inviteMember(team.id, { email: &#39;alice@example.com&#39;, role: &#39;member&#39; });
+// Invite a member by email; they join with the token the invite returns
+const invite = await inviteUser(team.id, &#39;alice@example.com&#39;, &#39;member&#39;);
+await acceptInvite(invite.token, &#39;alice&#39;);
 
-// Update role
+// Update role, list members, remove someone
 await updateRole(team.id, &#39;alice&#39;, &#39;admin&#39;);
+const members = await listTeamMembers(team.id);
+await removeUser(team.id, &#39;alice&#39;);
 
 // Check permissions
 const canRun = checkPermission(&#39;member&#39;, &#39;run-actions&#39;);  // true
@@ -339,6 +342,12 @@ const log = await getActivityLog(team.id);
 <td>Get team activity log</td>
 </tr>
 </tbody></table>
+<p>Through the API, membership is keyed by user id, with the username kept on
+each entry for display, so renaming an account keeps its teams and whoever
+takes the old name inherits none of them. <code>:username</code> in a path names the
+account that holds that username now. Entries saved before ids were recorded
+are matched by username until their holder next signs in, then rewritten with
+the id. The CLI and MCP tools have no user ids and keep working by username.</p>
 <h3 id="create-a-team">Create a team</h3>
 <pre><code class="language-bash">curl -X POST http://localhost:3001/api/teams \
   -H &quot;Content-Type: application/json&quot; \
@@ -349,7 +358,7 @@ const log = await getActivityLog(team.id);
   -H &quot;Content-Type: application/json&quot; \
   -d &#39;{&quot;email&quot;: &quot;alice@example.com&quot;, &quot;role&quot;: &quot;member&quot;}&#39;
 </code></pre>
-<h2 id="roles-amp-permissions">Roles &amp; Permissions</h2>
+<h2 id="roles--permissions">Roles &amp; Permissions</h2>
 <table>
 <thead>
 <tr>
@@ -465,7 +474,7 @@ const log = await getActivityLog(team.id);
     </article>
 
     <div class="page-meta">
-      <span>1 min read</span>
+      <span>2 min read</span>
       <a href="https://github.com/nirholas/XActions/edit/main/docs/teams.md" target="_blank" rel="noopener">Edit this page</a>
       <a href="https://github.com/nirholas/XActions/issues/new?title=Docs%3A%20Team%20Management" target="_blank" rel="noopener">Report a problem</a>
     </div>

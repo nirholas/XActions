@@ -88,12 +88,12 @@
   <aside class="sidebar" aria-label="Documentation sections">
     <div class="sidebar__group">
       <div class="sidebar__heading">Guides &amp; Reference</div>
-      <a class="sidebar__link" href="/docs/guides/scheduler">⏰ Scheduler &amp; Webhook Triggers</a>
       <a class="sidebar__link" href="/docs/guides/a2a-api-reference">A2A API Reference — XActions</a>
       <a class="sidebar__link" href="/docs/guides/a2a-protocol">A2A Protocol — XActions</a>
+      <a class="sidebar__link" href="/docs/guides/brief">Account briefs: research the accounts you are about to tag</a>
       <a class="sidebar__link" href="/docs/guides/portability">Account Portability — Export, Migrate &amp; Diff</a>
       <a class="sidebar__link" href="/docs/guides/algorithm-builder">Algorithm Builder — 24/7 Niche Growth Automation</a>
-      <a class="sidebar__link" href="/docs">+ 72 more…</a>
+      <a class="sidebar__link" href="/docs">+ 75 more…</a>
     </div>
     <div class="sidebar__group">
       <div class="sidebar__heading">Tutorials</div>
@@ -225,16 +225,48 @@ npx prisma db push
 npm run dev          # the API server on http://localhost:3001
 npm run cli -- profile nasa   # or drive the CLI straight from the source tree
 </code></pre>
-<p>XActions needs Node.js 20 or newer (<code>engines.node</code> is <code>&gt;=20</code>). CI runs the test
-suite on 20, 22 and 24, so any of those is a safe local choice.</p>
+<p>XActions needs Node.js 22.19 or newer (<code>engines.node</code> is <code>&gt;=22.19</code>, the floor
+undici 8 sets). CI runs the test suite on 22 and 24, so either is a safe
+local choice.</p>
 <h2 id="-before-you-open-a-pr">✅ Before you open a PR</h2>
-<p>Three commands. All of them run in CI, so running them locally saves a round
-trip:</p>
-<pre><code class="language-bash">npm test              # the whole suite, offline, under a minute
+<p>These all run in CI, so running them locally saves a round trip:</p>
+<pre><code class="language-bash">npm test              # the whole suite, offline, under two minutes
 npm run lint          # ESLint over the whole repo
+npm run typecheck     # tsc over src/ and api/, against a per-file baseline
+npm run test:coverage # the suite again, failing if coverage drops below the floor
 npm run docs:check    # dead links, stale versions and counts, invented CLI commands
 npm run docs:scripts  # only if you added or renamed a browser console script
 </code></pre>
+<p><code>npm install</code> points git at <code>.githooks/</code>, whose pre-commit hook runs ESLint on
+the staged files and the type check (a few seconds). Skip it once with
+<code>git commit --no-verify</code>.</p>
+<p>Three of these checks are ratchets: they accept the debt that already exists
+and refuse anything new.</p>
+<table>
+<thead>
+<tr>
+<th>Check</th>
+<th>What it tolerates</th>
+<th>When you fix old problems</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>lint</code></td>
+<td>Violations recorded in <code>eslint-suppressions.json</code></td>
+<td><code>npx eslint . --prune-suppressions</code>, or lint fails on the unused entry</td>
+</tr>
+<tr>
+<td><code>typecheck</code></td>
+<td>Each file&#39;s error count in <code>config/typecheck-baseline.json</code>; a file not listed must have none</td>
+<td><code>npm run typecheck -- --update</code> (CI fails until the lower count is committed)</td>
+</tr>
+<tr>
+<td><code>test:coverage</code></td>
+<td>The <code>thresholds</code> in <code>vitest.config.js</code></td>
+<td>Raise them to just under the new numbers</td>
+</tr>
+</tbody></table>
+<p>Never regenerate a baseline to make a new error go away. Fix the error.</p>
 <p><code>docs:check</code> runs four checks in sequence: the browser-script catalog is
 regenerated and compared, the MCP registry manifests are compared, the Ask
 action index is compared, and then the documentation auditor runs. The auditor
@@ -336,9 +368,9 @@ most confusing thing this tool can do, and it has happened more than once.</li>
 </ol>
 <h2 id="-project-structure">🏗️ Project Structure</h2>
 <pre><code>xactions/
-├── src/              # Core modules
-│   ├── automation/   # Automation features
-│   └── *.js          # Main scripts
+├── src/              # Node library, CLI, MCP server
+│   └── automation/   # Automation features
+├── browser/          # Browser console scripts (paste into DevTools on x.com)
 ├── api/              # Backend API routes
 ├── dashboard/        # Frontend UI
 ├── docs/             # Documentation
@@ -360,6 +392,28 @@ mistakes that have cost people time here. Read it before your first PR.</p>
 <li><strong>Screenshots</strong> if applicable</li>
 <li><strong>Environment</strong> (browser, Node version, etc.)</li>
 </ul>
+<h2 id="releasing">Releasing</h2>
+<p>Releases are cut from GitHub&#39;s <code>main</code>, never from a local branch.</p>
+<ol>
+<li>Bump <code>version</code> in <code>package.json</code> above npm&#39;s current <code>latest</code> (<code>npm view xactions version</code>), run <code>node scripts/sync-registry.mjs</code>, and move the <code>[Unreleased]</code> notes in <code>CHANGELOG.md</code> under the new version. Merge that to <code>main</code>.</li>
+<li><code>npm run release:check</code> on a clean checkout of that commit.</li>
+<li>Tag it (<code>git tag vX.Y.Z &amp;&amp; git push origin vX.Y.Z</code>). <code>.github/workflows/release.yml</code> tests it, creates the GitHub Release and publishes to npm with provenance.</li>
+</ol>
+<p><code>npm publish</code> runs the same check through <code>prepublishOnly</code>, so a publish from your machine is refused unless HEAD is on <code>main</code>, the tree is clean and the version sorts above <code>latest</code>. Use a local publish only when Actions cannot run, and from a clean checkout of <code>main</code>.</p>
+<h2 id="credit">Credit</h2>
+<p>Everyone whose work changes XActions is credited in
+<a href="https://github.com/nirholas/XActions/blob/main/CONTRIBUTORS.md">CONTRIBUTORS.md</a>, not only in git history:</p>
+<ul>
+<li><strong>Merged code</strong> is credited to its author, including when a maintainer
+rebases or re-lands it in another PR.</li>
+<li><strong>A valid bug report</strong> (one that reproduces and leads to a fix) is credited
+to the reporter, with a link to the issue. The fixing commit carries a
+<code>Reported-by:</code> trailer and its CHANGELOG entry names you.</li>
+<li><strong>A closed PR whose finding was right</strong> is credited too, when the fix reached
+<code>main</code> another way.</li>
+</ul>
+<p>Questions, feature ideas that are not built, and reports that do not reproduce
+are welcome but are not listed. If you think you were missed, open an issue.</p>
 <h2 id="-questions">💬 Questions?</h2>
 <ul>
 <li>Open a <a target="_blank" rel="noopener noreferrer" href="https://github.com/nirholas/xactions/issues">GitHub Issue</a></li>
@@ -390,7 +444,7 @@ doubt, add the dependency instead of copying it.</p>
     </article>
 
     <div class="page-meta">
-      <span>4 min read</span>
+      <span>5 min read</span>
       <a href="https://github.com/nirholas/XActions/edit/main/CONTRIBUTING.md" target="_blank" rel="noopener">Edit this page</a>
       <a href="https://github.com/nirholas/XActions/issues/new?title=Docs%3A%20Contributing%20to%20XActions" target="_blank" rel="noopener">Report a problem</a>
     </div>

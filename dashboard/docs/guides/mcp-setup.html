@@ -88,9 +88,9 @@
   <aside class="sidebar" aria-label="Documentation sections">
     <div class="sidebar__group">
       <div class="sidebar__heading">Guides &amp; Reference</div>
-      <a class="sidebar__link" href="/docs/guides/scheduler">⏰ Scheduler &amp; Webhook Triggers</a>
       <a class="sidebar__link" href="/docs/guides/a2a-api-reference">A2A API Reference — XActions</a>
       <a class="sidebar__link" href="/docs/guides/a2a-protocol">A2A Protocol — XActions</a>
+      <a class="sidebar__link" href="/docs/guides/brief">Account briefs: research the accounts you are about to tag</a>
       <a class="sidebar__link" href="/docs/guides/portability">Account Portability — Export, Migrate &amp; Diff</a>
       <a class="sidebar__link" href="/docs/guides/algorithm-builder">Algorithm Builder — 24/7 Niche Growth Automation</a>
       <a class="sidebar__link" href="/docs/guides/analytics-advanced">Analytics &amp; Sentiment Analysis</a>
@@ -117,12 +117,14 @@
       <a class="sidebar__link" href="/docs/guides/media-archive">Media archive</a>
       <a class="sidebar__link" href="/docs/guides/monitoring">Monitoring Guide</a>
       <a class="sidebar__link" href="/docs/guides/notifications">Notifications</a>
+      <a class="sidebar__link" href="/docs/guides/orgs">Organizations: run a family of X accounts as a team</a>
       <a class="sidebar__link" href="/docs/guides/x402">Paying for XActions: x402 and MCP</a>
       <a class="sidebar__link" href="/docs/guides/plugins">Plugin System</a>
       <a class="sidebar__link" href="/docs/guides/streaming">Real-Time Streaming</a>
       <a class="sidebar__link" href="/docs/guides/streams">Real-time Streams — Live Twitter Monitoring</a>
       <a class="sidebar__link" href="/docs/guides/reputation-audit">Reputation audit: AI-score your own timeline, get a shareable card</a>
       <a class="sidebar__link" href="/docs/guides/rss-monitor">Rss Monitor</a>
+      <a class="sidebar__link" href="/docs/guides/scheduler">Scheduler &amp; Webhook Triggers</a>
       <a class="sidebar__link" href="/docs/guides/scrapers">Scrapers</a>
       <a class="sidebar__link" href="/docs/guides/scraping-infrastructure">Scraping Infrastructure</a>
       <a class="sidebar__link" href="/docs/guides/scraping">Scraping Infrastructure</a>
@@ -156,6 +158,7 @@
       <a class="sidebar__link" href="/docs/guides/ai-api">XActions AI API Documentation</a>
       <a class="sidebar__link" href="/docs/guides/api-reference">XActions API Reference</a>
       <a class="sidebar__link" href="/docs/guides/automation">XActions Automation Framework Guide</a>
+      <a class="sidebar__link" href="/docs/guides/chat">XActions Chat</a>
       <a class="sidebar__link" href="/docs/guides/cli-reference">XActions CLI Reference</a>
       <a class="sidebar__link" href="/docs/guides/xactions-reference">XActions Complete Function Reference</a>
       <a class="sidebar__link" href="/docs/guides/readme">XActions Documentation</a>
@@ -958,17 +961,17 @@ xactions-mcp
   }
 }
 </code></pre>
-<h3 id="quottool-not-foundquot-or-no-tools-showing">&quot;Tool not found&quot; or no tools showing</h3>
+<h3 id="tool-not-found-or-no-tools-showing">&quot;Tool not found&quot; or no tools showing</h3>
 <ol>
 <li>Make sure the MCP server is configured correctly in your client</li>
 <li>Restart your AI client after changing config</li>
 <li>Check that Node.js 18+ is installed: <code>node --version</code></li>
 </ol>
-<h3 id="quotcould-not-followunfollowpostquot">&quot;Could not follow/unfollow/post&quot;</h3>
+<h3 id="could-not-followunfollowpost">&quot;Could not follow/unfollow/post&quot;</h3>
 <p>Auth is required for action tools. Make sure <code>XACTIONS_SESSION_COOKIE</code> is set in your MCP config <code>env</code>.</p>
-<h3 id="quotopenrouter_api_key-requiredquot">&quot;OPENROUTER_API_KEY required&quot;</h3>
+<h3 id="openrouter_api_key-required">&quot;OPENROUTER_API_KEY required&quot;</h3>
 <p>AI tools (voice analysis, tweet generation, thread summarization) need an OpenRouter API key. Get a free one at <a target="_blank" rel="noopener noreferrer" href="https://openrouter.ai">openrouter.ai</a>.</p>
-<h3 id="server-won39t-start">Server won&#39;t start</h3>
+<h3 id="server-wont-start">Server won&#39;t start</h3>
 <pre><code class="language-bash"># Test manually
 node node_modules/xactions/src/mcp/server.js
 

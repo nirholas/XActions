@@ -14,6 +14,7 @@
   <meta property="og:title" content="Creator Monetization — XActions">
   <meta property="og:description" content="Tools for X/Twitter creator monetization — analytics, revenue tracking, subscriptions, and tips.">
   <meta property="og:url" content="https://xactions.app/docs/creator-monetization">
+  <meta property="og:image" content="https://xactions.app/og-docs.png">
   <meta property="og:site_name" content="XActions">
 
   <!-- Twitter Card -->
@@ -21,6 +22,7 @@
   <meta name="twitter:site" content="@nichxbt">
   <meta name="twitter:title" content="Creator Monetization — Free X/Twitter Tool">
   <meta name="twitter:description" content="Tools for X/Twitter creator monetization — analytics, revenue tracking, subscriptions, and tips.">
+  <meta name="twitter:image" content="https://xactions.app/og-docs.png">
 
   <link rel="canonical" href="https://xactions.app/docs/creator-monetization">
   <link rel="manifest" href="/manifest.json">
@@ -227,7 +229,7 @@
 })();
 </code></pre>
 <h2>📦 Node.js Module</h2>
-<pre><code class="language-javascript">import { getAccountAnalytics, getRevenue, getSubscribers } from &#39;xactions&#39;;
+<pre><code class="language-javascript">import { getAccountAnalytics, getRevenue, getSubscribers } from &#39;xactions/src/creatorStudio.js&#39;;
 
 // Get analytics overview
 const analytics = await getAccountAnalytics(page);
@@ -356,7 +358,7 @@ Input: {}
       </div>
     </div>
     <div class="footer-bottom">
-      <p>© 2024-2026 XActions. MIT License. No API fees. No limits.</p>
+      <p>© 2024-2026 XActions. Apache-2.0 licensed. No API fees. No limits.</p>
     </div>
   </footer>
 </body>

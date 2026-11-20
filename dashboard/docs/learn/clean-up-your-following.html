@@ -88,12 +88,12 @@
   <aside class="sidebar" aria-label="Documentation sections">
     <div class="sidebar__group">
       <div class="sidebar__heading">Guides &amp; Reference</div>
-      <a class="sidebar__link" href="/docs/guides/scheduler">⏰ Scheduler &amp; Webhook Triggers</a>
       <a class="sidebar__link" href="/docs/guides/a2a-api-reference">A2A API Reference — XActions</a>
       <a class="sidebar__link" href="/docs/guides/a2a-protocol">A2A Protocol — XActions</a>
+      <a class="sidebar__link" href="/docs/guides/brief">Account briefs: research the accounts you are about to tag</a>
       <a class="sidebar__link" href="/docs/guides/portability">Account Portability — Export, Migrate &amp; Diff</a>
       <a class="sidebar__link" href="/docs/guides/algorithm-builder">Algorithm Builder — 24/7 Niche Growth Automation</a>
-      <a class="sidebar__link" href="/docs">+ 72 more…</a>
+      <a class="sidebar__link" href="/docs">+ 75 more…</a>
     </div>
     <div class="sidebar__group">
       <div class="sidebar__heading">Tutorials</div>
@@ -291,7 +291,7 @@ noticing that you unfollowed them is not.</p>
 <ol>
 <li>Open <code>https://x.com/YOUR_USERNAME/following</code></li>
 <li>DevTools (<kbd>F12</kbd>) → <strong>Console</strong></li>
-<li>Paste <a href="../scripts/unfollowback.js"><code>scripts/unfollowback.js</code></a></li>
+<li>Paste <a href="https://github.com/nirholas/XActions/blob/main/scripts/unfollowback.js"><code>scripts/unfollowback.js</code></a></li>
 </ol>
 <p>Configure it <strong>before</strong> you paste:</p>
 <pre><code class="language-js">const CONFIG = {
@@ -306,7 +306,7 @@ noticing that you unfollowed them is not.</p>
 </code></pre>
 <p>Run once with <code>dryRun: true</code>. Read the output. It lists exactly who it would
 unfollow. Only then set <code>dryRun: false</code> and run again.</p>
-<p>Use <a href="../scripts/unfollowWDFBLog.js"><code>scripts/unfollowWDFBLog.js</code></a> instead if you
+<p>Use <a href="https://github.com/nirholas/XActions/blob/main/scripts/unfollowWDFBLog.js"><code>scripts/unfollowWDFBLog.js</code></a> instead if you
 want a downloadable log of everyone removed.</p>
 <h3 id="cli">CLI</h3>
 <p><code>bulk</code> takes the list you already saved and works through it with a checkpoint,
@@ -408,7 +408,7 @@ PostgreSQL. See <a href="/docs/guides/database#follower-history">docs/database.m
 <ul>
 <li><strong><a href="/docs/learn/build-a-brand-monitor">Tutorial 04 — Build a brand monitor</a></strong></li>
 <li><a href="/docs/guides/browser-scripts">Browser scripts</a> — the full catalog</li>
-<li><a href="../examples/06-find-non-followers.js">Example 06</a> — this analysis as a program</li>
+<li><a href="https://github.com/nirholas/XActions/blob/main/examples/06-find-non-followers.js">Example 06</a> — this analysis as a program</li>
 </ul>
 
     </article>

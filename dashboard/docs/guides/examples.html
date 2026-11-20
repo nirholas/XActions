@@ -88,9 +88,9 @@
   <aside class="sidebar" aria-label="Documentation sections">
     <div class="sidebar__group">
       <div class="sidebar__heading">Guides &amp; Reference</div>
-      <a class="sidebar__link" href="/docs/guides/scheduler">⏰ Scheduler &amp; Webhook Triggers</a>
       <a class="sidebar__link" href="/docs/guides/a2a-api-reference">A2A API Reference — XActions</a>
       <a class="sidebar__link" href="/docs/guides/a2a-protocol">A2A Protocol — XActions</a>
+      <a class="sidebar__link" href="/docs/guides/brief">Account briefs: research the accounts you are about to tag</a>
       <a class="sidebar__link" href="/docs/guides/portability">Account Portability — Export, Migrate &amp; Diff</a>
       <a class="sidebar__link" href="/docs/guides/algorithm-builder">Algorithm Builder — 24/7 Niche Growth Automation</a>
       <a class="sidebar__link" href="/docs/guides/analytics-advanced">Analytics &amp; Sentiment Analysis</a>
@@ -117,12 +117,14 @@
       <a class="sidebar__link" href="/docs/guides/media-archive">Media archive</a>
       <a class="sidebar__link" href="/docs/guides/monitoring">Monitoring Guide</a>
       <a class="sidebar__link" href="/docs/guides/notifications">Notifications</a>
+      <a class="sidebar__link" href="/docs/guides/orgs">Organizations: run a family of X accounts as a team</a>
       <a class="sidebar__link" href="/docs/guides/x402">Paying for XActions: x402 and MCP</a>
       <a class="sidebar__link" href="/docs/guides/plugins">Plugin System</a>
       <a class="sidebar__link" href="/docs/guides/streaming">Real-Time Streaming</a>
       <a class="sidebar__link" href="/docs/guides/streams">Real-time Streams — Live Twitter Monitoring</a>
       <a class="sidebar__link" href="/docs/guides/reputation-audit">Reputation audit: AI-score your own timeline, get a shareable card</a>
       <a class="sidebar__link" href="/docs/guides/rss-monitor">Rss Monitor</a>
+      <a class="sidebar__link" href="/docs/guides/scheduler">Scheduler &amp; Webhook Triggers</a>
       <a class="sidebar__link" href="/docs/guides/scrapers">Scrapers</a>
       <a class="sidebar__link" href="/docs/guides/scraping-infrastructure">Scraping Infrastructure</a>
       <a class="sidebar__link" href="/docs/guides/scraping">Scraping Infrastructure</a>
@@ -156,6 +158,7 @@
       <a class="sidebar__link" href="/docs/guides/ai-api">XActions AI API Documentation</a>
       <a class="sidebar__link" href="/docs/guides/api-reference">XActions API Reference</a>
       <a class="sidebar__link" href="/docs/guides/automation">XActions Automation Framework Guide</a>
+      <a class="sidebar__link" href="/docs/guides/chat">XActions Chat</a>
       <a class="sidebar__link" href="/docs/guides/cli-reference">XActions CLI Reference</a>
       <a class="sidebar__link" href="/docs/guides/xactions-reference">XActions Complete Function Reference</a>
       <a class="sidebar__link" href="/docs/guides/readme">XActions Documentation</a>
@@ -267,7 +270,7 @@
     <article class="prose">
 <h1 id="examples">Examples</h1>
 <p>Copy-paste snippets for the four ways to use XActions. For complete programs you
-can run and edit, see <a href="../examples/"><code>examples/</code></a> — eight of them, each verified
+can run and edit, see <a href="https://github.com/nirholas/XActions/tree/main/examples"><code>examples/</code></a> — eight of them, each verified
 against the live API.</p>
 <hr>
 <h2 id="command-line">Command line</h2>
@@ -332,7 +335,7 @@ rather than matching on message text:</p>
 <h2 id="browser-console">Browser console</h2>
 <p>Nothing installed at all. Open <code>x.com/YOUR_USERNAME/following</code>, open DevTools
 (<kbd>F12</kbd>) then the <strong>Console</strong> tab, and paste
-<a href="../scripts/unfollowback.js"><code>scripts/unfollowback.js</code></a>.</p>
+<a href="https://github.com/nirholas/XActions/blob/main/scripts/unfollowback.js"><code>scripts/unfollowback.js</code></a>.</p>
 <p>Every destructive script opens with <code>dryRun: true</code>, so the first run previews
 what it would do and changes nothing:</p>
 <pre><code class="language-js">const CONFIG = {
@@ -356,7 +359,7 @@ docker run -e XACTIONS_SESSION_COOKIE=your_auth_token xactions xactions follower
 </code></pre>
 <hr>
 <h2 id="ai-agents-mcp">AI agents (MCP)</h2>
-<p>Point Claude Desktop, Cursor, or Windsurf at the MCP server and it gets 144
+<p>Point Claude Desktop, Cursor, or Windsurf at the MCP server and it gets 160
 tools:</p>
 <pre><code class="language-json">{
   &quot;mcpServers&quot;: {
@@ -409,8 +412,8 @@ XActions turns them into an <code>AUTH_REQUIRED</code> error that says what to d
 <h2 id="next">Next</h2>
 <ul>
 <li><a href="/docs/guides/getting-started">Getting started</a> — pick an interface and set it up</li>
-<li><a href="../examples/">Runnable examples</a> — complete programs</li>
-<li><a href="../tutorials/">Tutorials</a> — guided walkthroughs</li>
+<li><a href="https://github.com/nirholas/XActions/tree/main/examples">Runnable examples</a> — complete programs</li>
+<li><a href="https://github.com/nirholas/XActions/tree/main/tutorials">Tutorials</a> — guided walkthroughs</li>
 <li><a href="/docs/guides/troubleshooting">Troubleshooting</a> — when something does not work</li>
 </ul>
 

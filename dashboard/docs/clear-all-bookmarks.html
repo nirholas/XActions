@@ -14,6 +14,7 @@
   <meta property="og:title" content="Clear All Bookmarks — XActions">
   <meta property="og:description" content="Remove all bookmarks from your X/Twitter account.">
   <meta property="og:url" content="https://xactions.app/docs/clear-all-bookmarks">
+  <meta property="og:image" content="https://xactions.app/og-docs.png">
   <meta property="og:site_name" content="XActions">
 
   <!-- Twitter Card -->
@@ -21,6 +22,7 @@
   <meta name="twitter:site" content="@nichxbt">
   <meta name="twitter:title" content="Clear All Bookmarks — Free X/Twitter Tool">
   <meta name="twitter:description" content="Remove all bookmarks from your X/Twitter account.">
+  <meta name="twitter:image" content="https://xactions.app/og-docs.png">
 
   <link rel="canonical" href="https://xactions.app/docs/clear-all-bookmarks">
   <link rel="manifest" href="/manifest.json">
@@ -233,6 +235,8 @@
 <ul>
 <li>The bulk clear option may not be available on all accounts</li>
 <li>If bulk clear fails, the script falls back to removing bookmarks individually</li>
+<li>If X redirects the bookmarks page to <code>x.com/i/history</code>, run the script there; it accepts both</li>
+<li>The MCP tool <code>x_clear_bookmarks</code> always removes bookmarks one at a time, counts a removal only once the post has left the feed, and stops instead of retrying a removal X did not confirm</li>
 <li>Consider running <code>browser/bookmarkOrganizer.js</code> first to export/categorize your bookmarks before deleting</li>
 <li>This action cannot be undone</li>
 </ul>
@@ -302,7 +306,7 @@
       </div>
     </div>
     <div class="footer-bottom">
-      <p>© 2024-2026 XActions. MIT License. No API fees. No limits.</p>
+      <p>© 2024-2026 XActions. Apache-2.0 licensed. No API fees. No limits.</p>
     </div>
   </footer>
 </body>

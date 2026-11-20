@@ -88,12 +88,12 @@
   <aside class="sidebar" aria-label="Documentation sections">
     <div class="sidebar__group">
       <div class="sidebar__heading">Guides &amp; Reference</div>
-      <a class="sidebar__link" href="/docs/guides/scheduler">⏰ Scheduler &amp; Webhook Triggers</a>
       <a class="sidebar__link" href="/docs/guides/a2a-api-reference">A2A API Reference — XActions</a>
       <a class="sidebar__link" href="/docs/guides/a2a-protocol">A2A Protocol — XActions</a>
+      <a class="sidebar__link" href="/docs/guides/brief">Account briefs: research the accounts you are about to tag</a>
       <a class="sidebar__link" href="/docs/guides/portability">Account Portability — Export, Migrate &amp; Diff</a>
       <a class="sidebar__link" href="/docs/guides/algorithm-builder">Algorithm Builder — 24/7 Niche Growth Automation</a>
-      <a class="sidebar__link" href="/docs">+ 72 more…</a>
+      <a class="sidebar__link" href="/docs">+ 75 more…</a>
     </div>
     <div class="sidebar__group">
       <div class="sidebar__heading">Tutorials</div>
@@ -253,7 +253,7 @@
 </ul>
 </li>
 </ol>
-<h3 id="part-2-setup-amp-authentication">Part 2: Setup &amp; Authentication</h3>
+<h3 id="part-2-setup--authentication">Part 2: Setup &amp; Authentication</h3>
 <p>Walk me through the complete setup:</p>
 <ol>
 <li><p><strong>Install dependencies:</strong></p>
@@ -321,7 +321,7 @@ export DEEPGRAM_API_KEY=&quot;...&quot;            # Alternative STT
 </ol>
 <h3 id="part-4-joining-a-space-via-nodejs">Part 4: Joining a Space via Node.js</h3>
 <p>For programmatic control:</p>
-<pre><code class="language-javascript">import { joinSpace, leaveSpace, getSpaceAgentStatus, getSpaceTranscript } from &#39;xactions/spaces/agent&#39;;
+<pre><code class="language-javascript">import { joinSpace, leaveSpace, getSpaceAgentStatus, getSpaceTranscript } from &#39;xactions/spaces&#39;;
 
 // Join with full configuration
 const result = await joinSpace({
@@ -593,7 +593,7 @@ await team.join(&#39;https://x.com/i/spaces/1abc123&#39;);
 <td><code>url</code></td>
 </tr>
 </tbody></table>
-<h3 id="part-11-monitoring-amp-debugging">Part 11: Monitoring &amp; Debugging</h3>
+<h3 id="part-11-monitoring--debugging">Part 11: Monitoring &amp; Debugging</h3>
 <p>Help me monitor and troubleshoot my Space agent:</p>
 <ol>
 <li><p><strong>Check if the agent is active:</strong></p>

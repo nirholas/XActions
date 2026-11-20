@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Organizations: run a family of X accounts as a team — XActions Docs</title>
+<meta name="description" content="xactions org is for teams that run several X accounts in the open: a newsroom with main, breaking and regional handles, a company with main, dev, status and s">
+<meta name="keywords" content="xactions, twitter automation, x automation, free, open source, orgs, organizations:, family, accounts, team, guides &amp; reference">
+<meta name="author" content="nich (@nichxbt)">
+<meta name="robots" content="index, follow, max-image-preview:large">
+<meta name="color-scheme" content="light dark">
+
+<meta property="og:type" content="article">
+<meta property="og:title" content="Organizations: run a family of X accounts as a team — XActions">
+<meta property="og:description" content="xactions org is for teams that run several X accounts in the open: a newsroom with main, breaking and regional handles, a company with main, dev, status and s">
+<meta property="og:url" content="https://xactions.app/docs/guides/orgs">
+<meta property="og:image" content="https://xactions.app/og-docs.png">
+<meta property="og:site_name" content="XActions">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@nichxbt">
+<meta name="twitter:title" content="Organizations: run a family of X accounts as a team — XActions">
+<meta name="twitter:description" content="xactions org is for teams that run several X accounts in the open: a newsroom with main, breaking and regional handles, a company with main, dev, status and s">
+<meta name="twitter:image" content="https://xactions.app/og-docs.png">
+
+<link rel="canonical" href="https://xactions.app/docs/guides/orgs">
+<link rel="manifest" href="/manifest.json">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+<link rel="stylesheet" href="/docs/assets/docs.css">
+
+<script>
+/* Applied before first paint so a dark-theme reader never sees a white flash. */
+(function(){try{var t=localStorage.getItem('xactions-theme');if(t==='light'||t==='dark'){document.documentElement.setAttribute('data-theme',t);}}catch(e){}})();
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "TechArticle",
+  "headline": "Organizations: run a family of X accounts as a team — XActions Docs",
+  "description": "xactions org is for teams that run several X accounts in the open: a newsroom with main, breaking and regional handles, a company with main, dev, status and s",
+  "url": "https://xactions.app/docs/guides/orgs",
+  "image": "https://xactions.app/og-docs.png",
+  "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
+  "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
+  "isAccessibleForFree": true,
+  "license": "https://www.apache.org/licenses/LICENSE-2.0",
+  "mainEntityOfPage": "https://xactions.app/docs/guides/orgs",
+  "articleSection": "Guides & Reference",
+  "keywords": "xactions, twitter automation, x automation, free, open source, orgs, organizations:, family, accounts, team, guides & reference"
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
+    { "@type": "ListItem", "position": 2, "name": "Docs", "item": "https://xactions.app/docs" },
+    { "@type": "ListItem", "position": 3, "name": "Guides & Reference", "item": "https://xactions.app/docs" },
+    { "@type": "ListItem", "position": 4, "name": "Organizations: run a family of X accounts as a team", "item": "https://xactions.app/docs/guides/orgs" }
+  ]
+}
+</script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="topbar">
+  <button class="icon-btn menu-toggle" data-menu-toggle aria-expanded="false" aria-label="Open navigation">☰</button>
+  <a class="topbar__brand" href="/">⚡ XActions</a>
+  <div class="topbar__spacer"></div>
+  <button class="search-trigger" data-search-trigger aria-label="Search documentation">
+    <span aria-hidden="true">🔍</span><span class="search-trigger__label">Search docs</span><kbd>⌘K</kbd>
+  </button>
+  <nav class="topbar__nav" aria-label="Main">
+    <a class="topbar__link" href="/docs" aria-current="page">Docs</a>
+    <a class="topbar__link" href="/tutorials">Tutorials</a>
+    <a class="topbar__link" href="/examples">Examples</a>
+    <a class="topbar__link" href="https://github.com/nirholas/XActions" target="_blank" rel="noopener">GitHub</a>
+  </nav>
+  <button class="icon-btn" data-theme-toggle aria-label="Switch theme">☾</button>
+</header>
+
+<div class="scrim" data-scrim></div>
+
+<div class="layout">
+  <aside class="sidebar" aria-label="Documentation sections">
+    <div class="sidebar__group">
+      <div class="sidebar__heading">Guides &amp; Reference</div>
+      <a class="sidebar__link" href="/docs/guides/a2a-api-reference">A2A API Reference — XActions</a>
+      <a class="sidebar__link" href="/docs/guides/a2a-protocol">A2A Protocol — XActions</a>
+      <a class="sidebar__link" href="/docs/guides/brief">Account briefs: research the accounts you are about to tag</a>
+      <a class="sidebar__link" href="/docs/guides/portability">Account Portability — Export, Migrate &amp; Diff</a>
+      <a class="sidebar__link" href="/docs/guides/algorithm-builder">Algorithm Builder — 24/7 Niche Growth Automation</a>
+      <a class="sidebar__link" href="/docs/guides/analytics-advanced">Analytics &amp; Sentiment Analysis</a>
+      <a class="sidebar__link" href="/docs/guides/architecture">Architecture</a>
+      <a class="sidebar__link" href="/docs/guides/ask">Ask XActions</a>
+      <a class="sidebar__link" href="/docs/guides/audience-overlap">Audience Overlap Analysis</a>
+      <a class="sidebar__link" href="/docs/guides/spaces-agent">Autonomous Space Agent</a>
+      <a class="sidebar__link" href="/docs/guides/browser-extension">Browser Extension</a>
+      <a class="sidebar__link" href="/docs/guides/browser-scripts">Browser Scripts</a>
+      <a class="sidebar__link" href="/docs/guides/bulk-operations">Bulk Operations</a>
+      <a class="sidebar__link" href="/docs/guides/configuration">Configuration</a>
+      <a class="sidebar__link" href="/docs/guides/content-calendar">Content Calendar</a>
+      <a class="sidebar__link" href="/docs/guides/control-panel">Control Panel — Browser Automation UI</a>
+      <a class="sidebar__link" href="/docs/guides/dashboard">Dashboard</a>
+      <a class="sidebar__link" href="/docs/guides/database">Database Schema</a>
+      <a class="sidebar__link" href="/docs/guides/deployment">Deployment Guide</a>
+      <a class="sidebar__link" href="/docs/guides/engagement-booster">Engagement Booster — Smart Tweet Engagement</a>
+      <a class="sidebar__link" href="/docs/guides/engage">Engagement sweeps: like, repost, and reply across a whole feed</a>
+      <a class="sidebar__link" href="/docs/guides/evergreen-recycler">Evergreen Content Recycler</a>
+      <a class="sidebar__link" href="/docs/guides/examples">Examples</a>
+      <a class="sidebar__link" href="/docs/guides/follower-crm">Follower CRM</a>
+      <a class="sidebar__link" href="/docs/guides/getting-started">Getting Started with XActions</a>
+      <a class="sidebar__link" href="/docs/guides/history-store">History Store &amp; Auto-Snapshots</a>
+      <a class="sidebar__link" href="/docs/guides/media-archive">Media archive</a>
+      <a class="sidebar__link" href="/docs/guides/monitoring">Monitoring Guide</a>
+      <a class="sidebar__link" href="/docs/guides/notifications">Notifications</a>
+      <a class="sidebar__link" href="/docs/guides/orgs" aria-current="page">Organizations: run a family of X accounts as a team</a>
+      <a class="sidebar__link" href="/docs/guides/x402">Paying for XActions: x402 and MCP</a>
+      <a class="sidebar__link" href="/docs/guides/plugins">Plugin System</a>
+      <a class="sidebar__link" href="/docs/guides/streaming">Real-Time Streaming</a>
+      <a class="sidebar__link" href="/docs/guides/streams">Real-time Streams — Live Twitter Monitoring</a>
+      <a class="sidebar__link" href="/docs/guides/reputation-audit">Reputation audit: AI-score your own timeline, get a shareable card</a>
+      <a class="sidebar__link" href="/docs/guides/rss-monitor">Rss Monitor</a>
+      <a class="sidebar__link" href="/docs/guides/scheduler">Scheduler &amp; Webhook Triggers</a>
+      <a class="sidebar__link" href="/docs/guides/scrapers">Scrapers</a>
+      <a class="sidebar__link" href="/docs/guides/scraping-infrastructure">Scraping Infrastructure</a>
+      <a class="sidebar__link" href="/docs/guides/scraping">Scraping Infrastructure</a>
+      <a class="sidebar__link" href="/docs/guides/analytics">Sentiment Analysis &amp; Reputation Monitoring</a>
+      <a class="sidebar__link" href="/docs/guides/skills">Skills Reference</a>
+      <a class="sidebar__link" href="/docs/guides/social-graph">Social Graph</a>
+      <a class="sidebar__link" href="/docs/guides/graph">Social Graph — Network Analysis &amp; Visualization</a>
+      <a class="sidebar__link" href="/docs/guides/graph-system">Social Graph System</a>
+      <a class="sidebar__link" href="/docs/guides/stealth-scraping">Stealth Scraping &amp; Proxy Rotation</a>
+      <a class="sidebar__link" href="/docs/guides/search-sweep">Sweep an X search: delete, like, repost, or reply to every result</a>
+      <a class="sidebar__link" href="/docs/guides/scheduling">Task Scheduling</a>
+      <a class="sidebar__link" href="/docs/guides/teams">Team Management</a>
+      <a class="sidebar__link" href="/docs/guides/cryptocurrency-api-guide">The Complete Guide to Cryptocurrency APIs in 2026</a>
+      <a class="sidebar__link" href="/docs/guides/mcp-remote">The hosted MCP server</a>
+      <a class="sidebar__link" href="/docs/guides/agents">Thought Leader Agent</a>
+      <a class="sidebar__link" href="/docs/guides/agent-advanced">Thought Leader Agent — Advanced Features</a>
+      <a class="sidebar__link" href="/docs/guides/agent-api-reference">Thought Leader Agent — API Reference</a>
+      <a class="sidebar__link" href="/docs/guides/agent-architecture">Thought Leader Agent — Architecture</a>
+      <a class="sidebar__link" href="/docs/guides/agent-config-reference">Thought Leader Agent — Configuration Reference</a>
+      <a class="sidebar__link" href="/docs/guides/agent-getting-started">Thought Leader Agent — Getting Started</a>
+      <a class="sidebar__link" href="/docs/guides/agent-system">Thought Leader Agent System</a>
+      <a class="sidebar__link" href="/docs/guides/troubleshooting">Troubleshooting</a>
+      <a class="sidebar__link" href="/docs/guides/price-correlation">Tweet-Price Correlation</a>
+      <a class="sidebar__link" href="/docs/guides/usage">Usage</a>
+      <a class="sidebar__link" href="/docs/guides/video-downloader">Video Downloader</a>
+      <a class="sidebar__link" href="/docs/guides/video">Video Engine — Programmatic Video Generation</a>
+      <a class="sidebar__link" href="/docs/guides/video-generation">Video Generation</a>
+      <a class="sidebar__link" href="/docs/guides/workflows">Workflow Engine</a>
+      <a class="sidebar__link" href="/docs/guides/x-developer-api-crypto-guide-2026">X Developer API in 2026: The Complete Guide for Crypto Builders</a>
+      <a class="sidebar__link" href="/docs/guides/dom-selectors">X/Twitter DOM Selector Reference</a>
+      <a class="sidebar__link" href="/docs/guides/ai-api">XActions AI API Documentation</a>
+      <a class="sidebar__link" href="/docs/guides/api-reference">XActions API Reference</a>
+      <a class="sidebar__link" href="/docs/guides/automation">XActions Automation Framework Guide</a>
+      <a class="sidebar__link" href="/docs/guides/chat">XActions Chat</a>
+      <a class="sidebar__link" href="/docs/guides/cli-reference">XActions CLI Reference</a>
+      <a class="sidebar__link" href="/docs/guides/xactions-reference">XActions Complete Function Reference</a>
+      <a class="sidebar__link" href="/docs/guides/readme">XActions Documentation</a>
+      <a class="sidebar__link" href="/docs/guides/extension-api">XActions Extension — Internal API Reference</a>
+      <a class="sidebar__link" href="/docs/guides/extension">XActions Extension — User Guide</a>
+      <a class="sidebar__link" href="/docs/guides/growth_strategy">XActions Growth Strategy: 76 → 100,000 Stars</a>
+      <a class="sidebar__link" href="/docs/guides/mcp-setup">XActions MCP Server Setup Guide</a>
+      <a class="sidebar__link" href="/docs/guides/rest-api">XActions REST API Reference</a>
+      <a class="sidebar__link" href="/docs/guides/feature_inventory">XActions v5.0.0: Complete Feature Inventory</a>
+    </div>
+    <div class="sidebar__group">
+      <div class="sidebar__heading">Tutorials</div>
+      <a class="sidebar__link" href="/docs/learn/your-first-scrape">Tutorial 01 — Your first scrape</a>
+      <a class="sidebar__link" href="/docs/learn/mcp-with-claude">Tutorial 02 — Claude that can use X</a>
+      <a class="sidebar__link" href="/docs/learn/clean-up-your-following">Tutorial 03 — Clean up your following list</a>
+      <a class="sidebar__link" href="/docs/learn/build-a-brand-monitor">Tutorial 04 — Build a brand monitor</a>
+      <a class="sidebar__link" href="/docs/learn/competitive-intelligence">05: Read any account like an analyst</a>
+      <a class="sidebar__link" href="/docs/learn/everything-is-json">06: Everything is JSON</a>
+      <a class="sidebar__link" href="/docs/learn/your-x-archive">07: Read your own X archive</a>
+      <a class="sidebar__link" href="/docs/learn/readme">Tutorials</a>
+    </div>
+    <div class="sidebar__group">
+      <div class="sidebar__heading">Developer Guides</div>
+      <a class="sidebar__link" href="/docs/guides/developer/contributing-features">Adding New Features</a>
+      <a class="sidebar__link" href="/docs/guides/developer/agent-troubleshooting">Agent Troubleshooting Guide</a>
+      <a class="sidebar__link" href="/docs/guides/developer/browser-script-patterns">Browser Script Patterns</a>
+      <a class="sidebar__link" href="/docs/guides/developer/selectors">X/Twitter DOM Selectors Reference</a>
+    </div>
+    <div class="sidebar__group">
+      <div class="sidebar__heading">Architecture</div>
+      <a class="sidebar__link" href="/docs/architecture/http-scraper">HTTP-Based Scraper — Architecture &amp; Implementation Plan</a>
+    </div>
+    <div class="sidebar__group">
+      <div class="sidebar__heading">Browser Automation</div>
+      <a class="sidebar__link" href="/docs/automation/advanced-techniques">Advanced Automation Techniques</a>
+      <a class="sidebar__link" href="/docs/automation/getting-started-browser">Getting Started with Browser Automation</a>
+      <a class="sidebar__link" href="/docs/automation/actions-reference">XActions Actions Library Reference (`actions.js`)</a>
+      <a class="sidebar__link" href="/docs/automation/scripts-reference">XActions Automation Scripts — Complete Reference</a>
+      <a class="sidebar__link" href="/docs/automation/core-reference">XActions Core Module Reference (`core.js`)</a>
+    </div>
+    <div class="sidebar__group">
+      <div class="sidebar__heading">Research &amp; Architecture</div>
+      <a class="sidebar__link" href="/docs/research/llm-powered-thought-leader">24/7 LLM-Powered Thought Leadership Agent — Architecture &amp; Implementation Guide</a>
+      <a class="sidebar__link" href="/docs/research/algorithm-cultivation">Algorithmic Feed Cultivation: A Technical Research Paper on Automated Thought Leadership via Platform Signal Training</a>
+    </div>
+    <div class="sidebar__group">
+      <div class="sidebar__heading">Case Studies</div>
+      <a class="sidebar__link" href="/docs/case-studies/robust-dom-extraction">Robust DOM Extraction: A Case Study in Browser Automation Resilience</a>
+    </div>
+    <div class="sidebar__group">
+      <div class="sidebar__heading">Agent Skills</div>
+      <a class="sidebar__link" href="/docs/skills/account-backup">Account Backup &amp; Data Export</a>
+      <a class="sidebar__link" href="/docs/skills/account-tools">Account Tools (Miscellaneous)</a>
+      <a class="sidebar__link" href="/docs/skills/algorithm-cultivation">Algorithm Cultivation &amp; Thought Leadership</a>
+      <a class="sidebar__link" href="/docs/skills/analytics-insights">Analytics &amp; Insights</a>
+      <a class="sidebar__link" href="/docs/skills/articles-longform">Articles &amp; Longform</a>
+      <a class="sidebar__link" href="/docs">+ 45 more…</a>
+    </div>
+    <div class="sidebar__group">
+      <div class="sidebar__heading">Skill References</div>
+      <a class="sidebar__link" href="/docs/skills/algorithm-cultivation-algorithm-internals">Algorithm Internals &amp; Architecture</a>
+      <a class="sidebar__link" href="/docs/skills/analytics-insights-script-configs">Analytics Script Configs</a>
+      <a class="sidebar__link" href="/docs/skills/blocking-muting-management-script-details">Blocking &amp; Muting Script Details</a>
+      <a class="sidebar__link" href="/docs/skills/algorithm-cultivation-browser-scripts">Browser Scripts Reference</a>
+      <a class="sidebar__link" href="/docs/skills/content-posting-script-configs">Content Posting Script Configs</a>
+      <a class="sidebar__link" href="/docs">+ 4 more…</a>
+    </div>
+    <div class="sidebar__group">
+      <div class="sidebar__heading">Claude Prompt Library</div>
+      <a class="sidebar__link" href="/docs/prompts/mcp-setup-and-first-commands">Tutorial: Setting Up XActions MCP Server with Claude</a>
+      <a class="sidebar__link" href="/docs/prompts/unfollow-non-followers-cleanup">Tutorial: Unfollow Non-Followers &amp; Follower Cleanup with Claude</a>
+      <a class="sidebar__link" href="/docs/prompts/growth-automation-suite">Tutorial: Growth Automation Suite — Grow Your X Account on Autopilot</a>
+      <a class="sidebar__link" href="/docs/prompts/scraping-research-analysis">Tutorial: Tweet Scraping, Profile Analysis &amp; Research with Claude</a>
+      <a class="sidebar__link" href="/docs/prompts/content-posting-threads-scheduling">Tutorial: Content Posting, Threads, Polls &amp; Scheduling with Claude</a>
+      <a class="sidebar__link" href="/docs">+ 19 more…</a>
+    </div>
+    <div class="sidebar__group">
+      <div class="sidebar__heading">Project Info</div>
+      <a class="sidebar__link" href="/docs/project/contributing">Contributing to XActions</a>
+      <a class="sidebar__link" href="/docs/project/changelog">Changelog</a>
+      <a class="sidebar__link" href="/docs/project/roadmap">Roadmap</a>
+      <a class="sidebar__link" href="/docs/project/security">Security Policy</a>
+      <a class="sidebar__link" href="/docs/project/code_of_conduct">Contributor Covenant Code of Conduct</a>
+      <a class="sidebar__link" href="/docs/project/readme">Quick start</a>
+    </div>
+    <div class="sidebar__group">
+      <div class="sidebar__heading">Extensions &amp; Plugins</div>
+      <a class="sidebar__link" href="/docs/extras/scripts">Chrome DevTools Console Scripts</a>
+      <a class="sidebar__link" href="/docs/extras/examples">Examples</a>
+      <a class="sidebar__link" href="/docs/extras/integrations-n8n">n8n-nodes-xactions</a>
+      <a class="sidebar__link" href="/docs/extras/extension">XActions Browser Extension</a>
+      <a class="sidebar__link" href="/docs/extras/src-plugins-excel">XActions Excel Plugin</a>
+      <a class="sidebar__link" href="/docs/extras/src-plugins-google-sheets">XActions Google Sheets Plugin</a>
+      <a class="sidebar__link" href="/docs/extras/src-plugins-template">xactions-plugin-example</a>
+    </div>
+    <div class="sidebar__group">
+      <div class="sidebar__heading">Launch &amp; Releases</div>
+      <a class="sidebar__link" href="/docs/launch/v310-launch-content">XActions v3.1.0 — Launch Content</a>
+    </div>
+  </aside>
+
+  <main class="content" id="main">
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+      <a href="https://xactions.app">Home</a> <span aria-hidden="true">›</span> <a href="https://xactions.app/docs">Docs</a> <span aria-hidden="true">›</span> <a href="https://xactions.app/docs">Guides &amp; Reference</a> <span aria-hidden="true">›</span> <span>Organizations: run a family of X accounts as a team</span>
+    </nav>
+
+    <span class="eyebrow">📖 Guides &amp; Reference</span>
+
+    <article class="prose">
+<h1 id="organizations-run-a-family-of-x-accounts-as-a-team">Organizations: run a family of X accounts as a team</h1>
+<p><code>xactions org</code> is for teams that run several X accounts in the open: a newsroom with
+main, breaking and regional handles, a company with main, dev, status and support
+accounts, or a brand whose affiliates post on its behalf and say so.</p>
+<p>What it gives you:</p>
+<ul>
+<li><strong>Roles.</strong> Owner, admin, editor, writer, viewer. Writers draft, editors approve and
+publish, admins connect accounts, owners change settings.</li>
+<li><strong>Approval before anything ships.</strong> Every post starts as a draft. Editing an approved
+post sends it back to draft. Two-person approval is a setting.</li>
+<li><strong>Cross-posting that follows X&#39;s rules.</strong> One post has a primary account, plus a
+variant written for each other account or a repost of the primary. Variants that are
+too alike are refused, and so is a post that repeats what another account published
+in the last seven days.</li>
+<li><strong>Disclosure on affiliate posts.</strong> Accounts marked <code>affiliate</code> get <code>#ad</code> (or your tag)
+added to every post and cannot repost, because a repost cannot carry a disclosure.</li>
+<li><strong>A checked identity on every write.</strong> Before posting, the saved session is checked to
+log in as the handle it was saved for. A session for the wrong account fails instead
+of posting.</li>
+<li><strong>Daily caps.</strong> Every write is charged against the same per-account 24 hour ledger the
+MCP server uses.</li>
+<li><strong>A tamper-evident audit log.</strong> Every change is one line in a SHA-256 hash chain, so
+<code>xactions org log --verify</code> shows the first line someone edited.</li>
+<li><strong>Encrypted sessions.</strong> Set <code>XACTIONS_ORG_KEY</code> and each account&#39;s cookie jar is stored
+with AES-256-GCM.</li>
+<li><strong>A calendar and stats</strong> across every account.</li>
+</ul>
+<p>What it does not do, on purpose: buy accounts, take over accounts, rotate proxies, or
+make accounts look unrelated. Accounts in an organization belong together in public,
+so there is nothing to hide. If a plan only works while X can&#39;t tell the accounts are
+linked, X will suspend all of them once it can.</p>
+<h2 id="quick-start">Quick start</h2>
+<pre><code class="language-bash"># 1. Create the org. You are its owner.
+xactions org create acme --owner nich --name &quot;Acme Inc&quot;
+
+# 2. Add the team
+xactions org member add acme rae --role editor
+xactions org member add acme sam --role writer
+
+# 3. Connect accounts. Each session is checked to log in as the handle you give.
+export XACTIONS_ORG_KEY=&#39;a long passphrase&#39;          # optional: encrypt sessions at rest
+xactions org account add acme acme       --label main   --cookies-file acme.cookies.txt
+xactions org account add acme acmedev    --label dev    --cookies-file acmedev.cookies.txt
+xactions org account add acme acmestatus --label status --from-browser chrome
+xactions org account add acme creatorjo  --kind affiliate --cookies-file jo.cookies.txt
+
+# 4. A writer drafts one announcement across three accounts
+export XACTIONS_ORG_MEMBER=sam
+xactions org draft acme \
+  --account acme       --text &quot;Acme 2.0 is here. Builds are twice as fast.&quot; \
+  --variant &quot;acmedev=Devs: 2.0 ships incremental compiles and a new CLI. Migration guide in the docs.&quot; \
+  --repost acmestatus \
+  --at 2026-12-01T15:00:00Z
+
+# 5. An editor reviews and approves
+xactions org posts acme --as rae
+xactions org post acme p_04c09090 --as rae
+xactions org approve acme p_04c09090 --as rae
+
+# 6. Publish what is due. Run this from cron for scheduled posts.
+xactions org publish acme --as rae --dry-run
+xactions org publish acme --as rae
+</code></pre>
+<p>Session sources for <code>account add</code> are the same as <code>xactions login</code>:</p>
+<table>
+<thead>
+<tr>
+<th>Flag</th>
+<th>Reads</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>--cookies-file &lt;path&gt;</code></td>
+<td>Netscape <code>cookies.txt</code>, Cookie-Editor or EditThisCookie JSON, Playwright or Puppeteer <code>storageState</code>, or a raw <code>auth_token=...; ct0=...</code> string</td>
+</tr>
+<tr>
+<td><code>--from-browser [name]</code></td>
+<td>x.com cookies from a local chrome, chromium, brave, edge, arc or firefox</td>
+</tr>
+<tr>
+<td><code>--from-saved</code></td>
+<td>the session <code>xactions connect</code> or <code>xactions login</code> already saved</td>
+</tr>
+</tbody></table>
+<p>Identity is checked with the <code>twid</code> cookie, so export the full cookie jar. <code>--no-verify</code>
+skips the check; the account then shows as <code>unverified</code> in <code>xactions org show</code>, and the
+check still runs before the first publish.</p>
+<h2 id="who-is-acting">Who is acting</h2>
+<p>Every command that reads or changes an org takes <code>--as &lt;member&gt;</code>. Without it, the
+<code>XACTIONS_ORG_MEMBER</code> environment variable is used, and if the org has only one member,
+that member is used.</p>
+<table>
+<thead>
+<tr>
+<th>Role</th>
+<th>Can</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>owner</td>
+<td>everything, including settings and other owners</td>
+</tr>
+<tr>
+<td>admin</td>
+<td>connect and remove accounts; add, change and remove members below admin</td>
+</tr>
+<tr>
+<td>editor</td>
+<td>approve, reject and publish; edit anyone&#39;s post</td>
+</tr>
+<tr>
+<td>writer</td>
+<td>draft; edit their own posts</td>
+</tr>
+<tr>
+<td>viewer</td>
+<td>read the queue, the calendar, the stats and the log</td>
+</tr>
+</tbody></table>
+<p>There must always be at least one owner.</p>
+<blockquote>
+<p><strong>Roles are an accountability workflow, not a security boundary.</strong> Everything lives in
+files under <code>XACTIONS_HOME</code>, and anyone who can write those files can edit them
+directly. The hash-chained audit log is what makes that visible. For separation
+between people, give each person their own machine account and share only the org
+directory, with filesystem permissions to match.</p>
+</blockquote>
+<h2 id="posts">Posts</h2>
+<p>A post is one announcement across one or more accounts:</p>
+<ul>
+<li>the <strong>primary</strong>: the account it belongs to, with its text (<code>--account</code>, <code>--text</code>)</li>
+<li><strong>variants</strong>: other accounts with wording of their own (<code>--variant handle=text</code>, repeatable)</li>
+<li><strong>reposts</strong>: other accounts that repost the primary once it is live (<code>--repost handle</code>, repeatable)</li>
+</ul>
+<pre><code>draft ──approve──▶ approved ──publish──▶ published
+  ▲                   │                 ├─▶ partial  (some accounts failed)
+  └──────edit─────────┘                 └─▶ failed
+  │
+  └──reject──▶ rejected ──edit──▶ draft
+</code></pre>
+<p><code>--at</code> schedules a post. A scheduled post publishes on the first <code>xactions org publish</code>
+after that time; one without <code>--at</code> publishes on the next run after approval.
+<code>xactions org publish --id &lt;id&gt;</code> publishes one post right away, whatever its schedule.</p>
+<h3 id="the-duplicate-check">The duplicate check</h3>
+<p>X&#39;s automation rules forbid posting identical or substantially similar content across
+accounts you operate, including accounts one organization openly runs. Two texts are
+compared as word pairs after lower-casing and removing links and punctuation, so
+changing a link, an emoji or the capitalisation does not make a post different.
+Writing the news for each audience does.</p>
+<p>The default threshold is 0.8 (80% of word pairs shared). An owner can set it anywhere
+from 0.5 to 1 with <code>xactions org settings acme --threshold 0.7</code>.</p>
+<p>When the check refuses a draft, either rewrite the variant or use <code>--repost</code>.</p>
+<h3 id="affiliates">Affiliates</h3>
+<p><code>--kind affiliate</code> marks an account that posts on the brand&#39;s behalf but is not the
+brand: a creator, an employee advocate, a partner. Every post from it must carry a
+disclosure:</p>
+<ul>
+<li>the tag is the account&#39;s own <code>--disclosure</code>, else the org&#39;s (<code>#ad</code> by default,
+change it with <code>xactions org settings acme --disclosure &quot;#sponsored&quot;</code>)</li>
+<li>a missing tag is added to the end of the text, and the writer is told</li>
+<li>affiliate accounts cannot be repost targets</li>
+</ul>
+<p>This follows the FTC&#39;s endorsement guides and X&#39;s paid-partnership policy. It is not
+legal advice; check what your jurisdiction requires.</p>
+<h2 id="publishing">Publishing</h2>
+<p><code>xactions org publish &lt;org&gt;</code> goes through every approved post that is due. Within a post,
+the primary goes first, then the variants, then the reposts, with <code>--delay</code> seconds
+(3 by default) between writes. Before each write:</p>
+<ol>
+<li>The account&#39;s daily cap is charged. A target over its cap stays pending for the next run.</li>
+<li>The session is checked to log in as that handle, once per account per run.</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th>Outcome</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>published</code> / <code>reposted</code></td>
+<td>done, with the post id</td>
+</tr>
+<tr>
+<td><code>capped</code></td>
+<td>over the 24 hour cap; still pending</td>
+</tr>
+<tr>
+<td><code>waiting</code></td>
+<td>a repost whose primary has not published yet; still pending</td>
+</tr>
+<tr>
+<td><code>failed</code></td>
+<td>X refused, the session is for another account, or the account was disconnected</td>
+</tr>
+<tr>
+<td><code>unconfirmed</code></td>
+<td>X accepted the write but returned no post id. Not retried, because a retry could post twice. Check the account.</td>
+</tr>
+</tbody></table>
+<p><code>--retry-failed</code> sets failed targets back to pending before the run. <code>--dry-run</code> prints
+the plan and writes nothing.</p>
+<p>For scheduled posts, run publish from cron as an editor:</p>
+<pre><code class="language-cron">*/5 * * * * XACTIONS_ORG_MEMBER=publisher XACTIONS_ORG_KEY=... xactions org publish acme --json &gt;&gt; ~/acme-publish.log 2&gt;&amp;1
+</code></pre>
+<p>Give the cron job a member of its own (<code>xactions org member add acme publisher --role editor</code>)
+so the audit log shows which writes were scheduled.</p>
+<h2 id="calendar-stats-and-the-log">Calendar, stats and the log</h2>
+<pre><code class="language-bash">xactions org calendar acme --days 30      # drafted and approved posts by day; overdue first
+xactions org stats acme --days 30         # per account: followers, published, likes, reposts, views, cap left
+xactions org log acme --limit 100         # who did what, when
+xactions org log acme --verify            # check every hash in the chain
+</code></pre>
+<p><code>stats</code> reads public profiles and the public metrics of up to 20 of each account&#39;s
+recent posts that went out through the org. It needs no login.</p>
+<h2 id="agents">Agents</h2>
+<p>The MCP server has an <code>orgs</code> tool group:</p>
+<table>
+<thead>
+<tr>
+<th>Tool</th>
+<th>Does</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>x_org_list</code></td>
+<td>list organizations</td>
+</tr>
+<tr>
+<td><code>x_org_queue</code></td>
+<td>one org&#39;s posts and connected accounts</td>
+</tr>
+<tr>
+<td><code>x_org_calendar</code></td>
+<td>drafted and approved posts by day</td>
+</tr>
+<tr>
+<td><code>x_org_draft</code></td>
+<td>draft a post into the queue as a member</td>
+</tr>
+</tbody></table>
+<p>There is no tool to approve or publish. An agent can fill the queue, and a person at the
+terminal decides what ships. Give the agent a member of its own so its drafts are
+labelled:</p>
+<pre><code class="language-bash">xactions org member add acme agent --role writer
+XACTIONS_ORG_MEMBER=agent npx xactions-mcp --tools orgs,read
+</code></pre>
+<h2 id="files">Files</h2>
+<pre><code>$XACTIONS_HOME/orgs/&lt;org&gt;/
+  org.json            settings, members, accounts
+  posts.json          the queue and publish results
+  audit.jsonl         hash-chained log
+  sessions/&lt;h&gt;.json   one cookie jar per account, mode 0600, encrypted when XACTIONS_ORG_KEY is set
+</code></pre>
+<p><code>XACTIONS_HOME</code> defaults to <code>~/.xactions</code>. Each read-change-write holds a lock file, so
+a cron publish and an editor approving at the same moment do not overwrite each other.</p>
+<h2 id="library">Library</h2>
+<pre><code class="language-js">import { createOrg, createPost, approvePost, publishDue } from &#39;xactions/orgs&#39;;
+</code></pre>
+<p>Every CLI command is a thin wrapper over a function in <a href="https://github.com/nirholas/XActions/tree/main/src/orgs"><code>src/orgs/</code></a>.</p>
+
+    </article>
+
+    <div class="page-meta">
+      <span>6 min read</span>
+      <a href="https://github.com/nirholas/XActions/edit/main/docs/orgs.md" target="_blank" rel="noopener">Edit this page</a>
+      <a href="https://github.com/nirholas/XActions/issues/new?title=Docs%3A%20Organizations%3A%20run%20a%20family%20of%20X%20accounts%20as%20a%20team" target="_blank" rel="noopener">Report a problem</a>
+    </div>
+
+    <nav class="page-nav" aria-label="Previous and next">
+      <a class="page-nav__link" href="/docs/guides/notifications"><span class="page-nav__dir">← Previous</span><span class="page-nav__title">Notifications</span></a>
+      <a class="page-nav__link page-nav__link--next" href="/docs/guides/x402"><span class="page-nav__dir">Next →</span><span class="page-nav__title">Paying for XActions: x402 and MCP</span></a>
+    </nav>
+
+    <div class="callout">
+      <h3>⚡ Free and open source</h3>
+      <p>No API keys, no monthly fees, no signup. Star the repo if it saved you a subscription.</p>
+      <a class="btn" href="https://github.com/nirholas/XActions" target="_blank" rel="noopener">View on GitHub</a>
+    </div>
+  </main>
+
+  <aside class="toc" data-toc aria-label="On this page">
+    <div class="toc__heading">On this page</div>
+  </aside>
+</div>
+
+<dialog class="search-dialog" data-search-dialog aria-label="Search documentation">
+  <input class="search-dialog__input" data-search-input type="search" placeholder="Search the documentation…" aria-label="Search query" autocomplete="off" spellcheck="false">
+  <div class="search-dialog__results" data-search-results role="listbox" aria-label="Search results"></div>
+  <div class="search-dialog__footer">
+    <span><kbd>↑</kbd><kbd>↓</kbd> navigate</span>
+    <span><kbd>↵</kbd> open</span>
+    <span><kbd>esc</kbd> close</span>
+  </div>
+</dialog>
+
+<footer class="site-footer">
+  <div class="site-footer__inner">
+    <div>
+      <h4>XActions</h4>
+      <p>Free, open-source X/Twitter automation.</p>
+      <p>Built by <a href="https://x.com/nichxbt" target="_blank" rel="noopener">@nichxbt</a></p>
+    </div>
+    <div>
+      <h4>Learn</h4>
+      <a href="/docs/learn/your-first-scrape">Your first scrape</a>
+      <a href="/docs/learn/mcp-with-claude">MCP with Claude</a>
+      <a href="/examples">Examples</a>
+      <a href="/docs/guides/troubleshooting">Troubleshooting</a>
+    </div>
+    <div>
+      <h4>Reference</h4>
+      <a href="/docs/guides/cli-reference">CLI</a>
+      <a href="/docs/guides/api-reference">API</a>
+      <a href="/docs/guides/mcp-setup">MCP server</a>
+      <a href="/docs/guides/browser-scripts">Browser scripts</a>
+    </div>
+    <div>
+      <h4>Project</h4>
+      <a href="https://github.com/nirholas/XActions" target="_blank" rel="noopener">GitHub</a>
+      <a href="/docs/project/contributing">Contributing</a>
+      <a href="/docs/project/changelog">Changelog</a>
+      <a href="/docs/project/security">Security</a>
+    </div>
+  </div>
+  <div class="site-footer__bottom">
+    <p>© 2024–2026 XActions. Apache-2.0 licensed. No API fees.</p>
+  </div>
+</footer>
+
+<script src="/docs/assets/docs.js" defer></script>
+</body>
+</html>

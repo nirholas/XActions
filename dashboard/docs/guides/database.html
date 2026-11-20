@@ -88,9 +88,9 @@
   <aside class="sidebar" aria-label="Documentation sections">
     <div class="sidebar__group">
       <div class="sidebar__heading">Guides &amp; Reference</div>
-      <a class="sidebar__link" href="/docs/guides/scheduler">⏰ Scheduler &amp; Webhook Triggers</a>
       <a class="sidebar__link" href="/docs/guides/a2a-api-reference">A2A API Reference — XActions</a>
       <a class="sidebar__link" href="/docs/guides/a2a-protocol">A2A Protocol — XActions</a>
+      <a class="sidebar__link" href="/docs/guides/brief">Account briefs: research the accounts you are about to tag</a>
       <a class="sidebar__link" href="/docs/guides/portability">Account Portability — Export, Migrate &amp; Diff</a>
       <a class="sidebar__link" href="/docs/guides/algorithm-builder">Algorithm Builder — 24/7 Niche Growth Automation</a>
       <a class="sidebar__link" href="/docs/guides/analytics-advanced">Analytics &amp; Sentiment Analysis</a>
@@ -117,12 +117,14 @@
       <a class="sidebar__link" href="/docs/guides/media-archive">Media archive</a>
       <a class="sidebar__link" href="/docs/guides/monitoring">Monitoring Guide</a>
       <a class="sidebar__link" href="/docs/guides/notifications">Notifications</a>
+      <a class="sidebar__link" href="/docs/guides/orgs">Organizations: run a family of X accounts as a team</a>
       <a class="sidebar__link" href="/docs/guides/x402">Paying for XActions: x402 and MCP</a>
       <a class="sidebar__link" href="/docs/guides/plugins">Plugin System</a>
       <a class="sidebar__link" href="/docs/guides/streaming">Real-Time Streaming</a>
       <a class="sidebar__link" href="/docs/guides/streams">Real-time Streams — Live Twitter Monitoring</a>
       <a class="sidebar__link" href="/docs/guides/reputation-audit">Reputation audit: AI-score your own timeline, get a shareable card</a>
       <a class="sidebar__link" href="/docs/guides/rss-monitor">Rss Monitor</a>
+      <a class="sidebar__link" href="/docs/guides/scheduler">Scheduler &amp; Webhook Triggers</a>
       <a class="sidebar__link" href="/docs/guides/scrapers">Scrapers</a>
       <a class="sidebar__link" href="/docs/guides/scraping-infrastructure">Scraping Infrastructure</a>
       <a class="sidebar__link" href="/docs/guides/scraping">Scraping Infrastructure</a>
@@ -156,6 +158,7 @@
       <a class="sidebar__link" href="/docs/guides/ai-api">XActions AI API Documentation</a>
       <a class="sidebar__link" href="/docs/guides/api-reference">XActions API Reference</a>
       <a class="sidebar__link" href="/docs/guides/automation">XActions Automation Framework Guide</a>
+      <a class="sidebar__link" href="/docs/guides/chat">XActions Chat</a>
       <a class="sidebar__link" href="/docs/guides/cli-reference">XActions CLI Reference</a>
       <a class="sidebar__link" href="/docs/guides/xactions-reference">XActions Complete Function Reference</a>
       <a class="sidebar__link" href="/docs/guides/readme">XActions Documentation</a>
@@ -270,7 +273,11 @@
 and the browser console scripts all run with no database at all. This page is
 for the self-hosted API server and dashboard, which persist users, jobs,
 billing, and follower history in PostgreSQL via <a target="_blank" rel="noopener noreferrer" href="https://www.prisma.io/">Prisma</a>.</p>
-<p>Schema: <a href="../prisma/schema.prisma"><code>prisma/schema.prisma</code></a>.</p>
+<p>Schema: <a href="https://github.com/nirholas/XActions/blob/main/prisma/schema.prisma"><code>prisma/schema.prisma</code></a>. The Prisma CLI reads
+<code>DATABASE_URL</code> (and <code>.env</code>) through <a href="https://github.com/nirholas/XActions/blob/main/prisma.config.js"><code>prisma.config.js</code></a>, and
+the server connects through the PostgreSQL driver adapter in
+<a href="https://github.com/nirholas/XActions/blob/main/src/utils/prisma.js"><code>src/utils/prisma.js</code></a>, the one client every module shares.
+A <code>?schema=</code> parameter in the URL selects the PostgreSQL schema.</p>
 <hr>
 <h2 id="setup">Setup</h2>
 <pre><code class="language-bash"># 1. Point at a database
@@ -346,8 +353,7 @@ across PostgreSQL versions and SQLite, at the cost of not being able to query
 inside them. Parse on read.</p>
 <hr>
 <h2 id="common-queries">Common queries</h2>
-<pre><code class="language-js">import { PrismaClient } from &#39;@prisma/client&#39;;
-const prisma = new PrismaClient();
+<pre><code class="language-js">import { prisma } from &#39;./src/utils/prisma.js&#39;;
 
 // Who unfollowed a user in the last week
 const lost = await prisma.followerChange.findMany({
@@ -392,7 +398,7 @@ snapshots exist to produce.</p>
 <hr>
 <h2 id="changing-the-schema">Changing the schema</h2>
 <ol>
-<li>Edit <a href="../prisma/schema.prisma"><code>prisma/schema.prisma</code></a>.</li>
+<li>Edit <a href="https://github.com/nirholas/XActions/blob/main/prisma/schema.prisma"><code>prisma/schema.prisma</code></a>.</li>
 <li><code>npx prisma migrate dev --name describe_your_change</code></li>
 <li><code>npx prisma generate</code></li>
 <li>Commit both the schema and the generated migration.</li>

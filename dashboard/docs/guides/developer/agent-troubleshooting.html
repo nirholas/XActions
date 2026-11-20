@@ -88,12 +88,12 @@
   <aside class="sidebar" aria-label="Documentation sections">
     <div class="sidebar__group">
       <div class="sidebar__heading">Guides &amp; Reference</div>
-      <a class="sidebar__link" href="/docs/guides/scheduler">⏰ Scheduler &amp; Webhook Triggers</a>
       <a class="sidebar__link" href="/docs/guides/a2a-api-reference">A2A API Reference — XActions</a>
       <a class="sidebar__link" href="/docs/guides/a2a-protocol">A2A Protocol — XActions</a>
+      <a class="sidebar__link" href="/docs/guides/brief">Account briefs: research the accounts you are about to tag</a>
       <a class="sidebar__link" href="/docs/guides/portability">Account Portability — Export, Migrate &amp; Diff</a>
       <a class="sidebar__link" href="/docs/guides/algorithm-builder">Algorithm Builder — 24/7 Niche Growth Automation</a>
-      <a class="sidebar__link" href="/docs">+ 72 more…</a>
+      <a class="sidebar__link" href="/docs">+ 75 more…</a>
     </div>
     <div class="sidebar__group">
       <div class="sidebar__heading">Tutorials</div>
@@ -198,7 +198,7 @@
 <p>Common issues agents encounter when working on XActions and how to resolve them.</p>
 <hr>
 <h2 id="tests">Tests</h2>
-<h3 id="tests-fail-with-quottask-not-found-undefinedquot">Tests fail with &quot;Task not found: undefined&quot;</h3>
+<h3 id="tests-fail-with-task-not-found-undefined">Tests fail with &quot;Task not found: undefined&quot;</h3>
 <p><strong>Cause:</strong> <code>TaskStore</code> methods are async — calling <code>store.create()</code> without <code>await</code> returns a Promise, not a task object. Passing the Promise as a task ID fails.
 <strong>Fix:</strong> Add <code>await</code> to all <code>store.create()</code>, <code>store.get()</code>, <code>store.transition()</code>, <code>store.list()</code> calls. Make test callbacks <code>async</code>.</p>
 <h3 id="integration-test-worker-crashes--times-out">Integration test worker crashes / times out</h3>
@@ -219,7 +219,7 @@ const fetchMock = vi.fn(async (url) =&gt; {
 <h3 id="mutation-mock-returns-wrong-shape">Mutation mock returns wrong shape</h3>
 <p><strong>Cause:</strong> For GraphQL <strong>queries</strong>, <code>client.graphql()</code> wraps the response as <code>{ data: json, cursor }</code>. For <strong>mutations</strong> (<code>mutation: true</code>), it returns the raw JSON directly.
 <strong>Fix:</strong> For mutation mocks, pass the full fixture <em>with</em> the <code>data</code> wrapper: <code>mockResponse(TWEET_CREATE_RESPONSE)</code>, not <code>mockResponse(graphqlBody(TWEET_CREATE_RESPONSE))</code>.</p>
-<h3 id="media-upload-test-quotcannot-read-properties-of-undefined-reading-39processing_info39quot">Media upload test: &quot;Cannot read properties of undefined (reading &#39;processing_info&#39;)&quot;</h3>
+<h3 id="media-upload-test-cannot-read-properties-of-undefined-reading-processing_info">Media upload test: &quot;Cannot read properties of undefined (reading &#39;processing_info&#39;)&quot;</h3>
 <p><strong>Cause:</strong> <code>MEDIA_FINALIZE_RESPONSE</code> includes <code>processing_info</code>, which triggers a STATUS poll call. The mock has no response for this extra call, so it returns <code>undefined</code>.
 <strong>Fix:</strong> Add a STATUS mock after FINALIZE: <code>.mockResolvedValueOnce({})</code>. The <code>pollProcessingStatus</code> function returns immediately when <code>processing_info</code> is absent.</p>
 <hr>
@@ -231,7 +231,7 @@ const fetchMock = vi.fn(async (url) =&gt; {
 <li>Check import errors: <code>node src/mcp/server.js</code> directly</li>
 <li>Review <code>docs/mcp-setup.md</code> for full setup</li>
 </ol>
-<h3 id="mcp-tool-returns-quotnot-authenticatedquot">MCP tool returns &quot;not authenticated&quot;</h3>
+<h3 id="mcp-tool-returns-not-authenticated">MCP tool returns &quot;not authenticated&quot;</h3>
 <p><strong>Cause:</strong> Session cookie expired or missing.
 <strong>Fix:</strong> Get a fresh <code>auth_token</code> cookie from DevTools → Application → Cookies → <code>auth_token</code> on x.com. Set as <code>XACTIONS_SESSION_COOKIE</code>.</p>
 <h3 id="mcp-tool-times-out">MCP tool times out</h3>
@@ -242,7 +242,7 @@ const fetchMock = vi.fn(async (url) =&gt; {
 </code></pre>
 <hr>
 <h2 id="browser-scripts">Browser Scripts</h2>
-<h3 id="quotno-unfollow-buttons-foundquot-or-script-finds-nothing">&quot;No unfollow buttons found&quot; or script finds nothing</h3>
+<h3 id="no-unfollow-buttons-found-or-script-finds-nothing">&quot;No unfollow buttons found&quot; or script finds nothing</h3>
 <ol>
 <li>Verify you&#39;re on the correct page (<code>x.com/USERNAME/following</code>, not <code>/followers</code>)</li>
 <li>Check selectors in <code>docs/agents/selectors.md</code> — X changes DOM frequently</li>
@@ -252,7 +252,7 @@ const fetchMock = vi.fn(async (url) =&gt; {
 <h3 id="script-stops-after-20-actions">Script stops after ~20 actions</h3>
 <p><strong>Cause:</strong> X rate limit triggered.
 <strong>Fix:</strong> Wait 30–60 minutes. Reduce actions per session. Increase delays (1–3s minimum between actions).</p>
-<h3 id="quotcorejs-not-definedquot-errors">&quot;core.js not defined&quot; errors</h3>
+<h3 id="corejs-not-defined-errors">&quot;core.js not defined&quot; errors</h3>
 <p><strong>Cause:</strong> Scripts in <code>src/automation/</code> require <code>src/automation/core.js</code> to be pasted first.
 <strong>Fix:</strong> Copy and paste <code>src/automation/core.js</code> into DevTools, then paste the automation script.</p>
 <hr>
@@ -274,13 +274,13 @@ npm link
 <pre><code class="language-bash">npx prisma migrate dev    # Apply pending migrations
 npx prisma db push        # Push schema changes without migration
 </code></pre>
-<h3 id="quotcannot-connect-to-databasequot">&quot;Cannot connect to database&quot;</h3>
+<h3 id="cannot-connect-to-database">&quot;Cannot connect to database&quot;</h3>
 <ol>
 <li>Verify PostgreSQL is running</li>
 <li>Check <code>DATABASE_URL</code> in <code>.env</code></li>
 <li>For local dev: <code>docker-compose up -d postgres redis</code></li>
 </ol>
-<h3 id="quotcannot-connect-to-redisquot">&quot;Cannot connect to Redis&quot;</h3>
+<h3 id="cannot-connect-to-redis">&quot;Cannot connect to Redis&quot;</h3>
 <ol>
 <li>Verify Redis is running</li>
 <li>Check <code>REDIS_HOST</code> and <code>REDIS_PORT</code> in <code>.env</code></li>
