@@ -1,6 +1,6 @@
 # XActions Documentation
 
-> Complete documentation for XActions v3.5.0, the X/Twitter automation toolkit.
+> Complete documentation for XActions v5.0.0, the X/Twitter automation toolkit.
 
 ## Quick Links
 
@@ -50,7 +50,7 @@ XActions provides **5 interfaces** to the same underlying toolkit:
 
 ```
 ┌─────────────────────────────────────────────────────┐
-│                   XActions v3.5.0                   │
+│                   XActions v5.0.0                   │
 ├──────────┬──────────┬───────┬──────────┬────────────┤
 │  CLI     │  MCP     │  API  │ Dashboard│  Browser   │
 │ xactions │ server   │ REST  │   Web UI │  Scripts   │
@@ -80,7 +80,7 @@ Node.js 22.19 or newer. CI runs the full Vitest suite on Node 22 and 24.
 
 ## Version
 
-Current version: **v3.5.0** (August 2026)
+Current version: **v5.0.0** (November 2026)
 
 ---
 

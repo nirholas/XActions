@@ -1,4 +1,4 @@
-# XActions v3.5.0: Complete Feature Inventory
+# XActions v5.0.0: Complete Feature Inventory
 
 > Every surface this repository ships, with the file that implements each one.
 > Package: `xactions` on npm | Author: nichxbt ([@nichxbt](https://x.com/nichxbt))
