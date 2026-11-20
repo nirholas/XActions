@@ -14,6 +14,7 @@
   <meta property="og:title" content="Profile Management — XActions">
   <meta property="og:description" content="Edit and manage your X/Twitter profile — update bio, avatar, header, filter posts, and share QR codes.">
   <meta property="og:url" content="https://xactions.app/docs/profile-management">
+  <meta property="og:image" content="https://xactions.app/og-docs.png">
   <meta property="og:site_name" content="XActions">
 
   <!-- Twitter Card -->
@@ -21,6 +22,7 @@
   <meta name="twitter:site" content="@nichxbt">
   <meta name="twitter:title" content="Profile Management — Free X/Twitter Tool">
   <meta name="twitter:description" content="Edit and manage your X/Twitter profile — update bio, avatar, header, filter posts, and share QR codes.">
+  <meta name="twitter:image" content="https://xactions.app/og-docs.png">
 
   <link rel="canonical" href="https://xactions.app/docs/profile-management">
   <link rel="manifest" href="/manifest.json">
@@ -221,7 +223,7 @@
 })();
 </code></pre>
 <h2>📦 Node.js Module</h2>
-<pre><code class="language-javascript">import { getProfile, updateProfile, uploadAvatar } from &#39;xactions&#39;;
+<pre><code class="language-javascript">import { getProfile, updateProfile, uploadAvatar } from &#39;xactions/src/profileManager.js&#39;;
 
 // Get profile info
 const profile = await getProfile(page, &#39;nichxbt&#39;);
@@ -372,7 +374,7 @@ Input: { &quot;name&quot;: &quot;Display Name&quot;, &quot;bio&quot;: &quot;New 
       </div>
     </div>
     <div class="footer-bottom">
-      <p>© 2024-2026 XActions. MIT License. No API fees. No limits.</p>
+      <p>© 2024-2026 XActions. Apache-2.0 licensed. No API fees. No limits.</p>
     </div>
   </footer>
 </body>

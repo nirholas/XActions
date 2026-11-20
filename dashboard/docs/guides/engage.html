@@ -88,9 +88,9 @@
   <aside class="sidebar" aria-label="Documentation sections">
     <div class="sidebar__group">
       <div class="sidebar__heading">Guides &amp; Reference</div>
-      <a class="sidebar__link" href="/docs/guides/scheduler">⏰ Scheduler &amp; Webhook Triggers</a>
       <a class="sidebar__link" href="/docs/guides/a2a-api-reference">A2A API Reference — XActions</a>
       <a class="sidebar__link" href="/docs/guides/a2a-protocol">A2A Protocol — XActions</a>
+      <a class="sidebar__link" href="/docs/guides/brief">Account briefs: research the accounts you are about to tag</a>
       <a class="sidebar__link" href="/docs/guides/portability">Account Portability — Export, Migrate &amp; Diff</a>
       <a class="sidebar__link" href="/docs/guides/algorithm-builder">Algorithm Builder — 24/7 Niche Growth Automation</a>
       <a class="sidebar__link" href="/docs/guides/analytics-advanced">Analytics &amp; Sentiment Analysis</a>
@@ -117,12 +117,14 @@
       <a class="sidebar__link" href="/docs/guides/media-archive">Media archive</a>
       <a class="sidebar__link" href="/docs/guides/monitoring">Monitoring Guide</a>
       <a class="sidebar__link" href="/docs/guides/notifications">Notifications</a>
+      <a class="sidebar__link" href="/docs/guides/orgs">Organizations: run a family of X accounts as a team</a>
       <a class="sidebar__link" href="/docs/guides/x402">Paying for XActions: x402 and MCP</a>
       <a class="sidebar__link" href="/docs/guides/plugins">Plugin System</a>
       <a class="sidebar__link" href="/docs/guides/streaming">Real-Time Streaming</a>
       <a class="sidebar__link" href="/docs/guides/streams">Real-time Streams — Live Twitter Monitoring</a>
       <a class="sidebar__link" href="/docs/guides/reputation-audit">Reputation audit: AI-score your own timeline, get a shareable card</a>
       <a class="sidebar__link" href="/docs/guides/rss-monitor">Rss Monitor</a>
+      <a class="sidebar__link" href="/docs/guides/scheduler">Scheduler &amp; Webhook Triggers</a>
       <a class="sidebar__link" href="/docs/guides/scrapers">Scrapers</a>
       <a class="sidebar__link" href="/docs/guides/scraping-infrastructure">Scraping Infrastructure</a>
       <a class="sidebar__link" href="/docs/guides/scraping">Scraping Infrastructure</a>
@@ -156,6 +158,7 @@
       <a class="sidebar__link" href="/docs/guides/ai-api">XActions AI API Documentation</a>
       <a class="sidebar__link" href="/docs/guides/api-reference">XActions API Reference</a>
       <a class="sidebar__link" href="/docs/guides/automation">XActions Automation Framework Guide</a>
+      <a class="sidebar__link" href="/docs/guides/chat">XActions Chat</a>
       <a class="sidebar__link" href="/docs/guides/cli-reference">XActions CLI Reference</a>
       <a class="sidebar__link" href="/docs/guides/xactions-reference">XActions Complete Function Reference</a>
       <a class="sidebar__link" href="/docs/guides/readme">XActions Documentation</a>
@@ -284,21 +287,21 @@ later.</p>
 </thead>
 <tbody><tr>
 <td>Browser console</td>
-<td><a href="../scripts/engageProfile.js"><code>scripts/engageProfile.js</code></a></td>
+<td><a href="https://github.com/nirholas/XActions/blob/main/scripts/engageProfile.js"><code>scripts/engageProfile.js</code></a></td>
 <td>You are already logged into x.com in a tab. Nothing to install. A floating panel drives it.</td>
 </tr>
 <tr>
 <td>CLI</td>
-<td><code>xactions engage</code> (<a href="../src/cli/commands/engage.js"><code>src/cli/commands/engage.js</code></a>)</td>
+<td><code>xactions engage</code> (<a href="https://github.com/nirholas/XActions/blob/main/src/cli/commands/engage.js"><code>src/cli/commands/engage.js</code></a>)</td>
 <td>You want any LLM provider, a cron, JSON output, or no browser at all.</td>
 </tr>
 <tr>
 <td>MCP tool</td>
-<td><code>x_engage</code> (<a href="../src/mcp/server.js"><code>src/mcp/server.js</code></a>)</td>
+<td><code>x_engage</code> (<a href="https://github.com/nirholas/XActions/blob/main/src/mcp/server.js"><code>src/mcp/server.js</code></a>)</td>
 <td>An agent in Claude, Cursor, or Windsurf should run the sweep for you.</td>
 </tr>
 </tbody></table>
-<p>The CLI and the MCP tool run the identical engine (<a href="../src/engage/"><code>src/engage/</code></a>)
+<p>The CLI and the MCP tool run the identical engine (<a href="https://github.com/nirholas/XActions/tree/main/src/engage"><code>src/engage/</code></a>)
 and share the same progress files, so a sweep an agent starts and one you start
 by hand never double-engage the same post.</p>
 <hr>
@@ -351,7 +354,7 @@ otherwise the repost filter would reject the whole page.</p>
 <ol>
 <li>Open the feed you want to sweep.</li>
 <li>Open DevTools (<kbd>F12</kbd>), Console tab.</li>
-<li>Paste <a href="../scripts/engageProfile.js"><code>scripts/engageProfile.js</code></a>. A panel appears bottom-right.</li>
+<li>Paste <a href="https://github.com/nirholas/XActions/blob/main/scripts/engageProfile.js"><code>scripts/engageProfile.js</code></a>. A panel appears bottom-right.</li>
 <li>Tick the actions you want, set the filters, leave <strong>Dry run</strong> on, click <strong>▶ Start</strong>.</li>
 <li>Read the log. When it looks right, untick <strong>Dry run</strong> and start again.</li>
 </ol>
@@ -467,7 +470,7 @@ allows <code>connect-src https://*.x.ai</code>, so <code>fetch</code> to <code>a
 Get a key at <a target="_blank" rel="noopener noreferrer" href="https://console.x.ai">console.x.ai</a>. Default model <code>grok-3-mini</code>.</li>
 <li><strong>OpenRouter, OpenAI, Anthropic, Ollama, anything else</strong> are blocked from the
 page by that same CSP. Two ways around it:<ol>
-<li>Install the <a href="../extension/">XActions browser extension</a> and pick
+<li>Install the <a href="https://github.com/nirholas/XActions/tree/main/extension">XActions browser extension</a> and pick
 <strong>XActions extension (any provider)</strong> in the panel. The page hands the
 request to the extension&#39;s service worker, which is not bound by the
 page&#39;s CSP, and gets the text back.</li>

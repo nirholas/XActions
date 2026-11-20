@@ -14,6 +14,7 @@
   <meta property="og:title" content="Grok AI Integration — XActions">
   <meta property="og:description" content="Interact with Grok AI on X/Twitter — summarize content, generate images, analyze posts, and get real-time insights.">
   <meta property="og:url" content="https://xactions.app/docs/grok-ai">
+  <meta property="og:image" content="https://xactions.app/og-docs.png">
   <meta property="og:site_name" content="XActions">
 
   <!-- Twitter Card -->
@@ -21,6 +22,7 @@
   <meta name="twitter:site" content="@nichxbt">
   <meta name="twitter:title" content="Grok AI Integration — Free X/Twitter Tool">
   <meta name="twitter:description" content="Interact with Grok AI on X/Twitter — summarize content, generate images, analyze posts, and get real-time insights.">
+  <meta name="twitter:image" content="https://xactions.app/og-docs.png">
 
   <link rel="canonical" href="https://xactions.app/docs/grok-ai">
   <link rel="manifest" href="/manifest.json">
@@ -221,7 +223,7 @@ document.execCommand(&#39;insertText&#39;, false, &#39;Summarize top tech trends
 document.querySelector(&#39;button[aria-label=&quot;Send&quot;]&#39;)?.click();
 </code></pre>
 <h2>📦 Node.js Module</h2>
-<pre><code class="language-javascript">import { queryGrok, summarize, analyzePost } from &#39;xactions&#39;;
+<pre><code class="language-javascript">import { queryGrok, summarize, analyzePost } from &#39;xactions/src/grokIntegration.js&#39;;
 
 // Query Grok (requires active x.com session)
 const response = await queryGrok(page, &#39;What are people saying about AI on X?&#39;);
@@ -314,7 +316,7 @@ Input: { &quot;topic&quot;: &quot;AI agents&quot; }
       </div>
     </div>
     <div class="footer-bottom">
-      <p>© 2024-2026 XActions. MIT License. No API fees. No limits.</p>
+      <p>© 2024-2026 XActions. Apache-2.0 licensed. No API fees. No limits.</p>
     </div>
   </footer>
 </body>

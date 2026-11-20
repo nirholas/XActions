@@ -88,12 +88,12 @@
   <aside class="sidebar" aria-label="Documentation sections">
     <div class="sidebar__group">
       <div class="sidebar__heading">Guides &amp; Reference</div>
-      <a class="sidebar__link" href="/docs/guides/scheduler">⏰ Scheduler &amp; Webhook Triggers</a>
       <a class="sidebar__link" href="/docs/guides/a2a-api-reference">A2A API Reference — XActions</a>
       <a class="sidebar__link" href="/docs/guides/a2a-protocol">A2A Protocol — XActions</a>
+      <a class="sidebar__link" href="/docs/guides/brief">Account briefs: research the accounts you are about to tag</a>
       <a class="sidebar__link" href="/docs/guides/portability">Account Portability — Export, Migrate &amp; Diff</a>
       <a class="sidebar__link" href="/docs/guides/algorithm-builder">Algorithm Builder — 24/7 Niche Growth Automation</a>
-      <a class="sidebar__link" href="/docs">+ 72 more…</a>
+      <a class="sidebar__link" href="/docs">+ 75 more…</a>
     </div>
     <div class="sidebar__group">
       <div class="sidebar__heading">Tutorials</div>
@@ -197,7 +197,7 @@
 <h1 id="tutorial-02--claude-that-can-use-x">Tutorial 02 — Claude that can use X</h1>
 <p><strong>Time:</strong> 10 minutes · <strong>Login required:</strong> optional · <strong>You need:</strong> Node.js 18+ and an MCP client</p>
 <p>MCP (Model Context Protocol) is how AI assistants call external tools. This
-tutorial connects the XActions MCP server&#39;s 153 tools to Claude Desktop, Cursor,
+tutorial connects the XActions MCP server&#39;s 160 tools to Claude Desktop, Cursor,
 or Windsurf, so
 you can ask for a competitor analysis in English and have the assistant actually
 go and get the data.</p>
@@ -212,14 +212,14 @@ saves most of the debugging people do later:</p>
 <pre><code>💻 XActions MCP Server: Local mode (free)
    Using Puppeteer for browser automation
 
-⚡ XActions MCP Server v3.5.0 — 153 tools
+⚡ XActions MCP Server v3.5.0 — 160 tools
    The free, open-source Twitter/X MCP server
    https://github.com/nirholas/XActions
 
 ⚠️  No auth_token configured. Some tools require authentication.
    ...
 
-📋 Tools available: 152
+📋 Tools available: 153
    Scraping: x_get_profile, x_get_followers, x_get_following, x_get_tweets, x_search_tweets, x_get_thread, x_download_video
    Analysis: x_detect_unfollowers, x_analyze_sentiment, x_best_time_to_post, x_competitor_analysis, x_brand_monitor
    Actions: x_follow, x_unfollow, x_like, x_post_tweet, x_post_thread, x_reply
@@ -236,7 +236,7 @@ cd XActions &amp;&amp; npm install
 node examples/08-mcp-tool-call.js
 </code></pre>
 <pre><code>Connected to xactions-mcp v3.5.0
-Server offers 152 tools.
+Server offers 160 tools.
 
 Calling x_get_profile — Get profile information for a user including bio, follower count, etc. Supports Twitter, Bluesky, Threads, and Mastodon.
 
@@ -289,7 +289,7 @@ servers are spawned at application startup.</p>
 </code></pre>
 <hr>
 <h2 id="step-3--add-a-session">Step 3 — Add a session</h2>
-<p>Without a session the MCP server still starts and still offers all 153 tools. The
+<p>Without a session the MCP server still starts and still offers all 160 tools. The
 guest-tier ones work; the rest report that they need a login. To unlock
 everything, put your cookies in the <code>env</code> block:</p>
 <pre><code class="language-json">{
@@ -336,7 +336,7 @@ sentiment.</p>
 <code>x_get_tweets</code> to pull the timeline, then its own reasoning over the results.</p>
 <hr>
 <h2 id="step-5--know-what-it-can-do">Step 5 — Know what it can do</h2>
-<p>The MCP server&#39;s 153 tools group roughly like this:</p>
+<p>The MCP server&#39;s 160 tools group roughly like this:</p>
 <table>
 <thead>
 <tr>
@@ -465,7 +465,7 @@ would have taken, so an approved draft is the thing the agent asked for, not a
 re-typed approximation of it.</p>
 <p>Drafts live in <code>~/.xactions/mcp-drafts.json</code>. The assistant can inspect its own
 queue with <code>x_list_drafts</code> and <code>x_draft_status</code>.</p>
-<p><a href="../examples/09-draft-approval.js"><code>examples/09-draft-approval.js</code></a> walks the
+<p><a href="https://github.com/nirholas/XActions/blob/main/examples/09-draft-approval.js"><code>examples/09-draft-approval.js</code></a> walks the
 whole cycle in one runnable program, against a throwaway draft store, and never
 touches X.</p>
 <hr>

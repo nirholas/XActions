@@ -88,12 +88,12 @@
   <aside class="sidebar" aria-label="Documentation sections">
     <div class="sidebar__group">
       <div class="sidebar__heading">Guides &amp; Reference</div>
-      <a class="sidebar__link" href="/docs/guides/scheduler">⏰ Scheduler &amp; Webhook Triggers</a>
       <a class="sidebar__link" href="/docs/guides/a2a-api-reference">A2A API Reference — XActions</a>
       <a class="sidebar__link" href="/docs/guides/a2a-protocol">A2A Protocol — XActions</a>
+      <a class="sidebar__link" href="/docs/guides/brief">Account briefs: research the accounts you are about to tag</a>
       <a class="sidebar__link" href="/docs/guides/portability">Account Portability — Export, Migrate &amp; Diff</a>
       <a class="sidebar__link" href="/docs/guides/algorithm-builder">Algorithm Builder — 24/7 Niche Growth Automation</a>
-      <a class="sidebar__link" href="/docs">+ 72 more…</a>
+      <a class="sidebar__link" href="/docs">+ 75 more…</a>
     </div>
     <div class="sidebar__group">
       <div class="sidebar__heading">Tutorials</div>
@@ -268,60 +268,60 @@ requires as a header before it treats the request as logged in. With only
 </thead>
 <tbody><tr>
 <td>01</td>
-<td><a href="01-profile-lookup.js">01-profile-lookup.js</a></td>
+<td><a href="https://github.com/nirholas/XActions/blob/main/examples/01-profile-lookup.js">01-profile-lookup.js</a></td>
 <td>Fetch public profiles. The shortest path to real data.</td>
 <td align="center">no</td>
 </tr>
 <tr>
 <td>02</td>
-<td><a href="02-user-timeline.js">02-user-timeline.js</a></td>
+<td><a href="https://github.com/nirholas/XActions/blob/main/examples/02-user-timeline.js">02-user-timeline.js</a></td>
 <td>Stream a timeline, rank posts by engagement, report the median.</td>
 <td align="center">no</td>
 </tr>
 <tr>
 <td>03</td>
-<td><a href="03-sentiment-report.js">03-sentiment-report.js</a></td>
+<td><a href="https://github.com/nirholas/XActions/blob/main/examples/03-sentiment-report.js">03-sentiment-report.js</a></td>
 <td>Score an account&#39;s tone with the offline analyzer.</td>
 <td align="center">no</td>
 </tr>
 <tr>
 <td>04</td>
-<td><a href="04-cross-platform.js">04-cross-platform.js</a></td>
+<td><a href="https://github.com/nirholas/XActions/blob/main/examples/04-cross-platform.js">04-cross-platform.js</a></td>
 <td>The same brand on X, Bluesky, and Mastodon, side by side.</td>
 <td align="center">no</td>
 </tr>
 <tr>
 <td>05</td>
-<td><a href="05-export-followers.js">05-export-followers.js</a></td>
+<td><a href="https://github.com/nirholas/XActions/blob/main/examples/05-export-followers.js">05-export-followers.js</a></td>
 <td>Stream a follower list to a spreadsheet-ready CSV.</td>
 <td align="center">yes</td>
 </tr>
 <tr>
 <td>06</td>
-<td><a href="06-find-non-followers.js">06-find-non-followers.js</a></td>
+<td><a href="https://github.com/nirholas/XActions/blob/main/examples/06-find-non-followers.js">06-find-non-followers.js</a></td>
 <td>Set difference of following vs followers. Read-only.</td>
 <td align="center">yes</td>
 </tr>
 <tr>
 <td>07</td>
-<td><a href="07-keyword-monitor.js">07-keyword-monitor.js</a></td>
+<td><a href="https://github.com/nirholas/XActions/blob/main/examples/07-keyword-monitor.js">07-keyword-monitor.js</a></td>
 <td>Poll search, score sentiment, POST a webhook on negatives.</td>
 <td align="center">yes</td>
 </tr>
 <tr>
 <td>08</td>
-<td><a href="08-mcp-tool-call.js">08-mcp-tool-call.js</a></td>
+<td><a href="https://github.com/nirholas/XActions/blob/main/examples/08-mcp-tool-call.js">08-mcp-tool-call.js</a></td>
 <td>Drive the MCP server over stdio the way Claude does.</td>
 <td align="center">no</td>
 </tr>
 <tr>
 <td>09</td>
-<td><a href="09-draft-approval.js">09-draft-approval.js</a></td>
+<td><a href="https://github.com/nirholas/XActions/blob/main/examples/09-draft-approval.js">09-draft-approval.js</a></td>
 <td>Hold an agent&#39;s write call as a draft, review it, discard it.</td>
 <td align="center">no</td>
 </tr>
 </tbody></table>
-<p><a href="auth.js">auth.js</a> is the shared helper the others import. It resolves a
+<p><a href="https://github.com/nirholas/XActions/blob/main/examples/auth.js">auth.js</a> is the shared helper the others import. It resolves a
 session from the environment or the CLI&#39;s cookie file and prints setup
 instructions when it cannot find one.</p>
 <hr>
@@ -421,9 +421,9 @@ best-known one unfollows everybody who does not follow you back:</p>
 <ol>
 <li>Open <code>https://x.com/YOUR_USERNAME/following</code></li>
 <li>Open DevTools (<kbd>F12</kbd>) → <strong>Console</strong></li>
-<li>Paste the contents of <a href="../scripts/unfollowback.js"><code>scripts/unfollowback.js</code></a></li>
+<li>Paste the contents of <a href="https://github.com/nirholas/XActions/blob/main/scripts/unfollowback.js"><code>scripts/unfollowback.js</code></a></li>
 </ol>
-<p>Use <a href="../scripts/unfollowWDFBLog.js"><code>scripts/unfollowWDFBLog.js</code></a> instead if you
+<p>Use <a href="https://github.com/nirholas/XActions/blob/main/scripts/unfollowWDFBLog.js"><code>scripts/unfollowWDFBLog.js</code></a> instead if you
 want a downloadable log of who was unfollowed. The full catalog is in
 <a href="/docs/guides/browser-scripts">docs/browser-scripts.md</a>.</p>
 <hr>
@@ -431,12 +431,12 @@ want a downloadable log of who was unfollowed. The full catalog is in
 <p>These examples cover the Node.js library. XActions has four more entry points:</p>
 <ul>
 <li><strong>CLI</strong> — 55 top-level commands, 157 counting sub-commands. <code>npx xactions profile nasa</code>. See <a href="/docs/guides/cli-reference">docs/cli-reference.md</a>.</li>
-<li><strong>MCP server</strong> — 153 tools for Claude, Cursor, and Windsurf. See <a href="/docs/guides/mcp-setup">docs/mcp-setup.md</a>.</li>
+<li><strong>MCP server</strong> — 160 tools for Claude, Cursor, and Windsurf. See <a href="/docs/guides/mcp-setup">docs/mcp-setup.md</a>.</li>
 <li><strong>Agent skills</strong> — 49 of them, installable with <code>npx xactions skills install --all</code>. See <a href="/docs/guides/skills">docs/skills.md</a>.</li>
 <li><strong>Browser scripts</strong> — 95 of them, pasted into DevTools with no install. See <a href="/docs/guides/browser-scripts">docs/browser-scripts.md</a>.</li>
 <li><strong>REST API</strong> — self-hosted. See <a href="/docs/guides/rest-api">docs/rest-api.md</a>.</li>
 </ul>
-<p>Guided, end-to-end walkthroughs live in <a href="../tutorials/">tutorials/</a>.</p>
+<p>Guided, end-to-end walkthroughs live in <a href="https://github.com/nirholas/XActions/tree/main/tutorials">tutorials/</a>.</p>
 <hr>
 <h2 id="contributing-an-example">Contributing an example</h2>
 <p>Good examples are short, do one thing, and run. If you add one:</p>

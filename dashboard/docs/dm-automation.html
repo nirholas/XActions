@@ -14,6 +14,7 @@
   <meta property="og:title" content="DM Automation — XActions">
   <meta property="og:description" content="Export, manage, and automate X/Twitter Direct Messages.">
   <meta property="og:url" content="https://xactions.app/docs/dm-automation">
+  <meta property="og:image" content="https://xactions.app/og-docs.png">
   <meta property="og:site_name" content="XActions">
 
   <!-- Twitter Card -->
@@ -21,6 +22,7 @@
   <meta name="twitter:site" content="@nichxbt">
   <meta name="twitter:title" content="DM Automation — Free X/Twitter Tool">
   <meta name="twitter:description" content="Export, manage, and automate X/Twitter Direct Messages.">
+  <meta name="twitter:image" content="https://xactions.app/og-docs.png">
 
   <link rel="canonical" href="https://xactions.app/docs/dm-automation">
   <link rel="manifest" href="/manifest.json">
@@ -228,7 +230,8 @@
 })();
 </code></pre>
 <h2>📦 Node.js Module</h2>
-<pre><code class="language-javascript">import { sendDM, getConversations, exportDMs } from &#39;xactions&#39;;
+<pre><code class="language-javascript">import { sendDM, getConversations } from &#39;xactions/src/dmManager.js&#39;;
+import { exportDMs } from &#39;xactions&#39;;
 
 // Send a DM
 await sendDM(page, &#39;username&#39;, &#39;Hello from XActions!&#39;);
@@ -370,7 +373,7 @@ Input: { &quot;limit&quot;: 50, &quot;format&quot;: &quot;json&quot; }
       </div>
     </div>
     <div class="footer-bottom">
-      <p>© 2024-2026 XActions. MIT License. No API fees. No limits.</p>
+      <p>© 2024-2026 XActions. Apache-2.0 licensed. No API fees. No limits.</p>
     </div>
   </footer>
 </body>

@@ -88,9 +88,9 @@
   <aside class="sidebar" aria-label="Documentation sections">
     <div class="sidebar__group">
       <div class="sidebar__heading">Guides &amp; Reference</div>
-      <a class="sidebar__link" href="/docs/guides/scheduler">⏰ Scheduler &amp; Webhook Triggers</a>
       <a class="sidebar__link" href="/docs/guides/a2a-api-reference">A2A API Reference — XActions</a>
       <a class="sidebar__link" href="/docs/guides/a2a-protocol">A2A Protocol — XActions</a>
+      <a class="sidebar__link" href="/docs/guides/brief">Account briefs: research the accounts you are about to tag</a>
       <a class="sidebar__link" href="/docs/guides/portability">Account Portability — Export, Migrate &amp; Diff</a>
       <a class="sidebar__link" href="/docs/guides/algorithm-builder">Algorithm Builder — 24/7 Niche Growth Automation</a>
       <a class="sidebar__link" href="/docs/guides/analytics-advanced">Analytics &amp; Sentiment Analysis</a>
@@ -117,12 +117,14 @@
       <a class="sidebar__link" href="/docs/guides/media-archive">Media archive</a>
       <a class="sidebar__link" href="/docs/guides/monitoring">Monitoring Guide</a>
       <a class="sidebar__link" href="/docs/guides/notifications">Notifications</a>
+      <a class="sidebar__link" href="/docs/guides/orgs">Organizations: run a family of X accounts as a team</a>
       <a class="sidebar__link" href="/docs/guides/x402">Paying for XActions: x402 and MCP</a>
       <a class="sidebar__link" href="/docs/guides/plugins">Plugin System</a>
       <a class="sidebar__link" href="/docs/guides/streaming">Real-Time Streaming</a>
       <a class="sidebar__link" href="/docs/guides/streams">Real-time Streams — Live Twitter Monitoring</a>
       <a class="sidebar__link" href="/docs/guides/reputation-audit">Reputation audit: AI-score your own timeline, get a shareable card</a>
       <a class="sidebar__link" href="/docs/guides/rss-monitor">Rss Monitor</a>
+      <a class="sidebar__link" href="/docs/guides/scheduler">Scheduler &amp; Webhook Triggers</a>
       <a class="sidebar__link" href="/docs/guides/scrapers">Scrapers</a>
       <a class="sidebar__link" href="/docs/guides/scraping-infrastructure" aria-current="page">Scraping Infrastructure</a>
       <a class="sidebar__link" href="/docs/guides/scraping">Scraping Infrastructure</a>
@@ -156,6 +158,7 @@
       <a class="sidebar__link" href="/docs/guides/ai-api">XActions AI API Documentation</a>
       <a class="sidebar__link" href="/docs/guides/api-reference">XActions API Reference</a>
       <a class="sidebar__link" href="/docs/guides/automation">XActions Automation Framework Guide</a>
+      <a class="sidebar__link" href="/docs/guides/chat">XActions Chat</a>
       <a class="sidebar__link" href="/docs/guides/cli-reference">XActions CLI Reference</a>
       <a class="sidebar__link" href="/docs/guides/xactions-reference">XActions Complete Function Reference</a>
       <a class="sidebar__link" href="/docs/guides/readme">XActions Documentation</a>
@@ -293,11 +296,13 @@ what <code>xactions followers</code> does:</p>
 <code>paginationEngine.js</code>), which backs <code>xactions dataset</code>, the <code>x_dataset_*</code> MCP
 tools, and <code>/api/datasets</code>.</p>
 <h3 id="import-paths">Import paths</h3>
-<p><code>package.json</code> publishes <code>xactions/scrapers/twitter/http</code> (the index) but not the
-individual modules inside it, and does not publish <code>src/scraping/</code> at all.
-<code>import ... from &#39;xactions/src/...&#39;</code> throws <code>ERR_PACKAGE_PATH_NOT_EXPORTED</code>.
-Paths below that start with <code>./src/</code> are relative to the root of a clone; where a
-published subpath exists, the example uses it.</p>
+<p><code>package.json</code> exports <code>./src/*</code>, so every module under <code>src/</code> can be imported
+from an installed package by its file path:</p>
+<pre><code class="language-javascript">import { ProxyManager } from &#39;xactions/src/scraping/proxyManager.js&#39;;
+</code></pre>
+<p>Paths below that start with <code>./src/</code> are relative to the root of a clone; in your
+own project, write <code>xactions/src/</code> instead. Where a shorter published subpath
+exists (<code>xactions/scrapers/twitter/http</code>), the example uses it.</p>
 <hr>
 <h2 id="architecture">Architecture</h2>
 <pre><code>src/scraping/
@@ -922,7 +927,7 @@ const url = buildGraphQLUrl(
 <code>SPECIALISED_OPERATIONS</code> and deliberately kept out of <code>DEFAULT_FEATURES</code>, so a
 plain <code>UserTweets</code> call does not advertise flags the web client would never send
 with it. Call them through <code>operationFeatures()</code> instead.</p>
-<h3 id="where-quotlast-verifiedquot-comes-from">Where &quot;last verified&quot; comes from</h3>
+<h3 id="where-last-verified-comes-from">Where &quot;last verified&quot; comes from</h3>
 <p>Both generated modules record the upstream commit they were built from, when
 that commit was published, and when we fetched it, so a freshness claim has a
 source rather than a date somebody typed into a comment:</p>

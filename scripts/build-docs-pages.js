@@ -247,6 +247,7 @@ function generateHTML(slug, markdown) {
   <meta property="og:title" content="${escapeHtml(title)} — XActions">
   <meta property="og:description" content="${escapeHtml(seoDescription)}">
   <meta property="og:url" content="${canonicalUrl}">
+  <meta property="og:image" content="${SITE_URL}/og-docs.png">
   <meta property="og:site_name" content="XActions">
 
   <!-- Twitter Card -->
@@ -254,6 +255,7 @@ function generateHTML(slug, markdown) {
   <meta name="twitter:site" content="@nichxbt">
   <meta name="twitter:title" content="${escapeHtml(title)} — Free X/Twitter Tool">
   <meta name="twitter:description" content="${escapeHtml(seoDescription)}">
+  <meta name="twitter:image" content="${SITE_URL}/og-docs.png">
 
   <link rel="canonical" href="${canonicalUrl}">
   <link rel="manifest" href="/manifest.json">
@@ -646,7 +648,7 @@ async function build() {
       // Fix breadcrumb
       html = html.replace(
         `<a href="/docs">Documentation</a>`,
-        `<a href="/docs">Documentation</a> / <a href="/docs#step-by-step">Tutorials</a>`
+        `<a href="/docs">Documentation</a> / <a href="/docs/step-by-step/">Tutorials</a>`
       );
 
       // Related links — other tutorials

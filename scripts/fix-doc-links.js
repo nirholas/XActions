@@ -20,6 +20,13 @@
  *   6. unique basename match anywhere in the repo            => GitHub blob
  *   else leave and report.
  *
+ * A second pass handles every other relative href on a page rendered from
+ * markdown: links to source files and folders (../scripts/foo.js,
+ * ../examples/, ../LICENSE). They are correct on GitHub and 404 on the site.
+ * When the href does not reach a file the site serves, it is resolved against
+ * the page's markdown source; a repo file becomes a GitHub blob link and a
+ * repo folder a GitHub tree link. Hrefs that already work are left alone.
+ *
  * Run after the doc generators:  node scripts/fix-doc-links.js
  */
 import fs from 'fs';
@@ -29,6 +36,8 @@ import { fileURLToPath } from 'url';
 const ROOT = path.join(path.dirname(fileURLToPath(import.meta.url)), '..');
 const DASH = path.join(ROOT, 'dashboard');
 const GITHUB_BLOB = 'https://github.com/nirholas/XActions/blob/main';
+const GITHUB_TREE = 'https://github.com/nirholas/XActions/tree/main';
+const GITHUB_RAW = 'https://raw.githubusercontent.com/nirholas/XActions/main';
 
 const manifestPath = path.join(DASH, 'docs', '_pages-manifest.json');
 const manifest = fs.existsSync(manifestPath) ? JSON.parse(fs.readFileSync(manifestPath, 'utf-8')) : [];
@@ -43,6 +52,18 @@ for (const e of manifest) {
   if (!e.sourcePath || !e.slug) continue;
   const out = path.join(DASH, 'docs', e.outSubdir || '', `${e.slug}.html`);
   sourceOfPage.set(out, e.sourcePath);
+}
+// scripts/build-docs-pages.js renders docs/examples/<slug>.md to /docs/<slug>
+// and docs/examples/tutorials/<slug>.md to /docs/step-by-step/<slug>, outside
+// the manifest. Register those too so their relative links resolve.
+for (const [outSub, srcDir] of [['', 'docs/examples'], ['step-by-step', 'docs/examples/tutorials']]) {
+  const dir = path.join(ROOT, srcDir);
+  if (!fs.existsSync(dir)) continue;
+  for (const name of fs.readdirSync(dir)) {
+    if (!name.endsWith('.md')) continue;
+    const out = path.join(DASH, 'docs', outSub, name.replace(/\.md$/, '.html'));
+    if (!sourceOfPage.has(out) && fs.existsSync(out)) sourceOfPage.set(out, `${srcDir}/${name}`);
+  }
 }
 
 let mdIndex = null;
@@ -73,10 +94,27 @@ function* htmlFiles(dir) {
     else if (d.name.endsWith('.html')) yield full;
   }
 }
+/**
+ * Whether the site serves a path, the way the Worker's html_handling does:
+ * the file itself, <path>.html, or <path>/index.html. dashboard/, site/ and
+ * public/ are all published at the root (scripts/build-cloudflare.mjs).
+ */
+const SERVED_ROOTS = [DASH, path.join(ROOT, 'site'), path.join(ROOT, 'public')];
+function siteServes(urlPath) {
+  const clean = urlPath.replace(/\/+$/, '');
+  if (!clean) return true;
+  return SERVED_ROOTS.some((base) => {
+    const p = path.join(base, clean.slice(1));
+    if (!p.startsWith(base)) return false;
+    if (fs.existsSync(`${p}.html`) || fs.existsSync(path.join(p, 'index.html'))) return true;
+    return fs.existsSync(p) && fs.statSync(p).isFile();
+  });
+}
+
 function cleanUrl(rel) { return ('/' + rel.split(path.sep).join('/')).replace(/\.html$/, '').replace(/\/index$/, '/'); }
 
 const unresolved = new Map();
-let filesChanged = 0, linksFixed = 0;
+let filesChanged = 0, linksFixed = 0, repoLinksFixed = 0;
 
 for (const file of htmlFiles(DASH)) {
   const pageDir = path.dirname(file);
@@ -110,10 +148,35 @@ for (const file of htmlFiles(DASH)) {
     unresolved.set(target, (unresolved.get(target) || 0) + 1);
     return whole;
   });
+  if (sourceDir) {
+    const pageUrl = '/' + path.relative(DASH, file).split(path.sep).join('/');
+    html = html.replace(/(\s(href|src|srcset)\s*=\s*")([^"\s,]+)(")/gi, (whole, pre, attr, href, post) => {
+      if (/^([a-z][a-z0-9+.-]*:|\/\/|#|\/)/i.test(href) || href.includes('${')) return whole;
+      const [target, hash = ''] = href.split(/(?=#)/);
+      if (/\.md$/i.test(target)) return whole; // first pass owns these
+      let decoded;
+      try { decoded = decodeURI(target.split('?')[0]); } catch { return whole; }
+      if (siteServes(path.posix.join(path.posix.dirname(pageUrl), decoded))) return whole;
+      const repoAbs = path.resolve(sourceDir, decoded);
+      if (!repoAbs.startsWith(ROOT + path.sep) || !fs.existsSync(repoAbs)) {
+        unresolved.set(href, (unresolved.get(href) || 0) + 1);
+        return whole;
+      }
+      const repoRel = path.relative(ROOT, repoAbs).split(path.sep).join('/');
+      repoLinksFixed++; changed = true;
+      // A file the site publishes from public/, site/ or dashboard/ keeps its site URL.
+      const published = repoRel.match(/^(?:public|site|dashboard)(\/.+)$/);
+      if (published && siteServes(published[1])) return pre + encodeURI(published[1]) + hash + post;
+      // An <img src> needs the raw file; a GitHub blob page is HTML.
+      if (attr.toLowerCase() !== 'href') return pre + `${GITHUB_RAW}/${encodeURI(repoRel)}` + post;
+      const base = fs.statSync(repoAbs).isDirectory() ? GITHUB_TREE : GITHUB_BLOB;
+      return pre + `${base}/${encodeURI(repoRel)}${hash}` + post;
+    });
+  }
   if (changed) { fs.writeFileSync(file, html); filesChanged++; }
 }
 
-console.log(`Fixed ${linksFixed} .md links across ${filesChanged} files.`);
+console.log(`Fixed ${linksFixed} .md links and ${repoLinksFixed} repo-file links across ${filesChanged} files.`);
 if (unresolved.size) {
   console.log(`\nUnresolved (${unresolved.size} unique):`);
   for (const [t, n] of [...unresolved.entries()].sort((a, b) => b[1] - a[1])) console.log(`  ${String(n).padStart(3)}x ${t}`);

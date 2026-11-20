@@ -57,7 +57,7 @@
     "outSubdir": "guides",
     "priority": 0.8,
     "sourcePath": "docs/a2a-protocol.md",
-    "minutes": 1
+    "minutes": 3
   },
   {
     "slug": "agent-advanced",
@@ -213,7 +213,7 @@
     "outSubdir": "guides",
     "priority": 0.8,
     "sourcePath": "docs/architecture.md",
-    "minutes": 3
+    "minutes": 4
   },
   {
     "slug": "ask",
@@ -252,6 +252,18 @@
     "minutes": 25
   },
   {
+    "slug": "brief",
+    "title": "Account briefs: research the accounts you are about to tag",
+    "description": "Give xactions brief the accounts you plan to post about. It reads each one and returns one brief: what they are posting, the numbers they publish about themselves…",
+    "section": "Guides & Reference",
+    "icon": "📖",
+    "urlPath": "/docs/guides/brief",
+    "outSubdir": "guides",
+    "priority": 0.8,
+    "sourcePath": "docs/brief.md",
+    "minutes": 4
+  },
+  {
     "slug": "browser-extension",
     "title": "Browser Extension",
     "description": "Chrome/Edge extension for XActions. Run automation directly from the browser toolbar — no DevTools console needed.",
@@ -288,6 +300,18 @@
     "minutes": 3
   },
   {
+    "slug": "chat",
+    "title": "XActions Chat",
+    "description": "Attach an X account, a post or a thread, then ask about it. Answers cite the posts they come from, and each citation opens that post. On the web at xactions.app/chat.",
+    "section": "Guides & Reference",
+    "icon": "📖",
+    "urlPath": "/docs/guides/chat",
+    "outSubdir": "guides",
+    "priority": 0.8,
+    "sourcePath": "docs/chat.md",
+    "minutes": 3
+  },
+  {
     "slug": "cli-reference",
     "title": "XActions CLI Reference",
     "description": "The Complete X/Twitter Automation Toolkit",
@@ -297,7 +321,7 @@
     "outSubdir": "guides",
     "priority": 0.8,
     "sourcePath": "docs/cli-reference.md",
-    "minutes": 33
+    "minutes": 40
   },
   {
     "slug": "configuration",
@@ -309,7 +333,7 @@
     "outSubdir": "guides",
     "priority": 0.8,
     "sourcePath": "docs/configuration.md",
-    "minutes": 5
+    "minutes": 6
   },
   {
     "slug": "content-calendar",
@@ -588,6 +612,18 @@
     "minutes": 2
   },
   {
+    "slug": "orgs",
+    "title": "Organizations: run a family of X accounts as a team",
+    "description": "xactions org is for teams that run several X accounts in the open: a newsroom with main, breaking and regional handles, a company with main, dev, status and suppo…",
+    "section": "Guides & Reference",
+    "icon": "📖",
+    "urlPath": "/docs/guides/orgs",
+    "outSubdir": "guides",
+    "priority": 0.8,
+    "sourcePath": "docs/orgs.md",
+    "minutes": 6
+  },
+  {
     "slug": "plugins",
     "title": "Plugin System",
     "description": "Extend XActions with community plugins — add scrapers, MCP tools, automation actions, and API routes via npm packages.",
@@ -645,7 +681,7 @@
     "outSubdir": "guides",
     "priority": 0.8,
     "sourcePath": "docs/rest-api.md",
-    "minutes": 4
+    "minutes": 5
   },
   {
     "slug": "rss-monitor",
@@ -661,7 +697,7 @@
   },
   {
     "slug": "scheduler",
-    "title": "⏰ Scheduler & Webhook Triggers",
+    "title": "Scheduler & Webhook Triggers",
     "description": "Cron-based task scheduling with job history, retries, templates, and external webhook triggers. Competes with Hypefury, Buffer, and Zapier.",
     "section": "Guides & Reference",
     "icon": "📖",
@@ -669,7 +705,7 @@
     "outSubdir": "guides",
     "priority": 0.8,
     "sourcePath": "docs/scheduler.md",
-    "minutes": 2
+    "minutes": 3
   },
   {
     "slug": "scheduling",
@@ -813,7 +849,7 @@
     "outSubdir": "guides",
     "priority": 0.8,
     "sourcePath": "docs/teams.md",
-    "minutes": 1
+    "minutes": 2
   },
   {
     "slug": "troubleshooting",
@@ -1046,7 +1082,7 @@
   {
     "slug": "contributing-features",
     "title": "Adding New Features",
-    "description": "1. Create the script in src/ following browser-script-patterns.md 2. Add documentation in docs/examples/your-feature.md 3.",
+    "description": "1. Create the script in browser/ following browser-script-patterns.md 2. Add documentation in docs/examples/your-feature.md 3.",
     "section": "Developer Guides",
     "icon": "🛠️",
     "urlPath": "/docs/guides/developer/contributing-features",
@@ -1281,7 +1317,7 @@
     "outSubdir": "skills",
     "priority": 0.7,
     "sourcePath": "skills/bookmarks-management/SKILL.md",
-    "minutes": 2
+    "minutes": 3
   },
   {
     "slug": "business-ads",
@@ -1766,7 +1802,7 @@
   {
     "slug": "xactions-mcp-server",
     "title": "XActions MCP Server",
-    "description": "The definitive free Twitter/X MCP server. 153 tools for AI agents.",
+    "description": "The definitive free Twitter/X MCP server. 160 tools for AI agents.",
     "section": "Agent Skills",
     "icon": "🎯",
     "urlPath": "/docs/skills/xactions-mcp-server",
@@ -2181,7 +2217,7 @@
     "outSubdir": "project",
     "priority": 0.5,
     "sourcePath": "CONTRIBUTING.md",
-    "minutes": 4
+    "minutes": 5
   },
   {
     "slug": "changelog",
@@ -2193,7 +2229,7 @@
     "outSubdir": "project",
     "priority": 0.5,
     "sourcePath": "CHANGELOG.md",
-    "minutes": 41
+    "minutes": 82
   },
   {
     "slug": "roadmap",
@@ -2241,7 +2277,7 @@
     "outSubdir": "project",
     "priority": 0.5,
     "sourcePath": "README.md",
-    "minutes": 26
+    "minutes": 27
   },
   {
     "slug": "extension",
@@ -2253,7 +2289,7 @@
     "outSubdir": "extras",
     "priority": 0.5,
     "sourcePath": "extension/README.md",
-    "minutes": 3
+    "minutes": 4
   },
   {
     "slug": "integrations-n8n",

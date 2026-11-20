@@ -88,9 +88,9 @@
   <aside class="sidebar" aria-label="Documentation sections">
     <div class="sidebar__group">
       <div class="sidebar__heading">Guides &amp; Reference</div>
-      <a class="sidebar__link" href="/docs/guides/scheduler">⏰ Scheduler &amp; Webhook Triggers</a>
       <a class="sidebar__link" href="/docs/guides/a2a-api-reference">A2A API Reference — XActions</a>
       <a class="sidebar__link" href="/docs/guides/a2a-protocol">A2A Protocol — XActions</a>
+      <a class="sidebar__link" href="/docs/guides/brief">Account briefs: research the accounts you are about to tag</a>
       <a class="sidebar__link" href="/docs/guides/portability">Account Portability — Export, Migrate &amp; Diff</a>
       <a class="sidebar__link" href="/docs/guides/algorithm-builder">Algorithm Builder — 24/7 Niche Growth Automation</a>
       <a class="sidebar__link" href="/docs/guides/analytics-advanced">Analytics &amp; Sentiment Analysis</a>
@@ -117,12 +117,14 @@
       <a class="sidebar__link" href="/docs/guides/media-archive">Media archive</a>
       <a class="sidebar__link" href="/docs/guides/monitoring">Monitoring Guide</a>
       <a class="sidebar__link" href="/docs/guides/notifications">Notifications</a>
+      <a class="sidebar__link" href="/docs/guides/orgs">Organizations: run a family of X accounts as a team</a>
       <a class="sidebar__link" href="/docs/guides/x402">Paying for XActions: x402 and MCP</a>
       <a class="sidebar__link" href="/docs/guides/plugins">Plugin System</a>
       <a class="sidebar__link" href="/docs/guides/streaming">Real-Time Streaming</a>
       <a class="sidebar__link" href="/docs/guides/streams">Real-time Streams — Live Twitter Monitoring</a>
       <a class="sidebar__link" href="/docs/guides/reputation-audit">Reputation audit: AI-score your own timeline, get a shareable card</a>
       <a class="sidebar__link" href="/docs/guides/rss-monitor">Rss Monitor</a>
+      <a class="sidebar__link" href="/docs/guides/scheduler">Scheduler &amp; Webhook Triggers</a>
       <a class="sidebar__link" href="/docs/guides/scrapers">Scrapers</a>
       <a class="sidebar__link" href="/docs/guides/scraping-infrastructure">Scraping Infrastructure</a>
       <a class="sidebar__link" href="/docs/guides/scraping">Scraping Infrastructure</a>
@@ -156,6 +158,7 @@
       <a class="sidebar__link" href="/docs/guides/ai-api">XActions AI API Documentation</a>
       <a class="sidebar__link" href="/docs/guides/api-reference">XActions API Reference</a>
       <a class="sidebar__link" href="/docs/guides/automation">XActions Automation Framework Guide</a>
+      <a class="sidebar__link" href="/docs/guides/chat">XActions Chat</a>
       <a class="sidebar__link" href="/docs/guides/cli-reference">XActions CLI Reference</a>
       <a class="sidebar__link" href="/docs/guides/xactions-reference">XActions Complete Function Reference</a>
       <a class="sidebar__link" href="/docs/guides/readme">XActions Documentation</a>
@@ -361,8 +364,9 @@ curl http://localhost:3001/api/workflows/actions
 curl http://localhost:3001/api/workflows/my-flow/runs
 curl http://localhost:3001/api/workflows/my-flow/runs/&lt;runId&gt;
 
-# Fire a webhook-triggered workflow
-curl -X POST http://localhost:3001/api/workflows/webhook/&lt;webhookId&gt; -d &#39;{}&#39;
+# Fire a webhook-triggered workflow (the secret is returned when it is created)
+curl -X POST http://localhost:3001/api/workflows/webhook/&lt;webhookId&gt; \
+  -H &#39;X-Webhook-Secret: &lt;secret&gt;&#39; -d &#39;{}&#39;
 </code></pre>
 <hr>
 <h2 id="workflow-definition">Workflow Definition</h2>
@@ -441,7 +445,13 @@ along with anything else whose key starts with <code>_</code>.</p>
 <pre><code class="language-javascript">{ type: &#39;webhook&#39; }
 // Generates URL: /api/workflows/webhook/{webhookId}
 </code></pre>
-<p>POST to the generated URL to trigger the workflow. Payload is passed as initial context.</p>
+<p>POST to the generated URL, with the trigger&#39;s <code>secret</code> in the <code>X-Webhook-Secret</code>
+header, to trigger the workflow. Payload is passed as initial context.</p>
+<p>On the API server a run, whether triggered or started with <code>POST /:id/run</code>,
+acts as the workflow&#39;s owner: it uses the X session the owner saved with
+<code>POST /api/session/save-session</code>, and fails with a clear error when there is
+none rather than falling back to the server&#39;s own <code>XACTIONS_SESSION_COOKIE</code>.
+The CLI and MCP server run as the machine&#39;s own account and still use it.</p>
 <h3 id="event">Event</h3>
 <pre><code class="language-javascript">{ 
   type: &#39;event&#39;, 

@@ -88,12 +88,12 @@
   <aside class="sidebar" aria-label="Documentation sections">
     <div class="sidebar__group">
       <div class="sidebar__heading">Guides &amp; Reference</div>
-      <a class="sidebar__link" href="/docs/guides/scheduler">⏰ Scheduler &amp; Webhook Triggers</a>
       <a class="sidebar__link" href="/docs/guides/a2a-api-reference">A2A API Reference — XActions</a>
       <a class="sidebar__link" href="/docs/guides/a2a-protocol">A2A Protocol — XActions</a>
+      <a class="sidebar__link" href="/docs/guides/brief">Account briefs: research the accounts you are about to tag</a>
       <a class="sidebar__link" href="/docs/guides/portability">Account Portability — Export, Migrate &amp; Diff</a>
       <a class="sidebar__link" href="/docs/guides/algorithm-builder">Algorithm Builder — 24/7 Niche Growth Automation</a>
-      <a class="sidebar__link" href="/docs">+ 72 more…</a>
+      <a class="sidebar__link" href="/docs">+ 75 more…</a>
     </div>
     <div class="sidebar__group">
       <div class="sidebar__heading">Tutorials</div>
@@ -222,7 +222,7 @@
 </blockquote>
 <hr>
 <h2 id="step-2-load-the-core-module">Step 2: Load the Core Module</h2>
-<p>Copy the entire contents of <a href="../../src/automation/core.js"><code>src/automation/core.js</code></a> and paste into the console. Press Enter.</p>
+<p>Copy the entire contents of <a href="https://github.com/nirholas/XActions/blob/main/src/automation/core.js"><code>src/automation/core.js</code></a> and paste into the console. Press Enter.</p>
 <p>You should see:</p>
 <pre><code>✅ XActions Core loaded! Ready for automation scripts.
 </code></pre>
@@ -243,7 +243,7 @@ console.log(window.XActions.Core.SELECTORS);
 <h3 id="example-like-10-posts-about-ai">Example: Like 10 Posts About AI</h3>
 <ol>
 <li>Make sure you&#39;re on your X home feed</li>
-<li>Open <a href="../../src/automation/autoLiker.js"><code>src/automation/autoLiker.js</code></a></li>
+<li>Open <a href="https://github.com/nirholas/XActions/blob/main/src/automation/autoLiker.js"><code>src/automation/autoLiker.js</code></a></li>
 <li><strong>Before pasting</strong>, edit the OPTIONS section:</li>
 </ol>
 <pre><code class="language-javascript">const OPTIONS = {
@@ -330,7 +330,7 @@ window.XActions.Core.storage.get(&#39;followed_users&#39;);
 3. Paste autoLiker.js (configured with your keywords)
    → Likes 20 matching posts
 </code></pre>
-<h3 id="intermediate-search-amp-follow">Intermediate: Search &amp; Follow</h3>
+<h3 id="intermediate-search--follow">Intermediate: Search &amp; Follow</h3>
 <pre><code>1. Paste core.js
 2. Be on any page
 3. Paste keywordFollow.js (configured with niche terms)
@@ -390,9 +390,9 @@ Week 3: core.js + smartUnfollow.js → Clean up non-followers
 </tbody></table>
 <hr>
 <h2 id="troubleshooting">Troubleshooting</h2>
-<h3 id="quot-core-module-not-loadedquot">&quot;❌ Core module not loaded!&quot;</h3>
+<h3 id="-core-module-not-loaded">&quot;❌ Core module not loaded!&quot;</h3>
 <p>You forgot to paste core.js first. Always paste core.js before any other script.</p>
-<h3 id="quotcould-not-find-tweet-textareaquot">&quot;Could not find tweet textarea&quot;</h3>
+<h3 id="could-not-find-tweet-textarea">&quot;Could not find tweet textarea&quot;</h3>
 <p>The compose dialog didn&#39;t open. Try refreshing and ensuring you&#39;re on x.com (not a different tab).</p>
 <h3 id="script-seems-to-do-nothing">Script seems to do nothing</h3>
 <ol>
@@ -403,13 +403,13 @@ Week 3: core.js + smartUnfollow.js → Clean up non-followers
 </ol>
 <h3 id="actions-are-being-denied">Actions are being denied</h3>
 <p>You may be rate-limited. Wait an hour and try again with smaller limits.</p>
-<h3 id="quotcannot-read-properties-of-nullquot">&quot;Cannot read properties of null&quot;</h3>
+<h3 id="cannot-read-properties-of-null">&quot;Cannot read properties of null&quot;</h3>
 <p>A DOM element wasn&#39;t found. X may have updated their UI. Check <a href="/docs/guides/dom-selectors">dom-selectors.md</a> for current selectors.</p>
 <hr>
 <h2 id="next-steps">Next Steps</h2>
 <ul>
-<li><strong>Learn the full API:</strong> Load <a href="../../src/automation/actions.js">actions.js</a> for 100+ functions — see <a href="/docs/automation/actions-reference">Actions Reference</a></li>
-<li><strong>Use the control panel:</strong> Load <a href="../../src/automation/controlPanel.js">controlPanel.js</a> for a visual UI — see <a href="/docs/automation/scripts-reference#controlpaneljs--floating-control-panel">Scripts Reference</a></li>
+<li><strong>Learn the full API:</strong> Load <a href="https://github.com/nirholas/XActions/blob/main/src/automation/actions.js">actions.js</a> for 100+ functions — see <a href="/docs/automation/actions-reference">Actions Reference</a></li>
+<li><strong>Use the control panel:</strong> Load <a href="https://github.com/nirholas/XActions/blob/main/src/automation/controlPanel.js">controlPanel.js</a> for a visual UI — see <a href="/docs/automation/scripts-reference#controlpaneljs--floating-control-panel">Scripts Reference</a></li>
 <li><strong>Chain scripts:</strong> See <a href="/docs/automation/advanced-techniques">Advanced Techniques</a> for multi-script workflows</li>
 <li><strong>Deep dive into Core:</strong> See <a href="/docs/automation/core-reference">Core Reference</a> for every utility function</li>
 </ul>

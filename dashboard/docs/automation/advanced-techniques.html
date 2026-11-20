@@ -88,12 +88,12 @@
   <aside class="sidebar" aria-label="Documentation sections">
     <div class="sidebar__group">
       <div class="sidebar__heading">Guides &amp; Reference</div>
-      <a class="sidebar__link" href="/docs/guides/scheduler">⏰ Scheduler &amp; Webhook Triggers</a>
       <a class="sidebar__link" href="/docs/guides/a2a-api-reference">A2A API Reference — XActions</a>
       <a class="sidebar__link" href="/docs/guides/a2a-protocol">A2A Protocol — XActions</a>
+      <a class="sidebar__link" href="/docs/guides/brief">Account briefs: research the accounts you are about to tag</a>
       <a class="sidebar__link" href="/docs/guides/portability">Account Portability — Export, Migrate &amp; Diff</a>
       <a class="sidebar__link" href="/docs/guides/algorithm-builder">Algorithm Builder — 24/7 Niche Growth Automation</a>
-      <a class="sidebar__link" href="/docs">+ 72 more…</a>
+      <a class="sidebar__link" href="/docs">+ 75 more…</a>
     </div>
     <div class="sidebar__group">
       <div class="sidebar__heading">Tutorials</div>
@@ -447,7 +447,7 @@ const cell = document.querySelector(SELECTORS.userCell);
 if (cell) console.log(window.XActions.Core.extractUserFromCell(cell));
 </code></pre>
 <hr>
-<h2 id="dom-discovery-amp-selector-updates">DOM Discovery &amp; Selector Updates</h2>
+<h2 id="dom-discovery--selector-updates">DOM Discovery &amp; Selector Updates</h2>
 <p>X/Twitter changes their DOM frequently. Here&#39;s how to find new selectors:</p>
 <h3 id="method-1-devmode">Method 1: <code>devMode()</code></h3>
 <pre><code class="language-javascript">XActions.utils.devMode();
@@ -559,7 +559,7 @@ observer.observe(document.body, { childList: true, subtree: true });
   run();
 })();
 </code></pre>
-<h3 id="pattern-scroll-amp-collect-no-actions">Pattern: Scroll &amp; Collect (No Actions)</h3>
+<h3 id="pattern-scroll--collect-no-actions">Pattern: Scroll &amp; Collect (No Actions)</h3>
 <pre><code class="language-javascript">const collectData = async () =&gt; {
   const data = [];
   let lastHeight = 0;
@@ -645,7 +645,7 @@ Week 3:   Add autoLiker.js with very low limits (5-10/day)
 Week 4:   Add keywordFollow.js with very low limits (5-10/day)
 Month 2+: Gradually increase limits
 </code></pre>
-<h3 id="signs-you39re-being-rate-limited">Signs You&#39;re Being Rate Limited</h3>
+<h3 id="signs-youre-being-rate-limited">Signs You&#39;re Being Rate Limited</h3>
 <ul>
 <li>Actions start failing silently</li>
 <li>Follow buttons don&#39;t respond</li>

@@ -21,7 +21,6 @@
 - [Data Flow](#data-flow)
 - [Activity Loop](#activity-loop)
 - [Rate Limiting Strategy](#rate-limiting-strategy)
-- [Anti-Detection Techniques](#anti-detection-techniques)
 - [LLM Tier System](#llm-tier-system)
 - [Database Schema](#database-schema)
 - [File Layout](#file-layout)

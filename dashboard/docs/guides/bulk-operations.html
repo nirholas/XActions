@@ -88,9 +88,9 @@
   <aside class="sidebar" aria-label="Documentation sections">
     <div class="sidebar__group">
       <div class="sidebar__heading">Guides &amp; Reference</div>
-      <a class="sidebar__link" href="/docs/guides/scheduler">⏰ Scheduler &amp; Webhook Triggers</a>
       <a class="sidebar__link" href="/docs/guides/a2a-api-reference">A2A API Reference — XActions</a>
       <a class="sidebar__link" href="/docs/guides/a2a-protocol">A2A Protocol — XActions</a>
+      <a class="sidebar__link" href="/docs/guides/brief">Account briefs: research the accounts you are about to tag</a>
       <a class="sidebar__link" href="/docs/guides/portability">Account Portability — Export, Migrate &amp; Diff</a>
       <a class="sidebar__link" href="/docs/guides/algorithm-builder">Algorithm Builder — 24/7 Niche Growth Automation</a>
       <a class="sidebar__link" href="/docs/guides/analytics-advanced">Analytics &amp; Sentiment Analysis</a>
@@ -117,12 +117,14 @@
       <a class="sidebar__link" href="/docs/guides/media-archive">Media archive</a>
       <a class="sidebar__link" href="/docs/guides/monitoring">Monitoring Guide</a>
       <a class="sidebar__link" href="/docs/guides/notifications">Notifications</a>
+      <a class="sidebar__link" href="/docs/guides/orgs">Organizations: run a family of X accounts as a team</a>
       <a class="sidebar__link" href="/docs/guides/x402">Paying for XActions: x402 and MCP</a>
       <a class="sidebar__link" href="/docs/guides/plugins">Plugin System</a>
       <a class="sidebar__link" href="/docs/guides/streaming">Real-Time Streaming</a>
       <a class="sidebar__link" href="/docs/guides/streams">Real-time Streams — Live Twitter Monitoring</a>
       <a class="sidebar__link" href="/docs/guides/reputation-audit">Reputation audit: AI-score your own timeline, get a shareable card</a>
       <a class="sidebar__link" href="/docs/guides/rss-monitor">Rss Monitor</a>
+      <a class="sidebar__link" href="/docs/guides/scheduler">Scheduler &amp; Webhook Triggers</a>
       <a class="sidebar__link" href="/docs/guides/scrapers">Scrapers</a>
       <a class="sidebar__link" href="/docs/guides/scraping-infrastructure">Scraping Infrastructure</a>
       <a class="sidebar__link" href="/docs/guides/scraping">Scraping Infrastructure</a>
@@ -156,6 +158,7 @@
       <a class="sidebar__link" href="/docs/guides/ai-api">XActions AI API Documentation</a>
       <a class="sidebar__link" href="/docs/guides/api-reference">XActions API Reference</a>
       <a class="sidebar__link" href="/docs/guides/automation">XActions Automation Framework Guide</a>
+      <a class="sidebar__link" href="/docs/guides/chat">XActions Chat</a>
       <a class="sidebar__link" href="/docs/guides/cli-reference">XActions CLI Reference</a>
       <a class="sidebar__link" href="/docs/guides/xactions-reference">XActions Complete Function Reference</a>
       <a class="sidebar__link" href="/docs/guides/readme">XActions Documentation</a>
@@ -322,7 +325,10 @@ const result = await bulkExecute(usernames, &#39;follow&#39;, {
   skipErrors: true,
   logFile: &#39;follow-log.json&#39;
 });
-// { action: &#39;follow&#39;, total: 100, succeeded: 95, failed: 3, skippedBlacklist: 2, duration: &#39;3m 20s&#39; }
+// Counts, not arrays. The usernames behind them are in result.results.
+// { action: &#39;follow&#39;, total: 100, processed: 100, succeeded: 95, alreadyFollowing: 2,
+//   failed: 3, skippedBlacklist: 2, remaining: 0, duration: &#39;3m 20s&#39;,
+//   results: { succeeded: [...], already: [...], failed: [{ username, status, error }] } }
 
 // Bulk scrape to JSON
 const { results } = await bulkScrape(usernames, { output: &#39;profiles.json&#39; });
@@ -494,6 +500,12 @@ naval
 <td>Progress file to resume from</td>
 </tr>
 <tr>
+<td><code>options.resume</code></td>
+<td><code>boolean</code></td>
+<td><code>false</code></td>
+<td>Resume from the newest progress file for this action</td>
+</tr>
+<tr>
 <td><code>options.force</code></td>
 <td><code>boolean</code></td>
 <td><code>false</code></td>
@@ -512,7 +524,49 @@ naval
 <td>List name for <code>add-to-list</code></td>
 </tr>
 </tbody></table>
-<p><strong>Returns:</strong> <code>{ action, total, succeeded, failed, skippedBlacklist, duration, progressFile }</code></p>
+<p><strong>Returns:</strong> <code>{ action, total, processed, succeeded, alreadyFollowing, failed, skippedBlacklist, remaining, stoppedEarly, duration, progressFile, results: { succeeded, already, failed } }</code></p>
+<p><code>succeeded</code> and <code>failed</code> are counts. <code>results</code> carries the usernames behind those counts, and each failed entry records <code>status</code> and <code>error</code>:</p>
+<table>
+<thead>
+<tr>
+<th><code>status</code></th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>success</code></td>
+<td>The action ran and X confirmed it</td>
+</tr>
+<tr>
+<td><code>already_following</code></td>
+<td>The account was already in that state; nothing was sent</td>
+</tr>
+<tr>
+<td><code>failed</code></td>
+<td>Ran, but X never confirmed it — the reason is in <code>error</code></td>
+</tr>
+<tr>
+<td><code>browser_error</code></td>
+<td>The browser died or the page was lost; retried, then reported with the original message</td>
+</tr>
+<tr>
+<td><code>auth_error</code></td>
+<td>No usable session — the run stops early and points at <code>xactions login</code></td>
+</tr>
+<tr>
+<td><code>rate_limited</code></td>
+<td>X refused on quota; retried</td>
+</tr>
+<tr>
+<td><code>target_not_found</code></td>
+<td>The profile does not exist</td>
+</tr>
+<tr>
+<td><code>not_implemented</code></td>
+<td>That action has no implementation behind it</td>
+</tr>
+</tbody></table>
+<p>Only <code>failed</code>, <code>browser_error</code> and <code>rate_limited</code> are retried; <code>auth_error</code> and <code>target_not_found</code> are final.</p>
 <h3 id="bulkscrapeusernames-options"><code>bulkScrape(usernames, options)</code></h3>
 <p>Scrapes profiles in bulk and saves results.</p>
 <table>

@@ -88,9 +88,9 @@
   <aside class="sidebar" aria-label="Documentation sections">
     <div class="sidebar__group">
       <div class="sidebar__heading">Guides &amp; Reference</div>
-      <a class="sidebar__link" href="/docs/guides/scheduler">⏰ Scheduler &amp; Webhook Triggers</a>
       <a class="sidebar__link" href="/docs/guides/a2a-api-reference">A2A API Reference — XActions</a>
       <a class="sidebar__link" href="/docs/guides/a2a-protocol">A2A Protocol — XActions</a>
+      <a class="sidebar__link" href="/docs/guides/brief">Account briefs: research the accounts you are about to tag</a>
       <a class="sidebar__link" href="/docs/guides/portability">Account Portability — Export, Migrate &amp; Diff</a>
       <a class="sidebar__link" href="/docs/guides/algorithm-builder">Algorithm Builder — 24/7 Niche Growth Automation</a>
       <a class="sidebar__link" href="/docs/guides/analytics-advanced">Analytics &amp; Sentiment Analysis</a>
@@ -117,12 +117,14 @@
       <a class="sidebar__link" href="/docs/guides/media-archive">Media archive</a>
       <a class="sidebar__link" href="/docs/guides/monitoring">Monitoring Guide</a>
       <a class="sidebar__link" href="/docs/guides/notifications">Notifications</a>
+      <a class="sidebar__link" href="/docs/guides/orgs">Organizations: run a family of X accounts as a team</a>
       <a class="sidebar__link" href="/docs/guides/x402">Paying for XActions: x402 and MCP</a>
       <a class="sidebar__link" href="/docs/guides/plugins">Plugin System</a>
       <a class="sidebar__link" href="/docs/guides/streaming">Real-Time Streaming</a>
       <a class="sidebar__link" href="/docs/guides/streams">Real-time Streams — Live Twitter Monitoring</a>
       <a class="sidebar__link" href="/docs/guides/reputation-audit">Reputation audit: AI-score your own timeline, get a shareable card</a>
       <a class="sidebar__link" href="/docs/guides/rss-monitor">Rss Monitor</a>
+      <a class="sidebar__link" href="/docs/guides/scheduler">Scheduler &amp; Webhook Triggers</a>
       <a class="sidebar__link" href="/docs/guides/scrapers">Scrapers</a>
       <a class="sidebar__link" href="/docs/guides/scraping-infrastructure">Scraping Infrastructure</a>
       <a class="sidebar__link" href="/docs/guides/scraping">Scraping Infrastructure</a>
@@ -156,6 +158,7 @@
       <a class="sidebar__link" href="/docs/guides/ai-api">XActions AI API Documentation</a>
       <a class="sidebar__link" href="/docs/guides/api-reference">XActions API Reference</a>
       <a class="sidebar__link" href="/docs/guides/automation">XActions Automation Framework Guide</a>
+      <a class="sidebar__link" href="/docs/guides/chat">XActions Chat</a>
       <a class="sidebar__link" href="/docs/guides/cli-reference">XActions CLI Reference</a>
       <a class="sidebar__link" href="/docs/guides/xactions-reference">XActions Complete Function Reference</a>
       <a class="sidebar__link" href="/docs/guides/readme">XActions Documentation</a>
@@ -451,7 +454,7 @@ Content-Type: application/json
 <pre><code class="language-http">GET /api/engagement/analytics
 </code></pre>
 <hr>
-<h2 id="discovery-amp-search">Discovery &amp; Search</h2>
+<h2 id="discovery--search">Discovery &amp; Search</h2>
 <h3 id="search-tweets">Search Tweets</h3>
 <pre><code class="language-http">GET /api/discovery/search?q=xactions&amp;limit=50&amp;filter=latest
 </code></pre>
@@ -473,8 +476,59 @@ Content-Type: application/json
 }
 </code></pre>
 <h3 id="get-conversations">Get Conversations</h3>
-<pre><code class="language-http">GET /api/messages/conversations
+<pre><code class="language-http">GET /api/messages/conversations?limit=20
 </code></pre>
+<p>Queues a job and answers with its <code>operationId</code>. The finished job&#39;s <code>result</code>
+holds <code>{ success, count, conversations }</code>, each conversation shaped like the
+entries of <code>GET /api/messages/groups</code> below plus a <code>type</code> of <code>ONE_TO_ONE</code> or
+<code>GROUP_DM</code>.</p>
+<h3 id="list-dm-groups">List DM Groups</h3>
+<pre><code class="language-http">GET /api/messages/groups?limit=50
+</code></pre>
+<p>Reads the group DMs your saved X session belongs to, straight from X, and
+answers immediately. <code>limit</code> is 1 to 100 (default 50). One-to-one
+conversations are left out, and up to 500 conversations are scanned to find
+the groups. It needs a session saved with <code>POST /api/session/save-session</code>.</p>
+<pre><code class="language-json">{
+  &quot;count&quot;: 1,
+  &quot;groups&quot;: [
+    {
+      &quot;id&quot;: &quot;1700000000000000001&quot;,
+      &quot;name&quot;: &quot;Launch crew&quot;,
+      &quot;avatar&quot;: &quot;https://pbs.twimg.com/dm_group_img/.../photo.jpg&quot;,
+      &quot;participants&quot;: [&quot;111&quot;, &quot;222&quot;, &quot;333&quot;],
+      &quot;adminUserIds&quot;: [&quot;111&quot;],
+      &quot;lastMessage&quot;: &quot;ship it&quot;,
+      &quot;unreadCount&quot;: 2,
+      &quot;updatedAt&quot;: &quot;2026-09-22T10:13:20.000Z&quot;
+    }
+  ]
+}
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Status</th>
+<th><code>code</code></th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>400</td>
+<td><code>NO_SESSION</code></td>
+<td>No X session is saved for this account</td>
+</tr>
+<tr>
+<td>401</td>
+<td><code>SESSION_EXPIRED</code></td>
+<td>X rejected the saved session; save a fresh one</td>
+</tr>
+<tr>
+<td>502</td>
+<td><code>CSRF_UNAVAILABLE</code> or <code>X_REQUEST_FAILED</code></td>
+<td>X did not answer usefully; retry shortly</td>
+</tr>
+</tbody></table>
 <h3 id="export-dms">Export DMs</h3>
 <pre><code class="language-http">GET /api/messages/export
 </code></pre>
@@ -735,7 +789,7 @@ Content-Type: application/json
 <pre><code class="language-http">POST /api/automations/stop-all
 </code></pre>
 <hr>
-<h2 id="analytics-amp-sentiment">Analytics &amp; Sentiment</h2>
+<h2 id="analytics--sentiment">Analytics &amp; Sentiment</h2>
 <h3 id="analyze-sentiment">Analyze Sentiment</h3>
 <pre><code class="language-http">POST /api/analytics/sentiment
 Content-Type: application/json
@@ -776,7 +830,7 @@ Content-Type: application/json
   &quot;days&quot;: 30
 }
 </code></pre>
-<h3 id="account-history-amp-growth">Account History &amp; Growth</h3>
+<h3 id="account-history--growth">Account History &amp; Growth</h3>
 <pre><code class="language-http">GET /api/analytics/history/:username
 GET /api/analytics/growth/:username
 POST /api/analytics/compare     { &quot;usernames&quot;: [&quot;alice&quot;, &quot;bob&quot;] }
@@ -796,13 +850,15 @@ GET /api/spaces/scheduled
 GET /api/spaces/scrape?url=&lt;space_url&gt;
 </code></pre>
 <hr>
-<h2 id="settings-amp-privacy">Settings &amp; Privacy</h2>
+<h2 id="settings--privacy">Settings &amp; Privacy</h2>
 <pre><code class="language-http">GET  /api/settings/
 PUT  /api/settings/protected     { &quot;enabled&quot;: true }
 GET  /api/settings/blocked
 GET  /api/settings/muted
-POST /api/settings/download-data
 </code></pre>
+<p>X only builds a data archive after the account holder confirms their password
+and a code sent by email or SMS, so there is no endpoint that requests one.
+Request it at <a target="_blank" rel="noopener noreferrer" href="https://x.com/settings/download_your_data">x.com/settings/download_your_data</a>.</p>
 <hr>
 <h2 id="data-portability">Data Portability</h2>
 <h3 id="export-account">Export Account</h3>
@@ -1156,7 +1212,7 @@ socket.on(&#39;alert:sentiment-shift&#39;, (data) =&gt; { /* sentiment change */
     </article>
 
     <div class="page-meta">
-      <span>4 min read</span>
+      <span>5 min read</span>
       <a href="https://github.com/nirholas/XActions/edit/main/docs/rest-api.md" target="_blank" rel="noopener">Edit this page</a>
       <a href="https://github.com/nirholas/XActions/issues/new?title=Docs%3A%20XActions%20REST%20API%20Reference" target="_blank" rel="noopener">Report a problem</a>
     </div>

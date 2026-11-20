@@ -88,9 +88,9 @@
   <aside class="sidebar" aria-label="Documentation sections">
     <div class="sidebar__group">
       <div class="sidebar__heading">Guides &amp; Reference</div>
-      <a class="sidebar__link" href="/docs/guides/scheduler">⏰ Scheduler &amp; Webhook Triggers</a>
       <a class="sidebar__link" href="/docs/guides/a2a-api-reference">A2A API Reference — XActions</a>
       <a class="sidebar__link" href="/docs/guides/a2a-protocol">A2A Protocol — XActions</a>
+      <a class="sidebar__link" href="/docs/guides/brief">Account briefs: research the accounts you are about to tag</a>
       <a class="sidebar__link" href="/docs/guides/portability">Account Portability — Export, Migrate &amp; Diff</a>
       <a class="sidebar__link" href="/docs/guides/algorithm-builder">Algorithm Builder — 24/7 Niche Growth Automation</a>
       <a class="sidebar__link" href="/docs/guides/analytics-advanced">Analytics &amp; Sentiment Analysis</a>
@@ -117,12 +117,14 @@
       <a class="sidebar__link" href="/docs/guides/media-archive">Media archive</a>
       <a class="sidebar__link" href="/docs/guides/monitoring">Monitoring Guide</a>
       <a class="sidebar__link" href="/docs/guides/notifications">Notifications</a>
+      <a class="sidebar__link" href="/docs/guides/orgs">Organizations: run a family of X accounts as a team</a>
       <a class="sidebar__link" href="/docs/guides/x402">Paying for XActions: x402 and MCP</a>
       <a class="sidebar__link" href="/docs/guides/plugins">Plugin System</a>
       <a class="sidebar__link" href="/docs/guides/streaming">Real-Time Streaming</a>
       <a class="sidebar__link" href="/docs/guides/streams">Real-time Streams — Live Twitter Monitoring</a>
       <a class="sidebar__link" href="/docs/guides/reputation-audit">Reputation audit: AI-score your own timeline, get a shareable card</a>
       <a class="sidebar__link" href="/docs/guides/rss-monitor">Rss Monitor</a>
+      <a class="sidebar__link" href="/docs/guides/scheduler">Scheduler &amp; Webhook Triggers</a>
       <a class="sidebar__link" href="/docs/guides/scrapers">Scrapers</a>
       <a class="sidebar__link" href="/docs/guides/scraping-infrastructure">Scraping Infrastructure</a>
       <a class="sidebar__link" href="/docs/guides/scraping">Scraping Infrastructure</a>
@@ -156,6 +158,7 @@
       <a class="sidebar__link" href="/docs/guides/ai-api">XActions AI API Documentation</a>
       <a class="sidebar__link" href="/docs/guides/api-reference">XActions API Reference</a>
       <a class="sidebar__link" href="/docs/guides/automation">XActions Automation Framework Guide</a>
+      <a class="sidebar__link" href="/docs/guides/chat">XActions Chat</a>
       <a class="sidebar__link" href="/docs/guides/cli-reference">XActions CLI Reference</a>
       <a class="sidebar__link" href="/docs/guides/xactions-reference">XActions Complete Function Reference</a>
       <a class="sidebar__link" href="/docs/guides/readme">XActions Documentation</a>
@@ -296,7 +299,7 @@ on which surface you use.</p>
 <td><code>.env</code>.</td>
 </tr>
 </tbody></table>
-<p>Only the last one needs a <code>.env</code> file at all. Copy <a href="../.env.example"><code>.env.example</code></a>
+<p>Only the last one needs a <code>.env</code> file at all. Copy <a href="https://github.com/nirholas/XActions/blob/main/.env.example"><code>.env.example</code></a>
 if you are running the server.</p>
 <hr>
 <h2 id="session-cookies">Session cookies</h2>
@@ -373,7 +376,7 @@ await scraper.saveCookies(&#39;./cookies.json&#39;);   // persist a refreshed se
   }
 }
 </code></pre>
-<p>Without them the server still starts and still serves all 152 tools. The
+<p>Without them the server still starts and still serves all 160 tools. The
 guest-tier ones (profiles, public timelines) work and the rest report that they
 need a session.</p>
 <h3 id="mcp-server-flags-and-env">MCP server flags and env</h3>
@@ -480,14 +483,14 @@ scripts.</p>
 <td>Used for CORS and redirects.</td>
 </tr>
 <tr>
-<td><code>CORS_ORIGINS</code></td>
-<td>localhost origins</td>
-<td>Comma-separated allowlist.</td>
+<td><code>DEV_ORIGINS</code></td>
+<td>localhost:3000, 3001, 5173</td>
+<td>Development only: the comma-separated CORS origins, replacing the localhost defaults. Production allows <code>https://xactions.app</code> and <code>FRONTEND_URL</code>.</td>
 </tr>
 <tr>
-<td><code>LOG_LEVEL</code></td>
-<td><code>info</code></td>
-<td><code>debug</code>, <code>info</code>, <code>warn</code>, <code>error</code>.</td>
+<td><code>TRUST_PROXY</code></td>
+<td><code>1</code> on Fly, Railway and Render; off elsewhere</td>
+<td>How many proxies sit in front of the API, so rate limits see the real client IP (any Express <code>trust proxy</code> value works). Never set it higher than the real number of proxies: clients could then choose their own IP with <code>X-Forwarded-For</code>.</td>
 </tr>
 </tbody></table>
 <h3 id="security">Security</h3>
@@ -510,6 +513,14 @@ scripts.</p>
 <td><code>ADMIN_API_KEY</code></td>
 <td>Guards the admin endpoints. Generate with <code>openssl rand -hex 32</code>.</td>
 </tr>
+<tr>
+<td><code>COOKIE_ENCRYPTION_KEY</code></td>
+<td>Encrypts saved X sessions, and the session a running monitor or RSS feed keeps so it can act later. Falls back to <code>SESSION_SECRET</code>, then <code>JWT_SECRET</code>. Changing it makes saved sessions unreadable, so users save them again.</td>
+</tr>
+<tr>
+<td><code>XACTIONS_WEBHOOK_ALLOW_PRIVATE</code></td>
+<td><code>true</code> lets webhooks and notifications deliver to private or internal addresses. Off by default, so a caller cannot point the server at its own network.</td>
+</tr>
 </tbody></table>
 <h3 id="database-and-queue">Database and queue</h3>
 <table>
@@ -526,6 +537,18 @@ scripts.</p>
 <tr>
 <td><code>REDIS_HOST</code> / <code>REDIS_PORT</code> / <code>REDIS_PASSWORD</code></td>
 <td>Backing store for the background job queue.</td>
+</tr>
+<tr>
+<td><code>REDIS_QUEUE_PREFIX</code></td>
+<td>Key prefix for the queue, so one Redis can serve several deployments. Default <code>xactions</code>.</td>
+</tr>
+<tr>
+<td><code>XACTIONS_WORKER_CONCURRENCY</code></td>
+<td>How many jobs one worker process runs at once on the shared queue. Default <code>8</code>; each job type also keeps its own lower limit. Types that run one at a time, or for hours, have a queue of their own and run on top of this. See <a href="/docs/guides/architecture#background-jobs">architecture.md</a>.</td>
+</tr>
+<tr>
+<td><code>XACTIONS_HOME</code></td>
+<td>Where the worker keeps per-caller state that is not in Postgres or Redis: the daily action ledger, follow dates for smart unfollow, saved RSS feeds, personas, workflows, teams and exports, and the analytics, CRM and lead store. Default <code>~/.xactions</code>. Run one worker host, or put it on a shared volume.</td>
 </tr>
 </tbody></table>
 <h3 id="scraping">Scraping</h3>
@@ -600,7 +623,7 @@ scripts.</p>
 </tr>
 <tr>
 <td><code>X402_*</code></td>
-<td>Per-request payments on the hosted API. Documented inline in <a href="../.env.example"><code>.env.example</code></a>; verify a setup with <code>npm run verify:x402</code>.</td>
+<td>Per-request payments on the hosted API. Documented inline in <a href="https://github.com/nirholas/XActions/blob/main/.env.example"><code>.env.example</code></a>; verify a setup with <code>npm run verify:x402</code>.</td>
 </tr>
 <tr>
 <td><code>SENTRY_DSN</code></td>
@@ -610,10 +633,10 @@ scripts.</p>
 <hr>
 <h2 id="personas-and-niches">Personas and niches</h2>
 <p>The autonomous agent reads two JSON files that decide what it talks about and
-how it sounds. Both live in <a href="../config/"><code>config/</code></a> and are plain data, so
+how it sounds. Both live in <a href="https://github.com/nirholas/XActions/tree/main/config"><code>config/</code></a> and are plain data, so
 adding your own is a matter of dropping in a file.</p>
 <h3 id="personas-how-the-agent-writes">Personas: how the agent writes</h3>
-<p><a href="../config/personas/"><code>config/personas/</code></a> ships three:
+<p><a href="https://github.com/nirholas/XActions/tree/main/config/personas"><code>config/personas/</code></a> ships three:
 <code>thought-leader</code>, <code>technical-builder</code>, <code>community-builder</code>.</p>
 <pre><code class="language-json">{
   &quot;name&quot;: &quot;ThoughtLeader&quot;,
@@ -628,7 +651,7 @@ adding your own is a matter of dropping in a file.</p>
 reads like a person and output that reads like a bot, and it is the first field
 worth editing.</p>
 <h3 id="niches-what-the-agent-looks-at">Niches: what the agent looks at</h3>
-<p><a href="../config/niches/"><code>config/niches/</code></a> ships <code>ai-engineering</code>, <code>saas-startups</code>,
+<p><a href="https://github.com/nirholas/XActions/tree/main/config/niches"><code>config/niches/</code></a> ships <code>ai-engineering</code>, <code>saas-startups</code>,
 and <code>web3-crypto</code>.</p>
 <pre><code class="language-json">{
   &quot;name&quot;: &quot;AI Engineering&quot;,
@@ -638,7 +661,7 @@ and <code>web3-crypto</code>.</p>
 <p>The agent uses these to find accounts and posts worth engaging with, which is
 also how it trains your timeline algorithm toward a topic.</p>
 <h3 id="agent-settings">Agent settings</h3>
-<p>Copy <a href="../config/agent-config.example.json"><code>config/agent-config.example.json</code></a>
+<p>Copy <a href="https://github.com/nirholas/XActions/blob/main/config/agent-config.example.json"><code>config/agent-config.example.json</code></a>
 to <code>data/agent-config.json</code> and edit, or run the wizard:</p>
 <pre><code class="language-bash">npx xactions agent setup
 </code></pre>
@@ -669,7 +692,7 @@ paste.</strong> See <a href="/docs/guides/browser-scripts#start-in-dry-run">brow
     </article>
 
     <div class="page-meta">
-      <span>5 min read</span>
+      <span>6 min read</span>
       <a href="https://github.com/nirholas/XActions/edit/main/docs/configuration.md" target="_blank" rel="noopener">Edit this page</a>
       <a href="https://github.com/nirholas/XActions/issues/new?title=Docs%3A%20Configuration" target="_blank" rel="noopener">Report a problem</a>
     </div>

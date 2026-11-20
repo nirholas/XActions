@@ -88,9 +88,9 @@
   <aside class="sidebar" aria-label="Documentation sections">
     <div class="sidebar__group">
       <div class="sidebar__heading">Guides &amp; Reference</div>
-      <a class="sidebar__link" href="/docs/guides/scheduler">⏰ Scheduler &amp; Webhook Triggers</a>
       <a class="sidebar__link" href="/docs/guides/a2a-api-reference">A2A API Reference — XActions</a>
       <a class="sidebar__link" href="/docs/guides/a2a-protocol">A2A Protocol — XActions</a>
+      <a class="sidebar__link" href="/docs/guides/brief">Account briefs: research the accounts you are about to tag</a>
       <a class="sidebar__link" href="/docs/guides/portability">Account Portability — Export, Migrate &amp; Diff</a>
       <a class="sidebar__link" href="/docs/guides/algorithm-builder">Algorithm Builder — 24/7 Niche Growth Automation</a>
       <a class="sidebar__link" href="/docs/guides/analytics-advanced">Analytics &amp; Sentiment Analysis</a>
@@ -117,12 +117,14 @@
       <a class="sidebar__link" href="/docs/guides/media-archive">Media archive</a>
       <a class="sidebar__link" href="/docs/guides/monitoring">Monitoring Guide</a>
       <a class="sidebar__link" href="/docs/guides/notifications">Notifications</a>
+      <a class="sidebar__link" href="/docs/guides/orgs">Organizations: run a family of X accounts as a team</a>
       <a class="sidebar__link" href="/docs/guides/x402">Paying for XActions: x402 and MCP</a>
       <a class="sidebar__link" href="/docs/guides/plugins">Plugin System</a>
       <a class="sidebar__link" href="/docs/guides/streaming">Real-Time Streaming</a>
       <a class="sidebar__link" href="/docs/guides/streams">Real-time Streams — Live Twitter Monitoring</a>
       <a class="sidebar__link" href="/docs/guides/reputation-audit">Reputation audit: AI-score your own timeline, get a shareable card</a>
       <a class="sidebar__link" href="/docs/guides/rss-monitor">Rss Monitor</a>
+      <a class="sidebar__link" href="/docs/guides/scheduler">Scheduler &amp; Webhook Triggers</a>
       <a class="sidebar__link" href="/docs/guides/scrapers">Scrapers</a>
       <a class="sidebar__link" href="/docs/guides/scraping-infrastructure">Scraping Infrastructure</a>
       <a class="sidebar__link" href="/docs/guides/scraping">Scraping Infrastructure</a>
@@ -156,6 +158,7 @@
       <a class="sidebar__link" href="/docs/guides/ai-api">XActions AI API Documentation</a>
       <a class="sidebar__link" href="/docs/guides/api-reference">XActions API Reference</a>
       <a class="sidebar__link" href="/docs/guides/automation" aria-current="page">XActions Automation Framework Guide</a>
+      <a class="sidebar__link" href="/docs/guides/chat">XActions Chat</a>
       <a class="sidebar__link" href="/docs/guides/cli-reference">XActions CLI Reference</a>
       <a class="sidebar__link" href="/docs/guides/xactions-reference">XActions Complete Function Reference</a>
       <a class="sidebar__link" href="/docs/guides/readme">XActions Documentation</a>
@@ -427,7 +430,7 @@ console.log(bookmarks)
 <hr>
 <h2 id="-xactions-function-reference">� XActions Function Reference</h2>
 <h3 id="xactionsuser-part-2---profile-exploration">XActions.user (Part 2) - Profile Exploration</h3>
-<h4 id="xactionsuserviewmediausername---view-user39s-media"><code>XActions.user.viewMedia(username)</code> - View user&#39;s media</h4>
+<h4 id="xactionsuserviewmediausername---view-users-media"><code>XActions.user.viewMedia(username)</code> - View user&#39;s media</h4>
 <pre><code class="language-js">// Example 1: View a creator&#39;s media gallery
 await XActions.user.viewMedia(&quot;mkbhd&quot;)
 // Opens mkbhd&#39;s media tab to see all photos and videos
@@ -441,7 +444,7 @@ const username = &quot;potentialfollow&quot;
 await XActions.user.viewMedia(username)
 // Check their media content before deciding to follow
 </code></pre>
-<h4 id="xactionsuserviewrepliesusername---view-user39s-replies"><code>XActions.user.viewReplies(username)</code> - View user&#39;s replies</h4>
+<h4 id="xactionsuserviewrepliesusername---view-users-replies"><code>XActions.user.viewReplies(username)</code> - View user&#39;s replies</h4>
 <pre><code class="language-js">// Example 1: See how a user engages with others
 await XActions.user.viewReplies(&quot;naval&quot;)
 // View naval&#39;s replies to understand their engagement style
@@ -457,7 +460,7 @@ async function analyzeEngagementStyle(username) {
 }
 await analyzeEngagementStyle(&quot;pmarca&quot;)
 </code></pre>
-<h4 id="xactionsuserviewhighlightsusername---view-user39s-highlights"><code>XActions.user.viewHighlights(username)</code> - View user&#39;s highlights</h4>
+<h4 id="xactionsuserviewhighlightsusername---view-users-highlights"><code>XActions.user.viewHighlights(username)</code> - View user&#39;s highlights</h4>
 <pre><code class="language-js">// Example 1: See curated content from a creator
 await XActions.user.viewHighlights(&quot;sama&quot;)
 // View Sam Altman&#39;s highlighted/pinned content
@@ -473,7 +476,7 @@ for (const leader of leaders) {
   await new Promise(r =&gt; setTimeout(r, 3000)) // Review each
 }
 </code></pre>
-<h4 id="xactionsuserviewarticlesusername---view-user39s-articles"><code>XActions.user.viewArticles(username)</code> - View user&#39;s articles</h4>
+<h4 id="xactionsuserviewarticlesusername---view-users-articles"><code>XActions.user.viewArticles(username)</code> - View user&#39;s articles</h4>
 <pre><code class="language-js">// Example 1: Read long-form content from a writer
 await XActions.user.viewArticles(&quot;maborak&quot;)
 // View their X articles/long posts
@@ -756,7 +759,7 @@ for (let i = 0; i &lt; Math.min(5, messages.length); i++) {
 }
 </code></pre>
 <hr>
-<h3 id="xactionssearch---search-amp-discovery">XActions.search - Search &amp; Discovery</h3>
+<h3 id="xactionssearch---search--discovery">XActions.search - Search &amp; Discovery</h3>
 <h4 id="xactionssearchqueryquery-filter---search-with-query"><code>XActions.search.query(query, filter)</code> - Search with query</h4>
 <pre><code class="language-js">// Example 1: Basic search
 await XActions.search.query(&quot;javascript tips&quot;)
@@ -1083,7 +1086,7 @@ await XActions.nav.premium()
 <pre><code class="language-js">// Then paste the automation script you want to use
 // e.g., autoLiker.js, keywordFollow.js, etc.
 </code></pre>
-<h3 id="step-3-configure-amp-run">Step 3: Configure &amp; Run</h3>
+<h3 id="step-3-configure--run">Step 3: Configure &amp; Run</h3>
 <p>Each script has a configuration section at the top. Modify it to match your needs.</p>
 <hr>
 <h2 id="-script-documentation">📚 Script Documentation</h2>
@@ -1780,7 +1783,7 @@ await XActions.profile.switchToProfessional()
 console.log(&quot;You&#39;ll now have access to tweet analytics and audience insights!&quot;)
 </code></pre>
 <hr>
-<h3 id="xactionsutils-utilities-amp-helpers">XActions.utils (Utilities &amp; Helpers)</h3>
+<h3 id="xactionsutils-utilities--helpers">XActions.utils (Utilities &amp; Helpers)</h3>
 <pre><code class="language-js">// XActions.utils.getCurrentUser - Get current logged-in username
 // Example 1: Get your username
 const me = await XActions.utils.getCurrentUser()
@@ -2195,7 +2198,7 @@ console.log(&quot;Successfully left!&quot;)
 <h2 id="-xactions-function-reference-2">📖 XActions Function Reference</h2>
 <p>Complete reference with practical examples for every XActions function.</p>
 <hr>
-<h3 id="-xactionstweet--posting-amp-managing-tweets">🐦 XActions.tweet — Posting &amp; Managing Tweets</h3>
+<h3 id="-xactionstweet--posting--managing-tweets">🐦 XActions.tweet — Posting &amp; Managing Tweets</h3>
 <p>Functions for posting and managing tweets.</p>
 <h4 id="posttext-options---post-a-new-tweet"><code>post(text, options)</code> - Post a new tweet</h4>
 <pre><code class="language-js">// XActions.tweet.post - Post a new tweet
@@ -2922,7 +2925,7 @@ console.log(&#39;Notification cleanup complete&#39;)
 await XActions.user.notifyOff(&quot;productlaunch2024&quot;)
 console.log(&#39;Post-launch notifications disabled&#39;)
 </code></pre>
-<h4 id="viewtopicsusername---view-user39s-topics"><code>viewTopics(username)</code> - View user&#39;s topics</h4>
+<h4 id="viewtopicsusername---view-users-topics"><code>viewTopics(username)</code> - View user&#39;s topics</h4>
 <pre><code class="language-js">// XActions.user.viewTopics - View user&#39;s topics
 // Example 1: See what topics a user follows
 await XActions.user.viewTopics(&quot;elonmusk&quot;)
@@ -2938,7 +2941,7 @@ for (const user of interestingUsers) {
   await new Promise(r =&gt; setTimeout(r, 5000)) // Time to review
 }
 </code></pre>
-<h4 id="viewlistsusername---view-user39s-lists"><code>viewLists(username)</code> - View user&#39;s lists</h4>
+<h4 id="viewlistsusername---view-users-lists"><code>viewLists(username)</code> - View user&#39;s lists</h4>
 <pre><code class="language-js">// XActions.user.viewLists - View user&#39;s lists
 // Example 1: Discover curated lists
 await XActions.user.viewLists(&quot;curator&quot;)
@@ -2980,7 +2983,7 @@ console.log(&#39;Great source for new follows!&#39;)
 await XActions.user.viewFollowing(&quot;competitor&quot;)
 console.log(&#39;See who your competitors watch&#39;)
 </code></pre>
-<h4 id="viewlikesusername---view-user39s-likes"><code>viewLikes(username)</code> - View user&#39;s likes</h4>
+<h4 id="viewlikesusername---view-users-likes"><code>viewLikes(username)</code> - View user&#39;s likes</h4>
 <pre><code class="language-js">// XActions.user.viewLikes - View user&#39;s likes
 // Example 1: See what content a user likes
 await XActions.user.viewLikes(&quot;influencer&quot;)
@@ -3489,7 +3492,7 @@ await XActions.settings.mutedWords()
 
     <nav class="page-nav" aria-label="Previous and next">
       <a class="page-nav__link" href="/docs/guides/api-reference"><span class="page-nav__dir">← Previous</span><span class="page-nav__title">XActions API Reference</span></a>
-      <a class="page-nav__link page-nav__link--next" href="/docs/guides/cli-reference"><span class="page-nav__dir">Next →</span><span class="page-nav__title">XActions CLI Reference</span></a>
+      <a class="page-nav__link page-nav__link--next" href="/docs/guides/chat"><span class="page-nav__dir">Next →</span><span class="page-nav__title">XActions Chat</span></a>
     </nav>
 
     <div class="callout">

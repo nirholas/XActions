@@ -104,6 +104,11 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://xactions.app/docs/guides/brief</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://xactions.app/docs/guides/browser-extension</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
@@ -115,6 +120,11 @@
   </url>
   <url>
     <loc>https://xactions.app/docs/guides/bulk-operations</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://xactions.app/docs/guides/chat</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -240,6 +250,11 @@
   </url>
   <url>
     <loc>https://xactions.app/docs/guides/notifications</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://xactions.app/docs/guides/orgs</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
