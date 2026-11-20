@@ -11,7 +11,7 @@
 
 import { GRAPHQL_ENDPOINTS, DEFAULT_FEATURES, graphqlQuery } from './graphqlQueries.js';
 import { Tweet } from '../models/Tweet.js';
-import { NotFoundError, ScraperError } from '../errors.js';
+import { NotFoundError } from '../errors.js';
 import {
   parseTimelineEntries,
   parseTweetEntry,

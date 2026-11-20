@@ -335,7 +335,7 @@ async function refreshTwitterToken(user) {
     return access_token;
   } catch (error) {
     console.error('❌ Token refresh error:', error.message);
-    throw new Error('Failed to refresh Twitter token');
+    throw new Error('Failed to refresh Twitter token', { cause: error });
   }
 }
 

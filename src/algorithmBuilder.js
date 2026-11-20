@@ -28,7 +28,6 @@ import {
   buildCommentPrompt,
   buildPostPrompt,
   shouldBeActive,
-  getSessionDuration,
   getDelayUntilNextSession,
   planSession,
 } from './personaEngine.js';

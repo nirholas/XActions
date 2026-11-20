@@ -179,9 +179,17 @@ function slugToTitle(slug) {
   return slug.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
 }
 
+/**
+ * Emoji stripped from titles. Matches whole code points (the `u` flag), plus the
+ * variation selector and zero-width joiner that glue emoji sequences together;
+ * without `u` a class of emoji matches lone surrogate halves and leaves garbage.
+ */
+// eslint-disable-next-line no-misleading-character-class -- FE0F and 200D are listed so they are stripped on their own
+const TITLE_EMOJI = /[\u{1F000}-\u{1FAFF}\u{2300}-\u{23FF}\u{2600}-\u{27BF}\u{2B00}-\u{2BFF}\u{FE0F}\u{200D}]/gu;
+
 function extractTitle(markdown) {
   const match = markdown.match(/^#\s+(.+)$/m);
-  if (match) return match[1].replace(/[🧠🔍❤️🎬📋👋🧹🔔📊🚫🎯🔑🚀🌊📝🧵🖼️🔗📈⚙️🔌📚📂🗑️💔⏰✉️📬📡🤖🚫🔊🔇⚠️🔒💾📥👤✏️👥📱📝🏘️🚪🎙️⭐📰💼💰🔍💬🔁📊]/g, '').trim();
+  if (match) return match[1].replace(TITLE_EMOJI, '').trim();
   return null;
 }
 

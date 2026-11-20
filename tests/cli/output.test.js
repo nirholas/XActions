@@ -116,6 +116,7 @@ describe('output', () => {
 
     it('never emits ANSI escapes', () => {
       const out = formatCompact([clientTweet], { kind: 'tweet' });
+      // eslint-disable-next-line no-control-regex -- matches ANSI escape sequences
       expect(out).not.toMatch(/\[/);
     });
 

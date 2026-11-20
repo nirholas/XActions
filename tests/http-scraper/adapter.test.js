@@ -12,7 +12,7 @@
  * @author nich (@nichxbt)
  */
 
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect, beforeEach } from 'vitest';
 
 // ---------------------------------------------------------------------------
 // 1. HttpAdapter class — interface compliance

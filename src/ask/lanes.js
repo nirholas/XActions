@@ -193,7 +193,7 @@ export async function streamCompletion(chain, messages, opts = {}) {
       return { lane: lane.name, model, text: produced };
     } catch (err) {
       errors.push(`${lane.name}: ${err.message}`);
-      if (opts.signal?.aborted) throw new Error('aborted');
+      if (opts.signal?.aborted) throw new Error('aborted', { cause: err });
       // A lane that already streamed part of an answer and then died would
       // leave the client with a truncated reply; surface that as the lane's
       // answer rather than restarting on another lane mid-sentence.

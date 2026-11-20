@@ -15,7 +15,6 @@ import {
   createTask,
   createMessage,
   createTextPart,
-  createDataPart,
   isValidTransition,
 } from './types.js';
 

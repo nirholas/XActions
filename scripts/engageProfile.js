@@ -535,7 +535,7 @@
         raw = await complete(messages);
       } catch (err) {
         if (/Content Security Policy|Failed to fetch|NetworkError/i.test(err.message)) {
-          throw new Error(`Blocked by x.com's CSP: ${err.message}. Use provider 'xai', the extension bridge, or the CLI (npx xactions engage).`);
+          throw new Error(`Blocked by x.com's CSP: ${err.message}. Use provider 'xai', the extension bridge, or the CLI (npx xactions engage).`, { cause: err });
         }
         throw err;
       }

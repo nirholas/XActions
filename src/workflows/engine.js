@@ -11,7 +11,7 @@
  */
 
 import crypto from 'crypto';
-import { executeAction, closeBrowser } from './actions.js';
+import { executeAction } from './actions.js';
 import { evaluateCondition } from './conditions.js';
 import { getStore } from './store.js';
 

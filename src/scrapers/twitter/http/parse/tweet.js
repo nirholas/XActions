@@ -11,7 +11,6 @@
  * @author nich (@nichxbt)
  */
 
-import { NotFoundError } from '../errors.js';
 
 /**
  * Parse Twitter's `created_at` string ("Mon Jan 01 00:00:00 +0000 2007")

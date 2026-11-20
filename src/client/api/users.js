@@ -9,9 +9,9 @@
  * @license Apache-2.0
  */
 
-import { GRAPHQL_ENDPOINTS, DEFAULT_FEATURES, graphqlQuery } from './graphqlQueries.js';
+import { GRAPHQL_ENDPOINTS, graphqlQuery } from './graphqlQueries.js';
 import { Profile } from '../models/Profile.js';
-import { NotFoundError, ScraperError } from '../errors.js';
+import { NotFoundError } from '../errors.js';
 import { parseTimelineEntries, parseUserEntry } from './parsers.js';
 
 /** @private Random delay between paginated requests */

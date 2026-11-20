@@ -10,9 +10,14 @@
  * @license Apache-2.0
  */
 
-import { GRAPHQL, DEFAULT_FEATURES, buildGraphQLVariables, operationFieldToggles } from './endpoints.js';
+import {
+  GRAPHQL,
+  DEFAULT_FEATURES,
+  buildGraphQLVariables,
+  operationFieldToggles,
+} from './endpoints.js';
 import { bindCheckpoint } from './checkpoint.js';
-import { NotFoundError, TwitterApiError } from './errors.js';
+import { NotFoundError } from './errors.js';
 
 // ---------------------------------------------------------------------------
 // Helpers

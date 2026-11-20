@@ -29,13 +29,11 @@ if (existsSync(envPath)) {
 }
 
 // Import configuration from the actual config module to ensure consistency
-import { 
-  PAY_TO_ADDRESS, 
-  FACILITATOR_URL, 
-  NETWORK, 
+import {
+  PAY_TO_ADDRESS,
+  FACILITATOR_URL,
+  NETWORK,
   AI_OPERATION_PRICES,
-  validateConfig,
-  isX402Configured 
 } from '../api/config/x402-config.js';
 
 // Network names for display

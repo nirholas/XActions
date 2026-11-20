@@ -10,12 +10,11 @@
  * @license Apache-2.0
  */
 
-import { GRAPHQL, REST_BASE } from './endpoints.js';
+import { GRAPHQL } from './endpoints.js';
 import { bindCheckpoint } from './checkpoint.js';
-import { parseTweetData, parseTimelineInstructions } from './tweets.js';
+import { parseTimelineInstructions } from './tweets.js';
 import { readReplacedBottomCursor } from './parse/tweet.js';
 import { parseUserData } from './profile.js';
-import { NotFoundError, TwitterApiError } from './errors.js';
 
 // ---------------------------------------------------------------------------
 // buildAdvancedQuery — Compose Twitter advanced search query string

@@ -555,6 +555,7 @@ function requireBetterSqlite() {
     throw new Error(
       `better-sqlite3 is required to read browser cookie databases but failed to load: ${err.message}. ` +
         'Reinstall dependencies (npm install) or use `--cookies-file` with an exported cookies.txt instead.',
+        { cause: err },
     );
   }
 }
@@ -610,6 +611,7 @@ function macKeychainPassword(browser) {
     throw new Error(
       `Could not read the ${serviceName} password from the macOS Keychain (${err.message}). ` +
         'Approve the Keychain prompt if one appeared, or export cookies to a file and use `--cookies-file`.',
+        { cause: err },
     );
   }
 }

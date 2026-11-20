@@ -30,7 +30,8 @@ async function loadViem() {
     } catch (e) {
       throw new Error(
         'viem package not installed. Install with: npm install viem\n' +
-        'This is required for x402 payment signing in remote mode.'
+        'This is required for x402 payment signing in remote mode.',
+        { cause: e }
       );
     }
   }

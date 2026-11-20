@@ -72,6 +72,7 @@ async function load(specifier) {
     }
     throw new Error(
       `${specifier} is not installed. Run \`npm i ${specifier}\` or set NODE_PATH to a tree that has it. (${error.message})`,
+      { cause: error },
     );
   }
 }

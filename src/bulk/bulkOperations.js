@@ -9,10 +9,8 @@
  * @license Apache-2.0
  */
 
-import fs from 'fs';
 import fsp from 'fs/promises';
 import path from 'path';
-import os from 'os';
 
 import { FOLLOW_STATUS, isRetryableStatus, classifyBrowserError } from '../mcp/followAction.js';
 import { xactionsHome } from '../utils/savedSession.js';

@@ -14,7 +14,6 @@
 
 import { readFileSync, writeFileSync, existsSync, mkdirSync, readdirSync, unlinkSync } from 'fs';
 import { join } from 'path';
-import { homedir } from 'os';
 import { xactionsHome } from './utils/savedSession.js';
 
 // ============================================================================

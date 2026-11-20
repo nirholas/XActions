@@ -145,6 +145,7 @@ function expectCompact(result, kind, { records, columns }) {
   expect(result.stdout.endsWith('\n')).toBe(true);
   expect(result.lines).toHaveLength(records);
   for (const line of result.lines) {
+    // eslint-disable-next-line no-control-regex -- matches ANSI escape sequences
     expect(line).not.toMatch(/\x1b\[/);
     for (const [key] of cells(line)) expect(key).toMatch(/^[A-Za-z]+$/);
     expect(keysOf(line)).toEqual(columns);

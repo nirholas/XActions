@@ -7,13 +7,7 @@
  * @license Apache-2.0
  */
 
-import {
-  buildAdjacency,
-  getMutualConnectionsFor,
-  computeInfluenceScores,
-  findGhostFollowers,
-  detectClusters,
-} from './analyzer.js';
+import { buildAdjacency, getMutualConnectionsFor, computeInfluenceScores } from './analyzer.js';
 
 // ============================================================================
 // Recommendation Engine

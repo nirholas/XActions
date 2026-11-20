@@ -19,11 +19,8 @@
 
 import { describe, it, expect } from 'vitest';
 import { TwitterHttpClient } from '../../src/scrapers/twitter/http/client.js';
-import { scrapeProfile, scrapeProfileById } from '../../src/scrapers/twitter/http/profile.js';
-import {
-  scrapeFollowers,
-  scrapeFollowing,
-} from '../../src/scrapers/twitter/http/relationships.js';
+import { scrapeProfile } from '../../src/scrapers/twitter/http/profile.js';
+import { scrapeFollowers } from '../../src/scrapers/twitter/http/relationships.js';
 import { GuestTokenManager } from '../../src/scrapers/twitter/http/guest.js';
 
 // ---------------------------------------------------------------------------

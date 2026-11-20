@@ -9,7 +9,6 @@ import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { CredentialAuth } from '../../../src/client/auth/CredentialAuth.js';
 import { CookieAuth } from '../../../src/client/auth/CookieAuth.js';
 import { TokenManager } from '../../../src/client/auth/TokenManager.js';
-import { CookieJar } from '../../../src/client/auth/CookieJar.js';
 import { AuthenticationError } from '../../../src/client/errors.js';
 
 // -- helpers ------------------------------------------------------------------

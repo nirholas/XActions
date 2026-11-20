@@ -2,7 +2,7 @@
 // XActions — BrowserDriver Tests (unit-level, no real browser)
 // by nichxbt
 
-import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { describe, it, expect, beforeEach } from 'vitest';
 
 // We test BrowserDriver without launching a real browser.
 // Methods that need Puppeteer are tested via mocking.

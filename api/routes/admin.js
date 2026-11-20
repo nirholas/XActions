@@ -10,7 +10,6 @@ import crypto from 'crypto';
 import {
   createLicense,
   validateLicenseKey,
-  activateLicense,
   revokeLicense,
   listLicenses,
   getLicense,

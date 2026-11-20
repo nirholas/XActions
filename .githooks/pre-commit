@@ -1,0 +1,44 @@
+#!/bin/sh
+# Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
+#
+# Runs the checks CI runs that are fast enough to run on every commit: ESLint on
+# the staged JavaScript, and the type-check ratchet (about a second on the whole
+# tree). Installed by `npm install` through scripts/install-git-hooks.mjs.
+#
+# Skip once with `git commit --no-verify`, or for a whole shell with
+# XACTIONS_SKIP_HOOKS=1.
+#
+# @author nich (@nichxbt)
+
+[ -n "$XACTIONS_SKIP_HOOKS" ] && exit 0
+
+root=$(git rev-parse --show-toplevel) || exit 0
+cd "$root" || exit 0
+
+# Without dependencies there is nothing to run the checks with; say so rather
+# than block a commit on a fresh clone.
+if [ ! -x node_modules/.bin/eslint ]; then
+  echo "pre-commit: node_modules is missing, skipping lint and type check (run npm ci)." >&2
+  exit 0
+fi
+
+# Added, copied, modified or renamed JavaScript only; a deleted file has nothing to lint.
+files=$(git diff --cached --name-only --diff-filter=ACMR -- '*.js' '*.mjs' '*.cjs')
+
+if [ -n "$files" ]; then
+  # --no-warn-ignored: a staged file under an ignored path (archive/, fixtures) is fine.
+  # --pass-on-unpruned-suppressions: linting a subset cannot judge suppressions
+  # for files it did not look at; the full `npm run lint` in CI does that.
+  echo "$files" | tr '\n' '\0' | xargs -0 node_modules/.bin/eslint --no-warn-ignored --pass-on-unpruned-suppressions || {
+    echo "pre-commit: ESLint failed. Fix the errors above, or commit with --no-verify." >&2
+    exit 1
+  }
+fi
+
+if [ -d node_modules/typescript ]; then
+  node scripts/typecheck.mjs >/dev/null || {
+    node scripts/typecheck.mjs >&2
+    echo "pre-commit: type errors above the baseline. Fix them, or commit with --no-verify." >&2
+    exit 1
+  }
+fi

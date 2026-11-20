@@ -7,11 +7,10 @@
  * @author nich (@nichxbt)
  */
 
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import {
   mimeFromExtension,
   mimeFromBuffer,
-  resolveInput,
   uploadChunked,
   pollProcessingStatus,
   uploadMedia,
@@ -20,7 +19,6 @@ import {
   uploadGif,
   setAltText,
   scrapeMedia,
-  downloadMedia,
   getVideoUrl,
   parseMediaEntity,
 } from '../../src/scrapers/twitter/http/media.js';

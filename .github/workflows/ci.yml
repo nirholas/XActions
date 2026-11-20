@@ -97,7 +97,7 @@ jobs:
         run: npm run test:coverage
 
   lint:
-    name: Lint
+    name: Lint and type check
     runs-on: ubuntu-latest
     timeout-minutes: 5
 
@@ -116,6 +116,17 @@ jobs:
 
       - name: Run ESLint
         run: npm run lint
+
+      # The generated Prisma client carries types the checker resolves, so the
+      # error counts only match the committed baseline once it exists.
+      - name: Generate Prisma client
+        run: npx prisma generate
+
+      # A ratchet, not a clean bill: config/typecheck-baseline.json records the
+      # errors each file already had, and a file may only go down. New files
+      # must type-check outright.
+      - name: Type check
+        run: npm run typecheck
 
   build:
     name: Build Check

@@ -433,6 +433,13 @@ Deeper map: [`docs/`](docs/), starting with
   with the same HTTP/2 response it gives a plain GET, never a 101. It is a
   streaming GET whose body is newline-delimited JSON read line by line. Do not
   "fix" it into a WebSocket client.
+- **Lint, types and coverage are ratchets.** `eslint-suppressions.json`,
+  `config/typecheck-baseline.json` and the coverage `thresholds` in
+  `vitest.config.js` record old debt so new code has to be clean. When
+  `npm run lint` or `npm run typecheck` fails on your change, fix your code. Do
+  not regenerate the baseline (`--suppress-all`, `--update --allow-increase`)
+  to make it pass. When you fix old problems, shrink the baseline: see
+  [CONTRIBUTING.md](CONTRIBUTING.md#-before-you-open-a-pr).
 
 ## House style
 

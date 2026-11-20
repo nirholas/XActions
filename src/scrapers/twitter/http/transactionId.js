@@ -586,7 +586,7 @@ export async function discoverFromPairDictionary(options = {}) {
   try {
     pairs = JSON.parse(text);
   } catch (err) {
-    throw new Error(`Pair dictionary at ${pairUrl} is not JSON: ${err.message}`);
+    throw new Error(`Pair dictionary at ${pairUrl} is not JSON: ${err.message}`, { cause: err });
   }
   if (!Array.isArray(pairs) || pairs.length === 0) {
     throw new Error(`Pair dictionary at ${pairUrl} held no pairs`);

@@ -10,7 +10,7 @@
  */
 
 import { createTextPart, createDataPart, createMessage, TASK_STATES } from './types.js';
-import { getAllSkills, getSkillById } from './skillRegistry.js';
+import { getSkillById } from './skillRegistry.js';
 import { applyAuth } from './auth.js';
 
 // ============================================================================
@@ -212,7 +212,7 @@ export class Delegator {
       return result.result || result;
     } catch (err) {
       await this.trust.record(agentUrl, { type: 'failure', duration: Date.now() - start });
-      throw new Error(`Delegation to ${agentUrl} failed: ${err.message}`);
+      throw new Error(`Delegation to ${agentUrl} failed: ${err.message}`, { cause: err });
     }
   }
 

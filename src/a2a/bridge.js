@@ -166,7 +166,7 @@ export function createBridge(options = {}) {
       try {
         _localTools = await import('../mcp/local-tools.js');
       } catch (err) {
-        throw new Error(`Failed to load local tools: ${err.message}`);
+        throw new Error(`Failed to load local tools: ${err.message}`, { cause: err });
       }
     }
     return _localTools;

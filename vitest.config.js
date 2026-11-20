@@ -22,14 +22,23 @@ export default defineConfig({
     maxWorkers: 4,
     coverage: {
       provider: 'v8',
-      reporter: ['text', 'json', 'html'],
+      reporter: ['text-summary', 'json-summary', 'html'],
+      // Count every module, not just the ones some test happened to import:
+      // without `include`, a file no test loads is invisible and the total
+      // reads higher than it is.
+      include: ['src/**/*.js', 'api/**/*.js'],
       exclude: [
-        'node_modules/',
-        'tests/',
-        'archive/',
-        'scripts/',
-        '*.config.js',
+        // Browser console scripts: pasted into DevTools, never loaded by Node.
+        'src/automation/**',
       ],
+      // A floor, not a target: set just under the measured numbers so a change
+      // that drops coverage fails, and raised as tests are added.
+      thresholds: {
+        lines: 48,
+        functions: 51,
+        branches: 43,
+        statements: 48,
+      },
     },
   },
 });

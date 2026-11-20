@@ -22,7 +22,6 @@ import {
   analyzeSentiment,
   analyzeBatch,
   createMonitor,
-  stopMonitor,
   getMonitor,
   getMonitorHistory,
   listMonitors,

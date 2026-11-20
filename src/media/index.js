@@ -21,7 +21,7 @@
  * by nichxbt
  */
 
-import { DEFAULT_ARCHIVE, openArchive } from './archive.js';
+import { openArchive } from './archive.js';
 import { downloadAll } from './download.js';
 import { collectItems, parseTarget } from './sources.js';
 import { DEFAULT_TEMPLATE } from './template.js';

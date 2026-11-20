@@ -9,9 +9,7 @@
  * @license Apache-2.0
  */
 
-import { GRAPHQL_ENDPOINTS, DEFAULT_FEATURES, graphqlQuery } from './graphqlQueries.js';
-import { Tweet } from '../models/Tweet.js';
-import { Profile } from '../models/Profile.js';
+import { GRAPHQL_ENDPOINTS, graphqlQuery } from './graphqlQueries.js';
 import { parseTimelineEntries, parseTweetEntry, parseUserEntry } from './parsers.js';
 
 /** @private Random delay between paginated requests */

@@ -10,7 +10,7 @@
  * @license Apache-2.0
  */
 
-import { assertPublicUrl, publicFetch } from '../utils/publicUrl.js';
+import { publicFetch } from '../utils/publicUrl.js';
 
 // ============================================================================
 // Alert types

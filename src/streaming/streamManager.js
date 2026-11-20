@@ -22,7 +22,11 @@ import { randomUUID } from 'crypto';
 import { pollTweets } from './tweetStream.js';
 import { pollFollowers } from './followerStream.js';
 import { pollMentions } from './mentionStream.js';
-import { getPoolStatus, closeAll as closeBrowserPool, isHealthy as isBrowserPoolHealthy } from './browserPool.js';
+import {
+  getPoolStatus,
+  closeAll as closeBrowserPool,
+  isHealthy as isBrowserPoolHealthy,
+} from './browserPool.js';
 import { createLivePipeline } from './livePipeline.js';
 import { TwitterHttpClient } from '../scrapers/twitter/http/client.js';
 import { importOptional } from '../utils/optionalDeps.js';
@@ -98,7 +102,7 @@ async function getRedis() {
     return _redis;
   } catch (err) {
     _redisHealthy = false;
-    throw new Error(`Redis unavailable: ${err.message}`);
+    throw new Error(`Redis unavailable: ${err.message}`, { cause: err });
   }
 }
 

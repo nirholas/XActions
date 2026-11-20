@@ -11,8 +11,7 @@
  */
 
 import { CookieJar } from './CookieJar.js';
-import { extractCsrfToken, extractUserId, extractAuthToken, updateJarFromResponse } from './CookieParser.js';
-import { AuthenticationError } from '../errors.js';
+import { extractCsrfToken, extractUserId, updateJarFromResponse } from './CookieParser.js';
 
 /**
  * Cookie-based authentication manager.

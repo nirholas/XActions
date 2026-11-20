@@ -55,7 +55,7 @@ export async function verifyAccountSession(client, handle) {
   try {
     me = await client.me();
   } catch (error) {
-    throw new Error(`Could not confirm which account this session belongs to: ${error.message}. Export the full cookie jar, which includes the twid cookie.`);
+    throw new Error(`Could not confirm which account this session belongs to: ${error.message}. Export the full cookie jar, which includes the twid cookie.`, { cause: error });
   }
   const username = String(me?.username ?? '').toLowerCase();
   if (username !== handle) {

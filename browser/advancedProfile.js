@@ -852,6 +852,7 @@
       console.log('💡 Trying fallback: detecting language and providing manual options...');
 
       // Simple language detection heuristic
+      // eslint-disable-next-line no-control-regex -- the range starts at NUL to mean "anything outside ASCII"
       const hasNonLatin = /[^\u0000-\u007F]/.test(bioText);
       const hasCJK = /[\u4e00-\u9fff\u3040-\u309f\u30a0-\u30ff\uac00-\ud7af]/.test(bioText);
       const hasCyrillic = /[\u0400-\u04ff]/.test(bioText);

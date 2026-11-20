@@ -11,8 +11,8 @@
  * @license Apache-2.0
  */
 
-import { readFile, writeFile, stat } from 'node:fs/promises';
-import { createWriteStream, createReadStream } from 'node:fs';
+import { readFile } from 'node:fs/promises';
+import { createWriteStream } from 'node:fs';
 import { pipeline } from 'node:stream/promises';
 import { extname, resolve } from 'node:path';
 import { userTimelineInstructions } from './tweets.js';

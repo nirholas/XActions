@@ -11,7 +11,7 @@
  * load, so HOME must point at a temp dir BEFORE the first dynamic import.
  */
 
-import { describe, it, expect, beforeAll, afterAll } from 'vitest';
+import { describe, it, beforeAll, afterAll } from 'vitest';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import os from 'node:os';
