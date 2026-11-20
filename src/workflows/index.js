@@ -143,21 +143,48 @@ async function getRun(workflowId, runId) {
 
 /**
  * Initialize trigger listener (connects triggers to the run engine)
+ *
+ * @param {object} [options]
+ * @param {string} [options.authToken] - Session every triggered run uses. For
+ *   the CLI and MCP server, which run as the machine's own account; defaults
+ *   to XACTIONS_SESSION_COOKIE.
+ * @param {(workflow: object) => Promise<string|undefined>} [options.authTokenFor]
+ *   - Resolve the session of the workflow's owner instead. For the API server,
+ *   where workflows belong to different users: the run acts as its owner, and
+ *   fails with `options.noSessionError` when the owner has no saved session,
+ *   never falling back to the operator's XACTIONS_SESSION_COOKIE.
+ * @param {string} [options.noSessionError]
+ * @returns {(event: object) => Promise<object|undefined>} the listener, so a
+ *   caller can remove it with triggerManager.off('trigger', listener)
  */
 function initTriggers(options = {}) {
-  triggerManager.on('trigger', async (event) => {
+  const listener = async (event) => {
     console.log(`⚡ Workflow triggered: ${event.workflowId} (${event.type})`);
     try {
-      const result = await run(event.workflowId, {
+      const workflow = await get(event.workflowId);
+      if (!workflow) throw new Error(`Workflow not found: ${event.workflowId}`);
+      const session = options.authTokenFor
+        ? {
+            authToken: await options.authTokenFor(workflow),
+            useEnvSession: false,
+            noSessionError: options.noSessionError,
+            userId: workflow.userId,
+          }
+        : { authToken: options.authToken || process.env.XACTIONS_SESSION_COOKIE };
+      const result = await run(workflow, {
         trigger: event.type,
         initialContext: event.payload || {},
-        authToken: options.authToken || process.env.XACTIONS_SESSION_COOKIE,
+        ...session,
       });
       console.log(`✅ Workflow ${event.workflowId} completed: ${result.status}`);
+      return result;
     } catch (error) {
       console.error(`❌ Workflow ${event.workflowId} failed:`, error.message);
+      return undefined;
     }
-  });
+  };
+  triggerManager.on('trigger', listener);
+  return listener;
 }
 
 /**

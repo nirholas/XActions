@@ -169,32 +169,40 @@ Pre-built templates available via `JOB_TEMPLATES`:
 
 ## Webhook Triggers
 
-External services (Zapier, n8n, IFTTT) can trigger scheduler jobs via HTTP:
+External services (Zapier, n8n, IFTTT) can trigger scheduler jobs via HTTP,
+once the routes are mounted with `mountWebhookRoutes(app)` from
+`src/scheduler/webhookTrigger.js`. Every route needs a secret, sent in the
+`X-Webhook-Secret` header (or `Authorization: Bearer <secret>`).
 
 ### Trigger a Job
+
+A job is triggerable only once it has a secret: `scheduler.setWebhookSecret('daily-snapshot')`
+generates one (or pass `webhookSecret`, at least 16 characters, to `addJob`).
+A job without one answers 403.
 
 ```bash
 POST /api/webhooks/trigger/daily-snapshot
 Content-Type: application/json
+X-Webhook-Secret: <the job's secret>
 
 {
   "data": { "username": "nichxbt" }
 }
 ```
 
-Optional secret: `POST /api/webhooks/trigger/daily-snapshot?secret=your-secret`
-
-### List Webhook Endpoints
-
-```bash
-GET /api/webhooks
-```
+`?secret=` in the query string is still read for old callers, but query
+strings end up in proxy and access logs. Send the header.
 
 ### Generic Data Ingestion
+
+Emits `webhook:received` on the scheduler. Needs the ingest secret, set with
+`XACTIONS_SCHEDULER_INGEST_SECRET` (or `mountWebhookRoutes(app, { ingestSecret })`),
+at least 16 characters; with none set the route answers 403.
 
 ```bash
 POST /api/webhooks/ingest
 Content-Type: application/json
+X-Webhook-Secret: <the ingest secret>
 
 {
   "source": "zapier",
@@ -202,6 +210,9 @@ Content-Type: application/json
   "data": { "username": "newuser123" }
 }
 ```
+
+There is no route that lists jobs: `GET /api/webhooks` answered every job's
+name to anyone who asked, and was removed.
 
 ---
 
@@ -229,7 +240,7 @@ Content-Type: application/json
 | `job:start` | `{ name }` | Job begins execution |
 | `job:complete` | `{ name, result, duration }` | Job succeeds |
 | `job:error` | `{ name, error }` | Job fails |
-| `webhook:received` | `{ source, data }` | Webhook data received |
+| `webhook:received` | `{ source, event, data, receivedAt }` | Webhook data received |
 
 ---
 

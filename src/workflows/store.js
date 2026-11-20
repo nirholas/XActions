@@ -24,6 +24,16 @@ import { xactionsHome } from '../utils/savedSession.js';
 const WORKFLOWS_DIR = path.join(xactionsHome(), 'workflows');
 const RUNS_DIR = path.join(xactionsHome(), 'workflow-runs');
 
+/**
+ * The run, only when it belongs to `workflowId`. Callers authorise the
+ * workflow and then ask for one of its runs by id; without this check a run id
+ * from someone else's workflow (or, in the file store, a `../` path) returned
+ * that run.
+ */
+function runOf(run, workflowId) {
+  return run && run.workflowId === workflowId ? run : null;
+}
+
 // ============================================================================
 // JSON File Store (fallback)
 // ============================================================================
@@ -79,6 +89,7 @@ class FileStore {
           const wf = JSON.parse(data);
           workflows.push({
             id: wf.id,
+            userId: wf.userId,
             name: wf.name,
             description: wf.description,
             trigger: wf.trigger,
@@ -137,7 +148,7 @@ class FileStore {
     try {
       const filePath = path.join(RUNS_DIR, workflowId, `${runId}.json`);
       const data = await fs.readFile(filePath, 'utf-8');
-      return JSON.parse(data);
+      return runOf(JSON.parse(data), workflowId);
     } catch {
       return null;
     }
@@ -249,6 +260,7 @@ class PrismaStore {
         const wf = JSON.parse(op.config);
         return {
           id: wf.id,
+          userId: wf.userId ?? op.userId,
           name: wf.name,
           description: wf.description,
           trigger: wf.trigger,
@@ -319,7 +331,7 @@ class PrismaStore {
         where: { id: runId },
       });
       if (op && op.type === 'workflow_run') {
-        return JSON.parse(op.config);
+        return runOf(JSON.parse(op.config), workflowId);
       }
       return null;
     } catch {
@@ -337,8 +349,7 @@ class PrismaStore {
         orderBy: { createdAt: 'desc' },
         take: limit,
       });
-      return ops.map(op => {
-        const run = JSON.parse(op.config);
+      return ops.map(op => JSON.parse(op.config)).filter(run => run.workflowId === workflowId).map(run => {
         return {
           id: run.id,
           workflowId: run.workflowId,

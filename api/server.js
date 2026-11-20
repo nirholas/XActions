@@ -123,6 +123,23 @@ export function resolveTrustProxy(env) {
   return env.FLY_APP_NAME || env.RAILWAY_ENVIRONMENT || env.RENDER ? 1 : false;
 }
 
+/** Static files that change rarely and only ever look stale, never break. */
+const SLOW_CHANGING_ASSET = /\.(png|jpe?g|gif|webp|avif|svg|ico|woff2?|ttf|otf|mp4|webm)$/i;
+
+/**
+ * The Cache-Control header for a static file. None of them is content-hashed,
+ * so none is cached as immutable: scripts, styles, HTML and data revalidate
+ * after five minutes, images, fonts and video after a day.
+ *
+ * @param {string} filePath
+ * @returns {string}
+ */
+export function staticCacheControl(filePath) {
+  return SLOW_CHANGING_ASSET.test(filePath)
+    ? 'public, max-age=86400'
+    : 'public, max-age=300, must-revalidate';
+}
+
 /**
  * Build the Express app, its HTTP server, and the Socket.io instance without
  * binding a port. `npm start` calls `start()` below; tests and embedders call
@@ -330,25 +347,25 @@ export function createApp({ rateLimiting = true } = {}) {
   app.use('/api/ask', askRoutes); // Ask XActions: docs-grounded answers over the free LLM chain
   app.use('/api/chat', chatRoutes); // XActions Chat: questions about attached X accounts and posts
 
-  // Serve public assets (icons, OG images, logo)
-  app.use(express.static(path.join(__dirname, '../public'), {
-    maxAge: '1y',
-    immutable: true,
+  // Static files. Nothing under public/ or dashboard/ is content-hashed:
+  // /js/sidebar.js keeps its name across every deploy. A year of `immutable`
+  // meant a returning visitor kept last year's script and images against this
+  // year's HTML and API, with no way to reach them short of renaming the file.
+  // Scripts, styles, HTML and data files are cached for five minutes and then
+  // revalidated against the ETag; images, fonts and video change rarely and
+  // are only ever stale-looking, not broken, so they get a day. Matches
+  // dashboard/_headers. If a build step ever emits hashed filenames, give that
+  // path the year-long immutable rule and nothing else.
+  const staticOptions = {
+    maxAge: '5m',
     etag: true,
-  }));
-
-  // Serve dashboard static files with cache headers
-  app.use(express.static(path.join(__dirname, '../dashboard'), {
-    maxAge: '1h',        // Cache HTML for 1 hour (content changes frequently)
-    etag: true,          // Enable ETag for conditional requests
     lastModified: true,
     setHeaders: (res, filePath) => {
-      // Long cache for immutable assets (if any)
-      if (filePath.endsWith('.png') || filePath.endsWith('.jpg') || filePath.endsWith('.svg') || filePath.endsWith('.ico') || filePath.endsWith('.woff2')) {
-        res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
-      }
-    }
-  }));
+      res.setHeader('Cache-Control', staticCacheControl(filePath));
+    },
+  };
+  app.use(express.static(path.join(__dirname, '../public'), staticOptions));
+  app.use(express.static(path.join(__dirname, '../dashboard'), staticOptions));
 
   // Branding middleware - injects "Powered by XActions" if no license
   app.use(brandingMiddleware());

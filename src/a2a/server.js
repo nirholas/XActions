@@ -21,7 +21,7 @@
  */
 
 import express from 'express';
-import { createTaskManager } from './taskManager.js';
+import { createTaskManager, ownerKey, canAccessTask } from './taskManager.js';
 import { serveAgentCard } from './agentCard.js';
 import { createBridge } from './bridge.js';
 import { StreamManager, bridgeTaskStream, attachStreamEndpoint } from './streaming.js';
@@ -262,6 +262,18 @@ export function createA2AServer(options = {}) {
     return res.status(403).json(jsonRpcError(null, ERROR_CODES.AUTH_FORBIDDEN, `This agent lacks the "${permission}" permission`));
   };
 
+  // A task belongs to the caller that created it. With auth on, every other
+  // caller (unless it holds "admin") gets the same 404 as for a task that does
+  // not exist, so task ids cannot be probed. With auth explicitly off there are
+  // no identities and every caller sees every task, as before.
+  const canAccess = (req, task) => !enableAuth || canAccessTask(task, req.agent);
+
+  /** The task named by :taskId, or null when it is missing or not the caller's. */
+  const taskFor = async (req) => {
+    const task = await taskStore.get(req.params.taskId);
+    return task && canAccess(req, task) ? task : null;
+  };
+
   // ------- Health endpoint -------
   app.get('/a2a/health', (req, res) => {
     const stats = taskStore.getStats();
@@ -320,7 +332,11 @@ export function createA2AServer(options = {}) {
     }
 
     try {
-      const task = await taskStore.create({ message: params.message, metadata: params.metadata });
+      const task = await taskStore.create({
+        message: params.message,
+        metadata: params.metadata,
+        owner: enableAuth ? ownerKey(req.agent) : null,
+      });
 
       // Subscribe for push notifications if callback provided
       if (params.pushNotification?.url) {
@@ -350,7 +366,7 @@ export function createA2AServer(options = {}) {
 
   // ------- Get task -------
   app.get('/a2a/tasks/:taskId', async (req, res) => {
-    const task = await taskStore.get(req.params.taskId);
+    const task = await taskFor(req);
     if (!task) {
       return res.status(404).json(jsonRpcError(null, ERROR_CODES.TASK_NOT_FOUND, 'Task not found'));
     }
@@ -359,7 +375,7 @@ export function createA2AServer(options = {}) {
 
   // ------- Cancel task -------
   app.post('/a2a/tasks/:taskId/cancel', async (req, res) => {
-    const task = await taskStore.get(req.params.taskId);
+    const task = await taskFor(req);
     if (!task) {
       return res.status(404).json(jsonRpcError(null, ERROR_CODES.TASK_NOT_FOUND, 'Task not found'));
     }
@@ -374,12 +390,12 @@ export function createA2AServer(options = {}) {
   });
 
   // ------- SSE stream -------
-  attachStreamEndpoint(app, streamManager, taskStore);
+  attachStreamEndpoint(app, streamManager, taskStore, { canAccess });
 
   // ------- Push notification callback -------
   app.post('/a2a/tasks/:taskId/message', async (req, res) => {
     const { taskId } = req.params;
-    const task = await taskStore.get(taskId);
+    const task = await taskFor(req);
     if (!task) {
       return res.status(404).json(jsonRpcError(null, ERROR_CODES.TASK_NOT_FOUND, 'Task not found'));
     }

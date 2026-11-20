@@ -54,6 +54,13 @@ All routes prefixed with `/api/teams`. Requires authentication.
 | PUT | `/api/teams/:id/members/:username/role` | Update a member's role |
 | GET | `/api/teams/:id/activity` | Get team activity log |
 
+Through the API, membership is keyed by user id, with the username kept on
+each entry for display, so renaming an account keeps its teams and whoever
+takes the old name inherits none of them. `:username` in a path names the
+account that holds that username now. Entries saved before ids were recorded
+are matched by username until their holder next signs in, then rewritten with
+the id. The CLI and MCP tools have no user ids and keep working by username.
+
 ### Create a team
 
 ```bash

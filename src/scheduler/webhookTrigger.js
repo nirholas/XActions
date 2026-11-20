@@ -36,15 +36,36 @@ export function presentedSecret(req) {
   return typeof query === 'string' ? query : '';
 }
 
+/** Shortest secret accepted, the same floor as a job's webhookSecret. */
+const MIN_SECRET_LENGTH = 16;
+
 /**
  * Mount webhook routes on an Express app/router
  * Usage: mountWebhookRoutes(app) or mountWebhookRoutes(router)
  *
- * A job is triggerable only once it has a webhook secret
- * (`scheduler.setWebhookSecret(name)`); a job without one answers 403, since
- * an open trigger would let anyone who can reach the server run it.
+ * Every route needs a secret, presented the same way (see presentedSecret()):
+ *
+ * - `POST /api/webhooks/trigger/:jobName` runs a job, and needs that job's
+ *   secret (`scheduler.setWebhookSecret(name)`); a job without one answers 403,
+ *   since an open trigger would let anyone who can reach the server run it.
+ * - `POST /api/webhooks/ingest` emits `webhook:received` on the scheduler, and
+ *   needs the ingest secret (`options.ingestSecret`, default
+ *   XACTIONS_SCHEDULER_INGEST_SECRET); with none configured it answers 403.
+ *
+ * There is no listing route. `GET /api/webhooks` once answered every job's
+ * name, and whether it had a secret, to anyone who asked; nothing called it.
+ *
+ * @param {import('express').Router|import('express').Express} router
+ * @param {object} [options]
+ * @param {string} [options.ingestSecret] secret for the ingest route, at least
+ *   16 characters
  */
-export function mountWebhookRoutes(router) {
+export function mountWebhookRoutes(router, options = {}) {
+  const ingestSecret = options.ingestSecret ?? process.env.XACTIONS_SCHEDULER_INGEST_SECRET;
+  if (ingestSecret !== undefined && ingestSecret !== '' && String(ingestSecret).length < MIN_SECRET_LENGTH) {
+    throw new Error(`The scheduler ingest secret must be at least ${MIN_SECRET_LENGTH} characters`);
+  }
+
   // Trigger a job by name
   router.post('/api/webhooks/trigger/:jobName', async (req, res) => {
     try {
@@ -67,26 +88,16 @@ export function mountWebhookRoutes(router) {
     }
   });
 
-  // List available webhook endpoints
-  router.get('/api/webhooks', (req, res) => {
-    const scheduler = getScheduler();
-    const endpoints = [];
-    for (const [name, job] of scheduler.jobs.entries()) {
-      endpoints.push({
-        name,
-        url: `/api/webhooks/trigger/${name}`,
-        method: 'POST',
-        hasSecret: !!job.config.webhookSecret,
-        enabled: job.config.enabled,
-      });
-    }
-    res.json({ endpoints });
-  });
-
-  // Incoming data webhook — stores payload for processing
+  // Incoming data webhook — hands the payload to `webhook:received` listeners
   router.post('/api/webhooks/ingest', async (req, res) => {
     try {
-      const { source, event, data } = req.body;
+      if (!ingestSecret) {
+        return res.status(403).json({ error: 'No ingest secret is configured (XACTIONS_SCHEDULER_INGEST_SECRET), so data cannot be ingested over HTTP' });
+      }
+      if (!secretsMatch(presentedSecret(req), String(ingestSecret))) {
+        return res.status(403).json({ error: 'Invalid webhook secret' });
+      }
+      const { source, event, data } = req.body || {};
       const scheduler = getScheduler();
       scheduler.emit('webhook:received', { source, event, data, receivedAt: new Date().toISOString() });
       res.json({ status: 'received', source, event });

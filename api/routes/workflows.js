@@ -114,13 +114,29 @@ async function requireOwnWorkflow(req, res, next) {
 }
 
 
-// Lazy-load workflow module to avoid circular deps
+/**
+ * What a workflow run started from the API fails with when its owner has no
+ * saved X session. Runs here act as the workflow's owner; they never fall back
+ * to the operator's XACTIONS_SESSION_COOKIE.
+ */
+const NO_OWNER_SESSION =
+  "The workflow's owner has no saved X session. Save one with POST /api/session/save-session, then run it again.";
+
+// Lazy-load workflow module to avoid circular deps. Loading it also connects
+// triggers (webhooks, intervals) to the run engine, once per process, with each
+// triggered run using the session of the workflow's owner.
 let _workflows = null;
-async function getWorkflows() {
-  if (!_workflows) {
-    const mod = await import('../../src/workflows/index.js');
-    _workflows = mod.default;
-  }
+function getWorkflows() {
+  _workflows ??= import('../../src/workflows/index.js').then((mod) => {
+    mod.initTriggers({
+      authTokenFor: (workflow) => authTokenForUser(workflow.userId),
+      noSessionError: NO_OWNER_SESSION,
+    });
+    return mod.default;
+  }).catch((error) => {
+    _workflows = null; // let the next request try again
+    throw error;
+  });
   return _workflows;
 }
 
@@ -260,7 +276,11 @@ router.post('/:id/run', requireOwnWorkflow, async (req, res) => {
     const runPromise = workflows.run(workflow, {
       trigger: 'manual',
       initialContext: context || {},
-      authToken: authToken || (await authTokenForUser(req.user?.id)),
+      // The run acts as the workflow's owner (the caller, unless an admin is
+      // running someone else's workflow).
+      authToken: authToken || (await authTokenForUser(workflow.userId)),
+      useEnvSession: false,
+      noSessionError: NO_OWNER_SESSION,
       userId: req.user?.id || 'anonymous',
       onProgress: (event) => {
         // Could emit via Socket.IO here

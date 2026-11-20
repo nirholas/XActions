@@ -81,18 +81,23 @@ router.patch('/profile', async (req, res) => {
       return res.status(400).json({ error: 'Username already taken' });
     }
 
-    // Team membership is keyed by username (src/auth/teamManager.js), so a
-    // name someone renamed away from still holds their team roles. Taking it
-    // would inherit them.
-    const { getUserTeams } = await import('../../src/auth/teamManager.js');
-    if ((await getUserTeams(username)).length > 0) {
+    // Team membership is keyed by user id (src/auth/teamManager.js), but
+    // entries written before that are keyed by username until their holder is
+    // next seen with an id. A name that still holds such entries would hand
+    // them to whoever took it.
+    const teamManager = await import('../../src/auth/teamManager.js');
+    if (await teamManager.hasUnclaimedMemberships(username)) {
       return res.status(400).json({ error: 'Username already taken' });
     }
+    // Claim this user's own legacy entries under the old name before it goes.
+    await teamManager.claimMemberships({ id: req.user.id, username: req.user.username });
 
     const user = await prisma.user.update({
       where: { id: req.user.id },
       data: { username }
     });
+    // And show the new name on their memberships.
+    await teamManager.claimMemberships({ id: user.id, username: user.username });
 
     res.json({
       id: user.id,
