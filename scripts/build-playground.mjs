@@ -31,8 +31,14 @@ const DASHBOARD = path.join(ROOT, 'dashboard');
 /**
  * The deployed playground API. The page served by the Cloud Run container
  * talks to itself, so only the static-site copy needs this.
+ *
+ * It is the Cloud Run URL rather than playground.xactions.app: that hostname
+ * has no DNS record, and xactions.app is not verified for a Cloud Run domain
+ * mapping. The browser calls it directly (the server allows any origin) rather
+ * than through a Pages Function, because the playground's per-IP rate limit
+ * would otherwise see one Cloudflare address for every visitor.
  */
-const API_BASE = process.env.PLAYGROUND_API_BASE || 'https://playground.xactions.app';
+const API_BASE = process.env.PLAYGROUND_API_BASE || 'https://xactions-playground-lp642k3kpa-uc.a.run.app';
 
 /** Modules that are authored once and shipped to the browser verbatim. */
 const SHARED_MODULES = [

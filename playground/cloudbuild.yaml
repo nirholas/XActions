@@ -4,7 +4,14 @@
 #
 #   gcloud builds submit --config playground/cloudbuild.yaml \
 #     --region us-central1 \
-#     --substitutions=SHORT_SHA=manual$(date +%s)
+#     --ignore-file=playground/.gcloudignore \
+#     --service-account=projects/$PROJECT/serviceAccounts/three-ws-build@$PROJECT.iam.gserviceaccount.com \
+#     --substitutions=SHORT_SHA=$(git rev-parse --short HEAD)
+#
+# --ignore-file: the root .gcloudignore is the website image's allow-list and
+# uploads none of playground/. --service-account: this project has no default
+# Cloud Build or Compute Engine service account, so the build names one and the
+# service runs as its own (xactions-playground@, which holds no roles).
 #
 # The service holds no secrets and no state, so it needs no Secret Manager
 # bindings and no database. Redeploying it is always safe.
@@ -12,7 +19,7 @@
 substitutions:
   _SERVICE: xactions-playground
   _REGION: us-central1
-  _REPO: xactions
+  _REPO: containers
 
 steps:
   - id: build
@@ -42,6 +49,7 @@ steps:
       - --region=${_REGION}
       - --platform=managed
       - --allow-unauthenticated
+      - --service-account=${_SERVICE}@$PROJECT_ID.iam.gserviceaccount.com
       - --port=8080
       - --cpu=1
       - --memory=512Mi
