@@ -140,6 +140,16 @@ When filing an issue, please include:
 - **Screenshots** if applicable
 - **Environment** (browser, Node version, etc.)
 
+## Releasing
+
+Releases are cut from GitHub's `main`, never from a local branch.
+
+1. Bump `version` in `package.json` above npm's current `latest` (`npm view xactions version`), run `node scripts/sync-registry.mjs`, and move the `[Unreleased]` notes in `CHANGELOG.md` under the new version. Merge that to `main`.
+2. `npm run release:check` on a clean checkout of that commit.
+3. Tag it (`git tag vX.Y.Z && git push origin vX.Y.Z`). `.github/workflows/release.yml` tests it, creates the GitHub Release and publishes to npm with provenance.
+
+`npm publish` runs the same check through `prepublishOnly`, so a publish from your machine is refused unless HEAD is on `main`, the tree is clean and the version sorts above `latest`. Use a local publish only when Actions cannot run, and from a clean checkout of `main`.
+
 ## Credit
 
 Everyone whose work changes XActions is credited in
