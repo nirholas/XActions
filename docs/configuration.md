@@ -173,7 +173,7 @@ scripts.
 | `DATABASE_URL` | PostgreSQL connection string. See [database.md](database.md). |
 | `REDIS_HOST` / `REDIS_PORT` / `REDIS_PASSWORD` | Backing store for the background job queue. |
 | `REDIS_QUEUE_PREFIX` | Key prefix for the queue, so one Redis can serve several deployments. Default `xactions`. |
-| `XACTIONS_WORKER_CONCURRENCY` | How many jobs one worker process runs at once. Default `8`; each job type also keeps its own lower limit. See [architecture.md](architecture.md#background-jobs). |
+| `XACTIONS_WORKER_CONCURRENCY` | How many jobs one worker process runs at once on the shared queue. Default `8`; each job type also keeps its own lower limit. Types that run one at a time, or for hours, have a queue of their own and run on top of this. See [architecture.md](architecture.md#background-jobs). |
 | `XACTIONS_HOME` | Where the worker keeps per-caller state that is not in Postgres or Redis: the daily action ledger, follow dates for smart unfollow, saved RSS feeds, personas, workflows, teams and exports, and the analytics, CRM and lead store. Default `~/.xactions`. Run one worker host, or put it on a shared volume. |
 
 ### Scraping

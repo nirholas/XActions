@@ -198,6 +198,19 @@ process itself) runs it:
   caller sent (AI routes) or the dashboard user's saved session, decrypted.
 - **Writes are capped.** `ctx.charge()` records write actions against the same
   rolling 24 hour per-account caps as the MCP server.
+- **One queue per concurrency class.** Most types share the `operations`
+  queue, `XACTIONS_WORKER_CONCURRENCY` (default 8) jobs at a time, each type
+  also held to its own `concurrency` (default 2). A type that runs one at a
+  time (`concurrency: 1`: `smartUnfollow`, `bulkExecute`, `autoFollow`,
+  `spaceJoin` and the rest), or that declares `ownQueue: true` because it runs
+  for hours (`personaRun`, `discoveryTrendingMonitor`), gets a queue of its
+  own, `operations-<type>`, with its limit as the queue's concurrency. A
+  backlog of one such type waits on its own queue instead of in the shared
+  queue's slots, so it cannot hold up every other type. A worker process runs
+  up to 8 shared jobs plus each own-queue type's limit at once. The queues
+  share one command and one pub/sub Redis connection, and each adds one
+  blocking connection: 28 queues today, 30 connections per process (the API
+  process and each `npm run worker`).
 - **Status for 24 hours.** `GET /api/ai/action/status/:operationId` and
   `GET /api/operations/status/:operationId` read the job by the id the route
   returned. An agent's `GET /api/ai/action/history` lists only operations
@@ -214,7 +227,7 @@ process itself) runs it:
 | `PORT` | No | Server port (default: 3001) |
 | `NODE_ENV` | No | `development` or `production` |
 | `REDIS_HOST` / `REDIS_PORT` / `REDIS_PASSWORD` | No | Redis for the Bull job queue |
-| `XACTIONS_WORKER_CONCURRENCY` | No | Jobs one worker process runs at once (default 8) |
+| `XACTIONS_WORKER_CONCURRENCY` | No | Jobs one worker process runs at once on the shared queue (default 8); types with a queue of their own run on top of this |
 | `STRIPE_SECRET_KEY` | No | Stripe payments |
 | `OPENROUTER_API_KEY` | No | AI features (OpenRouter) |
 | `X_SESSION_COOKIE` | No | Default auth_token for CLI |

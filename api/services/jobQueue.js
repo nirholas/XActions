@@ -1,20 +1,72 @@
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
+/**
+ * The operations job queue: one Bull queue per concurrency class.
+ *
+ * Every type that can share a slot runs on the shared `operations` queue,
+ * `XACTIONS_WORKER_CONCURRENCY` (default 8) at a time, each type also held to
+ * its own limit. A type that runs one at a time (`concurrency: 1`), or that
+ * declares `ownQueue: true` because it runs for hours, gets a queue of its own
+ * whose Bull concurrency is that type's limit. Bull claims a job into a slot
+ * before the processor runs, so a type limit enforced inside the shared
+ * queue's processor left its backlog waiting in claimed slots: eight queued
+ * smartUnfollow jobs held all eight and nothing else started for hours. A job
+ * waiting for its own queue's slot stays "waiting" and holds nothing.
+ *
+ * @author nich (@nichxbt)
+ * @license Apache-2.0
+ */
 import Queue from 'bull';
+import { createRequire } from 'node:module';
 import { prisma } from '../../src/utils/prisma.js';
 import crypto from 'node:crypto';
 import { SESSION_KEYS, createJobContext, isPermanentFailure, sessionHashOf } from './processors/context.js';
 import { assertRunnable, loadProcessors } from './processors/registry.js';
 import { assertPublicUrl, publicFetch } from '../utils/publicUrl.js';
 
+// The ioredis Bull itself depends on, which can differ from the app's own.
+const requireHere = createRequire(import.meta.url);
+const Redis = createRequire(requireHere.resolve('bull'))('ioredis');
+
 // In-memory job cancellation tracking
 const cancelledJobs = new Set();
 
-// Create Bull queue with Redis.
+const processors = await loadProcessors();
+
+// ── Redis connections ───────────────────────────────────────────────────────
+// Bull opens three connections per queue: commands, pub/sub, and a blocking
+// one for its worker loop. Every queue here shares the first two, as Bull
+// allows through `createClient`; only the blocking one cannot be shared. So a
+// process holds (number of queues + 2) connections, not three per queue.
+
+/** Every connection opened for the queues, closed by closeQueues(). */
+const connections = [];
+const sharedConnections = {};
+
+function createRedisClient(type, config) {
+  // Bull refuses a pub/sub or blocking connection that retries per request.
+  const options = type === 'client' ? config : { ...config, maxRetriesPerRequest: null, enableReadyCheck: false };
+  if (type === 'bclient') {
+    const client = new Redis(options);
+    connections.push(client);
+    return client;
+  }
+  if (!sharedConnections[type]) {
+    const client = new Redis(options);
+    // Each queue adds its own 'error' (and, on the subscriber, message)
+    // listeners to the shared connection; that many is expected.
+    client.setMaxListeners(0);
+    connections.push(client);
+    sharedConnections[type] = client;
+  }
+  return sharedConnections[type];
+}
+
 // prefix keeps keys namespaced when this Redis instance is shared with other services.
 // REDIS_URL (set by Railway and most hosts) wins over REDIS_HOST/PORT/PASSWORD;
 // it was ignored, so those deployments queued against localhost.
 const queueOptions = {
   prefix: process.env.REDIS_QUEUE_PREFIX || 'xactions',
+  createClient: createRedisClient,
   defaultJobOptions: {
     attempts: 3,
     backoff: {
@@ -26,16 +78,57 @@ const queueOptions = {
     removeOnFail: { age: 86_400, count: 5_000 }
   }
 };
-const operationsQueue = process.env.REDIS_URL
-  ? new Queue('operations', process.env.REDIS_URL, queueOptions)
-  : new Queue('operations', {
-    ...queueOptions,
-    redis: {
-      host: process.env.REDIS_HOST || 'localhost',
-      port: process.env.REDIS_PORT || 6379,
-      password: process.env.REDIS_PASSWORD
-    }
-  });
+
+function createQueue(name) {
+  return process.env.REDIS_URL
+    ? new Queue(name, process.env.REDIS_URL, queueOptions)
+    : new Queue(name, {
+      ...queueOptions,
+      redis: {
+        host: process.env.REDIS_HOST || 'localhost',
+        port: process.env.REDIS_PORT || 6379,
+        password: process.env.REDIS_PASSWORD
+      }
+    });
+}
+
+// ── Queues ─────────────────────────────────────────────────────────────────
+
+const SHARED_QUEUE = 'operations';
+const WORKER_CONCURRENCY = Math.max(1, parseInt(process.env.XACTIONS_WORKER_CONCURRENCY, 10) || 8);
+
+/** Whether a type runs on a queue of its own rather than the shared one. */
+const hasOwnQueue = (def) => def.concurrency <= 1 || def.ownQueue;
+
+/** Queue name → { queue, concurrency }. The shared queue is first. */
+const queues = new Map([[SHARED_QUEUE, { queue: createQueue(SHARED_QUEUE), concurrency: WORKER_CONCURRENCY }]]);
+for (const [type, def] of processors) {
+  if (!hasOwnQueue(def)) continue;
+  const name = `${SHARED_QUEUE}-${type}`;
+  queues.set(name, { queue: createQueue(name), concurrency: def.concurrency });
+}
+
+const operationsQueue = queues.get(SHARED_QUEUE).queue;
+
+/** Every queue, the shared one first. */
+const allQueues = () => [...queues.values()].map((entry) => entry.queue);
+
+/**
+ * The name of the queue a job type runs on.
+ * @param {string} type
+ */
+function queueNameFor(type) {
+  const own = `${SHARED_QUEUE}-${type}`;
+  return queues.has(own) ? own : SHARED_QUEUE;
+}
+
+/**
+ * The Bull queue a job type runs on.
+ * @param {string} type
+ */
+function queueFor(type) {
+  return queues.get(queueNameFor(type)).queue;
+}
 
 /** How long a request waits for Redis before the queue is reported unavailable. */
 const QUEUE_READY_TIMEOUT_MS = Math.max(500, parseInt(process.env.XACTIONS_QUEUE_TIMEOUT_MS, 10) || 5_000);
@@ -62,20 +155,21 @@ function withTimeout(promise, ms) {
 }
 
 /**
- * Add a job, failing fast when Redis is unreachable. Bull queues commands
- * while its client is offline, so add() on a dead Redis never settled and the
- * request (and its Operation row) hung at "pending". Nothing is added unless
- * the client is connected first.
+ * Add a job to the queue its type runs on, failing fast when Redis is
+ * unreachable. Bull queues commands while its client is offline, so add() on
+ * a dead Redis never settled and the request (and its Operation row) hung at
+ * "pending". Nothing is added unless the client is connected first.
  */
 async function addToQueue(name, data, opts) {
   await queueReady();
-  return operationsQueue.add(name, data, opts);
+  return queueFor(name).add(name, data, opts);
 }
 
 /**
  * Resolve once the Redis client is connected, or throw QueueUnavailableError.
  * Bull's own isReady() resolves even while Redis is unreachable, so the
- * client's connection status is what is checked.
+ * client's connection status is what is checked. Every queue shares this
+ * client.
  */
 async function queueReady() {
   const client = operationsQueue.client;
@@ -90,13 +184,24 @@ async function queueReady() {
   }
 }
 
-/** The Bull job with this id, failing fast instead of hanging when Redis is down. */
-async function bullJobById(jobId) {
+/**
+ * The Bull job with this id, from whichever queue holds it, failing fast
+ * instead of hanging when Redis is down. When the type is known its own queue
+ * is asked first; every queue is asked otherwise, and when that misses (a job
+ * queued before its type moved queues).
+ *
+ * @param {string} jobId
+ * @param {string} [type]
+ */
+async function bullJobById(jobId, type) {
   await queueReady();
-  return operationsQueue.getJob(jobId);
+  if (type) {
+    const job = await queueFor(type).getJob(jobId);
+    if (job) return job;
+  }
+  const found = await Promise.all(allQueues().map((queue) => queue.getJob(jobId)));
+  return found.find(Boolean) || null;
 }
-
-const processors = await loadProcessors();
 
 /**
  * Add a new job to the queue
@@ -186,10 +291,13 @@ async function queueJob(jobData) {
  * @returns {Promise<boolean>} whether one was found
  */
 async function removeRepeatingJob(jobId) {
-  const repeating = await operationsQueue.getRepeatableJobs();
-  const matches = repeating.filter((job) => job.id === jobId);
-  await Promise.all(matches.map((job) => operationsQueue.removeRepeatableByKey(job.key)));
-  return matches.length > 0;
+  await queueReady();
+  const removed = await Promise.all(allQueues().map(async (queue) => {
+    const matches = (await queue.getRepeatableJobs()).filter((job) => job.id === jobId);
+    await Promise.all(matches.map((job) => queue.removeRepeatableByKey(job.key)));
+    return matches.length;
+  }));
+  return removed.some((count) => count > 0);
 }
 
 /**
@@ -206,7 +314,7 @@ async function getJob(jobId) {
   }
 
   // Get Bull job for live progress (the row alone answers when Redis is down)
-  const bullJob = await bullJobById(jobId).catch(() => null);
+  const bullJob = await bullJobById(jobId, operation.type).catch(() => null);
   let progress = null;
   let state = operation.status;
 
@@ -379,9 +487,13 @@ async function runProcessor(job, def) {
 }
 
 /**
- * Cap how many jobs of one type run at once in this process. One wildcard
- * worker serves every type (a named `process()` per type adds Redis listeners
- * for each of the hundreds of types), so the per-type limit is kept here.
+ * Cap how many jobs of one type run at once in this process, across queues.
+ * On a type's own queue Bull's concurrency already is that limit; on the
+ * shared queue this is what holds each type to its own. A job waiting here
+ * holds a shared slot, which is why a type that runs one at a time, or for
+ * hours, has a queue of its own instead. (A named `process(type, n)` per type
+ * does not help: in Bull 4 every named processor's loop takes any job from
+ * the queue, and their concurrencies add up.)
  */
 function limiter(limit) {
   let running = 0;
@@ -399,13 +511,16 @@ function limiter(limit) {
 }
 
 const limits = new Map([...processors].map(([type, def]) => [type, limiter(def.concurrency)]));
-const WORKER_CONCURRENCY = Math.max(1, parseInt(process.env.XACTIONS_WORKER_CONCURRENCY, 10) || 8);
 
-operationsQueue.process('*', WORKER_CONCURRENCY, (job) => {
-  const def = processors.get(job.name);
-  if (!def) throw new Error(`No processor for "${job.name}" on this worker. Deploy the same version as the API.`);
-  return limits.get(job.name)(() => runProcessor(job, def));
-});
+// Every queue runs any type it is handed, so a job queued on the shared queue
+// before its type got a queue of its own still runs after a deploy.
+for (const { queue, concurrency } of queues.values()) {
+  queue.process('*', concurrency, (job) => {
+    const def = processors.get(job.name);
+    if (!def) throw new Error(`No processor for "${job.name}" on this worker. Deploy the same version as the API.`);
+    return limits.get(job.name)(() => runProcessor(job, def));
+  });
+}
 
 // ── Helpers ────────────────────────────────────────────────────────────────
 
@@ -456,8 +571,10 @@ async function describeBullJob(job) {
 async function getRecentJobs({ sessionCookie, source, type, limit = 20 } = {}) {
   const hash = sessionHashOf({ sessionCookie });
   if (!hash) return [];
-  const jobs = await operationsQueue.getJobs(['active', 'waiting', 'delayed', 'completed', 'failed'], 0, 999);
-  const mine = jobs
+  await queueReady();
+  const perQueue = await Promise.all(allQueues().map((queue) =>
+    queue.getJobs(['active', 'waiting', 'delayed', 'completed', 'failed'], 0, 999)));
+  const mine = perQueue.flat()
     .filter((job) => job?.data?.sessionHash === hash)
     .filter((job) => (!source || job.data.source === source) && (!type || job.name === type))
     .sort((a, b) => b.timestamp - a.timestamp)
@@ -529,7 +646,7 @@ async function updateOperation(job, data) {
   }
 }
 
-operationsQueue.on('active', async (job) => {
+const onActive = async (job) => {
   if (loud(job)) console.log(`▶️  Job active: ${job.id} (${job.data.type || job.name})`);
   await updateOperation(job, { status: 'processing', startedAt: new Date() });
   global.io?.to(`job:${roomOf(job)}`).emit('job:active', {
@@ -537,16 +654,16 @@ operationsQueue.on('active', async (job) => {
     type: job.data.type,
     startedAt: new Date().toISOString(),
   });
-});
+};
 
-operationsQueue.on('progress', (job, progress) => {
+const onProgress = (job, progress) => {
   global.io?.to(`job:${roomOf(job)}`).emit('job:progress', {
     jobId: roomOf(job),
     progress,
   });
-});
+};
 
-operationsQueue.on('completed', async (job, result) => {
+const onCompleted = async (job, result) => {
   if (loud(job)) console.log(`✅ Job completed: ${job.id}`);
   // A cancelled job that ran to its end keeps the status "cancelled" (its
   // partial result is still stored); it was overwritten with "completed".
@@ -569,9 +686,9 @@ operationsQueue.on('completed', async (job, result) => {
     result,
     completedAt: new Date().toISOString(),
   });
-});
+};
 
-operationsQueue.on('failed', async (job, err) => {
+const onFailed = async (job, err) => {
   const final = job.attemptsMade >= (job.opts.attempts ?? 1) || isPermanentFailure(err) || cancelledJobs.has(roomOf(job));
   // Bull fires 'failed' on every attempt. Until the last one the job is only
   // being retried: record the attempt, but do not mark the operation failed,
@@ -601,25 +718,54 @@ operationsQueue.on('failed', async (job, err) => {
     error: err.message,
     failedAt: new Date().toISOString(),
   });
-});
+};
 
-operationsQueue.on('stalled', (job) => {
+const onStalled = (job) => {
   console.warn(`⚠️ Job stalled: ${job.id}`);
-});
+};
+
+// Every queue reports the same lifecycle, whichever one a job ran on.
+for (const queue of allQueues()) {
+  queue.on('active', onActive);
+  queue.on('progress', onProgress);
+  queue.on('completed', onCompleted);
+  queue.on('failed', onFailed);
+  queue.on('stalled', onStalled);
+}
 
 // ── Graceful shutdown ───────────────────────────────────────────────────────
 
-async function gracefulShutdown(signal) {
-  console.log(`📊 Received ${signal} — draining job queue…`);
-  try {
-    await operationsQueue.pause(true /* isLocal */);
+/**
+ * Close every queue and the Redis connections they share, without waiting for
+ * running jobs (gracefulShutdown waits for those first).
+ */
+async function closeQueues() {
+  await Promise.all(allQueues().map((queue) => queue.close(true /* doNotWaitJobs */)));
+  // Bull leaves open the connections it was handed through createClient.
+  for (const client of connections) client.disconnect();
+}
 
+let shuttingDown = null;
+
+function gracefulShutdown(signal) {
+  shuttingDown ??= drainAndExit(signal);
+  return shuttingDown;
+}
+
+async function drainAndExit(signal) {
+  console.log(`📊 Received ${signal} — draining ${queues.size} job queues…`);
+  try {
+    // A local pause stops each queue taking new jobs and resolves once its
+    // running jobs finish. It was awaited before the 30s race, so the timeout
+    // never applied; running jobs now get 30s, then the queues close anyway.
+    let timer;
     await Promise.race([
-      operationsQueue.whenCurrentJobsFinished(),
-      new Promise((_, reject) =>
-        setTimeout(() => reject(new Error('Drain timeout after 30s')), 30_000)
-      ),
-    ]).catch(err => console.warn(`⚠️  ${err.message} — forcing shutdown`));
+      Promise.all(allQueues().map((queue) => queue.pause(true /* isLocal */))),
+      new Promise((_, reject) => {
+        timer = setTimeout(() => reject(new Error('Drain timeout after 30s')), 30_000);
+      }),
+    ]).catch(err => console.warn(`⚠️  ${err.message} — forcing shutdown`))
+      .finally(() => clearTimeout(timer));
 
     // Close any Puppeteer browsers still open
     if (global.activeBrowsers?.size) {
@@ -629,7 +775,7 @@ async function gracefulShutdown(signal) {
       );
     }
 
-    await operationsQueue.close();
+    await closeQueues();
     await prisma.$disconnect();
     console.log('✅ Graceful shutdown complete.');
   } catch (err) {
@@ -665,5 +811,9 @@ export {
   cancelQueuedJob,
   QueueUnavailableError,
   operationsQueue,
+  queueFor,
+  queueNameFor,
+  allQueues,
+  closeQueues,
   processors
 };
