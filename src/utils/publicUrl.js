@@ -103,7 +103,7 @@ export async function assertPublicUrl(raw, label = 'URL', lookup = dnsLookup) {
  * that was checked, so the request can be sent to that address and no other.
  * `address` is null when private hosts are allowed and nothing was pinned.
  *
- * @param {string} raw
+ * @param {string | URL} raw
  * @param {string} [label='URL']
  * @param {typeof dnsLookup} [lookup]
  * @returns {Promise<{ url: URL, address: string | null, family: 4 | 6 | null }>}
