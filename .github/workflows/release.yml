@@ -51,6 +51,12 @@ jobs:
           fi
           echo "Tag v$TAG_VERSION matches package.json."
 
+      # 4.0.0 and 4.0.1 reached npm from a commit that was never pushed, so main
+      # said 3.5.0 while users had 4.0.1. A tag below npm's latest would publish a
+      # lower version and move `latest` backwards; stop before anything runs.
+      - name: Version sorts above npm's latest
+        run: node scripts/check-release.mjs
+
   # Runs before anything is published. A tag is not a promise that the code works,
   # so the suite has to say so first; publish-npm needs this job to pass.
   test:
@@ -165,6 +171,13 @@ jobs:
     needs: [release, test]
     if: "!contains(github.ref, 'beta') && !contains(github.ref, 'alpha')"
 
+    # id-token lets npm sign a provenance statement: the npm page then links the
+    # exact commit and workflow run that built the tarball. A local publish
+    # cannot produce one, which is what made 4.0.1 impossible to trace.
+    permissions:
+      contents: read
+      id-token: write
+
     steps:
       - name: Checkout
         uses: actions/checkout@v7
@@ -181,6 +194,6 @@ jobs:
         run: npm ci
 
       - name: Publish
-        run: npm publish --access public
+        run: npm publish --provenance --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

@@ -52,6 +52,8 @@
     "db:push": "prisma db push",
     "db:seed": "node prisma/seed.js",
     "db:studio": "prisma studio",
+    "prepublishOnly": "node scripts/check-release.mjs",
+    "release:check": "node scripts/check-release.mjs",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
