@@ -156,3 +156,60 @@ describe('webhook trigger', () => {
     scheduler.jobs.get('wh-open').config.webhookSecret = undefined;
   });
 });
+
+describe('webhook listing and ingest', () => {
+  const INGEST = 'an-ingest-secret-long-enough';
+  const servers = [];
+
+  async function serve(options) {
+    const app = express();
+    app.use(express.json());
+    mountWebhookRoutes(app, options);
+    const server = await new Promise((r) => { const s = app.listen(0, '127.0.0.1', () => r(s)); });
+    servers.push(server);
+    return `http://127.0.0.1:${server.address().port}`;
+  }
+
+  afterAll(() => servers.forEach((s) => s.close()));
+
+  const ingest = (base, headers = {}) => fetch(`${base}/api/webhooks/ingest`, {
+    method: 'POST',
+    headers: { 'content-type': 'application/json', ...headers },
+    body: JSON.stringify({ source: 'zapier', event: 'new_follower', data: { username: 'x' } }),
+  });
+
+  it('no longer lists job names to anyone who asks', async () => {
+    const base = await serve({ ingestSecret: INGEST });
+    expect((await fetch(`${base}/api/webhooks`)).status).toBe(404);
+  });
+
+  it('refuses ingest when no secret is configured, or the secret is wrong or missing', async () => {
+    const received = [];
+    const scheduler = getScheduler();
+    const listener = (e) => received.push(e);
+    scheduler.on('webhook:received', listener);
+    try {
+      const saved = process.env.XACTIONS_SCHEDULER_INGEST_SECRET;
+      delete process.env.XACTIONS_SCHEDULER_INGEST_SECRET;
+      const open = await serve();
+      if (saved !== undefined) process.env.XACTIONS_SCHEDULER_INGEST_SECRET = saved;
+      expect((await ingest(open, { 'X-Webhook-Secret': INGEST })).status).toBe(403);
+
+      const locked = await serve({ ingestSecret: INGEST });
+      expect((await ingest(locked)).status).toBe(403);
+      expect((await ingest(locked, { 'X-Webhook-Secret': 'wrong-secret-of-some-length' })).status).toBe(403);
+      expect(received).toEqual([]);
+
+      expect((await ingest(locked, { 'X-Webhook-Secret': INGEST })).status).toBe(200);
+      expect((await ingest(locked, { Authorization: `Bearer ${INGEST}` })).status).toBe(200);
+      expect(received).toHaveLength(2);
+      expect(received[0]).toMatchObject({ source: 'zapier', event: 'new_follower', data: { username: 'x' } });
+    } finally {
+      scheduler.off('webhook:received', listener);
+    }
+  });
+
+  it('refuses a short ingest secret at mount time', () => {
+    expect(() => mountWebhookRoutes(express(), { ingestSecret: 'short' })).toThrow(/16 characters/);
+  });
+});

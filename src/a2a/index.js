@@ -14,7 +14,7 @@
 export * from './types.js';
 export { convertMcpToolToA2aSkill, getSkillCategories, searchSkills, getSkillById, getAllSkills, refreshSkills } from './skillRegistry.js';
 export { generateAgentCard, serveAgentCard, generateMinimalCard, diffCards, fetchRemoteAgentCard, clearCardCache } from './agentCard.js';
-export { TaskStore, TaskExecutor, createTaskManager } from './taskManager.js';
+export { TaskStore, TaskExecutor, createTaskManager, ownerKey, canAccessTask } from './taskManager.js';
 export { createBridge } from './bridge.js';
 export { StreamManager, bridgeTaskStream, attachStreamEndpoint, connectToAgentStream } from './streaming.js';
 export { PushNotificationServer, PushNotificationClient, SubscriptionManager } from './push.js';

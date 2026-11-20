@@ -379,3 +379,180 @@ describe('workflow webhook triggers', () => {
     expect((await request(app).post(hook).set('X-Webhook-Secret', secret).send({ hello: 1 })).status).toBe(200);
   });
 });
+
+// ── 14. Workflow listing and the session a run uses ─────────────────────────
+describe('workflows are listed to their owner and run as their owner', () => {
+  const seen = [];
+  let workflows;
+  let savedOperatorCookie;
+
+  beforeAll(async () => {
+    workflows = (await import('../../src/workflows/index.js')).default;
+    // Records the session each run was handed, so the test can see whose it was.
+    workflows.registerAction('recordSession', {
+      description: 'records context.authToken',
+      execute: async (params, context) => {
+        seen.push(context.authToken);
+        return { ok: true };
+      },
+    });
+    savedOperatorCookie = process.env.XACTIONS_SESSION_COOKIE;
+    process.env.XACTIONS_SESSION_COOKIE = 'operator-auth-token';
+  });
+
+  afterAll(() => {
+    if (savedOperatorCookie === undefined) delete process.env.XACTIONS_SESSION_COOKIE;
+    else process.env.XACTIONS_SESSION_COOKIE = savedOperatorCookie;
+  });
+
+  /** Create a webhook workflow as `user` and return its id, webhook id and secret. */
+  async function hookFor(user, name) {
+    const created = await request(app).post('/api/workflows').set(bearer(user)).send({
+      name, trigger: { type: 'webhook' }, steps: [{ action: 'recordSession' }],
+    });
+    expect(created.status).toBe(201);
+    return { id: created.body.id, ...created.body.trigger };
+  }
+
+  /** The first finished run of a workflow, polling while the triggered run is in flight. */
+  async function finishedRun(user, id) {
+    for (let i = 0; i < 100; i++) {
+      const { body } = await request(app).get(`/api/workflows/${id}/runs`).set(bearer(user));
+      const done = body.runs?.find((r) => r.completedAt);
+      if (done) return done;
+      await new Promise((r) => setTimeout(r, 20));
+    }
+    throw new Error(`no finished run for ${id}`);
+  }
+
+  it('GET /api/workflows shows a user their own workflows and nobody else\'s', async () => {
+    const created = await request(app).post('/api/workflows').set(bearer(alice)).send({
+      name: 'listed', steps: [{ action: 'recordSession' }],
+    });
+    const { id } = created.body;
+    const ids = async (user) => (await request(app).get('/api/workflows').set(bearer(user))).body.workflows.map((w) => w.id);
+
+    expect(await ids(alice)).toContain(id);
+    expect(await ids(bob)).not.toContain(id);
+    expect(await ids(admin)).toContain(id);
+    const summary = (await request(app).get('/api/workflows').set(bearer(alice))).body.workflows.find((w) => w.id === id);
+    expect(summary.userId).toBe(alice.id);
+  });
+
+  it('a run id from another workflow is not found under yours', async () => {
+    const mine = await request(app).post('/api/workflows').set(bearer(bob)).send({ name: 'mine', steps: [{ action: 'recordSession' }] });
+    const theirs = await request(app).post('/api/workflows').set(bearer(alice)).send({ name: 'theirs', steps: [{ action: 'recordSession' }] });
+    const run = await workflows.run(theirs.body.id, { authToken: 'alice-token' });
+    expect((await request(app).get(`/api/workflows/${theirs.body.id}/runs/${run.id}`).set(bearer(alice))).status).toBe(200);
+    expect((await request(app).get(`/api/workflows/${mine.body.id}/runs/${run.id}`).set(bearer(bob))).status).toBe(404);
+    const traversal = encodeURIComponent(`../${theirs.body.id}/${run.id}`);
+    expect((await request(app).get(`/api/workflows/${mine.body.id}/runs/${traversal}`).set(bearer(bob))).status).toBe(404);
+  });
+
+  it('a webhook run uses the owner\'s saved session', async () => {
+    const { encrypt } = await import('../../api/routes/session-auth.js');
+    db.table('user').find((u) => u.id === bob.id).sessionCookie = encrypt('auth_token=bob-auth-token; ct0=bobct0');
+    const hook = await hookFor(bob, 'bob-hook');
+    seen.length = 0;
+
+    const res = await request(app).post(`/api/workflows/webhook/${hook.webhookId}`).set('X-Webhook-Secret', hook.secret).send({});
+    expect(res.status).toBe(200);
+    expect((await finishedRun(bob, hook.id)).status).toBe('completed');
+    expect(seen).toEqual(['bob-auth-token']);
+  });
+
+  it('a webhook run whose owner has no session fails instead of using the operator\'s', async () => {
+    const hook = await hookFor(admin, 'no-session-hook');
+    seen.length = 0;
+
+    await request(app).post(`/api/workflows/webhook/${hook.webhookId}`).set('X-Webhook-Secret', hook.secret).send({});
+    const run = await finishedRun(admin, hook.id);
+    expect(run.status).toBe('failed');
+    expect(run.error).toMatch(/no saved X session/);
+    expect(seen).toEqual([]);
+  });
+
+  it('a manual API run without the owner\'s session fails instead of using the operator\'s', async () => {
+    const created = await request(app).post('/api/workflows').set(bearer(admin)).send({ name: 'manual', steps: [{ action: 'recordSession' }] });
+    seen.length = 0;
+    const res = await request(app).post(`/api/workflows/${created.body.id}/run`).set(bearer(admin)).send({});
+    expect(res.body.status).toBe('failed');
+    expect(res.body.error).toMatch(/no saved X session/);
+    expect(seen).toEqual([]);
+  });
+
+  it('the CLI and MCP path still runs with the machine\'s own session', async () => {
+    seen.length = 0;
+    const run = await workflows.run({ name: 'local', steps: [{ action: 'recordSession' }] });
+    expect(run.status).toBe('completed');
+    expect(seen).toEqual(['operator-auth-token']);
+  });
+});
+
+// ── 15. Team membership follows the account, not the name ───────────────────
+describe('team membership is keyed by user id', () => {
+  const carol = { id: 'user_carol', username: 'carol', email: 'carol@example.com', isAdmin: false };
+  const dave = { id: 'user_dave', username: 'dave', email: 'dave@example.com', isAdmin: false };
+  const erin = { id: 'user_erin', username: 'erin', email: 'erin@example.com', isAdmin: false };
+  let teamManager;
+
+  beforeAll(async () => {
+    db.table('user').push({ ...carol }, { ...dave }, { ...erin });
+    teamManager = await import('../../src/auth/teamManager.js');
+  });
+
+  const rename = (user, username) => request(app).patch('/api/user/profile').set(bearer(user)).send({ username });
+  const teamIds = async (user) => (await request(app).get('/api/teams').set(bearer(user))).body.teams.map((t) => t.id);
+
+  it('a renamed user keeps their teams, and whoever takes the old name gets none of them', async () => {
+    const created = await request(app).post('/api/teams').set(bearer(carol)).send({ name: 'Carol Co' });
+    expect(created.status).toBe(200);
+    const teamId = created.body.id;
+    expect(created.body.members).toEqual([expect.objectContaining({ userId: carol.id, username: 'carol', role: 'owner' })]);
+
+    expect((await rename(carol, 'carol_renamed')).status).toBe(200);
+    expect(await teamIds(carol)).toContain(teamId);
+    const members = (await request(app).get(`/api/teams/${teamId}/members`).set(bearer(carol))).body.members;
+    expect(members).toEqual([expect.objectContaining({ userId: carol.id, username: 'carol_renamed', role: 'owner' })]);
+
+    // The old name is free to take now, and carries nothing with it.
+    expect((await rename(dave, 'carol')).status).toBe(200);
+    expect(await teamIds(dave)).not.toContain(teamId);
+    expect((await request(app).get(`/api/teams/${teamId}/members`).set(bearer(dave))).status).toBe(404);
+    expect((await request(app).get(`/api/teams/${teamId}/activity`).set(bearer(dave))).status).toBe(404);
+
+    // Naming the old username in a member route reaches the account that holds
+    // it now, not the renamed owner.
+    const role = await request(app).put(`/api/teams/${teamId}/members/carol/role`).set(bearer(carol)).send({ role: 'viewer' });
+    expect(role.body).toEqual({ error: 'User not in team' });
+  });
+
+  it('migrates entries written by username to the id on first sight, and rewrites them', async () => {
+    const legacy = await teamManager.createTeam('Legacy', 'erin'); // the pre-id shape: no userId
+    expect(legacy.members[0]).not.toHaveProperty('userId');
+    expect(await teamManager.hasUnclaimedMemberships('erin')).toBe(true);
+
+    expect(await teamIds(erin)).toContain(legacy.id);
+    const [member] = await teamManager.listTeamMembers(legacy.id);
+    expect(member).toMatchObject({ userId: erin.id, username: 'erin', role: 'owner' });
+    expect(await teamManager.hasUnclaimedMemberships('erin')).toBe(false);
+  });
+
+  it('a user renaming away from a name claims its legacy entries first', async () => {
+    const legacy = await teamManager.createTeam('Legacy 2', 'erin');
+    expect((await rename(erin, 'erin_renamed')).status).toBe(200);
+    const [member] = await teamManager.listTeamMembers(legacy.id);
+    expect(member).toMatchObject({ userId: erin.id, username: 'erin_renamed' });
+    expect(await teamIds(erin)).toContain(legacy.id);
+  });
+
+  it('the CLI and MCP path, which has no user ids, still works by username', async () => {
+    const team = await teamManager.createTeam('Local', 'localuser');
+    expect(await teamManager.getUserRole(team.id, 'localuser')).toBe('owner');
+    const { token } = await teamManager.inviteUser(team.id, 'x@example.com', 'member');
+    expect(await teamManager.acceptInvite(token, 'helper')).toMatchObject({ role: 'member' });
+    expect(await teamManager.updateRole(team.id, 'helper', 'viewer')).toEqual({ username: 'helper', role: 'viewer' });
+    expect(await teamManager.removeUser(team.id, 'helper')).toEqual({ status: 'removed', username: 'helper' });
+    expect(await teamManager.removeUser(team.id, 'localuser')).toEqual({ error: 'Cannot remove team owner' });
+  });
+});

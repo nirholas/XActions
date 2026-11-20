@@ -20,6 +20,38 @@ import {
 } from './types.js';
 
 // ============================================================================
+// Ownership
+// ============================================================================
+
+/**
+ * The stable identity of an authenticated A2A caller, as recorded on the tasks
+ * it creates. The credential type is part of the key, so an API key labelled
+ * "x" and a bearer token for subject "x" are different callers.
+ *
+ * @param {{ id?: string|null, type?: string }|null|undefined} agent req.agent
+ * @returns {string|null} null for an anonymous caller
+ */
+export function ownerKey(agent) {
+  if (!agent || agent.id === undefined || agent.id === null || agent.id === '') return null;
+  return `${agent.type || 'agent'}:${agent.id}`;
+}
+
+/**
+ * Whether `agent` may see and act on `task`: the caller that created it, or a
+ * caller holding the `admin` permission. An anonymous caller owns nothing.
+ *
+ * @param {object} task
+ * @param {{ id?: string|null, type?: string, permissions?: string[] }|null} agent
+ * @returns {boolean}
+ */
+export function canAccessTask(task, agent) {
+  if (!task) return false;
+  if (Array.isArray(agent?.permissions) && agent.permissions.includes('admin')) return true;
+  const key = ownerKey(agent);
+  return key !== null && task.owner === key;
+}
+
+// ============================================================================
 // TaskStore — In-memory task storage with lifecycle management
 // ============================================================================
 
@@ -63,6 +95,9 @@ export class TaskStore {
    * @param {string} [params.contextId] - Conversation context
    * @param {object} [params.message] - Initial message
    * @param {object} [params.metadata] - Arbitrary metadata
+   * @param {string|null} [params.owner] - Identity of the caller that created
+   *   the task (see ownerKey()). Kept on the task as a non-enumerable `owner`
+   *   property, so it is never serialised to clients or push subscribers.
    * @returns {object} The created task
    */
   async create(params = {}) {
@@ -73,6 +108,7 @@ export class TaskStore {
       }
     }
     const task = createTask(params);
+    Object.defineProperty(task, 'owner', { value: params.owner ?? null, enumerable: false });
     this.tasks.set(task.id, task);
     this._emit('created', task.id, task);
     return task;

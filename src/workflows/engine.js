@@ -27,6 +27,13 @@ import { getStore } from './store.js';
  * @param {string} [options.trigger='manual'] - What triggered this run
  * @param {object} [options.initialContext={}] - Initial variables
  * @param {string} [options.authToken] - X/Twitter session cookie
+ * @param {boolean} [options.useEnvSession=true] - Fall back to the process's
+ *   XACTIONS_SESSION_COOKIE when no authToken is given. The CLI and MCP server
+ *   run as the machine's own account and keep the default; the API server runs
+ *   other people's workflows and passes false, so a run without its owner's
+ *   session fails instead of acting as the operator's account.
+ * @param {string} [options.noSessionError] - The error a run fails with when
+ *   it has no authToken and useEnvSession is false
  * @param {string} [options.userId] - User ID for tracking
  * @param {function} [options.onProgress] - Progress callback: (event) => void
  * @param {function} [options.isCancelled] - Cancellation check: () => boolean
@@ -57,13 +64,23 @@ export async function runWorkflow(workflow, options = {}) {
   // Save initial run record
   await store.saveRun(run);
 
+  const authToken = options.authToken || (options.useEnvSession === false ? undefined : process.env.XACTIONS_SESSION_COOKIE);
+  if (!authToken && options.useEnvSession === false) {
+    run.status = 'failed';
+    run.error = options.noSessionError || 'No X session is available for this workflow run.';
+    run.completedAt = new Date().toISOString();
+    await store.updateRun(run);
+    (options.onProgress || (() => {}))({ type: 'failed', runId, error: run.error });
+    return run;
+  }
+
   // Workflow execution context (variables passed between steps)
   const context = {
     ...options.initialContext,
     _workflow: { id: workflow.id, name: workflow.name },
     _run: { id: runId, trigger: run.trigger },
     _timestamp: new Date().toISOString(),
-    authToken: options.authToken || process.env.XACTIONS_SESSION_COOKIE,
+    authToken,
   };
 
   const notify = options.onProgress || (() => {});

@@ -6,6 +6,7 @@
  */
 
 import { Router } from 'express';
+import { prisma } from '../../src/utils/prisma.js';
 import { authenticate as authMiddleware } from '../middleware/auth.js';
 
 const router = Router();
@@ -17,6 +18,25 @@ router.use(authMiddleware);
 const teams = () => import('../../src/auth/teamManager.js');
 
 /**
+ * The signed-in caller as teamManager keys members: by user id, with the
+ * username as a display field (and to claim memberships written before ids).
+ */
+const caller = (req) => ({ id: req.user.id, username: req.user.username });
+
+/**
+ * The member a :username path segment names. A username an account holds now
+ * resolves to that account's id, so the entry of someone who has since renamed
+ * is never matched by their old name. A name no account holds falls back to
+ * the entry with that display name.
+ */
+async function target(req) {
+  const { username } = req.params;
+  if (username === req.user.username) return caller(req);
+  const user = await prisma.user.findFirst({ where: { username }, select: { id: true, username: true } });
+  return user ? { id: user.id, username: user.username } : { username };
+}
+
+/**
  * Continue only if the caller belongs to the team, and when `action` is given,
  * only if their role allows it. Answers 404 rather than 403 to non-members, so
  * team ids cannot be probed.
@@ -25,7 +45,7 @@ function requireTeamRole(action) {
   return async (req, res, next) => {
     try {
       const { checkPermission, getUserRole } = await teams();
-      const role = await getUserRole(req.params.id, req.user.username);
+      const role = await getUserRole(req.params.id, caller(req));
       if (!role) return res.status(404).json({ error: 'Team not found' });
       if (action && !checkPermission(role, action)) {
         return res.status(403).json({ error: `Your role (${role}) cannot ${action.replace('-', ' ')}` });
@@ -42,7 +62,7 @@ function requireTeamRole(action) {
 router.get('/', async (req, res) => {
   try {
     const { getUserTeams } = await teams();
-    res.json({ teams: await getUserTeams(req.user.username) });
+    res.json({ teams: await getUserTeams(caller(req)) });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -54,7 +74,7 @@ router.post('/', async (req, res) => {
     const { createTeam } = await teams();
     const { name } = req.body;
     if (!name || typeof name !== 'string') return res.status(400).json({ error: 'name required' });
-    res.json(await createTeam(name.trim().slice(0, 100), req.user.username));
+    res.json(await createTeam(name.trim().slice(0, 100), caller(req)));
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -89,7 +109,7 @@ router.delete('/:id/members/:username', async (req, res, next) => {
 }, async (req, res) => {
   try {
     const { removeUser } = await teams();
-    res.json(await removeUser(req.params.id, req.params.username));
+    res.json(await removeUser(req.params.id, await target(req)));
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -99,7 +119,7 @@ router.delete('/:id/members/:username', async (req, res, next) => {
 router.put('/:id/members/:username/role', requireTeamRole('manage-members'), async (req, res) => {
   try {
     const { updateRole } = await teams();
-    res.json(await updateRole(req.params.id, req.params.username, req.body.role));
+    res.json(await updateRole(req.params.id, await target(req), req.body.role));
   } catch (error) {
     res.status(400).json({ error: error.message });
   }

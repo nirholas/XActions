@@ -242,18 +242,23 @@ export function bridgeTaskStream(taskStore, streamManager) {
  *
  * With a task store, a stream is only opened for a task that exists (404
  * otherwise), and a task that has already finished gets its final status and
- * `done` at once instead of a connection that never closes.
+ * `done` at once instead of a connection that never closes. A task the
+ * caller may not see (`options.canAccess` returns false) is answered with the
+ * same 404 as a missing one.
  *
  * @param {import('express').Express} app
  * @param {StreamManager} streamManager
  * @param {import('./taskManager.js').TaskStore} [taskStore]
+ * @param {object} [options]
+ * @param {(req: object, task: object) => boolean} [options.canAccess]
  */
-export function attachStreamEndpoint(app, streamManager, taskStore) {
+export function attachStreamEndpoint(app, streamManager, taskStore, options = {}) {
+  const { canAccess = () => true } = options;
   app.get('/a2a/tasks/:taskId/stream', async (req, res) => {
     const { taskId } = req.params;
     if (taskStore) {
       const task = await taskStore.get(taskId);
-      if (!task) {
+      if (!task || !canAccess(req, task)) {
         return res.status(404).json({
           jsonrpc: '2.0',
           error: { code: -32001, message: 'Task not found' },

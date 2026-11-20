@@ -173,3 +173,28 @@ describe('trust proxy', () => {
     expect(resolveTrustProxy({ RAILWAY_ENVIRONMENT: 'production' })).toBe(1);
   });
 });
+
+describe('static file caching', () => {
+  // Nothing under public/ or dashboard/ is content-hashed, so a fix to
+  // /js/analytics.js has to reach a returning visitor within minutes.
+  it('revalidates scripts, styles, HTML and data within five minutes and caches nothing as immutable', async () => {
+    for (const url of ['/js/analytics.js', '/css/common.css', '/about.html', '/data/ask-actions.json', '/badges/live.json']) {
+      const res = await request(app).get(url);
+      expect(res.status, url).toBe(200);
+      expect(res.headers['cache-control'], url).toBe('public, max-age=300, must-revalidate');
+      expect(res.headers.etag, url).toBeTruthy();
+    }
+    for (const url of ['/icon-192.png', '/favicon.ico', '/logo.png']) {
+      const res = await request(app).get(url);
+      expect(res.status, url).toBe(200);
+      expect(res.headers['cache-control'], url).toBe('public, max-age=86400');
+    }
+  });
+
+  it('the GCP nginx config caches nothing as immutable either', () => {
+    const conf = fs.readFileSync(path.join(import.meta.dirname, '../../deploy/gcp/nginx.conf'), 'utf8');
+    const directives = conf.split('\n').filter((line) => !line.trim().startsWith('#')).join('\n');
+    expect(directives).not.toMatch(/immutable|max-age=31536000/);
+    expect(directives).toMatch(/default "public, max-age=300, must-revalidate"/);
+  });
+});

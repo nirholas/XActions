@@ -110,8 +110,9 @@ curl http://localhost:3001/api/workflows/actions
 curl http://localhost:3001/api/workflows/my-flow/runs
 curl http://localhost:3001/api/workflows/my-flow/runs/<runId>
 
-# Fire a webhook-triggered workflow
-curl -X POST http://localhost:3001/api/workflows/webhook/<webhookId> -d '{}'
+# Fire a webhook-triggered workflow (the secret is returned when it is created)
+curl -X POST http://localhost:3001/api/workflows/webhook/<webhookId> \
+  -H 'X-Webhook-Secret: <secret>' -d '{}'
 ```
 
 ---
@@ -215,7 +216,14 @@ Uses `setInterval`. Lighter than cron but less reliable across restarts.
 // Generates URL: /api/workflows/webhook/{webhookId}
 ```
 
-POST to the generated URL to trigger the workflow. Payload is passed as initial context.
+POST to the generated URL, with the trigger's `secret` in the `X-Webhook-Secret`
+header, to trigger the workflow. Payload is passed as initial context.
+
+On the API server a run, whether triggered or started with `POST /:id/run`,
+acts as the workflow's owner: it uses the X session the owner saved with
+`POST /api/session/save-session`, and fails with a clear error when there is
+none rather than falling back to the server's own `XACTIONS_SESSION_COOKIE`.
+The CLI and MCP server run as the machine's own account and still use it.
 
 ### Event
 

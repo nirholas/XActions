@@ -85,6 +85,13 @@ Force re-scan of available skills (including plugins).
 
 ## Tasks
 
+A task belongs to the agent that created it (its API key label or bearer
+token subject). Reading, streaming, cancelling or messaging another agent's
+task answers the same 404 as a task that does not exist, so task ids cannot be
+probed; an agent with the `admin` permission can reach every task. With
+authentication explicitly off there are no identities and every caller sees
+every task.
+
 ### `POST /a2a/tasks`
 
 Create and optionally execute a task.

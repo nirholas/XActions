@@ -186,6 +186,94 @@ describe('default A2A server', () => {
   });
 });
 
+describe('task ownership', () => {
+  let ctx, aliceKey, bobKey, adminToken;
+  const auth = (v) => ({ 'content-type': 'application/json', Authorization: v });
+
+  beforeAll(async () => {
+    ctx = await startServer();
+    aliceKey = `ApiKey ${(await generateApiKey('alice', PERMISSION_PRESETS.readonly)).key}`;
+    bobKey = `ApiKey ${(await generateApiKey('bob', PERMISSION_PRESETS.readonly)).key}`;
+    adminToken = `Bearer ${await generateToken('ops', ['admin'])}`;
+  });
+  afterAll(() => ctx.agent.shutdown());
+
+  async function createAs(header, text = 'get profile for nasa') {
+    const res = await fetch(`${ctx.base}/a2a/tasks`, { method: 'POST', headers: auth(header), body: rpc(text) });
+    return (await res.json()).result;
+  }
+
+  it('records the creator without putting it on the wire', async () => {
+    const task = await createAs(aliceKey);
+    expect(ctx.agent.taskStore.tasks.get(task.id).owner).toBe('apikey:alice');
+    expect(task).not.toHaveProperty('owner');
+  });
+
+  it('lets the creator read, stream and message its own task', async () => {
+    const task = await createAs(aliceKey);
+    expect((await fetch(`${ctx.base}/a2a/tasks/${task.id}`, { headers: auth(aliceKey) })).status).toBe(200);
+    const stream = await fetch(`${ctx.base}/a2a/tasks/${task.id}/stream`, { headers: auth(aliceKey) });
+    expect(stream.status).toBe(200);
+    expect(await stream.text()).toContain('"finalState":"completed"');
+    const msg = await fetch(`${ctx.base}/a2a/tasks/${task.id}/message`, {
+      method: 'POST', headers: auth(aliceKey),
+      body: JSON.stringify({ params: { message: { role: 'user', parts: [{ type: 'text', text: 'mine' }] } } }),
+    });
+    expect(msg.status).toBe(200);
+  });
+
+  it("answers another caller's task with the same 404 as a missing one", async () => {
+    const task = await createAs(aliceKey);
+    const historyBefore = ctx.agent.taskStore.tasks.get(task.id).history.length;
+
+    const get = await fetch(`${ctx.base}/a2a/tasks/${task.id}`, { headers: auth(bobKey) });
+    const missing = await fetch(`${ctx.base}/a2a/tasks/no-such-task`, { headers: auth(bobKey) });
+    expect(get.status).toBe(404);
+    expect(await get.json()).toEqual(await missing.json());
+
+    const stream = await fetch(`${ctx.base}/a2a/tasks/${task.id}/stream`, { headers: auth(bobKey) });
+    expect(stream.status).toBe(404);
+
+    const msg = await fetch(`${ctx.base}/a2a/tasks/${task.id}/message`, {
+      method: 'POST', headers: auth(bobKey),
+      body: JSON.stringify({ params: { message: { role: 'user', parts: [{ type: 'text', text: 'injected' }] } } }),
+    });
+    expect(msg.status).toBe(404);
+    expect(ctx.agent.taskStore.tasks.get(task.id).history).toHaveLength(historyBefore);
+
+    const cancel = await fetch(`${ctx.base}/a2a/tasks/${task.id}/cancel`, { method: 'POST', headers: auth(bobKey) });
+    expect(cancel.status).toBe(404);
+  });
+
+  it('keys ownership by credential type as well as id', async () => {
+    const task = await createAs(aliceKey);
+    const sameName = `Bearer ${await generateToken('alice', PERMISSION_PRESETS.readonly)}`;
+    expect((await fetch(`${ctx.base}/a2a/tasks/${task.id}`, { headers: auth(sameName) })).status).toBe(404);
+  });
+
+  it('lets an admin read any task', async () => {
+    const task = await createAs(aliceKey);
+    const res = await fetch(`${ctx.base}/a2a/tasks/${task.id}`, { headers: auth(adminToken) });
+    expect(res.status).toBe(200);
+    expect((await res.json()).result.id).toBe(task.id);
+  });
+
+  it('shares every task between callers when auth is explicitly off', async () => {
+    const open = await startServer({ enableAuth: false });
+    try {
+      const res = await fetch(`${open.base}/a2a/tasks`, {
+        method: 'POST', headers: { 'content-type': 'application/json' }, body: rpc('get profile for nasa'),
+      });
+      const { result } = await res.json();
+      expect(open.agent.taskStore.tasks.get(result.id).owner).toBeNull();
+      expect((await fetch(`${open.base}/a2a/tasks/${result.id}`)).status).toBe(200);
+      expect((await fetch(`${open.base}/a2a/tasks/${result.id}/stream`)).status).toBe(200);
+    } finally {
+      open.agent.shutdown();
+    }
+  });
+});
+
 describe('opt-outs and allowlists', () => {
   it('serves anonymous callers only when explicitly asked', async () => {
     const ctx = await startServer({ enableAuth: false });
