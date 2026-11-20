@@ -38,7 +38,8 @@ if ! gcloud sql instances describe "$SQL_INSTANCE" --project "$PROJECT" >/dev/nu
   gcloud sql instances create "$SQL_INSTANCE" \
     --project "$PROJECT" \
     --database-version=POSTGRES_16 \
-    --tier=db-g1-small \
+    --tier=db-f1-micro \
+    --edition=ENTERPRISE \
     --region="$REGION" \
     --storage-auto-increase \
     --backup-start-time=03:00 \
@@ -94,7 +95,8 @@ gcloud artifacts repositories describe containers --location "$REGION" --project
   gcloud artifacts repositories create containers --repository-format=docker --location="$REGION" --project "$PROJECT"
 
 echo "==> Building + deploying via Cloud Build"
-gcloud builds submit --config deploy/gcp/cloudbuild-api.yaml --region "$REGION" --project "$PROJECT" \
+# The root .gcloudignore uploads only the static site; the API needs its own.
+gcloud builds submit --config deploy/gcp/cloudbuild-api.yaml --ignore-file=deploy/gcp/api.gcloudignore --region "$REGION" --project "$PROJECT" \
   --substitutions="_IMAGE=${REGION}-docker.pkg.dev/${PROJECT}/containers/xactions-api:manual$(date +%s)"
 
 SERVICE_URL=$(gcloud run services describe xactions-api --region "$REGION" --project "$PROJECT" --format="value(status.url)")
@@ -103,7 +105,9 @@ echo "==> Deployed: $SERVICE_URL"
 echo "==> Health check:"
 curl -fsS "${SERVICE_URL}/api/health" && echo ""
 echo ""
-echo "Next: map api.xactions.app to this service:"
-echo "  gcloud run domain-mappings create --service=xactions-api --domain=api.xactions.app --region=$REGION --project=$PROJECT"
-echo "Then add the CNAME it prints to Cloudflare DNS for api.xactions.app (proxy OFF / DNS-only,"
-echo "so Google can validate the mapping and issue the cert)."
+echo "Next: point xactions.app at it. The Pages function functions/api/[[path]].js proxies"
+echo "every /api/* route it does not serve itself to XACTIONS_API_ORIGIN, so the API is public at"
+echo "https://xactions.app/api/* with no extra domain or certificate. Set the variable on the Pages"
+echo "project (Settings > Variables, production) to:"
+echo "  $SERVICE_URL"
+echo "then redeploy the site (npm run deploy:pages) so the functions pick it up."

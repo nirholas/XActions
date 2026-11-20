@@ -1,0 +1,47 @@
+# Upload set for the API image (gcloud builds submit --ignore-file=deploy/gcp/api.gcloudignore).
+#
+# The root .gcloudignore uploads only the static site (dashboard/, public/,
+# site/index.html) for deploy/gcp/cloudbuild.yaml, so an API build that used
+# it would get no source and no Dockerfile. This file mirrors .dockerignore,
+# which the Docker build applies again inside Cloud Build, and also leaves out
+# what is heavy and unused by the API: history, local installs, media.
+.git
+.github
+**/node_modules
+**/.env
+**/.env.*
+!**/.env.example
+!**/.env.*.example
+**/.dev.vars
+**/.xactions
+**/cookies.json
+**/*.cookies.json
+**/cookies.txt
+**/storage-state.json
+**/session.json
+**/*.session.json
+**/mcp-drafts.json
+**/.x402-wallets.json
+**/.x402-buyer.json
+**/vertex-ai-key.json
+**/*.pem
+deploy/gcp/.env.gcp
+tests
+xspace-agents
+coverage
+.nyc_output
+**/*.log
+**/__pycache__
+**/.venv
+**/venv
+.mcp.json
+.claude
+**/.npmrc
+exports
+pages-out
+dist
+dist-cloudflare
+.wrangler
+*.tgz
+public/demo.mp4
+d.mp4

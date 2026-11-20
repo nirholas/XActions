@@ -50,7 +50,7 @@ steps:
       - --memory=2Gi
       - --cpu=2
       - --timeout=300
-      - --min-instances=1
+      - --min-instances=0
       - --max-instances=4
       - --service-account=three-ws@aerial-vehicle-466722-p5.iam.gserviceaccount.com
       # Cloud SQL Auth Proxy sidecar — reaches Postgres over a unix socket,
@@ -63,7 +63,14 @@ steps:
       # with three.ws's own keys on the same instance.
       - --vpc-connector=three-ws-vpc
       - --vpc-egress=private-ranges-only
-      - --set-env-vars=NODE_ENV=production,PORT=3001,REDIS_HOST=10.234.231.139,REDIS_PORT=6379,REDIS_QUEUE_PREFIX=xactions,API_URL=https://api.xactions.app,API_BASE_URL=https://api.xactions.app,FRONTEND_URL=https://xactions.app,CORS_ORIGINS=https://xactions.app\,https://www.xactions.app\,https://xactions-e7r.pages.dev,PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true,PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium,PUPPETEER_HEADLESS=true,PUPPETEER_NO_SANDBOX=true
+      # TRUST_PROXY=2: a visitor reaches this service through the Pages function
+      # (functions/api/[[path]].js, which forwards Cloudflare's X-Forwarded-For)
+      # and then Google's front end, which appends the Cloudflare address. Two
+      # trusted hops make req.ip the visitor, so rate limits are per visitor
+      # rather than one bucket for everyone. PORT is set by Cloud Run itself and
+      # may not be passed here. API_URL is xactions.app because the API is
+      # public only through that proxy.
+      - --set-env-vars=NODE_ENV=production,TRUST_PROXY=2,REDIS_HOST=10.234.231.139,REDIS_PORT=6379,REDIS_QUEUE_PREFIX=xactions,API_URL=https://xactions.app,API_BASE_URL=https://xactions.app,FRONTEND_URL=https://xactions.app,X402_PAY_TO_ADDRESS=0xaC718534d58dD3C358779b7751faeC840DC81e56,X402_PAY_TO_ADDRESS_SOLANA=XACTx23ziev2QoDACrMBcsYoCzEKVm7QycPVCQnaKpZ,CORS_ORIGINS=https://xactions.app\,https://www.xactions.app\,https://xactions-e7r.pages.dev,PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true,PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium,PUPPETEER_HEADLESS=true,PUPPETEER_NO_SANDBOX=true
       - --set-secrets=DATABASE_URL=xactions-database-url:latest,JWT_SECRET=xactions-jwt-secret:latest,SESSION_SECRET=xactions-session-secret:latest,ADMIN_API_KEY=xactions-admin-api-key:latest
 
 images:
