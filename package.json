@@ -79,6 +79,7 @@
     "ask:index": "node scripts/build-ask-index.mjs",
     "ask:index:check": "node scripts/build-ask-index.mjs --check",
     "check:endpoints": "node scripts/check-endpoints.mjs",
+    "check:models": "node scripts/check-models.mjs",
     "sync:endpoints": "node scripts/sync-x-endpoints.mjs",
     "sync:endpoints:check": "node scripts/sync-x-endpoints.mjs --check",
     "sync:user-agents": "node scripts/sync-user-agents.mjs",

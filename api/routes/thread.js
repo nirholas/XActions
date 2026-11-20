@@ -22,6 +22,9 @@ import { summarizeThread } from '../services/threadSummarizer.js';
 
 const router = express.Router();
 
+const SUMMARIZE_MAX_TWEETS = 200;
+const SUMMARIZE_MAX_CHARS = 100_000;
+
 // ============================================================================
 // POST /api/thread/unroll
 // ============================================================================
@@ -94,6 +97,16 @@ router.post('/summarize', async (req, res) => {
       return res.status(400).json({
         error: 'Either "tweets" (array of { text }) or "url" (tweet URL) is required',
       });
+    }
+
+    // This route is public and spends the operator's OpenRouter key, so bound
+    // what one request can send to the model. The limits fit any real thread.
+    if (tweetData.length > SUMMARIZE_MAX_TWEETS) {
+      return res.status(400).json({ error: `Too many tweets (max ${SUMMARIZE_MAX_TWEETS})` });
+    }
+    const totalChars = tweetData.reduce((n, t) => n + String((typeof t === 'string' ? t : t?.text) ?? '').length, 0);
+    if (totalChars > SUMMARIZE_MAX_CHARS) {
+      return res.status(400).json({ error: `Thread too long to summarize (max ${SUMMARIZE_MAX_CHARS} characters)` });
     }
 
     const result = await summarizeThread({

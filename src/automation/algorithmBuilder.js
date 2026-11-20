@@ -77,7 +77,7 @@
     API_KEY: '', // Set your OpenRouter or OpenAI API key here
 
     // Model to use (OpenRouter format)
-    MODEL: 'google/gemini-flash-1.5',
+    MODEL: 'google/gemini-2.5-flash',
 
     // System prompt — shapes how comments sound
     SYSTEM_PROMPT: `You are a witty, knowledgeable person in the {niche} space on Twitter/X.

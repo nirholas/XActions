@@ -33,9 +33,32 @@ const authMiddleware = async (req, res, next) => {
     if (error.name === 'TokenExpiredError') {
       return res.status(401).json({ error: 'Token expired' });
     }
+    // The token was valid but the user lookup failed. When the database is
+    // unreachable that is temporary, so say so with a 503 a client can retry,
+    // the way requireSubscription and checkUsageLimit already do.
+    if (isDatabaseUnavailable(error)) {
+      console.error('❌ Auth user lookup failed, database unavailable:', error.message);
+      return res.status(503).json({ error: 'Authentication unavailable, try again shortly' });
+    }
+    console.error('❌ Auth error:', error);
     return res.status(500).json({ error: 'Authentication error' });
   }
 };
+
+/**
+ * True for errors that mean "the database could not be reached", as opposed to
+ * a bug. Prisma reports an unreachable server as an initialization error, as
+ * P1001/P1002/P1017, or (through the pg adapter) as a raw connection error.
+ * @param {unknown} error
+ */
+function isDatabaseUnavailable(error) {
+  const e = /** @type {{ name?: string, code?: string, message?: string, cause?: { code?: string } }} */ (error ?? {});
+  if (e.name === 'PrismaClientInitializationError') return true;
+  if (['P1001', 'P1002', 'P1017'].includes(e.code ?? '')) return true;
+  const net = ['ECONNREFUSED', 'ECONNRESET', 'ETIMEDOUT', 'ENOTFOUND', 'EHOSTUNREACH'];
+  if (net.includes(e.code ?? '') || net.includes(e.cause?.code ?? '')) return true;
+  return /Can't reach database server/.test(e.message ?? '');
+}
 
 // Optional auth - doesn't fail if no token, just attaches user if valid
 const optionalAuthMiddleware = async (req, res, next) => {

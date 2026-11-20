@@ -59,6 +59,7 @@ import * as drafts from './drafts.js';
 import * as actionCaps from './action-caps.js';
 import { gotoAndRender } from '../utils/navigation.js';
 import { typeIntoComposer, clickPostButton, confirmPosted } from './composer.js';
+import { OPENROUTER_FREE_MODEL, OPENROUTER_DEFAULT_MODEL } from '../ai/models.js';
 
 // ============================================================================
 // Configuration
@@ -3562,7 +3563,7 @@ async function executeXeepyTool(name, args) {
         method: 'POST',
         headers: { 'Authorization': `Bearer ${OPENROUTER_API_KEY}`, 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          model: 'x-ai/grok-2-vision-1212',
+          model: OPENROUTER_DEFAULT_MODEL,
           messages: [{
             role: 'user',
             content: [
@@ -4568,7 +4569,7 @@ async function executeAITool(name, args) {
             'X-Title': 'XActions MCP',
           },
           body: JSON.stringify({
-            model: 'meta-llama/llama-3-8b-instruct:free',
+            model: process.env.OPENROUTER_MODEL || OPENROUTER_FREE_MODEL,
             messages: [
               { role: 'system', content: `You are a thread summarizer. ${stylePrompts[style]}` },
               { role: 'user', content: `Summarize this Twitter/X thread:\n\n${fullThread}` },

@@ -13,12 +13,13 @@
  */
 
 import { buildVoicePrompt } from './voiceAnalyzer.js';
+import { OPENROUTER_DEFAULT_MODEL } from './models.js';
 
 // ============================================================================
 // Configuration
 // ============================================================================
 
-const DEFAULT_MODEL = 'google/gemini-flash-2.0';
+const DEFAULT_MODEL = OPENROUTER_DEFAULT_MODEL;
 const OPENROUTER_URL = 'https://openrouter.ai/api/v1/chat/completions';
 
 // ============================================================================

@@ -21,7 +21,8 @@
  */
 
 const OPENROUTER_MODELS_URL = 'https://openrouter.ai/api/v1/models';
-const OPENROUTER_PREFERRED = ['openai/gpt-oss', 'google/gemma', 'meta-llama/', 'qwen/', 'deepseek/', 'mistralai/'];
+// Prefixes for ranking live free models, not model ids.
+const OPENROUTER_PREFERRED = ['openai/gpt-oss', 'google/gemma', 'meta-llama/', 'qwen/', 'deepseek/', 'mistralai/']; // check:models ignore
 
 let openRouterCache = { id: null, at: 0 };
 

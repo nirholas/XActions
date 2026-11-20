@@ -9,6 +9,7 @@ import path from 'path';
 import readline from 'readline';
 import { BrowserDriver } from './browserDriver.js';
 import { isEntryPoint } from '../utils/entryPoint.js';
+import { AGENT_MODELS } from '../ai/models.js';
 
 const DATA_DIR = path.resolve('data');
 const CONFIG_DIR = path.resolve('config');
@@ -131,11 +132,7 @@ async function step3_llmProvider() {
 
   const provider = choice.value;
   let apiKey = '';
-  let models = {
-    fast: 'deepseek/deepseek-chat',
-    mid: 'anthropic/claude-3.5-haiku',
-    smart: 'anthropic/claude-sonnet-4',
-  };
+  let models = { ...AGENT_MODELS };
 
   if (provider !== 'ollama') {
     apiKey = await ask(`API key for ${provider}: `);

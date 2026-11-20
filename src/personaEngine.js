@@ -15,6 +15,7 @@
 import { readFileSync, writeFileSync, existsSync, mkdirSync, readdirSync, unlinkSync } from 'fs';
 import { join } from 'path';
 import { xactionsHome } from './utils/savedSession.js';
+import { OPENROUTER_DEFAULT_MODEL } from './ai/models.js';
 
 // ============================================================================
 // Constants
@@ -22,9 +23,9 @@ import { xactionsHome } from './utils/savedSession.js';
 
 const PERSONAS_DIR = join(xactionsHome(), 'personas');
 const DEFAULT_MODELS = {
-  comment: 'google/gemini-flash-2.0',
-  post: 'google/gemini-flash-2.0',
-  reply: 'google/gemini-flash-2.0',
+  comment: OPENROUTER_DEFAULT_MODEL,
+  post: OPENROUTER_DEFAULT_MODEL,
+  reply: OPENROUTER_DEFAULT_MODEL,
 };
 
 // ============================================================================

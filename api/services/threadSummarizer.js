@@ -9,6 +9,8 @@
  * @author nichxbt
  */
 
+import { OPENROUTER_DEFAULT_MODEL } from '../../src/ai/models.js';
+
 /**
  * Calculate estimated reading time
  * @param {string[]} texts - Array of tweet texts
@@ -52,7 +54,7 @@ export async function summarizeThread(options = {}) {
     };
   }
 
-  const selectedModel = model || 'google/gemini-flash-1.5';
+  const selectedModel = model || OPENROUTER_DEFAULT_MODEL;
 
   // Build the thread text for the prompt
   const threadText = texts

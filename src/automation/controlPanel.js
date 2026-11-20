@@ -768,7 +768,7 @@
           method: 'POST',
           headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${llmKey}` },
           body: JSON.stringify({
-            model: 'google/gemini-flash-1.5',
+            model: 'google/gemini-2.5-flash',
             messages: [
               { role: 'system', content: `You are ${persona} on Twitter. Reply in 1-2 casual sentences. No hashtags. Be specific to the tweet.` },
               { role: 'user', content: `Reply to: "${text.substring(0, 500)}"` },

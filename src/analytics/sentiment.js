@@ -14,6 +14,8 @@
 // Score range: -5 to +5
 // ============================================================================
 
+import { OPENROUTER_FREE_MODEL } from '../ai/models.js';
+
 const LEXICON = {
   // Strong positive (+4/+5)
   'love': 4, 'amazing': 5, 'excellent': 5, 'incredible': 5, 'fantastic': 5,
@@ -227,7 +229,7 @@ async function analyzeLLM(text, options = {}) {
     throw new Error('OpenRouter API key required for LLM sentiment analysis. Set OPENROUTER_API_KEY env var or pass apiKey option.');
   }
 
-  const model = options.model || 'meta-llama/llama-3.1-8b-instruct:free';
+  const model = options.model || OPENROUTER_FREE_MODEL;
 
   const systemPrompt = `You are a sentiment analysis engine. Analyze the sentiment of the given text and respond with ONLY a JSON object (no markdown, no explanation):
 {
