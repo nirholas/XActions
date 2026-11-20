@@ -4,22 +4,23 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Manage Bookmarks — Free X/Twitter Script | XActions</title>
-  <meta name="description" content="scripts/manageBookmarks.js">
+  <meta name="description" content="Browser console script to export and manage X/Twitter bookmarks. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
   <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, manage, bookmarks, content tools">
   <meta name="author" content="nich (@nichxbt)">
   <meta name="robots" content="index, follow">
 
   <meta property="og:type" content="article">
   <meta property="og:title" content="Manage Bookmarks — XActions">
-  <meta property="og:description" content="scripts/manageBookmarks.js">
+  <meta property="og:description" content="Browser console script to export and manage X/Twitter bookmarks. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
   <meta property="og:url" content="https://xactions.app/scripts/manage-bookmarks">
   <meta property="og:site_name" content="XActions">
-  <meta property="og:image" content="https://xactions.app/og-image.png">
+  <meta property="og:image" content="https://xactions.app/og-run.png">
 
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@nichxbt">
   <meta name="twitter:title" content="Manage Bookmarks — XActions">
-  <meta name="twitter:description" content="scripts/manageBookmarks.js">
+  <meta name="twitter:description" content="Browser console script to export and manage X/Twitter bookmarks. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
+  <meta name="twitter:image" content="https://xactions.app/og-run.png">
 
   <link rel="canonical" href="https://xactions.app/scripts/manage-bookmarks">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
@@ -29,7 +30,7 @@
     "@context": "https://schema.org",
     "@type": "TechArticle",
     "headline": "Manage Bookmarks — Free X/Twitter Script | XActions",
-    "description": "scripts/manageBookmarks.js",
+    "description": "Browser console script to export and manage X/Twitter bookmarks. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.",
     "url": "https://xactions.app/scripts/manage-bookmarks",
     "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
     "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
@@ -99,6 +100,8 @@
     .source-badge { display: inline-block; background: var(--bg-tertiary); color: var(--text-secondary); padding: 2px 8px; border-radius: 6px; font-size: 0.6875rem; margin-left: 8px; }
     @media (max-width: 1024px) { .sidebar-right { display: none; } }
     @media (max-width: 768px) {
+      /* A wide table scrolls inside its own box instead of widening the page. */
+      .article table { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; }
       .article pre { font-size: 0.75rem; }
       .meta-row { flex-direction: column; gap: 4px; }
     }
@@ -129,7 +132,7 @@
           <span>by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></span>
         </div>
 
-        <p>scripts/manageBookmarks.js</p>
+        <p>Browser console script to export and manage X/Twitter bookmarks</p>
 
         
 
@@ -315,7 +318,7 @@
 <a href="/scripts/clear-all-reposts">🗑️ Clear All Reposts</a>
 <a href="/scripts/clear-all-retweets">🗑️ Clear All Retweets</a>
 <a href="/scripts/content-repurposer">♻️ Content Repurposer</a>
-<a href="/scripts/delete-tweets">🗑️ Delete Tweets - XActions</a>
+<a href="/scripts/delete-tweets">🗑️ Delete Tweets</a>
       </div>
       <div class="sidebar-card">
         <h3>🔗 Quick Links</h3>

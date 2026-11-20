@@ -3,23 +3,24 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Like User Replies - XActions — Free X/Twitter Script | XActions</title>
-  <meta name="description" content="Automatically like replies/comments on a specific tweet">
+  <title>Like User Replies — Free X/Twitter Script | XActions</title>
+  <meta name="description" content="Automatically like replies/comments on a specific tweet. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
   <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, like, user, replies, engagement">
   <meta name="author" content="nich (@nichxbt)">
   <meta name="robots" content="index, follow">
 
   <meta property="og:type" content="article">
-  <meta property="og:title" content="Like User Replies - XActions — XActions">
-  <meta property="og:description" content="Automatically like replies/comments on a specific tweet">
+  <meta property="og:title" content="Like User Replies — XActions">
+  <meta property="og:description" content="Automatically like replies/comments on a specific tweet. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
   <meta property="og:url" content="https://xactions.app/scripts/like-user-replies">
   <meta property="og:site_name" content="XActions">
-  <meta property="og:image" content="https://xactions.app/og-image.png">
+  <meta property="og:image" content="https://xactions.app/og-run.png">
 
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@nichxbt">
-  <meta name="twitter:title" content="Like User Replies - XActions — XActions">
-  <meta name="twitter:description" content="Automatically like replies/comments on a specific tweet">
+  <meta name="twitter:title" content="Like User Replies — XActions">
+  <meta name="twitter:description" content="Automatically like replies/comments on a specific tweet. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
+  <meta name="twitter:image" content="https://xactions.app/og-run.png">
 
   <link rel="canonical" href="https://xactions.app/scripts/like-user-replies">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
@@ -28,8 +29,8 @@
   {
     "@context": "https://schema.org",
     "@type": "TechArticle",
-    "headline": "Like User Replies - XActions — Free X/Twitter Script | XActions",
-    "description": "Automatically like replies/comments on a specific tweet",
+    "headline": "Like User Replies — Free X/Twitter Script | XActions",
+    "description": "Automatically like replies/comments on a specific tweet. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.",
     "url": "https://xactions.app/scripts/like-user-replies",
     "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
     "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
@@ -47,7 +48,7 @@
       { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
       { "@type": "ListItem", "position": 2, "name": "Scripts", "item": "https://xactions.app/scripts" },
       { "@type": "ListItem", "position": 3, "name": "Engagement", "item": "https://xactions.app/scripts#engagement" },
-      { "@type": "ListItem", "position": 4, "name": "Like User Replies - XActions", "item": "https://xactions.app/scripts/like-user-replies" }
+      { "@type": "ListItem", "position": 4, "name": "Like User Replies", "item": "https://xactions.app/scripts/like-user-replies" }
     ]
   }
   </script>
@@ -99,6 +100,8 @@
     .source-badge { display: inline-block; background: var(--bg-tertiary); color: var(--text-secondary); padding: 2px 8px; border-radius: 6px; font-size: 0.6875rem; margin-left: 8px; }
     @media (max-width: 1024px) { .sidebar-right { display: none; } }
     @media (max-width: 768px) {
+      /* A wide table scrolls inside its own box instead of widening the page. */
+      .article table { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; }
       .article pre { font-size: 0.75rem; }
       .meta-row { flex-direction: column; gap: 4px; }
     }
@@ -112,9 +115,9 @@
 
     <main class="main-content" id="main-content">
       <header class="main-header">
-        <h1>❤️ Like User Replies - XActions</h1>
+        <h1>❤️ Like User Replies</h1>
         <div class="breadcrumb">
-          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#engagement">Engagement</a> › Like User Replies - XActions
+          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#engagement">Engagement</a> › Like User Replies
         </div>
       </header>
 
@@ -576,15 +579,15 @@
       <div class="sidebar-card">
         <h3>❤️ Engagement</h3>
         <a href="/scripts/auto-commenter">💬 Auto Commenter</a>
-<a href="/scripts/auto-engage">⚡ Auto Engage</a>
-<a href="/scripts/auto-liker">❤️ Auto Liker</a>
-<a href="/scripts/auto-reply-mentions">📨 Auto Reply Mentions - XActions</a>
-<a href="/scripts/auto-repost">🔁 Auto Repost</a>
+<a href="/scripts/auto-reply-mentions">📨 Auto Reply Mentions</a>
+<a href="/scripts/auto-repost">🔁 Auto Repost (Retweet)</a>
 <a href="/scripts/auto-plug-replies">🔌 Auto-Plug Replies</a>
 <a href="/scripts/auto-reply">💬 Auto-Reply / Auto-Respond</a>
+<a href="/scripts/auto-engage">⚡ Browser console script for automated engagement</a>
+<a href="/scripts/comment-by-hashtag">💬 Comment By Hashtag</a>
+<a href="/scripts/comment-by-location">💬 Comment By Location</a>
 <a href="/scripts/engagement-booster">🚀 Engagement Booster v2</a>
 <a href="/scripts/engagement-leaderboard">🏆 Engagement Leaderboard</a>
-<a href="/scripts/engagement-manager">⚡ Engagement Manager</a>
       </div>
       <div class="sidebar-card">
         <h3>🔗 Quick Links</h3>

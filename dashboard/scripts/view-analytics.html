@@ -3,23 +3,24 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>View Analytics — Free X/Twitter Script | XActions</title>
-  <meta name="description" content="View Analytics (Premium) — by nichxbt">
+  <title>View Analytics (Premium) — Free X/Twitter Script | XActions</title>
+  <meta name="description" content="Navigate to analytics dashboard, scrape impressions/engagements/followers, and export data.">
   <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, view, analytics, analytics">
   <meta name="author" content="nich (@nichxbt)">
   <meta name="robots" content="index, follow">
 
   <meta property="og:type" content="article">
-  <meta property="og:title" content="View Analytics — XActions">
-  <meta property="og:description" content="View Analytics (Premium) — by nichxbt">
+  <meta property="og:title" content="View Analytics (Premium) — XActions">
+  <meta property="og:description" content="Navigate to analytics dashboard, scrape impressions/engagements/followers, and export data.">
   <meta property="og:url" content="https://xactions.app/scripts/view-analytics">
   <meta property="og:site_name" content="XActions">
-  <meta property="og:image" content="https://xactions.app/og-image.png">
+  <meta property="og:image" content="https://xactions.app/og-run.png">
 
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@nichxbt">
-  <meta name="twitter:title" content="View Analytics — XActions">
-  <meta name="twitter:description" content="View Analytics (Premium) — by nichxbt">
+  <meta name="twitter:title" content="View Analytics (Premium) — XActions">
+  <meta name="twitter:description" content="Navigate to analytics dashboard, scrape impressions/engagements/followers, and export data.">
+  <meta name="twitter:image" content="https://xactions.app/og-run.png">
 
   <link rel="canonical" href="https://xactions.app/scripts/view-analytics">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
@@ -28,8 +29,8 @@
   {
     "@context": "https://schema.org",
     "@type": "TechArticle",
-    "headline": "View Analytics — Free X/Twitter Script | XActions",
-    "description": "View Analytics (Premium) — by nichxbt",
+    "headline": "View Analytics (Premium) — Free X/Twitter Script | XActions",
+    "description": "Navigate to analytics dashboard, scrape impressions/engagements/followers, and export data.",
     "url": "https://xactions.app/scripts/view-analytics",
     "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
     "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
@@ -47,7 +48,7 @@
       { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
       { "@type": "ListItem", "position": 2, "name": "Scripts", "item": "https://xactions.app/scripts" },
       { "@type": "ListItem", "position": 3, "name": "Analytics", "item": "https://xactions.app/scripts#analytics" },
-      { "@type": "ListItem", "position": 4, "name": "View Analytics", "item": "https://xactions.app/scripts/view-analytics" }
+      { "@type": "ListItem", "position": 4, "name": "View Analytics (Premium)", "item": "https://xactions.app/scripts/view-analytics" }
     ]
   }
   </script>
@@ -99,6 +100,8 @@
     .source-badge { display: inline-block; background: var(--bg-tertiary); color: var(--text-secondary); padding: 2px 8px; border-radius: 6px; font-size: 0.6875rem; margin-left: 8px; }
     @media (max-width: 1024px) { .sidebar-right { display: none; } }
     @media (max-width: 768px) {
+      /* A wide table scrolls inside its own box instead of widening the page. */
+      .article table { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; }
       .article pre { font-size: 0.75rem; }
       .meta-row { flex-direction: column; gap: 4px; }
     }
@@ -112,9 +115,9 @@
 
     <main class="main-content" id="main-content">
       <header class="main-header">
-        <h1>📊 View Analytics</h1>
+        <h1>📊 View Analytics (Premium)</h1>
         <div class="breadcrumb">
-          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#analytics">Analytics</a> › View Analytics
+          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#analytics">Analytics</a> › View Analytics (Premium)
         </div>
       </header>
 
@@ -129,7 +132,7 @@
           <span>by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></span>
         </div>
 
-        <p>View Analytics (Premium) — by nichxbt</p>
+        <p>Navigate to analytics dashboard, scrape impressions/engagements/followers, and export data.</p>
 
         
 
@@ -521,7 +524,7 @@
         <a href="/scripts/account-health-monitor">🏥 Account Health Monitor</a>
 <a href="/scripts/audience-demographics">📊 Audience Demographics Analyzer</a>
 <a href="/scripts/audience-overlap">🔗 Audience Overlap Analyzer</a>
-<a href="/scripts/best-time-to-post">⏰ Best Time To Post</a>
+<a href="/scripts/best-time-to-post">⏰ Best Time to Post</a>
 <a href="/scripts/competitor-analysis">🔍 Competitor Analysis</a>
 <a href="/scripts/engagement-analytics">📈 Engagement Analytics</a>
 <a href="/scripts/hashtag-analytics">#️⃣ Hashtag Analytics</a>

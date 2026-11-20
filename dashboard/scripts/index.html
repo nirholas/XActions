@@ -3,21 +3,22 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>All 241 Scripts — Free X/Twitter Automation | XActions</title>
-  <meta name="description" content="Browse 241+ free browser console scripts for X/Twitter automation. Unfollow, scrape, engage, grow, and more. No API keys needed.">
+  <title>All 238 Scripts — Free X/Twitter Automation | XActions</title>
+  <meta name="description" content="Browse 238+ free browser console scripts for X/Twitter automation. Unfollow, scrape, engage, grow, and more. No API keys needed.">
   <meta name="keywords" content="xactions, twitter automation, x automation, browser scripts, devtools console, free, open source, unfollow, scraper, engagement">
   <meta name="author" content="nich (@nichxbt)">
   <meta name="robots" content="index, follow">
 
   <meta property="og:type" content="website">
-  <meta property="og:title" content="All 241 Scripts — XActions">
-  <meta property="og:description" content="241+ free browser scripts for X/Twitter automation.">
+  <meta property="og:title" content="All 238 Scripts — XActions">
+  <meta property="og:description" content="238+ free browser scripts for X/Twitter automation.">
   <meta property="og:url" content="https://xactions.app/scripts">
   <meta property="og:site_name" content="XActions">
+  <meta property="og:image" content="https://xactions.app/og-run.png">
 
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@nichxbt">
-  <meta name="twitter:title" content="All 241 Scripts — XActions">
+  <meta name="twitter:title" content="All 238 Scripts — XActions">
 
   <link rel="canonical" href="https://xactions.app/scripts">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
@@ -26,7 +27,7 @@
   {
     "@context": "https://schema.org",
     "@type": "CollectionPage",
-    "name": "XActions Scripts — 241+ Free X/Twitter Automation Scripts",
+    "name": "XActions Scripts — 238+ Free X/Twitter Automation Scripts",
     "description": "Complete collection of free browser console scripts for X/Twitter automation.",
     "url": "https://xactions.app/scripts",
     "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
@@ -67,6 +68,8 @@
     .no-results.visible { display: block; }
     @media (max-width: 1024px) { .sidebar-right { display: none; } }
     @media (max-width: 768px) {
+      /* A wide table scrolls inside its own box instead of widening the page. */
+      .article table { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; }
       .stats-bar { gap: 16px; }
       .stat-num { font-size: 1.25rem; }
     }
@@ -80,23 +83,23 @@
 
     <main class="main-content" id="main-content">
       <header class="main-header">
-        <h1>⚡ All Scripts</h1>
+        <p class="header-title">⚡ All Scripts</p>
       </header>
 
       <div class="hero">
-        <h1>⚡ 241 Free X/Twitter Scripts</h1>
+        <h1>⚡ 238 Free X/Twitter Scripts</h1>
         <p>Browser console scripts for X/Twitter automation. No API keys, no fees, no signup. Just paste and run.</p>
       </div>
 
       <div class="stats-bar">
-        <div class="stat"><span class="stat-num">241</span><span class="stat-label">Total Scripts</span></div>
+        <div class="stat"><span class="stat-num">238</span><span class="stat-label">Total Scripts</span></div>
         <div class="stat"><span class="stat-num">20</span><span class="stat-label">Categories</span></div>
         <div class="stat"><span class="stat-num">100%</span><span class="stat-label">Free</span></div>
         <div class="stat"><span class="stat-num">0</span><span class="stat-label">API Keys Needed</span></div>
       </div>
 
       <div class="search-box">
-        <input type="text" id="scriptSearch" placeholder="Search 241 scripts..." autocomplete="off">
+        <input type="text" id="scriptSearch" placeholder="Search 238 scripts..." autocomplete="off">
       </div>
 
       <div id="scriptResults">
@@ -123,14 +126,14 @@
               <span class="script-icon">⚖️</span>
               <div class="script-info">
                 <strong>Follow Ratio Manager</strong>
-                <span>Monitor and manage your follow/following ratio.</span>
+                <span>Monitor and manage your follow/following ratio. Scrapes follower and following c</span>
               </div>
             </a>
-            <a href="/scripts/smart-unfollow" class="script-card" data-cat="unfollow-tools" data-name="smart unfollow">
+            <a href="/scripts/smart-unfollow" class="script-card" data-cat="unfollow-tools" data-name="smart unfollow (time-based)">
               <span class="script-icon">🧠</span>
               <div class="script-info">
-                <strong>Smart Unfollow</strong>
-                <span>XActions Automation - Smart Unfollow (Time-Based)</span>
+                <strong>Smart Unfollow (Time-Based)</strong>
+                <span>Unfollows users who didn't follow you back within X days. Works with the keyword</span>
               </div>
             </a>
             <a href="/scripts/unfollow-everyone" class="script-card" data-cat="unfollow-tools" data-name="unfollow everyone">
@@ -144,7 +147,7 @@
               <span class="script-icon">🧹</span>
               <div class="script-info">
                 <strong>Unfollow Non-Followers</strong>
-                <span>Unfollow accounts that do NOT follow you back.</span>
+                <span>Unfollow accounts that do NOT follow you back. Detects &quot;Follows you&quot; badge per u</span>
               </div>
             </a>
             <a href="/scripts/unfollow-non-followers" class="script-card" data-cat="unfollow-tools" data-name="unfollow non-followers">
@@ -165,28 +168,35 @@
         </section>
 
         <section class="cat-section" id="follower-monitoring">
-          <h2>📊 Follower Monitoring <span class="count">(11)</span></h2>
+          <h2>👥 Follower Monitoring <span class="count">(11)</span></h2>
           <div class="script-grid">
             
+            <a href="/scripts/follower-tools" class="script-card" data-cat="follower-monitoring" data-name="advanced follower tools">
+              <span class="script-icon">👥</span>
+              <div class="script-info">
+                <strong>Advanced follower tools</strong>
+                <span></span>
+              </div>
+            </a>
             <a href="/scripts/audit-followers" class="script-card" data-cat="follower-monitoring" data-name="audit followers">
               <span class="script-icon">📊</span>
               <div class="script-info">
                 <strong>Audit Followers</strong>
-                <span>Audit Followers on X - by nichxbt</span>
+                <span>Analyze your followers: find fakes, bots, inactive accounts</span>
               </div>
             </a>
             <a href="/scripts/continuous-monitor" class="script-card" data-cat="follower-monitoring" data-name="continuous monitor">
               <span class="script-icon">🔄</span>
               <div class="script-info">
                 <strong>Continuous Monitor</strong>
-                <span>ContinuousMonitor.js — Auto-refresh monitoring for followers/following changes</span>
+                <span>Auto-refresh monitoring for followers/following changes</span>
               </div>
             </a>
             <a href="/scripts/detect-unfollowers" class="script-card" data-cat="follower-monitoring" data-name="detect unfollowers">
               <span class="script-icon">🔍</span>
               <div class="script-info">
                 <strong>Detect Unfollowers</strong>
-                <span>DetectUnfollowers.js — Find out who unfollowed you on X (Twitter)</span>
+                <span>Find out who unfollowed you on X (Twitter)</span>
               </div>
             </a>
             <a href="/scripts/find-fake-followers" class="script-card" data-cat="follower-monitoring" data-name="find fake followers">
@@ -200,14 +210,7 @@
               <span class="script-icon">📈</span>
               <div class="script-info">
                 <strong>Follower Growth Tracker</strong>
-                <span>Track follower count over time, detect growth/loss</span>
-              </div>
-            </a>
-            <a href="/scripts/follower-tools" class="script-card" data-cat="follower-monitoring" data-name="follower tools">
-              <span class="script-icon">👥</span>
-              <div class="script-info">
-                <strong>Follower Tools</strong>
-                <span>browser/followerTools.js</span>
+                <span>Track follower count over time, detect growth/loss trends, and calculate velocit</span>
               </div>
             </a>
             <a href="/scripts/followers-growth-tracker" class="script-card" data-cat="follower-monitoring" data-name="followers growth tracker">
@@ -221,28 +224,28 @@
               <span class="script-icon">📊</span>
               <div class="script-info">
                 <strong>Monitor Account</strong>
-                <span>MonitorAccount.js — Track follows/unfollows on ANY public X (Twitter) account</span>
+                <span>Track follows/unfollows on ANY public X (Twitter) account</span>
               </div>
             </a>
             <a href="/scripts/new-followers-alert" class="script-card" data-cat="follower-monitoring" data-name="new followers alert">
               <span class="script-icon">🔔</span>
               <div class="script-info">
                 <strong>New Followers Alert</strong>
-                <span>NewFollowersAlert.js — Get notified when you gain new followers</span>
+                <span>Get notified when you gain new followers</span>
               </div>
             </a>
             <a href="/scripts/remove-followers" class="script-card" data-cat="follower-monitoring" data-name="remove followers">
               <span class="script-icon">🚫</span>
               <div class="script-info">
                 <strong>Remove Followers</strong>
-                <span>Remove specific or all followers using the</span>
+                <span>Remove specific or all followers using the soft-block technique (block → unblock</span>
               </div>
             </a>
             <a href="/scripts/welcome-new-followers" class="script-card" data-cat="follower-monitoring" data-name="welcome new followers">
               <span class="script-icon">👋</span>
               <div class="script-info">
                 <strong>Welcome New Followers</strong>
-                <span>Automatically send DM welcome messages to new</span>
+                <span>Automatically send DM welcome messages to new followers. Monitors the followers </span>
               </div>
             </a>
           </div>
@@ -256,70 +259,77 @@
               <span class="script-icon">💬</span>
               <div class="script-info">
                 <strong>Auto Commenter</strong>
-                <span>XActions Automation - Auto Commenter</span>
+                <span>Monitors a user's profile for new posts and auto-comments. Great for engagement,</span>
               </div>
             </a>
-            <a href="/scripts/auto-engage" class="script-card" data-cat="engagement" data-name="auto engage">
-              <span class="script-icon">⚡</span>
-              <div class="script-info">
-                <strong>Auto Engage</strong>
-                <span>scripts/autoEngage.js</span>
-              </div>
-            </a>
-            <a href="/scripts/auto-liker" class="script-card" data-cat="engagement" data-name="auto liker">
-              <span class="script-icon">❤️</span>
-              <div class="script-info">
-                <strong>Auto Liker</strong>
-                <span>XActions Automation - Timeline Auto-Liker</span>
-              </div>
-            </a>
-            <a href="/scripts/auto-reply-mentions" class="script-card" data-cat="engagement" data-name="auto reply mentions - xactions">
+            <a href="/scripts/auto-reply-mentions" class="script-card" data-cat="engagement" data-name="auto reply mentions">
               <span class="script-icon">📨</span>
               <div class="script-info">
-                <strong>Auto Reply Mentions - XActions</strong>
+                <strong>Auto Reply Mentions</strong>
                 <span>Reply to your recent mentions with rotating templates so no @ goes unanswered.</span>
               </div>
             </a>
-            <a href="/scripts/auto-repost" class="script-card" data-cat="engagement" data-name="auto repost">
+            <a href="/scripts/auto-repost" class="script-card" data-cat="engagement" data-name="auto repost (retweet)">
               <span class="script-icon">🔁</span>
               <div class="script-info">
-                <strong>Auto Repost</strong>
-                <span>Auto Repost (Retweet) on X - by nichxbt</span>
+                <strong>Auto Repost (Retweet)</strong>
+                <span>Automatically repost tweets matching keywords or from specific users</span>
               </div>
             </a>
             <a href="/scripts/auto-plug-replies" class="script-card" data-cat="engagement" data-name="auto-plug replies">
               <span class="script-icon">🔌</span>
               <div class="script-info">
                 <strong>Auto-Plug Replies</strong>
-                <span>Automatically reply to your own tweets that go</span>
+                <span>Automatically reply to your own tweets that go viral with a &quot;plug&quot; (link, CTA, p</span>
               </div>
             </a>
             <a href="/scripts/auto-reply" class="script-card" data-cat="engagement" data-name="auto-reply / auto-respond">
               <span class="script-icon">💬</span>
               <div class="script-info">
                 <strong>Auto-Reply / Auto-Respond</strong>
-                <span>Automatically reply to tweets matching filters.</span>
+                <span>Automatically reply to tweets matching filters. Monitors timeline/search and pos</span>
+              </div>
+            </a>
+            <a href="/scripts/auto-engage" class="script-card" data-cat="engagement" data-name="browser console script for automated engagement">
+              <span class="script-icon">⚡</span>
+              <div class="script-info">
+                <strong>Browser console script for automated engagement</strong>
+                <span>Auto-like, auto-reply, bookmark management</span>
+              </div>
+            </a>
+            <a href="/scripts/comment-by-hashtag" class="script-card" data-cat="engagement" data-name="comment by hashtag">
+              <span class="script-icon">💬</span>
+              <div class="script-info">
+                <strong>Comment By Hashtag</strong>
+                <span>Search for tweets with specific hashtags and automatically comment on them with </span>
+              </div>
+            </a>
+            <a href="/scripts/comment-by-location" class="script-card" data-cat="engagement" data-name="comment by location">
+              <span class="script-icon">💬</span>
+              <div class="script-info">
+                <strong>Comment By Location</strong>
+                <span>Search for tweets from specific locations and automatically comment on them with</span>
               </div>
             </a>
             <a href="/scripts/engagement-booster" class="script-card" data-cat="engagement" data-name="engagement booster v2">
               <span class="script-icon">🚀</span>
               <div class="script-info">
                 <strong>Engagement Booster v2</strong>
-                <span>Systematically engage with tweets from target</span>
+                <span>Systematically engage with tweets from target accounts to boost mutual engagemen</span>
               </div>
             </a>
             <a href="/scripts/engagement-leaderboard" class="script-card" data-cat="engagement" data-name="engagement leaderboard">
               <span class="script-icon">🏆</span>
               <div class="script-info">
                 <strong>Engagement Leaderboard</strong>
-                <span>Analyze who engages with your tweets the most.</span>
+                <span>Analyze who engages with your tweets the most. Scrapes your recent tweets to bui</span>
               </div>
             </a>
             <a href="/scripts/engagement-manager" class="script-card" data-cat="engagement" data-name="engagement manager">
               <span class="script-icon">⚡</span>
               <div class="script-info">
                 <strong>Engagement Manager</strong>
-                <span>scripts/engagementManager.js</span>
+                <span>Browser console script for liking, bookmarking, or replying to visible tweets</span>
               </div>
             </a>
             <a href="/scripts/interact-by-hashtag" class="script-card" data-cat="engagement" data-name="interact by hashtag">
@@ -354,105 +364,98 @@
               <span class="script-icon">❤️</span>
               <div class="script-info">
                 <strong>Keyword Liker</strong>
-                <span>scripts/keywordLiker.js</span>
+                <span>Like only posts containing specific keywords — with a prompt input box</span>
               </div>
             </a>
-            <a href="/scripts/like-by-feed" class="script-card" data-cat="engagement" data-name="like by feed - xactions">
+            <a href="/scripts/like-by-feed" class="script-card" data-cat="engagement" data-name="like by feed">
               <span class="script-icon">❤️</span>
               <div class="script-info">
-                <strong>Like By Feed - XActions</strong>
+                <strong>Like By Feed</strong>
                 <span>Automatically like tweets from your home timeline/feed</span>
               </div>
             </a>
-            <a href="/scripts/like-by-hashtag" class="script-card" data-cat="engagement" data-name="like by hashtag - xactions">
+            <a href="/scripts/like-by-hashtag" class="script-card" data-cat="engagement" data-name="like by hashtag">
               <span class="script-icon">❤️</span>
               <div class="script-info">
-                <strong>Like By Hashtag - XActions</strong>
+                <strong>Like By Hashtag</strong>
                 <span>Automatically like tweets containing specific hashtags</span>
               </div>
             </a>
-            <a href="/scripts/like-by-location" class="script-card" data-cat="engagement" data-name="like by location - xactions">
+            <a href="/scripts/like-by-location" class="script-card" data-cat="engagement" data-name="like by location">
               <span class="script-icon">❤️</span>
               <div class="script-info">
-                <strong>Like By Location - XActions</strong>
+                <strong>Like By Location</strong>
                 <span>Automatically like tweets from specific geographic locations</span>
               </div>
             </a>
-            <a href="/scripts/like-by-user" class="script-card" data-cat="engagement" data-name="like by user - xactions">
+            <a href="/scripts/like-by-user" class="script-card" data-cat="engagement" data-name="like by user">
               <span class="script-icon">❤️</span>
               <div class="script-info">
-                <strong>Like By User - XActions</strong>
+                <strong>Like By User</strong>
                 <span>Automatically like all tweets from a specific user's profile</span>
               </div>
             </a>
-            <a href="/scripts/like-post" class="script-card" data-cat="engagement" data-name="like post">
+            <a href="/scripts/like-post" class="script-card" data-cat="engagement" data-name="like posts">
               <span class="script-icon">❤️</span>
               <div class="script-info">
-                <strong>Like Post</strong>
-                <span>Like Posts on X - by nichxbt</span>
+                <strong>Like Posts</strong>
+                <span>Like specific posts by URL or like visible posts matching keywords</span>
               </div>
             </a>
-            <a href="/scripts/like-user-replies" class="script-card" data-cat="engagement" data-name="like user replies - xactions">
+            <a href="/scripts/multi-account-timeline-liker" class="script-card" data-cat="engagement" data-name="like the entire timeline of multiple x accounts in sequence">
               <span class="script-icon">❤️</span>
               <div class="script-info">
-                <strong>Like User Replies - XActions</strong>
+                <strong>Like the entire timeline of multiple X accounts in sequence</strong>
+                <span></span>
+              </div>
+            </a>
+            <a href="/scripts/like-user-replies" class="script-card" data-cat="engagement" data-name="like user replies">
+              <span class="script-icon">❤️</span>
+              <div class="script-info">
+                <strong>Like User Replies</strong>
                 <span>Automatically like replies/comments on a specific tweet</span>
               </div>
             </a>
-            <a href="/scripts/mention-users" class="script-card" data-cat="engagement" data-name="mention users">
+            <a href="/scripts/mention-users" class="script-card" data-cat="engagement" data-name="mention users in posts">
               <span class="script-icon">💬</span>
               <div class="script-info">
-                <strong>Mention Users</strong>
-                <span>Mention Users in Posts on X - by nichxbt</span>
+                <strong>Mention Users in Posts</strong>
+                <span>Compose a post mentioning multiple users with auto @mentions</span>
               </div>
             </a>
-            <a href="/scripts/multi-account-timeline-liker" class="script-card" data-cat="engagement" data-name="multi account timeline liker">
-              <span class="script-icon">❤️</span>
-              <div class="script-info">
-                <strong>Multi Account Timeline Liker</strong>
-                <span>scripts/multiAccountTimelineLiker.js</span>
-              </div>
-            </a>
-            <a href="/scripts/post-interactions" class="script-card" data-cat="engagement" data-name="post interactions">
+            <a href="/scripts/post-interactions" class="script-card" data-cat="engagement" data-name="post interaction tools">
               <span class="script-icon">💬</span>
               <div class="script-info">
-                <strong>Post Interactions</strong>
-                <span>browser/postInteractions.js</span>
+                <strong>Post interaction tools</strong>
+                <span></span>
               </div>
             </a>
             <a href="/scripts/quote-tweet-automation" class="script-card" data-cat="engagement" data-name="quote tweet automation">
               <span class="script-icon">🔁</span>
               <div class="script-info">
                 <strong>Quote Tweet Automation</strong>
-                <span>Auto-retweet with quote using customizable</span>
+                <span>Auto-retweet with quote using customizable templates. Scrape tweets from a timel</span>
               </div>
             </a>
-            <a href="/scripts/repost-post" class="script-card" data-cat="engagement" data-name="repost post">
+            <a href="/scripts/repost-post" class="script-card" data-cat="engagement" data-name="repost (retweet) posts">
               <span class="script-icon">🔁</span>
               <div class="script-info">
-                <strong>Repost Post</strong>
-                <span>Repost (Retweet) Posts on X - by nichxbt</span>
+                <strong>Repost (Retweet) Posts</strong>
+                <span>Repost specific posts by URL or bulk repost from search/timeline</span>
               </div>
             </a>
-            <a href="/scripts/vote-in-polls" class="script-card" data-cat="engagement" data-name="vote in polls - xactions">
+            <a href="/scripts/auto-liker" class="script-card" data-cat="engagement" data-name="timeline auto-liker">
+              <span class="script-icon">❤️</span>
+              <div class="script-info">
+                <strong>Timeline Auto-Liker</strong>
+                <span></span>
+              </div>
+            </a>
+            <a href="/scripts/vote-in-polls" class="script-card" data-cat="engagement" data-name="vote in polls">
               <span class="script-icon">🗳️</span>
               <div class="script-info">
-                <strong>Vote In Polls - XActions</strong>
+                <strong>Vote In Polls</strong>
                 <span>Vote in polls found in a timeline or search as you scroll, using a fixed or rand</span>
-              </div>
-            </a>
-            <a href="/scripts/comment-by-hashtag" class="script-card" data-cat="engagement" data-name="xactions - comment by hashtag">
-              <span class="script-icon">💬</span>
-              <div class="script-info">
-                <strong>XActions - Comment By Hashtag</strong>
-                <span>Search for tweets with specific hashtags and automatically</span>
-              </div>
-            </a>
-            <a href="/scripts/comment-by-location" class="script-card" data-cat="engagement" data-name="xactions - comment by location">
-              <span class="script-icon">💬</span>
-              <div class="script-info">
-                <strong>XActions - Comment By Location</strong>
-                <span>Search for tweets from specific locations and automatically</span>
               </div>
             </a>
           </div>
@@ -462,88 +465,88 @@
           <h2>🧠 Growth <span class="count">(12)</span></h2>
           <div class="script-grid">
             
-            <a href="/scripts/algorithm-builder" class="script-card" data-cat="growth" data-name="cycle 1">
+            <a href="/scripts/algorithm-builder" class="script-card" data-cat="growth" data-name="algorithm builder">
               <span class="script-icon">🧠</span>
               <div class="script-info">
-                <strong>Cycle 1</strong>
-                <span>XActions Automation — Algorithm Builder</span>
+                <strong>Algorithm Builder</strong>
+                <span>24/7 automation that builds up your X algorithm around specific topics/niches. M</span>
+              </div>
+            </a>
+            <a href="/scripts/algorithm-trainer" class="script-card" data-cat="growth" data-name="algorithm trainer">
+              <span class="script-icon">🧠</span>
+              <div class="script-info">
+                <strong>Algorithm Trainer</strong>
+                <span>Trains your X/Twitter algorithm by simulating natural browsing behavior in your </span>
               </div>
             </a>
             <a href="/scripts/follow-list" class="script-card" data-cat="growth" data-name="follow &amp; manage lists">
               <span class="script-icon">📋</span>
               <div class="script-info">
                 <strong>Follow &amp; Manage Lists</strong>
-                <span>Follow/unfollow X Lists, pin lists to your</span>
+                <span>Follow/unfollow X Lists, pin lists to your timeline, and browse list feeds.</span>
               </div>
             </a>
-            <a href="/scripts/follow-account" class="script-card" data-cat="growth" data-name="follow account">
+            <a href="/scripts/follow-account" class="script-card" data-cat="growth" data-name="follow accounts">
               <span class="script-icon">➕</span>
               <div class="script-info">
-                <strong>Follow Account</strong>
-                <span>Follow Accounts on X - by nichxbt</span>
+                <strong>Follow Accounts</strong>
+                <span>Follow a list of specific usernames, navigating to each profile</span>
               </div>
             </a>
-            <a href="/scripts/follow-back" class="script-card" data-cat="growth" data-name="follow back - xactions">
+            <a href="/scripts/follow-back" class="script-card" data-cat="growth" data-name="follow back">
               <span class="script-icon">🔗</span>
               <div class="script-info">
-                <strong>Follow Back - XActions</strong>
+                <strong>Follow Back</strong>
                 <span>Follow every account that follows you but that you don't follow back yet.</span>
               </div>
             </a>
-            <a href="/scripts/follow-engagers" class="script-card" data-cat="growth" data-name="follow engagers">
+            <a href="/scripts/follow-target-users" class="script-card" data-cat="growth" data-name="follow followers/following of target users">
               <span class="script-icon">🎯</span>
               <div class="script-info">
-                <strong>Follow Engagers</strong>
-                <span>XActions Automation - Follow Likers &amp; Commenters</span>
+                <strong>Follow Followers/Following of Target Users</strong>
+                <span>Follow the followers or following of any target account</span>
               </div>
             </a>
-            <a href="/scripts/follow-target-users" class="script-card" data-cat="growth" data-name="follow target users">
+            <a href="/scripts/follow-engagers" class="script-card" data-cat="growth" data-name="follow likers &amp; commenters">
               <span class="script-icon">🎯</span>
               <div class="script-info">
-                <strong>Follow Target Users</strong>
-                <span>XActions Automation - Follow Followers/Following of Target Users</span>
+                <strong>Follow Likers &amp; Commenters</strong>
+                <span>Find users who engage with specific posts and follow them</span>
               </div>
             </a>
-            <a href="/scripts/growth-suite" class="script-card" data-cat="growth" data-name="growth suite">
+            <a href="/scripts/growth-suite" class="script-card" data-cat="growth" data-name="growth automation suite">
               <span class="script-icon">🚀</span>
               <div class="script-info">
-                <strong>Growth Suite</strong>
-                <span>XActions Automation - Growth Automation Suite</span>
+                <strong>Growth Automation Suite</strong>
+                <span></span>
               </div>
             </a>
-            <a href="/scripts/keyword-follow" class="script-card" data-cat="growth" data-name="keyword follow">
+            <a href="/scripts/keyword-follow" class="script-card" data-cat="growth" data-name="keyword search &amp; follow">
               <span class="script-icon">🔑</span>
               <div class="script-info">
-                <strong>Keyword Follow</strong>
-                <span>XActions Automation - Keyword Search &amp; Follow</span>
+                <strong>Keyword Search &amp; Follow</strong>
+                <span></span>
               </div>
             </a>
             <a href="/scripts/natural-flow" class="script-card" data-cat="growth" data-name="natural flow">
               <span class="script-icon">🌊</span>
               <div class="script-info">
                 <strong>Natural Flow</strong>
-                <span>scripts/naturalFlow.js</span>
+                <span>Simulate a natural browsing session: scroll, like, reply, retweet, follow, and c</span>
               </div>
             </a>
             <a href="/scripts/persona-engine" class="script-card" data-cat="growth" data-name="persona engine">
               <span class="script-icon">🎭</span>
               <div class="script-info">
                 <strong>Persona Engine</strong>
-                <span>scripts/personaEngine.js</span>
+                <span>Browser console script for analyzing your posting style and generating a persona</span>
               </div>
             </a>
-            <a href="/scripts/algorithm-trainer" class="script-card" data-cat="growth" data-name="phase 1">
+            <a href="/scripts/thought-leader-cultivator" class="script-card" data-cat="growth" data-name="thought leader algorithm cultivator (standalone)">
               <span class="script-icon">🧠</span>
               <div class="script-info">
-                <strong>Phase 1</strong>
-                <span>XActions Automation - Algorithm Trainer</span>
-              </div>
-            </a>
-            <a href="/scripts/thought-leader-cultivator" class="script-card" data-cat="growth" data-name="thought leader cultivator">
-              <span class="script-icon">🧠</span>
-              <div class="script-info">
-                <strong>Thought Leader Cultivator</strong>
-                <span>XActions - Thought Leader Algorithm Cultivator (Standalone)</span>
+                <strong>Thought Leader Algorithm Cultivator (Standalone)</strong>
+                <span>STANDALONE VERSION — no dependencies required.</span>
               </div>
             </a>
           </div>
@@ -557,6 +560,13 @@
               <span class="script-icon">🔖</span>
               <div class="script-info">
                 <strong>Bookmarks Scraper</strong>
+                <span>Scrape all bookmarks with full metadata</span>
+              </div>
+            </a>
+            <a href="/scripts/scrape-analytics" class="script-card" data-cat="scrapers" data-name="browser console script to scrape x/twitter analytics data">
+              <span class="script-icon">📊</span>
+              <div class="script-info">
+                <strong>Browser console script to scrape X/Twitter analytics data</strong>
                 <span></span>
               </div>
             </a>
@@ -564,112 +574,105 @@
               <span class="script-icon">✉️</span>
               <div class="script-info">
                 <strong>DM Scraper</strong>
-                <span></span>
+                <span>Export DM conversations (if accessible)</span>
               </div>
             </a>
             <a href="/scripts/export-to-csv" class="script-card" data-cat="scrapers" data-name="export to csv utility">
               <span class="script-icon">📄</span>
               <div class="script-info">
                 <strong>Export to CSV Utility</strong>
-                <span></span>
+                <span>Convert any scraped data to CSV format</span>
               </div>
             </a>
             <a href="/scripts/scrape-followers" class="script-card" data-cat="scrapers" data-name="followers scraper">
               <span class="script-icon">👥</span>
               <div class="script-info">
                 <strong>Followers Scraper</strong>
-                <span></span>
+                <span>Export your followers list to JSON/CSV</span>
               </div>
             </a>
             <a href="/scripts/scrape-following" class="script-card" data-cat="scrapers" data-name="following scraper">
               <span class="script-icon">👥</span>
               <div class="script-info">
                 <strong>Following Scraper</strong>
-                <span></span>
+                <span>Export your following list to JSON/CSV</span>
               </div>
             </a>
             <a href="/scripts/scrape-hashtag" class="script-card" data-cat="scrapers" data-name="hashtag scraper">
               <span class="script-icon">#️⃣</span>
               <div class="script-info">
                 <strong>Hashtag Scraper</strong>
-                <span></span>
+                <span>Get tweets by hashtag</span>
               </div>
             </a>
             <a href="/scripts/scrape-likers" class="script-card" data-cat="scrapers" data-name="likers scraper">
               <span class="script-icon">❤️</span>
               <div class="script-info">
                 <strong>Likers Scraper</strong>
-                <span></span>
+                <span>Get all users who liked a specific tweet</span>
               </div>
             </a>
             <a href="/scripts/scrape-likes" class="script-card" data-cat="scrapers" data-name="likes scraper">
               <span class="script-icon">❤️</span>
               <div class="script-info">
                 <strong>Likes Scraper</strong>
-                <span></span>
+                <span>Export your liked tweets</span>
               </div>
             </a>
             <a href="/scripts/link-scraper" class="script-card" data-cat="scrapers" data-name="link scraper">
               <span class="script-icon">🔗</span>
               <div class="script-info">
                 <strong>Link Scraper</strong>
-                <span>XActions Automation - Link Scraper</span>
+                <span>Extracts all links shared by a specific user. Great for research, finding resour</span>
               </div>
             </a>
             <a href="/scripts/scrape-list" class="script-card" data-cat="scrapers" data-name="list members scraper">
               <span class="script-icon">📝</span>
               <div class="script-info">
                 <strong>List Members Scraper</strong>
-                <span></span>
+                <span>Get all members of a Twitter list</span>
               </div>
             </a>
             <a href="/scripts/scrape-media" class="script-card" data-cat="scrapers" data-name="media scraper">
               <span class="script-icon">🖼️</span>
               <div class="script-info">
                 <strong>Media Scraper</strong>
-                <span></span>
+                <span>Download all media (images/videos) from a user's profile</span>
               </div>
             </a>
             <a href="/scripts/scrape-notifications" class="script-card" data-cat="scrapers" data-name="notifications scraper">
               <span class="script-icon">🔔</span>
               <div class="script-info">
                 <strong>Notifications Scraper</strong>
-                <span></span>
+                <span>Export notification history</span>
               </div>
             </a>
             <a href="/scripts/scrape-profile" class="script-card" data-cat="scrapers" data-name="profile scraper">
               <span class="script-icon">👤</span>
               <div class="script-info">
                 <strong>Profile Scraper</strong>
-                <span></span>
+                <span>Get detailed profile data for a user</span>
               </div>
             </a>
             <a href="/scripts/scrape-quote-retweets" class="script-card" data-cat="scrapers" data-name="quote retweets scraper">
               <span class="script-icon">🔁</span>
               <div class="script-info">
                 <strong>Quote Retweets Scraper</strong>
-                <span></span>
+                <span>Get all quote retweets of a specific tweet</span>
               </div>
             </a>
             <a href="/scripts/scrape-replies" class="script-card" data-cat="scrapers" data-name="replies scraper">
               <span class="script-icon">💬</span>
               <div class="script-info">
                 <strong>Replies Scraper</strong>
-                <span></span>
-              </div>
-            </a>
-            <a href="/scripts/scrape-analytics" class="script-card" data-cat="scrapers" data-name="scrape analytics">
-              <span class="script-icon">📊</span>
-              <div class="script-info">
-                <strong>Scrape Analytics</strong>
-                <span>scripts/scrapeAnalytics.js</span>
+                <span>Get all replies to a specific tweet</span>
               </div>
             </a>
             <a href="/scripts/scrape-explore" class="script-card" data-cat="scrapers" data-name="scrape explore">
               <span class="script-icon">🔍</span>
               <div class="script-info">
                 <strong>Scrape Explore</strong>
-                <span>scripts/scrapeExplore.js</span>
+                <span>Browser console script to scrape Explore page trends and content</span>
               </div>
             </a>
             <a href="/scripts/scrape-retweeters" class="script-card" data-cat="scrapers" data-name="scrape reposters">
@@ -679,17 +682,17 @@
                 <span>Scroll a post's Reposts and Quotes tabs and export everyone who reposted or quot</span>
               </div>
             </a>
-            <a href="/scripts/scrape-spaces" class="script-card" data-cat="scrapers" data-name="scrape spaces">
+            <a href="/scripts/scrape-spaces" class="script-card" data-cat="scrapers" data-name="scrape spaces (audio/video broadcasts)">
               <span class="script-icon">🎙️</span>
               <div class="script-info">
-                <strong>Scrape Spaces</strong>
-                <span>Scrape Spaces (Audio/Video Broadcasts) on X - by nichxbt</span>
+                <strong>Scrape Spaces (Audio/Video Broadcasts)</strong>
+                <span>Find and collect metadata about X Spaces</span>
               </div>
             </a>
-            <a href="/scripts/scrape-user-likes" class="script-card" data-cat="scrapers" data-name="scrape user likes - xactions">
+            <a href="/scripts/scrape-user-likes" class="script-card" data-cat="scrapers" data-name="scrape user likes">
               <span class="script-icon">💗</span>
               <div class="script-info">
-                <strong>Scrape User Likes - XActions</strong>
+                <strong>Scrape User Likes</strong>
                 <span>Scroll a user's Likes timeline and export the posts they liked (url, author, tex</span>
               </div>
             </a>
@@ -697,21 +700,21 @@
               <span class="script-icon">🔍</span>
               <div class="script-info">
                 <strong>Search Scraper</strong>
-                <span></span>
+                <span>Search and export tweets by keyword</span>
               </div>
             </a>
             <a href="/scripts/scrape-profile-posts" class="script-card" data-cat="scrapers" data-name="twitter/x profile posts scraper">
               <span class="script-icon">👤</span>
               <div class="script-info">
                 <strong>Twitter/X Profile Posts Scraper</strong>
-                <span>Scrapes posts from any Twitter/X profile with filtering,</span>
+                <span>Scrapes posts from any Twitter/X profile with filtering, multiple export formats</span>
               </div>
             </a>
             <a href="/scripts/viral-tweets-scraper" class="script-card" data-cat="scrapers" data-name="viral tweet scraper">
               <span class="script-icon">🔥</span>
               <div class="script-info">
                 <strong>Viral Tweet Scraper</strong>
-                <span></span>
+                <span>Find top performing tweets by keyword or from any account</span>
               </div>
             </a>
             <a href="/scripts/scrape-cashtag-search" class="script-card" data-cat="scrapers" data-name="x cashtag search scraper">
@@ -725,7 +728,7 @@
               <span class="script-icon">👤</span>
               <div class="script-info">
                 <strong>X/Twitter Profile</strong>
-                <span></span>
+                <span>Scrapes a user's posts (including their replies) from the /with_replies tab, the</span>
               </div>
             </a>
           </div>
@@ -739,35 +742,35 @@
               <span class="script-icon">📚</span>
               <div class="script-info">
                 <strong>Bookmark Exporter</strong>
-                <span></span>
+                <span>Export all your X/Twitter bookmarks to JSON/CSV</span>
               </div>
             </a>
             <a href="/scripts/bookmark-manager" class="script-card" data-cat="content-tools" data-name="bookmark manager">
               <span class="script-icon">📚</span>
               <div class="script-info">
                 <strong>Bookmark Manager</strong>
-                <span>scripts/bookmarkManager.js</span>
+                <span>Browser console script for exporting and clearing bookmarks on X/Twitter</span>
               </div>
             </a>
             <a href="/scripts/bookmark-organizer" class="script-card" data-cat="content-tools" data-name="bookmark organizer">
               <span class="script-icon">📂</span>
               <div class="script-info">
                 <strong>Bookmark Organizer</strong>
-                <span>Bookmark Organizer on X - by nichxbt</span>
+                <span>Organize bookmarks into folders (Premium feature) Also export all bookmarks with</span>
               </div>
             </a>
             <a href="/scripts/bulk-delete-tweets" class="script-card" data-cat="content-tools" data-name="bulk delete tweets">
               <span class="script-icon">🗑️</span>
               <div class="script-info">
                 <strong>Bulk Delete Tweets</strong>
-                <span>Delete your tweets by age, keyword, or engagement threshold.</span>
+                <span>Delete your tweets by age, keyword, or engagement threshold. The #1 most-request</span>
               </div>
             </a>
             <a href="/scripts/clear-all-bookmarks" class="script-card" data-cat="content-tools" data-name="clear all bookmarks">
               <span class="script-icon">🗑️</span>
               <div class="script-info">
                 <strong>Clear All Bookmarks</strong>
-                <span>Remove all bookmarked posts. Tries the built-in</span>
+                <span>Remove all bookmarked posts. Tries the built-in &quot;Clear All&quot; button first, then f</span>
               </div>
             </a>
             <a href="/scripts/clear-all-likes" class="script-card" data-cat="content-tools" data-name="clear all likes">
@@ -781,7 +784,7 @@
               <span class="script-icon">🗑️</span>
               <div class="script-info">
                 <strong>Clear All Reposts</strong>
-                <span>Remove all reposts/retweets from your profile.</span>
+                <span>Remove all reposts/retweets from your profile. Supports filters (keyword, date r</span>
               </div>
             </a>
             <a href="/scripts/clear-all-retweets" class="script-card" data-cat="content-tools" data-name="clear all retweets">
@@ -795,125 +798,139 @@
               <span class="script-icon">♻️</span>
               <div class="script-info">
                 <strong>Content Repurposer</strong>
-                <span>Transform existing tweets into new content formats.</span>
+                <span>Transform existing tweets into new content formats. Convert single tweets → thre</span>
               </div>
             </a>
-            <a href="/scripts/delete-tweets" class="script-card" data-cat="content-tools" data-name="delete tweets - xactions">
+            <a href="/scripts/delete-tweets" class="script-card" data-cat="content-tools" data-name="delete tweets">
               <span class="script-icon">🗑️</span>
               <div class="script-info">
-                <strong>Delete Tweets - XActions</strong>
+                <strong>Delete Tweets</strong>
                 <span>DESTRUCTIVE: bulk-delete your own posts by age, keywords, or performance. Defaul</span>
+              </div>
+            </a>
+            <a href="/scripts/video-downloader-browser" class="script-card" data-cat="content-tools" data-name="download videos from x/twitter posts in browser">
+              <span class="script-icon">🎬</span>
+              <div class="script-info">
+                <strong>Download videos from X/Twitter posts in browser</strong>
+                <span></span>
               </div>
             </a>
             <a href="/scripts/manage-bookmarks" class="script-card" data-cat="content-tools" data-name="manage bookmarks">
               <span class="script-icon">📑</span>
               <div class="script-info">
                 <strong>Manage Bookmarks</strong>
-                <span>scripts/manageBookmarks.js</span>
+                <span>Browser console script to export and manage X/Twitter bookmarks</span>
               </div>
             </a>
-            <a href="/scripts/share-embed" class="script-card" data-cat="content-tools" data-name="share embed">
+            <a href="/scripts/share-embed" class="script-card" data-cat="content-tools" data-name="share &amp; embed posts">
               <span class="script-icon">🔗</span>
               <div class="script-info">
-                <strong>Share Embed</strong>
-                <span>Share &amp; Embed Posts on X - by nichxbt</span>
+                <strong>Share &amp; Embed Posts</strong>
+                <span>Copy post links, get embed codes, or bulk copy links from timeline</span>
               </div>
             </a>
-            <a href="/scripts/video-downloader-browser" class="script-card" data-cat="content-tools" data-name="strategy 1">
-              <span class="script-icon">🎬</span>
-              <div class="script-info">
-                <strong>Strategy 1</strong>
-                <span>browser/videoDownloaderBrowser.js</span>
-              </div>
-            </a>
-            <a href="/scripts/text-formatting" class="script-card" data-cat="content-tools" data-name="text formatting">
+            <a href="/scripts/text-formatting" class="script-card" data-cat="content-tools" data-name="text formatting helper">
               <span class="script-icon">✏️</span>
               <div class="script-info">
-                <strong>Text Formatting</strong>
-                <span>Text Formatting Helper for X - by nichxbt</span>
+                <strong>Text Formatting Helper</strong>
+                <span>Format text with bold, italic, strikethrough, monospace using Unicode characters</span>
               </div>
             </a>
             <a href="/scripts/thread-unroller" class="script-card" data-cat="content-tools" data-name="thread unroller">
               <span class="script-icon">🧵</span>
               <div class="script-info">
                 <strong>Thread Unroller</strong>
-                <span></span>
+                <span>Save any Twitter/X thread as clean text or markdown</span>
               </div>
             </a>
             <a href="/scripts/unlike-all-posts" class="script-card" data-cat="content-tools" data-name="unlike all posts">
               <span class="script-icon">💔</span>
               <div class="script-info">
                 <strong>Unlike All Posts</strong>
-                <span>Unlike every post in your Likes tab. Supports</span>
+                <span>Unlike every post in your Likes tab. Supports keyword filters, date-based filter</span>
               </div>
             </a>
-            <a href="/scripts/unlike-all" class="script-card" data-cat="content-tools" data-name="unlike all tweets - xactions">
+            <a href="/scripts/unlike-all" class="script-card" data-cat="content-tools" data-name="unlike all tweets">
               <span class="script-icon">💔</span>
               <div class="script-info">
-                <strong>Unlike All Tweets - XActions</strong>
+                <strong>Unlike All Tweets</strong>
                 <span>Unlikes all liked tweets from your likes page (x.com/USERNAME/likes)</span>
               </div>
             </a>
-            <a href="/scripts/unlike-old" class="script-card" data-cat="content-tools" data-name="unlike old tweets - xactions">
+            <a href="/scripts/unlike-old" class="script-card" data-cat="content-tools" data-name="unlike old tweets">
               <span class="script-icon">💔</span>
               <div class="script-info">
-                <strong>Unlike Old Tweets - XActions</strong>
+                <strong>Unlike Old Tweets</strong>
                 <span>Unlikes tweets older than a specified number of days from your likes page</span>
               </div>
             </a>
-            <a href="/scripts/video-captions" class="script-card" data-cat="content-tools" data-name="video captions">
+            <a href="/scripts/video-captions" class="script-card" data-cat="content-tools" data-name="video captions uploader">
               <span class="script-icon">📝</span>
               <div class="script-info">
-                <strong>Video Captions</strong>
-                <span>Video Captions Uploader on X - by nichxbt</span>
+                <strong>Video Captions Uploader</strong>
+                <span>Add captions/subtitles to a video when composing a tweet</span>
               </div>
             </a>
             <a href="/scripts/video-downloader" class="script-card" data-cat="content-tools" data-name="x video downloader">
               <span class="script-icon">🎬</span>
               <div class="script-info">
                 <strong>X Video Downloader</strong>
-                <span></span>
+                <span>Download any video from X/Twitter posts</span>
               </div>
             </a>
           </div>
         </section>
 
         <section class="cat-section" id="posting">
-          <h2>📰 Posting <span class="count">(16)</span></h2>
+          <h2>✏️ Posting <span class="count">(16)</span></h2>
           <div class="script-grid">
             
+            <a href="/scripts/post-advanced" class="script-card" data-cat="posting" data-name="advanced post features">
+              <span class="script-icon">✏️</span>
+              <div class="script-info">
+                <strong>Advanced post features</strong>
+                <span></span>
+              </div>
+            </a>
             <a href="/scripts/article-publisher" class="script-card" data-cat="posting" data-name="article publisher">
               <span class="script-icon">📰</span>
               <div class="script-info">
                 <strong>Article Publisher</strong>
-                <span>scripts/articlePublisher.js</span>
+                <span>Browser console script for publishing long-form articles on X (Premium+ required</span>
+              </div>
+            </a>
+            <a href="/scripts/poll-creator" class="script-card" data-cat="posting" data-name="browser console script to create polls">
+              <span class="script-icon">📊</span>
+              <div class="script-info">
+                <strong>Browser console script to create polls</strong>
+                <span></span>
               </div>
             </a>
             <a href="/scripts/content-calendar" class="script-card" data-cat="posting" data-name="content calendar &amp; tweet scheduler">
               <span class="script-icon">📅</span>
               <div class="script-info">
                 <strong>Content Calendar &amp; Tweet Scheduler</strong>
-                <span>Plan and visualize your posting schedule. Tracks</span>
+                <span>Plan and visualize your posting schedule. Tracks tweet frequency by day/hour, id</span>
               </div>
             </a>
             <a href="/scripts/create-poll" class="script-card" data-cat="posting" data-name="create poll">
               <span class="script-icon">📊</span>
               <div class="script-info">
                 <strong>Create Poll</strong>
-                <span>Create Poll on X - by nichxbt</span>
+                <span>Create a poll tweet programmatically</span>
               </div>
             </a>
-            <a href="/scripts/edit-post" class="script-card" data-cat="posting" data-name="edit post">
+            <a href="/scripts/edit-post" class="script-card" data-cat="posting" data-name="edit post &amp; undo post">
               <span class="script-icon">✏️</span>
               <div class="script-info">
-                <strong>Edit Post</strong>
-                <span>Edit Post &amp; Undo Post on X - by nichxbt</span>
+                <strong>Edit Post &amp; Undo Post</strong>
+                <span>Edit an existing post or undo a recently posted tweet (Premium feature, 30s wind</span>
               </div>
             </a>
-            <a href="/scripts/pin-tweet" class="script-card" data-cat="posting" data-name="pin tweet - xactions">
+            <a href="/scripts/pin-tweet" class="script-card" data-cat="posting" data-name="pin tweet">
               <span class="script-icon">📌</span>
               <div class="script-info">
-                <strong>Pin Tweet - XActions</strong>
+                <strong>Pin Tweet</strong>
                 <span>Pin or unpin one of your own tweets to the top of your profile.</span>
               </div>
             </a>
@@ -921,34 +938,27 @@
               <span class="script-icon">📌</span>
               <div class="script-info">
                 <strong>Pin Tweet Manager</strong>
-                <span>Pin/unpin tweets, auto-rotate pinned content,</span>
-              </div>
-            </a>
-            <a href="/scripts/poll-creator" class="script-card" data-cat="posting" data-name="poll creator">
-              <span class="script-icon">📊</span>
-              <div class="script-info">
-                <strong>Poll Creator</strong>
-                <span>scripts/pollCreator.js</span>
+                <span>Pin/unpin tweets, auto-rotate pinned content, and pin your best-performing tweet</span>
               </div>
             </a>
             <a href="/scripts/post-composer" class="script-card" data-cat="posting" data-name="post composer">
               <span class="script-icon">✏️</span>
               <div class="script-info">
                 <strong>Post Composer</strong>
-                <span>scripts/postComposer.js</span>
+                <span>Browser console script to compose and post tweets, threads, and polls</span>
               </div>
             </a>
             <a href="/scripts/post-thread" class="script-card" data-cat="posting" data-name="post thread">
               <span class="script-icon">🧵</span>
               <div class="script-info">
                 <strong>Post Thread</strong>
-                <span>Post Thread on X - by nichxbt</span>
+                <span>Compose and post a thread of connected tweets</span>
               </div>
             </a>
-            <a href="/scripts/post-tweet" class="script-card" data-cat="posting" data-name="post tweet - xactions">
+            <a href="/scripts/post-tweet" class="script-card" data-cat="posting" data-name="post tweet">
               <span class="script-icon">✍️</span>
               <div class="script-info">
-                <strong>Post Tweet - XActions</strong>
+                <strong>Post Tweet</strong>
                 <span>Compose and post a single tweet from your logged-in session.</span>
               </div>
             </a>
@@ -956,20 +966,20 @@
               <span class="script-icon">📰</span>
               <div class="script-info">
                 <strong>Publish Article</strong>
-                <span>scripts/publishArticle.js</span>
+                <span>Browser console script for publishing articles on X/Twitter (Premium+)</span>
               </div>
             </a>
-            <a href="/scripts/quote-tweet" class="script-card" data-cat="posting" data-name="quote tweet - xactions">
+            <a href="/scripts/quote-tweet" class="script-card" data-cat="posting" data-name="quote tweet">
               <span class="script-icon">💬</span>
               <div class="script-info">
-                <strong>Quote Tweet - XActions</strong>
+                <strong>Quote Tweet</strong>
                 <span>Quote-tweet the post you are currently viewing with your own text.</span>
               </div>
             </a>
-            <a href="/scripts/schedule-post" class="script-card" data-cat="posting" data-name="schedule post - xactions">
+            <a href="/scripts/schedule-post" class="script-card" data-cat="posting" data-name="schedule post">
               <span class="script-icon">🗓️</span>
               <div class="script-info">
-                <strong>Schedule Post - XActions</strong>
+                <strong>Schedule Post</strong>
                 <span>Schedule a tweet for a future date/time using X's native scheduler.</span>
               </div>
             </a>
@@ -977,21 +987,14 @@
               <span class="script-icon">⏰</span>
               <div class="script-info">
                 <strong>Schedule Posts</strong>
-                <span>Schedule Posts on X - by nichxbt</span>
+                <span>Queue multiple posts to be published at specified times</span>
               </div>
             </a>
             <a href="/scripts/thread-composer" class="script-card" data-cat="posting" data-name="thread composer &amp; publisher">
               <span class="script-icon">🧵</span>
               <div class="script-info">
                 <strong>Thread Composer &amp; Publisher</strong>
-                <span>Compose and publish Twitter/X threads from the</span>
-              </div>
-            </a>
-            <a href="/scripts/post-advanced" class="script-card" data-cat="posting" data-name="wait for an element to appear in the dom">
-              <span class="script-icon">✏️</span>
-              <div class="script-info">
-                <strong>Wait for an element to appear in the DOM</strong>
-                <span>browser/postAdvanced.js</span>
+                <span>Compose and publish Twitter/X threads from the browser console. Manages multi-tw</span>
               </div>
             </a>
           </div>
@@ -1001,17 +1004,24 @@
           <h2>💌 Messaging <span class="count">(8)</span></h2>
           <div class="script-grid">
             
-            <a href="/scripts/auto-reply-dms" class="script-card" data-cat="messaging" data-name="auto reply dms - xactions">
+            <a href="/scripts/auto-reply-dms" class="script-card" data-cat="messaging" data-name="auto reply dms">
               <span class="script-icon">💌</span>
               <div class="script-info">
-                <strong>Auto Reply DMs - XActions</strong>
+                <strong>Auto Reply DMs</strong>
                 <span>Auto-reply to unread DM conversations with a single message template.</span>
               </div>
             </a>
-            <a href="/scripts/bulk-dm" class="script-card" data-cat="messaging" data-name="bulk dm - xactions">
+            <a href="/scripts/dm-exporter" class="script-card" data-cat="messaging" data-name="browser console script to export x/twitter dm conversations">
               <span class="script-icon">📤</span>
               <div class="script-info">
-                <strong>Bulk DM - XActions</strong>
+                <strong>Browser console script to export X/Twitter DM conversations</strong>
+                <span></span>
+              </div>
+            </a>
+            <a href="/scripts/bulk-dm" class="script-card" data-cat="messaging" data-name="bulk dm">
+              <span class="script-icon">📤</span>
+              <div class="script-info">
+                <strong>Bulk DM</strong>
                 <span>Send a personalized DM to a list of users from one message template.</span>
               </div>
             </a>
@@ -1019,42 +1029,35 @@
               <span class="script-icon">📞</span>
               <div class="script-info">
                 <strong>DM Audio &amp; Video Calls</strong>
-                <span>Navigate to a DM conversation and initiate</span>
-              </div>
-            </a>
-            <a href="/scripts/dm-exporter" class="script-card" data-cat="messaging" data-name="dm exporter">
-              <span class="script-icon">📤</span>
-              <div class="script-info">
-                <strong>DM Exporter</strong>
-                <span>scripts/dmExporter.js</span>
+                <span>Navigate to a DM conversation and initiate audio or video calls on X/Twitter.</span>
               </div>
             </a>
             <a href="/scripts/dm-manager" class="script-card" data-cat="messaging" data-name="dm manager">
               <span class="script-icon">✉️</span>
               <div class="script-info">
                 <strong>DM Manager</strong>
-                <span>scripts/dmManager.js</span>
+                <span>Browser console script for sending DMs and exporting conversations on X/Twitter</span>
               </div>
             </a>
             <a href="/scripts/encrypted-dm" class="script-card" data-cat="messaging" data-name="encrypted direct messages">
               <span class="script-icon">🔒</span>
               <div class="script-info">
                 <strong>Encrypted Direct Messages</strong>
-                <span>Enable encrypted DM mode, send encrypted messages,</span>
+                <span>Enable encrypted DM mode, send encrypted messages, and check encryption status o</span>
               </div>
             </a>
             <a href="/scripts/group-dm" class="script-card" data-cat="messaging" data-name="group direct messages">
               <span class="script-icon">👥</span>
               <div class="script-info">
                 <strong>Group Direct Messages</strong>
-                <span>Create group DM conversations and send messages</span>
+                <span>Create group DM conversations and send messages to multiple users at once on X/T</span>
               </div>
             </a>
-            <a href="/scripts/send-direct-message" class="script-card" data-cat="messaging" data-name="send direct message">
+            <a href="/scripts/send-direct-message" class="script-card" data-cat="messaging" data-name="send direct messages">
               <span class="script-icon">📬</span>
               <div class="script-info">
-                <strong>Send Direct Message</strong>
-                <span>Send Direct Messages on X - by nichxbt</span>
+                <strong>Send Direct Messages</strong>
+                <span>Send personalized DMs to a list of users</span>
               </div>
             </a>
           </div>
@@ -1068,70 +1071,70 @@
               <span class="script-icon">🏥</span>
               <div class="script-info">
                 <strong>Account Health Monitor</strong>
-                <span>Comprehensive health check for your X/Twitter account.</span>
+                <span>Comprehensive health check for your X/Twitter account. Generates a composite hea</span>
               </div>
             </a>
             <a href="/scripts/audience-demographics" class="script-card" data-cat="analytics" data-name="audience demographics analyzer">
               <span class="script-icon">📊</span>
               <div class="script-info">
                 <strong>Audience Demographics Analyzer</strong>
-                <span>Analyze your followers' demographics by scraping</span>
+                <span>Analyze your followers' demographics by scraping visible profile data: bio keywo</span>
               </div>
             </a>
             <a href="/scripts/audience-overlap" class="script-card" data-cat="analytics" data-name="audience overlap analyzer">
               <span class="script-icon">🔗</span>
               <div class="script-info">
                 <strong>Audience Overlap Analyzer</strong>
-                <span>Compare the follower lists of two X/Twitter</span>
+                <span>Compare the follower lists of two X/Twitter accounts to find shared followers, u</span>
               </div>
             </a>
             <a href="/scripts/best-time-to-post" class="script-card" data-cat="analytics" data-name="best time to post">
               <span class="script-icon">⏰</span>
               <div class="script-info">
-                <strong>Best Time To Post</strong>
-                <span>Best Time to Post on X - by nichxbt</span>
+                <strong>Best Time to Post</strong>
+                <span>Analyze your posting history to find optimal posting times</span>
               </div>
             </a>
             <a href="/scripts/competitor-analysis" class="script-card" data-cat="analytics" data-name="competitor analysis">
               <span class="script-icon">🔍</span>
               <div class="script-info">
                 <strong>Competitor Analysis</strong>
-                <span>Competitor Analysis on X - by nichxbt</span>
+                <span>Compare engagement, follower counts, and posting patterns of multiple accounts</span>
               </div>
             </a>
             <a href="/scripts/engagement-analytics" class="script-card" data-cat="analytics" data-name="engagement analytics">
               <span class="script-icon">📈</span>
               <div class="script-info">
                 <strong>Engagement Analytics</strong>
-                <span>Engagement Analytics on X - by nichxbt</span>
+                <span>Analyze engagement metrics across your recent posts</span>
               </div>
             </a>
             <a href="/scripts/hashtag-analytics" class="script-card" data-cat="analytics" data-name="hashtag analytics">
               <span class="script-icon">#️⃣</span>
               <div class="script-info">
                 <strong>Hashtag Analytics</strong>
-                <span>Hashtag Analytics on X - by nichxbt</span>
+                <span>Analyze performance and trends for specific hashtags</span>
               </div>
             </a>
             <a href="/scripts/keyword-monitor" class="script-card" data-cat="analytics" data-name="keyword monitor &amp; alerts">
               <span class="script-icon">🔑</span>
               <div class="script-info">
                 <strong>Keyword Monitor &amp; Alerts</strong>
-                <span>Monitor any X/Twitter search for keyword mentions</span>
+                <span>Monitor any X/Twitter search for keyword mentions in real-time. Scrapes search r</span>
               </div>
             </a>
             <a href="/scripts/manage-notifications" class="script-card" data-cat="analytics" data-name="manage notifications">
               <span class="script-icon">🔔</span>
               <div class="script-info">
                 <strong>Manage Notifications</strong>
-                <span>scripts/manageNotifications.js</span>
+                <span>Browser console script to scrape and manage X/Twitter notifications</span>
               </div>
             </a>
             <a href="/scripts/notification-manager" class="script-card" data-cat="analytics" data-name="notification manager">
               <span class="script-icon">🔔</span>
               <div class="script-info">
                 <strong>Notification Manager</strong>
-                <span>scripts/notificationManager.js</span>
+                <span>Browser console script for scraping and filtering notifications on X/Twitter</span>
               </div>
             </a>
             <a href="/scripts/profile-stats" class="script-card" data-cat="analytics" data-name="profile stats">
@@ -1145,20 +1148,20 @@
               <span class="script-icon">👻</span>
               <div class="script-info">
                 <strong>Shadowban Checker</strong>
-                <span>Check if your X/Twitter account is shadowbanned.</span>
+                <span>Check if your X/Twitter account is shadowbanned. Tests: search ban, ghost ban, r</span>
               </div>
             </a>
             <a href="/scripts/timeline-viewer" class="script-card" data-cat="analytics" data-name="timeline viewer">
               <span class="script-icon">📊</span>
               <div class="script-info">
                 <strong>Timeline Viewer</strong>
-                <span>Timeline Viewer — by nichxbt</span>
+                <span>Switch between For You / Following timelines, auto-scroll and collect posts, and</span>
               </div>
             </a>
-            <a href="/scripts/trending-monitor" class="script-card" data-cat="analytics" data-name="trending monitor - xactions">
+            <a href="/scripts/trending-monitor" class="script-card" data-cat="analytics" data-name="trending monitor">
               <span class="script-icon">📈</span>
               <div class="script-info">
-                <strong>Trending Monitor - XActions</strong>
+                <strong>Trending Monitor</strong>
                 <span>Capture the current X trends (name, post count, category), highlight watched key</span>
               </div>
             </a>
@@ -1166,49 +1169,49 @@
               <span class="script-icon">📈</span>
               <div class="script-info">
                 <strong>Trending Topic Monitor</strong>
-                <span>Scrape and monitor X/Twitter trending topics in</span>
+                <span>Scrape and monitor X/Twitter trending topics in real-time. Tracks trend velocity</span>
               </div>
             </a>
             <a href="/scripts/tweet-performance" class="script-card" data-cat="analytics" data-name="tweet performance comparator">
               <span class="script-icon">📊</span>
               <div class="script-info">
                 <strong>Tweet Performance Comparator</strong>
-                <span>Compare the performance of your recent tweets</span>
+                <span>Compare the performance of your recent tweets side by side. Ranks by engagement </span>
               </div>
             </a>
             <a href="/scripts/tweet-price-correlation" class="script-card" data-cat="analytics" data-name="tweet price correlation">
               <span class="script-icon">💹</span>
               <div class="script-info">
                 <strong>Tweet Price Correlation</strong>
-                <span>scripts/tweetPriceCorrelation.js</span>
+                <span>Browser console script — correlate a founder's tweet frequency with token price </span>
               </div>
             </a>
             <a href="/scripts/tweet-schedule-optimizer" class="script-card" data-cat="analytics" data-name="tweet schedule optimizer">
               <span class="script-icon">⏰</span>
               <div class="script-info">
                 <strong>Tweet Schedule Optimizer</strong>
-                <span>Analyzes your historical tweet performance by</span>
+                <span>Analyzes your historical tweet performance by time of day and day of week, then </span>
               </div>
             </a>
             <a href="/scripts/sentiment-analyzer" class="script-card" data-cat="analytics" data-name="tweet sentiment analyzer">
               <span class="script-icon">🧠</span>
               <div class="script-info">
                 <strong>Tweet Sentiment Analyzer</strong>
-                <span>Analyze the sentiment of your recent tweets,</span>
+                <span>Analyze the sentiment of your recent tweets, mentions, or any visible timeline. </span>
               </div>
             </a>
-            <a href="/scripts/view-analytics" class="script-card" data-cat="analytics" data-name="view analytics">
+            <a href="/scripts/view-analytics" class="script-card" data-cat="analytics" data-name="view analytics (premium)">
               <span class="script-icon">📊</span>
               <div class="script-info">
-                <strong>View Analytics</strong>
-                <span>View Analytics (Premium) — by nichxbt</span>
+                <strong>View Analytics (Premium)</strong>
+                <span>Navigate to analytics dashboard, scrape impressions/engagements/followers, and e</span>
               </div>
             </a>
             <a href="/scripts/viral-tweet-detector" class="script-card" data-cat="analytics" data-name="viral tweet detector">
               <span class="script-icon">🔥</span>
               <div class="script-info">
                 <strong>Viral Tweet Detector</strong>
-                <span>Scan any timeline and identify tweets going viral</span>
+                <span>Scan any timeline and identify tweets going viral in real-time. Calculates veloc</span>
               </div>
             </a>
           </div>
@@ -1225,11 +1228,11 @@
                 <span>Manage a blacklist of users to ignore/skip</span>
               </div>
             </a>
-            <a href="/scripts/block-bots" class="script-card" data-cat="safety-privacy" data-name="block bots">
+            <a href="/scripts/block-bots" class="script-card" data-cat="safety-privacy" data-name="block bot accounts">
               <span class="script-icon">🤖</span>
               <div class="script-info">
-                <strong>Block Bots</strong>
-                <span>Block Bot Accounts on X - by nichxbt</span>
+                <strong>Block Bot Accounts</strong>
+                <span>Detects &amp; blocks likely bot accounts based on heuristics</span>
               </div>
             </a>
             <a href="/scripts/block-by-keywords" class="script-card" data-cat="safety-privacy" data-name="block by keywords">
@@ -1246,10 +1249,10 @@
                 <span>Block accounts by follower/following ratio</span>
               </div>
             </a>
-            <a href="/scripts/block-list-transfer" class="script-card" data-cat="safety-privacy" data-name="block list transfer - xactions">
+            <a href="/scripts/block-list-transfer" class="script-card" data-cat="safety-privacy" data-name="block list transfer">
               <span class="script-icon">🧱</span>
               <div class="script-info">
-                <strong>Block List Transfer - XActions</strong>
+                <strong>Block List Transfer</strong>
                 <span>Export your block list to JSON, import and block a list of users, or block-chain</span>
               </div>
             </a>
@@ -1260,81 +1263,81 @@
                 <span>Configure filters for XActions automation</span>
               </div>
             </a>
+            <a href="/scripts/id-verification" class="script-card" data-cat="safety-privacy" data-name="id verification management">
+              <span class="script-icon">🪪</span>
+              <div class="script-info">
+                <strong>ID Verification management</strong>
+                <span></span>
+              </div>
+            </a>
             <a href="/scripts/manage-muted-words" class="script-card" data-cat="safety-privacy" data-name="manage muted words">
               <span class="script-icon">🔇</span>
               <div class="script-info">
                 <strong>Manage Muted Words</strong>
-                <span>Manage Muted Words on X - by nichxbt</span>
+                <span>Bulk-add or manage muted words for filtering your timeline</span>
               </div>
             </a>
             <a href="/scripts/manage-settings" class="script-card" data-cat="safety-privacy" data-name="manage settings">
               <span class="script-icon">⚙️</span>
               <div class="script-info">
                 <strong>Manage Settings</strong>
-                <span>scripts/manageSettings.js</span>
+                <span>Browser console script to export and audit X/Twitter settings</span>
               </div>
             </a>
             <a href="/scripts/mass-block" class="script-card" data-cat="safety-privacy" data-name="mass block users">
               <span class="script-icon">🚫</span>
               <div class="script-info">
                 <strong>Mass Block Users</strong>
-                <span>Block multiple accounts by username list. Also</span>
+                <span>Block multiple accounts by username list. Also supports &quot;block from timeline&quot; mo</span>
               </div>
             </a>
             <a href="/scripts/mass-unblock" class="script-card" data-cat="safety-privacy" data-name="mass unblock users">
               <span class="script-icon">🔓</span>
               <div class="script-info">
                 <strong>Mass Unblock Users</strong>
-                <span>Unblock all or selected users from your blocked</span>
+                <span>Unblock all or selected users from your blocked list. Supports whitelist (keep-b</span>
               </div>
             </a>
             <a href="/scripts/mass-unmute" class="script-card" data-cat="safety-privacy" data-name="mass unmute users">
               <span class="script-icon">🔊</span>
               <div class="script-info">
                 <strong>Mass Unmute Users</strong>
-                <span>Unmute all or selected users from your muted list.</span>
+                <span>Unmute all or selected users from your muted list. Supports keep-muted filter, r</span>
               </div>
             </a>
-            <a href="/scripts/mute-by-keywords" class="script-card" data-cat="safety-privacy" data-name="mute by keywords">
+            <a href="/scripts/mute-by-keywords" class="script-card" data-cat="safety-privacy" data-name="mute users by keywords">
               <span class="script-icon">🔕</span>
               <div class="script-info">
-                <strong>Mute By Keywords</strong>
-                <span>Mute Users by Keywords on X - by nichxbt</span>
+                <strong>Mute Users by Keywords</strong>
+                <span>Mutes users whose posts contain specified keywords</span>
               </div>
             </a>
-            <a href="/scripts/id-verification" class="script-card" data-cat="safety-privacy" data-name="navigate to verification settings and start the id verification flow">
-              <span class="script-icon">🪪</span>
-              <div class="script-info">
-                <strong>Navigate to verification settings and start the ID verification flow</strong>
-                <span>browser/idVerification.js</span>
-              </div>
-            </a>
-            <a href="/scripts/remove-follower" class="script-card" data-cat="safety-privacy" data-name="remove follower - xactions">
+            <a href="/scripts/remove-follower" class="script-card" data-cat="safety-privacy" data-name="remove follower">
               <span class="script-icon">🚪</span>
               <div class="script-info">
-                <strong>Remove Follower - XActions</strong>
+                <strong>Remove Follower</strong>
                 <span>Remove followers without blocking them: X's native &quot;Remove this follower&quot;, or a </span>
               </div>
             </a>
-            <a href="/scripts/report-spam" class="script-card" data-cat="safety-privacy" data-name="report spam">
+            <a href="/scripts/report-spam" class="script-card" data-cat="safety-privacy" data-name="report spam accounts">
               <span class="script-icon">⚠️</span>
               <div class="script-info">
-                <strong>Report Spam</strong>
-                <span>Report Spam Accounts on X - by nichxbt</span>
+                <strong>Report Spam Accounts</strong>
+                <span>Report multiple spam/bot accounts at once</span>
               </div>
             </a>
             <a href="/scripts/settings-manager" class="script-card" data-cat="safety-privacy" data-name="settings manager">
               <span class="script-icon">⚙️</span>
               <div class="script-info">
                 <strong>Settings Manager</strong>
-                <span>scripts/settingsManager.js</span>
+                <span>Browser console script for exporting settings and toggling protection on X/Twitt</span>
               </div>
             </a>
-            <a href="/scripts/verified-only" class="script-card" data-cat="safety-privacy" data-name="verified only">
+            <a href="/scripts/verified-only" class="script-card" data-cat="safety-privacy" data-name="verified-only replies">
               <span class="script-icon">✅</span>
               <div class="script-info">
-                <strong>Verified Only</strong>
-                <span>Verified-Only Replies — by nichxbt</span>
+                <strong>Verified-Only Replies</strong>
+                <span>Toggle &quot;only verified users can reply&quot; on your posts and check verification stat</span>
               </div>
             </a>
             <a href="/scripts/whitelist" class="script-card" data-cat="safety-privacy" data-name="whitelist manager">
@@ -1351,67 +1354,67 @@
           <h2>⚙️ Account Management <span class="count">(14)</span></h2>
           <div class="script-grid">
             
-            <a href="/scripts/account-settings" class="script-card" data-cat="account-management" data-name="account settings - xactions">
+            <a href="/scripts/account-settings" class="script-card" data-cat="account-management" data-name="account settings">
               <span class="script-icon">⚙️</span>
               <div class="script-info">
-                <strong>Account Settings - XActions</strong>
+                <strong>Account Settings</strong>
                 <span>Toggle common X privacy and safety settings (protect posts, DMs, tagging, discov</span>
               </div>
             </a>
-            <a href="/scripts/backup-account" class="script-card" data-cat="account-management" data-name="backup account">
+            <a href="/scripts/backup-account" class="script-card" data-cat="account-management" data-name="backup account data">
               <span class="script-icon">💾</span>
               <div class="script-info">
-                <strong>Backup Account</strong>
-                <span>Backup Account Data on X - by nichxbt</span>
+                <strong>Backup Account Data</strong>
+                <span>Scrape and download your profile, tweets, likes, bookmarks, following/followers</span>
+              </div>
+            </a>
+            <a href="/scripts/edit-profile" class="script-card" data-cat="account-management" data-name="browser console script to update x/twitter profile fields">
+              <span class="script-icon">✏️</span>
+              <div class="script-info">
+                <strong>Browser console script to update X/Twitter profile fields</strong>
+                <span></span>
               </div>
             </a>
             <a href="/scripts/delegate-access" class="script-card" data-cat="account-management" data-name="delegate access">
               <span class="script-icon">🔑</span>
               <div class="script-info">
                 <strong>Delegate Access</strong>
-                <span>Delegate Access — by nichxbt</span>
+                <span>Manage delegate access for your account: add/remove delegates and configure perm</span>
               </div>
             </a>
-            <a href="/scripts/download-account-data" class="script-card" data-cat="account-management" data-name="download account data">
+            <a href="/scripts/download-account-data" class="script-card" data-cat="account-management" data-name="download account data from x">
               <span class="script-icon">📥</span>
               <div class="script-info">
-                <strong>Download Account Data</strong>
-                <span>Download Account Data from X - by nichxbt</span>
+                <strong>Download Account Data from X</strong>
+                <span>Trigger Twitter's built-in data download and monitor progress</span>
               </div>
             </a>
-            <a href="/scripts/edit-profile" class="script-card" data-cat="account-management" data-name="edit profile">
-              <span class="script-icon">✏️</span>
-              <div class="script-info">
-                <strong>Edit Profile</strong>
-                <span>scripts/editProfile.js</span>
-              </div>
-            </a>
-            <a href="/scripts/multi-account" class="script-card" data-cat="account-management" data-name="multi account">
+            <a href="/scripts/multi-account" class="script-card" data-cat="account-management" data-name="multi-account manager">
               <span class="script-icon">👥</span>
               <div class="script-info">
-                <strong>Multi Account</strong>
-                <span>XActions Automation - Multi-Account Manager</span>
+                <strong>Multi-Account Manager</strong>
+                <span>Manages multiple X accounts for automation. Stores account list locally, rotates</span>
               </div>
             </a>
             <a href="/scripts/profile-manager" class="script-card" data-cat="account-management" data-name="profile manager">
               <span class="script-icon">👤</span>
               <div class="script-info">
                 <strong>Profile Manager</strong>
-                <span>scripts/profileManager.js</span>
+                <span>Browser console script for scraping profile data from any X/Twitter profile page</span>
               </div>
             </a>
-            <a href="/scripts/qr-code-sharing" class="script-card" data-cat="account-management" data-name="qr code sharing">
+            <a href="/scripts/qr-code-sharing" class="script-card" data-cat="account-management" data-name="qr code profile sharing">
               <span class="script-icon">📱</span>
               <div class="script-info">
-                <strong>QR Code Sharing</strong>
-                <span>QR Code Profile Sharing on X - by nichxbt</span>
+                <strong>QR Code Profile Sharing</strong>
+                <span>Generate a shareable QR code for any X profile</span>
               </div>
             </a>
-            <a href="/scripts/subscribe-premium" class="script-card" data-cat="account-management" data-name="subscribe premium">
+            <a href="/scripts/subscribe-premium" class="script-card" data-cat="account-management" data-name="subscribe to x premium">
               <span class="script-icon">⭐</span>
               <div class="script-info">
-                <strong>Subscribe Premium</strong>
-                <span>Subscribe to X Premium — by nichxbt</span>
+                <strong>Subscribe to X Premium</strong>
+                <span>Navigate to Premium subscription page, compare tiers, check status, and guide th</span>
               </div>
             </a>
             <a href="/scripts/update-banner" class="script-card" data-cat="account-management" data-name="update banner image">
@@ -1425,7 +1428,7 @@
               <span class="script-icon">✏️</span>
               <div class="script-info">
                 <strong>Update Profile</strong>
-                <span>Update Profile on X - by nichxbt</span>
+                <span>Programmatically update your bio, display name, location, website</span>
               </div>
             </a>
             <a href="/scripts/update-bio" class="script-card" data-cat="account-management" data-name="update profile bio">
@@ -1446,7 +1449,7 @@
               <span class="script-icon">📇</span>
               <div class="script-info">
                 <strong>Upload Contacts</strong>
-                <span>Navigate to the contact upload page on X/Twitter</span>
+                <span>Navigate to the contact upload page on X/Twitter and trigger the contact sync / </span>
               </div>
             </a>
           </div>
@@ -1456,38 +1459,45 @@
           <h2>➕ Lists &amp; Communities <span class="count">(11)</span></h2>
           <div class="script-grid">
             
-            <a href="/scripts/add-to-list" class="script-card" data-cat="lists-communities" data-name="add to list - xactions">
+            <a href="/scripts/add-to-list" class="script-card" data-cat="lists-communities" data-name="add to list">
               <span class="script-icon">➕</span>
               <div class="script-info">
-                <strong>Add To List - XActions</strong>
+                <strong>Add To List</strong>
                 <span>Add a batch of users to one of your Twitter Lists via the list's &quot;Manage members</span>
               </div>
             </a>
-            <a href="/scripts/advanced-lists" class="script-card" data-cat="lists-communities" data-name="advanced lists">
+            <a href="/scripts/advanced-lists" class="script-card" data-cat="lists-communities" data-name="advanced list management">
               <span class="script-icon">📝</span>
               <div class="script-info">
-                <strong>Advanced Lists</strong>
-                <span>browser/advancedLists.js</span>
+                <strong>Advanced list management</strong>
+                <span>Advanced list management: delete list, edit list, remove member, follow/unfollow</span>
               </div>
             </a>
-            <a href="/scripts/block-list-manager" class="script-card" data-cat="lists-communities" data-name="block list manager">
+            <a href="/scripts/block-list-manager" class="script-card" data-cat="lists-communities" data-name="block list import/export/sharing">
               <span class="script-icon">📝</span>
               <div class="script-info">
-                <strong>Block List Manager</strong>
-                <span>browser/blockListManager.js</span>
+                <strong>Block list import/export/sharing</strong>
+                <span>Block list import/export/sharing: export block list, import block list, share bl</span>
+              </div>
+            </a>
+            <a href="/scripts/manage-lists" class="script-card" data-cat="lists-communities" data-name="browser console script to manage x/twitter lists">
+              <span class="script-icon">📝</span>
+              <div class="script-info">
+                <strong>Browser console script to manage X/Twitter Lists</strong>
+                <span></span>
               </div>
             </a>
             <a href="/scripts/create-community" class="script-card" data-cat="lists-communities" data-name="create communities">
               <span class="script-icon">🏘️</span>
               <div class="script-info">
                 <strong>Create Communities</strong>
-                <span>Create a new X Community with name, description,</span>
+                <span>Create a new X Community with name, description, rules, and initial settings.</span>
               </div>
             </a>
-            <a href="/scripts/follow-list-members" class="script-card" data-cat="lists-communities" data-name="follow list members - xactions">
+            <a href="/scripts/follow-list-members" class="script-card" data-cat="lists-communities" data-name="follow list members">
               <span class="script-icon">👣</span>
               <div class="script-info">
-                <strong>Follow List Members - XActions</strong>
+                <strong>Follow List Members</strong>
                 <span>Follow every member of a Twitter List, skipping accounts you already follow, rat</span>
               </div>
             </a>
@@ -1495,14 +1505,14 @@
               <span class="script-icon">🏘️</span>
               <div class="script-info">
                 <strong>Join Communities</strong>
-                <span>Join Communities on X - by nichxbt</span>
+                <span>Discover and join X communities based on keywords</span>
               </div>
             </a>
             <a href="/scripts/leave-all-communities" class="script-card" data-cat="lists-communities" data-name="leave all communities">
               <span class="script-icon">🚪</span>
               <div class="script-info">
                 <strong>Leave All Communities</strong>
-                <span>Leave all X Communities you've joined. Navigates</span>
+                <span>Leave all X Communities you've joined. Navigates into each community, clicks &quot;Le</span>
               </div>
             </a>
             <a href="/scripts/leave-community" class="script-card" data-cat="lists-communities" data-name="leave specific community">
@@ -1512,74 +1522,46 @@
                 <span>Leave a specific X/Twitter community by ID or name</span>
               </div>
             </a>
-            <a href="/scripts/list-manager" class="script-card" data-cat="lists-communities" data-name="list manager">
-              <span class="script-icon">📝</span>
-              <div class="script-info">
-                <strong>List Manager</strong>
-                <span>Manage Lists on X - by nichxbt</span>
-              </div>
-            </a>
             <a href="/scripts/manage-community" class="script-card" data-cat="lists-communities" data-name="manage communities">
               <span class="script-icon">🏘️</span>
               <div class="script-info">
                 <strong>Manage Communities</strong>
-                <span>Manage X Community members, roles, settings,</span>
+                <span>Manage X Community members, roles, settings, pin posts, and update rules.</span>
               </div>
             </a>
-            <a href="/scripts/manage-lists" class="script-card" data-cat="lists-communities" data-name="manage lists">
+            <a href="/scripts/list-manager" class="script-card" data-cat="lists-communities" data-name="manage lists">
               <span class="script-icon">📝</span>
               <div class="script-info">
                 <strong>Manage Lists</strong>
-                <span>scripts/manageLists.js</span>
+                <span>Create, manage, and populate X lists programmatically</span>
               </div>
             </a>
           </div>
         </section>
 
         <section class="cat-section" id="automation">
-          <h2>⚡ Automation <span class="count">(9)</span></h2>
+          <h2>🤝 Automation <span class="count">(8)</span></h2>
           <div class="script-grid">
             
-            <a href="/scripts/actions" class="script-card" data-cat="automation" data-name="actions">
-              <span class="script-icon">⚡</span>
-              <div class="script-info">
-                <strong>Actions</strong>
-                <span>XActions Actions Library - Complete X/Twitter Actions</span>
-              </div>
-            </a>
-            <a href="/scripts/control-panel" class="script-card" data-cat="automation" data-name="control panel">
-              <span class="script-icon">🎛️</span>
-              <div class="script-info">
-                <strong>Control Panel</strong>
-                <span>XActions Control Panel — Floating UI for Browser Automations</span>
-              </div>
-            </a>
-            <a href="/scripts/core" class="script-card" data-cat="automation" data-name="core">
-              <span class="script-icon">⚙️</span>
-              <div class="script-info">
-                <strong>Core</strong>
-                <span>XActions Automation Framework - Core Utilities</span>
-              </div>
-            </a>
-            <a href="/scripts/customer-service" class="script-card" data-cat="automation" data-name="customer service">
+            <a href="/scripts/customer-service" class="script-card" data-cat="automation" data-name="customer service bot">
               <span class="script-icon">🤝</span>
               <div class="script-info">
-                <strong>Customer Service</strong>
-                <span>XActions Automation - Customer Service Bot</span>
+                <strong>Customer Service Bot</strong>
+                <span>Automate customer service responses on X for business accounts Monitor mentions,</span>
               </div>
             </a>
-            <a href="/scripts/protect-active-users" class="script-card" data-cat="automation" data-name="protect active users">
+            <a href="/scripts/protect-active-users" class="script-card" data-cat="automation" data-name="don't unfollow active users">
               <span class="script-icon">🛡️</span>
               <div class="script-info">
-                <strong>Protect Active Users</strong>
-                <span>XActions Automation - Don't Unfollow Active Users</span>
+                <strong>Don't Unfollow Active Users</strong>
+                <span>Protect users who have engaged with your content from being unfollowed</span>
               </div>
             </a>
             <a href="/scripts/quota-supervisor" class="script-card" data-cat="automation" data-name="quota supervisor">
               <span class="script-icon">⚠️</span>
               <div class="script-info">
                 <strong>Quota Supervisor</strong>
-                <span>XActions Automation - Quota Supervisor</span>
+                <span>Sophisticated rate limiting and action management to protect your account</span>
               </div>
             </a>
             <a href="/scripts/rate-limiter" class="script-card" data-cat="automation" data-name="rate limiter">
@@ -1589,17 +1571,31 @@
                 <span>Rate limiting and quota management utility</span>
               </div>
             </a>
-            <a href="/scripts/session-logger" class="script-card" data-cat="automation" data-name="session logger">
+            <a href="/scripts/session-logger" class="script-card" data-cat="automation" data-name="session logger &amp; analytics">
               <span class="script-icon">📋</span>
               <div class="script-info">
-                <strong>Session Logger</strong>
-                <span>XActions Automation - Session Logger &amp; Analytics</span>
+                <strong>Session Logger &amp; Analytics</strong>
+                <span>Track all automation actions and generate reports</span>
               </div>
             </a>
-            <a href="/scripts/rss-monitor" class="script-card" data-cat="automation" data-name="xactions rss &amp; webhook content ingestion">
-              <span class="script-icon">📡</span>
+            <a href="/scripts/actions" class="script-card" data-cat="automation" data-name="xactions actions library - complete x/twitter actions">
+              <span class="script-icon">⚡</span>
               <div class="script-info">
-                <strong>XActions RSS &amp; Webhook Content Ingestion</strong>
+                <strong>XActions Actions Library - Complete X/Twitter Actions</strong>
+                <span>This module contains ALL available X/Twitter actions - visible, hidden, and undo</span>
+              </div>
+            </a>
+            <a href="/scripts/core" class="script-card" data-cat="automation" data-name="xactions automation framework - core utilities">
+              <span class="script-icon">⚙️</span>
+              <div class="script-info">
+                <strong>XActions Automation Framework - Core Utilities</strong>
+                <span>This is the foundation module. Paste this FIRST, then paste any automation scrip</span>
+              </div>
+            </a>
+            <a href="/scripts/control-panel" class="script-card" data-cat="automation" data-name="xactions control panel — floating ui for browser automations">
+              <span class="script-icon">🎛️</span>
+              <div class="script-info">
+                <strong>XActions Control Panel — Floating UI for Browser Automations</strong>
                 <span></span>
               </div>
             </a>
@@ -1610,11 +1606,11 @@
           <h2>🧠 AI &amp; Developer <span class="count">(1)</span></h2>
           <div class="script-grid">
             
-            <a href="/scripts/grok-integration" class="script-card" data-cat="ai-developer" data-name="grok integration">
+            <a href="/scripts/grok-integration" class="script-card" data-cat="ai-developer" data-name="browser console script for interacting with grok ai">
               <span class="script-icon">🧠</span>
               <div class="script-info">
-                <strong>Grok Integration</strong>
-                <span>scripts/grokIntegration.js</span>
+                <strong>Browser console script for interacting with Grok AI</strong>
+                <span></span>
               </div>
             </a>
           </div>
@@ -1628,21 +1624,21 @@
               <span class="script-icon">🎙️</span>
               <div class="script-info">
                 <strong>Host / Start a Space</strong>
-                <span>Start a new X Space with title, topic, and</span>
+                <span>Start a new X Space with title, topic, and optional recording and scheduling con</span>
               </div>
             </a>
             <a href="/scripts/join-space" class="script-card" data-cat="spaces-live" data-name="join a space">
               <span class="script-icon">🎙️</span>
               <div class="script-info">
                 <strong>Join a Space</strong>
-                <span>Find and join live X Spaces by topic, keyword,</span>
+                <span>Find and join live X Spaces by topic, keyword, or specific host username.</span>
               </div>
             </a>
             <a href="/scripts/spaces-manager" class="script-card" data-cat="spaces-live" data-name="spaces manager">
               <span class="script-icon">🎙️</span>
               <div class="script-info">
                 <strong>Spaces Manager</strong>
-                <span>scripts/spacesManager.js</span>
+                <span>Browser console script for scraping live and scheduled Spaces on X/Twitter</span>
               </div>
             </a>
           </div>
@@ -1652,32 +1648,32 @@
           <h2>💰 Premium <span class="count">(4)</span></h2>
           <div class="script-grid">
             
-            <a href="/scripts/creator-subscriptions" class="script-card" data-cat="premium" data-name="creator subscriptions">
+            <a href="/scripts/creator-subscriptions" class="script-card" data-cat="premium" data-name="creator subscriptions &amp; revenue sharing">
               <span class="script-icon">💰</span>
               <div class="script-info">
-                <strong>Creator Subscriptions</strong>
-                <span>Creator Subscriptions &amp; Revenue Sharing — by nichxbt</span>
+                <strong>Creator Subscriptions &amp; Revenue Sharing</strong>
+                <span>Setup creator subscriptions, configure tiers, view subscriber analytics, and enr</span>
               </div>
             </a>
             <a href="/scripts/premium-features" class="script-card" data-cat="premium" data-name="premium features">
               <span class="script-icon">⭐</span>
               <div class="script-info">
                 <strong>Premium Features</strong>
-                <span>scripts/premiumFeatures.js</span>
+                <span>Browser console script to check X/Twitter Premium status and features</span>
               </div>
             </a>
             <a href="/scripts/premium-gifting" class="script-card" data-cat="premium" data-name="premium gifting">
               <span class="script-icon">🎁</span>
               <div class="script-info">
                 <strong>Premium Gifting</strong>
-                <span>Premium Gifting — by nichxbt</span>
+                <span>Gift an X Premium subscription to another user from their profile.</span>
               </div>
             </a>
             <a href="/scripts/premium-manager" class="script-card" data-cat="premium" data-name="premium manager">
               <span class="script-icon">⭐</span>
               <div class="script-info">
                 <strong>Premium Manager</strong>
-                <span>scripts/premiumManager.js</span>
+                <span>Browser console script for detecting Premium tier and features on X/Twitter</span>
               </div>
             </a>
           </div>
@@ -1687,39 +1683,39 @@
           <h2>📢 Business <span class="count">(5)</span></h2>
           <div class="script-grid">
             
-            <a href="/scripts/ads-manager" class="script-card" data-cat="business" data-name="ads manager">
+            <a href="/scripts/ads-manager" class="script-card" data-cat="business" data-name="business ads &amp; campaigns">
               <span class="script-icon">📢</span>
               <div class="script-info">
-                <strong>Ads Manager</strong>
-                <span>Business Ads &amp; Campaigns — by nichxbt</span>
+                <strong>Business Ads &amp; Campaigns</strong>
+                <span>Navigate to ads dashboard, create campaigns, boost posts, and view campaign anal</span>
               </div>
             </a>
             <a href="/scripts/business-analytics" class="script-card" data-cat="business" data-name="business analytics">
               <span class="script-icon">💼</span>
               <div class="script-info">
                 <strong>Business Analytics</strong>
-                <span>scripts/businessAnalytics.js</span>
+                <span>Browser console script for X/Twitter business analytics and brand monitoring</span>
               </div>
             </a>
             <a href="/scripts/business-tools" class="script-card" data-cat="business" data-name="business tools">
               <span class="script-icon">💼</span>
               <div class="script-info">
                 <strong>Business Tools</strong>
-                <span>scripts/businessTools.js</span>
+                <span>Browser console script for brand mention monitoring and sentiment analysis</span>
               </div>
             </a>
             <a href="/scripts/creator-studio" class="script-card" data-cat="business" data-name="creator studio">
               <span class="script-icon">🎨</span>
               <div class="script-info">
                 <strong>Creator Studio</strong>
-                <span>scripts/creatorStudio.js</span>
+                <span>Browser console script for analyzing account analytics and content performance</span>
               </div>
             </a>
-            <a href="/scripts/media-studio" class="script-card" data-cat="business" data-name="media studio">
+            <a href="/scripts/media-studio" class="script-card" data-cat="business" data-name="media studio automation">
               <span class="script-icon">🖼️</span>
               <div class="script-info">
-                <strong>Media Studio</strong>
-                <span>browser/mediaStudio.js</span>
+                <strong>Media Studio automation</strong>
+                <span>Media Studio automation: navigate to Media Studio, upload media, manage library,</span>
               </div>
             </a>
           </div>
@@ -1733,119 +1729,119 @@
               <span class="script-icon">🔍</span>
               <div class="script-info">
                 <strong>Discovery Explore</strong>
-                <span>scripts/discoveryExplore.js</span>
+                <span>Browser console script for scraping trending topics and search results on X/Twit</span>
               </div>
             </a>
             <a href="/scripts/save-search" class="script-card" data-cat="discovery" data-name="save searches">
               <span class="script-icon">🔍</span>
               <div class="script-info">
                 <strong>Save Searches</strong>
-                <span>Save the current search query, list saved searches,</span>
+                <span>Save the current search query, list saved searches, and manage your saved search</span>
               </div>
             </a>
             <a href="/scripts/topic-manager" class="script-card" data-cat="discovery" data-name="topic manager">
               <span class="script-icon">🏷️</span>
               <div class="script-info">
                 <strong>Topic Manager</strong>
-                <span>Browse, follow, and unfollow X Topics. Manage</span>
+                <span>Browse, follow, and unfollow X Topics. Manage your followed topics list and disc</span>
               </div>
             </a>
-            <a href="/scripts/x-pro" class="script-card" data-cat="discovery" data-name="x pro">
+            <a href="/scripts/x-pro" class="script-card" data-cat="discovery" data-name="x pro (tweetdeck)">
               <span class="script-icon">⚡</span>
               <div class="script-info">
-                <strong>X Pro</strong>
-                <span>X Pro (TweetDeck) — by nichxbt</span>
+                <strong>X Pro (TweetDeck)</strong>
+                <span>Navigate to X Pro / TweetDeck, setup monitoring columns, and multi-column view h</span>
               </div>
             </a>
-            <a href="/scripts/x-pro-manager" class="script-card" data-cat="discovery" data-name="x pro manager">
+            <a href="/scripts/x-pro-manager" class="script-card" data-cat="discovery" data-name="x pro (tweetdeck) automation">
               <span class="script-icon">⚡</span>
               <div class="script-info">
-                <strong>X Pro Manager</strong>
-                <span>browser/xProManager.js</span>
+                <strong>X Pro (TweetDeck) automation</strong>
+                <span></span>
               </div>
             </a>
           </div>
         </section>
 
         <section class="cat-section" id="other-tools">
-          <h2>⚡ Other Tools <span class="count">(22)</span></h2>
+          <h2>⚡ Other Tools <span class="count">(20)</span></h2>
           <div class="script-grid">
             
-            <a href="/scripts/account-misc" class="script-card" data-cat="other-tools" data-name="account misc">
+            <a href="/scripts/ad-campaign-manager" class="script-card" data-cat="other-tools" data-name="ad campaign management">
               <span class="script-icon">⚡</span>
               <div class="script-info">
-                <strong>Account Misc</strong>
-                <span>browser/accountMisc.js</span>
-              </div>
-            </a>
-            <a href="/scripts/ad-campaign-manager" class="script-card" data-cat="other-tools" data-name="ad campaign manager">
-              <span class="script-icon">⚡</span>
-              <div class="script-info">
-                <strong>Ad Campaign Manager</strong>
-                <span>browser/adCampaignManager.js</span>
-              </div>
-            </a>
-            <a href="/scripts/advanced-creator" class="script-card" data-cat="other-tools" data-name="advanced creator">
-              <span class="script-icon">⚡</span>
-              <div class="script-info">
-                <strong>Advanced Creator</strong>
-                <span>browser/advancedCreator.js</span>
-              </div>
-            </a>
-            <a href="/scripts/advanced-dm" class="script-card" data-cat="other-tools" data-name="advanced dm">
-              <span class="script-icon">⚡</span>
-              <div class="script-info">
-                <strong>Advanced DM</strong>
-                <span>browser/advancedDM.js</span>
-              </div>
-            </a>
-            <a href="/scripts/advanced-grok" class="script-card" data-cat="other-tools" data-name="advanced grok">
-              <span class="script-icon">⚡</span>
-              <div class="script-info">
-                <strong>Advanced Grok</strong>
-                <span>browser/advancedGrok.js</span>
-              </div>
-            </a>
-            <a href="/scripts/advanced-notifications" class="script-card" data-cat="other-tools" data-name="advanced notifications">
-              <span class="script-icon">⚡</span>
-              <div class="script-info">
-                <strong>Advanced Notifications</strong>
-                <span>browser/advancedNotifications.js</span>
-              </div>
-            </a>
-            <a href="/scripts/advanced-premium" class="script-card" data-cat="other-tools" data-name="advanced premium">
-              <span class="script-icon">⚡</span>
-              <div class="script-info">
-                <strong>Advanced Premium</strong>
-                <span>browser/advancedPremium.js</span>
-              </div>
-            </a>
-            <a href="/scripts/advanced-settings" class="script-card" data-cat="other-tools" data-name="advanced settings">
-              <span class="script-icon">⚡</span>
-              <div class="script-info">
-                <strong>Advanced Settings</strong>
-                <span>browser/advancedSettings.js</span>
-              </div>
-            </a>
-            <a href="/scripts/audit-console-errors" class="script-card" data-cat="other-tools" data-name="audit console errors">
-              <span class="script-icon">⚡</span>
-              <div class="script-info">
-                <strong>Audit Console Errors</strong>
+                <strong>Ad campaign management</strong>
                 <span></span>
               </div>
             </a>
-            <a href="/scripts/community-manager" class="script-card" data-cat="other-tools" data-name="community manager">
+            <a href="/scripts/advanced-creator" class="script-card" data-cat="other-tools" data-name="advanced creator monetization">
               <span class="script-icon">⚡</span>
               <div class="script-info">
-                <strong>Community Manager</strong>
-                <span>browser/communityManager.js</span>
+                <strong>Advanced creator monetization</strong>
+                <span>Advanced creator monetization: creator subscriptions setup, subscription content</span>
+              </div>
+            </a>
+            <a href="/scripts/advanced-dm" class="script-card" data-cat="other-tools" data-name="advanced direct message features">
+              <span class="script-icon">⚡</span>
+              <div class="script-info">
+                <strong>Advanced Direct Message features</strong>
+                <span></span>
+              </div>
+            </a>
+            <a href="/scripts/advanced-grok" class="script-card" data-cat="other-tools" data-name="advanced grok ai features">
+              <span class="script-icon">⚡</span>
+              <div class="script-info">
+                <strong>Advanced Grok AI features</strong>
+                <span></span>
+              </div>
+            </a>
+            <a href="/scripts/advanced-notifications" class="script-card" data-cat="other-tools" data-name="advanced notification management">
+              <span class="script-icon">⚡</span>
+              <div class="script-info">
+                <strong>Advanced notification management</strong>
+                <span></span>
+              </div>
+            </a>
+            <a href="/scripts/advanced-premium" class="script-card" data-cat="other-tools" data-name="advanced premium features">
+              <span class="script-icon">⚡</span>
+              <div class="script-info">
+                <strong>Advanced Premium features</strong>
+                <span></span>
+              </div>
+            </a>
+            <a href="/scripts/advanced-profile" class="script-card" data-cat="other-tools" data-name="advanced profile management">
+              <span class="script-icon">⚡</span>
+              <div class="script-info">
+                <strong>Advanced profile management</strong>
+                <span></span>
+              </div>
+            </a>
+            <a href="/scripts/advanced-settings" class="script-card" data-cat="other-tools" data-name="advanced settings and privacy management">
+              <span class="script-icon">⚡</span>
+              <div class="script-info">
+                <strong>Advanced settings and privacy management</strong>
+                <span></span>
+              </div>
+            </a>
+            <a href="/scripts/advanced-spaces" class="script-card" data-cat="other-tools" data-name="advanced spaces features">
+              <span class="script-icon">⚡</span>
+              <div class="script-info">
+                <strong>Advanced Spaces features</strong>
+                <span></span>
+              </div>
+            </a>
+            <a href="/scripts/community-manager" class="script-card" data-cat="other-tools" data-name="community management">
+              <span class="script-icon">⚡</span>
+              <div class="script-info">
+                <strong>Community management</strong>
+                <span></span>
               </div>
             </a>
             <a href="/scripts/community-notes" class="script-card" data-cat="other-tools" data-name="community notes">
               <span class="script-icon">⚡</span>
               <div class="script-info">
                 <strong>Community Notes</strong>
-                <span>View and contribute to Community Notes on posts,</span>
+                <span>View and contribute to Community Notes on posts, rate existing notes, and browse</span>
               </div>
             </a>
             <a href="/scripts/engage-profile" class="script-card" data-cat="other-tools" data-name="engage profile">
@@ -1855,6 +1851,13 @@
                 <span>Like, repost, and comment on every post of one profile, with comments from your </span>
               </div>
             </a>
+            <a href="/scripts/account-misc" class="script-card" data-cat="other-tools" data-name="miscellaneous account tools">
+              <span class="script-icon">⚡</span>
+              <div class="script-info">
+                <strong>Miscellaneous account tools</strong>
+                <span></span>
+              </div>
+            </a>
             <a href="/scripts/reputation-audit" class="script-card" data-cat="other-tools" data-name="reputation audit">
               <span class="script-icon">⚡</span>
               <div class="script-info">
@@ -1862,11 +1865,11 @@
                 <span>AI-scores your own posts across professional, hostile, legal, and spam risk, the</span>
               </div>
             </a>
-            <a href="/scripts/saved-search-manager" class="script-card" data-cat="other-tools" data-name="saved search manager">
+            <a href="/scripts/saved-search-manager" class="script-card" data-cat="other-tools" data-name="saved search and discovery tools">
               <span class="script-icon">⚡</span>
               <div class="script-info">
-                <strong>Saved Search Manager</strong>
-                <span>browser/savedSearchManager.js</span>
+                <strong>Saved search and discovery tools</strong>
+                <span></span>
               </div>
             </a>
             <a href="/scripts/search-sweep" class="script-card" data-cat="other-tools" data-name="search sweep">
@@ -1876,53 +1879,32 @@
                 <span>Delete, like, repost, or reply to every post an X search returns. Built for &quot;rem</span>
               </div>
             </a>
-            <a href="/scripts/advanced-profile" class="script-card" data-cat="other-tools" data-name="set birthday fields in the profile edit dialog">
+            <a href="/scripts/timeline-scraper" class="script-card" data-cat="other-tools" data-name="timeline scraping tools">
               <span class="script-icon">⚡</span>
               <div class="script-info">
-                <strong>Set birthday fields in the profile edit dialog</strong>
-                <span>browser/advancedProfile.js</span>
-              </div>
-            </a>
-            <a href="/scripts/timeline-scraper" class="script-card" data-cat="other-tools" data-name="timeline scraper">
-              <span class="script-icon">⚡</span>
-              <div class="script-info">
-                <strong>Timeline Scraper</strong>
-                <span>browser/timelineScraper.js</span>
+                <strong>Timeline scraping tools</strong>
+                <span></span>
               </div>
             </a>
             <a href="/scripts/tweet-abtester" class="script-card" data-cat="other-tools" data-name="tweet a/b tester">
               <span class="script-icon">⚡</span>
               <div class="script-info">
                 <strong>Tweet A/B Tester</strong>
-                <span>A/B test tweet performance. Post two variations</span>
+                <span>A/B test tweet performance. Post two variations of a tweet, track their engageme</span>
               </div>
             </a>
             <a href="/scripts/unfollow-wdfblog" class="script-card" data-cat="other-tools" data-name="unfollow non-followers with full log">
               <span class="script-icon">⚡</span>
               <div class="script-info">
                 <strong>Unfollow Non-Followers with Full Log</strong>
-                <span>Unfollow accounts that don't follow back, with</span>
-              </div>
-            </a>
-            <a href="/scripts/advanced-spaces" class="script-card" data-cat="other-tools" data-name="wait for a dom element to appear">
-              <span class="script-icon">⚡</span>
-              <div class="script-info">
-                <strong>Wait for a DOM element to appear</strong>
-                <span>browser/advancedSpaces.js</span>
-              </div>
-            </a>
-            <a href="/scripts/evergreen-recycler" class="script-card" data-cat="other-tools" data-name="xactions evergreen content recycler">
-              <span class="script-icon">⚡</span>
-              <div class="script-info">
-                <strong>XActions Evergreen Content Recycler</strong>
-                <span></span>
+                <span>Unfollow accounts that don't follow back, with comprehensive logging: username, </span>
               </div>
             </a>
             <a href="/scripts/scraper-toolbox" class="script-card" data-cat="other-tools" data-name="xactions scraper toolbox">
               <span class="script-icon">⚡</span>
               <div class="script-info">
                 <strong>XActions Scraper Toolbox</strong>
-                <span>Interactive on-page control panel for scraping X/Twitter</span>
+                <span>Interactive on-page control panel for scraping X/Twitter timelines. Start/pause/</span>
               </div>
             </a>
           </div>
@@ -1939,24 +1921,24 @@
         <h3>📂 Categories</h3>
         <a href="#command-center">⚡ Command Center (1)</a>
 <a href="#unfollow-tools">⚖️ Unfollow Tools (6)</a>
-<a href="#follower-monitoring">📊 Follower Monitoring (11)</a>
+<a href="#follower-monitoring">👥 Follower Monitoring (11)</a>
 <a href="#engagement">💬 Engagement (29)</a>
 <a href="#growth">🧠 Growth (12)</a>
 <a href="#scrapers">🔖 Scrapers (25)</a>
 <a href="#content-tools">📚 Content Tools (20)</a>
-<a href="#posting">📰 Posting (16)</a>
+<a href="#posting">✏️ Posting (16)</a>
 <a href="#messaging">💌 Messaging (8)</a>
 <a href="#analytics">🏥 Analytics (21)</a>
 <a href="#safety-privacy">🚫 Safety &amp; Privacy (18)</a>
 <a href="#account-management">⚙️ Account Management (14)</a>
 <a href="#lists-communities">➕ Lists &amp; Communities (11)</a>
-<a href="#automation">⚡ Automation (9)</a>
+<a href="#automation">🤝 Automation (8)</a>
 <a href="#ai-developer">🧠 AI &amp; Developer (1)</a>
 <a href="#spaces-live">🎙️ Spaces &amp; Live (3)</a>
 <a href="#premium">💰 Premium (4)</a>
 <a href="#business">📢 Business (5)</a>
 <a href="#discovery">🔍 Discovery (5)</a>
-<a href="#other-tools">⚡ Other Tools (22)</a>
+<a href="#other-tools">⚡ Other Tools (20)</a>
       </div>
       <div class="sidebar-card">
         <h3>🔗 Quick Links</h3>

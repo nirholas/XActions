@@ -4,22 +4,23 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Followers Scraper — Free X/Twitter Script | XActions</title>
-  <meta name="description" content="Followers Scraper — Free browser console script for X/Twitter automation. No API keys needed.">
+  <meta name="description" content="Export your followers list to JSON/CSV. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
   <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, scrape, followers, scrapers">
   <meta name="author" content="nich (@nichxbt)">
   <meta name="robots" content="index, follow">
 
   <meta property="og:type" content="article">
   <meta property="og:title" content="Followers Scraper — XActions">
-  <meta property="og:description" content="Followers Scraper — Free browser console script for X/Twitter automation. No API keys needed.">
+  <meta property="og:description" content="Export your followers list to JSON/CSV. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
   <meta property="og:url" content="https://xactions.app/scripts/scrape-followers">
   <meta property="og:site_name" content="XActions">
-  <meta property="og:image" content="https://xactions.app/og-image.png">
+  <meta property="og:image" content="https://xactions.app/og-run.png">
 
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@nichxbt">
   <meta name="twitter:title" content="Followers Scraper — XActions">
-  <meta name="twitter:description" content="Followers Scraper — Free browser console script for X/Twitter automation. No API keys needed.">
+  <meta name="twitter:description" content="Export your followers list to JSON/CSV. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
+  <meta name="twitter:image" content="https://xactions.app/og-run.png">
 
   <link rel="canonical" href="https://xactions.app/scripts/scrape-followers">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
@@ -29,7 +30,7 @@
     "@context": "https://schema.org",
     "@type": "TechArticle",
     "headline": "Followers Scraper — Free X/Twitter Script | XActions",
-    "description": "Followers Scraper — Free browser console script for X/Twitter automation. No API keys needed.",
+    "description": "Export your followers list to JSON/CSV. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.",
     "url": "https://xactions.app/scripts/scrape-followers",
     "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
     "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
@@ -99,6 +100,8 @@
     .source-badge { display: inline-block; background: var(--bg-tertiary); color: var(--text-secondary); padding: 2px 8px; border-radius: 6px; font-size: 0.6875rem; margin-left: 8px; }
     @media (max-width: 1024px) { .sidebar-right { display: none; } }
     @media (max-width: 768px) {
+      /* A wide table scrolls inside its own box instead of widening the page. */
+      .article table { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; }
       .article pre { font-size: 0.75rem; }
       .meta-row { flex-direction: column; gap: 4px; }
     }
@@ -129,7 +132,7 @@
           <span>by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></span>
         </div>
 
-        <p>Followers Scraper — a free, open-source browser console script for X/Twitter automation. No API keys or fees required.</p>
+        <p>Export your followers list to JSON/CSV</p>
 
         
 
@@ -344,6 +347,7 @@
       <div class="sidebar-card">
         <h3>👥 Scrapers</h3>
         <a href="/scripts/scrape-bookmarks">🔖 Bookmarks Scraper</a>
+<a href="/scripts/scrape-analytics">📊 Browser console script to scrape X/Twitter analytics data</a>
 <a href="/scripts/scrape-dms">✉️ DM Scraper</a>
 <a href="/scripts/export-to-csv">📄 Export to CSV Utility</a>
 <a href="/scripts/scrape-following">👥 Following Scraper</a>
@@ -352,7 +356,6 @@
 <a href="/scripts/scrape-likes">❤️ Likes Scraper</a>
 <a href="/scripts/link-scraper">🔗 Link Scraper</a>
 <a href="/scripts/scrape-list">📝 List Members Scraper</a>
-<a href="/scripts/scrape-media">🖼️ Media Scraper</a>
       </div>
       <div class="sidebar-card">
         <h3>🔗 Quick Links</h3>

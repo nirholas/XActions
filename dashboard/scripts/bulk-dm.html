@@ -3,23 +3,24 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Bulk DM - XActions — Free X/Twitter Script | XActions</title>
-  <meta name="description" content="Send a personalized DM to a list of users from one message template.">
+  <title>Bulk DM — Free X/Twitter Script | XActions</title>
+  <meta name="description" content="Send a personalized DM to a list of users from one message template. Free X/Twitter browser script, no API key needed.">
   <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, bulk, messaging">
   <meta name="author" content="nich (@nichxbt)">
   <meta name="robots" content="index, follow">
 
   <meta property="og:type" content="article">
-  <meta property="og:title" content="Bulk DM - XActions — XActions">
-  <meta property="og:description" content="Send a personalized DM to a list of users from one message template.">
+  <meta property="og:title" content="Bulk DM — XActions">
+  <meta property="og:description" content="Send a personalized DM to a list of users from one message template. Free X/Twitter browser script, no API key needed.">
   <meta property="og:url" content="https://xactions.app/scripts/bulk-dm">
   <meta property="og:site_name" content="XActions">
-  <meta property="og:image" content="https://xactions.app/og-image.png">
+  <meta property="og:image" content="https://xactions.app/og-run.png">
 
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@nichxbt">
-  <meta name="twitter:title" content="Bulk DM - XActions — XActions">
-  <meta name="twitter:description" content="Send a personalized DM to a list of users from one message template.">
+  <meta name="twitter:title" content="Bulk DM — XActions">
+  <meta name="twitter:description" content="Send a personalized DM to a list of users from one message template. Free X/Twitter browser script, no API key needed.">
+  <meta name="twitter:image" content="https://xactions.app/og-run.png">
 
   <link rel="canonical" href="https://xactions.app/scripts/bulk-dm">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
@@ -28,8 +29,8 @@
   {
     "@context": "https://schema.org",
     "@type": "TechArticle",
-    "headline": "Bulk DM - XActions — Free X/Twitter Script | XActions",
-    "description": "Send a personalized DM to a list of users from one message template.",
+    "headline": "Bulk DM — Free X/Twitter Script | XActions",
+    "description": "Send a personalized DM to a list of users from one message template. Free X/Twitter browser script, no API key needed.",
     "url": "https://xactions.app/scripts/bulk-dm",
     "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
     "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
@@ -47,7 +48,7 @@
       { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
       { "@type": "ListItem", "position": 2, "name": "Scripts", "item": "https://xactions.app/scripts" },
       { "@type": "ListItem", "position": 3, "name": "Messaging", "item": "https://xactions.app/scripts#messaging" },
-      { "@type": "ListItem", "position": 4, "name": "Bulk DM - XActions", "item": "https://xactions.app/scripts/bulk-dm" }
+      { "@type": "ListItem", "position": 4, "name": "Bulk DM", "item": "https://xactions.app/scripts/bulk-dm" }
     ]
   }
   </script>
@@ -99,6 +100,8 @@
     .source-badge { display: inline-block; background: var(--bg-tertiary); color: var(--text-secondary); padding: 2px 8px; border-radius: 6px; font-size: 0.6875rem; margin-left: 8px; }
     @media (max-width: 1024px) { .sidebar-right { display: none; } }
     @media (max-width: 768px) {
+      /* A wide table scrolls inside its own box instead of widening the page. */
+      .article table { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; }
       .article pre { font-size: 0.75rem; }
       .meta-row { flex-direction: column; gap: 4px; }
     }
@@ -112,9 +115,9 @@
 
     <main class="main-content" id="main-content">
       <header class="main-header">
-        <h1>📤 Bulk DM - XActions</h1>
+        <h1>📤 Bulk DM</h1>
         <div class="breadcrumb">
-          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#messaging">Messaging</a> › Bulk DM - XActions
+          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#messaging">Messaging</a> › Bulk DM
         </div>
       </header>
 
@@ -472,13 +475,13 @@
     <aside class="sidebar-right">
       <div class="sidebar-card">
         <h3>📤 Messaging</h3>
-        <a href="/scripts/auto-reply-dms">💌 Auto Reply DMs - XActions</a>
+        <a href="/scripts/auto-reply-dms">💌 Auto Reply DMs</a>
+<a href="/scripts/dm-exporter">📤 Browser console script to export X/Twitter DM conversations</a>
 <a href="/scripts/dm-calls">📞 DM Audio &amp; Video Calls</a>
-<a href="/scripts/dm-exporter">📤 DM Exporter</a>
 <a href="/scripts/dm-manager">✉️ DM Manager</a>
 <a href="/scripts/encrypted-dm">🔒 Encrypted Direct Messages</a>
 <a href="/scripts/group-dm">👥 Group Direct Messages</a>
-<a href="/scripts/send-direct-message">📬 Send Direct Message</a>
+<a href="/scripts/send-direct-message">📬 Send Direct Messages</a>
       </div>
       <div class="sidebar-card">
         <h3>🔗 Quick Links</h3>

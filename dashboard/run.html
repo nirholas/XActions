@@ -509,7 +509,7 @@
       <p style="color: var(--text-secondary); margin-bottom: 16px;">Don't want to use browser scripts? Run operations from our dashboard with your session cookie.</p>
       <div style="display: flex; gap: 12px; flex-wrap: wrap;">
         <a href="/dashboard" class="server-btn">📊 Open Dashboard</a>
-        <a href="/tutorials/unfollow#session-cookie" class="server-btn secondary">🔑 How to Get Session Cookie</a>
+        <a href="/docs/guides/getting-started#authentication" class="server-btn secondary">🔑 How to Get Session Cookie</a>
       </div>
       <style>
         .server-btn { display: inline-flex; align-items: center; gap: 8px; padding: 12px 24px; background: var(--accent); color: white; text-decoration: none; border-radius: 9999px; font-weight: 600; transition: all 0.2s; }
@@ -588,7 +588,7 @@
             <a class="bookmarklet" href="javascript:(function(){const $unfollow='[data-testid$=%22-unfollow%22]',confirmBtn='[data-testid=%22confirmationSheetConfirm%22]',indicator='[data-testid=%22userFollowIndicator%22]',sleep=ms=>new Promise(r=>setTimeout(r,ms));let count=0;async function run(){while(true){const cells=document.querySelectorAll('[data-testid=%22UserCell%22]');let found=false;for(const cell of cells){const followsYou=cell.querySelector(indicator);const unfollowBtn=cell.querySelector($unfollow);if(!followsYou&&unfollowBtn){unfollowBtn.click();await sleep(500);document.querySelector(confirmBtn)?.click();count++;console.log('Unfollowed:',count);await sleep(1500);found=true;break}}if(!found){window.scrollBy(0,500);await sleep(1000);if(!document.querySelector('[data-testid=%22UserCell%22]')){console.log('✅ Done! Unfollowed:',count);return}}}}run()})();">⚡ Unfollow Non-Followers</a>
             <button class="copy-btn" data-script="unfollowNonFollowers">📋 Copy Script</button>
           </div>
-          <a href="/tutorials/unfollow#non-followers" class="tutorial-link">📚 Full Tutorial →</a>
+          <a href="/tutorials/unfollow#unfollow-non-followers" class="tutorial-link">📚 Full Tutorial →</a>
         </div>
       </div>
     </section>
@@ -626,7 +626,7 @@
             <a class="bookmarklet" href="javascript:(function(){if(!location.pathname.includes('/bookmarks')){alert('Go to x.com/i/bookmarks first!');return}const sleep=ms=>new Promise(r=>setTimeout(r,ms));const bookmarks=[];async function run(){let lastCount=0,retries=0;while(retries<5){document.querySelectorAll('article').forEach(a=>{const text=a.querySelector('[data-testid=%22tweetText%22]')?.textContent||'';const time=a.querySelector('time')?.closest('a')?.href||'';if(text%26%26!bookmarks.find(b=>b.text===text))bookmarks.push({text,url:time})});if(bookmarks.length===lastCount)retries++;else retries=0;lastCount=bookmarks.length;window.scrollTo(0,document.body.scrollHeight);await sleep(1500)}console.table(bookmarks);const blob=new Blob([JSON.stringify(bookmarks,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='bookmarks.json';a.click();alert('Exported '+bookmarks.length+' bookmarks!')}run()})();">⚡ Export Bookmarks</a>
             <button class="copy-btn" data-script="bookmarkExporter">📋 Copy Script</button>
           </div>
-          <a href="/tutorials/scrapers#bookmarks" class="tutorial-link">📚 Full Tutorial →</a>
+          <a href="/scripts/scrape-bookmarks" class="tutorial-link">📚 Full Tutorial →</a>
         </div>
 
         <!-- Thread Unroller -->
@@ -641,7 +641,7 @@
             <a class="bookmarklet" href="javascript:(function(){const author=location.pathname.match(/\/(\w+)\/status/)?.[1];if(!author){alert('Go to a tweet first!');return}const sleep=ms=>new Promise(r=>setTimeout(r,ms));const tweets=[];async function run(){let retries=0;while(retries<5){document.querySelectorAll('article').forEach(a=>{const text=a.querySelector('[data-testid=%22tweetText%22]')?.textContent||'';const handle=a.querySelector('[data-testid=%22User-Name%22]')?.textContent?.match(/@(\w+)/)?.[1]||'';if(handle.toLowerCase()===author.toLowerCase()%26%26text%26%26!tweets.includes(text))tweets.push(text)});window.scrollBy(0,500);await sleep(1000);retries++}const thread='🧵 Thread by @'+author+'\\n\\n'+tweets.map((t,i)=>(i+1)+'. '+t).join('\\n\\n');console.log(thread);navigator.clipboard.writeText(thread);alert('Thread copied! '+tweets.length+' tweets')}run()})();">⚡ Unroll Thread</a>
             <button class="copy-btn" data-script="threadUnroller">📋 Copy Script</button>
           </div>
-          <a href="/tutorials/scrapers#threads" class="tutorial-link">📚 Full Tutorial →</a>
+          <a href="/tutorials/scrapers#thread" class="tutorial-link">📚 Full Tutorial →</a>
         </div>
 
         <!-- Viral Tweets -->
@@ -656,7 +656,7 @@
             <a class="bookmarklet" href="javascript:(function(){const sleep=ms=>new Promise(r=>setTimeout(r,ms));const tweets=[];const parseNum=s=>{if(!s)return 0;const n=parseFloat(s.replace(/,/g,''));if(s.includes('K'))return n*1000;if(s.includes('M'))return n*1000000;return n};async function run(){let scrolls=0;while(scrolls<20){document.querySelectorAll('article').forEach(a=>{const text=a.querySelector('[data-testid=%22tweetText%22]')?.textContent||'';const url=a.querySelector('time')?.closest('a')?.href||'';const btns=a.querySelectorAll('[role=%22group%22] button');let likes=0;btns.forEach(b=>{const l=b.getAttribute('aria-label')||'';if(l.includes('like'))likes=parseNum(l.match(/[\d,.]+[KM]?/)?.[0]||'0')});if(text%26%26likes>=100%26%26!tweets.find(t=>t.url===url))tweets.push({text:text.slice(0,100),likes,url})});window.scrollBy(0,500);await sleep(1000);scrolls++}tweets.sort((a,b)=>b.likes-a.likes);console.table(tweets.slice(0,20));alert('Found '+tweets.length+' viral tweets! Check console.')}run()})();">⚡ Find Viral Tweets</a>
             <button class="copy-btn" data-script="viralTweets">📋 Copy Script</button>
           </div>
-          <a href="/tutorials/scrapers#viral" class="tutorial-link">📚 Full Tutorial →</a>
+          <a href="/scripts/viral-tweets-scraper" class="tutorial-link">📚 Full Tutorial →</a>
         </div>
       </div>
     </section>
@@ -679,7 +679,7 @@
             <a class="bookmarklet" href="javascript:(function(){const sleep=ms=>new Promise(r=>setTimeout(r,ms));const followers=new Set();async function scrape(){let retries=0;while(retries<5){document.querySelectorAll('[data-testid=%22UserCell%22] a[href^=%22/%22]').forEach(a=>{const u=a.getAttribute('href')?.replace('/','');if(u)followers.add(u.toLowerCase())});window.scrollTo(0,document.body.scrollHeight);await sleep(1500);retries++}}async function run(){await scrape();const prev=JSON.parse(localStorage.getItem('xactions_followers')||'[]');const current=Array.from(followers);if(prev.length){const lost=prev.filter(u=>!followers.has(u));const gained=current.filter(u=>!prev.includes(u));console.log('❌ Unfollowed you:',lost);console.log('✅ New followers:',gained);alert('Lost: '+lost.length+' | Gained: '+gained.length)}localStorage.setItem('xactions_followers',JSON.stringify(current));alert('Saved '+current.length+' followers. Run again later to compare!')}run()})();">⚡ Check Unfollowers</a>
             <button class="copy-btn" data-script="detectUnfollowers">📋 Copy Script</button>
           </div>
-          <a href="/tutorials/monitoring#unfollowers" class="tutorial-link">📚 Full Tutorial →</a>
+          <a href="/tutorials/monitoring#detect-unfollowers" class="tutorial-link">📚 Full Tutorial →</a>
         </div>
 
         <!-- Monitor Account -->
@@ -694,7 +694,7 @@
             <a class="bookmarklet" href="javascript:(function(){const user=location.pathname.split('/')[1];if(!user){alert('Go to a profile page first!');return}const data={user,followers:document.querySelector('[href$=%22/followers%22]')?.textContent||'0',following:document.querySelector('[href$=%22/following%22]')?.textContent||'0',bio:document.querySelector('[data-testid=%22UserDescription%22]')?.textContent||'',time:new Date().toISOString()};const key='xactions_monitor_'+user;const prev=JSON.parse(localStorage.getItem(key)||'null');localStorage.setItem(key,JSON.stringify(data));if(prev){const changes=[];if(prev.followers!==data.followers)changes.push('Followers: '+prev.followers+' → '+data.followers);if(prev.following!==data.following)changes.push('Following: '+prev.following+' → '+data.following);if(prev.bio!==data.bio)changes.push('Bio changed!');alert(changes.length?'Changes detected:\\n'+changes.join('\\n'):'No changes since last check')}else{alert('Snapshot saved for @'+user+'. Run again later to detect changes!')}})();">⚡ Monitor Account</a>
             <button class="copy-btn" data-script="monitorAccount">📋 Copy Script</button>
           </div>
-          <a href="/tutorials/monitoring#monitor" class="tutorial-link">📚 Full Tutorial →</a>
+          <a href="/tutorials/monitoring#monitor-account" class="tutorial-link">📚 Full Tutorial →</a>
         </div>
       </div>
     </section>
@@ -747,7 +747,7 @@
           <div class="script-actions">
             <button class="copy-btn" data-script="autoLiker">📋 Copy Script</button>
           </div>
-          <a href="/tutorials/automation#liker" class="tutorial-link">📚 Full Tutorial →</a>
+          <a href="/tutorials/automation#auto-liker" class="tutorial-link">📚 Full Tutorial →</a>
         </div>
 
         <!-- Auto Commenter -->
@@ -761,7 +761,7 @@
           <div class="script-actions">
             <button class="copy-btn" data-script="autoCommenter">📋 Copy Script</button>
           </div>
-          <a href="/tutorials/automation#commenter" class="tutorial-link">📚 Full Tutorial →</a>
+          <a href="/tutorials/automation#auto-commenter" class="tutorial-link">📚 Full Tutorial →</a>
         </div>
 
         <!-- Follow Engagers -->
@@ -775,7 +775,7 @@
           <div class="script-actions">
             <button class="copy-btn" data-script="followEngagers">📋 Copy Script</button>
           </div>
-          <a href="/tutorials/automation#engagers" class="tutorial-link">📚 Full Tutorial →</a>
+          <a href="/tutorials/automation#follow-engagers" class="tutorial-link">📚 Full Tutorial →</a>
         </div>
 
         <!-- Keyword Follow -->
@@ -789,7 +789,7 @@
           <div class="script-actions">
             <button class="copy-btn" data-script="keywordFollow">📋 Copy Script</button>
           </div>
-          <a href="/tutorials/automation#keyword" class="tutorial-link">📚 Full Tutorial →</a>
+          <a href="/scripts/keyword-follow" class="tutorial-link">📚 Full Tutorial →</a>
         </div>
 
         <!-- Smart Unfollow -->
@@ -803,7 +803,7 @@
           <div class="script-actions">
             <button class="copy-btn" data-script="smartUnfollow">📋 Copy Script</button>
           </div>
-          <a href="/tutorials/automation#smart" class="tutorial-link">📚 Full Tutorial →</a>
+          <a href="/tutorials/unfollow#smart-unfollow" class="tutorial-link">📚 Full Tutorial →</a>
         </div>
 
         <!-- Growth Suite -->
@@ -817,7 +817,7 @@
           <div class="script-actions">
             <button class="copy-btn" data-script="growthSuite">📋 Copy Script</button>
           </div>
-          <a href="/tutorials/automation#growth" class="tutorial-link">📚 Full Tutorial →</a>
+          <a href="/scripts/growth-suite" class="tutorial-link">📚 Full Tutorial →</a>
         </div>
       </div>
     </section>

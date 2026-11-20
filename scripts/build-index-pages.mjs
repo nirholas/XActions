@@ -460,7 +460,10 @@ ${entries.map(renderCard).join('\n')}
     html: renderPage({
       title: info.title,
       description: `${info.lede} ${entries.length} pages in the XActions documentation.`,
-      urlPath: `/docs/${subdir}`,
+      // Trailing slash: Pages serves a directory index at /docs/<subdir>/ and
+      // 308-redirects the bare spelling there, so a canonical without it
+      // points search engines at a redirect.
+      urlPath: `/docs/${subdir}/`,
       navCurrent: 'docs',
       body,
     }),

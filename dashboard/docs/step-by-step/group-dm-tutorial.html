@@ -115,7 +115,7 @@
     /* Main */
     .main-content { flex: 1; max-width: 800px; border-right: 1px solid var(--border); }
     .main-header { position: sticky; top: 0; background: rgba(0,0,0,.65); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 16px 20px; z-index: 100; }
-    .main-header h1 { font-size: 1.25rem; font-weight: 700; }
+    .main-header h1, .main-header .header-title { font-size: 1.25rem; font-weight: 700; margin: 0; }
     .breadcrumb { font-size: 0.8125rem; color: var(--text-secondary); margin-top: 4px; }
     .breadcrumb a { color: var(--accent); text-decoration: none; }
     .breadcrumb a:hover { text-decoration: underline; }
@@ -166,6 +166,8 @@
     /* Responsive */
     @media (max-width: 1024px) { .sidebar-right { display: none; } }
     @media (max-width: 768px) {
+      /* A wide table scrolls inside its own box instead of widening the page. */
+      .article table { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; }
       .layout { flex-direction: column; }
       .sidebar { display: none; }
       .main-content { max-width: 100%; border-right: none; }
@@ -194,7 +196,7 @@
     <!-- Main Content -->
     <main class="main-content">
       <header class="main-header">
-        <h1>⚡ Group Direct Messages — Tutorial</h1>
+        <p class="header-title">⚡ Group Direct Messages — Tutorial</p>
         <div class="breadcrumb">
           <a href="/">Home</a> › <a href="/docs">Docs</a> › Group Direct Messages — Tutorial
         </div>

@@ -15,6 +15,20 @@ const ROOT = path.join(path.dirname(fileURLToPath(import.meta.url)), '..');
 const DASH = path.join(ROOT, 'dashboard');
 const SITE = 'https://xactions.app';
 const EXCLUDE = new Set(['/404', '/50x', '/admin', '/team']);
+// A URL robots.txt disallows must not be in the sitemap, or search consoles
+// report "submitted URL blocked by robots.txt". Read the rules rather than
+// repeating them here, so the two files cannot drift apart.
+// The Pages build copies dashboard/ over public/, so dashboard/robots.txt is
+// the one that ships; read both in case they ever differ.
+for (const dir of ['public', 'dashboard']) {
+  const file = path.join(ROOT, dir, 'robots.txt');
+  if (!fs.existsSync(file)) continue;
+  for (const line of fs.readFileSync(file, 'utf8').split('\n')) {
+    const m = line.match(/^Disallow:\s*(\/[^\s*]*?)(?:\.html)?\/?\s*$/i);
+    if (m && m[1] !== '/') EXCLUDE.add(m[1]);
+  }
+}
+const isExcluded = (u) => [...EXCLUDE].some((x) => u === x || u.startsWith(x + '/'));
 
 function* htmlFiles(dir) {
   for (const d of fs.readdirSync(dir, { withFileTypes: true })) {
@@ -25,13 +39,20 @@ function* htmlFiles(dir) {
 }
 function urlFor(file) {
   let rel = '/' + path.relative(DASH, file).split(path.sep).join('/');
-  rel = rel.replace(/\.html$/, '').replace(/\/index$/, '/');
-  if (rel === '/index' || rel === '') rel = '/dashboard';
+  rel = rel.replace(/\.html$/, '');
+  // dashboard/index.html is the app; the build moves it to /dashboard so the
+  // landing page can take /. Check before the /index strip below turns it
+  // into '/' (robots.txt keeps /dashboard out of the sitemap).
+  if (rel === '/index') return '/dashboard';
+  rel = rel.replace(/\/index$/, '/');
+  // docs/index.html and tutorials/index.html are copies of docs.html and
+  // tutorials.html whose canonical is the slashless URL; list only that one.
+  if (rel.endsWith('/') && fs.existsSync(path.join(DASH, rel.slice(1, -1) + '.html'))) return null;
   return rel;
 }
 function priorityFor(url) {
   if (url === '/') return '1.0';
-  if (['/features', '/pricing', '/docs', '/scripts', '/tutorials/'].includes(url)) return '0.9';
+  if (['/features', '/pricing', '/docs', '/scripts', '/tutorials'].includes(url)) return '0.9';
   const depth = url.split('/').filter(Boolean).length;
   if (depth === 1) return '0.8';
   if (url.startsWith('/scripts/') || url.startsWith('/tutorials/') || url.startsWith('/blog/')) return '0.7';
@@ -39,7 +60,7 @@ function priorityFor(url) {
 }
 
 const urls = new Set(['/']);
-for (const file of htmlFiles(DASH)) { const u = urlFor(file); if (!EXCLUDE.has(u)) urls.add(u); }
+for (const file of htmlFiles(DASH)) { const u = urlFor(file); if (u && !isExcluded(u)) urls.add(u); }
 
 const today = new Date().toISOString().slice(0, 10);
 const entries = [...urls].sort().map((u) => `  <url>

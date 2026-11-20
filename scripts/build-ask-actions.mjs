@@ -25,6 +25,7 @@
  */
 
 import { readFileSync, writeFileSync, readdirSync, existsSync, statSync, mkdirSync } from 'node:fs';
+import { isNodeProgram } from './lib/is-node-program.mjs';
 import { join, dirname, basename, relative } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { createHash } from 'node:crypto';
@@ -92,6 +93,9 @@ function collectScripts() {
       if (!statSync(join(ROOT, path)).isFile()) continue;
       const source = read(path);
       if (!/paste|console|DevTools|@name|@description/i.test(source.slice(0, 2000))) continue;
+      // Node tools (build and audit scripts) live here too; they cannot be pasted
+      // into a browser console, so they are not runnable script actions.
+      if (isNodeProgram(source)) continue;
 
       const head = source.slice(0, 3000);
       const description =

@@ -63,6 +63,7 @@ body {
   display: flex;
   flex-direction: column;
   border-right: 1px solid var(--border);
+  flex-shrink: 0;
 }
 
 .logo { padding: 8px 12px; margin-bottom: 4px; }
@@ -122,6 +123,9 @@ nav::-webkit-scrollbar { width: 0; }
 /* Main Content */
 .main-content {
   flex: 1;
+  /* A flex item will not shrink below its widest child by default, so one
+     wide table or code line pushed every page past the screen on phones. */
+  min-width: 0;
   max-width: 600px;
   border-right: 1px solid var(--border);
 }
@@ -135,7 +139,8 @@ nav::-webkit-scrollbar { width: 0; }
   padding: 16px;
   z-index: 100;
 }
-.main-header h1 { font-size: 1.25rem; font-weight: 700; }
+/* .header-title: the bar's label on pages whose article carries the real <h1>. */
+.main-header h1, .main-header .header-title { font-size: 1.25rem; font-weight: 700; margin: 0; }
 
 /* Right Sidebar */
 .sidebar-right {
@@ -221,6 +226,14 @@ nav::-webkit-scrollbar { width: 0; }
 
 @media (max-width: 480px) {
   .footer-content { grid-template-columns: 1fr; }
+}
+
+/* Phones: a wide table or code block scrolls inside its own box instead of
+   widening the whole page. */
+@media (max-width: 768px) {
+  .main-content table { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .main-content pre { overflow-x: auto; }
+  .main-content img, .main-content video, .main-content iframe { max-width: 100%; height: auto; }
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════ */

@@ -4,22 +4,23 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Tweet Sentiment Analyzer — Free X/Twitter Script | XActions</title>
-  <meta name="description" content="Analyze the sentiment of your recent tweets,">
+  <meta name="description" content="Analyze the sentiment of your recent tweets, mentions, or any visible timeline. Categorizes posts as positive/negative/neutral using a battle-tested…">
   <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, sentiment, analyzer, analytics">
   <meta name="author" content="nich (@nichxbt)">
   <meta name="robots" content="index, follow">
 
   <meta property="og:type" content="article">
   <meta property="og:title" content="Tweet Sentiment Analyzer — XActions">
-  <meta property="og:description" content="Analyze the sentiment of your recent tweets,">
+  <meta property="og:description" content="Analyze the sentiment of your recent tweets, mentions, or any visible timeline. Categorizes posts as positive/negative/neutral using a battle-tested…">
   <meta property="og:url" content="https://xactions.app/scripts/sentiment-analyzer">
   <meta property="og:site_name" content="XActions">
-  <meta property="og:image" content="https://xactions.app/og-image.png">
+  <meta property="og:image" content="https://xactions.app/og-run.png">
 
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@nichxbt">
   <meta name="twitter:title" content="Tweet Sentiment Analyzer — XActions">
-  <meta name="twitter:description" content="Analyze the sentiment of your recent tweets,">
+  <meta name="twitter:description" content="Analyze the sentiment of your recent tweets, mentions, or any visible timeline. Categorizes posts as positive/negative/neutral using a battle-tested…">
+  <meta name="twitter:image" content="https://xactions.app/og-run.png">
 
   <link rel="canonical" href="https://xactions.app/scripts/sentiment-analyzer">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
@@ -29,7 +30,7 @@
     "@context": "https://schema.org",
     "@type": "TechArticle",
     "headline": "Tweet Sentiment Analyzer — Free X/Twitter Script | XActions",
-    "description": "Analyze the sentiment of your recent tweets,",
+    "description": "Analyze the sentiment of your recent tweets, mentions, or any visible timeline. Categorizes posts as positive/negative/neutral using a battle-tested…",
     "url": "https://xactions.app/scripts/sentiment-analyzer",
     "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
     "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
@@ -99,6 +100,8 @@
     .source-badge { display: inline-block; background: var(--bg-tertiary); color: var(--text-secondary); padding: 2px 8px; border-radius: 6px; font-size: 0.6875rem; margin-left: 8px; }
     @media (max-width: 1024px) { .sidebar-right { display: none; } }
     @media (max-width: 768px) {
+      /* A wide table scrolls inside its own box instead of widening the page. */
+      .article table { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; }
       .article pre { font-size: 0.75rem; }
       .meta-row { flex-direction: column; gap: 4px; }
     }
@@ -125,11 +128,11 @@
         <div class="meta-row">
           <span>v1.0.0</span>
           <span>Updated: 2026-02-24</span>
-          <span>264 lines</span>
+          <span>266 lines</span>
           <span>by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></span>
         </div>
 
-        <p>Analyze the sentiment of your recent tweets,</p>
+        <p>Analyze the sentiment of your recent tweets, mentions, or any visible timeline. Categorizes posts as positive/negative/neutral using a battle-tested lexicon-based approach. Shows trends, toxicity flags, and emotional distribution.</p>
 
         
 
@@ -242,9 +245,11 @@
   const NEGATORS = new Set(['not', &quot;n't&quot;, 'no', 'never', 'neither', 'nobody', 'nothing', 'hardly', 'barely', 'rarely']);
   const INTENSIFIERS = { 'very': 1.5, 'really': 1.5, 'extremely': 2, 'absolutely': 2, 'super': 1.5, 'so': 1.3, 'totally': 1.5, 'incredibly': 2 };
 
-  // ── Emoji sentiment
-  const EMOJI_POS = /[😀😃😄😁😆😂🤣😊😇🥰😍🤩😘😗😙😚😋😛😜🤪😝🤑🤗🤭🥳🎉🎊💪🔥✨💯👏❤️💕💖💗💝💘🙏👍👌✅🏆🥇🎯💎🚀⭐🌟]/;
-  const EMOJI_NEG = /[😢😭😤😡🤬😠😞😔😟😣😩😫😰😱🤮💀☠️👎❌🚫💩😒😑😐🙄]/;
+  // ── Emoji sentiment. Alternations with the `u` flag, not character classes: a
+  // class of emoji without `u` matches UTF-16 surrogate halves, and nearly every
+  // emoji shares the same high surrogate, so each one scored as positive AND negative.
+  const EMOJI_POS = /(?:❤️|😀|😃|😄|😁|😆|😂|🤣|😊|😇|🥰|😍|🤩|😘|😗|😙|😚|😋|😛|😜|🤪|😝|🤑|🤗|🤭|🥳|🎉|🎊|💪|🔥|💯|👏|💕|💖|💗|💝|💘|🙏|👍|👌|🏆|🥇|🎯|💎|🚀|🌟|✨|✅|⭐|❤)/u;
+  const EMOJI_NEG = /(?:☠️|😢|😭|😤|😡|🤬|😠|😞|😔|😟|😣|😩|😫|😰|😱|🤮|💀|👎|🚫|💩|😒|😑|😐|🙄|❌|☠)/u;
 
   // ── Analyze single tweet ──────────────────────────────────
   const analyzeTweet = (text) =&gt; {
@@ -271,8 +276,8 @@
     }
 
     // Emoji bonus
-    const emojiPosMatches = text.match(new RegExp(EMOJI_POS.source, 'g'));
-    const emojiNegMatches = text.match(new RegExp(EMOJI_NEG.source, 'g'));
+    const emojiPosMatches = text.match(new RegExp(EMOJI_POS.source, 'gu'));
+    const emojiNegMatches = text.match(new RegExp(EMOJI_NEG.source, 'gu'));
     if (emojiPosMatches) score += emojiPosMatches.length * 0.5;
     if (emojiNegMatches) score -= emojiNegMatches.length * 0.5;
 
@@ -450,7 +455,7 @@
         <a href="/scripts/account-health-monitor">🏥 Account Health Monitor</a>
 <a href="/scripts/audience-demographics">📊 Audience Demographics Analyzer</a>
 <a href="/scripts/audience-overlap">🔗 Audience Overlap Analyzer</a>
-<a href="/scripts/best-time-to-post">⏰ Best Time To Post</a>
+<a href="/scripts/best-time-to-post">⏰ Best Time to Post</a>
 <a href="/scripts/competitor-analysis">🔍 Competitor Analysis</a>
 <a href="/scripts/engagement-analytics">📈 Engagement Analytics</a>
 <a href="/scripts/hashtag-analytics">#️⃣ Hashtag Analytics</a>

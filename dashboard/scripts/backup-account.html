@@ -3,23 +3,24 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Backup Account — Free X/Twitter Script | XActions</title>
-  <meta name="description" content="Backup Account Data on X - by nichxbt">
+  <title>Backup Account Data — Free X/Twitter Script | XActions</title>
+  <meta name="description" content="Scrape and download your profile, tweets, likes, bookmarks, following/followers. Free X/Twitter browser script, no API key needed.">
   <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, backup, account, account management">
   <meta name="author" content="nich (@nichxbt)">
   <meta name="robots" content="index, follow">
 
   <meta property="og:type" content="article">
-  <meta property="og:title" content="Backup Account — XActions">
-  <meta property="og:description" content="Backup Account Data on X - by nichxbt">
+  <meta property="og:title" content="Backup Account Data — XActions">
+  <meta property="og:description" content="Scrape and download your profile, tweets, likes, bookmarks, following/followers. Free X/Twitter browser script, no API key needed.">
   <meta property="og:url" content="https://xactions.app/scripts/backup-account">
   <meta property="og:site_name" content="XActions">
-  <meta property="og:image" content="https://xactions.app/og-image.png">
+  <meta property="og:image" content="https://xactions.app/og-run.png">
 
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@nichxbt">
-  <meta name="twitter:title" content="Backup Account — XActions">
-  <meta name="twitter:description" content="Backup Account Data on X - by nichxbt">
+  <meta name="twitter:title" content="Backup Account Data — XActions">
+  <meta name="twitter:description" content="Scrape and download your profile, tweets, likes, bookmarks, following/followers. Free X/Twitter browser script, no API key needed.">
+  <meta name="twitter:image" content="https://xactions.app/og-run.png">
 
   <link rel="canonical" href="https://xactions.app/scripts/backup-account">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
@@ -28,8 +29,8 @@
   {
     "@context": "https://schema.org",
     "@type": "TechArticle",
-    "headline": "Backup Account — Free X/Twitter Script | XActions",
-    "description": "Backup Account Data on X - by nichxbt",
+    "headline": "Backup Account Data — Free X/Twitter Script | XActions",
+    "description": "Scrape and download your profile, tweets, likes, bookmarks, following/followers. Free X/Twitter browser script, no API key needed.",
     "url": "https://xactions.app/scripts/backup-account",
     "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
     "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
@@ -47,7 +48,7 @@
       { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
       { "@type": "ListItem", "position": 2, "name": "Scripts", "item": "https://xactions.app/scripts" },
       { "@type": "ListItem", "position": 3, "name": "Account Management", "item": "https://xactions.app/scripts#account-management" },
-      { "@type": "ListItem", "position": 4, "name": "Backup Account", "item": "https://xactions.app/scripts/backup-account" }
+      { "@type": "ListItem", "position": 4, "name": "Backup Account Data", "item": "https://xactions.app/scripts/backup-account" }
     ]
   }
   </script>
@@ -99,6 +100,8 @@
     .source-badge { display: inline-block; background: var(--bg-tertiary); color: var(--text-secondary); padding: 2px 8px; border-radius: 6px; font-size: 0.6875rem; margin-left: 8px; }
     @media (max-width: 1024px) { .sidebar-right { display: none; } }
     @media (max-width: 768px) {
+      /* A wide table scrolls inside its own box instead of widening the page. */
+      .article table { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; }
       .article pre { font-size: 0.75rem; }
       .meta-row { flex-direction: column; gap: 4px; }
     }
@@ -112,9 +115,9 @@
 
     <main class="main-content" id="main-content">
       <header class="main-header">
-        <h1>💾 Backup Account</h1>
+        <h1>💾 Backup Account Data</h1>
         <div class="breadcrumb">
-          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#account-management">Account Management</a> › Backup Account
+          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#account-management">Account Management</a> › Backup Account Data
         </div>
       </header>
 
@@ -129,7 +132,7 @@
           <span>by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></span>
         </div>
 
-        <p>Backup Account Data on X - by nichxbt</p>
+        <p>Scrape and download your profile, tweets, likes, bookmarks, following/followers</p>
 
         
 
@@ -370,14 +373,14 @@
     <aside class="sidebar-right">
       <div class="sidebar-card">
         <h3>💾 Account Management</h3>
-        <a href="/scripts/account-settings">⚙️ Account Settings - XActions</a>
+        <a href="/scripts/account-settings">⚙️ Account Settings</a>
+<a href="/scripts/edit-profile">✏️ Browser console script to update X/Twitter profile fields</a>
 <a href="/scripts/delegate-access">🔑 Delegate Access</a>
-<a href="/scripts/download-account-data">📥 Download Account Data</a>
-<a href="/scripts/edit-profile">✏️ Edit Profile</a>
-<a href="/scripts/multi-account">👥 Multi Account</a>
+<a href="/scripts/download-account-data">📥 Download Account Data from X</a>
+<a href="/scripts/multi-account">👥 Multi-Account Manager</a>
 <a href="/scripts/profile-manager">👤 Profile Manager</a>
-<a href="/scripts/qr-code-sharing">📱 QR Code Sharing</a>
-<a href="/scripts/subscribe-premium">⭐ Subscribe Premium</a>
+<a href="/scripts/qr-code-sharing">📱 QR Code Profile Sharing</a>
+<a href="/scripts/subscribe-premium">⭐ Subscribe to X Premium</a>
 <a href="/scripts/update-banner">🖼️ Update Banner Image</a>
 <a href="/scripts/update-profile">✏️ Update Profile</a>
       </div>

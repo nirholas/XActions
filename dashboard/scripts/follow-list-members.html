@@ -3,23 +3,24 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Follow List Members - XActions — Free X/Twitter Script | XActions</title>
+  <title>Follow List Members — Free X/Twitter Script | XActions</title>
   <meta name="description" content="Follow every member of a Twitter List, skipping accounts you already follow, rate-limited.">
   <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, follow, list, members, lists &amp; communities">
   <meta name="author" content="nich (@nichxbt)">
   <meta name="robots" content="index, follow">
 
   <meta property="og:type" content="article">
-  <meta property="og:title" content="Follow List Members - XActions — XActions">
+  <meta property="og:title" content="Follow List Members — XActions">
   <meta property="og:description" content="Follow every member of a Twitter List, skipping accounts you already follow, rate-limited.">
   <meta property="og:url" content="https://xactions.app/scripts/follow-list-members">
   <meta property="og:site_name" content="XActions">
-  <meta property="og:image" content="https://xactions.app/og-image.png">
+  <meta property="og:image" content="https://xactions.app/og-run.png">
 
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@nichxbt">
-  <meta name="twitter:title" content="Follow List Members - XActions — XActions">
+  <meta name="twitter:title" content="Follow List Members — XActions">
   <meta name="twitter:description" content="Follow every member of a Twitter List, skipping accounts you already follow, rate-limited.">
+  <meta name="twitter:image" content="https://xactions.app/og-run.png">
 
   <link rel="canonical" href="https://xactions.app/scripts/follow-list-members">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
@@ -28,7 +29,7 @@
   {
     "@context": "https://schema.org",
     "@type": "TechArticle",
-    "headline": "Follow List Members - XActions — Free X/Twitter Script | XActions",
+    "headline": "Follow List Members — Free X/Twitter Script | XActions",
     "description": "Follow every member of a Twitter List, skipping accounts you already follow, rate-limited.",
     "url": "https://xactions.app/scripts/follow-list-members",
     "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
@@ -47,7 +48,7 @@
       { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
       { "@type": "ListItem", "position": 2, "name": "Scripts", "item": "https://xactions.app/scripts" },
       { "@type": "ListItem", "position": 3, "name": "Lists & Communities", "item": "https://xactions.app/scripts#lists-communities" },
-      { "@type": "ListItem", "position": 4, "name": "Follow List Members - XActions", "item": "https://xactions.app/scripts/follow-list-members" }
+      { "@type": "ListItem", "position": 4, "name": "Follow List Members", "item": "https://xactions.app/scripts/follow-list-members" }
     ]
   }
   </script>
@@ -99,6 +100,8 @@
     .source-badge { display: inline-block; background: var(--bg-tertiary); color: var(--text-secondary); padding: 2px 8px; border-radius: 6px; font-size: 0.6875rem; margin-left: 8px; }
     @media (max-width: 1024px) { .sidebar-right { display: none; } }
     @media (max-width: 768px) {
+      /* A wide table scrolls inside its own box instead of widening the page. */
+      .article table { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; }
       .article pre { font-size: 0.75rem; }
       .meta-row { flex-direction: column; gap: 4px; }
     }
@@ -112,9 +115,9 @@
 
     <main class="main-content" id="main-content">
       <header class="main-header">
-        <h1>👣 Follow List Members - XActions</h1>
+        <h1>👣 Follow List Members</h1>
         <div class="breadcrumb">
-          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#lists-communities">Lists &amp; Communities</a> › Follow List Members - XActions
+          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#lists-communities">Lists &amp; Communities</a> › Follow List Members
         </div>
       </header>
 
@@ -408,16 +411,16 @@
     <aside class="sidebar-right">
       <div class="sidebar-card">
         <h3>👣 Lists &amp; Communities</h3>
-        <a href="/scripts/add-to-list">➕ Add To List - XActions</a>
-<a href="/scripts/advanced-lists">📝 Advanced Lists</a>
-<a href="/scripts/block-list-manager">📝 Block List Manager</a>
+        <a href="/scripts/add-to-list">➕ Add To List</a>
+<a href="/scripts/advanced-lists">📝 Advanced list management</a>
+<a href="/scripts/block-list-manager">📝 Block list import/export/sharing</a>
+<a href="/scripts/manage-lists">📝 Browser console script to manage X/Twitter Lists</a>
 <a href="/scripts/create-community">🏘️ Create Communities</a>
 <a href="/scripts/join-communities">🏘️ Join Communities</a>
 <a href="/scripts/leave-all-communities">🚪 Leave All Communities</a>
 <a href="/scripts/leave-community">🚪 Leave Specific Community</a>
-<a href="/scripts/list-manager">📝 List Manager</a>
 <a href="/scripts/manage-community">🏘️ Manage Communities</a>
-<a href="/scripts/manage-lists">📝 Manage Lists</a>
+<a href="/scripts/list-manager">📝 Manage Lists</a>
       </div>
       <div class="sidebar-card">
         <h3>🔗 Quick Links</h3>

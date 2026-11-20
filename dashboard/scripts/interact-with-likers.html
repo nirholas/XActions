@@ -4,22 +4,23 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Interact With Likers — Free X/Twitter Script | XActions</title>
-  <meta name="description" content="Interact with users who liked specific posts">
+  <meta name="description" content="Interact with users who liked specific posts. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
   <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, interact, with, likers, engagement">
   <meta name="author" content="nich (@nichxbt)">
   <meta name="robots" content="index, follow">
 
   <meta property="og:type" content="article">
   <meta property="og:title" content="Interact With Likers — XActions">
-  <meta property="og:description" content="Interact with users who liked specific posts">
+  <meta property="og:description" content="Interact with users who liked specific posts. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
   <meta property="og:url" content="https://xactions.app/scripts/interact-with-likers">
   <meta property="og:site_name" content="XActions">
-  <meta property="og:image" content="https://xactions.app/og-image.png">
+  <meta property="og:image" content="https://xactions.app/og-run.png">
 
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@nichxbt">
   <meta name="twitter:title" content="Interact With Likers — XActions">
-  <meta name="twitter:description" content="Interact with users who liked specific posts">
+  <meta name="twitter:description" content="Interact with users who liked specific posts. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
+  <meta name="twitter:image" content="https://xactions.app/og-run.png">
 
   <link rel="canonical" href="https://xactions.app/scripts/interact-with-likers">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
@@ -29,7 +30,7 @@
     "@context": "https://schema.org",
     "@type": "TechArticle",
     "headline": "Interact With Likers — Free X/Twitter Script | XActions",
-    "description": "Interact with users who liked specific posts",
+    "description": "Interact with users who liked specific posts. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.",
     "url": "https://xactions.app/scripts/interact-with-likers",
     "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
     "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
@@ -99,6 +100,8 @@
     .source-badge { display: inline-block; background: var(--bg-tertiary); color: var(--text-secondary); padding: 2px 8px; border-radius: 6px; font-size: 0.6875rem; margin-left: 8px; }
     @media (max-width: 1024px) { .sidebar-right { display: none; } }
     @media (max-width: 768px) {
+      /* A wide table scrolls inside its own box instead of widening the page. */
+      .article table { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; }
       .article pre { font-size: 0.75rem; }
       .meta-row { flex-direction: column; gap: 4px; }
     }
@@ -450,15 +453,15 @@ var CONFIG = {
       <div class="sidebar-card">
         <h3>💬 Engagement</h3>
         <a href="/scripts/auto-commenter">💬 Auto Commenter</a>
-<a href="/scripts/auto-engage">⚡ Auto Engage</a>
-<a href="/scripts/auto-liker">❤️ Auto Liker</a>
-<a href="/scripts/auto-reply-mentions">📨 Auto Reply Mentions - XActions</a>
-<a href="/scripts/auto-repost">🔁 Auto Repost</a>
+<a href="/scripts/auto-reply-mentions">📨 Auto Reply Mentions</a>
+<a href="/scripts/auto-repost">🔁 Auto Repost (Retweet)</a>
 <a href="/scripts/auto-plug-replies">🔌 Auto-Plug Replies</a>
 <a href="/scripts/auto-reply">💬 Auto-Reply / Auto-Respond</a>
+<a href="/scripts/auto-engage">⚡ Browser console script for automated engagement</a>
+<a href="/scripts/comment-by-hashtag">💬 Comment By Hashtag</a>
+<a href="/scripts/comment-by-location">💬 Comment By Location</a>
 <a href="/scripts/engagement-booster">🚀 Engagement Booster v2</a>
 <a href="/scripts/engagement-leaderboard">🏆 Engagement Leaderboard</a>
-<a href="/scripts/engagement-manager">⚡ Engagement Manager</a>
       </div>
       <div class="sidebar-card">
         <h3>🔗 Quick Links</h3>

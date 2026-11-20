@@ -3,23 +3,24 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Report Spam — Free X/Twitter Script | XActions</title>
-  <meta name="description" content="Report Spam Accounts on X - by nichxbt">
+  <title>Report Spam Accounts — Free X/Twitter Script | XActions</title>
+  <meta name="description" content="Report multiple spam/bot accounts at once. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
   <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, report, spam, safety &amp; privacy">
   <meta name="author" content="nich (@nichxbt)">
   <meta name="robots" content="index, follow">
 
   <meta property="og:type" content="article">
-  <meta property="og:title" content="Report Spam — XActions">
-  <meta property="og:description" content="Report Spam Accounts on X - by nichxbt">
+  <meta property="og:title" content="Report Spam Accounts — XActions">
+  <meta property="og:description" content="Report multiple spam/bot accounts at once. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
   <meta property="og:url" content="https://xactions.app/scripts/report-spam">
   <meta property="og:site_name" content="XActions">
-  <meta property="og:image" content="https://xactions.app/og-image.png">
+  <meta property="og:image" content="https://xactions.app/og-run.png">
 
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@nichxbt">
-  <meta name="twitter:title" content="Report Spam — XActions">
-  <meta name="twitter:description" content="Report Spam Accounts on X - by nichxbt">
+  <meta name="twitter:title" content="Report Spam Accounts — XActions">
+  <meta name="twitter:description" content="Report multiple spam/bot accounts at once. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
+  <meta name="twitter:image" content="https://xactions.app/og-run.png">
 
   <link rel="canonical" href="https://xactions.app/scripts/report-spam">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
@@ -28,8 +29,8 @@
   {
     "@context": "https://schema.org",
     "@type": "TechArticle",
-    "headline": "Report Spam — Free X/Twitter Script | XActions",
-    "description": "Report Spam Accounts on X - by nichxbt",
+    "headline": "Report Spam Accounts — Free X/Twitter Script | XActions",
+    "description": "Report multiple spam/bot accounts at once. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.",
     "url": "https://xactions.app/scripts/report-spam",
     "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
     "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
@@ -47,7 +48,7 @@
       { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
       { "@type": "ListItem", "position": 2, "name": "Scripts", "item": "https://xactions.app/scripts" },
       { "@type": "ListItem", "position": 3, "name": "Safety & Privacy", "item": "https://xactions.app/scripts#safety-privacy" },
-      { "@type": "ListItem", "position": 4, "name": "Report Spam", "item": "https://xactions.app/scripts/report-spam" }
+      { "@type": "ListItem", "position": 4, "name": "Report Spam Accounts", "item": "https://xactions.app/scripts/report-spam" }
     ]
   }
   </script>
@@ -99,6 +100,8 @@
     .source-badge { display: inline-block; background: var(--bg-tertiary); color: var(--text-secondary); padding: 2px 8px; border-radius: 6px; font-size: 0.6875rem; margin-left: 8px; }
     @media (max-width: 1024px) { .sidebar-right { display: none; } }
     @media (max-width: 768px) {
+      /* A wide table scrolls inside its own box instead of widening the page. */
+      .article table { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; }
       .article pre { font-size: 0.75rem; }
       .meta-row { flex-direction: column; gap: 4px; }
     }
@@ -112,9 +115,9 @@
 
     <main class="main-content" id="main-content">
       <header class="main-header">
-        <h1>⚠️ Report Spam</h1>
+        <h1>⚠️ Report Spam Accounts</h1>
         <div class="breadcrumb">
-          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#safety-privacy">Safety &amp; Privacy</a> › Report Spam
+          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#safety-privacy">Safety &amp; Privacy</a> › Report Spam Accounts
         </div>
       </header>
 
@@ -129,7 +132,7 @@
           <span>by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></span>
         </div>
 
-        <p>Report Spam Accounts on X - by nichxbt</p>
+        <p>Report multiple spam/bot accounts at once</p>
 
         
 
@@ -304,15 +307,15 @@
       <div class="sidebar-card">
         <h3>⚠️ Safety &amp; Privacy</h3>
         <a href="/scripts/blacklist">🚫 Blacklist Manager</a>
-<a href="/scripts/block-bots">🤖 Block Bots</a>
+<a href="/scripts/block-bots">🤖 Block Bot Accounts</a>
 <a href="/scripts/block-by-keywords">🚫 Block By Keywords</a>
 <a href="/scripts/block-by-ratio">🚫 Block By Ratio</a>
-<a href="/scripts/block-list-transfer">🧱 Block List Transfer - XActions</a>
+<a href="/scripts/block-list-transfer">🧱 Block List Transfer</a>
 <a href="/scripts/filter-manager">🔍 Filter Manager</a>
+<a href="/scripts/id-verification">🪪 ID Verification management</a>
 <a href="/scripts/manage-muted-words">🔇 Manage Muted Words</a>
 <a href="/scripts/manage-settings">⚙️ Manage Settings</a>
 <a href="/scripts/mass-block">🚫 Mass Block Users</a>
-<a href="/scripts/mass-unblock">🔓 Mass Unblock Users</a>
       </div>
       <div class="sidebar-card">
         <h3>🔗 Quick Links</h3>

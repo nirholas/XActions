@@ -6,7 +6,10 @@
 User-agent: *
 Allow: /
 Disallow: /admin
+Disallow: /admin.html
 Disallow: /login
+Disallow: /login.html
+Disallow: /dashboard
 Disallow: /api/
 Disallow: /webhooks/
 

@@ -4,22 +4,23 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Unfollow Everyone — Free X/Twitter Script | XActions</title>
-  <meta name="description" content="Unfollow every account you follow on X/Twitter.">
+  <meta name="description" content="Unfollow every account you follow on X/Twitter. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
   <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, unfollow, everyone, unfollow tools">
   <meta name="author" content="nich (@nichxbt)">
   <meta name="robots" content="index, follow">
 
   <meta property="og:type" content="article">
   <meta property="og:title" content="Unfollow Everyone — XActions">
-  <meta property="og:description" content="Unfollow every account you follow on X/Twitter.">
+  <meta property="og:description" content="Unfollow every account you follow on X/Twitter. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
   <meta property="og:url" content="https://xactions.app/scripts/unfollow-everyone">
   <meta property="og:site_name" content="XActions">
-  <meta property="og:image" content="https://xactions.app/og-image.png">
+  <meta property="og:image" content="https://xactions.app/og-run.png">
 
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@nichxbt">
   <meta name="twitter:title" content="Unfollow Everyone — XActions">
-  <meta name="twitter:description" content="Unfollow every account you follow on X/Twitter.">
+  <meta name="twitter:description" content="Unfollow every account you follow on X/Twitter. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
+  <meta name="twitter:image" content="https://xactions.app/og-run.png">
 
   <link rel="canonical" href="https://xactions.app/scripts/unfollow-everyone">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
@@ -29,7 +30,7 @@
     "@context": "https://schema.org",
     "@type": "TechArticle",
     "headline": "Unfollow Everyone — Free X/Twitter Script | XActions",
-    "description": "Unfollow every account you follow on X/Twitter.",
+    "description": "Unfollow every account you follow on X/Twitter. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.",
     "url": "https://xactions.app/scripts/unfollow-everyone",
     "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
     "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
@@ -99,6 +100,8 @@
     .source-badge { display: inline-block; background: var(--bg-tertiary); color: var(--text-secondary); padding: 2px 8px; border-radius: 6px; font-size: 0.6875rem; margin-left: 8px; }
     @media (max-width: 1024px) { .sidebar-right { display: none; } }
     @media (max-width: 768px) {
+      /* A wide table scrolls inside its own box instead of widening the page. */
+      .article table { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; }
       .article pre { font-size: 0.75rem; }
       .meta-row { flex-direction: column; gap: 4px; }
     }
@@ -465,7 +468,7 @@ XActionsUtils.abort()   — stop entirely</code></pre>
       <div class="sidebar-card">
         <h3>👋 Unfollow Tools</h3>
         <a href="/scripts/follow-ratio-manager">⚖️ Follow Ratio Manager</a>
-<a href="/scripts/smart-unfollow">🧠 Smart Unfollow</a>
+<a href="/scripts/smart-unfollow">🧠 Smart Unfollow (Time-Based)</a>
 <a href="/scripts/unfollowback">🧹 Unfollow Non-Followers</a>
 <a href="/scripts/unfollow-non-followers">🧹 Unfollow Non-Followers</a>
 <a href="/scripts/unfollow-with-log">📋 Unfollow Non-Followers With Log</a>

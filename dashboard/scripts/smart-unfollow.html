@@ -3,23 +3,24 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Smart Unfollow — Free X/Twitter Script | XActions</title>
-  <meta name="description" content="XActions Automation - Smart Unfollow (Time-Based)">
+  <title>Smart Unfollow (Time-Based) — Free X/Twitter Script | XActions</title>
+  <meta name="description" content="Unfollows users who didn't follow you back within X days. Works with the keywordFollow.js tracking data.">
   <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, smart, unfollow, unfollow tools">
   <meta name="author" content="nich (@nichxbt)">
   <meta name="robots" content="index, follow">
 
   <meta property="og:type" content="article">
-  <meta property="og:title" content="Smart Unfollow — XActions">
-  <meta property="og:description" content="XActions Automation - Smart Unfollow (Time-Based)">
+  <meta property="og:title" content="Smart Unfollow (Time-Based) — XActions">
+  <meta property="og:description" content="Unfollows users who didn't follow you back within X days. Works with the keywordFollow.js tracking data.">
   <meta property="og:url" content="https://xactions.app/scripts/smart-unfollow">
   <meta property="og:site_name" content="XActions">
-  <meta property="og:image" content="https://xactions.app/og-image.png">
+  <meta property="og:image" content="https://xactions.app/og-run.png">
 
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@nichxbt">
-  <meta name="twitter:title" content="Smart Unfollow — XActions">
-  <meta name="twitter:description" content="XActions Automation - Smart Unfollow (Time-Based)">
+  <meta name="twitter:title" content="Smart Unfollow (Time-Based) — XActions">
+  <meta name="twitter:description" content="Unfollows users who didn't follow you back within X days. Works with the keywordFollow.js tracking data.">
+  <meta name="twitter:image" content="https://xactions.app/og-run.png">
 
   <link rel="canonical" href="https://xactions.app/scripts/smart-unfollow">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
@@ -28,8 +29,8 @@
   {
     "@context": "https://schema.org",
     "@type": "TechArticle",
-    "headline": "Smart Unfollow — Free X/Twitter Script | XActions",
-    "description": "XActions Automation - Smart Unfollow (Time-Based)",
+    "headline": "Smart Unfollow (Time-Based) — Free X/Twitter Script | XActions",
+    "description": "Unfollows users who didn't follow you back within X days. Works with the keywordFollow.js tracking data.",
     "url": "https://xactions.app/scripts/smart-unfollow",
     "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
     "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
@@ -47,7 +48,7 @@
       { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
       { "@type": "ListItem", "position": 2, "name": "Scripts", "item": "https://xactions.app/scripts" },
       { "@type": "ListItem", "position": 3, "name": "Unfollow Tools", "item": "https://xactions.app/scripts#unfollow-tools" },
-      { "@type": "ListItem", "position": 4, "name": "Smart Unfollow", "item": "https://xactions.app/scripts/smart-unfollow" }
+      { "@type": "ListItem", "position": 4, "name": "Smart Unfollow (Time-Based)", "item": "https://xactions.app/scripts/smart-unfollow" }
     ]
   }
   </script>
@@ -99,6 +100,8 @@
     .source-badge { display: inline-block; background: var(--bg-tertiary); color: var(--text-secondary); padding: 2px 8px; border-radius: 6px; font-size: 0.6875rem; margin-left: 8px; }
     @media (max-width: 1024px) { .sidebar-right { display: none; } }
     @media (max-width: 768px) {
+      /* A wide table scrolls inside its own box instead of widening the page. */
+      .article table { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; }
       .article pre { font-size: 0.75rem; }
       .meta-row { flex-direction: column; gap: 4px; }
     }
@@ -112,9 +115,9 @@
 
     <main class="main-content" id="main-content">
       <header class="main-header">
-        <h1>🧠 Smart Unfollow</h1>
+        <h1>🧠 Smart Unfollow (Time-Based)</h1>
         <div class="breadcrumb">
-          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#unfollow-tools">Unfollow Tools</a> › Smart Unfollow
+          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#unfollow-tools">Unfollow Tools</a> › Smart Unfollow (Time-Based)
         </div>
       </header>
 
@@ -129,7 +132,7 @@
           <span>by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></span>
         </div>
 
-        <p>XActions Automation - Smart Unfollow (Time-Based)</p>
+        <p>Unfollows users who didn't follow you back within X days. Works with the keywordFollow.js tracking data.</p>
 
         
 

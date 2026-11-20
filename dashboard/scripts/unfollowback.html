@@ -4,22 +4,23 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Unfollow Non-Followers — Free X/Twitter Script | XActions</title>
-  <meta name="description" content="Unfollow accounts that do NOT follow you back.">
+  <meta name="description" content="Unfollow accounts that do NOT follow you back. Detects &quot;Follows you&quot; badge per user cell and only unfollows those missing it.">
   <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, unfollowback, unfollow tools">
   <meta name="author" content="nich (@nichxbt)">
   <meta name="robots" content="index, follow">
 
   <meta property="og:type" content="article">
   <meta property="og:title" content="Unfollow Non-Followers — XActions">
-  <meta property="og:description" content="Unfollow accounts that do NOT follow you back.">
+  <meta property="og:description" content="Unfollow accounts that do NOT follow you back. Detects &quot;Follows you&quot; badge per user cell and only unfollows those missing it.">
   <meta property="og:url" content="https://xactions.app/scripts/unfollowback">
   <meta property="og:site_name" content="XActions">
-  <meta property="og:image" content="https://xactions.app/og-image.png">
+  <meta property="og:image" content="https://xactions.app/og-run.png">
 
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@nichxbt">
   <meta name="twitter:title" content="Unfollow Non-Followers — XActions">
-  <meta name="twitter:description" content="Unfollow accounts that do NOT follow you back.">
+  <meta name="twitter:description" content="Unfollow accounts that do NOT follow you back. Detects &quot;Follows you&quot; badge per user cell and only unfollows those missing it.">
+  <meta name="twitter:image" content="https://xactions.app/og-run.png">
 
   <link rel="canonical" href="https://xactions.app/scripts/unfollowback">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
@@ -29,7 +30,7 @@
     "@context": "https://schema.org",
     "@type": "TechArticle",
     "headline": "Unfollow Non-Followers — Free X/Twitter Script | XActions",
-    "description": "Unfollow accounts that do NOT follow you back.",
+    "description": "Unfollow accounts that do NOT follow you back. Detects \"Follows you\" badge per user cell and only unfollows those missing it.",
     "url": "https://xactions.app/scripts/unfollowback",
     "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
     "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
@@ -99,6 +100,8 @@
     .source-badge { display: inline-block; background: var(--bg-tertiary); color: var(--text-secondary); padding: 2px 8px; border-radius: 6px; font-size: 0.6875rem; margin-left: 8px; }
     @media (max-width: 1024px) { .sidebar-right { display: none; } }
     @media (max-width: 768px) {
+      /* A wide table scrolls inside its own box instead of widening the page. */
+      .article table { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; }
       .article pre { font-size: 0.75rem; }
       .meta-row { flex-direction: column; gap: 4px; }
     }
@@ -129,7 +132,7 @@
           <span>by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></span>
         </div>
 
-        <p>Unfollow accounts that do NOT follow you back.</p>
+        <p>Unfollow accounts that do NOT follow you back. Detects &quot;Follows you&quot; badge per user cell and only unfollows those missing it. Whitelist protection, dry-run, rate-limit detection, pause/resume, full export of unfollowed list.</p>
 
         
 
@@ -512,7 +515,7 @@ window.XActions.status()  — Show progress</code></pre>
       <div class="sidebar-card">
         <h3>🧹 Unfollow Tools</h3>
         <a href="/scripts/follow-ratio-manager">⚖️ Follow Ratio Manager</a>
-<a href="/scripts/smart-unfollow">🧠 Smart Unfollow</a>
+<a href="/scripts/smart-unfollow">🧠 Smart Unfollow (Time-Based)</a>
 <a href="/scripts/unfollow-everyone">👋 Unfollow Everyone</a>
 <a href="/scripts/unfollow-non-followers">🧹 Unfollow Non-Followers</a>
 <a href="/scripts/unfollow-with-log">📋 Unfollow Non-Followers With Log</a>

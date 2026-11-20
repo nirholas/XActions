@@ -3,23 +3,24 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Scrape Spaces — Free X/Twitter Script | XActions</title>
-  <meta name="description" content="Scrape Spaces (Audio/Video Broadcasts) on X - by nichxbt">
+  <title>Scrape Spaces (Audio/Video Broadcasts) | XActions</title>
+  <meta name="description" content="Find and collect metadata about X Spaces. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
   <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, scrape, spaces, scrapers">
   <meta name="author" content="nich (@nichxbt)">
   <meta name="robots" content="index, follow">
 
   <meta property="og:type" content="article">
-  <meta property="og:title" content="Scrape Spaces — XActions">
-  <meta property="og:description" content="Scrape Spaces (Audio/Video Broadcasts) on X - by nichxbt">
+  <meta property="og:title" content="Scrape Spaces (Audio/Video Broadcasts) — XActions">
+  <meta property="og:description" content="Find and collect metadata about X Spaces. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
   <meta property="og:url" content="https://xactions.app/scripts/scrape-spaces">
   <meta property="og:site_name" content="XActions">
-  <meta property="og:image" content="https://xactions.app/og-image.png">
+  <meta property="og:image" content="https://xactions.app/og-run.png">
 
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@nichxbt">
-  <meta name="twitter:title" content="Scrape Spaces — XActions">
-  <meta name="twitter:description" content="Scrape Spaces (Audio/Video Broadcasts) on X - by nichxbt">
+  <meta name="twitter:title" content="Scrape Spaces (Audio/Video Broadcasts) — XActions">
+  <meta name="twitter:description" content="Find and collect metadata about X Spaces. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
+  <meta name="twitter:image" content="https://xactions.app/og-run.png">
 
   <link rel="canonical" href="https://xactions.app/scripts/scrape-spaces">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
@@ -28,8 +29,8 @@
   {
     "@context": "https://schema.org",
     "@type": "TechArticle",
-    "headline": "Scrape Spaces — Free X/Twitter Script | XActions",
-    "description": "Scrape Spaces (Audio/Video Broadcasts) on X - by nichxbt",
+    "headline": "Scrape Spaces (Audio/Video Broadcasts) | XActions",
+    "description": "Find and collect metadata about X Spaces. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.",
     "url": "https://xactions.app/scripts/scrape-spaces",
     "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
     "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
@@ -47,7 +48,7 @@
       { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
       { "@type": "ListItem", "position": 2, "name": "Scripts", "item": "https://xactions.app/scripts" },
       { "@type": "ListItem", "position": 3, "name": "Scrapers", "item": "https://xactions.app/scripts#scrapers" },
-      { "@type": "ListItem", "position": 4, "name": "Scrape Spaces", "item": "https://xactions.app/scripts/scrape-spaces" }
+      { "@type": "ListItem", "position": 4, "name": "Scrape Spaces (Audio/Video Broadcasts)", "item": "https://xactions.app/scripts/scrape-spaces" }
     ]
   }
   </script>
@@ -99,6 +100,8 @@
     .source-badge { display: inline-block; background: var(--bg-tertiary); color: var(--text-secondary); padding: 2px 8px; border-radius: 6px; font-size: 0.6875rem; margin-left: 8px; }
     @media (max-width: 1024px) { .sidebar-right { display: none; } }
     @media (max-width: 768px) {
+      /* A wide table scrolls inside its own box instead of widening the page. */
+      .article table { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; }
       .article pre { font-size: 0.75rem; }
       .meta-row { flex-direction: column; gap: 4px; }
     }
@@ -112,9 +115,9 @@
 
     <main class="main-content" id="main-content">
       <header class="main-header">
-        <h1>🎙️ Scrape Spaces</h1>
+        <h1>🎙️ Scrape Spaces (Audio/Video Broadcasts)</h1>
         <div class="breadcrumb">
-          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#scrapers">Scrapers</a> › Scrape Spaces
+          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#scrapers">Scrapers</a> › Scrape Spaces (Audio/Video Broadcasts)
         </div>
       </header>
 
@@ -129,7 +132,7 @@
           <span>by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></span>
         </div>
 
-        <p>Scrape Spaces (Audio/Video Broadcasts) on X - by nichxbt</p>
+        <p>Find and collect metadata about X Spaces</p>
 
         
 
@@ -292,6 +295,7 @@
       <div class="sidebar-card">
         <h3>🎙️ Scrapers</h3>
         <a href="/scripts/scrape-bookmarks">🔖 Bookmarks Scraper</a>
+<a href="/scripts/scrape-analytics">📊 Browser console script to scrape X/Twitter analytics data</a>
 <a href="/scripts/scrape-dms">✉️ DM Scraper</a>
 <a href="/scripts/export-to-csv">📄 Export to CSV Utility</a>
 <a href="/scripts/scrape-followers">👥 Followers Scraper</a>
@@ -300,7 +304,6 @@
 <a href="/scripts/scrape-likers">❤️ Likers Scraper</a>
 <a href="/scripts/scrape-likes">❤️ Likes Scraper</a>
 <a href="/scripts/link-scraper">🔗 Link Scraper</a>
-<a href="/scripts/scrape-list">📝 List Members Scraper</a>
       </div>
       <div class="sidebar-card">
         <h3>🔗 Quick Links</h3>

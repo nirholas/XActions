@@ -2,119 +2,143 @@
   {
     "slug": "account-health-monitor",
     "title": "Account Health Monitor",
-    "description": "Comprehensive health check for your X/Twitter account.",
+    "description": "Comprehensive health check for your X/Twitter account. Generates a composite health score (0–100) across engagement, growth, content quality, and risk factors.",
     "category": "Analytics",
     "icon": "🏥",
     "sourceDir": "browser"
   },
   {
-    "slug": "account-misc",
-    "title": "Account Misc",
-    "description": "browser/accountMisc.js",
-    "category": "Other Tools",
-    "icon": "⚡",
-    "sourceDir": "browser"
-  },
-  {
     "slug": "account-settings",
-    "title": "Account Settings - XActions",
+    "title": "Account Settings",
     "description": "Toggle common X privacy and safety settings (protect posts, DMs, tagging, discoverability) from one script.",
     "category": "Account Management",
     "icon": "⚙️",
     "sourceDir": "scripts/twitter"
   },
   {
-    "slug": "actions",
-    "title": "Actions",
-    "description": "XActions Actions Library - Complete X/Twitter Actions",
-    "category": "Automation",
-    "icon": "⚡",
-    "sourceDir": "src/automation"
-  },
-  {
     "slug": "ad-campaign-manager",
-    "title": "Ad Campaign Manager",
-    "description": "browser/adCampaignManager.js",
+    "title": "Ad campaign management",
+    "description": "",
     "category": "Other Tools",
     "icon": "⚡",
     "sourceDir": "browser"
   },
   {
     "slug": "add-to-list",
-    "title": "Add To List - XActions",
+    "title": "Add To List",
     "description": "Add a batch of users to one of your Twitter Lists via the list's \"Manage members\" search, rate-limited.",
     "category": "Lists & Communities",
     "icon": "➕",
     "sourceDir": "scripts/twitter"
   },
   {
-    "slug": "ads-manager",
-    "title": "Ads Manager",
-    "description": "Business Ads & Campaigns — by nichxbt",
-    "category": "Business",
-    "icon": "📢",
-    "sourceDir": "browser"
-  },
-  {
     "slug": "advanced-creator",
-    "title": "Advanced Creator",
-    "description": "browser/advancedCreator.js",
+    "title": "Advanced creator monetization",
+    "description": "Advanced creator monetization: creator subscriptions setup, subscription content management, ticketed Spaces, payout management, tax information, affiliate program.",
     "category": "Other Tools",
     "icon": "⚡",
     "sourceDir": "browser"
   },
   {
     "slug": "advanced-dm",
-    "title": "Advanced DM",
-    "description": "browser/advancedDM.js",
+    "title": "Advanced Direct Message features",
+    "description": "",
     "category": "Other Tools",
     "icon": "⚡",
     "sourceDir": "browser"
   },
   {
+    "slug": "follower-tools",
+    "title": "Advanced follower tools",
+    "description": "",
+    "category": "Follower Monitoring",
+    "icon": "👥",
+    "sourceDir": "browser"
+  },
+  {
     "slug": "advanced-grok",
-    "title": "Advanced Grok",
-    "description": "browser/advancedGrok.js",
+    "title": "Advanced Grok AI features",
+    "description": "",
     "category": "Other Tools",
     "icon": "⚡",
     "sourceDir": "browser"
   },
   {
     "slug": "advanced-lists",
-    "title": "Advanced Lists",
-    "description": "browser/advancedLists.js",
+    "title": "Advanced list management",
+    "description": "Advanced list management: delete list, edit list, remove member, follow/unfollow list, pin list, scrape list timeline, view subscribers, view lists you're on, share list.",
     "category": "Lists & Communities",
     "icon": "📝",
     "sourceDir": "browser"
   },
   {
     "slug": "advanced-notifications",
-    "title": "Advanced Notifications",
-    "description": "browser/advancedNotifications.js",
+    "title": "Advanced notification management",
+    "description": "",
     "category": "Other Tools",
     "icon": "⚡",
     "sourceDir": "browser"
   },
   {
+    "slug": "post-advanced",
+    "title": "Advanced post features",
+    "description": "",
+    "category": "Posting",
+    "icon": "✏️",
+    "sourceDir": "browser"
+  },
+  {
     "slug": "advanced-premium",
-    "title": "Advanced Premium",
-    "description": "browser/advancedPremium.js",
+    "title": "Advanced Premium features",
+    "description": "",
+    "category": "Other Tools",
+    "icon": "⚡",
+    "sourceDir": "browser"
+  },
+  {
+    "slug": "advanced-profile",
+    "title": "Advanced profile management",
+    "description": "",
     "category": "Other Tools",
     "icon": "⚡",
     "sourceDir": "browser"
   },
   {
     "slug": "advanced-settings",
-    "title": "Advanced Settings",
-    "description": "browser/advancedSettings.js",
+    "title": "Advanced settings and privacy management",
+    "description": "",
     "category": "Other Tools",
     "icon": "⚡",
     "sourceDir": "browser"
   },
   {
+    "slug": "advanced-spaces",
+    "title": "Advanced Spaces features",
+    "description": "",
+    "category": "Other Tools",
+    "icon": "⚡",
+    "sourceDir": "browser"
+  },
+  {
+    "slug": "algorithm-builder",
+    "title": "Algorithm Builder",
+    "description": "24/7 automation that builds up your X algorithm around specific topics/niches. Mimics natural human behavior: search → scroll → like → comment → follow → browse. Includes LLM-powered comment generation via OpenRouter or any compatible endpoint.",
+    "category": "Growth",
+    "icon": "🧠",
+    "sourceDir": "src/automation"
+  },
+  {
+    "slug": "algorithm-trainer",
+    "title": "Algorithm Trainer",
+    "description": "Trains your X/Twitter algorithm by simulating natural browsing behavior in your chosen niche(s). Searches topics, scrolls feeds, likes posts, follows viral accounts, comments on content, visits your own profile — all with human-like timing and randomness.",
+    "category": "Growth",
+    "icon": "🧠",
+    "sourceDir": "src/automation"
+  },
+  {
     "slug": "article-publisher",
     "title": "Article Publisher",
-    "description": "scripts/articlePublisher.js",
+    "description": "Browser console script for publishing long-form articles on X (Premium+ required)",
     "category": "Posting",
     "icon": "📰",
     "sourceDir": "scripts"
@@ -122,7 +146,7 @@
   {
     "slug": "audience-demographics",
     "title": "Audience Demographics Analyzer",
-    "description": "Analyze your followers' demographics by scraping",
+    "description": "Analyze your followers' demographics by scraping visible profile data: bio keywords, locations, account age, verified status, engagement level, and content niches. Builds a comprehensive audience profile without API access.",
     "category": "Analytics",
     "icon": "📊",
     "sourceDir": "browser"
@@ -130,23 +154,15 @@
   {
     "slug": "audience-overlap",
     "title": "Audience Overlap Analyzer",
-    "description": "Compare the follower lists of two X/Twitter",
+    "description": "Compare the follower lists of two X/Twitter accounts to find shared followers, unique-to-each audiences, and overlap percentage. Useful for identifying collaboration opportunities, competitor analysis, and audience expansion targets.",
     "category": "Analytics",
     "icon": "🔗",
     "sourceDir": "browser"
   },
   {
-    "slug": "audit-console-errors",
-    "title": "Audit Console Errors",
-    "description": "",
-    "category": "Other Tools",
-    "icon": "⚡",
-    "sourceDir": "scripts"
-  },
-  {
     "slug": "audit-followers",
     "title": "Audit Followers",
-    "description": "Audit Followers on X - by nichxbt",
+    "description": "Analyze your followers: find fakes, bots, inactive accounts",
     "category": "Follower Monitoring",
     "icon": "📊",
     "sourceDir": "browser"
@@ -154,30 +170,14 @@
   {
     "slug": "auto-commenter",
     "title": "Auto Commenter",
-    "description": "XActions Automation - Auto Commenter",
+    "description": "Monitors a user's profile for new posts and auto-comments. Great for engagement, building relationships, never missing a post.",
     "category": "Engagement",
     "icon": "💬",
     "sourceDir": "src/automation"
   },
   {
-    "slug": "auto-engage",
-    "title": "Auto Engage",
-    "description": "scripts/autoEngage.js",
-    "category": "Engagement",
-    "icon": "⚡",
-    "sourceDir": "scripts"
-  },
-  {
-    "slug": "auto-liker",
-    "title": "Auto Liker",
-    "description": "XActions Automation - Timeline Auto-Liker",
-    "category": "Engagement",
-    "icon": "❤️",
-    "sourceDir": "src/automation"
-  },
-  {
     "slug": "auto-reply-dms",
-    "title": "Auto Reply DMs - XActions",
+    "title": "Auto Reply DMs",
     "description": "Auto-reply to unread DM conversations with a single message template.",
     "category": "Messaging",
     "icon": "💌",
@@ -185,7 +185,7 @@
   },
   {
     "slug": "auto-reply-mentions",
-    "title": "Auto Reply Mentions - XActions",
+    "title": "Auto Reply Mentions",
     "description": "Reply to your recent mentions with rotating templates so no @ goes unanswered.",
     "category": "Engagement",
     "icon": "📨",
@@ -193,8 +193,8 @@
   },
   {
     "slug": "auto-repost",
-    "title": "Auto Repost",
-    "description": "Auto Repost (Retweet) on X - by nichxbt",
+    "title": "Auto Repost (Retweet)",
+    "description": "Automatically repost tweets matching keywords or from specific users",
     "category": "Engagement",
     "icon": "🔁",
     "sourceDir": "browser"
@@ -202,7 +202,7 @@
   {
     "slug": "auto-plug-replies",
     "title": "Auto-Plug Replies",
-    "description": "Automatically reply to your own tweets that go",
+    "description": "Automatically reply to your own tweets that go viral with a \"plug\" (link, CTA, product pitch). Monitors your recent tweets for engagement spikes, and when a tweet exceeds a threshold, posts a follow-up reply to capitalize on the visibility.",
     "category": "Engagement",
     "icon": "🔌",
     "sourceDir": "browser"
@@ -210,23 +210,23 @@
   {
     "slug": "auto-reply",
     "title": "Auto-Reply / Auto-Respond",
-    "description": "Automatically reply to tweets matching filters.",
+    "description": "Automatically reply to tweets matching filters. Monitors timeline/search and posts contextual replies.",
     "category": "Engagement",
     "icon": "💬",
     "sourceDir": "browser"
   },
   {
     "slug": "backup-account",
-    "title": "Backup Account",
-    "description": "Backup Account Data on X - by nichxbt",
+    "title": "Backup Account Data",
+    "description": "Scrape and download your profile, tweets, likes, bookmarks, following/followers",
     "category": "Account Management",
     "icon": "💾",
     "sourceDir": "browser"
   },
   {
     "slug": "best-time-to-post",
-    "title": "Best Time To Post",
-    "description": "Best Time to Post on X - by nichxbt",
+    "title": "Best Time to Post",
+    "description": "Analyze your posting history to find optimal posting times",
     "category": "Analytics",
     "icon": "⏰",
     "sourceDir": "browser"
@@ -241,8 +241,8 @@
   },
   {
     "slug": "block-bots",
-    "title": "Block Bots",
-    "description": "Block Bot Accounts on X - by nichxbt",
+    "title": "Block Bot Accounts",
+    "description": "Detects & blocks likely bot accounts based on heuristics",
     "category": "Safety & Privacy",
     "icon": "🤖",
     "sourceDir": "browser"
@@ -265,15 +265,15 @@
   },
   {
     "slug": "block-list-manager",
-    "title": "Block List Manager",
-    "description": "browser/blockListManager.js",
+    "title": "Block list import/export/sharing",
+    "description": "Block list import/export/sharing: export block list, import block list, share block list, view muted conversations, unmute specific conversation.",
     "category": "Lists & Communities",
     "icon": "📝",
     "sourceDir": "browser"
   },
   {
     "slug": "block-list-transfer",
-    "title": "Block List Transfer - XActions",
+    "title": "Block List Transfer",
     "description": "Export your block list to JSON, import and block a list of users, or block-chain an account's followers.",
     "category": "Safety & Privacy",
     "icon": "🧱",
@@ -282,7 +282,7 @@
   {
     "slug": "bookmark-exporter",
     "title": "Bookmark Exporter",
-    "description": "",
+    "description": "Export all your X/Twitter bookmarks to JSON/CSV",
     "category": "Content Tools",
     "icon": "📚",
     "sourceDir": "scripts"
@@ -290,7 +290,7 @@
   {
     "slug": "bookmark-manager",
     "title": "Bookmark Manager",
-    "description": "scripts/bookmarkManager.js",
+    "description": "Browser console script for exporting and clearing bookmarks on X/Twitter",
     "category": "Content Tools",
     "icon": "📚",
     "sourceDir": "scripts"
@@ -298,7 +298,7 @@
   {
     "slug": "bookmark-organizer",
     "title": "Bookmark Organizer",
-    "description": "Bookmark Organizer on X - by nichxbt",
+    "description": "Organize bookmarks into folders (Premium feature) Also export all bookmarks with categorization",
     "category": "Content Tools",
     "icon": "📂",
     "sourceDir": "browser"
@@ -306,31 +306,95 @@
   {
     "slug": "scrape-bookmarks",
     "title": "Bookmarks Scraper",
-    "description": "",
+    "description": "Scrape all bookmarks with full metadata",
     "category": "Scrapers",
     "icon": "🔖",
     "sourceDir": "scripts"
   },
   {
+    "slug": "auto-engage",
+    "title": "Browser console script for automated engagement",
+    "description": "Auto-like, auto-reply, bookmark management",
+    "category": "Engagement",
+    "icon": "⚡",
+    "sourceDir": "scripts"
+  },
+  {
+    "slug": "grok-integration",
+    "title": "Browser console script for interacting with Grok AI",
+    "description": "",
+    "category": "AI & Developer",
+    "icon": "🧠",
+    "sourceDir": "scripts"
+  },
+  {
+    "slug": "poll-creator",
+    "title": "Browser console script to create polls",
+    "description": "",
+    "category": "Posting",
+    "icon": "📊",
+    "sourceDir": "scripts"
+  },
+  {
+    "slug": "dm-exporter",
+    "title": "Browser console script to export X/Twitter DM conversations",
+    "description": "",
+    "category": "Messaging",
+    "icon": "📤",
+    "sourceDir": "scripts"
+  },
+  {
+    "slug": "manage-lists",
+    "title": "Browser console script to manage X/Twitter Lists",
+    "description": "",
+    "category": "Lists & Communities",
+    "icon": "📝",
+    "sourceDir": "scripts"
+  },
+  {
+    "slug": "scrape-analytics",
+    "title": "Browser console script to scrape X/Twitter analytics data",
+    "description": "",
+    "category": "Scrapers",
+    "icon": "📊",
+    "sourceDir": "scripts"
+  },
+  {
+    "slug": "edit-profile",
+    "title": "Browser console script to update X/Twitter profile fields",
+    "description": "",
+    "category": "Account Management",
+    "icon": "✏️",
+    "sourceDir": "scripts"
+  },
+  {
     "slug": "bulk-delete-tweets",
     "title": "Bulk Delete Tweets",
-    "description": "Delete your tweets by age, keyword, or engagement threshold.",
+    "description": "Delete your tweets by age, keyword, or engagement threshold. The #1 most-requested Twitter automation feature.",
     "category": "Content Tools",
     "icon": "🗑️",
     "sourceDir": "browser"
   },
   {
     "slug": "bulk-dm",
-    "title": "Bulk DM - XActions",
+    "title": "Bulk DM",
     "description": "Send a personalized DM to a list of users from one message template.",
     "category": "Messaging",
     "icon": "📤",
     "sourceDir": "scripts/twitter"
   },
   {
+    "slug": "ads-manager",
+    "title": "Business Ads & Campaigns",
+    "description": "Navigate to ads dashboard, create campaigns, boost posts, and view campaign analytics.",
+    "category": "Business",
+    "icon": "📢",
+    "sourceDir": "browser"
+  },
+  {
     "slug": "business-analytics",
     "title": "Business Analytics",
-    "description": "scripts/businessAnalytics.js",
+    "description": "Browser console script for X/Twitter business analytics and brand monitoring",
     "category": "Business",
     "icon": "💼",
     "sourceDir": "scripts"
@@ -338,7 +402,7 @@
   {
     "slug": "business-tools",
     "title": "Business Tools",
-    "description": "scripts/businessTools.js",
+    "description": "Browser console script for brand mention monitoring and sentiment analysis",
     "category": "Business",
     "icon": "💼",
     "sourceDir": "scripts"
@@ -346,7 +410,7 @@
   {
     "slug": "clear-all-bookmarks",
     "title": "Clear All Bookmarks",
-    "description": "Remove all bookmarked posts. Tries the built-in",
+    "description": "Remove all bookmarked posts. Tries the built-in \"Clear All\" button first, then falls back to individual removal. Supports keyword keep-filters, rate-limit detection, pause/resume, full export.",
     "category": "Content Tools",
     "icon": "🗑️",
     "sourceDir": "browser"
@@ -362,7 +426,7 @@
   {
     "slug": "clear-all-reposts",
     "title": "Clear All Reposts",
-    "description": "Remove all reposts/retweets from your profile.",
+    "description": "Remove all reposts/retweets from your profile. Supports filters (keyword, date range), rate-limit detection, pause/resume/abort, and full export.",
     "category": "Content Tools",
     "icon": "🗑️",
     "sourceDir": "browser"
@@ -376,9 +440,25 @@
     "sourceDir": "scripts/twitter"
   },
   {
+    "slug": "comment-by-hashtag",
+    "title": "Comment By Hashtag",
+    "description": "Search for tweets with specific hashtags and automatically comment on them with customizable messages",
+    "category": "Engagement",
+    "icon": "💬",
+    "sourceDir": "scripts/twitter"
+  },
+  {
+    "slug": "comment-by-location",
+    "title": "Comment By Location",
+    "description": "Search for tweets from specific locations and automatically comment on them with customizable messages",
+    "category": "Engagement",
+    "icon": "💬",
+    "sourceDir": "scripts/twitter"
+  },
+  {
     "slug": "community-manager",
-    "title": "Community Manager",
-    "description": "browser/communityManager.js",
+    "title": "Community management",
+    "description": "",
     "category": "Other Tools",
     "icon": "⚡",
     "sourceDir": "browser"
@@ -386,7 +466,7 @@
   {
     "slug": "community-notes",
     "title": "Community Notes",
-    "description": "View and contribute to Community Notes on posts,",
+    "description": "View and contribute to Community Notes on posts, rate existing notes, and browse noted tweets.",
     "category": "Other Tools",
     "icon": "⚡",
     "sourceDir": "browser"
@@ -394,7 +474,7 @@
   {
     "slug": "competitor-analysis",
     "title": "Competitor Analysis",
-    "description": "Competitor Analysis on X - by nichxbt",
+    "description": "Compare engagement, follower counts, and posting patterns of multiple accounts",
     "category": "Analytics",
     "icon": "🔍",
     "sourceDir": "browser"
@@ -402,7 +482,7 @@
   {
     "slug": "content-calendar",
     "title": "Content Calendar & Tweet Scheduler",
-    "description": "Plan and visualize your posting schedule. Tracks",
+    "description": "Plan and visualize your posting schedule. Tracks tweet frequency by day/hour, identifies posting gaps, suggests optimal posting times based on historical engagement, and manages a localStorage- persisted content queue.",
     "category": "Posting",
     "icon": "📅",
     "sourceDir": "browser"
@@ -410,7 +490,7 @@
   {
     "slug": "content-repurposer",
     "title": "Content Repurposer",
-    "description": "Transform existing tweets into new content formats.",
+    "description": "Transform existing tweets into new content formats. Convert single tweets → threads, threads → single tweets, long tweets → tweet storms, tweets → blog outlines, tweets → quote-tweet templates. Maximize content ROI by repurposing your top-performing posts.",
     "category": "Content Tools",
     "icon": "♻️",
     "sourceDir": "browser"
@@ -418,31 +498,15 @@
   {
     "slug": "continuous-monitor",
     "title": "Continuous Monitor",
-    "description": "ContinuousMonitor.js — Auto-refresh monitoring for followers/following changes",
+    "description": "Auto-refresh monitoring for followers/following changes",
     "category": "Follower Monitoring",
     "icon": "🔄",
     "sourceDir": "browser"
   },
   {
-    "slug": "control-panel",
-    "title": "Control Panel",
-    "description": "XActions Control Panel — Floating UI for Browser Automations",
-    "category": "Automation",
-    "icon": "🎛️",
-    "sourceDir": "src/automation"
-  },
-  {
-    "slug": "core",
-    "title": "Core",
-    "description": "XActions Automation Framework - Core Utilities",
-    "category": "Automation",
-    "icon": "⚙️",
-    "sourceDir": "src/automation"
-  },
-  {
     "slug": "create-community",
     "title": "Create Communities",
-    "description": "Create a new X Community with name, description,",
+    "description": "Create a new X Community with name, description, rules, and initial settings.",
     "category": "Lists & Communities",
     "icon": "🏘️",
     "sourceDir": "browser"
@@ -450,7 +514,7 @@
   {
     "slug": "create-poll",
     "title": "Create Poll",
-    "description": "Create Poll on X - by nichxbt",
+    "description": "Create a poll tweet programmatically",
     "category": "Posting",
     "icon": "📊",
     "sourceDir": "browser"
@@ -458,46 +522,38 @@
   {
     "slug": "creator-studio",
     "title": "Creator Studio",
-    "description": "scripts/creatorStudio.js",
+    "description": "Browser console script for analyzing account analytics and content performance",
     "category": "Business",
     "icon": "🎨",
     "sourceDir": "scripts"
   },
   {
     "slug": "creator-subscriptions",
-    "title": "Creator Subscriptions",
-    "description": "Creator Subscriptions & Revenue Sharing — by nichxbt",
+    "title": "Creator Subscriptions & Revenue Sharing",
+    "description": "Setup creator subscriptions, configure tiers, view subscriber analytics, and enroll in revenue sharing.",
     "category": "Premium",
     "icon": "💰",
     "sourceDir": "browser"
   },
   {
     "slug": "customer-service",
-    "title": "Customer Service",
-    "description": "XActions Automation - Customer Service Bot",
+    "title": "Customer Service Bot",
+    "description": "Automate customer service responses on X for business accounts Monitor mentions, DMs, and provide templated responses",
     "category": "Automation",
     "icon": "🤝",
     "sourceDir": "src/automation"
   },
   {
-    "slug": "algorithm-builder",
-    "title": "Cycle 1",
-    "description": "XActions Automation — Algorithm Builder",
-    "category": "Growth",
-    "icon": "🧠",
-    "sourceDir": "src/automation"
-  },
-  {
     "slug": "delegate-access",
     "title": "Delegate Access",
-    "description": "Delegate Access — by nichxbt",
+    "description": "Manage delegate access for your account: add/remove delegates and configure permissions.",
     "category": "Account Management",
     "icon": "🔑",
     "sourceDir": "browser"
   },
   {
     "slug": "delete-tweets",
-    "title": "Delete Tweets - XActions",
+    "title": "Delete Tweets",
     "description": "DESTRUCTIVE: bulk-delete your own posts by age, keywords, or performance. Defaults to a safe dry run.",
     "category": "Content Tools",
     "icon": "🗑️",
@@ -506,7 +562,7 @@
   {
     "slug": "detect-unfollowers",
     "title": "Detect Unfollowers",
-    "description": "DetectUnfollowers.js — Find out who unfollowed you on X (Twitter)",
+    "description": "Find out who unfollowed you on X (Twitter)",
     "category": "Follower Monitoring",
     "icon": "🔍",
     "sourceDir": "browser"
@@ -514,7 +570,7 @@
   {
     "slug": "discovery-explore",
     "title": "Discovery Explore",
-    "description": "scripts/discoveryExplore.js",
+    "description": "Browser console script for scraping trending topics and search results on X/Twitter",
     "category": "Discovery",
     "icon": "🔍",
     "sourceDir": "scripts"
@@ -522,23 +578,15 @@
   {
     "slug": "dm-calls",
     "title": "DM Audio & Video Calls",
-    "description": "Navigate to a DM conversation and initiate",
+    "description": "Navigate to a DM conversation and initiate audio or video calls on X/Twitter.",
     "category": "Messaging",
     "icon": "📞",
     "sourceDir": "browser"
   },
   {
-    "slug": "dm-exporter",
-    "title": "DM Exporter",
-    "description": "scripts/dmExporter.js",
-    "category": "Messaging",
-    "icon": "📤",
-    "sourceDir": "scripts"
-  },
-  {
     "slug": "dm-manager",
     "title": "DM Manager",
-    "description": "scripts/dmManager.js",
+    "description": "Browser console script for sending DMs and exporting conversations on X/Twitter",
     "category": "Messaging",
     "icon": "✉️",
     "sourceDir": "scripts"
@@ -546,39 +594,47 @@
   {
     "slug": "scrape-dms",
     "title": "DM Scraper",
-    "description": "",
+    "description": "Export DM conversations (if accessible)",
     "category": "Scrapers",
     "icon": "✉️",
     "sourceDir": "scripts"
   },
   {
+    "slug": "protect-active-users",
+    "title": "Don't Unfollow Active Users",
+    "description": "Protect users who have engaged with your content from being unfollowed",
+    "category": "Automation",
+    "icon": "🛡️",
+    "sourceDir": "src/automation"
+  },
+  {
     "slug": "download-account-data",
-    "title": "Download Account Data",
-    "description": "Download Account Data from X - by nichxbt",
+    "title": "Download Account Data from X",
+    "description": "Trigger Twitter's built-in data download and monitor progress",
     "category": "Account Management",
     "icon": "📥",
     "sourceDir": "browser"
   },
   {
+    "slug": "video-downloader-browser",
+    "title": "Download videos from X/Twitter posts in browser",
+    "description": "",
+    "category": "Content Tools",
+    "icon": "🎬",
+    "sourceDir": "browser"
+  },
+  {
     "slug": "edit-post",
-    "title": "Edit Post",
-    "description": "Edit Post & Undo Post on X - by nichxbt",
+    "title": "Edit Post & Undo Post",
+    "description": "Edit an existing post or undo a recently posted tweet (Premium feature, 30s window)",
     "category": "Posting",
     "icon": "✏️",
     "sourceDir": "browser"
   },
   {
-    "slug": "edit-profile",
-    "title": "Edit Profile",
-    "description": "scripts/editProfile.js",
-    "category": "Account Management",
-    "icon": "✏️",
-    "sourceDir": "scripts"
-  },
-  {
     "slug": "encrypted-dm",
     "title": "Encrypted Direct Messages",
-    "description": "Enable encrypted DM mode, send encrypted messages,",
+    "description": "Enable encrypted DM mode, send encrypted messages, and check encryption status on X/Twitter.",
     "category": "Messaging",
     "icon": "🔒",
     "sourceDir": "browser"
@@ -594,7 +650,7 @@
   {
     "slug": "engagement-analytics",
     "title": "Engagement Analytics",
-    "description": "Engagement Analytics on X - by nichxbt",
+    "description": "Analyze engagement metrics across your recent posts",
     "category": "Analytics",
     "icon": "📈",
     "sourceDir": "browser"
@@ -602,7 +658,7 @@
   {
     "slug": "engagement-booster",
     "title": "Engagement Booster v2",
-    "description": "Systematically engage with tweets from target",
+    "description": "Systematically engage with tweets from target accounts to boost mutual engagement. Features a floating control panel, smart engagement scoring, retweet & bookmark support, drip scheduling, undo rollback, persistent session history, and speed presets. Works standalone or with core.js.",
     "category": "Engagement",
     "icon": "🚀",
     "sourceDir": "browser"
@@ -610,7 +666,7 @@
   {
     "slug": "engagement-leaderboard",
     "title": "Engagement Leaderboard",
-    "description": "Analyze who engages with your tweets the most.",
+    "description": "Analyze who engages with your tweets the most. Scrapes your recent tweets to build a leaderboard of top repliers, likers, and retweeters. Exports a VIP list for relationship building. Identifies superfans, dormant followers, and engagement tiers.",
     "category": "Engagement",
     "icon": "🏆",
     "sourceDir": "browser"
@@ -618,7 +674,7 @@
   {
     "slug": "engagement-manager",
     "title": "Engagement Manager",
-    "description": "scripts/engagementManager.js",
+    "description": "Browser console script for liking, bookmarking, or replying to visible tweets",
     "category": "Engagement",
     "icon": "⚡",
     "sourceDir": "scripts"
@@ -626,7 +682,7 @@
   {
     "slug": "export-to-csv",
     "title": "Export to CSV Utility",
-    "description": "",
+    "description": "Convert any scraped data to CSV format",
     "category": "Scrapers",
     "icon": "📄",
     "sourceDir": "scripts"
@@ -650,38 +706,46 @@
   {
     "slug": "follow-list",
     "title": "Follow & Manage Lists",
-    "description": "Follow/unfollow X Lists, pin lists to your",
+    "description": "Follow/unfollow X Lists, pin lists to your timeline, and browse list feeds.",
     "category": "Growth",
     "icon": "📋",
     "sourceDir": "browser"
   },
   {
     "slug": "follow-account",
-    "title": "Follow Account",
-    "description": "Follow Accounts on X - by nichxbt",
+    "title": "Follow Accounts",
+    "description": "Follow a list of specific usernames, navigating to each profile",
     "category": "Growth",
     "icon": "➕",
     "sourceDir": "browser"
   },
   {
     "slug": "follow-back",
-    "title": "Follow Back - XActions",
+    "title": "Follow Back",
     "description": "Follow every account that follows you but that you don't follow back yet.",
     "category": "Growth",
     "icon": "🔗",
     "sourceDir": "scripts/twitter"
   },
   {
+    "slug": "follow-target-users",
+    "title": "Follow Followers/Following of Target Users",
+    "description": "Follow the followers or following of any target account",
+    "category": "Growth",
+    "icon": "🎯",
+    "sourceDir": "src/automation"
+  },
+  {
     "slug": "follow-engagers",
-    "title": "Follow Engagers",
-    "description": "XActions Automation - Follow Likers & Commenters",
+    "title": "Follow Likers & Commenters",
+    "description": "Find users who engage with specific posts and follow them",
     "category": "Growth",
     "icon": "🎯",
     "sourceDir": "src/automation"
   },
   {
     "slug": "follow-list-members",
-    "title": "Follow List Members - XActions",
+    "title": "Follow List Members",
     "description": "Follow every member of a Twitter List, skipping accounts you already follow, rate-limited.",
     "category": "Lists & Communities",
     "icon": "👣",
@@ -690,33 +754,17 @@
   {
     "slug": "follow-ratio-manager",
     "title": "Follow Ratio Manager",
-    "description": "Monitor and manage your follow/following ratio.",
+    "description": "Monitor and manage your follow/following ratio. Scrapes follower and following counts, calculates your ratio, tracks it over time in localStorage, identifies who to unfollow to improve your ratio, and provides actionable recommendations.",
     "category": "Unfollow Tools",
     "icon": "⚖️",
     "sourceDir": "browser"
   },
   {
-    "slug": "follow-target-users",
-    "title": "Follow Target Users",
-    "description": "XActions Automation - Follow Followers/Following of Target Users",
-    "category": "Growth",
-    "icon": "🎯",
-    "sourceDir": "src/automation"
-  },
-  {
     "slug": "follower-growth-tracker",
     "title": "Follower Growth Tracker",
-    "description": "Track follower count over time, detect growth/loss",
+    "description": "Track follower count over time, detect growth/loss trends, and calculate velocity. Stores snapshots in localStorage for long-term historical analysis.",
     "category": "Follower Monitoring",
     "icon": "📈",
-    "sourceDir": "browser"
-  },
-  {
-    "slug": "follower-tools",
-    "title": "Follower Tools",
-    "description": "browser/followerTools.js",
-    "category": "Follower Monitoring",
-    "icon": "👥",
     "sourceDir": "browser"
   },
   {
@@ -730,7 +778,7 @@
   {
     "slug": "scrape-followers",
     "title": "Followers Scraper",
-    "description": "",
+    "description": "Export your followers list to JSON/CSV",
     "category": "Scrapers",
     "icon": "👥",
     "sourceDir": "scripts"
@@ -738,31 +786,23 @@
   {
     "slug": "scrape-following",
     "title": "Following Scraper",
-    "description": "",
+    "description": "Export your following list to JSON/CSV",
     "category": "Scrapers",
     "icon": "👥",
     "sourceDir": "scripts"
   },
   {
-    "slug": "grok-integration",
-    "title": "Grok Integration",
-    "description": "scripts/grokIntegration.js",
-    "category": "AI & Developer",
-    "icon": "🧠",
-    "sourceDir": "scripts"
-  },
-  {
     "slug": "group-dm",
     "title": "Group Direct Messages",
-    "description": "Create group DM conversations and send messages",
+    "description": "Create group DM conversations and send messages to multiple users at once on X/Twitter.",
     "category": "Messaging",
     "icon": "👥",
     "sourceDir": "browser"
   },
   {
     "slug": "growth-suite",
-    "title": "Growth Suite",
-    "description": "XActions Automation - Growth Automation Suite",
+    "title": "Growth Automation Suite",
+    "description": "",
     "category": "Growth",
     "icon": "🚀",
     "sourceDir": "src/automation"
@@ -770,7 +810,7 @@
   {
     "slug": "hashtag-analytics",
     "title": "Hashtag Analytics",
-    "description": "Hashtag Analytics on X - by nichxbt",
+    "description": "Analyze performance and trends for specific hashtags",
     "category": "Analytics",
     "icon": "#️⃣",
     "sourceDir": "browser"
@@ -778,7 +818,7 @@
   {
     "slug": "scrape-hashtag",
     "title": "Hashtag Scraper",
-    "description": "",
+    "description": "Get tweets by hashtag",
     "category": "Scrapers",
     "icon": "#️⃣",
     "sourceDir": "scripts"
@@ -786,9 +826,17 @@
   {
     "slug": "host-space",
     "title": "Host / Start a Space",
-    "description": "Start a new X Space with title, topic, and",
+    "description": "Start a new X Space with title, topic, and optional recording and scheduling configuration.",
     "category": "Spaces & Live",
     "icon": "🎙️",
+    "sourceDir": "browser"
+  },
+  {
+    "slug": "id-verification",
+    "title": "ID Verification management",
+    "description": "",
+    "category": "Safety & Privacy",
+    "icon": "🪪",
     "sourceDir": "browser"
   },
   {
@@ -826,7 +874,7 @@
   {
     "slug": "join-space",
     "title": "Join a Space",
-    "description": "Find and join live X Spaces by topic, keyword,",
+    "description": "Find and join live X Spaces by topic, keyword, or specific host username.",
     "category": "Spaces & Live",
     "icon": "🎙️",
     "sourceDir": "browser"
@@ -834,23 +882,15 @@
   {
     "slug": "join-communities",
     "title": "Join Communities",
-    "description": "Join Communities on X - by nichxbt",
+    "description": "Discover and join X communities based on keywords",
     "category": "Lists & Communities",
     "icon": "🏘️",
     "sourceDir": "browser"
   },
   {
-    "slug": "keyword-follow",
-    "title": "Keyword Follow",
-    "description": "XActions Automation - Keyword Search & Follow",
-    "category": "Growth",
-    "icon": "🔑",
-    "sourceDir": "src/automation"
-  },
-  {
     "slug": "keyword-liker",
     "title": "Keyword Liker",
-    "description": "scripts/keywordLiker.js",
+    "description": "Like only posts containing specific keywords — with a prompt input box",
     "category": "Engagement",
     "icon": "❤️",
     "sourceDir": "scripts"
@@ -858,15 +898,23 @@
   {
     "slug": "keyword-monitor",
     "title": "Keyword Monitor & Alerts",
-    "description": "Monitor any X/Twitter search for keyword mentions",
+    "description": "Monitor any X/Twitter search for keyword mentions in real-time. Scrapes search results, detects new tweets matching your keywords, tracks mention frequency, identifies top mentioners, and persists history in localStorage. Supports auto-refresh intervals and engagement threshold filters.",
     "category": "Analytics",
     "icon": "🔑",
     "sourceDir": "browser"
   },
   {
+    "slug": "keyword-follow",
+    "title": "Keyword Search & Follow",
+    "description": "",
+    "category": "Growth",
+    "icon": "🔑",
+    "sourceDir": "src/automation"
+  },
+  {
     "slug": "leave-all-communities",
     "title": "Leave All Communities",
-    "description": "Leave all X Communities you've joined. Navigates",
+    "description": "Leave all X Communities you've joined. Navigates into each community, clicks \"Leave\", and returns. Supports whitelist, rate-limit detection, pause/resume, and persistence across page reloads.",
     "category": "Lists & Communities",
     "icon": "🚪",
     "sourceDir": "browser"
@@ -881,7 +929,7 @@
   },
   {
     "slug": "like-by-feed",
-    "title": "Like By Feed - XActions",
+    "title": "Like By Feed",
     "description": "Automatically like tweets from your home timeline/feed",
     "category": "Engagement",
     "icon": "❤️",
@@ -889,7 +937,7 @@
   },
   {
     "slug": "like-by-hashtag",
-    "title": "Like By Hashtag - XActions",
+    "title": "Like By Hashtag",
     "description": "Automatically like tweets containing specific hashtags",
     "category": "Engagement",
     "icon": "❤️",
@@ -897,7 +945,7 @@
   },
   {
     "slug": "like-by-location",
-    "title": "Like By Location - XActions",
+    "title": "Like By Location",
     "description": "Automatically like tweets from specific geographic locations",
     "category": "Engagement",
     "icon": "❤️",
@@ -905,7 +953,7 @@
   },
   {
     "slug": "like-by-user",
-    "title": "Like By User - XActions",
+    "title": "Like By User",
     "description": "Automatically like all tweets from a specific user's profile",
     "category": "Engagement",
     "icon": "❤️",
@@ -913,15 +961,23 @@
   },
   {
     "slug": "like-post",
-    "title": "Like Post",
-    "description": "Like Posts on X - by nichxbt",
+    "title": "Like Posts",
+    "description": "Like specific posts by URL or like visible posts matching keywords",
     "category": "Engagement",
     "icon": "❤️",
     "sourceDir": "browser"
   },
   {
+    "slug": "multi-account-timeline-liker",
+    "title": "Like the entire timeline of multiple X accounts in sequence",
+    "description": "",
+    "category": "Engagement",
+    "icon": "❤️",
+    "sourceDir": "scripts"
+  },
+  {
     "slug": "like-user-replies",
-    "title": "Like User Replies - XActions",
+    "title": "Like User Replies",
     "description": "Automatically like replies/comments on a specific tweet",
     "category": "Engagement",
     "icon": "❤️",
@@ -930,7 +986,7 @@
   {
     "slug": "scrape-likers",
     "title": "Likers Scraper",
-    "description": "",
+    "description": "Get all users who liked a specific tweet",
     "category": "Scrapers",
     "icon": "❤️",
     "sourceDir": "scripts"
@@ -938,7 +994,7 @@
   {
     "slug": "scrape-likes",
     "title": "Likes Scraper",
-    "description": "",
+    "description": "Export your liked tweets",
     "category": "Scrapers",
     "icon": "❤️",
     "sourceDir": "scripts"
@@ -946,23 +1002,15 @@
   {
     "slug": "link-scraper",
     "title": "Link Scraper",
-    "description": "XActions Automation - Link Scraper",
+    "description": "Extracts all links shared by a specific user. Great for research, finding resources, tracking promotions.",
     "category": "Scrapers",
     "icon": "🔗",
     "sourceDir": "src/automation"
   },
   {
-    "slug": "list-manager",
-    "title": "List Manager",
-    "description": "Manage Lists on X - by nichxbt",
-    "category": "Lists & Communities",
-    "icon": "📝",
-    "sourceDir": "browser"
-  },
-  {
     "slug": "scrape-list",
     "title": "List Members Scraper",
-    "description": "",
+    "description": "Get all members of a Twitter list",
     "category": "Scrapers",
     "icon": "📝",
     "sourceDir": "scripts"
@@ -970,7 +1018,7 @@
   {
     "slug": "manage-bookmarks",
     "title": "Manage Bookmarks",
-    "description": "scripts/manageBookmarks.js",
+    "description": "Browser console script to export and manage X/Twitter bookmarks",
     "category": "Content Tools",
     "icon": "📑",
     "sourceDir": "scripts"
@@ -978,23 +1026,23 @@
   {
     "slug": "manage-community",
     "title": "Manage Communities",
-    "description": "Manage X Community members, roles, settings,",
+    "description": "Manage X Community members, roles, settings, pin posts, and update rules.",
     "category": "Lists & Communities",
     "icon": "🏘️",
     "sourceDir": "browser"
   },
   {
-    "slug": "manage-lists",
+    "slug": "list-manager",
     "title": "Manage Lists",
-    "description": "scripts/manageLists.js",
+    "description": "Create, manage, and populate X lists programmatically",
     "category": "Lists & Communities",
     "icon": "📝",
-    "sourceDir": "scripts"
+    "sourceDir": "browser"
   },
   {
     "slug": "manage-muted-words",
     "title": "Manage Muted Words",
-    "description": "Manage Muted Words on X - by nichxbt",
+    "description": "Bulk-add or manage muted words for filtering your timeline",
     "category": "Safety & Privacy",
     "icon": "🔇",
     "sourceDir": "browser"
@@ -1002,7 +1050,7 @@
   {
     "slug": "manage-notifications",
     "title": "Manage Notifications",
-    "description": "scripts/manageNotifications.js",
+    "description": "Browser console script to scrape and manage X/Twitter notifications",
     "category": "Analytics",
     "icon": "🔔",
     "sourceDir": "scripts"
@@ -1010,7 +1058,7 @@
   {
     "slug": "manage-settings",
     "title": "Manage Settings",
-    "description": "scripts/manageSettings.js",
+    "description": "Browser console script to export and audit X/Twitter settings",
     "category": "Safety & Privacy",
     "icon": "⚙️",
     "sourceDir": "scripts"
@@ -1018,7 +1066,7 @@
   {
     "slug": "mass-block",
     "title": "Mass Block Users",
-    "description": "Block multiple accounts by username list. Also",
+    "description": "Block multiple accounts by username list. Also supports \"block from timeline\" mode: blocks every visible user on the current page (great for blocking spam replies). Dry-run, rate-limit detection, full result log with export.",
     "category": "Safety & Privacy",
     "icon": "🚫",
     "sourceDir": "browser"
@@ -1026,7 +1074,7 @@
   {
     "slug": "mass-unblock",
     "title": "Mass Unblock Users",
-    "description": "Unblock all or selected users from your blocked",
+    "description": "Unblock all or selected users from your blocked list. Supports whitelist (keep-blocked), rate-limit detection, pause/resume, progress tracking, export.",
     "category": "Safety & Privacy",
     "icon": "🔓",
     "sourceDir": "browser"
@@ -1034,7 +1082,7 @@
   {
     "slug": "mass-unmute",
     "title": "Mass Unmute Users",
-    "description": "Unmute all or selected users from your muted list.",
+    "description": "Unmute all or selected users from your muted list. Supports keep-muted filter, rate-limit detection, pause/resume, progress tracking, and export.",
     "category": "Safety & Privacy",
     "icon": "🔊",
     "sourceDir": "browser"
@@ -1042,55 +1090,55 @@
   {
     "slug": "scrape-media",
     "title": "Media Scraper",
-    "description": "",
+    "description": "Download all media (images/videos) from a user's profile",
     "category": "Scrapers",
     "icon": "🖼️",
     "sourceDir": "scripts"
   },
   {
     "slug": "media-studio",
-    "title": "Media Studio",
-    "description": "browser/mediaStudio.js",
+    "title": "Media Studio automation",
+    "description": "Media Studio automation: navigate to Media Studio, upload media, manage library, media analytics, monetization settings, live streaming management.",
     "category": "Business",
     "icon": "🖼️",
     "sourceDir": "browser"
   },
   {
     "slug": "mention-users",
-    "title": "Mention Users",
-    "description": "Mention Users in Posts on X - by nichxbt",
+    "title": "Mention Users in Posts",
+    "description": "Compose a post mentioning multiple users with auto @mentions",
     "category": "Engagement",
     "icon": "💬",
     "sourceDir": "browser"
   },
   {
+    "slug": "account-misc",
+    "title": "Miscellaneous account tools",
+    "description": "",
+    "category": "Other Tools",
+    "icon": "⚡",
+    "sourceDir": "browser"
+  },
+  {
     "slug": "monitor-account",
     "title": "Monitor Account",
-    "description": "MonitorAccount.js — Track follows/unfollows on ANY public X (Twitter) account",
+    "description": "Track follows/unfollows on ANY public X (Twitter) account",
     "category": "Follower Monitoring",
     "icon": "📊",
     "sourceDir": "browser"
   },
   {
     "slug": "multi-account",
-    "title": "Multi Account",
-    "description": "XActions Automation - Multi-Account Manager",
+    "title": "Multi-Account Manager",
+    "description": "Manages multiple X accounts for automation. Stores account list locally, rotates between them.",
     "category": "Account Management",
     "icon": "👥",
     "sourceDir": "src/automation"
   },
   {
-    "slug": "multi-account-timeline-liker",
-    "title": "Multi Account Timeline Liker",
-    "description": "scripts/multiAccountTimelineLiker.js",
-    "category": "Engagement",
-    "icon": "❤️",
-    "sourceDir": "scripts"
-  },
-  {
     "slug": "mute-by-keywords",
-    "title": "Mute By Keywords",
-    "description": "Mute Users by Keywords on X - by nichxbt",
+    "title": "Mute Users by Keywords",
+    "description": "Mutes users whose posts contain specified keywords",
     "category": "Safety & Privacy",
     "icon": "🔕",
     "sourceDir": "browser"
@@ -1098,23 +1146,15 @@
   {
     "slug": "natural-flow",
     "title": "Natural Flow",
-    "description": "scripts/naturalFlow.js",
+    "description": "Simulate a natural browsing session: scroll, like, reply, retweet, follow, and check notifications on a human rhythm",
     "category": "Growth",
     "icon": "🌊",
     "sourceDir": "scripts"
   },
   {
-    "slug": "id-verification",
-    "title": "Navigate to verification settings and start the ID verification flow",
-    "description": "browser/idVerification.js",
-    "category": "Safety & Privacy",
-    "icon": "🪪",
-    "sourceDir": "browser"
-  },
-  {
     "slug": "new-followers-alert",
     "title": "New Followers Alert",
-    "description": "NewFollowersAlert.js — Get notified when you gain new followers",
+    "description": "Get notified when you gain new followers",
     "category": "Follower Monitoring",
     "icon": "🔔",
     "sourceDir": "browser"
@@ -1122,7 +1162,7 @@
   {
     "slug": "notification-manager",
     "title": "Notification Manager",
-    "description": "scripts/notificationManager.js",
+    "description": "Browser console script for scraping and filtering notifications on X/Twitter",
     "category": "Analytics",
     "icon": "🔔",
     "sourceDir": "scripts"
@@ -1130,7 +1170,7 @@
   {
     "slug": "scrape-notifications",
     "title": "Notifications Scraper",
-    "description": "",
+    "description": "Export notification history",
     "category": "Scrapers",
     "icon": "🔔",
     "sourceDir": "scripts"
@@ -1138,22 +1178,14 @@
   {
     "slug": "persona-engine",
     "title": "Persona Engine",
-    "description": "scripts/personaEngine.js",
+    "description": "Browser console script for analyzing your posting style and generating a persona profile",
     "category": "Growth",
     "icon": "🎭",
     "sourceDir": "scripts"
   },
   {
-    "slug": "algorithm-trainer",
-    "title": "Phase 1",
-    "description": "XActions Automation - Algorithm Trainer",
-    "category": "Growth",
-    "icon": "🧠",
-    "sourceDir": "src/automation"
-  },
-  {
     "slug": "pin-tweet",
-    "title": "Pin Tweet - XActions",
+    "title": "Pin Tweet",
     "description": "Pin or unpin one of your own tweets to the top of your profile.",
     "category": "Posting",
     "icon": "📌",
@@ -1162,31 +1194,23 @@
   {
     "slug": "pin-tweet-manager",
     "title": "Pin Tweet Manager",
-    "description": "Pin/unpin tweets, auto-rotate pinned content,",
+    "description": "Pin/unpin tweets, auto-rotate pinned content, and pin your best-performing tweet.",
     "category": "Posting",
     "icon": "📌",
     "sourceDir": "browser"
   },
   {
-    "slug": "poll-creator",
-    "title": "Poll Creator",
-    "description": "scripts/pollCreator.js",
-    "category": "Posting",
-    "icon": "📊",
-    "sourceDir": "scripts"
-  },
-  {
     "slug": "post-composer",
     "title": "Post Composer",
-    "description": "scripts/postComposer.js",
+    "description": "Browser console script to compose and post tweets, threads, and polls",
     "category": "Posting",
     "icon": "✏️",
     "sourceDir": "scripts"
   },
   {
     "slug": "post-interactions",
-    "title": "Post Interactions",
-    "description": "browser/postInteractions.js",
+    "title": "Post interaction tools",
+    "description": "",
     "category": "Engagement",
     "icon": "💬",
     "sourceDir": "browser"
@@ -1194,14 +1218,14 @@
   {
     "slug": "post-thread",
     "title": "Post Thread",
-    "description": "Post Thread on X - by nichxbt",
+    "description": "Compose and post a thread of connected tweets",
     "category": "Posting",
     "icon": "🧵",
     "sourceDir": "browser"
   },
   {
     "slug": "post-tweet",
-    "title": "Post Tweet - XActions",
+    "title": "Post Tweet",
     "description": "Compose and post a single tweet from your logged-in session.",
     "category": "Posting",
     "icon": "✍️",
@@ -1210,7 +1234,7 @@
   {
     "slug": "premium-features",
     "title": "Premium Features",
-    "description": "scripts/premiumFeatures.js",
+    "description": "Browser console script to check X/Twitter Premium status and features",
     "category": "Premium",
     "icon": "⭐",
     "sourceDir": "scripts"
@@ -1218,7 +1242,7 @@
   {
     "slug": "premium-gifting",
     "title": "Premium Gifting",
-    "description": "Premium Gifting — by nichxbt",
+    "description": "Gift an X Premium subscription to another user from their profile.",
     "category": "Premium",
     "icon": "🎁",
     "sourceDir": "browser"
@@ -1226,7 +1250,7 @@
   {
     "slug": "premium-manager",
     "title": "Premium Manager",
-    "description": "scripts/premiumManager.js",
+    "description": "Browser console script for detecting Premium tier and features on X/Twitter",
     "category": "Premium",
     "icon": "⭐",
     "sourceDir": "scripts"
@@ -1234,7 +1258,7 @@
   {
     "slug": "profile-manager",
     "title": "Profile Manager",
-    "description": "scripts/profileManager.js",
+    "description": "Browser console script for scraping profile data from any X/Twitter profile page",
     "category": "Account Management",
     "icon": "👤",
     "sourceDir": "scripts"
@@ -1242,7 +1266,7 @@
   {
     "slug": "scrape-profile",
     "title": "Profile Scraper",
-    "description": "",
+    "description": "Get detailed profile data for a user",
     "category": "Scrapers",
     "icon": "👤",
     "sourceDir": "scripts"
@@ -1256,25 +1280,17 @@
     "sourceDir": "scripts/twitter"
   },
   {
-    "slug": "protect-active-users",
-    "title": "Protect Active Users",
-    "description": "XActions Automation - Don't Unfollow Active Users",
-    "category": "Automation",
-    "icon": "🛡️",
-    "sourceDir": "src/automation"
-  },
-  {
     "slug": "publish-article",
     "title": "Publish Article",
-    "description": "scripts/publishArticle.js",
+    "description": "Browser console script for publishing articles on X/Twitter (Premium+)",
     "category": "Posting",
     "icon": "📰",
     "sourceDir": "scripts"
   },
   {
     "slug": "qr-code-sharing",
-    "title": "QR Code Sharing",
-    "description": "QR Code Profile Sharing on X - by nichxbt",
+    "title": "QR Code Profile Sharing",
+    "description": "Generate a shareable QR code for any X profile",
     "category": "Account Management",
     "icon": "📱",
     "sourceDir": "browser"
@@ -1282,7 +1298,7 @@
   {
     "slug": "quota-supervisor",
     "title": "Quota Supervisor",
-    "description": "XActions Automation - Quota Supervisor",
+    "description": "Sophisticated rate limiting and action management to protect your account",
     "category": "Automation",
     "icon": "⚠️",
     "sourceDir": "src/automation"
@@ -1290,14 +1306,14 @@
   {
     "slug": "scrape-quote-retweets",
     "title": "Quote Retweets Scraper",
-    "description": "",
+    "description": "Get all quote retweets of a specific tweet",
     "category": "Scrapers",
     "icon": "🔁",
     "sourceDir": "scripts"
   },
   {
     "slug": "quote-tweet",
-    "title": "Quote Tweet - XActions",
+    "title": "Quote Tweet",
     "description": "Quote-tweet the post you are currently viewing with your own text.",
     "category": "Posting",
     "icon": "💬",
@@ -1306,7 +1322,7 @@
   {
     "slug": "quote-tweet-automation",
     "title": "Quote Tweet Automation",
-    "description": "Auto-retweet with quote using customizable",
+    "description": "Auto-retweet with quote using customizable templates. Scrape tweets from a timeline/search and quote-RT them with personalized commentary. Supports keyword targeting, skip filters, template rotation, and human-like delays.",
     "category": "Engagement",
     "icon": "🔁",
     "sourceDir": "browser"
@@ -1321,7 +1337,7 @@
   },
   {
     "slug": "remove-follower",
-    "title": "Remove Follower - XActions",
+    "title": "Remove Follower",
     "description": "Remove followers without blocking them: X's native \"Remove this follower\", or a soft-block fallback.",
     "category": "Safety & Privacy",
     "icon": "🚪",
@@ -1330,7 +1346,7 @@
   {
     "slug": "remove-followers",
     "title": "Remove Followers",
-    "description": "Remove specific or all followers using the",
+    "description": "Remove specific or all followers using the soft-block technique (block → unblock). Includes smart filtering: remove bots, low-quality, or inactive followers based on heuristics.",
     "category": "Follower Monitoring",
     "icon": "🚫",
     "sourceDir": "browser"
@@ -1338,23 +1354,23 @@
   {
     "slug": "scrape-replies",
     "title": "Replies Scraper",
-    "description": "",
+    "description": "Get all replies to a specific tweet",
     "category": "Scrapers",
     "icon": "💬",
     "sourceDir": "scripts"
   },
   {
     "slug": "report-spam",
-    "title": "Report Spam",
-    "description": "Report Spam Accounts on X - by nichxbt",
+    "title": "Report Spam Accounts",
+    "description": "Report multiple spam/bot accounts at once",
     "category": "Safety & Privacy",
     "icon": "⚠️",
     "sourceDir": "browser"
   },
   {
     "slug": "repost-post",
-    "title": "Repost Post",
-    "description": "Repost (Retweet) Posts on X - by nichxbt",
+    "title": "Repost (Retweet) Posts",
+    "description": "Repost specific posts by URL or bulk repost from search/timeline",
     "category": "Engagement",
     "icon": "🔁",
     "sourceDir": "browser"
@@ -1370,22 +1386,22 @@
   {
     "slug": "save-search",
     "title": "Save Searches",
-    "description": "Save the current search query, list saved searches,",
+    "description": "Save the current search query, list saved searches, and manage your saved search collection on X/Twitter.",
     "category": "Discovery",
     "icon": "🔍",
     "sourceDir": "browser"
   },
   {
     "slug": "saved-search-manager",
-    "title": "Saved Search Manager",
-    "description": "browser/savedSearchManager.js",
+    "title": "Saved search and discovery tools",
+    "description": "",
     "category": "Other Tools",
     "icon": "⚡",
     "sourceDir": "browser"
   },
   {
     "slug": "schedule-post",
-    "title": "Schedule Post - XActions",
+    "title": "Schedule Post",
     "description": "Schedule a tweet for a future date/time using X's native scheduler.",
     "category": "Posting",
     "icon": "🗓️",
@@ -1394,23 +1410,15 @@
   {
     "slug": "schedule-posts",
     "title": "Schedule Posts",
-    "description": "Schedule Posts on X - by nichxbt",
+    "description": "Queue multiple posts to be published at specified times",
     "category": "Posting",
     "icon": "⏰",
     "sourceDir": "browser"
   },
   {
-    "slug": "scrape-analytics",
-    "title": "Scrape Analytics",
-    "description": "scripts/scrapeAnalytics.js",
-    "category": "Scrapers",
-    "icon": "📊",
-    "sourceDir": "scripts"
-  },
-  {
     "slug": "scrape-explore",
     "title": "Scrape Explore",
-    "description": "scripts/scrapeExplore.js",
+    "description": "Browser console script to scrape Explore page trends and content",
     "category": "Scrapers",
     "icon": "🔍",
     "sourceDir": "scripts"
@@ -1425,15 +1433,15 @@
   },
   {
     "slug": "scrape-spaces",
-    "title": "Scrape Spaces",
-    "description": "Scrape Spaces (Audio/Video Broadcasts) on X - by nichxbt",
+    "title": "Scrape Spaces (Audio/Video Broadcasts)",
+    "description": "Find and collect metadata about X Spaces",
     "category": "Scrapers",
     "icon": "🎙️",
     "sourceDir": "browser"
   },
   {
     "slug": "scrape-user-likes",
-    "title": "Scrape User Likes - XActions",
+    "title": "Scrape User Likes",
     "description": "Scroll a user's Likes timeline and export the posts they liked (url, author, text, counts) to JSON and CSV.",
     "category": "Scrapers",
     "icon": "💗",
@@ -1442,7 +1450,7 @@
   {
     "slug": "scrape-search",
     "title": "Search Scraper",
-    "description": "",
+    "description": "Search and export tweets by keyword",
     "category": "Scrapers",
     "icon": "🔍",
     "sourceDir": "scripts"
@@ -1457,32 +1465,24 @@
   },
   {
     "slug": "send-direct-message",
-    "title": "Send Direct Message",
-    "description": "Send Direct Messages on X - by nichxbt",
+    "title": "Send Direct Messages",
+    "description": "Send personalized DMs to a list of users",
     "category": "Messaging",
     "icon": "📬",
     "sourceDir": "browser"
   },
   {
     "slug": "session-logger",
-    "title": "Session Logger",
-    "description": "XActions Automation - Session Logger & Analytics",
+    "title": "Session Logger & Analytics",
+    "description": "Track all automation actions and generate reports",
     "category": "Automation",
     "icon": "📋",
     "sourceDir": "src/automation"
   },
   {
-    "slug": "advanced-profile",
-    "title": "Set birthday fields in the profile edit dialog",
-    "description": "browser/advancedProfile.js",
-    "category": "Other Tools",
-    "icon": "⚡",
-    "sourceDir": "browser"
-  },
-  {
     "slug": "settings-manager",
     "title": "Settings Manager",
-    "description": "scripts/settingsManager.js",
+    "description": "Browser console script for exporting settings and toggling protection on X/Twitter",
     "category": "Safety & Privacy",
     "icon": "⚙️",
     "sourceDir": "scripts"
@@ -1490,23 +1490,23 @@
   {
     "slug": "shadowban-checker",
     "title": "Shadowban Checker",
-    "description": "Check if your X/Twitter account is shadowbanned.",
+    "description": "Check if your X/Twitter account is shadowbanned. Tests: search ban, ghost ban, reply deboosting, suggestion ban, and media visibility.",
     "category": "Analytics",
     "icon": "👻",
     "sourceDir": "browser"
   },
   {
     "slug": "share-embed",
-    "title": "Share Embed",
-    "description": "Share & Embed Posts on X - by nichxbt",
+    "title": "Share & Embed Posts",
+    "description": "Copy post links, get embed codes, or bulk copy links from timeline",
     "category": "Content Tools",
     "icon": "🔗",
     "sourceDir": "browser"
   },
   {
     "slug": "smart-unfollow",
-    "title": "Smart Unfollow",
-    "description": "XActions Automation - Smart Unfollow (Time-Based)",
+    "title": "Smart Unfollow (Time-Based)",
+    "description": "Unfollows users who didn't follow you back within X days. Works with the keywordFollow.js tracking data.",
     "category": "Unfollow Tools",
     "icon": "🧠",
     "sourceDir": "src/automation"
@@ -1514,39 +1514,31 @@
   {
     "slug": "spaces-manager",
     "title": "Spaces Manager",
-    "description": "scripts/spacesManager.js",
+    "description": "Browser console script for scraping live and scheduled Spaces on X/Twitter",
     "category": "Spaces & Live",
     "icon": "🎙️",
     "sourceDir": "scripts"
   },
   {
-    "slug": "video-downloader-browser",
-    "title": "Strategy 1",
-    "description": "browser/videoDownloaderBrowser.js",
-    "category": "Content Tools",
-    "icon": "🎬",
-    "sourceDir": "browser"
-  },
-  {
     "slug": "subscribe-premium",
-    "title": "Subscribe Premium",
-    "description": "Subscribe to X Premium — by nichxbt",
+    "title": "Subscribe to X Premium",
+    "description": "Navigate to Premium subscription page, compare tiers, check status, and guide through signup.",
     "category": "Account Management",
     "icon": "⭐",
     "sourceDir": "browser"
   },
   {
     "slug": "text-formatting",
-    "title": "Text Formatting",
-    "description": "Text Formatting Helper for X - by nichxbt",
+    "title": "Text Formatting Helper",
+    "description": "Format text with bold, italic, strikethrough, monospace using Unicode characters X/Twitter doesn't support native formatting, but Unicode math symbols work!",
     "category": "Content Tools",
     "icon": "✏️",
     "sourceDir": "browser"
   },
   {
     "slug": "thought-leader-cultivator",
-    "title": "Thought Leader Cultivator",
-    "description": "XActions - Thought Leader Algorithm Cultivator (Standalone)",
+    "title": "Thought Leader Algorithm Cultivator (Standalone)",
+    "description": "STANDALONE VERSION — no dependencies required.",
     "category": "Growth",
     "icon": "🧠",
     "sourceDir": "scripts"
@@ -1554,7 +1546,7 @@
   {
     "slug": "thread-composer",
     "title": "Thread Composer & Publisher",
-    "description": "Compose and publish Twitter/X threads from the",
+    "description": "Compose and publish Twitter/X threads from the browser console. Manages multi-tweet threads with character counting, auto-numbering, preview mode, draft persistence (localStorage), and sequential posting with human-like delays.",
     "category": "Posting",
     "icon": "🧵",
     "sourceDir": "browser"
@@ -1562,15 +1554,23 @@
   {
     "slug": "thread-unroller",
     "title": "Thread Unroller",
-    "description": "",
+    "description": "Save any Twitter/X thread as clean text or markdown",
     "category": "Content Tools",
     "icon": "🧵",
     "sourceDir": "scripts"
   },
   {
+    "slug": "auto-liker",
+    "title": "Timeline Auto-Liker",
+    "description": "",
+    "category": "Engagement",
+    "icon": "❤️",
+    "sourceDir": "src/automation"
+  },
+  {
     "slug": "timeline-scraper",
-    "title": "Timeline Scraper",
-    "description": "browser/timelineScraper.js",
+    "title": "Timeline scraping tools",
+    "description": "",
     "category": "Other Tools",
     "icon": "⚡",
     "sourceDir": "browser"
@@ -1578,7 +1578,7 @@
   {
     "slug": "timeline-viewer",
     "title": "Timeline Viewer",
-    "description": "Timeline Viewer — by nichxbt",
+    "description": "Switch between For You / Following timelines, auto-scroll and collect posts, and export data.",
     "category": "Analytics",
     "icon": "📊",
     "sourceDir": "browser"
@@ -1586,14 +1586,14 @@
   {
     "slug": "topic-manager",
     "title": "Topic Manager",
-    "description": "Browse, follow, and unfollow X Topics. Manage",
+    "description": "Browse, follow, and unfollow X Topics. Manage your followed topics list and discover new ones.",
     "category": "Discovery",
     "icon": "🏷️",
     "sourceDir": "browser"
   },
   {
     "slug": "trending-monitor",
-    "title": "Trending Monitor - XActions",
+    "title": "Trending Monitor",
     "description": "Capture the current X trends (name, post count, category), highlight watched keywords, and optionally re-scan on an interval.",
     "category": "Analytics",
     "icon": "📈",
@@ -1602,7 +1602,7 @@
   {
     "slug": "trending-topic-monitor",
     "title": "Trending Topic Monitor",
-    "description": "Scrape and monitor X/Twitter trending topics in",
+    "description": "Scrape and monitor X/Twitter trending topics in real-time. Tracks trend velocity (rising/falling), categorizes by niche, detects opportunities, persists history in localStorage for comparison, and alerts on trends matching your keywords.",
     "category": "Analytics",
     "icon": "📈",
     "sourceDir": "browser"
@@ -1610,7 +1610,7 @@
   {
     "slug": "tweet-abtester",
     "title": "Tweet A/B Tester",
-    "description": "A/B test tweet performance. Post two variations",
+    "description": "A/B test tweet performance. Post two variations of a tweet, track their engagement over time, and determine a statistical winner. Persists test data in localStorage. Supports multiple concurrent tests with unique IDs.",
     "category": "Other Tools",
     "icon": "⚡",
     "sourceDir": "browser"
@@ -1618,7 +1618,7 @@
   {
     "slug": "tweet-performance",
     "title": "Tweet Performance Comparator",
-    "description": "Compare the performance of your recent tweets",
+    "description": "Compare the performance of your recent tweets side by side. Ranks by engagement rate, identifies patterns in your best/worst posts, analyzes optimal posting characteristics (length, media, hashtags, time of day).",
     "category": "Analytics",
     "icon": "📊",
     "sourceDir": "browser"
@@ -1626,7 +1626,7 @@
   {
     "slug": "tweet-price-correlation",
     "title": "Tweet Price Correlation",
-    "description": "scripts/tweetPriceCorrelation.js",
+    "description": "Browser console script — correlate a founder's tweet frequency with token price movements",
     "category": "Analytics",
     "icon": "💹",
     "sourceDir": "scripts"
@@ -1634,7 +1634,7 @@
   {
     "slug": "tweet-schedule-optimizer",
     "title": "Tweet Schedule Optimizer",
-    "description": "Analyzes your historical tweet performance by",
+    "description": "Analyzes your historical tweet performance by time of day and day of week, then generates a personalized optimal posting schedule. Uses weighted scoring across engagement rate, reply ratio, and retweet ratio to surface the best time slots for maximum reach.",
     "category": "Analytics",
     "icon": "⏰",
     "sourceDir": "browser"
@@ -1642,7 +1642,7 @@
   {
     "slug": "sentiment-analyzer",
     "title": "Tweet Sentiment Analyzer",
-    "description": "Analyze the sentiment of your recent tweets,",
+    "description": "Analyze the sentiment of your recent tweets, mentions, or any visible timeline. Categorizes posts as positive/negative/neutral using a battle-tested lexicon-based approach. Shows trends, toxicity flags, and emotional distribution.",
     "category": "Analytics",
     "icon": "🧠",
     "sourceDir": "browser"
@@ -1650,7 +1650,7 @@
   {
     "slug": "scrape-profile-posts",
     "title": "Twitter/X Profile Posts Scraper",
-    "description": "Scrapes posts from any Twitter/X profile with filtering,",
+    "description": "Scrapes posts from any Twitter/X profile with filtering, multiple export formats, and analytics",
     "category": "Scrapers",
     "icon": "👤",
     "sourceDir": "scripts/twitter"
@@ -1666,7 +1666,7 @@
   {
     "slug": "unfollowback",
     "title": "Unfollow Non-Followers",
-    "description": "Unfollow accounts that do NOT follow you back.",
+    "description": "Unfollow accounts that do NOT follow you back. Detects \"Follows you\" badge per user cell and only unfollows those missing it. Whitelist protection, dry-run, rate-limit detection, pause/resume, full export of unfollowed list.",
     "category": "Unfollow Tools",
     "icon": "🧹",
     "sourceDir": "browser"
@@ -1682,7 +1682,7 @@
   {
     "slug": "unfollow-wdfblog",
     "title": "Unfollow Non-Followers with Full Log",
-    "description": "Unfollow accounts that don't follow back, with",
+    "description": "Unfollow accounts that don't follow back, with comprehensive logging: username, display name, follower count, bio, timestamp. Downloads both JSON and CSV. Designed for auditing who you unfollowed and why.",
     "category": "Other Tools",
     "icon": "⚡",
     "sourceDir": "browser"
@@ -1698,14 +1698,14 @@
   {
     "slug": "unlike-all-posts",
     "title": "Unlike All Posts",
-    "description": "Unlike every post in your Likes tab. Supports",
+    "description": "Unlike every post in your Likes tab. Supports keyword filters, date-based filters, max cap, rate-limit detection, pause/resume, and exports a log of unliked posts.",
     "category": "Content Tools",
     "icon": "💔",
     "sourceDir": "browser"
   },
   {
     "slug": "unlike-all",
-    "title": "Unlike All Tweets - XActions",
+    "title": "Unlike All Tweets",
     "description": "Unlikes all liked tweets from your likes page (x.com/USERNAME/likes)",
     "category": "Content Tools",
     "icon": "💔",
@@ -1713,7 +1713,7 @@
   },
   {
     "slug": "unlike-old",
-    "title": "Unlike Old Tweets - XActions",
+    "title": "Unlike Old Tweets",
     "description": "Unlikes tweets older than a specified number of days from your likes page",
     "category": "Content Tools",
     "icon": "💔",
@@ -1730,7 +1730,7 @@
   {
     "slug": "update-profile",
     "title": "Update Profile",
-    "description": "Update Profile on X - by nichxbt",
+    "description": "Programmatically update your bio, display name, location, website",
     "category": "Account Management",
     "icon": "✏️",
     "sourceDir": "browser"
@@ -1754,31 +1754,31 @@
   {
     "slug": "upload-contacts",
     "title": "Upload Contacts",
-    "description": "Navigate to the contact upload page on X/Twitter",
+    "description": "Navigate to the contact upload page on X/Twitter and trigger the contact sync / upload flow.",
     "category": "Account Management",
     "icon": "📇",
     "sourceDir": "browser"
   },
   {
     "slug": "verified-only",
-    "title": "Verified Only",
-    "description": "Verified-Only Replies — by nichxbt",
+    "title": "Verified-Only Replies",
+    "description": "Toggle \"only verified users can reply\" on your posts and check verification status.",
     "category": "Safety & Privacy",
     "icon": "✅",
     "sourceDir": "browser"
   },
   {
     "slug": "video-captions",
-    "title": "Video Captions",
-    "description": "Video Captions Uploader on X - by nichxbt",
+    "title": "Video Captions Uploader",
+    "description": "Add captions/subtitles to a video when composing a tweet",
     "category": "Content Tools",
     "icon": "📝",
     "sourceDir": "browser"
   },
   {
     "slug": "view-analytics",
-    "title": "View Analytics",
-    "description": "View Analytics (Premium) — by nichxbt",
+    "title": "View Analytics (Premium)",
+    "description": "Navigate to analytics dashboard, scrape impressions/engagements/followers, and export data.",
     "category": "Analytics",
     "icon": "📊",
     "sourceDir": "browser"
@@ -1786,7 +1786,7 @@
   {
     "slug": "viral-tweet-detector",
     "title": "Viral Tweet Detector",
-    "description": "Scan any timeline and identify tweets going viral",
+    "description": "Scan any timeline and identify tweets going viral in real-time. Calculates velocity (engagement/hour) and flags tweets with abnormally high engagement relative to the author's follower count.",
     "category": "Analytics",
     "icon": "🔥",
     "sourceDir": "browser"
@@ -1794,39 +1794,23 @@
   {
     "slug": "viral-tweets-scraper",
     "title": "Viral Tweet Scraper",
-    "description": "",
+    "description": "Find top performing tweets by keyword or from any account",
     "category": "Scrapers",
     "icon": "🔥",
     "sourceDir": "scripts"
   },
   {
     "slug": "vote-in-polls",
-    "title": "Vote In Polls - XActions",
+    "title": "Vote In Polls",
     "description": "Vote in polls found in a timeline or search as you scroll, using a fixed or random option strategy.",
     "category": "Engagement",
     "icon": "🗳️",
     "sourceDir": "scripts/twitter"
   },
   {
-    "slug": "advanced-spaces",
-    "title": "Wait for a DOM element to appear",
-    "description": "browser/advancedSpaces.js",
-    "category": "Other Tools",
-    "icon": "⚡",
-    "sourceDir": "browser"
-  },
-  {
-    "slug": "post-advanced",
-    "title": "Wait for an element to appear in the DOM",
-    "description": "browser/postAdvanced.js",
-    "category": "Posting",
-    "icon": "✏️",
-    "sourceDir": "browser"
-  },
-  {
     "slug": "welcome-new-followers",
     "title": "Welcome New Followers",
-    "description": "Automatically send DM welcome messages to new",
+    "description": "Automatically send DM welcome messages to new followers. Monitors the followers list, detects new ones via localStorage diff, and sends a personalized greeting. Rate-limited to avoid spam.",
     "category": "Follower Monitoring",
     "icon": "👋",
     "sourceDir": "browser"
@@ -1849,16 +1833,16 @@
   },
   {
     "slug": "x-pro",
-    "title": "X Pro",
-    "description": "X Pro (TweetDeck) — by nichxbt",
+    "title": "X Pro (TweetDeck)",
+    "description": "Navigate to X Pro / TweetDeck, setup monitoring columns, and multi-column view helpers.",
     "category": "Discovery",
     "icon": "⚡",
     "sourceDir": "browser"
   },
   {
     "slug": "x-pro-manager",
-    "title": "X Pro Manager",
-    "description": "browser/xProManager.js",
+    "title": "X Pro (TweetDeck) automation",
+    "description": "",
     "category": "Discovery",
     "icon": "⚡",
     "sourceDir": "browser"
@@ -1866,7 +1850,7 @@
   {
     "slug": "video-downloader",
     "title": "X Video Downloader",
-    "description": "",
+    "description": "Download any video from X/Twitter posts",
     "category": "Content Tools",
     "icon": "🎬",
     "sourceDir": "scripts"
@@ -1874,26 +1858,26 @@
   {
     "slug": "scrape-profile-with-replies",
     "title": "X/Twitter Profile",
-    "description": "",
+    "description": "Scrapes a user's posts (including their replies) from the /with_replies tab, then navigates into each post to collect all reply comments from other users.",
     "category": "Scrapers",
     "icon": "👤",
     "sourceDir": "scripts"
   },
   {
-    "slug": "comment-by-hashtag",
-    "title": "XActions - Comment By Hashtag",
-    "description": "Search for tweets with specific hashtags and automatically",
-    "category": "Engagement",
-    "icon": "💬",
-    "sourceDir": "scripts/twitter"
+    "slug": "actions",
+    "title": "XActions Actions Library - Complete X/Twitter Actions",
+    "description": "This module contains ALL available X/Twitter actions - visible, hidden, and undocumented.",
+    "category": "Automation",
+    "icon": "⚡",
+    "sourceDir": "src/automation"
   },
   {
-    "slug": "comment-by-location",
-    "title": "XActions - Comment By Location",
-    "description": "Search for tweets from specific locations and automatically",
-    "category": "Engagement",
-    "icon": "💬",
-    "sourceDir": "scripts/twitter"
+    "slug": "core",
+    "title": "XActions Automation Framework - Core Utilities",
+    "description": "This is the foundation module. Paste this FIRST, then paste any automation script. All automations depend on this core module.",
+    "category": "Automation",
+    "icon": "⚙️",
+    "sourceDir": "src/automation"
   },
   {
     "slug": "xactions-command-center",
@@ -1904,25 +1888,17 @@
     "sourceDir": "scripts/twitter"
   },
   {
-    "slug": "evergreen-recycler",
-    "title": "XActions Evergreen Content Recycler",
-    "description": "",
-    "category": "Other Tools",
-    "icon": "⚡",
-    "sourceDir": "src/automation"
-  },
-  {
-    "slug": "rss-monitor",
-    "title": "XActions RSS & Webhook Content Ingestion",
+    "slug": "control-panel",
+    "title": "XActions Control Panel — Floating UI for Browser Automations",
     "description": "",
     "category": "Automation",
-    "icon": "📡",
+    "icon": "🎛️",
     "sourceDir": "src/automation"
   },
   {
     "slug": "scraper-toolbox",
     "title": "XActions Scraper Toolbox",
-    "description": "Interactive on-page control panel for scraping X/Twitter",
+    "description": "Interactive on-page control panel for scraping X/Twitter timelines. Start/pause/stop, live filters, user exclusions, keyword rules, and one-click exports (JSON/CSV/MD/TXT/HTML, clipboard). Captures data from X's own GraphQL responses, so engagement numbers are exact and long posts are complete.",
     "category": "Other Tools",
     "icon": "⚡",
     "sourceDir": "scripts/twitter"

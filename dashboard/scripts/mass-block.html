@@ -4,22 +4,23 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Mass Block Users — Free X/Twitter Script | XActions</title>
-  <meta name="description" content="Block multiple accounts by username list. Also">
+  <meta name="description" content="Block multiple accounts by username list. Also supports &quot;block from timeline&quot; mode: blocks every visible user on the current page (great for blocking spam…">
   <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, mass, block, safety &amp; privacy">
   <meta name="author" content="nich (@nichxbt)">
   <meta name="robots" content="index, follow">
 
   <meta property="og:type" content="article">
   <meta property="og:title" content="Mass Block Users — XActions">
-  <meta property="og:description" content="Block multiple accounts by username list. Also">
+  <meta property="og:description" content="Block multiple accounts by username list. Also supports &quot;block from timeline&quot; mode: blocks every visible user on the current page (great for blocking spam…">
   <meta property="og:url" content="https://xactions.app/scripts/mass-block">
   <meta property="og:site_name" content="XActions">
-  <meta property="og:image" content="https://xactions.app/og-image.png">
+  <meta property="og:image" content="https://xactions.app/og-run.png">
 
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@nichxbt">
   <meta name="twitter:title" content="Mass Block Users — XActions">
-  <meta name="twitter:description" content="Block multiple accounts by username list. Also">
+  <meta name="twitter:description" content="Block multiple accounts by username list. Also supports &quot;block from timeline&quot; mode: blocks every visible user on the current page (great for blocking spam…">
+  <meta name="twitter:image" content="https://xactions.app/og-run.png">
 
   <link rel="canonical" href="https://xactions.app/scripts/mass-block">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
@@ -29,7 +30,7 @@
     "@context": "https://schema.org",
     "@type": "TechArticle",
     "headline": "Mass Block Users — Free X/Twitter Script | XActions",
-    "description": "Block multiple accounts by username list. Also",
+    "description": "Block multiple accounts by username list. Also supports \"block from timeline\" mode: blocks every visible user on the current page (great for blocking spam…",
     "url": "https://xactions.app/scripts/mass-block",
     "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
     "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
@@ -99,6 +100,8 @@
     .source-badge { display: inline-block; background: var(--bg-tertiary); color: var(--text-secondary); padding: 2px 8px; border-radius: 6px; font-size: 0.6875rem; margin-left: 8px; }
     @media (max-width: 1024px) { .sidebar-right { display: none; } }
     @media (max-width: 768px) {
+      /* A wide table scrolls inside its own box instead of widening the page. */
+      .article table { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; }
       .article pre { font-size: 0.75rem; }
       .meta-row { flex-direction: column; gap: 4px; }
     }
@@ -129,7 +132,7 @@
           <span>by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></span>
         </div>
 
-        <p>Block multiple accounts by username list. Also</p>
+        <p>Block multiple accounts by username list. Also supports &quot;block from timeline&quot; mode: blocks every visible user on the current page (great for blocking spam replies). Dry-run, rate-limit detection, full result log with export.</p>
 
         
 
@@ -467,15 +470,15 @@
       <div class="sidebar-card">
         <h3>🚫 Safety &amp; Privacy</h3>
         <a href="/scripts/blacklist">🚫 Blacklist Manager</a>
-<a href="/scripts/block-bots">🤖 Block Bots</a>
+<a href="/scripts/block-bots">🤖 Block Bot Accounts</a>
 <a href="/scripts/block-by-keywords">🚫 Block By Keywords</a>
 <a href="/scripts/block-by-ratio">🚫 Block By Ratio</a>
-<a href="/scripts/block-list-transfer">🧱 Block List Transfer - XActions</a>
+<a href="/scripts/block-list-transfer">🧱 Block List Transfer</a>
 <a href="/scripts/filter-manager">🔍 Filter Manager</a>
+<a href="/scripts/id-verification">🪪 ID Verification management</a>
 <a href="/scripts/manage-muted-words">🔇 Manage Muted Words</a>
 <a href="/scripts/manage-settings">⚙️ Manage Settings</a>
 <a href="/scripts/mass-unblock">🔓 Mass Unblock Users</a>
-<a href="/scripts/mass-unmute">🔊 Mass Unmute Users</a>
       </div>
       <div class="sidebar-card">
         <h3>🔗 Quick Links</h3>

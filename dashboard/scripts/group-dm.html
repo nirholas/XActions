@@ -4,22 +4,23 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Group Direct Messages — Free X/Twitter Script | XActions</title>
-  <meta name="description" content="Create group DM conversations and send messages">
+  <meta name="description" content="Create group DM conversations and send messages to multiple users at once on X/Twitter. Free X/Twitter browser script, no API key needed.">
   <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, group, messaging">
   <meta name="author" content="nich (@nichxbt)">
   <meta name="robots" content="index, follow">
 
   <meta property="og:type" content="article">
   <meta property="og:title" content="Group Direct Messages — XActions">
-  <meta property="og:description" content="Create group DM conversations and send messages">
+  <meta property="og:description" content="Create group DM conversations and send messages to multiple users at once on X/Twitter. Free X/Twitter browser script, no API key needed.">
   <meta property="og:url" content="https://xactions.app/scripts/group-dm">
   <meta property="og:site_name" content="XActions">
-  <meta property="og:image" content="https://xactions.app/og-image.png">
+  <meta property="og:image" content="https://xactions.app/og-run.png">
 
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@nichxbt">
   <meta name="twitter:title" content="Group Direct Messages — XActions">
-  <meta name="twitter:description" content="Create group DM conversations and send messages">
+  <meta name="twitter:description" content="Create group DM conversations and send messages to multiple users at once on X/Twitter. Free X/Twitter browser script, no API key needed.">
+  <meta name="twitter:image" content="https://xactions.app/og-run.png">
 
   <link rel="canonical" href="https://xactions.app/scripts/group-dm">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
@@ -29,7 +30,7 @@
     "@context": "https://schema.org",
     "@type": "TechArticle",
     "headline": "Group Direct Messages — Free X/Twitter Script | XActions",
-    "description": "Create group DM conversations and send messages",
+    "description": "Create group DM conversations and send messages to multiple users at once on X/Twitter. Free X/Twitter browser script, no API key needed.",
     "url": "https://xactions.app/scripts/group-dm",
     "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
     "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
@@ -99,6 +100,8 @@
     .source-badge { display: inline-block; background: var(--bg-tertiary); color: var(--text-secondary); padding: 2px 8px; border-radius: 6px; font-size: 0.6875rem; margin-left: 8px; }
     @media (max-width: 1024px) { .sidebar-right { display: none; } }
     @media (max-width: 768px) {
+      /* A wide table scrolls inside its own box instead of widening the page. */
+      .article table { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; }
       .article pre { font-size: 0.75rem; }
       .meta-row { flex-direction: column; gap: 4px; }
     }
@@ -129,7 +132,7 @@
           <span>by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></span>
         </div>
 
-        <p>Create group DM conversations and send messages</p>
+        <p>Create group DM conversations and send messages to multiple users at once on X/Twitter.</p>
 
         
 
@@ -440,13 +443,13 @@ window.XActions.status()  — check progress</code></pre>
     <aside class="sidebar-right">
       <div class="sidebar-card">
         <h3>👥 Messaging</h3>
-        <a href="/scripts/auto-reply-dms">💌 Auto Reply DMs - XActions</a>
-<a href="/scripts/bulk-dm">📤 Bulk DM - XActions</a>
+        <a href="/scripts/auto-reply-dms">💌 Auto Reply DMs</a>
+<a href="/scripts/dm-exporter">📤 Browser console script to export X/Twitter DM conversations</a>
+<a href="/scripts/bulk-dm">📤 Bulk DM</a>
 <a href="/scripts/dm-calls">📞 DM Audio &amp; Video Calls</a>
-<a href="/scripts/dm-exporter">📤 DM Exporter</a>
 <a href="/scripts/dm-manager">✉️ DM Manager</a>
 <a href="/scripts/encrypted-dm">🔒 Encrypted Direct Messages</a>
-<a href="/scripts/send-direct-message">📬 Send Direct Message</a>
+<a href="/scripts/send-direct-message">📬 Send Direct Messages</a>
       </div>
       <div class="sidebar-card">
         <h3>🔗 Quick Links</h3>

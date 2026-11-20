@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Examples — XActions</title>
-<meta name="description" content="8 runnable XActions examples: scrape X profiles and timelines with no API key, export followers to CSV, monitor keywords, and drive the MCP server.">
+<meta name="description" content="9 runnable XActions examples: scrape X profiles and timelines with no API key, export followers to CSV, monitor keywords, and drive the MCP server.">
 <meta name="keywords" content="xactions, twitter automation, x automation, open source, free">
 <meta name="author" content="nich (@nichxbt)">
 <meta name="robots" content="index, follow, max-image-preview:large">
@@ -12,7 +12,7 @@
 
 <meta property="og:type" content="website">
 <meta property="og:title" content="Examples — XActions">
-<meta property="og:description" content="8 runnable XActions examples: scrape X profiles and timelines with no API key, export followers to CSV, monitor keywords, and drive the MCP server.">
+<meta property="og:description" content="9 runnable XActions examples: scrape X profiles and timelines with no API key, export followers to CSV, monitor keywords, and drive the MCP server.">
 <meta property="og:url" content="https://xactions.app/examples">
 <meta property="og:image" content="https://xactions.app/og-docs.png">
 <meta property="og:site_name" content="XActions">
@@ -20,7 +20,7 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:site" content="@nichxbt">
 <meta name="twitter:title" content="Examples — XActions">
-<meta name="twitter:description" content="8 runnable XActions examples: scrape X profiles and timelines with no API key, export followers to CSV, monitor keywords, and drive the MCP server.">
+<meta name="twitter:description" content="9 runnable XActions examples: scrape X profiles and timelines with no API key, export followers to CSV, monitor keywords, and drive the MCP server.">
 <meta name="twitter:image" content="https://xactions.app/og-docs.png">
 
 <link rel="canonical" href="https://xactions.app/examples">
@@ -37,7 +37,7 @@
   "@context": "https://schema.org",
   "@type": "ItemList",
   "name": "XActions examples",
-  "numberOfItems": 8,
+  "numberOfItems": 9,
   "itemListElement": [
     { "@type": "ListItem", "position": 1, "name": "Profile lookup", "url": "https://github.com/nirholas/XActions/blob/main/examples/01-profile-lookup.js" },
     { "@type": "ListItem", "position": 2, "name": "User timeline and engagement stats", "url": "https://github.com/nirholas/XActions/blob/main/examples/02-user-timeline.js" },
@@ -46,7 +46,8 @@
     { "@type": "ListItem", "position": 5, "name": "Export followers to CSV", "url": "https://github.com/nirholas/XActions/blob/main/examples/05-export-followers.js" },
     { "@type": "ListItem", "position": 6, "name": "Who doesn't follow you back", "url": "https://github.com/nirholas/XActions/blob/main/examples/06-find-non-followers.js" },
     { "@type": "ListItem", "position": 7, "name": "Watch a keyword and alert on it", "url": "https://github.com/nirholas/XActions/blob/main/examples/07-keyword-monitor.js" },
-    { "@type": "ListItem", "position": 8, "name": "Drive the MCP server the way an AI agent does", "url": "https://github.com/nirholas/XActions/blob/main/examples/08-mcp-tool-call.js" }
+    { "@type": "ListItem", "position": 8, "name": "Drive the MCP server the way an AI agent does", "url": "https://github.com/nirholas/XActions/blob/main/examples/08-mcp-tool-call.js" },
+    { "@type": "ListItem", "position": 9, "name": "The MCP draft-approval gate", "url": "https://github.com/nirholas/XActions/blob/main/examples/09-draft-approval.js" }
   ]
 }
 </script>
@@ -76,7 +77,7 @@
   <div class="prose">
     <span class="eyebrow">⚡ Examples</span>
     <h1>Runnable examples</h1>
-    <p class="hero__lede">8 Node.js programs built on the XActions library. Every one runs against the live API and was verified before release. 5 of them need no account at all.</p>
+    <p class="hero__lede">9 Node.js programs built on the XActions library. Every one runs against the live API and was verified before release. 6 of them need no account at all.</p>
 
     <h2 id="run-them">Run them</h2>
     <pre><code>git clone https://github.com/nirholas/XActions.git
@@ -90,50 +91,56 @@ node examples/01-profile-lookup.js</code></pre>
       <a class="card" href="https://github.com/nirholas/XActions/blob/main/examples/01-profile-lookup.js" target="_blank" rel="noopener">
         <span class="card__icon" aria-hidden="true">01</span>
         <span class="card__title">Profile lookup</span>
-        <span class="card__desc">Fetch a public X profile. No account, no API key, no browser.</span>
+        <span class="card__desc">What it does: fetches one or more public X profiles and prints the headline numbers. The shortest path from &quot;npm install xactions&quot; to real data.</span>
         <span class="card__meta"><span class="tag tag--ok">no login</span> <code>01-profile-lookup.js</code></span>
       </a>
       <a class="card" href="https://github.com/nirholas/XActions/blob/main/examples/02-user-timeline.js" target="_blank" rel="noopener">
         <span class="card__icon" aria-hidden="true">02</span>
         <span class="card__title">User timeline and engagement stats</span>
-        <span class="card__desc">Stream a public timeline and summarise what actually performs. No account needed.</span>
+        <span class="card__desc">What it does: streams a public timeline and summarises what actually performs, ranking posts by likes plus reposts plus replies and reporting the median so one viral post cannot skew the picture.</span>
         <span class="card__meta"><span class="tag tag--ok">no login</span> <code>02-user-timeline.js</code></span>
       </a>
       <a class="card" href="https://github.com/nirholas/XActions/blob/main/examples/03-sentiment-report.js" target="_blank" rel="noopener">
         <span class="card__icon" aria-hidden="true">03</span>
         <span class="card__title">Sentiment report for an account</span>
-        <span class="card__desc">Pull a public timeline and score how the account talks. The analyzer is rule-based and runs entirely offline, so this costs nothing and needs no model, no key, and no network beyond the timeline fetch itself.</span>
+        <span class="card__desc">What it does: pulls a public timeline and scores how the account talks. Prints the distribution, the most positive and most negative post, and the words that drove the scores.</span>
         <span class="card__meta"><span class="tag tag--ok">no login</span> <code>03-sentiment-report.js</code></span>
       </a>
       <a class="card" href="https://github.com/nirholas/XActions/blob/main/examples/04-cross-platform.js" target="_blank" rel="noopener">
         <span class="card__icon" aria-hidden="true">04</span>
         <span class="card__title">One account, three networks</span>
-        <span class="card__desc">Look up the same brand on X, Bluesky, and Mastodon and print the results side by side. All three reads are public: no account on any network.</span>
+        <span class="card__desc">What it does: looks up the same brand on X, Bluesky, and Mastodon and prints the results side by side. One network being down does not cost you the other two results.</span>
         <span class="card__meta"><span class="tag tag--ok">no login</span> <code>04-cross-platform.js</code></span>
       </a>
       <a class="card" href="https://github.com/nirholas/XActions/blob/main/examples/05-export-followers.js" target="_blank" rel="noopener">
         <span class="card__icon" aria-hidden="true">05</span>
         <span class="card__title">Export followers to CSV</span>
-        <span class="card__desc">Page through a follower list and write a spreadsheet-ready CSV. Requires a logged-in session: X does not serve follower lists to guests.</span>
+        <span class="card__desc">What it does: pages through a follower list and writes a spreadsheet-ready CSV. Rows are streamed to disk as they arrive rather than accumulated in memory, so an interrupted run keeps whatever it had already written.</span>
         <span class="card__meta"><span class="tag tag--auth">login</span> <code>05-export-followers.js</code></span>
       </a>
       <a class="card" href="https://github.com/nirholas/XActions/blob/main/examples/06-find-non-followers.js" target="_blank" rel="noopener">
         <span class="card__icon" aria-hidden="true">06</span>
         <span class="card__title">Who doesn&#39;t follow you back</span>
-        <span class="card__desc">The set difference that XActions is best known for, done with the HTTP client instead of a browser. Requires a logged-in session.</span>
+        <span class="card__desc">What it does: the set difference XActions is best known for, done with the HTTP client instead of a browser. Prints the biggest accounts first and writes the full list to JSON.</span>
         <span class="card__meta"><span class="tag tag--auth">login</span> <code>06-find-non-followers.js</code></span>
       </a>
       <a class="card" href="https://github.com/nirholas/XActions/blob/main/examples/07-keyword-monitor.js" target="_blank" rel="noopener">
         <span class="card__icon" aria-hidden="true">07</span>
         <span class="card__title">Watch a keyword and alert on it</span>
-        <span class="card__desc">Poll X search on an interval, score each new post for sentiment, and fire a webhook when something negative shows up. This is the shape of a brand monitor, a support-mention watcher, or an incident tripwire.</span>
+        <span class="card__desc">What it does: polls X search on an interval, scores each new post for sentiment, and fires a webhook when something negative shows up. The shape of a brand monitor, a support-mention watcher, or an incident tripwire. Seen IDs are tracked so a post is reported once, and the first poll is treated as a baseline rather than alerting on the entire backlog.</span>
         <span class="card__meta"><span class="tag tag--auth">login</span> <code>07-keyword-monitor.js</code></span>
       </a>
       <a class="card" href="https://github.com/nirholas/XActions/blob/main/examples/08-mcp-tool-call.js" target="_blank" rel="noopener">
         <span class="card__icon" aria-hidden="true">08</span>
         <span class="card__title">Drive the MCP server the way an AI agent does</span>
-        <span class="card__desc">Claude, Cursor, and Windsurf talk to XActions over MCP: they spawn the server, exchange JSON-RPC over stdio, and call tools. This example does exactly that, in about 60 lines, so you can see the wire format and verify your setup without an AI client in the loop.</span>
+        <span class="card__desc">What it does: spawns the XActions MCP server, completes the JSON-RPC handshake over stdio, lists the tools, and calls one. Exactly what Claude, Cursor, and Windsurf do, so you can see the wire format and verify a setup without an AI client in the loop. Reach for this when an MCP config &quot;doesn&#39;t work&quot; and you need to know whether the server or the client is at fault.</span>
         <span class="card__meta"><span class="tag tag--ok">no login</span> <code>08-mcp-tool-call.js</code></span>
+      </a>
+      <a class="card" href="https://github.com/nirholas/XActions/blob/main/examples/09-draft-approval.js" target="_blank" rel="noopener">
+        <span class="card__icon" aria-hidden="true">09</span>
+        <span class="card__title">The MCP draft-approval gate</span>
+        <span class="card__desc">What it does: starts the MCP server with approval mode on, calls a write tool, and shows that the call was held as a draft instead of running. Then it lists the draft over MCP and discards it. This is the safety rail you want before you let an agent post, follow, or unfollow on your behalf.</span>
+        <span class="card__meta"><span class="tag tag--ok">no login</span> <code>09-draft-approval.js</code></span>
       </a>
     </div>
 

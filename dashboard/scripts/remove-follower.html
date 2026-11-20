@@ -3,23 +3,24 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Remove Follower - XActions — Free X/Twitter Script | XActions</title>
+  <title>Remove Follower — Free X/Twitter Script | XActions</title>
   <meta name="description" content="Remove followers without blocking them: X's native &quot;Remove this follower&quot;, or a soft-block fallback.">
   <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, remove, follower, safety &amp; privacy">
   <meta name="author" content="nich (@nichxbt)">
   <meta name="robots" content="index, follow">
 
   <meta property="og:type" content="article">
-  <meta property="og:title" content="Remove Follower - XActions — XActions">
+  <meta property="og:title" content="Remove Follower — XActions">
   <meta property="og:description" content="Remove followers without blocking them: X's native &quot;Remove this follower&quot;, or a soft-block fallback.">
   <meta property="og:url" content="https://xactions.app/scripts/remove-follower">
   <meta property="og:site_name" content="XActions">
-  <meta property="og:image" content="https://xactions.app/og-image.png">
+  <meta property="og:image" content="https://xactions.app/og-run.png">
 
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@nichxbt">
-  <meta name="twitter:title" content="Remove Follower - XActions — XActions">
+  <meta name="twitter:title" content="Remove Follower — XActions">
   <meta name="twitter:description" content="Remove followers without blocking them: X's native &quot;Remove this follower&quot;, or a soft-block fallback.">
+  <meta name="twitter:image" content="https://xactions.app/og-run.png">
 
   <link rel="canonical" href="https://xactions.app/scripts/remove-follower">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
@@ -28,7 +29,7 @@
   {
     "@context": "https://schema.org",
     "@type": "TechArticle",
-    "headline": "Remove Follower - XActions — Free X/Twitter Script | XActions",
+    "headline": "Remove Follower — Free X/Twitter Script | XActions",
     "description": "Remove followers without blocking them: X's native \"Remove this follower\", or a soft-block fallback.",
     "url": "https://xactions.app/scripts/remove-follower",
     "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
@@ -47,7 +48,7 @@
       { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
       { "@type": "ListItem", "position": 2, "name": "Scripts", "item": "https://xactions.app/scripts" },
       { "@type": "ListItem", "position": 3, "name": "Safety & Privacy", "item": "https://xactions.app/scripts#safety-privacy" },
-      { "@type": "ListItem", "position": 4, "name": "Remove Follower - XActions", "item": "https://xactions.app/scripts/remove-follower" }
+      { "@type": "ListItem", "position": 4, "name": "Remove Follower", "item": "https://xactions.app/scripts/remove-follower" }
     ]
   }
   </script>
@@ -99,6 +100,8 @@
     .source-badge { display: inline-block; background: var(--bg-tertiary); color: var(--text-secondary); padding: 2px 8px; border-radius: 6px; font-size: 0.6875rem; margin-left: 8px; }
     @media (max-width: 1024px) { .sidebar-right { display: none; } }
     @media (max-width: 768px) {
+      /* A wide table scrolls inside its own box instead of widening the page. */
+      .article table { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; }
       .article pre { font-size: 0.75rem; }
       .meta-row { flex-direction: column; gap: 4px; }
     }
@@ -112,9 +115,9 @@
 
     <main class="main-content" id="main-content">
       <header class="main-header">
-        <h1>🚪 Remove Follower - XActions</h1>
+        <h1>🚪 Remove Follower</h1>
         <div class="breadcrumb">
-          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#safety-privacy">Safety &amp; Privacy</a> › Remove Follower - XActions
+          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#safety-privacy">Safety &amp; Privacy</a> › Remove Follower
         </div>
       </header>
 
@@ -507,15 +510,15 @@ ${CONFIG.dryRun ? '║  ⚠️  DRY RUN - No followers will be removed          
       <div class="sidebar-card">
         <h3>🚪 Safety &amp; Privacy</h3>
         <a href="/scripts/blacklist">🚫 Blacklist Manager</a>
-<a href="/scripts/block-bots">🤖 Block Bots</a>
+<a href="/scripts/block-bots">🤖 Block Bot Accounts</a>
 <a href="/scripts/block-by-keywords">🚫 Block By Keywords</a>
 <a href="/scripts/block-by-ratio">🚫 Block By Ratio</a>
-<a href="/scripts/block-list-transfer">🧱 Block List Transfer - XActions</a>
+<a href="/scripts/block-list-transfer">🧱 Block List Transfer</a>
 <a href="/scripts/filter-manager">🔍 Filter Manager</a>
+<a href="/scripts/id-verification">🪪 ID Verification management</a>
 <a href="/scripts/manage-muted-words">🔇 Manage Muted Words</a>
 <a href="/scripts/manage-settings">⚙️ Manage Settings</a>
 <a href="/scripts/mass-block">🚫 Mass Block Users</a>
-<a href="/scripts/mass-unblock">🔓 Mass Unblock Users</a>
       </div>
       <div class="sidebar-card">
         <h3>🔗 Quick Links</h3>

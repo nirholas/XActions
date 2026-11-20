@@ -10,6 +10,7 @@
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { isNodeProgram } from './lib/is-node-program.mjs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -324,6 +325,93 @@ function getCategoryInfo(slug) {
 
 // ─── JS File Parser ─────────────────────────────────────────────────
 
+/** Lines that are part of the header but say nothing about what the script does. */
+const HEADER_NOISE = [
+  /^(copyright|spdx)\b/i, /\blicen[sc]ed?\b/i, /\ball rights reserved\b/i,
+  /^https?:\/\//, /^[\w@./-]+\.(?:m?js|cjs)$/, /^by\s+@?nichxbt\b/i, /^@\w+/,
+  /^[=\-─━*#~_]{3,}/, /^(REQUIRES|HOW TO|USAGE|Usage|Paste |CONTROLS|Controls|Last Updated|Example|Run with|Options|Config)/, /^Features:?$/,
+  /^\d+[.)]\s/, /^[-•]\s/, /^⚠️/, /^\(/, /^[\w.$]+\([^)]*\)/,
+];
+const isNoise = (l) => HEADER_NOISE.some((re) => re.test(l));
+
+/** "XActions Automation — Algorithm Builder — by nichxbt" -> "Algorithm Builder" */
+function cleanLine(l) {
+  return l
+    .replace(/\s*[—–-]+\s*by\s+@?nichxbt\b.*$/i, '')
+    .replace(/^XActions(?: Automation)?\s*[—–:-]\s*/i, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+function looksLikeTitle(l) {
+  const c = cleanLine(l);
+  return c.length > 2 && c.length <= 60 && !/[.:;,]$/.test(c) && !/^[a-z]/.test(c);
+}
+function cleanTitle(l) {
+  return cleanLine(l)
+    .replace(/^[^\p{L}\p{N}]+/u, '')
+    .replace(/\s+(?:for|on|in)\s+(?:X\/Twitter|Twitter\/X|X|Twitter)$/i, '')
+    .replace(/\s*[—–-]\s*Production Grade$/i, '')
+    .replace(/\s+[—–-]\s+XActions$/i, '')
+    .trim();
+}
+
+/**
+ * The comment region at the top of a script: leading // lines and block
+ * comments, up to the first line of code. Returns the raw text and the
+ * meaningful lines grouped into paragraphs (blank or noise lines split them).
+ */
+function readHeader(code) {
+  const lines = code.split('\n');
+  const text = [];
+  let inBlock = false;
+  let i = 0;
+  for (; i < lines.length; i++) {
+    const t = lines[i].trim();
+    if (inBlock) {
+      const endAt = t.indexOf('*/');
+      text.push((endAt === -1 ? t : t.slice(0, endAt)).replace(/^\*+\s?/, ''));
+      if (endAt !== -1) inBlock = false;
+      continue;
+    }
+    if (t === '' || t.startsWith('#!')) { text.push(''); continue; }
+    if (t.startsWith('//')) { text.push(t.replace(/^\/\/+\s?/, '')); continue; }
+    if (t.startsWith('/*')) {
+      const rest = t.replace(/^\/\*+!?\s?/, '');
+      const endAt = rest.indexOf('*/');
+      text.push(endAt === -1 ? rest : rest.slice(0, endAt));
+      if (endAt === -1) inBlock = true;
+      continue;
+    }
+    break;
+  }
+  const paragraphs = [];
+  let cur = [];
+  for (const raw of text) {
+    const l = raw.trim();
+    if (!l || isNoise(l)) { if (cur.length) paragraphs.push(cur); cur = []; continue; }
+    cur.push(l);
+  }
+  if (cur.length) paragraphs.push(cur);
+  return { raw: lines.slice(0, i).join('\n'), text, paragraphs };
+}
+
+/** A meta description of 70-160 characters, cut at a sentence or word boundary. */
+function metaDescription(title, description) {
+  let d = (description || '').trim();
+  const tail = 'Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.';
+  const shortTail = 'Free X/Twitter browser script, no API key needed.';
+  if (!d) d = `${title}. ${tail}`;
+  else if (d.length < 90) {
+    const base = d.replace(/[.!]?$/, '.');
+    d = `${base} ${tail}`.length <= 160 ? `${base} ${tail}` : `${base} ${shortTail}`;
+  }
+  if (d.length <= 160) return d;
+  const cut = d.slice(0, 160);
+  const sentence = cut.lastIndexOf('. ');
+  if (sentence >= 80) return cut.slice(0, sentence + 1);
+  return cut.slice(0, cut.lastIndexOf(' ')).replace(/[,;:—–-]+$/, '') + '…';
+}
+
 function parseScriptFile(filePath) {
   const code = fs.readFileSync(filePath, 'utf-8');
   const result = {
@@ -341,17 +429,12 @@ function parseScriptFile(filePath) {
     lineCount: code.split('\n').length,
   };
 
-  // Extract JSDoc-style header
-  const jsdocMatch = code.match(/\/\*\*[\s\S]*?\*\//);
+  // Only the comment block at the very top of the file describes the script.
+  // Reading the first JSDoc anywhere in the file picked up helper docstrings
+  // from deep in the code ("Wait for an element to appear in the DOM").
+  const header = readHeader(code);
+  const jsdocMatch = header.raw.match(/\/\*\*[\s\S]*?\*\//);
   const headerComment = jsdocMatch ? jsdocMatch[0] : '';
-
-  // Also try line comments at top
-  const lineComments = [];
-  for (const line of code.split('\n')) {
-    if (line.trim().startsWith('//')) lineComments.push(line.trim().replace(/^\/\/\s?/, ''));
-    else if (line.trim() === '') continue;
-    else break;
-  }
 
   // Extract @tags from JSDoc
   const tagPattern = /@(\w+)\s+(.+)/g;
@@ -365,24 +448,48 @@ function parseScriptFile(filePath) {
     if (tag === 'date') result.date = value.trim();
   }
 
-  // Extract title from emoji headers like "🚫 Unfollow Everyone — Production Grade"
+  // Title: an emoji header in the JSDoc ("🚫 Unfollow Everyone — Production
+  // Grade"), else a short heading line at the top of the line comments.
   const titleMatch = headerComment.match(/\*\s+[^\n]*?([A-Z][\w\s/&—–-]+(?:—[^*\n]+)?)/);
   if (titleMatch) {
-    result.name = titleMatch[1].replace(/\s*—[\s\S]*$/, '').replace(/Production Grade/i, '').replace(/\s+/g, ' ').trim();
+    result.name = cleanTitle(titleMatch[1].replace(/\s*—[\s\S]*$/, '').replace(/Production Grade/i, '').replace(/\s+/g, ' '));
+  }
+  const paras = header.paragraphs.map((para) => para.slice());
+  const first = paras[0]?.[0];
+  // A wrapped first sentence continues in lower case on the next line; that
+  // is prose, not a heading.
+  if (first && looksLikeTitle(first) && !/^[a-z]/.test(paras[0][1] || '')) {
+    if (!result.name) result.name = cleanTitle(first);
+    paras[0].shift();
   }
 
-  // Extract description from header comment if not found via @tag
+  // Description: the first paragraph of prose, with wrapped lines joined back
+  // into whole sentences, unless the JSDoc gave a fuller @description.
+  // @description often wraps onto indented continuation lines.
+  const descAt = header.text.findIndex((l) => /^@description\b/.test(l.trim()));
+  if (descAt !== -1) {
+    const parts = [header.text[descAt].trim().replace(/^@description\s*/, '')];
+    for (const l of header.text.slice(descAt + 1)) {
+      const t = l.trim();
+      if (!t || t.startsWith('@') || /^[=\-─━*]{3,}/.test(t)) break;
+      parts.push(t);
+    }
+    result.description = parts.join(' ');
+  }
   if (!result.description) {
-    // Try first meaningful line comment. Skip the copyright/license banner that
-    // `add-license-notices` prepends to every script — it is not a description.
-    const descLine = lineComments.find(l =>
-      l.length > 15 && !l.startsWith('==') && !l.startsWith('http') &&
-      !l.startsWith('REQUIRES') && !l.startsWith('HOW TO') &&
-      !l.match(/^\d+\./) && !l.startsWith('Last Updated') &&
-      !/^(copyright|spdx|licen[sc]e|all rights reserved)\b/i.test(l) &&
-      !/\ball rights reserved\b|\blicense\b/i.test(l)
-    );
-    if (descLine) result.description = descLine;
+    // Skip a paragraph that continues a dropped line (starts in lower case)
+    // or only introduces a list (ends with a colon).
+    const prose = paras
+      .map((para) => para.join(' ').replace(/\s+/g, ' ').trim())
+      .find((t) => t.length > 15 && !/^[a-z]/.test(t) && !/:$/.test(t));
+    if (prose) {
+      result.description = /^Features:\s*/.test(prose) && result.name
+        ? prose.replace(/^Features:\s*/, `${result.name}: `)
+        : prose;
+    }
+  }
+  if (result.description) {
+    result.description = cleanLine(result.description.replace(/^[\w.-]+\.m?js\s*[—–:-]\s*/, ''));
   }
 
   // Extract USAGE section
@@ -434,8 +541,12 @@ function parseScriptFile(filePath) {
 // ─── HTML Generator ─────────────────────────────────────────────────
 
 function generateScriptPage({ slug, title, description, category, icon, sourceDir, parsed, requiresCore, relatedPages }) {
-  const seoTitle = `${title} — Free X/Twitter Script | XActions`;
-  const seoDesc = (description || `${title} — Free browser console script for X/Twitter automation. No API keys needed.`).slice(0, 160);
+  // Search results cut titles near 60-70 characters; drop the tagline when it
+  // would push the script's own name out of view.
+  const seoTitle = `${title} — Free X/Twitter Script | XActions`.length <= 70
+    ? `${title} — Free X/Twitter Script | XActions`
+    : `${title} | XActions`;
+  const seoDesc = metaDescription(title, description);
   const canonicalUrl = `${SITE_URL}/scripts/${slug}`;
   const keywords = ['xactions', 'twitter automation', 'x automation', 'browser script', 'devtools console', 'free', 'open source',
     ...slug.split('-').filter(w => w.length > 2), category.toLowerCase()].join(', ');
@@ -507,12 +618,13 @@ function generateScriptPage({ slug, title, description, category, icon, sourceDi
   <meta property="og:description" content="${escapeHtml(seoDesc)}">
   <meta property="og:url" content="${canonicalUrl}">
   <meta property="og:site_name" content="XActions">
-  <meta property="og:image" content="${SITE_URL}/og-image.png">
+  <meta property="og:image" content="${SITE_URL}/og-run.png">
 
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@nichxbt">
   <meta name="twitter:title" content="${escapeHtml(title)} — XActions">
   <meta name="twitter:description" content="${escapeHtml(seoDesc)}">
+  <meta name="twitter:image" content="${SITE_URL}/og-run.png">
 
   <link rel="canonical" href="${canonicalUrl}">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
@@ -592,6 +704,8 @@ function generateScriptPage({ slug, title, description, category, icon, sourceDi
     .source-badge { display: inline-block; background: var(--bg-tertiary); color: var(--text-secondary); padding: 2px 8px; border-radius: 6px; font-size: 0.6875rem; margin-left: 8px; }
     @media (max-width: 1024px) { .sidebar-right { display: none; } }
     @media (max-width: 768px) {
+      /* A wide table scrolls inside its own box instead of widening the page. */
+      .article table { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; }
       .article pre { font-size: 0.75rem; }
       .meta-row { flex-direction: column; gap: 4px; }
     }
@@ -736,6 +850,7 @@ function generateIndexPage(allPages) {
   <meta property="og:description" content="${allPages.length}+ free browser scripts for X/Twitter automation.">
   <meta property="og:url" content="${SITE_URL}/scripts">
   <meta property="og:site_name" content="XActions">
+  <meta property="og:image" content="${SITE_URL}/og-run.png">
 
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@nichxbt">
@@ -789,6 +904,8 @@ function generateIndexPage(allPages) {
     .no-results.visible { display: block; }
     @media (max-width: 1024px) { .sidebar-right { display: none; } }
     @media (max-width: 768px) {
+      /* A wide table scrolls inside its own box instead of widening the page. */
+      .article table { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; }
       .stats-bar { gap: 16px; }
       .stat-num { font-size: 1.25rem; }
     }
@@ -802,7 +919,7 @@ function generateIndexPage(allPages) {
 
     <main class="main-content" id="main-content">
       <header class="main-header">
-        <h1>⚡ All Scripts</h1>
+        <p class="header-title">⚡ All Scripts</p>
       </header>
 
       <div class="hero">
@@ -893,6 +1010,10 @@ function build() {
         const stat = fs.statSync(path.join(dir, f));
         if (!stat.isFile()) return false;
       }
+      // A page here tells people to paste the file into the DevTools console,
+      // so a Node program (fs imports, process.argv, a node shebang) must not
+      // get one: rssMonitor.js and evergreenRecycler.js were published that way.
+      if (isNodeProgram(fs.readFileSync(path.join(dir, f), 'utf-8'))) return false;
       return true;
     });
 

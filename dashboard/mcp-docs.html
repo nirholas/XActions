@@ -13,10 +13,12 @@
   <meta property="og:description" content="Connect your AI agents to X/Twitter with Model Context Protocol. Works with Claude, GPT, Cursor, and custom LLMs.">
   <meta property="og:url" content="https://xactions.app/mcp">
   <meta property="og:site_name" content="XActions">
+  <meta property="og:image" content="https://xactions.app/og-mcp.png">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@nichxbt">
   <meta name="twitter:title" content="XActions MCP Server - AI Twitter Integration">
   <meta name="twitter:description" content="Connect Claude, GPT, Cursor to X/Twitter with MCP. 20+ automation tools.">
+  <meta name="twitter:image" content="https://xactions.app/og-mcp.png">
   <link rel="canonical" href="https://xactions.app/mcp">
   <link rel="manifest" href="/manifest.json">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
@@ -190,7 +192,7 @@ const mp4  = await x.videoUrl('https://x.com/SpaceX/status/2092648130856571283')
         <h2 id="local">🤖 What is MCP?</h2>
         <p><strong>Model Context Protocol (MCP)</strong> is an open standard that allows AI assistants like Claude, GPT, and Cursor to connect to external tools. XActions provides a full MCP server for X/Twitter automation.</p>
 
-        <h2>⚡ Quick Start</h2>
+        <h2 id="quick-start">⚡ Quick Start</h2>
         <pre><code>npm install -g xactions
 xactions mcp start</code></pre>
         <p>Or add to Claude Desktop's <code>claude_desktop_config.json</code>:</p>
@@ -203,7 +205,7 @@ xactions mcp start</code></pre>
   }
 }</code></pre>
 
-        <h2>🛠️ Available Tools</h2>
+        <h2 id="available-tools">🛠️ Available Tools</h2>
         <div class="tool-grid">
           <div class="tool-card"><h4>unfollow_non_followers</h4><p>Mass unfollow accounts that don't follow back</p></div>
           <div class="tool-card"><h4>detect_unfollowers</h4><p>Find who unfollowed you recently</p></div>
@@ -228,7 +230,7 @@ xactions mcp start</code></pre>
           </div>
         </div>
 
-        <h2>🔧 Configuration</h2>
+        <h2 id="configuration">🔧 Configuration</h2>
         <pre><code>{
   "sessionCookie": "your_x_session_cookie",
   "rateLimit": 100,
@@ -236,7 +238,7 @@ xactions mcp start</code></pre>
   "dryRun": false
 }</code></pre>
 
-        <h2>💬 Usage with Claude</h2>
+        <h2 id="usage-with-claude">💬 Usage with Claude</h2>
         <p>Once configured, just ask Claude:</p>
         <ul>
           <li>"Unfollow everyone who doesn't follow me back"</li>
@@ -255,7 +257,7 @@ xactions mcp start</code></pre>
           <li>Configurable rate limiting</li>
         </ul>
 
-        <h2>🔗 REST API</h2>
+        <h2 id="rest-api">🔗 REST API</h2>
         <pre><code>GET  /api/followers/:username
 GET  /api/following/:username
 POST /api/unfollow

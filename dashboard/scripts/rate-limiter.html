@@ -4,22 +4,23 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Rate Limiter — Free X/Twitter Script | XActions</title>
-  <meta name="description" content="Rate limiting and quota management utility">
+  <meta name="description" content="Rate limiting and quota management utility. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
   <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, rate, limiter, automation">
   <meta name="author" content="nich (@nichxbt)">
   <meta name="robots" content="index, follow">
 
   <meta property="og:type" content="article">
   <meta property="og:title" content="Rate Limiter — XActions">
-  <meta property="og:description" content="Rate limiting and quota management utility">
+  <meta property="og:description" content="Rate limiting and quota management utility. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
   <meta property="og:url" content="https://xactions.app/scripts/rate-limiter">
   <meta property="og:site_name" content="XActions">
-  <meta property="og:image" content="https://xactions.app/og-image.png">
+  <meta property="og:image" content="https://xactions.app/og-run.png">
 
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@nichxbt">
   <meta name="twitter:title" content="Rate Limiter — XActions">
-  <meta name="twitter:description" content="Rate limiting and quota management utility">
+  <meta name="twitter:description" content="Rate limiting and quota management utility. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
+  <meta name="twitter:image" content="https://xactions.app/og-run.png">
 
   <link rel="canonical" href="https://xactions.app/scripts/rate-limiter">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
@@ -29,7 +30,7 @@
     "@context": "https://schema.org",
     "@type": "TechArticle",
     "headline": "Rate Limiter — Free X/Twitter Script | XActions",
-    "description": "Rate limiting and quota management utility",
+    "description": "Rate limiting and quota management utility. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.",
     "url": "https://xactions.app/scripts/rate-limiter",
     "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
     "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
@@ -99,6 +100,8 @@
     .source-badge { display: inline-block; background: var(--bg-tertiary); color: var(--text-secondary); padding: 2px 8px; border-radius: 6px; font-size: 0.6875rem; margin-left: 8px; }
     @media (max-width: 1024px) { .sidebar-right { display: none; } }
     @media (max-width: 768px) {
+      /* A wide table scrolls inside its own box instead of widening the page. */
+      .article table { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; }
       .article pre { font-size: 0.75rem; }
       .meta-row { flex-direction: column; gap: 4px; }
     }
@@ -551,14 +554,13 @@
     <aside class="sidebar-right">
       <div class="sidebar-card">
         <h3>⏱️ Automation</h3>
-        <a href="/scripts/actions">⚡ Actions</a>
-<a href="/scripts/control-panel">🎛️ Control Panel</a>
-<a href="/scripts/core">⚙️ Core</a>
-<a href="/scripts/customer-service">🤝 Customer Service</a>
-<a href="/scripts/protect-active-users">🛡️ Protect Active Users</a>
+        <a href="/scripts/customer-service">🤝 Customer Service Bot</a>
+<a href="/scripts/protect-active-users">🛡️ Don't Unfollow Active Users</a>
 <a href="/scripts/quota-supervisor">⚠️ Quota Supervisor</a>
-<a href="/scripts/session-logger">📋 Session Logger</a>
-<a href="/scripts/rss-monitor">📡 XActions RSS &amp; Webhook Content Ingestion</a>
+<a href="/scripts/session-logger">📋 Session Logger &amp; Analytics</a>
+<a href="/scripts/actions">⚡ XActions Actions Library - Complete X/Twitter Actions</a>
+<a href="/scripts/core">⚙️ XActions Automation Framework - Core Utilities</a>
+<a href="/scripts/control-panel">🎛️ XActions Control Panel — Floating UI for Browser Automations</a>
       </div>
       <div class="sidebar-card">
         <h3>🔗 Quick Links</h3>

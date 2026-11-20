@@ -4,22 +4,23 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Clear All Reposts — Free X/Twitter Script | XActions</title>
-  <meta name="description" content="Remove all reposts/retweets from your profile.">
+  <meta name="description" content="Remove all reposts/retweets from your profile. Supports filters (keyword, date range), rate-limit detection, pause/resume/abort, and full export.">
   <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, clear, all, reposts, content tools">
   <meta name="author" content="nich (@nichxbt)">
   <meta name="robots" content="index, follow">
 
   <meta property="og:type" content="article">
   <meta property="og:title" content="Clear All Reposts — XActions">
-  <meta property="og:description" content="Remove all reposts/retweets from your profile.">
+  <meta property="og:description" content="Remove all reposts/retweets from your profile. Supports filters (keyword, date range), rate-limit detection, pause/resume/abort, and full export.">
   <meta property="og:url" content="https://xactions.app/scripts/clear-all-reposts">
   <meta property="og:site_name" content="XActions">
-  <meta property="og:image" content="https://xactions.app/og-image.png">
+  <meta property="og:image" content="https://xactions.app/og-run.png">
 
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@nichxbt">
   <meta name="twitter:title" content="Clear All Reposts — XActions">
-  <meta name="twitter:description" content="Remove all reposts/retweets from your profile.">
+  <meta name="twitter:description" content="Remove all reposts/retweets from your profile. Supports filters (keyword, date range), rate-limit detection, pause/resume/abort, and full export.">
+  <meta name="twitter:image" content="https://xactions.app/og-run.png">
 
   <link rel="canonical" href="https://xactions.app/scripts/clear-all-reposts">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
@@ -29,7 +30,7 @@
     "@context": "https://schema.org",
     "@type": "TechArticle",
     "headline": "Clear All Reposts — Free X/Twitter Script | XActions",
-    "description": "Remove all reposts/retweets from your profile.",
+    "description": "Remove all reposts/retweets from your profile. Supports filters (keyword, date range), rate-limit detection, pause/resume/abort, and full export.",
     "url": "https://xactions.app/scripts/clear-all-reposts",
     "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
     "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
@@ -99,6 +100,8 @@
     .source-badge { display: inline-block; background: var(--bg-tertiary); color: var(--text-secondary); padding: 2px 8px; border-radius: 6px; font-size: 0.6875rem; margin-left: 8px; }
     @media (max-width: 1024px) { .sidebar-right { display: none; } }
     @media (max-width: 768px) {
+      /* A wide table scrolls inside its own box instead of widening the page. */
+      .article table { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; }
       .article pre { font-size: 0.75rem; }
       .meta-row { flex-direction: column; gap: 4px; }
     }
@@ -129,7 +132,7 @@
           <span>by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></span>
         </div>
 
-        <p>Remove all reposts/retweets from your profile.</p>
+        <p>Remove all reposts/retweets from your profile. Supports filters (keyword, date range), rate-limit detection, pause/resume/abort, and full export.</p>
 
         
 
@@ -375,8 +378,8 @@
 <a href="/scripts/clear-all-likes">🗑️ Clear All Likes</a>
 <a href="/scripts/clear-all-retweets">🗑️ Clear All Retweets</a>
 <a href="/scripts/content-repurposer">♻️ Content Repurposer</a>
-<a href="/scripts/delete-tweets">🗑️ Delete Tweets - XActions</a>
-<a href="/scripts/manage-bookmarks">📑 Manage Bookmarks</a>
+<a href="/scripts/delete-tweets">🗑️ Delete Tweets</a>
+<a href="/scripts/video-downloader-browser">🎬 Download videos from X/Twitter posts in browser</a>
       </div>
       <div class="sidebar-card">
         <h3>🔗 Quick Links</h3>
