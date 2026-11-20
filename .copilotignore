@@ -38,7 +38,7 @@ FEATURE_PROMPTS.md
 FEATURE_INVENTORY.md
 EXAMPLE_WRITER_PROMPT.md
 AGENT_PROMPTS.md
-humans.txt
+public/humans.txt
 llms-full.txt
 llms.txt
 

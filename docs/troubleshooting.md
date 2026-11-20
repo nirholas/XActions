@@ -270,9 +270,6 @@ sudo apt-get install -y \
   libgbm1 libasound2
 ```
 
-The repo ships [`setup-puppeteer.sh`](../setup-puppeteer.sh) which installs
-these for you.
-
 **Running as root, or in Docker.** Chromium's sandbox needs unprivileged
 namespaces. Set:
 

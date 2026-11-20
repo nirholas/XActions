@@ -1,10 +1,11 @@
 #!/bin/bash
 # XActions — One-command setup for local development
 # Starts PostgreSQL, installs deps, pushes schema, and runs the server
-# Usage: bash setup.sh
+# Usage: bash scripts/setup.sh   (or: npm run setup)
 # by nichxbt
 
 set -e
+cd "$(dirname "$0")/.."
 
 echo "⚡ XActions Setup"
 echo ""
