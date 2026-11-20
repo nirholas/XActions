@@ -931,12 +931,6 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://xactions.app/docs/guides/rss-monitor</loc>
-    <lastmod>2026-11-20</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
     <loc>https://xactions.app/docs/guides/scheduler</loc>
     <lastmod>2026-11-20</lastmod>
     <changefreq>monthly</changefreq>
@@ -1016,12 +1010,6 @@
   </url>
   <url>
     <loc>https://xactions.app/docs/guides/troubleshooting</loc>
-    <lastmod>2026-11-20</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://xactions.app/docs/guides/usage</loc>
     <lastmod>2026-11-20</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>

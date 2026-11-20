@@ -684,18 +684,6 @@
     "minutes": 5
   },
   {
-    "slug": "rss-monitor",
-    "title": "Rss Monitor",
-    "description": "Rss Monitor — XActions documentation",
-    "section": "Guides & Reference",
-    "icon": "📖",
-    "urlPath": "/docs/guides/rss-monitor",
-    "outSubdir": "guides",
-    "priority": 0.8,
-    "sourcePath": "docs/rss-monitor.md",
-    "minutes": 1
-  },
-  {
     "slug": "scheduler",
     "title": "Scheduler & Webhook Triggers",
     "description": "Cron-based task scheduling with job history, retries, templates, and external webhook triggers. Competes with Hypefury, Buffer, and Zapier.",
@@ -862,18 +850,6 @@
     "priority": 0.8,
     "sourcePath": "docs/troubleshooting.md",
     "minutes": 7
-  },
-  {
-    "slug": "usage",
-    "title": "Usage",
-    "description": "Usage — XActions documentation",
-    "section": "Guides & Reference",
-    "icon": "📖",
-    "urlPath": "/docs/guides/usage",
-    "outSubdir": "guides",
-    "priority": 0.8,
-    "sourcePath": "docs/usage.md",
-    "minutes": 1
   },
   {
     "slug": "video-downloader",
@@ -1250,7 +1226,7 @@
   {
     "slug": "algorithm-cultivation",
     "title": "Algorithm Cultivation & Thought Leadership",
-    "description": "Train your X/Twitter algorithm for a specific niche. Three approaches:",
+    "description": "Train your X/Twitter algorithm for a specific niche.",
     "section": "Agent Skills",
     "icon": "🎯",
     "urlPath": "/docs/skills/algorithm-cultivation",
@@ -1814,7 +1790,7 @@
   {
     "slug": "algorithm-cultivation-algorithm-internals",
     "title": "Algorithm Internals & Architecture",
-    "description": "┌─────────────────────────────────────────────────┐ │ CLI: xactions persona run │ ├─────────────────────────────────────────────────┤ │ Persona Engine (personaEng…",
+    "description": "Algorithm Internals & Architecture — XActions documentation",
     "section": "Skill References",
     "icon": "📚",
     "urlPath": "/docs/skills/algorithm-cultivation-algorithm-internals",
@@ -1898,7 +1874,7 @@
   {
     "slug": "twitter-scraping-scraper-details",
     "title": "Scraper Details",
-    "description": "Full setup for programmatic scraping:",
+    "description": "Scraper Details — XActions documentation",
     "section": "Skill References",
     "icon": "📚",
     "urlPath": "/docs/skills/twitter-scraping-scraper-details",
@@ -2269,8 +2245,8 @@
   },
   {
     "slug": "readme",
-    "title": "Quick start",
-    "description": "██╗ ██╗ █████╗ ██████╗████████╗██╗ ██████╗ ███╗ ██╗███████╗ ╚██╗██╔╝██╔══██╗██╔════╝╚══██╔══╝██║██╔═══██╗████╗ ██║██╔════╝ ╚███╔╝ ███████║██║ ██║ ██║██║ ██║██╔██╗…",
+    "title": "XActions: the complete X/Twitter automation toolkit",
+    "description": "The complete X/Twitter automation toolkit: scrapers, an MCP server for AI agents, a CLI, browser scripts and a browser extension. No API keys, no monthly fees, 100% open source.",
     "section": "Project Info",
     "icon": "📄",
     "urlPath": "/docs/project/readme",

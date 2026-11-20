@@ -95,14 +95,16 @@ function* htmlFiles(dir) {
   }
 }
 /**
- * Whether the site serves a path, the way the Worker's html_handling does:
- * the file itself, <path>.html, or <path>/index.html. dashboard/, site/ and
- * public/ are all published at the root (scripts/build-cloudflare.mjs).
+ * Whether the production site serves a path, the way Pages' clean URLs do:
+ * the file itself, <path>.html, or <path>/index.html. Production is
+ * deploy/cloudflare/build.sh, which publishes public/ and dashboard/ at the
+ * root and, from site/, only site/index.html (as /). site/video/** and
+ * site/assets/** are not deployed, so a link to them must go to GitHub.
  */
-const SERVED_ROOTS = [DASH, path.join(ROOT, 'site'), path.join(ROOT, 'public')];
+const SERVED_ROOTS = [DASH, path.join(ROOT, 'public')];
 function siteServes(urlPath) {
   const clean = urlPath.replace(/\/+$/, '');
-  if (!clean) return true;
+  if (!clean || clean === '/index.html') return true;
   return SERVED_ROOTS.some((base) => {
     const p = path.join(base, clean.slice(1));
     if (!p.startsWith(base)) return false;
@@ -164,8 +166,8 @@ for (const file of htmlFiles(DASH)) {
       }
       const repoRel = path.relative(ROOT, repoAbs).split(path.sep).join('/');
       repoLinksFixed++; changed = true;
-      // A file the site publishes from public/, site/ or dashboard/ keeps its site URL.
-      const published = repoRel.match(/^(?:public|site|dashboard)(\/.+)$/);
+      // A file the site publishes from public/ or dashboard/ keeps its site URL.
+      const published = repoRel.match(/^(?:public|dashboard)(\/.+)$/);
       if (published && siteServes(published[1])) return pre + encodeURI(published[1]) + hash + post;
       // An <img src> needs the raw file; a GitHub blob page is HTML.
       if (attr.toLowerCase() !== 'href') return pre + `${GITHUB_RAW}/${encodeURI(repoRel)}` + post;

@@ -241,6 +241,41 @@ function headingSlug(text) {
     .replace(/\s/g, '-');
 }
 
+/**
+ * Remove fenced code blocks (``` or ~~~) and HTML <pre> blocks, so text
+ * inside them is never taken for a heading or a sentence.
+ * @param {string} markdown
+ * @returns {string}
+ */
+function stripFencedCode(markdown) {
+  return markdown
+    .replace(/^[ \t]*(`{3,}|~{3,})[^\n]*\n[\s\S]*?^[ \t]*\1[ \t]*$/gm, '')
+    .replace(/<pre\b[\s\S]*?<\/pre>/gi, '');
+}
+
+/**
+ * True for a line drawn with box and block characters (U+2500-U+259F), such
+ * as an unfenced ASCII-art banner or diagram border.
+ * @param {string} line
+ * @returns {boolean}
+ */
+function isMostlyBoxDrawing(line) {
+  const drawn = (line.match(/[\u2500-\u259F]/g) || []).length;
+  return drawn > 0 && drawn / line.replace(/\s/g, '').length > 0.3;
+}
+
+/**
+ * Title and description for sources that have neither to take: README.md
+ * opens with an ASCII-art banner and a logo, and states its name in the
+ * logo's alt text and the tagline under it.
+ */
+const PAGE_OVERRIDES = {
+  'README.md': {
+    title: 'XActions: the complete X/Twitter automation toolkit',
+    description: 'The complete X/Twitter automation toolkit: scrapers, an MCP server for AI agents, a CLI, browser scripts and a browser extension. No API keys, no monthly fees, 100% open source.',
+  },
+};
+
 /** Emoji stripped from titles so headings read cleanly in nav and <title>. */
 // eslint-disable-next-line no-misleading-character-class -- FE0F and 200D are listed so they are stripped on their own
 const EMOJI = /[\u{1F000}-\u{1FAFF}\u{2300}-\u{23FF}\u{2600}-\u{27BF}\u{2B00}-\u{2BFF}\u{FE0F}\u{200D}]/gu;
@@ -250,8 +285,8 @@ const EMOJI = /[\u{1F000}-\u{1FAFF}\u{2300}-\u{23FF}\u{2600}-\u{27BF}\u{2B00}-\u
  * @returns {string|null}
  */
 function extractTitle(markdown) {
-  const cleaned = stripFrontmatter(markdown);
-  const match = cleaned.match(/^#\s+(.+)$/m);
+  // Fenced code goes first: a "# comment" line in a shell block is not a title.
+  const match = stripFencedCode(stripFrontmatter(markdown)).match(/^#\s+(.+)$/m);
   return match ? match[1].replace(EMOJI, '').trim() : null;
 }
 
@@ -261,7 +296,9 @@ function extractTitle(markdown) {
  * @returns {string|null}
  */
 function extractDescription(markdown) {
-  const cleaned = stripFrontmatter(markdown);
+  // Code is never the description: an ASCII-art banner or a box diagram in a
+  // fenced block once became the docs index card text and the search snippet.
+  const cleaned = stripFencedCode(stripFrontmatter(markdown));
   const lines = cleaned.split('\n');
 
   /**
@@ -277,6 +314,9 @@ function extractDescription(markdown) {
       .replace(/\*\*/g, '')
       .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1')
       .replace(/`/g, '')
+      .replace(/<[^>]+>/g, '')
+      .replace(/&nbsp;/g, ' ')
+      .replace(/&amp;/g, '&')
       .replace(/\s+/g, ' ')
       .trim();
 
@@ -295,7 +335,7 @@ function extractDescription(markdown) {
 
     if (paragraph.length > 0) {
       // Inside a paragraph: a blank line or any block marker ends it.
-      if (!line || /^(#|\*|-|---|\||```|>|<)/.test(line)) return finish(paragraph);
+      if (!line || /^(#|\*|-|---|\||```|>|<)/.test(line)) return withoutLeadIn(finish(paragraph));
       paragraph.push(line);
       continue;
     }
@@ -315,12 +355,28 @@ function extractDescription(markdown) {
       && !line.startsWith('```')
       && !line.startsWith('<')
       && line.length > 25
+      && !isMostlyBoxDrawing(line)
     ) {
       paragraph.push(line);
     }
   }
 
-  return paragraph.length > 0 ? finish(paragraph) : null;
+  return paragraph.length > 0 ? withoutLeadIn(finish(paragraph)) : null;
+}
+
+/**
+ * A sentence ending in ":" introduces a list or a code block and describes
+ * nothing ("Full setup for programmatic scraping:"). Drop it, and keep what
+ * precedes it when that is a real sentence; otherwise there is no description
+ * and the page falls back to its title.
+ * @param {string} text
+ * @returns {string|null}
+ */
+function withoutLeadIn(text) {
+  if (!text.endsWith(':')) return text;
+  const stop = text.lastIndexOf('. ');
+  const kept = stop === -1 ? '' : text.slice(0, stop + 1);
+  return kept.length >= 40 ? kept : null;
 }
 
 /**
@@ -412,6 +468,27 @@ function renderMarkdown(markdown) {
 
   const html = marked.parse(markdown, { renderer, gfm: true, breaks: false });
   return { html, headings };
+}
+
+/**
+ * Delete pages this generator wrote on an earlier run whose source is gone or
+ * now empty, so the site stops serving them. Only the output folders listed
+ * in SOURCES are touched, and only their direct *.html children other than
+ * index.html (build-index-pages.mjs owns those). Nothing else writes there.
+ * @param {Array<{outFile: string}>} pages
+ */
+function pruneStalePages(pages) {
+  const keep = new Set(pages.map((p) => p.outFile));
+  for (const sub of new Set(SOURCES.map((s) => s.outSubdir))) {
+    const dir = path.join(OUT_BASE, sub);
+    if (!fs.existsSync(dir)) continue;
+    for (const name of fs.readdirSync(dir)) {
+      const file = path.join(dir, name);
+      if (!name.endsWith('.html') || name === 'index.html' || keep.has(file)) continue;
+      fs.rmSync(file);
+      console.log(`  prune ${path.relative(OUT_BASE, file)} (no source)`);
+    }
+  }
 }
 
 // ─── Template ───────────────────────────────────────────────────────
@@ -775,15 +852,23 @@ async function build() {
       const slug = buildSlug(relPath);
       const markdown = fs.readFileSync(fullPath, 'utf-8');
       const body = stripFrontmatter(markdown);
+      // An empty source would publish a blank page and list it in every
+      // sidebar. Skip it; pruneStalePages() then removes any page it left.
+      if (!body.trim()) {
+        console.log(`  skip  ${source.dir === '.' ? relPath : `${source.dir}/${relPath}`} (empty)`);
+        continue;
+      }
 
-      const title = extractTitle(markdown)
+      const override = PAGE_OVERRIDES[source.dir === '.' ? relPath : `${source.dir}/${relPath}`] || {};
+      const title = override.title
+        || extractTitle(markdown)
         || extractFrontmatterField(markdown, 'name')
         || slug.replace(/-/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
 
       const page = {
         slug,
         title,
-        description: extractDescription(markdown)
+        description: override.description || extractDescription(markdown)
           || extractFrontmatterField(markdown, 'description')
           || `${title} — XActions documentation`,
         section: source.section,
@@ -822,7 +907,13 @@ async function build() {
     const siblings = sectionPages[page.section];
     const position = siblings.indexOf(page);
 
-    const { html: htmlContent, headings } = renderMarkdown(page.markdown);
+    const rendered = renderMarkdown(page.markdown);
+    const { headings } = rendered;
+    // Every page needs one h1. A source that opens below h1 level (a README
+    // that starts with a logo, a guide that starts at ##) gets its title.
+    const htmlContent = /<h1[\s>]/i.test(rendered.html)
+      ? rendered.html
+      : `<h1 id="${headingSlug(escapeHtml(page.title))}">${escapeHtml(page.title)}</h1>\n${rendered.html}`;
 
     const finalHtml = generateHTML({
       ...page,
@@ -864,6 +955,8 @@ async function build() {
   </url>`)
       .join('\n'),
   );
+
+  pruneStalePages(allPages);
 
   fs.writeFileSync(
     path.join(OUT_BASE, '_pages-manifest.json'),
