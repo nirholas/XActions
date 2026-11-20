@@ -92,6 +92,16 @@ npm run check:endpoints   # are X's GraphQL query IDs still current?
 Query IDs that need a session are reported as unchecked rather than as
 failures; set `X_AUTH_TOKEN` and `X_CSRF_TOKEN` to cover those too.
 
+If you touched anything that calls an LLM through OpenRouter, also run:
+
+```bash
+npm run check:models      # does OpenRouter still serve every model id in the code?
+```
+
+Put new defaults in `src/ai/models.js`, and use `OPENROUTER_FREE_MODEL`
+(`openrouter/free`) instead of a single `:free` id, which OpenRouter retires
+without notice.
+
 ## 📝 Contribution Guidelines
 
 ### Code Standards

@@ -401,6 +401,8 @@ Content-Type: application/json
 { "url": "https://x.com/user/status/123456789" }
 ```
 
+Or send the posts yourself as `{ "tweets": [{ "text": "..." }] }`. No account is needed. The summary comes from `google/gemini-2.5-flash` on the server's `OPENROUTER_API_KEY`; without one the response has `"available": false`. A request is limited to 200 posts and 100,000 characters (`400` beyond that).
+
 ### Get as Text/Markdown
 
 ```http
@@ -1012,7 +1014,11 @@ GET    /api/teams/:id/activity           # Activity log
 
 ## AI Content Optimizer
 
-AI-powered tweet optimization (requires OpenRouter API key).
+Tweet optimization. Every route needs a signed-in user (`Authorization: Bearer <jwt_token>`). With `OPENROUTER_API_KEY` set, `optimize`, `hashtags` and `variations` ask an LLM (`openrouter/free` unless `OPENROUTER_MODEL` says otherwise); without it they answer from rule-based heuristics. `predict` is always rule-based.
+
+`text` is required on every route: a non-empty string of at most 25,000 characters. `count` is an integer from 1 to 30 for `hashtags` (default 5) and 1 to 10 for `variations` (default 3). `goal` on `optimize` is a short phrase such as `engagement` or `replies` (letters, digits, spaces and hyphens, up to 40 characters). Anything else answers `400`.
+
+The same operations are sold per call without an account over x402 at `/api/ai/optimizer/*`.
 
 ### Optimize Tweet
 

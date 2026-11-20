@@ -6,6 +6,23 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Security
+
+- **`/api/optimizer/*` needs a signed-in user.** The router was mounted with no authentication, so on a self-hosted API server with `OPENROUTER_API_KEY` set, anyone could spend the operator's key through `optimize`, `hashtags` and `variations`, and get for free what `/api/ai/optimizer/*` charges for over x402. xactions.app was not affected (it serves the API from Cloudflare Functions, where these paths answer 503).
+- **`POST /api/thread/summarize` caps its input** at 200 posts and 100,000 characters. It stays public, since the thread reader on xactions.app uses it, but one request can no longer send an unbounded prompt on the operator's key.
+
+### Fixed
+
+- **Seven retired OpenRouter model ids replaced, so the AI features work with a key again.** Thread summaries (`google/gemini-flash-1.5`), the content optimizer and MCP thread summaries (`meta-llama/llama-3-8b-instruct:free`), LLM sentiment and the workflow AI actions (`meta-llama/llama-3.1-8b-instruct:free`), the tweet generator and persona engine (`google/gemini-flash-2.0`), image description (`x-ai/grok-2-vision-1212`), the agent's mid and smart tiers (`anthropic/claude-3.5-haiku`, `anthropic/claude-sonnet-4`) and two paste-in scripts all named models OpenRouter no longer serves, so every call failed and each feature fell back to its offline path or answered "temporarily unavailable". Defaults now live in [`src/ai/models.js`](src/ai/models.js): `openrouter/free` where a free model was meant (it always routes to a live one), `google/gemini-2.5-flash` for paid calls, and Claude Haiku 5.5 and Sonnet 5.5 for the agent, whose cost table now uses current prices. The comment generator's direct-Anthropic default moves from `claude-3-5-haiku-latest` to `claude-haiku-5-5`.
+- **The optimizer answers 400, not 500, to a request without `text`.** `hashtags`, `predict` and `variations` crashed with a TypeError; all four now validate `text`, `count` and `goal`.
+- **The optimizer no longer invents an engagement lift.** `predictedLift` was a random number from 10% to 30%.
+- **A signed-in request answers 503, not 500, while the database is unreachable,** matching the subscription and usage checks, and the auth middleware now logs the error it used to swallow.
+
+### Added
+
+- **`npm run check:models`** reads OpenRouter's public model list and reports any model id under `api/` and `src/` that it no longer serves. [`tests/ai/models.test.js`](tests/ai/models.test.js) fails offline on a hardcoded `:free` id.
+- **[`tests/api/route-table.test.js`](tests/api/route-table.test.js) checks every route the server mounts, not only the documented ones.** The contract suite walks the OpenAPI spec, which is how the undocumented optimizer went unchecked. The new suite reads the route table from the routers `api/server.js` mounts, fails on any 5xx to an empty unauthenticated request, and fails on any route that answers without credentials unless it is listed in `PUBLIC_ROUTES` with a reason.
+
 ## [5.0.0] - 2026-11-20
 
 This release follows 4.0.1 on npm. 4.0.0 and 4.0.1 were published from a tree that was never pushed to this repository, so this changelog goes straight from 3.5.0 to 5.0.0 and every entry below is relative to 3.5.0. It is a major version because Node.js 22.19 is now the minimum and some operations were removed rather than faked (both under Changed). The `xactions-mcp` wrapper moves to 5.0.0 with it and depends on `xactions` ^5.0.0.

@@ -3,6 +3,8 @@
 // Tiered LLM client for intelligent decision-making
 // by nichxbt
 
+import { AGENT_MODELS } from '../ai/models.js';
+
 /**
  * @typedef {Object} LLMConfig
  * @property {'openrouter'|'openai'|'ollama'} provider
@@ -11,11 +13,7 @@
  * @property {{ fast: string, mid: string, smart: string }} models
  */
 
-const DEFAULT_MODELS = {
-  fast: 'deepseek/deepseek-chat',
-  mid: 'anthropic/claude-3.5-haiku',
-  smart: 'anthropic/claude-sonnet-4',
-};
+const DEFAULT_MODELS = AGENT_MODELS;
 
 const PROVIDER_URLS = {
   openrouter: 'https://openrouter.ai/api/v1/chat/completions',

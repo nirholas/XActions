@@ -13,8 +13,10 @@
 // AI Content Optimizer
 // ============================================================================
 
+import { OPENROUTER_FREE_MODEL } from './models.js';
+
 const OPENROUTER_URL = 'https://openrouter.ai/api/v1/chat/completions';
-const DEFAULT_MODEL = 'meta-llama/llama-3-8b-instruct:free';
+const DEFAULT_MODEL = OPENROUTER_FREE_MODEL;
 
 /**
  * Suggest relevant hashtags for a tweet
@@ -69,7 +71,9 @@ export async function optimizeTweet(text, options = {}) {
         original: text,
         optimized: optimized.trim(),
         changes,
-        predictedLift: `~${Math.round(Math.random() * 20 + 10)}% higher engagement`,
+        // Nothing here measures engagement, so claim no number. This used to
+        // report a random 10-30% "lift".
+        predictedLift: 'AI rewrite; engagement lift not measured',
       };
     } catch (error) {
       console.log(`⚠️  AI optimization unavailable: ${error.message}`);

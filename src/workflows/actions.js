@@ -13,6 +13,7 @@
 import scrapers from '../scrapers/index.js';
 import { gotoAndRender } from '../utils/navigation.js';
 import { openComposer, typeIntoComposer, clickPostButton, confirmPosted } from '../mcp/composer.js';
+import { OPENROUTER_FREE_MODEL } from '../ai/models.js';
 
 // ============================================================================
 // Browser Pool (shared across action executions)
@@ -606,7 +607,7 @@ registerAction('summarize', {
   params: {
     input: { type: 'string', required: true, description: 'Text to summarize (or context variable name)' },
     provider: { type: 'string', default: 'openrouter', description: 'LLM provider' },
-    model: { type: 'string', default: 'meta-llama/llama-3.1-8b-instruct:free', description: 'Model ID' },
+    model: { type: 'string', default: OPENROUTER_FREE_MODEL, description: 'Model ID' },
     prompt: { type: 'string', default: 'Summarize the following text concisely:', description: 'System prompt' },
   },
   async execute(params, context) {
@@ -630,7 +631,7 @@ registerAction('summarize', {
         'X-Title': 'XActions Workflow',
       },
       body: JSON.stringify({
-        model: params.model || 'meta-llama/llama-3.1-8b-instruct:free',
+        model: params.model || OPENROUTER_FREE_MODEL,
         messages: [
           { role: 'system', content: params.prompt || 'Summarize the following text concisely:' },
           { role: 'user', content: String(text).slice(0, 4000) },
@@ -650,7 +651,7 @@ registerAction('generateText', {
   params: {
     prompt: { type: 'string', required: true, description: 'The prompt' },
     system: { type: 'string', default: 'You are a helpful assistant.', description: 'System prompt' },
-    model: { type: 'string', default: 'meta-llama/llama-3.1-8b-instruct:free', description: 'Model ID' },
+    model: { type: 'string', default: OPENROUTER_FREE_MODEL, description: 'Model ID' },
   },
   async execute(params, context) {
     const apiKey = process.env.OPENROUTER_API_KEY;
@@ -674,7 +675,7 @@ registerAction('generateText', {
         'X-Title': 'XActions Workflow',
       },
       body: JSON.stringify({
-        model: params.model || 'meta-llama/llama-3.1-8b-instruct:free',
+        model: params.model || OPENROUTER_FREE_MODEL,
         messages: [
           { role: 'system', content: params.system || 'You are a helpful assistant.' },
           { role: 'user', content: prompt.slice(0, 4000) },

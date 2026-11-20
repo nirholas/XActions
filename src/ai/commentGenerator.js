@@ -32,7 +32,7 @@ export const DEFAULT_MODELS = {
   openai: 'gpt-4o-mini',
   xai: 'grok-3-mini',
   ollama: 'llama3.1',
-  anthropic: 'claude-3-5-haiku-latest',
+  anthropic: 'claude-haiku-5-5',
   custom: '',
 };
 

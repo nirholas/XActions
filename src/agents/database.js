@@ -9,9 +9,13 @@ import fs from 'fs';
 
 // Default model costs per million tokens (USD)
 const MODEL_COSTS = {
-  'deepseek/deepseek-chat': { input: 0.14, output: 0.28 },
-  'anthropic/claude-3.5-haiku': { input: 0.80, output: 4.00 },
-  'anthropic/claude-sonnet-4': { input: 3.00, output: 15.00 },
+  // OpenRouter list prices, checked 2026-11-20.
+  'deepseek/deepseek-chat': { input: 0.26, output: 1.03 },
+  'anthropic/claude-haiku-5.5': { input: 0.10, output: 0.50 },
+  'anthropic/claude-sonnet-5.5': { input: 2.00, output: 10.00 },
+  // Retired ids, kept so usage recorded before the switch is still priced.
+  'anthropic/claude-3.5-haiku': { input: 0.80, output: 4.00 }, // check:models ignore
+  'anthropic/claude-sonnet-4': { input: 3.00, output: 15.00 }, // check:models ignore
 };
 
 /**
