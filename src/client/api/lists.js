@@ -6,8 +6,9 @@
  * @license Apache-2.0
  */
 
-import { Tweet } from '../models/Tweet.js';
-import { Profile } from '../models/Profile.js';
+/** @typedef {import('../models/Tweet.js').Tweet} Tweet */
+/** @typedef {import('../models/Profile.js').Profile} Profile */
+
 import { GRAPHQL_ENDPOINTS, graphqlQuery, DEFAULT_FEATURES } from './graphqlQueries.js';
 import { parseTimelineEntries, parseTweetEntry, parseUserEntry, extractCursor } from './parsers.js';
 

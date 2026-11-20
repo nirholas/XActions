@@ -7,8 +7,13 @@
  * @see src/scrapers/twitter/http/engagement.js
  */
 
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { GRAPHQL, GRAPHQL_BASE, REST, REST_BASE } from '../../src/scrapers/twitter/http/endpoints.js';
+import { describe, it, expect, vi } from 'vitest';
+import {
+  GRAPHQL,
+  GRAPHQL_BASE,
+  REST,
+  REST_BASE,
+} from '../../src/scrapers/twitter/http/endpoints.js';
 import { TwitterHttpClient } from '../../src/scrapers/twitter/http/client.js';
 import {
   likeTweet,

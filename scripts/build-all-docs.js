@@ -238,7 +238,8 @@ function headingSlug(text) {
 }
 
 /** Emoji stripped from titles so headings read cleanly in nav and <title>. */
-const EMOJI = /[\u{1F000}-\u{1FAFF}\u{2600}-\u{27BF}\u{2B00}-\u{2BFF}\u{FE0F}\u{200D}]/gu;
+// eslint-disable-next-line no-misleading-character-class -- FE0F and 200D are listed so they are stripped on their own
+const EMOJI = /[\u{1F000}-\u{1FAFF}\u{2300}-\u{23FF}\u{2600}-\u{27BF}\u{2B00}-\u{2BFF}\u{FE0F}\u{200D}]/gu;
 
 /**
  * @param {string} markdown

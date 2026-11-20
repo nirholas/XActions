@@ -12,11 +12,7 @@
  * @license Apache-2.0
  */
 
-import {
-  GRAPHQL,
-  DEFAULT_FEATURES,
-  buildGraphQLUrl,
-} from './endpoints.js';
+import { GRAPHQL, DEFAULT_FEATURES } from './endpoints.js';
 import { AuthError, NotFoundError } from './errors.js';
 import { bindCheckpoint } from './checkpoint.js';
 

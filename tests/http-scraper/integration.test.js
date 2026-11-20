@@ -15,37 +15,25 @@
  * @author nich (@nichxbt)
  */
 
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 
 // Core modules under test
-import {
-  TwitterHttpClient,
-  WaitingRateLimitStrategy,
-} from '../../src/scrapers/twitter/http/client.js';
-import {
-  GRAPHQL,
-  GRAPHQL_BASE,
-  REST,
-  REST_BASE,
-  BEARER_TOKEN,
-} from '../../src/scrapers/twitter/http/endpoints.js';
+import { TwitterHttpClient } from '../../src/scrapers/twitter/http/client.js';
+import { GRAPHQL, GRAPHQL_BASE } from '../../src/scrapers/twitter/http/endpoints.js';
 import {
   AuthError,
   RateLimitError,
   NotFoundError,
-  NetworkError,
 } from '../../src/scrapers/twitter/http/errors.js';
 
 // Scraper modules
-import { scrapeProfile, parseUserData } from '../../src/scrapers/twitter/http/profile.js';
+import { scrapeProfile } from '../../src/scrapers/twitter/http/profile.js';
 import {
-  scrapeFollowers,
-  scrapeFollowing,
   scrapeNonFollowers,
   parseUserList,
 } from '../../src/scrapers/twitter/http/relationships.js';
-import { postTweet, deleteTweet, postThread } from '../../src/scrapers/twitter/http/actions.js';
-import { likeTweet, unlikeTweet } from '../../src/scrapers/twitter/http/engagement.js';
+import { postTweet, deleteTweet } from '../../src/scrapers/twitter/http/actions.js';
+import { likeTweet } from '../../src/scrapers/twitter/http/engagement.js';
 import { GuestTokenManager } from '../../src/scrapers/twitter/http/guest.js';
 
 // Fixtures

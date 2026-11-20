@@ -168,7 +168,7 @@ function loadOverrides() {
     try {
       parsed = JSON.parse(env);
     } catch (error) {
-      throw new Error(`XACTIONS_ACTION_CAPS is not valid JSON: ${error.message}`);
+      throw new Error(`XACTIONS_ACTION_CAPS is not valid JSON: ${error.message}`, { cause: error });
     }
     layers.push(parseCapsObject(parsed, 'XACTIONS_ACTION_CAPS'));
   }

@@ -20,8 +20,6 @@ import {
   scrapeTweets,
   searchTweets,
   scrapeThread,
-  scrapeLikes,
-  scrapeMedia,
   scrapeListMembers,
   scrapeBookmarks,
   scrapeNotifications,
@@ -32,7 +30,6 @@ import {
 import { AsyncLocalStorage } from 'node:async_hooks';
 import fs from 'fs/promises';
 import path from 'path';
-import os from 'os';
 
 import { isBrowserConnected, isPageUsable } from '../utils/browserState.js';
 import { loadSavedSession, sessionDir } from '../utils/savedSession.js';
@@ -1954,7 +1951,7 @@ export async function x_creator_analytics({ period = '28d' }) {
 // HTTP Client Tools (no Puppeteer — faster, lightweight)
 // ============================================================================
 
-import { Scraper, SearchMode } from '../client/index.js';
+import { Scraper } from '../client/index.js';
 
 /**
  * Helper: create a Scraper instance with saved cookies if available.

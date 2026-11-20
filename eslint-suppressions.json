@@ -1,0 +1,1273 @@
+{
+  "api/routes/ai.js": {
+    "no-unused-vars": {
+      "count": 2
+    }
+  },
+  "api/routes/ai/scrape.js": {
+    "no-unused-vars": {
+      "count": 3
+    }
+  },
+  "api/routes/ai/sentiment.js": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "api/routes/ai/utility.js": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "api/server.js": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "api/services/browserAutomation.js": {
+    "no-unused-vars": {
+      "count": 8
+    }
+  },
+  "api/services/licenseManager.js": {
+    "no-useless-assignment": {
+      "count": 1
+    }
+  },
+  "api/services/licensing.js": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "api/services/operations/puppeteer/scriptRunner.js": {
+    "no-unused-vars": {
+      "count": 1
+    },
+    "no-useless-assignment": {
+      "count": 1
+    }
+  },
+  "api/services/threadExtractor.js": {
+    "no-empty": {
+      "count": 3
+    }
+  },
+  "api/services/videoExtractor.js": {
+    "no-empty": {
+      "count": 4
+    }
+  },
+  "api/utils/security.js": {
+    "no-useless-escape": {
+      "count": 1
+    }
+  },
+  "dashboard/js/analytics.js": {
+    "no-unused-vars": {
+      "count": 9
+    }
+  },
+  "dashboard/js/workflow-builder.js": {
+    "no-unused-vars": {
+      "count": 2
+    },
+    "no-useless-assignment": {
+      "count": 1
+    }
+  },
+  "extension/background/service-worker.js": {
+    "no-unused-vars": {
+      "count": 2
+    }
+  },
+  "extension/content/injected.js": {
+    "no-unused-vars": {
+      "count": 7
+    }
+  },
+  "extension/generate-icons.cjs": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "extension/popup/popup.js": {
+    "no-unused-vars": {
+      "count": 2
+    },
+    "no-useless-assignment": {
+      "count": 1
+    }
+  },
+  "functions/api/video/extract-form.js": {
+    "no-useless-assignment": {
+      "count": 1
+    }
+  },
+  "integrations/n8n/nodes/XActions/XActionsTrigger.node.js": {
+    "no-unused-vars": {
+      "count": 1
+    },
+    "no-useless-assignment": {
+      "count": 1
+    }
+  },
+  "scripts/audienceDemographics.js": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "scripts/audit-site.mjs": {
+    "no-useless-assignment": {
+      "count": 1
+    }
+  },
+  "scripts/backupAccount.js": {
+    "no-empty": {
+      "count": 1
+    }
+  },
+  "scripts/bookmarkExporter.js": {
+    "no-empty": {
+      "count": 1
+    },
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "scripts/build-ask-actions.mjs": {
+    "no-useless-escape": {
+      "count": 1
+    }
+  },
+  "scripts/build-docs-pages.js": {
+    "no-unused-vars": {
+      "count": 4
+    }
+  },
+  "scripts/build-index-pages.mjs": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "scripts/build-script-pages.js": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "scripts/businessAnalytics.js": {
+    "no-empty": {
+      "count": 1
+    }
+  },
+  "scripts/detectUnfollowers.js": {
+    "no-empty": {
+      "count": 1
+    }
+  },
+  "scripts/discoveryExplore.js": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "scripts/dmManager.js": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "scripts/engageProfile.js": {
+    "no-useless-escape": {
+      "count": 1
+    }
+  },
+  "scripts/engagementBooster.js": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "scripts/engagementLeaderboard.js": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "scripts/followRatioManager.js": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "scripts/followerGrowthTracker.js": {
+    "no-empty": {
+      "count": 1
+    }
+  },
+  "scripts/generate-missing-docs.js": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "scripts/grokIntegration.js": {
+    "no-empty": {
+      "count": 1
+    }
+  },
+  "scripts/keywordMonitor.js": {
+    "no-empty": {
+      "count": 1
+    }
+  },
+  "scripts/leaveAllCommunities.js": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "scripts/linkScraper.js": {
+    "no-empty": {
+      "count": 1
+    }
+  },
+  "scripts/manageBookmarks.js": {
+    "no-empty": {
+      "count": 2
+    }
+  },
+  "scripts/manageLists.js": {
+    "no-empty": {
+      "count": 1
+    }
+  },
+  "scripts/manageSettings.js": {
+    "no-empty": {
+      "count": 1
+    },
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "scripts/multiAccountTimelineLiker.js": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "scripts/naturalFlow.js": {
+    "no-empty": {
+      "count": 1
+    }
+  },
+  "scripts/newFollowersAlert.js": {
+    "no-empty": {
+      "count": 1
+    }
+  },
+  "scripts/premiumFeatures.js": {
+    "no-unused-vars": {
+      "count": 2
+    }
+  },
+  "scripts/premiumManager.js": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "scripts/qrCodeSharing.js": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "scripts/quoteTweetAutomation.js": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "scripts/scrape-profile-with-replies.js": {
+    "no-unused-vars": {
+      "count": 4
+    },
+    "no-useless-escape": {
+      "count": 2
+    }
+  },
+  "scripts/scrapeAnalytics.js": {
+    "no-empty": {
+      "count": 1
+    }
+  },
+  "scripts/scrapeCashtagSearch.js": {
+    "no-empty": {
+      "count": 1
+    },
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "scripts/scrapeDMs.js": {
+    "no-unused-vars": {
+      "count": 2
+    }
+  },
+  "scripts/scrapeReplies.js": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "scripts/scrapeSpaces.js": {
+    "no-empty": {
+      "count": 2
+    },
+    "no-unused-vars": {
+      "count": 2
+    }
+  },
+  "scripts/searchSweep.js": {
+    "no-useless-escape": {
+      "count": 1
+    }
+  },
+  "scripts/shadowbanChecker.js": {
+    "no-empty": {
+      "count": 1
+    }
+  },
+  "scripts/sync-user-agents.mjs": {
+    "no-useless-assignment": {
+      "count": 2
+    }
+  },
+  "scripts/sync-x-endpoints.mjs": {
+    "no-useless-assignment": {
+      "count": 1
+    }
+  },
+  "scripts/templates/script-template.js": {
+    "no-unused-vars": {
+      "count": 4
+    }
+  },
+  "scripts/tweetABTester.js": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "scripts/tweetPriceCorrelation.js": {
+    "no-unused-vars": {
+      "count": 3
+    }
+  },
+  "scripts/twitter/add-to-list.js": {
+    "no-empty": {
+      "count": 1
+    }
+  },
+  "scripts/twitter/auto-commenter.js": {
+    "no-empty": {
+      "count": 1
+    },
+    "no-useless-escape": {
+      "count": 1
+    }
+  },
+  "scripts/twitter/best-time-to-post.js": {
+    "no-unused-vars": {
+      "count": 1
+    },
+    "no-useless-escape": {
+      "count": 1
+    }
+  },
+  "scripts/twitter/blacklist.js": {
+    "no-useless-escape": {
+      "count": 2
+    }
+  },
+  "scripts/twitter/bookmark-exporter.js": {
+    "no-empty": {
+      "count": 1
+    }
+  },
+  "scripts/twitter/clear-all-bookmarks.js": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "scripts/twitter/clear-all-likes.js": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "scripts/twitter/clear-all-retweets.js": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "scripts/twitter/competitor-analysis.js": {
+    "no-useless-escape": {
+      "count": 1
+    }
+  },
+  "scripts/twitter/continuous-monitor.js": {
+    "no-empty": {
+      "count": 2
+    },
+    "no-useless-escape": {
+      "count": 1
+    }
+  },
+  "scripts/twitter/engagement-analytics.js": {
+    "no-useless-escape": {
+      "count": 1
+    }
+  },
+  "scripts/twitter/follow-engagers.js": {
+    "no-empty": {
+      "count": 1
+    }
+  },
+  "scripts/twitter/follow-target-users.js": {
+    "no-empty": {
+      "count": 1
+    },
+    "no-useless-escape": {
+      "count": 1
+    }
+  },
+  "scripts/twitter/followers-growth-tracker.js": {
+    "no-unused-vars": {
+      "count": 2
+    },
+    "no-useless-escape": {
+      "count": 1
+    }
+  },
+  "scripts/twitter/hashtag-analytics.js": {
+    "no-useless-escape": {
+      "count": 1
+    }
+  },
+  "scripts/twitter/interact-by-users.js": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "scripts/twitter/keyword-follow.js": {
+    "no-empty": {
+      "count": 1
+    }
+  },
+  "scripts/twitter/leave-community.js": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "scripts/twitter/like-by-hashtag.js": {
+    "no-empty": {
+      "count": 1
+    }
+  },
+  "scripts/twitter/like-by-location.js": {
+    "no-empty": {
+      "count": 1
+    }
+  },
+  "scripts/twitter/like-by-user.js": {
+    "no-useless-escape": {
+      "count": 4
+    }
+  },
+  "scripts/twitter/like-user-replies.js": {
+    "no-useless-escape": {
+      "count": 1
+    }
+  },
+  "scripts/twitter/link-scraper.js": {
+    "no-useless-escape": {
+      "count": 1
+    }
+  },
+  "scripts/twitter/mass-block.js": {
+    "no-empty": {
+      "count": 1
+    }
+  },
+  "scripts/twitter/mass-unblock.js": {
+    "no-useless-assignment": {
+      "count": 1
+    }
+  },
+  "scripts/twitter/mass-unmute.js": {
+    "no-useless-assignment": {
+      "count": 1
+    }
+  },
+  "scripts/twitter/monitor-account.js": {
+    "no-empty": {
+      "count": 1
+    },
+    "no-useless-escape": {
+      "count": 1
+    }
+  },
+  "scripts/twitter/multi-account.js": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "scripts/twitter/new-followers-alert.js": {
+    "no-empty": {
+      "count": 2
+    }
+  },
+  "scripts/twitter/profile-stats.js": {
+    "no-unused-vars": {
+      "count": 1
+    },
+    "no-useless-escape": {
+      "count": 1
+    }
+  },
+  "scripts/twitter/protect-active-users.js": {
+    "no-empty": {
+      "count": 1
+    },
+    "no-unused-vars": {
+      "count": 1
+    },
+    "no-useless-escape": {
+      "count": 1
+    }
+  },
+  "scripts/twitter/scrape-followers.js": {
+    "no-useless-assignment": {
+      "count": 1
+    }
+  },
+  "scripts/twitter/scrape-following.js": {
+    "no-useless-assignment": {
+      "count": 1
+    }
+  },
+  "scripts/twitter/scrape-likers.js": {
+    "no-useless-assignment": {
+      "count": 1
+    }
+  },
+  "scripts/twitter/scrape-profile-posts.js": {
+    "no-useless-escape": {
+      "count": 1
+    }
+  },
+  "scripts/twitter/scrape-profile-with-replies.js": {
+    "no-unused-vars": {
+      "count": 4
+    },
+    "no-useless-escape": {
+      "count": 2
+    }
+  },
+  "scripts/twitter/scrape-retweeters.js": {
+    "no-useless-assignment": {
+      "count": 1
+    }
+  },
+  "scripts/twitter/scrape-spaces.js": {
+    "no-useless-escape": {
+      "count": 2
+    }
+  },
+  "scripts/twitter/smart-unfollow.js": {
+    "no-empty": {
+      "count": 4
+    }
+  },
+  "scripts/twitter/thread-unroller.js": {
+    "no-empty": {
+      "count": 1
+    },
+    "no-useless-escape": {
+      "count": 1
+    }
+  },
+  "scripts/twitter/update-banner.js": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "scripts/twitter/update-profile-picture.js": {
+    "no-useless-assignment": {
+      "count": 2
+    }
+  },
+  "scripts/twitter/video-downloader.js": {
+    "no-empty": {
+      "count": 2
+    },
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "src/a2a/discovery.js": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "src/a2a/orchestrator.js": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "src/a2a/skillRegistry.js": {
+    "no-unused-vars": {
+      "count": 1
+    },
+    "no-useless-assignment": {
+      "count": 1
+    }
+  },
+  "src/a2a/streaming.js": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "src/adCampaignManager.js": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "src/adsManager.js": {
+    "no-unused-vars": {
+      "count": 2
+    }
+  },
+  "src/advancedCreator.js": {
+    "no-unused-vars": {
+      "count": 2
+    }
+  },
+  "src/advancedGrok.js": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "src/advancedNotifications.js": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "src/advancedPremium.js": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "src/advancedProfile.js": {
+    "no-useless-assignment": {
+      "count": 1
+    }
+  },
+  "src/advancedSettings.js": {
+    "no-unused-vars": {
+      "count": 3
+    }
+  },
+  "src/advancedSpaces.js": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "src/agents/setup.js": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "src/ai/commentGenerator.js": {
+    "no-useless-escape": {
+      "count": 1
+    }
+  },
+  "src/ai/contentOptimizer.js": {
+    "no-unused-vars": {
+      "count": 2
+    },
+    "no-useless-assignment": {
+      "count": 1
+    },
+    "no-useless-escape": {
+      "count": 2
+    }
+  },
+  "src/ai/voiceAnalyzer.js": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "src/audienceDemographics.js": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "src/autoRepost.js": {
+    "no-useless-escape": {
+      "count": 1
+    }
+  },
+  "src/automation/actions.js": {
+    "no-unused-vars": {
+      "count": 5
+    }
+  },
+  "src/automation/algorithmBuilder.js": {
+    "no-unused-vars": {
+      "count": 4
+    }
+  },
+  "src/automation/algorithmTrainer.js": {
+    "no-unused-vars": {
+      "count": 6
+    }
+  },
+  "src/automation/autoCommenter.js": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "src/automation/controlPanel.js": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "src/automation/customerService.js": {
+    "no-unused-vars": {
+      "count": 2
+    }
+  },
+  "src/automation/evergreenRecycler.js": {
+    "no-useless-assignment": {
+      "count": 1
+    }
+  },
+  "src/automation/followTargetUsers.js": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "src/automation/growthSuite.js": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "src/automation/keywordFollow.js": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "src/automation/linkScraper.js": {
+    "no-empty": {
+      "count": 1
+    }
+  },
+  "src/automation/sessionLogger.js": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "src/backupAccount.js": {
+    "no-empty": {
+      "count": 1
+    }
+  },
+  "src/bestTimeToPost.js": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "src/blockListManager.js": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "src/bookmarkOrganizer.js": {
+    "no-useless-escape": {
+      "count": 1
+    }
+  },
+  "src/bulk/bulkOperations.js": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "src/bulkDeleteTweets.js": {
+    "no-empty": {
+      "count": 3
+    },
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "src/clearAllBookmarks.js": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "src/cli/commands/reputation.js": {
+    "no-useless-assignment": {
+      "count": 1
+    }
+  },
+  "src/cli/commands/skills.js": {
+    "no-useless-assignment": {
+      "count": 2
+    }
+  },
+  "src/cli/index.js": {
+    "no-empty": {
+      "count": 5
+    },
+    "no-unused-vars": {
+      "count": 8
+    },
+    "no-useless-escape": {
+      "count": 8
+    }
+  },
+  "src/client/Scraper.js": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "src/client/api/dms.js": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "src/client/api/trends.js": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "src/client/auth/CredentialAuth.js": {
+    "no-useless-assignment": {
+      "count": 1
+    }
+  },
+  "src/communityManager.js": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "src/contentRepurposer.js": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "src/continuousMonitor.js": {
+    "no-empty": {
+      "count": 1
+    }
+  },
+  "src/creatorStudio.js": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "src/creatorSubscriptions.js": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "src/delegateAccess.js": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "src/edge/openapi.js": {
+    "no-useless-escape": {
+      "count": 1
+    }
+  },
+  "src/encryptedDM.js": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "src/engagementAnalytics.js": {
+    "no-unused-vars": {
+      "count": 1
+    },
+    "no-useless-escape": {
+      "count": 1
+    }
+  },
+  "src/engagementBooster.js": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "src/engagementLeaderboard.js": {
+    "no-unused-vars": {
+      "count": 3
+    }
+  },
+  "src/followRatioManager.js": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "src/followerGrowthTracker.js": {
+    "no-useless-assignment": {
+      "count": 1
+    }
+  },
+  "src/followerTools.js": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "src/graph/builder.js": {
+    "no-empty": {
+      "count": 1
+    }
+  },
+  "src/graph/index.js": {
+    "no-empty": {
+      "count": 1
+    }
+  },
+  "src/graph/recommendations.js": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "src/graph/visualizer.js": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "src/grokIntegration.js": {
+    "no-empty": {
+      "count": 1
+    }
+  },
+  "src/hashtagAnalytics.js": {
+    "no-useless-escape": {
+      "count": 1
+    }
+  },
+  "src/massBlock.js": {
+    "no-unused-vars": {
+      "count": 2
+    }
+  },
+  "src/mcp/edgePrompts.js": {
+    "no-useless-escape": {
+      "count": 1
+    }
+  },
+  "src/mcp/followAction.js": {
+    "no-useless-assignment": {
+      "count": 3
+    }
+  },
+  "src/mcp/local-tools.js": {
+    "no-empty": {
+      "count": 3
+    },
+    "no-unused-vars": {
+      "count": 2
+    }
+  },
+  "src/mcp/server.js": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "src/mcp/x402-client.js": {
+    "no-unused-vars": {
+      "count": 2
+    }
+  },
+  "src/media/sources.js": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "src/muteByKeywords.js": {
+    "no-useless-escape": {
+      "count": 1
+    }
+  },
+  "src/notifications/notifier.js": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "src/plugins/template/index.js": {
+    "no-unused-vars": {
+      "count": 2
+    }
+  },
+  "src/portability/importer.js": {
+    "no-unused-vars": {
+      "count": 3
+    }
+  },
+  "src/postAdvanced.js": {
+    "no-unused-vars": {
+      "count": 3
+    }
+  },
+  "src/postInteractions.js": {
+    "no-unused-vars": {
+      "count": 2
+    }
+  },
+  "src/profileManager.js": {
+    "no-empty": {
+      "count": 2
+    },
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "src/qrCodeSharing.js": {
+    "no-useless-escape": {
+      "count": 1
+    }
+  },
+  "src/removeFollowers.js": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "src/reportSpam.js": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "src/savedSearchManager.js": {
+    "no-unused-vars": {
+      "count": 2
+    },
+    "no-useless-escape": {
+      "count": 1
+    }
+  },
+  "src/schedulePosts.js": {
+    "no-unused-vars": {
+      "count": 3
+    }
+  },
+  "src/scheduler/scheduler.js": {
+    "no-empty": {
+      "count": 1
+    }
+  },
+  "src/scrapeSpaces.js": {
+    "no-unused-vars": {
+      "count": 1
+    },
+    "no-useless-escape": {
+      "count": 2
+    }
+  },
+  "src/scrapers/adapters/base.js": {
+    "no-unused-vars": {
+      "count": 17
+    }
+  },
+  "src/scrapers/adapters/cheerio.js": {
+    "no-unused-vars": {
+      "count": 7
+    }
+  },
+  "src/scrapers/adapters/crawlee.js": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "src/scrapers/adapters/got-jsdom.js": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "src/scrapers/adapters/http.js": {
+    "no-unused-vars": {
+      "count": 14
+    }
+  },
+  "src/scrapers/adapters/selenium.js": {
+    "no-unused-vars": {
+      "count": 3
+    }
+  },
+  "src/scrapers/bookmarkExporter.js": {
+    "no-empty": {
+      "count": 1
+    },
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "src/scrapers/showMoreExpander.js": {
+    "no-unused-vars": {
+      "count": 2
+    }
+  },
+  "src/scrapers/threads/index.js": {
+    "no-unused-vars": {
+      "count": 3
+    }
+  },
+  "src/scrapers/twitter/http/auth.js": {
+    "no-unused-vars": {
+      "count": 2
+    },
+    "no-useless-assignment": {
+      "count": 1
+    }
+  },
+  "src/scrapers/twitter/http/client.js": {
+    "no-useless-assignment": {
+      "count": 1
+    }
+  },
+  "src/scrapers/twitter/http/dm.js": {
+    "no-unused-vars": {
+      "count": 3
+    }
+  },
+  "src/scrapers/twitter/http/media.js": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "src/scraping/stealthBrowser.js": {
+    "no-unused-vars": {
+      "count": 2
+    }
+  },
+  "src/shadowbanChecker.js": {
+    "no-empty": {
+      "count": 1
+    },
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "src/shareEmbed.js": {
+    "no-unused-vars": {
+      "count": 2
+    }
+  },
+  "src/threadComposer.js": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "src/timelineScraper.js": {
+    "no-unused-vars": {
+      "count": 5
+    },
+    "no-useless-assignment": {
+      "count": 1
+    }
+  },
+  "src/topicManager.js": {
+    "no-unused-vars": {
+      "count": 2
+    }
+  },
+  "src/unfollowEveryone.js": {
+    "no-empty": {
+      "count": 3
+    }
+  },
+  "src/unfollowWDFBLog.js": {
+    "no-empty": {
+      "count": 2
+    },
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "src/unfollowback.js": {
+    "no-empty": {
+      "count": 2
+    }
+  },
+  "src/welcomeNewFollowers.js": {
+    "no-unused-vars": {
+      "count": 2
+    }
+  },
+  "src/workflows/actions.js": {
+    "no-empty": {
+      "count": 2
+    }
+  },
+  "src/workflows/store.js": {
+    "no-empty": {
+      "count": 2
+    }
+  },
+  "src/workflows/triggers.js": {
+    "no-empty": {
+      "count": 1
+    }
+  },
+  "src/xPro.js": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "src/xProManager.js": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "tests/a2a/integration.test.js": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "tests/a2a/server.test.js": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "tests/client/auth/credentialAuth.test.js": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "tests/http-scraper/auth.test.js": {
+    "no-unused-vars": {
+      "count": 2
+    }
+  },
+  "tests/http-scraper/integration.test.js": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "tests/http-scraper/relationships.test.js": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "tests/http-scraper/search.test.js": {
+    "no-unused-vars": {
+      "count": 7
+    }
+  },
+  "tests/http-scraper/thread.test.js": {
+    "no-unused-vars": {
+      "count": 3
+    }
+  },
+  "tests/http-scraper/tweets.test.js": {
+    "no-unused-vars": {
+      "count": 2
+    }
+  },
+  "tests/x402.test.js": {
+    "no-unused-vars": {
+      "count": 3
+    }
+  }
+}

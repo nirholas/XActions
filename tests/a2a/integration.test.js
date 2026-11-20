@@ -11,8 +11,8 @@
 import { describe, it, expect, beforeAll, afterAll } from 'vitest';
 import { createA2AServer } from '../../src/a2a/server.js';
 import { getAllSkills, searchSkills, getSkillById } from '../../src/a2a/skillRegistry.js';
-import { generateAgentCard, clearCardCache } from '../../src/a2a/agentCard.js';
-import { createTask, createTextPart, TASK_STATES, jsonRpcSuccess } from '../../src/a2a/types.js';
+import { clearCardCache } from '../../src/a2a/agentCard.js';
+import { TASK_STATES } from '../../src/a2a/types.js';
 import { TaskDecomposer } from '../../src/a2a/orchestrator.js';
 
 // ── Server lifecycle ─────────────────────────────────────────────────────────

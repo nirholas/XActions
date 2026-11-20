@@ -30,17 +30,12 @@ import {
   getOperationName,
   pathForOperation,
   operationForPath,
-  SUPPORTED_NETWORKS,
   getAcceptedNetworks,
   ensureConfigValidated,
-  isX402Configured
+  isX402Configured,
 } from '../config/x402-config.js';
 import { recordPayment } from '../services/payment-stats.js';
-import {
-  notifyPaymentSettled,
-  notifyPaymentFailed,
-  PAYMENT_EVENTS
-} from '../services/payment-webhooks.js';
+import { notifyPaymentSettled, notifyPaymentFailed } from '../services/payment-webhooks.js';
 
 // Lazy-loaded x402 middleware instance
 let _middleware = null;

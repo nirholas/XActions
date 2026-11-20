@@ -63,7 +63,7 @@ async function loadPuppeteer() {
     puppeteer.use(stealthModule.default());
     puppeteerLoaded = true;
   } catch (err) {
-    throw new Error(`Puppeteer not available: ${err.message}`);
+    throw new Error(`Puppeteer not available: ${err.message}`, { cause: err });
   }
 }
 

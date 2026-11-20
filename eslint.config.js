@@ -1,7 +1,16 @@
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
 /**
  * ESLint flat config. Correctness only: undefined variables, unreachable code,
- * duplicate keys. Style is deliberately not enforced here.
+ * duplicate keys, dead code. Style is deliberately not enforced here.
+ *
+ * Violations that predate a rule are recorded in eslint-suppressions.json, so a
+ * rule can be switched on without first fixing every old hit. Only new
+ * violations fail, and a suppression that no longer matches anything fails too,
+ * so the file can only shrink. After fixing old hits, drop their entries:
+ *
+ *   npx eslint . --prune-suppressions
+ *
+ * Do not regenerate the whole file to make a new violation go away.
  *
  * Run: npm run lint
  */
@@ -44,22 +53,19 @@ export default [
       },
     },
     rules: {
-      // Style-adjacent rules from "recommended" that this codebase does not follow yet.
-      'no-unused-vars': 'off',
-      'no-empty': 'off',
-      'no-useless-escape': 'off',
-      'no-prototype-builtins': 'off',
-      'no-control-regex': 'off',
-      'no-async-promise-executor': 'off',
-      'no-cond-assign': 'off',
-      'no-fallthrough': 'off',
-      'no-inner-declarations': 'off',
-      'no-misleading-character-class': 'off',
-      'no-case-declarations': 'off',
-      'no-constant-condition': 'off',
-      'no-useless-catch': 'off',
-      'no-useless-assignment': 'off',
-      'preserve-caught-error': 'off',
+      // Unused bindings are dead code or a misspelled name. A leading underscore
+      // marks one that is unused on purpose (a positional argument, say).
+      'no-unused-vars': ['error', {
+        args: 'after-used',
+        argsIgnorePattern: '^_',
+        varsIgnorePattern: '^_',
+        destructuredArrayIgnorePattern: '^_',
+        caughtErrors: 'none',
+        ignoreRestSiblings: true,
+      }],
+      // An empty block needs a comment saying why ignoring is safe; a bare
+      // `catch {}` is how an error turns into a silent wrong answer.
+      'no-empty': ['error', { allowEmptyCatch: false }],
       // `(m || [, ''])[1]` is the regex-fallback idiom used throughout the browser scripts.
       'no-sparse-arrays': 'off',
       // A doc comment in scripts/build-all-docs.js names a zero-width space on purpose.

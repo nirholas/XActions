@@ -71,9 +71,11 @@
   const NEGATORS = new Set(['not', "n't", 'no', 'never', 'neither', 'nobody', 'nothing', 'hardly', 'barely', 'rarely']);
   const INTENSIFIERS = { 'very': 1.5, 'really': 1.5, 'extremely': 2, 'absolutely': 2, 'super': 1.5, 'so': 1.3, 'totally': 1.5, 'incredibly': 2 };
 
-  // ── Emoji sentiment
-  const EMOJI_POS = /[😀😃😄😁😆😂🤣😊😇🥰😍🤩😘😗😙😚😋😛😜🤪😝🤑🤗🤭🥳🎉🎊💪🔥✨💯👏❤️💕💖💗💝💘🙏👍👌✅🏆🥇🎯💎🚀⭐🌟]/;
-  const EMOJI_NEG = /[😢😭😤😡🤬😠😞😔😟😣😩😫😰😱🤮💀☠️👎❌🚫💩😒😑😐🙄]/;
+  // ── Emoji sentiment. Alternations with the `u` flag, not character classes: a
+  // class of emoji without `u` matches UTF-16 surrogate halves, and nearly every
+  // emoji shares the same high surrogate, so each one scored as positive AND negative.
+  const EMOJI_POS = /(?:❤️|😀|😃|😄|😁|😆|😂|🤣|😊|😇|🥰|😍|🤩|😘|😗|😙|😚|😋|😛|😜|🤪|😝|🤑|🤗|🤭|🥳|🎉|🎊|💪|🔥|💯|👏|💕|💖|💗|💝|💘|🙏|👍|👌|🏆|🥇|🎯|💎|🚀|🌟|✨|✅|⭐|❤)/u;
+  const EMOJI_NEG = /(?:☠️|😢|😭|😤|😡|🤬|😠|😞|😔|😟|😣|😩|😫|😰|😱|🤮|💀|👎|🚫|💩|😒|😑|😐|🙄|❌|☠)/u;
 
   // ── Analyze single tweet ──────────────────────────────────
   const analyzeTweet = (text) => {
@@ -100,8 +102,8 @@
     }
 
     // Emoji bonus
-    const emojiPosMatches = text.match(new RegExp(EMOJI_POS.source, 'g'));
-    const emojiNegMatches = text.match(new RegExp(EMOJI_NEG.source, 'g'));
+    const emojiPosMatches = text.match(new RegExp(EMOJI_POS.source, 'gu'));
+    const emojiNegMatches = text.match(new RegExp(EMOJI_NEG.source, 'gu'));
     if (emojiPosMatches) score += emojiPosMatches.length * 0.5;
     if (emojiNegMatches) score -= emojiNegMatches.length * 0.5;
 

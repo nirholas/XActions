@@ -23,7 +23,6 @@ import {
   retargetPlatform,
   extractVersion,
   buildProfiles,
-  renderModule,
   readFixtures,
   sync,
   DEFAULT_PROFILE_ID as GENERATOR_DEFAULT_PROFILE_ID,

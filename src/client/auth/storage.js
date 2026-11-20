@@ -10,7 +10,6 @@
  */
 
 import { promises as fs } from 'node:fs';
-import { homedir } from 'node:os';
 import { join, dirname } from 'node:path';
 import { CookieAuth } from './CookieAuth.js';
 import { xactionsHome } from '../../utils/savedSession.js';

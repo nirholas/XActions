@@ -5,7 +5,7 @@
  */
 
 import { createBridge } from '../../src/a2a/bridge.js';
-import { createTextPart, createDataPart } from '../../src/a2a/types.js';
+import { createTextPart } from '../../src/a2a/types.js';
 
 describe('createBridge', () => {
   it('returns an object with execute, parseNaturalLanguage, batchExecute', () => {

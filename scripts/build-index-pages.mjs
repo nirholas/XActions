@@ -25,7 +25,7 @@
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import { renderPage, escapeHtml, SITE_URL, REPO_URL } from './lib/page-shell.mjs';
+import { renderPage, escapeHtml, REPO_URL } from './lib/page-shell.mjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.join(__dirname, '..');

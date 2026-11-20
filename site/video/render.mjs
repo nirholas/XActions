@@ -15,7 +15,6 @@
 
 import { bundle } from '@remotion/bundler';
 import { renderMedia, selectComposition } from '@remotion/renderer';
-import { createRequire } from 'module';
 import path from 'path';
 import { fileURLToPath } from 'url';
 

@@ -14,7 +14,7 @@
 
 import { BEARER_TOKEN } from '../api/graphqlQueries.js';
 import { AuthenticationError } from '../errors.js';
-import { updateJarFromResponse, extractCsrfToken } from './CookieParser.js';
+import { extractCsrfToken } from './CookieParser.js';
 import { randomUserAgent } from './userAgent.js';
 
 const LOGIN_URL = 'https://api.x.com/1.1/onboarding/task.json';

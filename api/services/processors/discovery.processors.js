@@ -25,15 +25,37 @@ import { PublicUrlError, publicFetch } from '../../utils/publicUrl.js';
 import { BlockList, isIP } from 'node:net';
 
 import { JobInputError } from './context.js';
-import { GRAPHQL, REST_BASE, buildGraphQLVariables, resolveGraphQL } from '../../../src/scrapers/twitter/http/endpoints.js';
-import { AuthError, NotFoundError, TwitterApiError } from '../../../src/scrapers/twitter/http/errors.js';
-import { scrapeExplorePage, scrapeTrends, scrapeTrendsByWoeid } from '../../../src/scrapers/twitter/http/explore.js';
+import {
+  GRAPHQL,
+  REST_BASE,
+  buildGraphQLVariables,
+  resolveGraphQL,
+} from '../../../src/scrapers/twitter/http/endpoints.js';
+import { AuthError, TwitterApiError } from '../../../src/scrapers/twitter/http/errors.js';
+import {
+  scrapeExplorePage,
+  scrapeTrends,
+  scrapeTrendsByWoeid,
+} from '../../../src/scrapers/twitter/http/explore.js';
 import { searchTweets, searchUsers } from '../../../src/scrapers/twitter/http/search.js';
-import { parseTimelineInstructions, scrapeTweetById } from '../../../src/scrapers/twitter/http/tweets.js';
+import {
+  parseTimelineInstructions,
+  scrapeTweetById,
+} from '../../../src/scrapers/twitter/http/tweets.js';
 import { findInstructions, paginate } from '../../../src/scrapers/twitter/http/paging.js';
-import { mimeFromBuffer, parseMediaEntity, uploadChunked } from '../../../src/scrapers/twitter/http/media.js';
+import {
+  mimeFromBuffer,
+  parseMediaEntity,
+  uploadChunked,
+} from '../../../src/scrapers/twitter/http/media.js';
 import { scrapeProfile } from '../../../src/scrapers/twitter/http/profile.js';
-import { DEFAULT_TEMPLATE, TEMPLATE_KEYS, applyFilters, itemsFromTweet, renderTemplate } from '../../../src/media/index.js';
+import {
+  DEFAULT_TEMPLATE,
+  TEMPLATE_KEYS,
+  applyFilters,
+  itemsFromTweet,
+  renderTemplate,
+} from '../../../src/media/index.js';
 import { extractTweetVideo } from '../../../src/video/edgeExtractor.js';
 
 // ---------------------------------------------------------------------------

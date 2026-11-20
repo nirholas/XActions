@@ -11,8 +11,14 @@
  */
 
 import express from 'express';
-import { extractThread, getCachedThread, parseTweetUrl, formatAsText, formatAsMarkdown } from '../services/threadExtractor.js';
-import { summarizeThread, calculateReadingTime } from '../services/threadSummarizer.js';
+import {
+  extractThread,
+  getCachedThread,
+  parseTweetUrl,
+  formatAsText,
+  formatAsMarkdown,
+} from '../services/threadExtractor.js';
+import { summarizeThread } from '../services/threadSummarizer.js';
 
 const router = express.Router();
 

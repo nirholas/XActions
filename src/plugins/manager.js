@@ -14,9 +14,7 @@ import {
   writePluginsConfig,
   loadPlugin,
   loadAllPlugins,
-  validatePlugin,
   isValidPluginName,
-  discoverPlugins,
   packageNameFromSpec,
 } from './loader.js';
 
@@ -67,7 +65,7 @@ export async function installPlugin(name) {
       // No shell: the name is one argument, so it cannot carry a second command.
       execFileSync('npm', ['install', '--', name], { stdio: 'pipe', cwd: process.cwd() });
     } catch (error) {
-      throw new Error(`Failed to install "${name}": ${error.message}`);
+      throw new Error(`Failed to install "${name}": ${error.message}`, { cause: error });
     }
   }
 

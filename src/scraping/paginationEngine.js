@@ -12,7 +12,6 @@
 import fs from 'fs';
 import fsp from 'fs/promises';
 import path from 'path';
-import os from 'os';
 import { xactionsHome } from '../utils/savedSession.js';
 
 const DATA_DIR = xactionsHome();

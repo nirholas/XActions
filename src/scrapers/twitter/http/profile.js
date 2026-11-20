@@ -11,7 +11,7 @@
  */
 
 import { GRAPHQL } from './endpoints.js';
-import { NotFoundError, AuthError, TwitterApiError } from './errors.js';
+import { NotFoundError, TwitterApiError } from './errors.js';
 
 // ---------------------------------------------------------------------------
 // Parsing

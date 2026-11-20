@@ -13,7 +13,6 @@
 import Database from 'better-sqlite3';
 import fs from 'fs';
 import path from 'path';
-import os from 'os';
 import { xactionsHome } from '../utils/savedSession.js';
 
 // ============================================================================

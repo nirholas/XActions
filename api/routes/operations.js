@@ -2,7 +2,6 @@
 import express from 'express';
 import { prisma } from '../../src/utils/prisma.js';
 import { authMiddleware } from '../middleware/auth.js';
-import { getTwitterClient } from './twitter.js';
 import { queueJob } from '../services/jobQueue.js';
 
 // Payment routes archived - XActions is now 100% free and open-source

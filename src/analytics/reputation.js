@@ -10,7 +10,7 @@
  * @license Apache-2.0
  */
 
-import { analyzeSentiment, analyzeBatch, aggregateResults } from './sentiment.js';
+import { analyzeBatch, aggregateResults } from './sentiment.js';
 import { checkAlerts } from './alerts.js';
 
 // ============================================================================

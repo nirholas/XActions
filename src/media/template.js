@@ -45,6 +45,7 @@ export const TEMPLATE_KEYS = Object.freeze({
 export const DEFAULT_TEMPLATE = '{username}/{tweet_id}_{num}.{ext}';
 
 /** Characters no filesystem we support tolerates, plus control characters. */
+// eslint-disable-next-line no-control-regex -- control characters are illegal in file names
 const ILLEGAL = /[\u0000-\u001f<>:"|?*\\]/g;
 
 /**
