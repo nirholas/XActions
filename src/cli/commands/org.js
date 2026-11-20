@@ -48,7 +48,7 @@ import {
   createSessionClient,
   KEY_ENV,
 } from '../../orgs/index.js';
-import { getXactionsHome as xactionsHome } from '../../mcp/action-caps.js';
+import { xactionsHome } from '../../utils/savedSession.js';
 
 // ---------------------------------------------------------------------------
 // Output helpers
