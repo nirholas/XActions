@@ -2165,7 +2165,15 @@ program
       },
     };
 
-    const configPath = configPaths[client]?.[platform] || configPaths[client]?.linux;
+    // An unknown client used to print Claude Desktop's format and exit 0, and
+    // --write then did nothing. Refuse it, the same as search --filter does.
+    if (!configPaths[client]) {
+      console.error(chalk.red(`Unknown --client "${client}". Use one of: ${Object.keys(configPaths).join(', ')}.`));
+      process.exitCode = 1;
+      return;
+    }
+
+    const configPath = configPaths[client][platform] || configPaths[client].linux;
 
     // Build the MCP config snippet
     const mcpEntry = {
@@ -2244,7 +2252,7 @@ program
   .description('Show XActions information')
   .action(() => {
     console.log(`
-${chalk.bold.cyan('⚡ XActions')} ${chalk.gray('v3.0.0')}
+${chalk.bold.cyan('⚡ XActions')} ${chalk.gray(`v${VERSION}`)}
 
 ${chalk.bold('The Complete X/Twitter Automation Toolkit')}
 

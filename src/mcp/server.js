@@ -2771,8 +2771,11 @@ async function dispatchTool(name, args, options = {}) {
   if (name.startsWith('x_history_') || name === 'x_growth_rate' || name === 'x_compare_accounts') {
     return await executeCompetitiveTool(name, args);
   }
+  // x_schedule_post shares the prefix but is the composer's schedule dialog in
+  // local-tools, not the scheduler queue; routing it here made every call fail
+  // with "Unknown competitive tool".
   if (name === 'x_audience_overlap' || name.startsWith('x_crm_') || name.startsWith('x_bulk_') ||
-      name.startsWith('x_schedule_') || name.startsWith('x_evergreen_') || name.startsWith('x_rss_') ||
+      (name.startsWith('x_schedule_') && name !== 'x_schedule_post') || name.startsWith('x_evergreen_') || name.startsWith('x_rss_') ||
       name.startsWith('x_optimize_') || name === 'x_suggest_hashtags' || name === 'x_predict_performance' ||
       name === 'x_generate_variations' || name.startsWith('x_notify_') || name.startsWith('x_dataset_') ||
       name.startsWith('x_team_') || name === 'x_import_data' || name === 'x_convert_format') {
@@ -4845,9 +4848,10 @@ function createMcpServer(overrides = {}) {
             text: JSON.stringify(result, null, 2),
           },
         ],
-        // A tool that reports `{ success: false }` failed; say so in the
-        // protocol, not only inside the text, so the agent does not count it.
-        ...(result && typeof result === 'object' && result.success === false ? { isError: true } : {}),
+        // A tool that reports `{ success: false }` or `{ error }` failed; say
+        // so in the protocol, not only inside the text, so the agent does not
+        // count it.
+        ...(drafts.reportsFailure(result) ? { isError: true } : {}),
       };
 
     } catch (error) {
