@@ -149,14 +149,15 @@ export function paymentRequiredResponse(request, paymentRequired) {
  * Ask the facilitator whether a payment payload satisfies the requirements.
  * @param {string} facilitator
  * @param {object} paymentPayload
- * @param {object} paymentRequirements
+ * @param {object} paymentRequirements - In the same protocol version as the payload.
+ * @param {number} [x402Version] - The payload's version; v2 requirements name CAIP-2 networks.
  * @returns {Promise<{ isValid: boolean, payer?: string, invalidReason?: string }>}
  */
-export async function verifyPayment(facilitator, paymentPayload, paymentRequirements) {
+export async function verifyPayment(facilitator, paymentPayload, paymentRequirements, x402Version = 1) {
   const response = await fetch(`${facilitator.replace(/\/+$/, '')}/verify`, {
     method: 'POST',
     headers: { 'content-type': 'application/json' },
-    body: JSON.stringify({ x402Version: 1, paymentPayload, paymentRequirements }),
+    body: JSON.stringify({ x402Version, paymentPayload, paymentRequirements }),
   });
   if (!response.ok) {
     // Pass the facilitator's own words through. "HTTP 400" tells a caller
@@ -175,14 +176,15 @@ export async function verifyPayment(facilitator, paymentPayload, paymentRequirem
  * never charged for a response they did not get.
  * @param {string} facilitator
  * @param {object} paymentPayload
- * @param {object} paymentRequirements
+ * @param {object} paymentRequirements - In the same protocol version as the payload.
+ * @param {number} [x402Version]
  * @returns {Promise<{ success: boolean, transaction?: string, network?: string, payer?: string, errorReason?: string }>}
  */
-export async function settlePayment(facilitator, paymentPayload, paymentRequirements) {
+export async function settlePayment(facilitator, paymentPayload, paymentRequirements, x402Version = 1) {
   const response = await fetch(`${facilitator.replace(/\/+$/, '')}/settle`, {
     method: 'POST',
     headers: { 'content-type': 'application/json' },
-    body: JSON.stringify({ x402Version: 1, paymentPayload, paymentRequirements }),
+    body: JSON.stringify({ x402Version, paymentPayload, paymentRequirements }),
   });
   if (!response.ok) {
     const detail = await response.text().catch(() => '');
@@ -256,7 +258,13 @@ export function withX402({ price, description }, handler) {
     const attached = readPayment(request);
     if (!attached) return paymentRequiredResponse(request, paymentRequired);
 
-    const requirements = matchRequirements(paymentRequired.accepts, attached.payload, api.sameNetwork);
+    // Answer a payment in the protocol version it was made in. A v2 client pays
+    // against the CAIP-2 terms from the PAYMENT-REQUIRED header; handing the
+    // facilitator the v1 view (network "solana") with a v2 payload is refused
+    // with "x402Version 2 requires CAIP-2 network format".
+    const version = attached.payload?.x402Version === 2 ? 2 : 1;
+    const published = version === 2 ? paymentRequired['x-x402-v2'].accepts : paymentRequired.accepts;
+    const requirements = matchRequirements(published, attached.payload, api.sameNetwork);
     if (!requirements) {
       return paymentRequiredResponse(request, {
         ...paymentRequired,
@@ -264,7 +272,7 @@ export function withX402({ price, description }, handler) {
       });
     }
 
-    const verification = await verifyPayment(facilitator, attached.payload, requirements);
+    const verification = await verifyPayment(facilitator, attached.payload, requirements, version);
     if (!verification.isValid) {
       return paymentRequiredResponse(request, {
         ...paymentRequired,
@@ -275,7 +283,7 @@ export function withX402({ price, description }, handler) {
     const response = await handler({ ...context, payment: { payer: verification.payer, requirements } });
     if (response.status >= 400) return response;
 
-    const settlement = await settlePayment(facilitator, attached.payload, requirements);
+    const settlement = await settlePayment(facilitator, attached.payload, requirements, version);
     if (!settlement.success) {
       return new Response(
         JSON.stringify({
