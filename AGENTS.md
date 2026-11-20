@@ -1,6 +1,6 @@
 # XActions for agents
 
-X/Twitter automation with no X API key: a 58-command CLI, a Node library, 156
+X/Twitter automation with no X API key: a 59-command CLI, a Node library, 160
 MCP tools, 50 agent skills, 95 browser console scripts, and a web dashboard.
 Apache-2.0, by nichxbt.
 
@@ -23,7 +23,7 @@ difference is what each costs you before you have read a single tweet.
 | Writes | reads, plus `engage` and `bulk` | every write tool, with an approval gate |
 | Usable without client configuration | yes, it is just a process | no, the client must be configured first |
 
-The tool list is not small. The server advertises 156 tools, and the
+The tool list is not small. The server advertises 160 tools, and the
 `tools/list` payload it serves is about 60 KB of JSON before you have done any
 work at all. Measure it yourself:
 
@@ -241,12 +241,12 @@ stdio is the default and is what a local client wants. `--http` (or
 remote or hosted client; set `XACTIONS_MCP_TOKEN` and send
 `Authorization: Bearer <token>` to require auth on it.
 
-### Do not load all 156 tools
+### Do not load all 160 tools
 
 The tool list is filterable by group, and a filtered tool is neither advertised
 nor callable, so the schema cost drops with it. Groups: `read`, `write`, `dm`,
 `lists`, `spaces`, `analytics`, `ai`, `grok`, `automation`, `monitoring`,
-`workflows`, `persona`, `graph`, `data`, `x402`, `drafts`, `auth`.
+`workflows`, `persona`, `orgs`, `graph`, `data`, `x402`, `drafts`, `auth`.
 
 ```bash
 XACTIONS_MCP_TOOLS=read,analytics node src/mcp/server.js
@@ -332,6 +332,7 @@ is not, that is a bug in this table.
 | Read the full text of a long-form Article | `xactions article <url>`, the `x_get_article` MCP tool, or `scrapeArticle` in `src/scrapers/twitter/http/tweets.js` |
 | Import an official X archive | `xactions archive <path-to-zip>` |
 | Hold agent writes for human approval | set `XACTIONS_MCP_REQUIRE_APPROVAL=1`, then `xactions drafts` |
+| Run a family of accounts as a team (newsroom, company main/dev/status, brand affiliates) | `xactions org`, library in `src/orgs/`. Agents draft with the `orgs` MCP group; people approve. See [`docs/orgs.md`](docs/orgs.md) |
 | Log in from a browser already signed in to x.com | `xactions login --from-browser`, or `--cookies-file` for an export |
 | Watch an account in real time | `xactions stream start tweet <user>`, or `src/streaming/livePipeline.js` for x.com's own event pipeline |
 | Send an event to another service | `src/notifications/webhook.js`, signed with `XACTIONS_WEBHOOK_SECRET` |

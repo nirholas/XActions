@@ -4,7 +4,7 @@
 
 ## Overview
 
-XActions automates X/Twitter without official API access. It combines 95 browser-paste console scripts, HTTP and Puppeteer scrapers, an MCP server with 156 tools, a CLI with 58 commands, 50 agent skills, and a full-stack Express.js dashboard backed by PostgreSQL.
+XActions automates X/Twitter without official API access. It combines 95 browser-paste console scripts, HTTP and Puppeteer scrapers, an MCP server with 160 tools, a CLI with 59 commands, 50 agent skills, and a full-stack Express.js dashboard backed by PostgreSQL.
 
 Two lanes lead into the same engine, and picking the right one matters for an agent: shell out to the CLI for a handful of reads, load the MCP server for long sessions and writes. AGENTS.md is the single source of truth on that choice and on the repository layout.
 

@@ -64,7 +64,7 @@ export const GROUPS = [
   {
     title: 'Automate',
     hint: 'Run it without you',
-    commands: ['workflow', 'agent', 'notify', 'plugin', 'team', 'dataset'],
+    commands: ['workflow', 'agent', 'notify', 'plugin', 'org', 'team', 'dataset'],
   },
   {
     title: 'Move data',

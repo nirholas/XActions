@@ -335,7 +335,7 @@ call that would exceed it is refused before anything reaches X.
 onto Claude Desktop > Settings > Extensions; it prompts for the session cookie
 and tool groups at install time.
 
-### 6.2 Complete MCP Tool List (156 tools)
+### 6.2 Complete MCP Tool List (160 tools)
 
 Grouped by tool group, alphabetical within each group. "Write" marks the tools
 the approval gate holds and the daily caps charge.
@@ -503,8 +503,8 @@ the approval gate holds and the daily caps charge.
 > **How to use:** `npx xactions <command>`, or `npm run cli -- <command>` from a clone.
 > **Auth:** stored under `~/.xactions` (override with `XACTIONS_HOME`).
 
-58 commands, grouped by task exactly as `xactions` with no arguments prints
-them, plus 85 subcommands. Two more are registered but ungrouped: `completion`,
+59 commands, grouped by task exactly as `xactions` with no arguments prints
+them, plus 106 subcommands. Two more are registered but ungrouped: `completion`,
 which prints a shell completion script generated from the live command tree,
 and `ask`.
 
@@ -848,11 +848,11 @@ rows on every run and fails the build when one has drifted.
 
 | Category | Count | Where it comes from |
 |----------|-------|---------------------|
-| MCP tools * | 152 | the `TOOLS` array in `src/mcp/server.js` |
-| CLI commands * | 56 | the `GROUPS` arrays in `src/cli/help-groups.js`, which is what `xactions --help` prints |
-| CLI subcommands | 85 | the subcommands registered under those commands |
+| MCP tools * | 160 | the `TOOLS` array in `src/mcp/server.js` |
+| CLI commands * | 59 | the `GROUPS` arrays in `src/cli/help-groups.js`, which is what `xactions --help` prints |
+| CLI subcommands | 106 | the subcommands registered under those commands |
 | Agent skills * | 50 | directories under `skills/`, indexed in `skills/index.json` |
-| API route modules * | 40 | `.js` files in `api/routes/` |
+| API route modules * | 41 | `.js` files in `api/routes/` |
 | Browser console scripts | 95 | files in `scripts/` carrying a "Paste in DevTools" header, catalogued in [browser-scripts.md](browser-scripts.md) |
 | Standalone console variants | 110 | `.js` files in `scripts/twitter/` |
 | Library modules at `src/` top level | 131 | `.js` files directly in `src/` |

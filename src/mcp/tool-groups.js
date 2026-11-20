@@ -7,7 +7,7 @@
  *
  * 1. GROUP_RULES assigns every tool name to exactly one group (read, write,
  *    dm, lists, spaces, analytics, ai, grok, automation, monitoring,
- *    workflows, persona, graph, data, x402, drafts, auth). Groups are what a
+ *    workflows, persona, orgs, graph, data, x402, drafts, auth). Groups are what a
  *    user names in XACTIONS_MCP_TOOLS / XACTIONS_MCP_EXCLUDE or on the
  *    --tools / --exclude flags, so a config can say "read,analytics" instead
  *    of listing forty tool names.
@@ -62,6 +62,10 @@ export const GROUP_RULES = Object.freeze([
   {
     group: 'persona',
     prefixes: ['x_persona_'],
+  },
+  {
+    group: 'orgs',
+    prefixes: ['x_org_'],
   },
   {
     group: 'graph',

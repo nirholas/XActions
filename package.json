@@ -33,7 +33,8 @@
     "./spaces": "./src/spaces/agent.js",
     "./portability": "./src/portability/index.js",
     "./media": "./src/media/index.js",
-    "./analysis": "./src/analysis/accountReport.js"
+    "./analysis": "./src/analysis/accountReport.js",
+    "./orgs": "./src/orgs/index.js"
   },
   "bin": {
     "xactions": "./src/cli/index.js",

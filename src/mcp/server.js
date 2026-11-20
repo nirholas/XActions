@@ -2371,6 +2371,60 @@ const TOOLS = [
       },
     },
   },
+  // ====== Organizations (see src/orgs). Agents read and draft; people approve and publish. ======
+  {
+    name: 'x_org_list',
+    description: 'List the organizations set up with `xactions org`: families of X accounts a team runs in the open (a newsroom\'s main and regional handles, a company\'s main, dev and status accounts). Returns each org id, name, and how many accounts and members it has.',
+    inputSchema: { type: 'object', properties: {} },
+  },
+  {
+    name: 'x_org_queue',
+    description: 'The post queue of one organization, newest first: each post with its primary account, the variants and reposts on other accounts, its status (draft, approved, rejected, published, partial, failed), its schedule, and per-account publish results. Also returns the connected accounts with their labels and kinds.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        org: { type: 'string', description: 'Organization id' },
+        status: { type: 'string', enum: ['draft', 'approved', 'rejected', 'published', 'partial', 'failed', 'all'], description: 'Only posts in this state (default: all)' },
+        member: { type: 'string', description: 'Member acting (default: XACTIONS_ORG_MEMBER, or the only member)' },
+      },
+      required: ['org'],
+    },
+  },
+  {
+    name: 'x_org_calendar',
+    description: 'Drafted and approved posts of one organization grouped by day, with overdue posts first and unscheduled ones apart. Use it to find gaps before drafting.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        org: { type: 'string', description: 'Organization id' },
+        days: { type: 'number', description: 'How many days ahead (default 14)' },
+        member: { type: 'string', description: 'Member acting (default: XACTIONS_ORG_MEMBER, or the only member)' },
+      },
+      required: ['org'],
+    },
+  },
+  {
+    name: 'x_org_draft',
+    description: 'Draft a post into an organization\'s queue. Nothing is published: an editor approves it with `xactions org approve` and it ships on `xactions org publish`. Give the primary account and its text; put the same news on other accounts either as a variant written for that audience or as a repost of the primary. Variants that are too alike are refused, because X forbids duplicate posts across accounts you run; affiliate accounts get their disclosure tag added and cannot repost.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        org: { type: 'string', description: 'Organization id' },
+        account: { type: 'string', description: 'Primary account handle' },
+        text: { type: 'string', description: 'Primary text' },
+        variants: {
+          type: 'array',
+          description: 'Other accounts with their own wording',
+          items: { type: 'object', properties: { account: { type: 'string' }, text: { type: 'string' } }, required: ['account', 'text'] },
+        },
+        reposts: { type: 'array', items: { type: 'string' }, description: 'Other accounts that repost the primary once it is published' },
+        scheduledFor: { type: 'string', description: 'ISO 8601 time to publish at or after' },
+        note: { type: 'string', description: 'Note for the reviewer, such as sources or why now' },
+        member: { type: 'string', description: 'Member the draft is written as; needs writer or above (default: XACTIONS_ORG_MEMBER, or the only member)' },
+      },
+      required: ['org', 'account', 'text'],
+    },
+  },
   // ====== Draft approval (always available, see tool-groups.js) ======
   {
     name: 'x_list_drafts',
@@ -2686,6 +2740,10 @@ async function dispatchTool(name, args, options = {}) {
   }
 
   // Handle persona/algorithm builder tools
+  if (name.startsWith('x_org_')) {
+    return await executeOrgTool(name, args);
+  }
+
   if (name.startsWith('x_persona_')) {
     return await executePersonaTool(name, args);
   }
@@ -2784,6 +2842,41 @@ async function executeDraftTool(name, args) {
     }
     default:
       throw new Error(`Unknown draft tool: ${name}`);
+  }
+}
+
+/**
+ * Organization tools. Read and draft only: approving and publishing stay
+ * with a person at the terminal (`xactions org approve`, `xactions org publish`).
+ */
+async function executeOrgTool(name, args) {
+  const orgs = await import('../orgs/index.js');
+  switch (name) {
+    case 'x_org_list':
+      return { orgs: orgs.listOrgs() };
+    case 'x_org_queue': {
+      const org = orgs.loadOrg(args.org);
+      orgs.assertCan(orgs.resolveActor(org, args.member), 'posts:read');
+      return {
+        org: org.slug,
+        accounts: org.accounts.map((a) => ({ handle: a.handle, label: a.label, kind: a.kind })),
+        posts: orgs.listPosts(args.org, { status: args.status || 'all' }),
+      };
+    }
+    case 'x_org_calendar':
+      return orgs.orgCalendar(args.org, { as: args.member, days: args.days ?? 14 });
+    case 'x_org_draft': {
+      const { post, notices } = orgs.createPost(args.org, args.member, {
+        primary: { handle: args.account, text: args.text },
+        variants: (args.variants || []).map((v) => ({ handle: v.account, text: v.text })),
+        reposts: args.reposts || [],
+        scheduledFor: args.scheduledFor,
+        note: args.note,
+      });
+      return { post, notices, next: `An editor approves it with \`xactions org approve ${args.org} ${post.id}\`.` };
+    }
+    default:
+      throw new Error(`Unknown org tool: ${name}`);
   }
 }
 

@@ -66,6 +66,7 @@ The answer streams as it is written and ends with a **Run it** block naming the 
   - [xactions persona status](#xactions-persona-status)
   - [xactions persona edit](#xactions-persona-edit)
   - [xactions persona delete](#xactions-persona-delete)
+- [Organization Commands](#organization-commands)
 - [Agent Commands](#agent-commands)
 - [Plugin Commands](#plugin-commands)
 - [Stream Commands](#stream-commands)
@@ -1240,6 +1241,36 @@ $ xactions persona delete persona_1234567890
 ? Delete persona persona_1234567890? This cannot be undone. (y/N) y
 ✅ Persona persona_1234567890 deleted
 ```
+
+---
+
+## Organization Commands
+
+Run a family of X accounts as a team: roles, approval, cross-posting checked against X's
+duplicate-content rule, affiliate disclosure, daily caps, and a hash-chained audit log.
+Full guide: [orgs.md](orgs.md).
+
+| Command | Does |
+|---|---|
+| `xactions org create <org> --owner <name>` | create an organization |
+| `xactions org list` | list organizations |
+| `xactions org show <org>` | members, accounts, settings |
+| `xactions org settings <org> [--two-person on\|off] [--threshold n] [--disclosure tag]` | owner only |
+| `xactions org member add <org> <name> --role <role>` | add a member or change their role |
+| `xactions org member remove <org> <name>` | remove a member |
+| `xactions org account add <org> <handle> (--cookies-file p \| --from-browser [b] \| --from-saved) [--label l] [--kind owned\|affiliate]` | connect an account; the session is checked against the handle |
+| `xactions org account remove <org> <handle>` | disconnect and delete the session |
+| `xactions org draft <org> --account h --text t [--variant h=t]... [--repost h]... [--at iso]` | draft a post |
+| `xactions org edit <org> <id> [--account h] [--text t] [--at iso\|none]` | change a post; it returns to draft |
+| `xactions org posts <org> [--status s]` | the queue |
+| `xactions org post <org> <id>` | one post in full |
+| `xactions org approve <org> <id>` / `reject <org> <id> [--reason r]` | editor or above |
+| `xactions org publish <org> [--id id] [--dry-run] [--retry-failed] [--delay s]` | publish what is due |
+| `xactions org calendar <org> [--days n]` | posts by day |
+| `xactions org stats <org> [--days n]` | per-account and total numbers |
+| `xactions org log <org> [--limit n] [--verify]` | the audit log |
+
+Every command takes `--as <member>` (default `$XACTIONS_ORG_MEMBER`, or the only member) and `--json`.
 
 ---
 

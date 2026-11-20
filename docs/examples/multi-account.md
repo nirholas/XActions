@@ -19,14 +19,14 @@ Multi-Account Management enables you to:
 - Social media agencies managing client accounts
 - Brand accounts across multiple regions
 - Personal + business account management
-- Growth automation across account networks
-- A/B testing engagement strategies
+- Newsrooms with main, breaking and regional handles
+- Companies with main, dev, status and support accounts
 
-**⚠️ Important Considerations:**
-- Always comply with X's Terms of Service
-- Use different IPs/proxies for each account
-- Never link accounts through similar behavior patterns
-- This is an advanced feature for professional users
+**⚠️ Before you start:**
+- Run only accounts you or your client own, or that their owner connected and can disconnect.
+- These accounts belong together in public. Nothing on this page is for making them look unrelated: X treats a network of accounts presented as independent as platform manipulation and suspends the whole network.
+- Do not post the same or nearly the same text from several accounts. X's automation rules forbid it even for accounts one organization openly runs; have the other accounts repost instead.
+- For a team running an account family, use [`xactions org`](../orgs.md). It gives you roles, approval before anything ships, a duplicate-content check, disclosure on affiliate posts, and an audit log.
 
 ---
 
@@ -701,48 +701,30 @@ project/
 
 ## 🛡️ Safety Tips
 
-Managing multiple accounts requires careful attention to avoid detection and account suspensions:
+Managing several accounts is ordinary for an agency, a newsroom or a company. What gets accounts suspended is automation that acts faster than a person, duplicate content across accounts, and accounts that pretend not to be connected.
 
-### 🌐 Use Different IPs/Proxies
+### 🏷️ Run Them in the Open
 
-```javascript
-// Each account should use a unique proxy
-const accounts = [
-  {
-    username: 'account1',
-    proxy: 'http://user:pass@us-proxy.example.com:8080',   // US IP
-  },
-  {
-    username: 'account2',
-    proxy: 'http://user:pass@uk-proxy.example.com:8080',   // UK IP
-  },
-  {
-    username: 'account3',
-    proxy: 'http://user:pass@de-proxy.example.com:8080',   // Germany IP
-  },
-];
+- ✅ Make the relationship visible: a shared brand in the name or bio, and X's affiliate badges if you use Verified Organizations.
+- ✅ Have affiliate and sponsored accounts disclose every promotional post (`#ad`, or X's paid-partnership label).
+- ✅ Keep one session per account, saved from a login by someone who is allowed to run it.
+- ❌ Do not buy accounts, take over accounts, or present accounts you run as independent people.
+- ❌ Do not use proxies or browser fingerprints to stop X from linking accounts. If the accounts would get suspended once X sees they are linked, the problem is the plan, not the network setup.
+
+### 📣 Cross-Post Without Duplicating
+
+X's automation rules forbid posting identical or substantially similar content across accounts you operate. To put one announcement on several accounts:
+
+- Post it once from the account it belongs to, and **repost** it from the others.
+- Or write a **different variant** for each audience: the main account gets the headline, the dev account the technical detail.
+
+`xactions org draft` checks every cross-post for this before it can be approved:
+
+```bash
+xactions org draft acme --account acme --text "Acme 2.0 is here. Builds are twice as fast." \
+  --variant "acmedev=Devs: 2.0 ships incremental compiles and a new CLI. Migration guide in the docs." \
+  --repost acmestatus
 ```
-
-**Recommended proxy types:**
-- ✅ Residential proxies (best, looks like real users)
-- ✅ Mobile proxies (excellent, uses mobile carrier IPs)
-- ⚠️ Datacenter proxies (risky, easily detected)
-
-### 🔗 Don't Link Accounts
-
-**Never do these things that link accounts:**
-- ❌ Follow the same accounts from multiple accounts
-- ❌ Like/retweet the same content from all accounts
-- ❌ Use similar usernames, bios, or profile pictures
-- ❌ Post similar content or at similar times
-- ❌ Use the same device/browser fingerprint
-- ❌ Access from the same IP address
-
-**Instead:**
-- ✅ Give each account unique behavior patterns
-- ✅ Use different niches/interests per account
-- ✅ Randomize action timing significantly
-- ✅ Use different browser profiles/fingerprints
 
 ### ⏱️ Proper Delays
 
@@ -763,7 +745,7 @@ const SAFE_DELAYS = {
     comments: 15,
   },
   
-  // Working hours (to appear human)
+  // Working hours, so posts land when your audience is awake
   activeHours: { start: 8, end: 22 },        // 8 AM - 10 PM
   
   // Rest days

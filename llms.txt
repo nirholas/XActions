@@ -2,7 +2,7 @@
 
 > The complete X/Twitter automation toolkit. Scrapers, an MCP server for AI agents, a CLI, browser console scripts and a browser extension. No X API key, no monthly fee, Apache-2.0. By nichxbt.
 
-XActions automates X/Twitter without official API access. It ships 156 MCP tools, a 58-command CLI, 95 browser console scripts, 50 agent skills, 41 REST route modules, a Puppeteer and HTTP scraping engine, and an Express dashboard backed by PostgreSQL.
+XActions automates X/Twitter without official API access. It ships 160 MCP tools, a 59-command CLI, 95 browser console scripts, 50 agent skills, 41 REST route modules, a Puppeteer and HTTP scraping engine, and an Express dashboard backed by PostgreSQL.
 
 ## Links
 

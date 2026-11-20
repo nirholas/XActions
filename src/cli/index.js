@@ -33,6 +33,7 @@ import { registerEngageCommand } from './commands/engage.js';
 import { registerReputationCommand } from './commands/reputation.js';
 import { registerSkillsCommand } from './commands/skills.js';
 import { registerDraftsCommand } from './commands/drafts.js';
+import { registerOrgCommand } from './commands/org.js';
 import { registerArchiveCommand } from './commands/archive.js';
 import { renderRootHelp } from './help-groups.js';
 import { createSpinner, printCompact, resolveOutputMode } from '../utils/output.js';
@@ -405,6 +406,7 @@ registerQuickstartCommand(program, { version: VERSION });
 registerCompletionCommand(program);
 registerSkillsCommand(program);
 registerDraftsCommand(program);
+registerOrgCommand(program);
 registerArchiveCommand(program);
 
 // ============================================================================
