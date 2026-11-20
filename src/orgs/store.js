@@ -28,8 +28,8 @@
 import { randomBytes } from 'node:crypto';
 import { existsSync, mkdirSync, readdirSync, readFileSync, renameSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { withLock as withFileLock } from './lock.js';
-import { getXactionsHome as xactionsHome } from '../mcp/action-caps.js';
+import { withFileLock } from '../utils/fileLock.js';
+import { xactionsHome } from '../utils/savedSession.js';
 import { appendAudit } from './audit.js';
 import {
   DEFAULT_DISCLOSURE,

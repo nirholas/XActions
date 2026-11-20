@@ -16,7 +16,7 @@
 
 import { createHash } from 'node:crypto';
 import { appendFileSync, existsSync, readFileSync } from 'node:fs';
-import { withLock as withFileLock } from './lock.js';
+import { withFileLock } from '../utils/fileLock.js';
 
 /** Hash of the entry before the first one. */
 export const GENESIS = '0'.repeat(64);
