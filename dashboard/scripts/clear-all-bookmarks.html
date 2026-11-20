@@ -125,7 +125,7 @@
         <div class="meta-row">
           <span>v2.0.0</span>
           <span>Updated: 2026-02-24</span>
-          <span>189 lines</span>
+          <span>194 lines</span>
           <span>by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></span>
         </div>
 
@@ -261,7 +261,12 @@
     console.log('║  by nichxbt — v2.0' + ' '.repeat(W - 21) + '║');
     console.log('╚' + '═'.repeat(W) + '╝');
 
-    if (!window.location.href.includes('/bookmarks')) {
+    // Some accounts are redirected from the bookmarks page to /i/history
+    // (reported in https://github.com/nirholas/XActions/pull/88); the list
+    // there is the same, so run on either. Only the path is checked, so a
+    // search for &quot;/bookmarks&quot; does not count.
+    const path = window.location.pathname;
+    if (!path.includes('/bookmarks') &amp;&amp; !/^\/i\/history(\/|$)/.test(path)) {
       console.error('❌ Navigate to x.com/i/bookmarks first!');
       return;
     }
