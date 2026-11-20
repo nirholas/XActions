@@ -130,7 +130,7 @@ failures; set `X_AUTH_TOKEN` and `X_CSRF_TOKEN` to cover those too.
 ```
 xactions/
 ├── src/              # Node library, CLI, MCP server
-│   └── automation/   # Automation features
+│   └── automation/   # Browser console scripts (paste core.js first)
 ├── browser/          # Browser console scripts (paste into DevTools on x.com)
 ├── api/              # Backend API routes
 ├── dashboard/        # Frontend UI
