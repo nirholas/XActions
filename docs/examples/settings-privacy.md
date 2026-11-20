@@ -33,7 +33,7 @@ Export, audit, and manage your X/Twitter account settings, privacy controls, and
 ## 📦 Node.js Module
 
 ```javascript
-import { getSettings, toggleProtectedAccount, getBlockedAccounts, requestDataDownload } from 'xactions';
+import { getSettings, toggleProtectedAccount, getBlockedAccounts, requestDataDownload } from 'xactions/src/settingsManager.js';
 
 // Export settings
 const settings = await getSettings(page);

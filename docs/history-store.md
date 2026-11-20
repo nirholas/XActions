@@ -58,8 +58,8 @@ import {
   getGrowthRate,
   compareAccounts,
   exportHistory
-} from 'xactions/src/analytics/historyStore.js';
-import { startAutoSnapshot } from 'xactions/src/analytics/autoSnapshot.js';
+} from 'xactions/analytics';
+import { startAutoSnapshot } from 'xactions/analytics';
 
 // Save a manual snapshot
 await saveAccountSnapshot('elonmusk', {

@@ -239,7 +239,7 @@ that genuinely need a browser.
 
 ## 5. Puppeteer Manager Modules
 
-> **How to use:** `import { functionName } from 'xactions'`: these are ES module exports from `src/index.js`. All take a Puppeteer `page` as first argument.
+> **How to use:** each module is exported from `src/index.js` as a namespace, so `import { profileManager } from 'xactions'` and call `profileManager.getProfile(page, username)`. The functions are also named exports of their own file (`xactions/src/profileManager.js`). All take a Puppeteer `page` as first argument.
 
 ### 5.1 Profile & Settings
 

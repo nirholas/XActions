@@ -35,7 +35,7 @@ Tools for X/Twitter creator monetization — analytics, revenue tracking, subscr
 ## 📦 Node.js Module
 
 ```javascript
-import { getAccountAnalytics, getRevenue, getSubscribers } from 'xactions';
+import { getAccountAnalytics, getRevenue, getSubscribers } from 'xactions/src/creatorStudio.js';
 
 // Get analytics overview
 const analytics = await getAccountAnalytics(page);

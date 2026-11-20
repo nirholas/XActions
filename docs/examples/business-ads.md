@@ -29,7 +29,7 @@ Business analytics, brand monitoring, social listening, and advertising tools fo
 ## 📦 Node.js Module
 
 ```javascript
-import { monitorBrandMentions, getAudienceInsights, analyzeCompetitors } from 'xactions';
+import { monitorBrandMentions, getAudienceInsights, analyzeCompetitors } from 'xactions/src/businessTools.js';
 
 // Monitor brand mentions
 const mentions = await monitorBrandMentions(page, 'XActions', { limit: 50 });

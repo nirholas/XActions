@@ -18,4 +18,4 @@ export { analyzeTweetPriceCorrelation, alignTweetsWithPrices, computeCorrelation
 export { saveAccountSnapshot, saveTweetSnapshot, saveDailyEngagement, getAccountHistory, getTweetHistory, getGrowthRate, compareAccounts, exportHistory } from './historyStore.js';
 export { startAutoSnapshot, stopAutoSnapshot, listActiveSnapshots, stopAllSnapshots } from './autoSnapshot.js';
 export { analyzeOverlap, multiOverlap, findSimilarAudience, getAudienceInsights } from './audienceOverlap.js';
-export { syncFollowers, tagContact, untagContact, addNote, scoreContact, autoScore, searchContacts, filterContacts, createSegment, getSegment, listSegments, bulkTag, getContactTimeline, exportSegment } from './followerCRM.js';
+export { syncFollowers, tagContact, untagContact, addNote, scoreContact, autoScore, searchContacts, filterContacts, createSegment, getSegment, listSegments, bulkTag, getContactTimeline, exportSegment, addAutoTagRule, BUILT_IN_RULES } from './followerCRM.js';

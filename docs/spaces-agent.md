@@ -79,7 +79,7 @@ Claude will call the `x_space_join` tool and your agent will enter the Space.
 ### Via Node.js
 
 ```javascript
-import { joinSpace, leaveSpace, getSpaceAgentStatus, getSpaceTranscript } from 'xactions/spaces/agent';
+import { joinSpace, leaveSpace, getSpaceAgentStatus, getSpaceTranscript } from 'xactions/spaces';
 
 // Join a Space
 const result = await joinSpace({
@@ -201,7 +201,7 @@ The agent emits events you can listen to for logging, monitoring, or custom beha
 ## Example: Crypto Alpha Space Agent
 
 ```javascript
-import { joinSpace } from 'xactions/spaces/agent';
+import { joinSpace } from 'xactions/spaces';
 
 await joinSpace({
   url: 'https://x.com/i/spaces/1abc123',

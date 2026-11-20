@@ -26,6 +26,9 @@
     "./scrapers/threads": "./src/scrapers/threads/index.js",
     "./streaming": "./src/streaming/index.js",
     "./analytics": "./src/analytics/index.js",
+    "./ai": "./src/ai/index.js",
+    "./engage": "./src/engage/index.js",
+    "./graph": "./src/graph/index.js",
     "./plugins": "./src/plugins/index.js",
     "./mcp": "./src/mcp/server.js",
     "./cli": "./src/cli/index.js",
@@ -34,7 +37,8 @@
     "./portability": "./src/portability/index.js",
     "./media": "./src/media/index.js",
     "./analysis": "./src/analysis/accountReport.js",
-    "./orgs": "./src/orgs/index.js"
+    "./orgs": "./src/orgs/index.js",
+    "./src/*": "./src/*"
   },
   "bin": {
     "xactions": "./src/cli/index.js",

@@ -17,21 +17,21 @@ src/auth/
 
 ```javascript
 import {
-  createTeam, getTeam, inviteMember, removeMember,
+  createTeam, inviteUser, acceptInvite, removeUser, listTeamMembers,
   updateRole, checkPermission, getActivityLog
 } from 'xactions/src/auth/teamManager.js';
 
-// Create a team
-const team = await createTeam({
-  name: 'Growth Team',
-  owner: 'nichxbt'
-});
+// Create a team (the owner is its first member)
+const team = await createTeam('Growth Team', 'nichxbt');
 
-// Invite a member
-await inviteMember(team.id, { email: 'alice@example.com', role: 'member' });
+// Invite a member by email; they join with the token the invite returns
+const invite = await inviteUser(team.id, 'alice@example.com', 'member');
+await acceptInvite(invite.token, 'alice');
 
-// Update role
+// Update role, list members, remove someone
 await updateRole(team.id, 'alice', 'admin');
+const members = await listTeamMembers(team.id);
+await removeUser(team.id, 'alice');
 
 // Check permissions
 const canRun = checkPermission('member', 'run-actions');  // true

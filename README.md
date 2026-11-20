@@ -1078,7 +1078,7 @@ Claude calls `x_space_join` and your agent enters the Space.
 
 **Node.js:**
 ```javascript
-import { joinSpace, leaveSpace } from 'xactions/spaces/agent';
+import { joinSpace, leaveSpace } from 'xactions/spaces';
 
 await joinSpace({
   url: 'https://x.com/i/spaces/1abc123',
