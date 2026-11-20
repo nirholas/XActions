@@ -136,7 +136,9 @@ charged ones.
 ### `GET /api/ai/health` and `GET /api/ai/pricing`
 
 Service status with the x402 facilitator and pay-to address, and the
-per-operation price table.
+per-operation price table. Without `XACTIONS_API_ORIGIN` the price table lists
+only the edge resources in `src/edge/paidResources.js`, because those are the
+only paid endpoints this deployment serves; with it, the full table.
 
 ### `/api/*` (catch-all)
 
