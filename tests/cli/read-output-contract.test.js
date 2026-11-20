@@ -38,10 +38,11 @@ import { DEFAULT_FIELDS } from '../../src/utils/output.js';
  * with no data at all, and `missing` handles whose profile lookup is empty.
  */
 const transport = vi.hoisted(() => {
-  const state = { routes: {}, empty: new Set(), missing: new Set(), requests: [] };
-  state.fetch = async (input) => {
+  const state = { routes: {}, empty: new Set(), missing: new Set(), requests: [], headers: [] };
+  state.fetch = async (input, init = {}) => {
     const url = String(input);
     state.requests.push(url);
+    state.headers.push({ url, headers: new Headers(init.headers ?? {}) });
     const json = (body, status = 200) =>
       new Response(JSON.stringify(body), { status, headers: { 'content-type': 'application/json' } });
     if (url.includes('guest/activate')) return json({ guest_token: '1700000000000000000' });
@@ -196,6 +197,7 @@ beforeEach(() => {
   transport.empty = new Set();
   transport.missing = new Set();
   transport.requests = [];
+  transport.headers = [];
   browser.records = [];
   browser.closed = 0;
   vi.spyOn(process.stdout, 'write').mockImplementation((chunk) => { stdout += String(chunk); return true; });
@@ -561,5 +563,51 @@ describe('brief', () => {
     expect(result.code).toBe(1);
     expect(result.stderr).toMatch(/No accounts given/);
     expect(transport.requests).toEqual([]);
+  });
+});
+
+describe('a saved session', () => {
+  // Shaped like real cookies; no account has ever had these values.
+  const AUTH = '0'.repeat(40);
+  const CT0 = 'f'.repeat(32);
+  const jar = path.join(home, 'xh', 'cookies.json');
+
+  beforeEach(() => {
+    fs.mkdirSync(path.dirname(jar), { recursive: true });
+    fs.writeFileSync(jar, JSON.stringify([
+      { name: 'auth_token', value: AUTH, domain: '.x.com', path: '/' },
+      { name: 'ct0', value: CT0, domain: '.x.com', path: '/' },
+    ]));
+  });
+
+  afterEach(() => {
+    fs.rmSync(jar, { force: true });
+  });
+
+  /** The headers of every GraphQL request made so far. */
+  const graphqlHeaders = () => transport.headers.filter((r) => r.url.includes('/graphql/')).map((r) => r.headers);
+
+  it('is what the Scraper-backed commands send, with no guest token', async () => {
+    const result = await cli(['profile', 'testuser', '--compact', '--fields', 'username']);
+    expect(result.code, result.stderr).toBe(0);
+    expect(transport.requests.some((u) => u.includes('guest/activate'))).toBe(false);
+    const headers = graphqlHeaders();
+    expect(headers.length).toBeGreaterThan(0);
+    for (const h of headers) {
+      expect(h.get('cookie')).toContain(`auth_token=${AUTH}`);
+      expect(h.get('x-csrf-token')).toBe(CT0);
+      expect(h.get('x-guest-token')).toBeNull();
+    }
+  });
+
+  it('is what the HTTP-scraper-backed commands send', async () => {
+    const result = await cli(['thread', '1810000000000000001', '--compact', '--fields', 'id']);
+    expect(result.code, result.stderr).toBe(0);
+    const headers = graphqlHeaders();
+    expect(headers.length).toBeGreaterThan(0);
+    for (const h of headers) {
+      expect(h.get('cookie')).toContain(`auth_token=${AUTH}`);
+      expect(h.get('x-csrf-token')).toBe(CT0);
+    }
   });
 });
