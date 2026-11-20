@@ -785,13 +785,26 @@ async function drainAndExit(signal) {
   }
 }
 
-process.on('SIGTERM', () => gracefulShutdown('SIGTERM'));
-process.on('SIGINT',  () => gracefulShutdown('SIGINT'));
+let lifecycleStarted = false;
 
-// Periodic cleanup of cancelled job markers
-setInterval(cleanupCancelledJobs, 3600000); // Every hour
+/**
+ * Install the process-wide parts of the queue: graceful shutdown on SIGTERM and
+ * SIGINT, and the hourly cleanup of cancelled-job markers. Only the server
+ * entry point calls this. Importing the module must stay side-effect free, or
+ * every importer (tests, CLI, library use) has its signal handling taken over
+ * and is kept alive by the interval. Idempotent.
+ */
+function startJobQueueLifecycle() {
+  if (lifecycleStarted) return;
+  lifecycleStarted = true;
+  process.on('SIGTERM', () => gracefulShutdown('SIGTERM'));
+  process.on('SIGINT',  () => gracefulShutdown('SIGINT'));
+  // unref: the cleanup timer alone must never hold the process open.
+  setInterval(cleanupCancelledJobs, 3600000).unref(); // Every hour
+}
 
 export {
+  startJobQueueLifecycle,
   addJob,
   queueJob,
   getJob,

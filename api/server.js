@@ -89,6 +89,8 @@ import notificationsRoutes from './routes/notifications.js';
 import teamsRoutes from './routes/teams.js';
 import optimizerRoutes from './routes/optimizer.js';
 import { startScheduler } from './services/unfollowerScheduler.js';
+import { startJobQueueLifecycle } from './services/jobQueue.js';
+import { isEntryPoint as isEntryPointModule } from '../src/utils/entryPoint.js';
 import { initializeSocketIO } from './realtime/socketHandler.js';
 import { initializeLicensing, brandingMiddleware } from './services/licensing.js';
 
@@ -641,6 +643,7 @@ function mountPluginRoutes(app) {
  */
 export function start() {
   const { app, httpServer, io } = createApp();
+  startJobQueueLifecycle();
   // Use httpServer instead of app.listen for Socket.io support
   httpServer.listen(PORT, async () => {
     console.log(`🚀 XActions API Server running on port ${PORT}`);
@@ -689,7 +692,7 @@ export function start() {
 
 // Listen only when this file is the entry point (`npm start`, `npm run dev`).
 // Importing it (tests, embedders) yields `createApp()` with nothing bound.
-const isEntryPoint = Boolean(process.argv[1]) && path.resolve(process.argv[1]) === __filename;
+const isEntryPoint = isEntryPointModule(import.meta.url);
 const app = isEntryPoint ? start().app : null;
 
 export default app;
