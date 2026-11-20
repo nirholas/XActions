@@ -23,7 +23,7 @@ Available via: **API**, **CLI**, **MCP tools** (for AI agents), and **Dashboard*
 # Rule-based (instant, offline)
 unfollowx sentiment "I love this product! Amazing work 🔥"
 
-# LLM-powered (requires OPENROUTER_API_KEY)
+# LLM-powered (free models, no key needed)
 unfollowx sentiment "This is surprisingly mediocre" --mode llm
 ```
 
@@ -356,12 +356,11 @@ Fast, offline analysis using an AFINN-style lexicon:
 
 ### LLM Mode (`llm`)
 
-Uses OpenRouter to call an LLM for nuanced analysis:
+Uses a free LLM for nuanced analysis:
 
-- **Default model:** `meta-llama/llama-3.1-8b-instruct:free`
+- **Model:** the free lane chain ([Free LLM lanes](ask.md#free-llm-lanes)); no key needed
 - Handles sarcasm, irony, crypto/finance slang, internet culture
 - Structured JSON output with graceful fallback to rule-based on parse failure
-- Requires `OPENROUTER_API_KEY` environment variable
 
 **Best for:** Complex/nuanced text, sarcasm detection, specialized domains.
 
@@ -373,7 +372,7 @@ Uses OpenRouter to call an LLM for nuanced analysis:
 
 | Variable | Required | Description |
 |----------|----------|-------------|
-| `OPENROUTER_API_KEY` | For LLM mode | OpenRouter API key |
+| `GROQ_API_KEY`, `NVIDIA_API_KEY`, `OPENROUTER_API_KEY` | No | Optional free-tier keys that add capacity to LLM mode |
 | `PORT` | No (default: 3000) | Server port |
 
 ### Monitor Defaults

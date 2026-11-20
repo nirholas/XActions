@@ -115,7 +115,7 @@ router.post('/analyze-voice', generationLimiter, async (req, res) => {
  * Generate tweets in a user's voice
  * POST /api/ai/writer/generate
  * 
- * Body: { username, topic, style?, count?, type?, threadLength?, model?, apiKey? }
+ * Body: { username, topic, style?, count?, type?, threadLength? }
  * type: 'tweet' | 'thread'
  */
 router.post('/generate', generationLimiter, async (req, res) => {
@@ -123,7 +123,6 @@ router.post('/generate', generationLimiter, async (req, res) => {
     const {
       username, topic, style, count = 3,
       type = 'tweet', threadLength = 5,
-      model, apiKey,
       // Allow passing a voice profile directly
       voiceProfile: directProfile,
     } = req.body;
@@ -153,14 +152,14 @@ router.post('/generate', generationLimiter, async (req, res) => {
 
     let result;
     if (type === 'thread') {
-      result = await generateThread(voiceProfile, { topic, length: threadLength, model, apiKey });
+      result = await generateThread(voiceProfile, { topic, length: threadLength });
       res.json({
         success: true,
         data: result,
         operation: 'ai:generate-thread',
       });
     } else {
-      result = await generateTweet(voiceProfile, { topic, style, count, model, apiKey });
+      result = await generateTweet(voiceProfile, { topic, style, count });
       res.json({
         success: true,
         data: result,
@@ -179,13 +178,13 @@ router.post('/generate', generationLimiter, async (req, res) => {
  * Rewrite/improve an existing tweet
  * POST /api/ai/writer/rewrite
  * 
- * Body: { username, text, goal?, count?, model?, apiKey? }
+ * Body: { username, text, goal?, count? }
  */
 router.post('/rewrite', generationLimiter, async (req, res) => {
   try {
     const {
       username, text, goal = 'more_engaging', count = 3,
-      model, apiKey, voiceProfile: directProfile,
+      voiceProfile: directProfile,
     } = req.body;
 
     if (!text) {
@@ -206,7 +205,7 @@ router.post('/rewrite', generationLimiter, async (req, res) => {
     }
 
     const { rewriteTweet } = await import('../../src/ai/tweetGenerator.js');
-    const result = await rewriteTweet(voiceProfile, text, { goal, count, model, apiKey });
+    const result = await rewriteTweet(voiceProfile, text, { goal, count });
 
     res.json({
       success: true,
@@ -225,13 +224,13 @@ router.post('/rewrite', generationLimiter, async (req, res) => {
  * Generate weekly content calendar
  * POST /api/ai/writer/calendar
  * 
- * Body: { username, topics?, postsPerDay?, days?, model?, apiKey? }
+ * Body: { username, topics?, postsPerDay?, days? }
  */
 router.post('/calendar', generationLimiter, async (req, res) => {
   try {
     const {
       username, topics, postsPerDay = 2, days = 7,
-      model, apiKey, voiceProfile: directProfile,
+      voiceProfile: directProfile,
     } = req.body;
 
     let voiceProfile = directProfile;
@@ -248,7 +247,7 @@ router.post('/calendar', generationLimiter, async (req, res) => {
     }
 
     const { generateWeek } = await import('../../src/ai/tweetGenerator.js');
-    const result = await generateWeek(voiceProfile, { topics, postsPerDay, days, model, apiKey });
+    const result = await generateWeek(voiceProfile, { topics, postsPerDay, days });
 
     res.json({
       success: true,
@@ -267,13 +266,13 @@ router.post('/calendar', generationLimiter, async (req, res) => {
  * Generate reply to a tweet
  * POST /api/ai/writer/reply
  * 
- * Body: { username, originalTweet, tone?, count?, model?, apiKey? }
+ * Body: { username, originalTweet, tone?, count? }
  */
 router.post('/reply', generationLimiter, async (req, res) => {
   try {
     const {
       username, originalTweet, tone, count = 3,
-      model, apiKey, voiceProfile: directProfile,
+      voiceProfile: directProfile,
     } = req.body;
 
     if (!originalTweet) {
@@ -294,7 +293,7 @@ router.post('/reply', generationLimiter, async (req, res) => {
     }
 
     const { generateReply } = await import('../../src/ai/tweetGenerator.js');
-    const result = await generateReply(voiceProfile, originalTweet, { tone, count, model, apiKey });
+    const result = await generateReply(voiceProfile, originalTweet, { tone, count });
 
     res.json({
       success: true,
@@ -319,13 +318,14 @@ router.post('/reply', generationLimiter, async (req, res) => {
  *
  * Body: {
  *   tweet: { text, author?, authorName?, quotedText?, hasMedia? },
- *   prompt, persona?, provider?, model?, apiKey?, baseUrl?,
+ *   prompt, persona?, provider?, model?, apiKey?,
  *   temperature?, allowHashtags?, allowEmoji?, history?: string[]
  * }
  */
 router.post('/comment', generationLimiter, async (req, res) => {
   try {
-    const { tweet, prompt, history = [], ...llm } = req.body || {};
+    // baseUrl is not taken from a request: see resolveCallerProvider.
+    const { tweet, prompt, history = [], baseUrl, ...llm } = req.body || {};
     if (!tweet || !tweet.text) {
       return res.status(400).json({ error: 'tweet.text is required — the post to reply to' });
     }
@@ -334,7 +334,12 @@ router.post('/comment', generationLimiter, async (req, res) => {
     }
 
     const { createCommentGenerator } = await import('../../../src/ai/commentGenerator.js');
-    const generator = createCommentGenerator({ prompt, ...llm });
+    let generator;
+    try {
+      generator = createCommentGenerator({ prompt, ...llm, callerSupplied: true });
+    } catch (error) {
+      return res.status(400).json({ error: error.message });
+    }
     if (Array.isArray(history)) generator.history.push(...history.filter((h) => typeof h === 'string').slice(-10));
     const result = await generator.generate(tweet);
 

@@ -47,15 +47,11 @@ console.log(stats);
 | Mode | How it works | Requirements |
 |------|-------------|-------------|
 | `rules` (default) | AFINN-style lexicon with negation, intensifiers, emoji scoring | None — works offline |
-| `llm` | OpenRouter API with configurable model | `OPENROUTER_API_KEY` env var |
+| `llm` | A free LLM through the free lane chain | None; optional free-tier keys add capacity |
 
 ```javascript
 // LLM mode
-const result = await analyzeSentiment('This is a nuanced political statement.', {
-  mode: 'llm',
-  apiKey: process.env.OPENROUTER_API_KEY,
-  model: 'meta-llama/llama-3.1-8b-instruct:free'
-});
+const result = await analyzeSentiment('This is a nuanced political statement.', { mode: 'llm' });
 ```
 
 ### Score Range
@@ -292,6 +288,6 @@ await exportSegment('high-value-devs', { format: 'csv' });
 
 | Variable | Required | Description |
 |----------|----------|-------------|
-| `OPENROUTER_API_KEY` | Only for LLM mode | OpenRouter API key for advanced sentiment |
+| `GROQ_API_KEY`, `NVIDIA_API_KEY`, `OPENROUTER_API_KEY` | No | Optional free-tier keys that add capacity to LLM mode |
 | `XACTIONS_SESSION_COOKIE` | For scrapers | X/Twitter auth token |
 | `REDIS_HOST` | For monitoring | Redis server for state persistence |

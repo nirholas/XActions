@@ -34,7 +34,8 @@ import processors, {
 
 const COOKIE = 'auth_token=tok; ct0=csrf; twid=u%3D999';
 const OWNER = 'owner-a';
-const LLM_KEYS = ['OPENROUTER_API_KEY', 'ANTHROPIC_API_KEY', 'OPENAI_API_KEY', 'XAI_API_KEY', 'GROK_API_KEY'];
+const LLM_KEYS = ['OPENROUTER_API_KEY', 'OPENROUTER_API_KEYS', 'GROQ_API_KEY', 'NVIDIA_API_KEY', 'CEREBRAS_API_KEY', 'GEMINI_API_KEY', 'MISTRAL_API_KEY', 'ANTHROPIC_API_KEY', 'OPENAI_API_KEY', 'XAI_API_KEY', 'GROK_API_KEY', 'XACTIONS_LLM'];
+const LLM_HOSTS = new Set(['openrouter.ai', 'api.llm7.io', 'text.pollinations.ai', 'oai.endpoints.kepler.ai.cloud.ovh.net', 'api.groq.com', 'integrate.api.nvidia.com']);
 
 // ── x.com payloads ──────────────────────────────────────────────────────────
 
@@ -172,7 +173,8 @@ function createNetwork() {
     net.calls.push({ url: u, method: init.method || 'GET', body: init.body });
     const parsed = new URL(u);
 
-    if (parsed.hostname === 'openrouter.ai') {
+    // Every free LLM lane (src/ask/lanes.js) answers from the same fake model.
+    if (LLM_HOSTS.has(parsed.hostname)) {
       const body = JSON.parse(init.body);
       net.llm.prompts.push(body.messages);
       if (net.llm.status !== 200) return reply('{"error":"bad request"}', net.llm.status);
@@ -245,6 +247,8 @@ beforeEach(() => {
   vi.stubGlobal('fetch', net.fetch);
   for (const key of LLM_KEYS) delete process.env[key];
   process.env.OPENROUTER_API_KEY = 'test-key';
+  // vitest.config.js turns LLM calls off; these tests answer them from `net`.
+  process.env.XACTIONS_LLM = 'on';
 });
 
 // ── registry and shared pieces ──────────────────────────────────────────────
@@ -265,11 +269,13 @@ describe('content processors', () => {
     expect(all.get('personaRun').write).toBe(true);
   });
 
-  it('names the env vars when no language model is configured, and refuses local BYOK providers', () => {
-    expect(() => llmTarget({}, {})).toThrow(/OPENROUTER_API_KEY.*ANTHROPIC_API_KEY/);
-    expect(() => llmTarget({ provider: 'ollama' }, {})).toThrow(JobInputError);
-    expect(llmTarget({}, { ANTHROPIC_API_KEY: 'k' }).provider).toBe('anthropic');
-    expect(llmTarget({ provider: 'openai', apiKey: 'mine' }, {}).apiKey).toBe('mine');
+  it('writes with free models, takes a caller\'s own key, and never spends the server\'s', () => {
+    expect(llmTarget({}).provider).toBe('free');
+    expect(() => llmTarget({ provider: 'ollama' })).toThrow(JobInputError);
+    expect(() => llmTarget({ provider: 'custom', apiKey: 'k' })).toThrow(JobInputError);
+    process.env.ANTHROPIC_API_KEY = 'server-key';
+    expect(() => llmTarget({ provider: 'anthropic' })).toThrow(/needs your own apiKey/);
+    expect(llmTarget({ provider: 'openai', apiKey: 'mine' }).apiKey).toBe('mine');
   });
 
   it('derives the same owner key a job carries for a session', () => {
@@ -304,11 +310,13 @@ describe('post writing', () => {
     expect(isPermanentFailure(err)).toBe(true);
   });
 
-  it('fails a writing job that has no model configured', async () => {
+  it('writes on a keyless free lane when the server has no key at all', async () => {
     delete process.env.OPENROUTER_API_KEY;
-    const err = await run('rewriteTweet', { text: 'hello world' }).catch((e) => e);
-    expect(err).toBeInstanceOf(JobInputError);
-    expect(err.message).toMatch(/OPENROUTER_API_KEY/);
+    net.llm.reply = () => '[{"text":"Hi.","change":"cut"}]';
+    const result = await run('rewriteTweet', { text: 'hello world' });
+    expect(result.rewrites.map((r) => r.text)).toEqual(['Hi.']);
+    expect(net.calls.some((c) => c.url.startsWith('https://api.llm7.io/'))).toBe(true);
+    expect(net.calls.some((c) => c.url.startsWith('https://openrouter.ai/'))).toBe(false);
   });
 
   it('rewriteTweet returns rewrites toward the goal, and reports a model error', async () => {
@@ -319,7 +327,7 @@ describe('post writing', () => {
     expect(lastPrompt()).toMatch(/shorter and punchier/);
 
     net.llm.status = 400;
-    await expect(run('rewriteTweet', { text: 'x' })).rejects.toThrow(/openrouter error 400/);
+    await expect(run('rewriteTweet', { text: 'x' })).rejects.toThrow(/every LLM lane failed: openrouter:free: HTTP 400/);
   });
 
   it('optimizeTweet scores before and after and honours the length constraint', async () => {

@@ -82,12 +82,11 @@ import {
   createPage,
   loginWithCookie,
 } from './scrapers/index.js';
+import { freeChat } from './ai/freeLLM.js';
 
 // ============================================================================
 // Configuration
 // ============================================================================
-
-const OPENROUTER_URL = 'https://openrouter.ai/api/v1/chat/completions';
 
 const TIMING = {
   // Human-like delays with jitter
@@ -230,42 +229,13 @@ async function humanScroll(page, options = {}) {
 // ============================================================================
 
 /**
- * Call OpenRouter for text generation
+ * Generate text with free models (src/ai/freeLLM.js). Returns null when no
+ * lane answers, so the caller skips the comment rather than posting nothing.
  */
 async function callLLM(messages, persona) {
-  const apiKey = persona.llm.apiKey || process.env.OPENROUTER_API_KEY;
-  if (!apiKey) {
-    log('⚠️', 'No OpenRouter API key — skipping LLM generation');
-    return null;
-  }
-
-  const model = persona.llm.models.comment;
-
   try {
-    const response = await fetch(OPENROUTER_URL, {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${apiKey}`,
-        'Content-Type': 'application/json',
-        'HTTP-Referer': 'https://xactions.app',
-        'X-Title': 'XActions Algorithm Builder',
-      },
-      body: JSON.stringify({
-        model,
-        messages,
-        temperature: persona.llm.temperature,
-        max_tokens: 300,
-      }),
-    });
-
-    if (!response.ok) {
-      const err = await response.text();
-      log('❌', `LLM error: ${err.slice(0, 100)}`);
-      return null;
-    }
-
-    const data = await response.json();
-    return data.choices?.[0]?.message?.content?.trim() || null;
+    const { text } = await freeChat(messages, { temperature: persona.llm.temperature ?? 0.85, maxTokens: 300 });
+    return text || null;
   } catch (err) {
     log('❌', `LLM request failed: ${err.message}`);
     return null;

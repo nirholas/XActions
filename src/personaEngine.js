@@ -15,17 +15,18 @@
 import { readFileSync, writeFileSync, existsSync, mkdirSync, readdirSync, unlinkSync } from 'fs';
 import { join } from 'path';
 import { xactionsHome } from './utils/savedSession.js';
-import { OPENROUTER_DEFAULT_MODEL } from './ai/models.js';
 
 // ============================================================================
 // Constants
 // ============================================================================
 
 const PERSONAS_DIR = join(xactionsHome(), 'personas');
+// Personas write with free models (src/ai/freeLLM.js). These fields are kept
+// so saved personas keep their shape; a model named here is not used.
 const DEFAULT_MODELS = {
-  comment: OPENROUTER_DEFAULT_MODEL,
-  post: OPENROUTER_DEFAULT_MODEL,
-  reply: OPENROUTER_DEFAULT_MODEL,
+  comment: 'free',
+  post: 'free',
+  reply: 'free',
 };
 
 // ============================================================================
@@ -256,13 +257,12 @@ function createPersona(options = {}) {
 
     // LLM Configuration
     llm: {
-      provider: 'openrouter',
+      provider: 'free',
       models: {
         comment: options.commentModel || DEFAULT_MODELS.comment,
         post: options.postModel || DEFAULT_MODELS.post,
         reply: options.replyModel || DEFAULT_MODELS.reply,
       },
-      apiKey: options.apiKey || null,  // falls back to env OPENROUTER_API_KEY
       temperature: options.temperature ?? 0.85,
       systemPrompt: options.systemPrompt || null,  // auto-generated if null
     },

@@ -9,7 +9,6 @@ import path from 'path';
 import readline from 'readline';
 import { BrowserDriver } from './browserDriver.js';
 import { isEntryPoint } from '../utils/entryPoint.js';
-import { AGENT_MODELS } from '../ai/models.js';
 
 const DATA_DIR = path.resolve('data');
 const CONFIG_DIR = path.resolve('config');
@@ -124,31 +123,25 @@ async function step3_llmProvider() {
   log('  🧠 Step 3/8: Configure LLM Provider');
   log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
 
-  const choice = await choose('Select your LLM provider:', [
-    { label: 'OpenRouter (recommended — multi-model, best pricing)', value: 'openrouter' },
-    { label: 'OpenAI (direct API)', value: 'openai' },
-    { label: 'Ollama (local, no cost)', value: 'ollama' },
+  const choice = await choose('Select your LLM provider (both are free):', [
+    { label: 'Free models (recommended, no key needed)', value: 'free' },
+    { label: 'Ollama (a model running on this machine)', value: 'ollama' },
   ]);
 
   const provider = choice.value;
-  let apiKey = '';
-  let models = { ...AGENT_MODELS };
+  let models = { fast: 'free', mid: 'free', smart: 'free' };
 
-  if (provider !== 'ollama') {
-    apiKey = await ask(`API key for ${provider}: `);
-
-    // Validate API key with a test call
-    if (apiKey) {
-      log('  🔄 Validating API key...');
-      try {
-        const { LLMBrain } = await import('./llmBrain.js');
-        const brain = new LLMBrain({ provider, apiKey, models });
-        const score = await brain.scoreRelevance('Testing connection', ['test']);
-        log(`  ✅ API key valid (test score: ${score})`);
-      } catch (err) {
-        log(`  ⚠️ Validation failed: ${err.message}`);
-        log('  You can update the key later in data/agent-config.json');
-      }
+  if (provider === 'free') {
+    log('  Optional free-tier keys add capacity: GROQ_API_KEY, NVIDIA_API_KEY, OPENROUTER_API_KEY.');
+    log('  🔄 Testing the free models...');
+    try {
+      const { LLMBrain } = await import('./llmBrain.js');
+      const brain = new LLMBrain({ provider });
+      const score = await brain.scoreRelevance('Testing connection', ['test']);
+      log(`  ✅ Free models answered (test score: ${score})`);
+    } catch (err) {
+      log(`  ⚠️ No free model answered right now: ${err.message}`);
+      log('  The agent will keep trying when it runs.');
     }
   } else {
     models = {
@@ -158,7 +151,7 @@ async function step3_llmProvider() {
     };
   }
 
-  return { provider, apiKey, models };
+  return { provider, models };
 }
 
 async function step4_timezone() {

@@ -164,11 +164,13 @@ Three-tier LLM client with rate limiting and cost tracking.
 
 **Tier system:**
 
-| Tier | Model (default) | Use Case | Cost/1M tokens |
-|---|---|---|---|
-| `fast` | deepseek-chat | Scoring, quick checks | ~$0.14 |
-| `mid` | claude-3.5-haiku | Reply generation | ~$1.00 |
-| `smart` | claude-sonnet-4 | Content creation, strategy | ~$3.00 |
+| Tier | Use Case |
+|---|---|
+| `fast` | Scoring, quick checks |
+| `mid` | Reply generation |
+| `smart` | Content creation, strategy |
+
+Every tier runs on free models: the free lane chain by default ([Free LLM lanes](ask.md#free-llm-lanes)), or a local Ollama model per tier. Cost is $0.
 
 **Retry behavior:**
 - 429 (rate limit): Exponential backoff, up to 3 retries

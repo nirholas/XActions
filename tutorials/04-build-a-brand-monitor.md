@@ -132,7 +132,7 @@ changes:
 const sentiment = await analyzeSentiment(tweet.text, { mode: 'llm' });
 ```
 
-That needs `OPENROUTER_API_KEY`. Start with the rule-based mode. It is free,
+That runs on free models and needs no key, but it calls a model per post. Start with the rule-based mode. It is
 instant, and good enough to decide whether something is worth a human look,
 which is the only decision this program is making.
 

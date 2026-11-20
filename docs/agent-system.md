@@ -145,13 +145,7 @@ cp config/agent-config.example.json data/agent-config.json
   },
 
   "llm": {
-    "provider": "openrouter",
-    "apiKey": "",
-    "models": {
-      "fast": "deepseek/deepseek-chat",
-      "mid": "anthropic/claude-3.5-haiku",
-      "smart": "anthropic/claude-sonnet-4"
-    }
+    "provider": "free"
   },
 
   "schedule": {
@@ -186,11 +180,8 @@ cp config/agent-config.example.json data/agent-config.json
 | `persona.opinions` | string[] | Stances the agent should express |
 | `persona.avoid` | string[] | Things the agent should never do |
 | `persona.replyStyles` | object | Weighted reply type distribution (%) |
-| `llm.provider` | string | `openrouter`, `openai`, or `ollama` |
-| `llm.apiKey` | string | API key (or use `OPENROUTER_API_KEY` env var) |
-| `llm.models.fast` | string | Cheap model for scoring (e.g., DeepSeek) |
-| `llm.models.mid` | string | Mid-tier for replies (e.g., Haiku) |
-| `llm.models.smart` | string | Best model for original content (e.g., Claude Sonnet) |
+| `llm.provider` | string | `free` (default: XActions' free lane chain, no key needed) or `ollama` (a local model). Older configs that say `openrouter` or `openai` run on free models. |
+| `llm.models.fast` / `.mid` / `.smart` | string | Ollama only: the local model for scoring, replies and original content |
 | `schedule.timezone` | string | IANA timezone for sleep hours |
 | `schedule.sleepHours` | [number, number] | [start, end] hours when agent sleeps (24h) |
 | `limits.dailyLikes` | number | Maximum likes per day |
@@ -380,8 +371,7 @@ xactions agent report [--days <n>]        # Growth report
 
 | Variable | Description |
 |----------|-------------|
-| `OPENROUTER_API_KEY` | OpenRouter API key (alternative to config file) |
-| `OPENAI_API_KEY` | OpenAI API key (if using `openai` provider) |
+| `GROQ_API_KEY`, `NVIDIA_API_KEY`, `OPENROUTER_API_KEY` | Optional free-tier keys that add capacity to the free lanes ([Free LLM lanes](ask.md#free-llm-lanes)) |
 
 ## Data Files
 

@@ -13,10 +13,7 @@
 // AI Content Optimizer
 // ============================================================================
 
-import { OPENROUTER_FREE_MODEL } from './models.js';
-
-const OPENROUTER_URL = 'https://openrouter.ai/api/v1/chat/completions';
-const DEFAULT_MODEL = OPENROUTER_FREE_MODEL;
+import { freeAsk, llmEnabled } from './freeLLM.js';
 
 /**
  * Suggest relevant hashtags for a tweet
@@ -27,12 +24,11 @@ export async function suggestHashtags(tweetText, options = {}) {
   // Strategy 1: Rule-based (offline)
   const ruleBased = getRuleBasedHashtags(tweetText, niche);
 
-  // Strategy 2: AI-based (if API key available)
-  const apiKey = process.env.OPENROUTER_API_KEY;
-  if (apiKey) {
+  // Strategy 2: AI-based (free LLM lanes, unless XACTIONS_LLM=off)
+  if (llmEnabled()) {
     try {
       const prompt = `Suggest ${count} relevant Twitter/X hashtags for this tweet. Return only hashtags, one per line, no explanations.${niche ? ` Niche: ${niche}.` : ''}\n\nTweet: "${tweetText}"`;
-      const aiResult = await callLLM(apiKey, prompt);
+      const aiResult = await callLLM(prompt);
       const aiHashtags = aiResult.split('\n').map(h => h.trim().replace(/^#?/, '#')).filter(h => h.length > 1 && h !== '#');
 
       // Hybrid: combine AI + rule-based, deduplicate
@@ -60,11 +56,10 @@ export async function suggestHashtags(tweetText, options = {}) {
 export async function optimizeTweet(text, options = {}) {
   const { tone = 'casual', audience, goal = 'engagement' } = options;
 
-  const apiKey = process.env.OPENROUTER_API_KEY;
-  if (apiKey) {
+  if (llmEnabled()) {
     try {
       const prompt = `Optimize this tweet for maximum ${goal} on Twitter/X. Tone: ${tone}.${audience ? ` Audience: ${audience}.` : ''} Return ONLY the optimized tweet text, nothing else.\n\nOriginal: "${text}"`;
-      const optimized = await callLLM(apiKey, prompt);
+      const optimized = await callLLM(prompt);
       const changes = detectChanges(text, optimized.trim());
 
       return {
@@ -146,12 +141,11 @@ export function predictPerformance(text) {
  * Generate N variations of a tweet
  */
 export async function generateVariations(text, count = 3) {
-  const apiKey = process.env.OPENROUTER_API_KEY;
 
-  if (apiKey) {
+  if (llmEnabled()) {
     try {
       const prompt = `Generate ${count} different variations of this tweet. Each should have a different hook/angle. Return each variation on its own line, numbered 1. 2. 3. Nothing else.\n\nOriginal: "${text}"`;
-      const result = await callLLM(apiKey, prompt);
+      const result = await callLLM(prompt);
       const variations = result.split('\n')
         .map(l => l.replace(/^\d+[\.\)]\s*/, '').trim())
         .filter(l => l.length > 10)
@@ -174,7 +168,6 @@ export async function generateVariations(text, count = 3) {
  * Analyze a user's writing voice from their tweets
  */
 export async function analyzeVoice(username) {
-  const apiKey = process.env.OPENROUTER_API_KEY;
 
   // Scrape recent tweets
   let tweets = [];
@@ -212,11 +205,11 @@ export async function analyzeVoice(username) {
     tone: emojiUsage > 0.5 ? 'casual/fun' : questionUsage > 0.3 ? 'conversational' : 'informational',
   };
 
-  if (apiKey) {
+  if (llmEnabled()) {
     try {
       const sampleTweets = texts.slice(0, 20).join('\n---\n');
       const prompt = `Analyze the writing voice and style of these tweets. Describe: tone, vocabulary level, common patterns, emoji usage, sentence structure. Be concise (3-5 sentences).\n\nTweets:\n${sampleTweets}`;
-      voiceProfile.aiAnalysis = (await callLLM(apiKey, prompt)).trim();
+      voiceProfile.aiAnalysis = (await callLLM(prompt)).trim();
     } catch { /* AI analysis optional */ }
   }
 
@@ -352,26 +345,9 @@ function findCommonPhrases(texts) {
 // LLM Helper
 // ============================================================================
 
-async function callLLM(apiKey, prompt) {
-  const response = await fetch(OPENROUTER_URL, {
-    method: 'POST',
-    headers: {
-      'Authorization': `Bearer ${apiKey}`,
-      'Content-Type': 'application/json',
-      'HTTP-Referer': 'https://xactions.app',
-      'X-Title': 'XActions',
-    },
-    body: JSON.stringify({
-      model: process.env.OPENROUTER_MODEL || DEFAULT_MODEL,
-      messages: [{ role: 'user', content: prompt }],
-      max_tokens: 500,
-      temperature: 0.7,
-    }),
-  });
-
-  if (!response.ok) throw new Error(`LLM API error: ${response.status}`);
-  const data = await response.json();
-  return data.choices?.[0]?.message?.content || '';
+/** One prompt through the free LLM lanes (src/ai/freeLLM.js). */
+async function callLLM(prompt) {
+  return freeAsk('', prompt, { maxTokens: 500, temperature: 0.7 });
 }
 
 // by nichxbt

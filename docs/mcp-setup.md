@@ -174,7 +174,7 @@ Then use `xactions-mcp` as the command instead of `npx`:
 | Variable | Required | Description |
 |----------|----------|-------------|
 | `XACTIONS_SESSION_COOKIE` | For most tools | Your X/Twitter `auth_token` cookie |
-| `OPENROUTER_API_KEY` | For AI tools | Free key from [openrouter.ai](https://openrouter.ai) |
+| `GROQ_API_KEY`, `NVIDIA_API_KEY`, `OPENROUTER_API_KEY` | No | AI tools use free models and work with no key; these free-tier keys add capacity. Image analysis needs `OPENROUTER_API_KEY` or `NVIDIA_API_KEY`. See [Free LLM lanes](ask.md#free-llm-lanes) |
 | `XACTIONS_MODE` | No | `local` (default, free) or `remote` |
 | `XACTIONS_MCP_TOOLS` | No | Allowlist of tool or group names to expose (see [Tool filtering](#tool-filtering)) |
 | `XACTIONS_MCP_EXCLUDE` | No | Denylist of tool or group names to hide; wins over the allowlist |
@@ -495,7 +495,7 @@ gate cannot be used to spend past a cap.
 | `x_bookmark` | Bookmark a tweet |
 | `x_send_dm` | Send a direct message |
 
-### AI Tools (require OPENROUTER_API_KEY)
+### AI Tools (free models, no key needed)
 
 | Tool | Description |
 |------|-------------|
@@ -567,9 +567,9 @@ For MCP client configs, the `-p` flag approach:
 
 Auth is required for action tools. Make sure `XACTIONS_SESSION_COOKIE` is set in your MCP config `env`.
 
-### "OPENROUTER_API_KEY required"
+### "every LLM lane failed"
 
-AI tools (voice analysis, tweet generation, thread summarization) need an OpenRouter API key. Get a free one at [openrouter.ai](https://openrouter.ai).
+AI tools run on free models. Their keyless lanes are rate limited per IP, so at busy times all of them can be. Add a free-tier key (`GROQ_API_KEY` is quickest; `NVIDIA_API_KEY` and `OPENROUTER_API_KEY` also work) to get a lane of your own. Image analysis has no keyless lane and needs `OPENROUTER_API_KEY` or `NVIDIA_API_KEY`.
 
 ### Server won't start
 

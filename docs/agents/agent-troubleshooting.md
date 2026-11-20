@@ -89,7 +89,7 @@ npm link
 
 ### CLI persona commands fail
 1. Check `XACTIONS_SESSION_COOKIE` env var
-2. For LLM features: check `OPENROUTER_API_KEY`
+2. For LLM features: they use free models; if every lane is rate limited, add a free-tier key (`GROQ_API_KEY`, `NVIDIA_API_KEY` or `OPENROUTER_API_KEY`)
 3. Run `xactions persona list` to verify setup
 
 ---

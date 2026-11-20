@@ -47,7 +47,7 @@ import { deliverWebhook } from '../../../src/notifications/webhook.js';
 import { Notifier } from '../../../src/notifications/notifier.js';
 import { aggregateResults, analyzeBatch } from '../../../src/analytics/sentiment.js';
 import { varyTweet } from '../../../src/automation/evergreenRecycler.js';
-import { PROVIDER_ENV_KEYS, chatCompletion, resolveProvider } from '../../../src/ai/commentGenerator.js';
+import { chatCompletion, resolveProvider } from '../../../src/ai/commentGenerator.js';
 
 // ── Constants ───────────────────────────────────────────────────────────────
 
@@ -97,7 +97,6 @@ const DM_MEDIA = {
 const MAX_DM_MEDIA_BYTES = 64 * 1024 * 1024;
 const REPURPOSE_FORMATS = ['thread', 'single', 'blog', 'linkedin', 'newsletter', 'hooks'];
 const STREAM_TYPES = ['keyword', 'user', 'hashtag', 'mentions'];
-const LLM_PROVIDERS = ['openrouter', 'anthropic', 'openai', 'xai'];
 
 /** Where each monitor type is read and controlled. */
 const MONITOR_ROUTES = {
@@ -624,13 +623,9 @@ function csvCell(value) {
 
 // ── LLM ─────────────────────────────────────────────────────────────────────
 
+/** The server writes with free models only (src/ai/freeLLM.js). */
 function llmTarget() {
-  const provider = LLM_PROVIDERS.find((p) => PROVIDER_ENV_KEYS[p].some((name) => process.env[name]));
-  if (!provider) {
-    const names = LLM_PROVIDERS.flatMap((p) => PROVIDER_ENV_KEYS[p]).join(', ');
-    throw new JobInputError(`No language model is configured on this server. Set one of ${names}.`);
-  }
-  return resolveProvider({ provider });
+  return resolveProvider({ provider: 'free' });
 }
 
 function parseModelJson(text) {

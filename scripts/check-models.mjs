@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
 /**
- * Report OpenRouter model ids in the code that OpenRouter no longer serves.
+ * Report OpenRouter model ids in the code that are retired or not free.
  *
  * OpenRouter retires model ids, and a retired id fails every request with an
  * error most callers swallow: the feature quietly drops to its offline
@@ -9,10 +9,14 @@
  * ids in use had gone that way (gemini-flash-1.5, llama-3-8b-instruct:free,
  * claude-3.5-haiku, grok-2-vision-1212, ...), and nothing noticed.
  *
+ * XActions uses free models only (src/ai/freeLLM.js), so an id is also
+ * reported when OpenRouter charges for it.
+ *
  * This reads OpenRouter's public model list (no key needed) and checks every
  * quoted `vendor/model` string under api/ and src/ whose vendor OpenRouter
- * knows. Defaults live in src/ai/models.js; paste-in browser scripts carry
- * their own literals, which this covers too.
+ * knows. Ids of other providers' free tiers (Groq, NVIDIA) that happen to look
+ * like OpenRouter ids are skipped when OpenRouter does not list them; mark any
+ * other deliberate exception with `check:models ignore`.
  *
  * A line can opt out with the comment `check:models ignore`, for example a
  * cost table that still prices usage recorded under a retired id.
@@ -21,7 +25,7 @@
  *   node scripts/check-models.mjs
  *   node scripts/check-models.mjs --json
  *
- * Exits 1 when any id is retired, 2 when the model list cannot be fetched.
+ * Exits 1 when any id is retired or paid, 2 when the model list cannot be fetched.
  *
  * Direct-provider ids (claude-*, gpt-*, grok-* without a vendor prefix) are
  * not covered: their lists need each provider's API key.
@@ -58,6 +62,9 @@ try {
 }
 
 const live = new Set(list.map((m) => m.id));
+// Free: OpenRouter's free router, or a model whose prompt and completion
+// prices are both zero. Routers with variable pricing report -1.
+const free = new Set(list.filter((m) => m.id === 'openrouter/free' || (Number(m.pricing?.prompt) === 0 && Number(m.pricing?.completion) === 0)).map((m) => m.id));
 const vendors = new Set(list.map((m) => m.id.split('/')[0]));
 
 /** @type {Map<string, string[]>} */
@@ -76,16 +83,26 @@ for (const dir of DIRS) {
   }
 }
 
-const results = [...found].sort(([a], [b]) => a.localeCompare(b)).map(([id, where]) => ({ id, live: live.has(id), where }));
+// A lanes.js id for another provider's free tier (e.g. Groq's openai/gpt-oss-120b)
+// is not an OpenRouter id at all; it is only checked if OpenRouter lists it.
+const OTHER_PROVIDER_FILES = new Set(['src/ask/lanes.js']);
+const results = [...found]
+  .sort(([a], [b]) => a.localeCompare(b))
+  .map(([id, where]) => ({ id, live: live.has(id), free: free.has(id), where }))
+  .filter((r) => r.live || !r.where.every((w) => OTHER_PROVIDER_FILES.has(w.split(':')[0])));
 const retired = results.filter((r) => !r.live);
+const paid = results.filter((r) => r.live && !r.free);
 
 if (json) {
-  console.log(JSON.stringify({ checked: results.length, retired }, null, 2));
+  console.log(JSON.stringify({ checked: results.length, retired, paid }, null, 2));
 } else {
-  for (const r of results) console.log(`  ${r.live ? 'ok     ' : 'RETIRED'}  ${r.id}${r.live ? '' : `\n           ${r.where.join('\n           ')}`}`);
+  for (const r of results) {
+    const status = !r.live ? 'RETIRED' : !r.free ? 'PAID   ' : 'ok     ';
+    console.log(`  ${status}  ${r.id}${status === 'ok     ' ? '' : `\n           ${r.where.join('\n           ')}`}`);
+  }
   console.log(`\n${results.length} model ids checked against ${live.size} live OpenRouter models.`);
-  console.log(retired.length
-    ? `${retired.length} retired. Replace them, preferably through src/ai/models.js.`
-    : 'No retired model ids.');
+  if (retired.length) console.log(`${retired.length} retired.`);
+  if (paid.length) console.log(`${paid.length} paid. XActions uses free models only: call freeChat() from src/ai/freeLLM.js, or use openrouter/free.`);
+  if (!retired.length && !paid.length) console.log('Every model id is live and free.');
 }
-process.exit(retired.length ? 1 : 0);
+process.exit(retired.length || paid.length ? 1 : 0);

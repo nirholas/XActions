@@ -51,7 +51,7 @@ await startAlgorithmBuilder({
 });
 ```
 
-Requires `OPENROUTER_API_KEY` env var for LLM-generated comments and posts.
+Comments and posts are written by free models (no key needed). Optional free-tier keys (`GROQ_API_KEY`, `NVIDIA_API_KEY`, `OPENROUTER_API_KEY`) add capacity.
 
 ## Algorithm Trainer -- `src/automation/algorithmTrainer.js`
 
@@ -95,17 +95,17 @@ Browser console script for manual training sessions. Requires `src/automation/co
 4. The algorithm typically adjusts within 3-7 days of consistent signals
 
 ### Running 24/7 with LLM
-1. Set `OPENROUTER_API_KEY` for AI-generated replies
+1. Optional: set a free-tier key (`GROQ_API_KEY`, `NVIDIA_API_KEY` or `OPENROUTER_API_KEY`) for more LLM capacity
 2. `xactions persona create` -- configure niche, strategy, schedule
 3. `xactions persona run <id>` -- starts headless Puppeteer session
 4. Monitor: `xactions persona status <id>`
-5. Cost estimate: ~$0.50-2.00/day depending on model and activity level
+5. LLM cost: none. XActions uses free models only
 
 ## Environment Variables
 
 | Variable | Purpose |
 |----------|---------|
-| `OPENROUTER_API_KEY` | Required for LLM-generated comments and posts |
+| `GROQ_API_KEY`, `NVIDIA_API_KEY`, `OPENROUTER_API_KEY` | Optional free-tier keys; LLM comments and posts work without them |
 | `XACTIONS_SESSION_COOKIE` | X auth token (alternative to `--token` flag) |
 
 ## Detailed References

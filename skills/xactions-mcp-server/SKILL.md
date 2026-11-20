@@ -76,7 +76,7 @@ xactions mcp-config --client vscode --write
 ### Messaging
 `x_send_dm`, `x_get_conversations`, `x_export_dms`
 
-### AI (requires OPENROUTER_API_KEY)
+### AI (free models, no key needed)
 `x_analyze_voice`, `x_generate_tweet`, `x_rewrite_tweet`, `x_summarize_thread`
 
 ### Advanced
@@ -104,7 +104,7 @@ xactions mcp-config --client vscode --write
 | Variable | Required | Purpose |
 |----------|----------|---------|
 | `XACTIONS_SESSION_COOKIE` | Yes | X auth_token for authentication |
-| `OPENROUTER_API_KEY` | No | Enables AI tools (voice analysis, tweet generation) |
+| `GROQ_API_KEY`, `NVIDIA_API_KEY`, `OPENROUTER_API_KEY` | No | Optional free-tier keys that add capacity to the AI tools (which use free models only). Image analysis needs `OPENROUTER_API_KEY` or `NVIDIA_API_KEY` |
 
 ## Full Documentation
 See `docs/mcp-setup.md` for complete setup guide with troubleshooting.

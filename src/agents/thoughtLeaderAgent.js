@@ -22,7 +22,7 @@ const rand = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
  * @typedef {Object} AgentConfig
  * @property {{ name: string, searchTerms: string[], influencers: string[], keywords: string[] }} niche
  * @property {{ name: string, handle: string, tone: string, expertise: string[], opinions: string[], avoid: string[], exampleTweets?: string[] }} persona
- * @property {{ provider: string, apiKey: string, models: { fast: string, mid: string, smart: string } }} llm
+ * @property {{ provider: 'free'|'ollama', baseUrl?: string, models?: { fast: string, mid: string, smart: string } }} llm
  * @property {{ timezone: string, sleepHours: [number, number] }} schedule
  * @property {{ dailyLikes: number, dailyFollows: number, dailyComments: number, dailyPosts: number }} limits
  * @property {{ headless: boolean, sessionPath: string, proxy?: string }} browser
@@ -51,8 +51,8 @@ class ThoughtLeaderAgent {
     });
 
     this.llm = new LLMBrain({
-      provider: config.llm?.provider || 'openrouter',
-      apiKey: config.llm?.apiKey || process.env.OPENROUTER_API_KEY || '',
+      provider: config.llm?.provider || 'free',
+      baseUrl: config.llm?.baseUrl,
       models: config.llm?.models,
     });
 

@@ -198,7 +198,8 @@ scripts.
 
 | Variable | Enables |
 |----------|---------|
-| `OPENROUTER_API_KEY` | LLM-backed sentiment mode and AI tweet generation. |
+| `GROQ_API_KEY`, `NVIDIA_API_KEY`, `OPENROUTER_API_KEY`, `OPENROUTER_API_KEYS`, `CEREBRAS_API_KEY`, `GEMINI_API_KEY`, `MISTRAL_API_KEY` | More capacity for the AI features. XActions uses free LLMs only; each of these is a provider's free tier and adds a lane. None is required: three keyless lanes answer without any. Images need `OPENROUTER_API_KEY` or `NVIDIA_API_KEY`. See [Free LLM lanes](ask.md#free-llm-lanes). |
+| `XACTIONS_LLM` | `off` turns every LLM call off; features fall back to rule-based output. |
 | `TWITTER_CLIENT_ID` / `TWITTER_CLIENT_SECRET` | OAuth 2.0 login in the dashboard. |
 | `STRIPE_*` | Subscription billing. |
 | `X402_*` | Per-request payments on the hosted API. Documented inline in [`.env.example`](../.env.example); verify a setup with `npm run verify:x402`. |

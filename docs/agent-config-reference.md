@@ -88,13 +88,7 @@ See [`config/agent-config.example.json`](../config/agent-config.example.json) fo
     }
   },
   "llm": {
-    "provider": "openrouter",
-    "apiKey": "sk-or-v1-YOUR-KEY-HERE",
-    "models": {
-      "fast": "deepseek/deepseek-chat",
-      "mid": "anthropic/claude-3.5-haiku",
-      "smart": "anthropic/claude-sonnet-4"
-    }
+    "provider": "free"
   },
   "schedule": {
     "timezone": "America/New_York",
@@ -183,33 +177,13 @@ Configures the LLM provider for scoring, reply generation, and content creation.
 
 | Field | Type | Required | Default | Description |
 |---|---|---|---|---|
-| `provider` | string | no | `"openrouter"` | `"openrouter"`, `"openai"`, or `"ollama"` |
-| `apiKey` | string | yes* | env var | API key (*not needed for Ollama) |
-| `baseUrl` | string | no | auto-detected | Custom API base URL |
-| `models.fast` | string | no | `"deepseek/deepseek-chat"` | Model for scoring (high volume, cheap) |
-| `models.mid` | string | no | `"anthropic/claude-3.5-haiku"` | Model for reply generation |
-| `models.smart` | string | no | `"anthropic/claude-sonnet-4"` | Model for content creation and strategy |
+| `provider` | string | no | `"free"` | `"free"` (XActions' free lane chain, no key needed) or `"ollama"` (a local model). A config that says `"openrouter"` or `"openai"` runs on free models and logs a note. |
+| `baseUrl` | string | no | `http://localhost:11434/v1/chat/completions` | Ollama only |
+| `models.fast` | string | no | — | Ollama only: model for scoring (high volume) |
+| `models.mid` | string | no | — | Ollama only: model for reply generation |
+| `models.smart` | string | no | — | Ollama only: model for content creation and strategy |
 
-**Provider URLs (auto-detected):**
-
-| Provider | Base URL |
-|---|---|
-| `openrouter` | `https://openrouter.ai/api/v1/chat/completions` |
-| `openai` | `https://api.openai.com/v1/chat/completions` |
-| `ollama` | `http://localhost:11434/v1/chat/completions` |
-
-**Environment variable fallbacks:**
-- OpenRouter: `OPENROUTER_API_KEY`
-- OpenAI: `OPENAI_API_KEY`
-
-**Cost estimates per day (Normal intensity):**
-
-| Model Tier | Daily Calls | Avg Tokens/Call | Est. Cost |
-|---|---|---|---|
-| Fast (scoring) | ~200 | 500 input / 50 output | ~$0.02 |
-| Mid (replies) | ~25 | 800 input / 200 output | ~$0.03 |
-| Smart (content) | ~5 | 1500 input / 500 output | ~$0.05 |
-| **Total** | | | **~$0.10/day** |
+**Cost:** nothing. The agent uses free models only. Free tiers have daily quotas, so optional free-tier keys (`GROQ_API_KEY`, `NVIDIA_API_KEY`, `OPENROUTER_API_KEY`) add lanes; see [Free LLM lanes](ask.md#free-llm-lanes).
 
 ### schedule
 
@@ -327,6 +301,5 @@ These can be set instead of (or in addition to) config file values:
 
 | Variable | Description |
 |---|---|
-| `OPENROUTER_API_KEY` | OpenRouter API key (fallback for `llm.apiKey`) |
-| `OPENAI_API_KEY` | OpenAI API key (fallback for `llm.apiKey`) |
+| `GROQ_API_KEY`, `NVIDIA_API_KEY`, `OPENROUTER_API_KEY` | Optional free-tier keys that add capacity to the free lanes |
 | `AGENT_CONFIG_PATH` | Default config path (fallback for `--config`) |

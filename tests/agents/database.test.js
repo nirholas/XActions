@@ -161,10 +161,11 @@ describe('AgentDatabase', () => {
       expect(usage[0].output_tokens).toBe(300);
     });
 
-    it('should calculate cost', () => {
-      db.recordLLMUsage('deepseek/deepseek-chat', 1000000, 500000);
-      const cost = db.getLLMCost(1);
-      expect(cost).toBeGreaterThan(0);
+    it('records free-model usage at no cost', () => {
+      // The agent uses free models only, so a call costs nothing however many
+      // tokens it used. (It used to price unknown models at $1/$3 per Mtok.)
+      db.recordLLMUsage('groq:openai/gpt-oss-120b', 1000000, 500000); // check:models ignore
+      expect(db.getLLMCost(1)).toBe(0);
     });
   });
 

@@ -65,10 +65,12 @@ import { homedir } from 'os';
 // ============================================================================
 
 const PERSONAS_DIR = join(homedir(), '.xactions', 'personas');
+// Personas write with free models (src/ai/freeLLM.js). These fields are kept
+// so saved personas keep their shape; a model named here is not used.
 const DEFAULT_MODELS = {
-  comment: 'google/gemini-flash-2.0',
-  post: 'google/gemini-flash-2.0',
-  reply: 'google/gemini-flash-2.0',
+  comment: 'free',
+  post: 'free',
+  reply: 'free',
 };
 
 // ============================================================================
@@ -305,7 +307,6 @@ function createPersona(options = {}) {
         post: options.postModel || DEFAULT_MODELS.post,
         reply: options.replyModel || DEFAULT_MODELS.reply,
       },
-      apiKey: options.apiKey || null,  // falls back to env OPENROUTER_API_KEY
       temperature: options.temperature ?? 0.85,
       systemPrompt: options.systemPrompt || null,  // auto-generated if null
     },

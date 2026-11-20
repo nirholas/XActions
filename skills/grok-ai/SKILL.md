@@ -97,7 +97,7 @@ For programmatic AI content without Grok, the XActions MCP server includes AI to
 | `x_rewrite_tweet` | Rewrite tweet for better engagement |
 | `x_summarize_thread` | Summarize a thread |
 
-These require an `OPENROUTER_API_KEY` env var but work without Premium.
+These use free models (no key needed) and work without Premium.
 
 ## Notes
 - Grok responses are AI-generated and should be reviewed before posting

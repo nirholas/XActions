@@ -14,7 +14,7 @@
 // Score range: -5 to +5
 // ============================================================================
 
-import { OPENROUTER_FREE_MODEL } from '../ai/models.js';
+import { freeChat } from '../ai/freeLLM.js';
 
 const LEXICON = {
   // Strong positive (+4/+5)
@@ -216,21 +216,11 @@ function analyzeRuleBased(text) {
 // ============================================================================
 
 /**
- * Analyze sentiment using an LLM via OpenRouter
+ * Analyze sentiment with a free LLM (src/ai/freeLLM.js). No key needed.
  * @param {string} text - Text to analyze
- * @param {object} [options]
- * @param {string} [options.apiKey] - OpenRouter API key (or env OPENROUTER_API_KEY)
- * @param {string} [options.model] - Model to use (default: meta-llama/llama-3.1-8b-instruct:free)
  * @returns {Promise<{ score: number, label: string, confidence: number, keywords: string[] }>}
  */
-async function analyzeLLM(text, options = {}) {
-  const apiKey = options.apiKey || process.env.OPENROUTER_API_KEY;
-  if (!apiKey) {
-    throw new Error('OpenRouter API key required for LLM sentiment analysis. Set OPENROUTER_API_KEY env var or pass apiKey option.');
-  }
-
-  const model = options.model || OPENROUTER_FREE_MODEL;
-
+async function analyzeLLM(text) {
   const systemPrompt = `You are a sentiment analysis engine. Analyze the sentiment of the given text and respond with ONLY a JSON object (no markdown, no explanation):
 {
   "score": <number from -1.0 to 1.0>,
@@ -247,32 +237,13 @@ Rules:
 - Consider sarcasm, irony, and context
 - For tweets/social media, consider crypto/finance slang, internet culture`;
 
-  const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
-    method: 'POST',
-    headers: {
-      'Authorization': `Bearer ${apiKey}`,
-      'Content-Type': 'application/json',
-      'HTTP-Referer': 'https://xactions.app',
-      'X-Title': 'XActions Sentiment Analysis',
-    },
-    body: JSON.stringify({
-      model,
-      messages: [
-        { role: 'system', content: systemPrompt },
-        { role: 'user', content: text },
-      ],
-      temperature: 0.1,
-      max_tokens: 200,
-    }),
-  });
-
-  if (!response.ok) {
-    const errorBody = await response.text();
-    throw new Error(`OpenRouter API error (${response.status}): ${errorBody}`);
-  }
-
-  const data = await response.json();
-  const content = data.choices?.[0]?.message?.content || '';
+  const { text: content } = await freeChat(
+    [
+      { role: 'system', content: systemPrompt },
+      { role: 'user', content: text },
+    ],
+    { temperature: 0.1, maxTokens: 400 },
+  );
 
   try {
     // Try to extract JSON from the response
@@ -302,9 +273,7 @@ Rules:
  * 
  * @param {string} text - Text to analyze
  * @param {object} [options]
- * @param {string} [options.mode] - 'rules' (default) or 'llm'
- * @param {string} [options.apiKey] - OpenRouter API key for LLM mode
- * @param {string} [options.model] - LLM model for LLM mode
+ * @param {string} [options.mode] - 'rules' (default) or 'llm' (free models, no key needed)
  * @returns {Promise<{ score: number, label: string, confidence: number, keywords: string[] }>}
  */
 export async function analyzeSentiment(text, options = {}) {
@@ -315,7 +284,7 @@ export async function analyzeSentiment(text, options = {}) {
   const mode = options.mode || 'rules';
 
   if (mode === 'llm') {
-    return await analyzeLLM(text, options);
+    return await analyzeLLM(text);
   }
 
   return analyzeRuleBased(text);

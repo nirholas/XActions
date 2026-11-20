@@ -2610,8 +2610,8 @@ ai
   .option('-c, --count <n>', 'Number of tweets to generate', '3')
   .option('-s, --style <style>', 'Style: casual, professional, provocative')
   .option('-t, --type <type>', 'Type: tweet or thread', 'tweet')
-  .option('-m, --model <model>', 'OpenRouter model to use')
-  .option('-k, --api-key <key>', 'OpenRouter API key (or set OPENROUTER_API_KEY)')
+  .option('-m, --model <model>', 'Ignored: XActions uses free models only (accepted so older scripts still run)')
+  .option('-k, --api-key <key>', 'Optional OpenRouter key; its free tier adds capacity (or set OPENROUTER_API_KEY)')
   .action(async (topic, options) => {
     if (!options.voice) {
       console.error(chalk.red('✗ --voice <username> is required'));
@@ -2619,17 +2619,13 @@ ai
     }
     const config = await loadConfig();
     const token = config.authToken || config.auth_token || process.env.TWITTER_AUTH_TOKEN;
+    // Optional: an OpenRouter key adds its free tier to the free lane chain.
     const apiKey = options.apiKey || config.openrouter_api_key || process.env.OPENROUTER_API_KEY;
     if (!token) {
       console.error(chalk.red('✗ Auth token required. Run: xactions login (or xactions connect)'));
       process.exit(1);
     }
-    if (!apiKey) {
-      console.error(chalk.red('✗ OpenRouter API key required. Set OPENROUTER_API_KEY or use --api-key'));
-      process.exit(1);
-    }
-    process.env.OPENROUTER_API_KEY = apiKey;
-    if (options.model) process.env.OPENROUTER_MODEL = options.model;
+    if (apiKey) process.env.OPENROUTER_API_KEY = apiKey;
 
     const spinner = ora(`Scraping @${options.voice}'s tweets...`).start();
     try {
@@ -2682,8 +2678,8 @@ ai
   .option('-v, --voice <username>', 'Username whose voice to mimic (required)')
   .option('-g, --goal <goal>', 'Goal: more_engaging, shorter, more_professional, funnier', 'more_engaging')
   .option('-c, --count <n>', 'Number of variations', '3')
-  .option('-m, --model <model>', 'OpenRouter model to use')
-  .option('-k, --api-key <key>', 'OpenRouter API key (or set OPENROUTER_API_KEY)')
+  .option('-m, --model <model>', 'Ignored: XActions uses free models only (accepted so older scripts still run)')
+  .option('-k, --api-key <key>', 'Optional OpenRouter key; its free tier adds capacity (or set OPENROUTER_API_KEY)')
   .action(async (text, options) => {
     if (!options.voice) {
       console.error(chalk.red('✗ --voice <username> is required'));
@@ -2691,17 +2687,13 @@ ai
     }
     const config = await loadConfig();
     const token = config.authToken || config.auth_token || process.env.TWITTER_AUTH_TOKEN;
+    // Optional: an OpenRouter key adds its free tier to the free lane chain.
     const apiKey = options.apiKey || config.openrouter_api_key || process.env.OPENROUTER_API_KEY;
     if (!token) {
       console.error(chalk.red('✗ Auth token required. Run: xactions login (or xactions connect)'));
       process.exit(1);
     }
-    if (!apiKey) {
-      console.error(chalk.red('✗ OpenRouter API key required. Set OPENROUTER_API_KEY or use --api-key'));
-      process.exit(1);
-    }
-    process.env.OPENROUTER_API_KEY = apiKey;
-    if (options.model) process.env.OPENROUTER_MODEL = options.model;
+    if (apiKey) process.env.OPENROUTER_API_KEY = apiKey;
 
     const spinner = ora(`Scraping @${options.voice}'s tweets...`).start();
     try {
@@ -2744,22 +2736,18 @@ ai
   .option('-p, --posts-per-day <n>', 'Posts per day', '3')
   .option('-t, --topics <topics>', 'Comma-separated topics')
   .option('-o, --output <file>', 'Save calendar to file')
-  .option('-m, --model <model>', 'OpenRouter model to use')
-  .option('-k, --api-key <key>', 'OpenRouter API key (or set OPENROUTER_API_KEY)')
+  .option('-m, --model <model>', 'Ignored: XActions uses free models only (accepted so older scripts still run)')
+  .option('-k, --api-key <key>', 'Optional OpenRouter key; its free tier adds capacity (or set OPENROUTER_API_KEY)')
   .action(async (username, options) => {
     const config = await loadConfig();
     const token = config.authToken || config.auth_token || process.env.TWITTER_AUTH_TOKEN;
+    // Optional: an OpenRouter key adds its free tier to the free lane chain.
     const apiKey = options.apiKey || config.openrouter_api_key || process.env.OPENROUTER_API_KEY;
     if (!token) {
       console.error(chalk.red('✗ Auth token required. Run: xactions login (or xactions connect)'));
       process.exit(1);
     }
-    if (!apiKey) {
-      console.error(chalk.red('✗ OpenRouter API key required. Set OPENROUTER_API_KEY or use --api-key'));
-      process.exit(1);
-    }
-    process.env.OPENROUTER_API_KEY = apiKey;
-    if (options.model) process.env.OPENROUTER_MODEL = options.model;
+    if (apiKey) process.env.OPENROUTER_API_KEY = apiKey;
 
     const spinner = ora(`Scraping @${username}'s tweets...`).start();
     try {

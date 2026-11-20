@@ -2,7 +2,7 @@
 /**
  * XActions AI Tweet Generator
  * 
- * Uses OpenRouter to generate tweets in a user's voice.
+ * Generates tweets in a user's voice with free LLMs (src/ai/freeLLM.js).
  * Supports single tweets, threads, rewrites, weekly calendars, and replies.
  * 
  * The moat: scrape tweets → analyze voice → generate in their style.
@@ -13,61 +13,23 @@
  */
 
 import { buildVoicePrompt } from './voiceAnalyzer.js';
-import { OPENROUTER_DEFAULT_MODEL } from './models.js';
+import { freeChat } from './freeLLM.js';
 
 // ============================================================================
 // Configuration
 // ============================================================================
 
-const DEFAULT_MODEL = OPENROUTER_DEFAULT_MODEL;
-const OPENROUTER_URL = 'https://openrouter.ai/api/v1/chat/completions';
-
-// ============================================================================
-// OpenRouter Client
-// ============================================================================
-
 /**
- * Call OpenRouter API
+ * Complete through the free LLM lanes (src/ai/freeLLM.js). Only free models
+ * are used; `model` and `apiKey` options from older callers are ignored.
  */
-async function callOpenRouter(messages, options = {}) {
-  const apiKey = options.apiKey || process.env.OPENROUTER_API_KEY;
-  if (!apiKey) {
-    throw new Error('OpenRouter API key required. Set OPENROUTER_API_KEY env var or pass apiKey option.');
-  }
-
-  const model = options.model || DEFAULT_MODEL;
-  const temperature = options.temperature ?? 0.8;
-  const maxTokens = options.maxTokens || 2000;
-
-  const response = await fetch(OPENROUTER_URL, {
-    method: 'POST',
-    headers: {
-      'Authorization': `Bearer ${apiKey}`,
-      'Content-Type': 'application/json',
-      'HTTP-Referer': 'https://xactions.app',
-      'X-Title': 'XActions AI Tweet Writer',
-    },
-    body: JSON.stringify({
-      model,
-      messages,
-      temperature,
-      max_tokens: maxTokens,
-    }),
+async function callLLM(messages, options = {}) {
+  const { text, lane, model } = await freeChat(messages, {
+    temperature: options.temperature ?? 0.8,
+    maxTokens: options.maxTokens || 2000,
+    timeoutMs: 90_000,
   });
-
-  if (!response.ok) {
-    const errorBody = await response.text();
-    throw new Error(`OpenRouter API error (${response.status}): ${errorBody}`);
-  }
-
-  const data = await response.json();
-  const content = data.choices?.[0]?.message?.content || '';
-  
-  return {
-    content,
-    model: data.model || model,
-    usage: data.usage || {},
-  };
+  return { content: text, model: `${lane}:${model}`, usage: {} };
 }
 
 /**
@@ -110,12 +72,10 @@ function parseJSON(content) {
  * @param {string} options.topic - Topic or prompt for the tweet
  * @param {string} [options.style] - Optional style override: 'hot-take', 'educational', 'personal', 'promotional'
  * @param {number} [options.count=3] - Number of variations to generate (1-5)
- * @param {string} [options.model] - OpenRouter model override
- * @param {string} [options.apiKey] - OpenRouter API key override
  * @returns {Promise<{ tweets: Array<{ text: string, estimatedEngagement: string, reasoning: string }>, model: string }>}
  */
 export async function generateTweet(voiceProfile, options = {}) {
-  const { topic, style, count = 3, model, apiKey } = options;
+  const { topic, style, count = 3 } = options;
 
   if (!topic) throw new Error('topic is required');
   if (!voiceProfile) throw new Error('voiceProfile is required');
@@ -139,10 +99,10 @@ Respond with ONLY a JSON array:
   }
 ]`;
 
-  const result = await callOpenRouter([
+  const result = await callLLM([
     { role: 'system', content: systemPrompt },
     { role: 'user', content: userPrompt },
-  ], { model, apiKey, temperature: 0.85 });
+  ], { temperature: 0.85 });
 
   const tweets = parseJSON(result.content);
 
@@ -161,12 +121,10 @@ Respond with ONLY a JSON array:
  * @param {string} options.topic - Topic for the thread
  * @param {number} [options.length=5] - Number of tweets in thread (3-10)
  * @param {boolean} [options.hooks=true] - Whether to include a hook opener and CTA closer
- * @param {string} [options.model] - OpenRouter model override
- * @param {string} [options.apiKey] - OpenRouter API key override
  * @returns {Promise<{ thread: Array<{ position: number, text: string, purpose: string }>, model: string }>}
  */
 export async function generateThread(voiceProfile, options = {}) {
-  const { topic, length = 5, hooks = true, model, apiKey } = options;
+  const { topic, length = 5, hooks = true } = options;
 
   if (!topic) throw new Error('topic is required');
 
@@ -195,10 +153,10 @@ Respond with ONLY a JSON array:
   }
 ]`;
 
-  const result = await callOpenRouter([
+  const result = await callLLM([
     { role: 'system', content: systemPrompt },
     { role: 'user', content: userPrompt },
-  ], { model, apiKey, temperature: 0.8, maxTokens: 3000 });
+  ], { temperature: 0.8, maxTokens: 3000 });
 
   const thread = parseJSON(result.content);
 
@@ -217,12 +175,10 @@ Respond with ONLY a JSON array:
  * @param {object} [options]
  * @param {string} [options.goal='more_engaging'] - 'more_engaging' | 'shorter' | 'add_hook' | 'more_casual' | 'more_formal' | 'add_cta'
  * @param {number} [options.count=3] - Number of variations
- * @param {string} [options.model] - OpenRouter model override
- * @param {string} [options.apiKey] - OpenRouter API key override
  * @returns {Promise<{ original: string, rewrites: Array<{ text: string, improvement: string }>, model: string }>}
  */
 export async function rewriteTweet(voiceProfile, originalText, options = {}) {
-  const { goal = 'more_engaging', count = 3, model, apiKey } = options;
+  const { goal = 'more_engaging', count = 3 } = options;
 
   if (!originalText) throw new Error('originalText is required');
 
@@ -256,10 +212,10 @@ Respond with ONLY a JSON array:
   }
 ]`;
 
-  const result = await callOpenRouter([
+  const result = await callLLM([
     { role: 'system', content: systemPrompt },
     { role: 'user', content: userPrompt },
-  ], { model, apiKey, temperature: 0.85 });
+  ], { temperature: 0.85 });
 
   const rewrites = parseJSON(result.content);
 
@@ -280,12 +236,10 @@ Respond with ONLY a JSON array:
  * @param {string[]} [options.topics] - Topics to cover (auto-generated from pillars if not provided)
  * @param {number} [options.postsPerDay=2] - Posts per day (1-5)
  * @param {number} [options.days=7] - Number of days (1-14)
- * @param {string} [options.model] - OpenRouter model override
- * @param {string} [options.apiKey] - OpenRouter API key override
  * @returns {Promise<{ calendar: Array<{ day: string, slot: string, topic: string, text: string, type: string }>, model: string }>}
  */
 export async function generateWeek(voiceProfile, options = {}) {
-  const { topics, postsPerDay = 2, days = 7, model, apiKey } = options;
+  const { topics, postsPerDay = 2, days = 7 } = options;
 
   const resolvedTopics = topics && topics.length > 0
     ? topics
@@ -322,10 +276,10 @@ Respond with ONLY a JSON array:
   }
 ]`;
 
-  const result = await callOpenRouter([
+  const result = await callLLM([
     { role: 'system', content: systemPrompt },
     { role: 'user', content: userPrompt },
-  ], { model, apiKey, temperature: 0.85, maxTokens: 4000 });
+  ], { temperature: 0.85, maxTokens: 4000 });
 
   const calendar = parseJSON(result.content);
 
@@ -347,12 +301,10 @@ Respond with ONLY a JSON array:
  * @param {object} [options]
  * @param {string} [options.tone] - 'agree', 'disagree', 'add-on', 'question', 'funny', 'supportive'
  * @param {number} [options.count=3] - Number of reply variations
- * @param {string} [options.model] - OpenRouter model override
- * @param {string} [options.apiKey] - OpenRouter API key override
  * @returns {Promise<{ originalTweet: string, replies: Array<{ text: string, tone: string, reasoning: string }>, model: string }>}
  */
 export async function generateReply(voiceProfile, originalTweet, options = {}) {
-  const { tone, count = 3, model, apiKey } = options;
+  const { tone, count = 3 } = options;
 
   if (!originalTweet) throw new Error('originalTweet is required');
 
@@ -380,10 +332,10 @@ Respond with ONLY a JSON array:
   }
 ]`;
 
-  const result = await callOpenRouter([
+  const result = await callLLM([
     { role: 'system', content: systemPrompt },
     { role: 'user', content: userPrompt },
-  ], { model, apiKey, temperature: 0.85 });
+  ], { temperature: 0.85 });
 
   const replies = parseJSON(result.content);
 
@@ -407,12 +359,10 @@ Respond with ONLY a JSON array:
  * @param {object} competitorVoiceProfile - Competitor's VoiceProfile
  * @param {object} [options]
  * @param {number} [options.count=5] - Number of tweets to generate
- * @param {string} [options.model] - OpenRouter model override
- * @param {string} [options.apiKey] - OpenRouter API key override
  * @returns {Promise<{ insights: string, tweets: Array<{ text: string, inspiredBy: string }>, model: string }>}
  */
 export async function analyzeCompetitorAndGenerate(myVoiceProfile, competitorVoiceProfile, options = {}) {
-  const { count = 5, model, apiKey } = options;
+  const { count = 5 } = options;
 
   const myPrompt = buildVoicePrompt(myVoiceProfile);
 
@@ -458,10 +408,10 @@ Respond with ONLY a JSON object:
   ]
 }`;
 
-  const result = await callOpenRouter([
+  const result = await callLLM([
     { role: 'system', content: myPrompt },
     { role: 'user', content: userPrompt },
-  ], { model, apiKey, temperature: 0.85, maxTokens: 3000 });
+  ], { temperature: 0.85, maxTokens: 3000 });
 
   const parsed = parseJSON(result.content);
 

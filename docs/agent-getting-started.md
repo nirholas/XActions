@@ -78,10 +78,7 @@ All activities are scored by an LLM for relevance before engagement. The agent n
 ## Requirements
 
 - **Node.js** v18 or higher
-- **An LLM provider** — one of:
-  - [OpenRouter](https://openrouter.ai) (recommended — $5 credit lasts weeks)
-  - [OpenAI](https://platform.openai.com) API key
-  - [Ollama](https://ollama.ai) running locally (free, but slower)
+- **Nothing for the LLM.** The agent uses free models only, and works with no key. Optional free-tier keys (`GROQ_API_KEY`, `NVIDIA_API_KEY`, `OPENROUTER_API_KEY`) add capacity, or run [Ollama](https://ollama.ai) locally.
 - **An X/Twitter account** — logged into a Chrome browser
 - **~500MB disk space** for Chromium and SQLite database
 
@@ -138,7 +135,7 @@ Choose a voice archetype:
 
 ### Step 3 — Configure LLM Provider
 
-Enter your API key for OpenRouter, OpenAI, or Ollama. The wizard validates your key with a test call.
+Choose free models (no key needed) or a local Ollama model. The wizard tests the free models with one call.
 
 ### Step 4 — Set Timezone
 
@@ -195,8 +192,7 @@ Edit `data/agent-config.json`:
     "avoid": ["corporate jargon", "hashtag spam"]
   },
   "llm": {
-    "provider": "openrouter",
-    "apiKey": "sk-or-v1-YOUR-KEY-HERE"
+    "provider": "free"
   },
   "schedule": {
     "timezone": "America/New_York",
@@ -255,7 +251,7 @@ pm2 save  # persist across reboots
 ```bash
 docker run -d \
   -v $(pwd)/data:/app/data \
-  -e OPENROUTER_API_KEY=sk-or-v1-... \
+  -e GROQ_API_KEY=gsk_... \
   xactions/agent
 ```
 

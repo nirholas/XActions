@@ -83,7 +83,7 @@ The only surface that renders the downloadable/copyable PNG score card.
 xactions reputation USERNAME
 xactions reputation USERNAME --replies --limit 200
 xactions reputation USERNAME --dimensions hostile,legal --custom-question "Does this reveal my employer?"
-XAI_API_KEY=xai-... xactions reputation USERNAME --provider xai --json
+GROQ_API_KEY=gsk_... xactions reputation USERNAME --json   # free models; a free-tier key adds capacity
 ```
 
 Prints the score, a bar per dimension, and the flagged/review posts with the

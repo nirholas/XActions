@@ -11,48 +11,28 @@
  * deployment with an empty env still answers. Lanes marked `browser: false`
  * refuse requests that carry an `Origin` header (LLM7 answers 401 for any
  * browser call), so the in-browser fallback filters them out rather than
- * spending a round trip on a guaranteed rejection. Keyed lanes are all free tiers
- * (Groq, Cerebras, OpenRouter `:free` models, Gemini AI Studio, Mistral,
- * Cloudflare Workers AI) and are only added when their env var is present.
- * xAI is included so a self-host that already pays for Grok can lead with it.
+ * spending a round trip on a guaranteed rejection.
+ *
+ * Every lane the server pays for is a free tier, and only free tiers belong
+ * here: Groq, Cerebras, NVIDIA NIM, OpenRouter's free models (one lane per key
+ * in OPENROUTER_API_KEY / OPENROUTER_API_KEYS, each with its own daily quota),
+ * Gemini AI Studio, Mistral and Cloudflare Workers AI, each added only when its
+ * env var is present. The one exception is BYOK: a user's own key, spent at
+ * that user's choice.
+ *
+ * Models are named by alias where a provider has one (`openrouter/free`,
+ * LLM7's `default`), because individual free model ids are retired without
+ * notice. `npm run check:models` checks the OpenRouter ones.
  *
  * @module ask/lanes
  * by nichxbt
  */
 
-const OPENROUTER_MODELS_URL = 'https://openrouter.ai/api/v1/models';
-// Prefixes for ranking live free models, not model ids.
-const OPENROUTER_PREFERRED = ['openai/gpt-oss', 'google/gemma', 'meta-llama/', 'qwen/', 'deepseek/', 'mistralai/']; // check:models ignore
-
-let openRouterCache = { id: null, at: 0 };
-
-/**
- * Pick a live `:free` model on OpenRouter. Free model ids are retired without
- * notice, so the id is read from the live list (cached 10 minutes) instead of
- * being hardcoded.
- */
-export async function pickOpenRouterFreeModel(apiKey, fetchImpl = fetch) {
-  if (openRouterCache.id && Date.now() - openRouterCache.at < 10 * 60 * 1000) return openRouterCache.id;
-  const res = await fetchImpl(OPENROUTER_MODELS_URL, {
-    headers: { authorization: `Bearer ${apiKey}`, 'HTTP-Referer': 'https://xactions.app', 'X-Title': 'XActions Ask' },
-  });
-  if (!res.ok) throw new Error(`openrouter models list HTTP ${res.status}`);
-  const { data = [] } = await res.json();
-  const free = data.filter((m) => typeof m.id === 'string' && m.id.endsWith(':free'));
-  if (!free.length) throw new Error('openrouter has no free models right now');
-  const rank = (m) => {
-    const i = OPENROUTER_PREFERRED.findIndex((p) => m.id.startsWith(p));
-    return i === -1 ? OPENROUTER_PREFERRED.length : i;
-  };
-  free.sort((a, b) => rank(a) - rank(b) || (b.context_length || 0) - (a.context_length || 0) || a.id.localeCompare(b.id));
-  openRouterCache = { id: free[0].id, at: Date.now() };
-  return openRouterCache.id;
-}
-
 /** Providers a user can lead the chain with using their own key (BYOK). */
 export const BYOK_PROVIDERS = {
-  groq: { label: 'Groq', url: 'https://api.groq.com/openai/v1/chat/completions', model: 'llama-3.3-70b-versatile' },
-  openrouter: { label: 'OpenRouter', url: 'https://openrouter.ai/api/v1/chat/completions', model: 'openrouter/auto' },
+  groq: { label: 'Groq', url: 'https://api.groq.com/openai/v1/chat/completions', model: 'openai/gpt-oss-120b' }, // Groq's free tier, not OpenRouter: check:models ignore
+  // openrouter/free, not openrouter/auto: auto routes to paid models.
+  openrouter: { label: 'OpenRouter', url: 'https://openrouter.ai/api/v1/chat/completions', model: 'openrouter/free' },
   xai: { label: 'xAI Grok', url: 'https://api.x.ai/v1/chat/completions', model: 'grok-4.1-fast' },
   openai: { label: 'OpenAI', url: 'https://api.openai.com/v1/chat/completions', model: 'gpt-4.1-mini' },
   gemini: { label: 'Google Gemini', url: 'https://generativelanguage.googleapis.com/v1beta/openai/chat/completions', model: 'gemini-2.5-flash' },
@@ -60,12 +40,80 @@ export const BYOK_PROVIDERS = {
   cerebras: { label: 'Cerebras', url: 'https://api.cerebras.ai/v1/chat/completions', model: 'llama-3.3-70b' },
 };
 
+const NVIDIA_URL = 'https://integrate.api.nvidia.com/v1/chat/completions';
+const OPENROUTER_HEADERS = { 'HTTP-Referer': 'https://xactions.app', 'X-Title': 'XActions' };
+
+// Several free models reason before they answer, and the reasoning counts
+// against max_tokens: NVIDIA's Nemotron spent 488 of 500 tokens thinking and
+// stopped mid-sentence. These per-lane request options turn reasoning off or
+// down (each checked against the provider on 2026-11-20). `lane.body` is
+// merged into the request.
+const NO_REASONING = {
+  openrouter: { reasoning: { enabled: false } },
+  nvidia: { chat_template_kwargs: { enable_thinking: false } },
+};
+/** Groq's gpt-oss models take reasoning_effort low; other Groq models may reject it. */
+const groqBody = (model) => (/^openai\/gpt-oss/.test(model) ? { reasoning_effort: 'low' } : undefined);
+
+/**
+ * Every OpenRouter key in the env, deduplicated: OPENROUTER_API_KEY first,
+ * then OPENROUTER_API_KEYS (comma- or whitespace-separated).
+ * @param {Record<string, string|undefined>} env
+ */
+export function openRouterKeys(env = {}) {
+  const keys = [env.OPENROUTER_API_KEY, ...String(env.OPENROUTER_API_KEYS || '').split(/[\s,]+/)]
+    .map((k) => (k || '').trim())
+    .filter(Boolean);
+  return [...new Set(keys)];
+}
+
+/**
+ * The OpenRouter model to ask for: OPENROUTER_FREE_MODEL if it names a free
+ * model, else `openrouter/free`, OpenRouter's router over whichever free
+ * models are live (it also picks a vision model when the message has an image).
+ * A paid id in OPENROUTER_FREE_MODEL is ignored, so a typo cannot start a bill.
+ * @param {Record<string, string|undefined>} env
+ */
+export function freeOpenRouterModel(env = {}) {
+  const wanted = env.OPENROUTER_FREE_MODEL;
+  return wanted && isFreeOpenRouterModel(wanted) ? wanted : 'openrouter/free';
+}
+
+/** True for `openrouter/free` and any `:free` model id. */
+export function isFreeOpenRouterModel(id) {
+  return id === 'openrouter/free' || /:free$/.test(String(id));
+}
+
+/**
+ * Lanes that accept an image in the message (`image_url` content parts), for
+ * describing media. Only free tiers: OpenRouter's free router (one lane per
+ * key) and NVIDIA's vision model. No keyless lane takes images.
+ *
+ * @param {Record<string, string|undefined>} env
+ * @returns {ReturnType<typeof buildLaneChain>}
+ */
+export function buildVisionChain(env = {}) {
+  /** @type {Array<{ name: string, url: string, model: string, key: string, headers?: Record<string, string>, body?: object }>} */
+  const chain = openRouterKeys(env).map((key, i) => ({
+    name: i === 0 ? 'openrouter:free' : `openrouter:free#${i + 1}`,
+    url: BYOK_PROVIDERS.openrouter.url,
+    model: 'openrouter/free',
+    key,
+    headers: OPENROUTER_HEADERS,
+    body: NO_REASONING.openrouter,
+  }));
+  if (env.NVIDIA_API_KEY) {
+    chain.push({ name: 'nvidia', url: NVIDIA_URL, model: env.NVIDIA_VISION_MODEL || 'nvidia/nemotron-3.5-super-vl-120b-a12b', key: env.NVIDIA_API_KEY, body: NO_REASONING.nvidia });
+  }
+  return chain;
+}
+
 /**
  * Build the ordered lane chain for one request.
  *
  * @param {Record<string, string|undefined>} env  process.env, the Worker env, or {} in the browser
  * @param {{ byok?: { provider: string, apiKey: string, model?: string }, browserSafe?: boolean }} [opts]
- * @returns {Array<{ name: string, url: string, model: string|(() => Promise<string>), key?: string, headers?: Record<string,string>, keyless?: boolean, noStream?: boolean, browser?: boolean }>}
+ * @returns {Array<{ name: string, url: string, model: string|(() => Promise<string>), key?: string, headers?: Record<string,string>, body?: object, keyless?: boolean, noStream?: boolean, browser?: boolean }>}
  */
 export function buildLaneChain(env = {}, opts = {}) {
   const chain = [];
@@ -75,23 +123,25 @@ export function buildLaneChain(env = {}, opts = {}) {
     chain.push({ name: `byok:${byok.provider}`, url: p.url, model: byok.model || p.model, key: byok.apiKey, byok: true });
   }
   if (env.GROQ_API_KEY) {
-    chain.push({ name: 'groq', url: BYOK_PROVIDERS.groq.url, model: 'llama-3.3-70b-versatile', key: env.GROQ_API_KEY });
+    const model = env.GROQ_MODEL || 'openai/gpt-oss-120b'; // Groq's free tier, not OpenRouter: check:models ignore
+    chain.push({ name: 'groq', url: BYOK_PROVIDERS.groq.url, model, key: env.GROQ_API_KEY, body: groqBody(model) });
   }
   if (env.CEREBRAS_API_KEY) {
     chain.push({ name: 'cerebras', url: BYOK_PROVIDERS.cerebras.url, model: 'llama-3.3-70b', key: env.CEREBRAS_API_KEY });
   }
-  if (env.OPENROUTER_API_KEY) {
+  if (env.NVIDIA_API_KEY) {
+    chain.push({ name: 'nvidia', url: NVIDIA_URL, model: env.NVIDIA_MODEL || 'nvidia/nemotron-3.5-lightning-30b-a3b', key: env.NVIDIA_API_KEY, body: NO_REASONING.nvidia });
+  }
+  openRouterKeys(env).forEach((key, i) => {
     chain.push({
-      name: 'openrouter:free',
+      name: i === 0 ? 'openrouter:free' : `openrouter:free#${i + 1}`,
       url: BYOK_PROVIDERS.openrouter.url,
-      model: () => (env.OPENROUTER_FREE_MODEL ? Promise.resolve(env.OPENROUTER_FREE_MODEL) : pickOpenRouterFreeModel(env.OPENROUTER_API_KEY)),
-      key: env.OPENROUTER_API_KEY,
-      headers: { 'HTTP-Referer': 'https://xactions.app', 'X-Title': 'XActions Ask' },
+      model: freeOpenRouterModel(env),
+      key,
+      headers: OPENROUTER_HEADERS,
+      body: NO_REASONING.openrouter,
     });
-  }
-  if (env.XAI_API_KEY) {
-    chain.push({ name: 'xai', url: BYOK_PROVIDERS.xai.url, model: env.XAI_MODEL || 'grok-4.1-fast', key: env.XAI_API_KEY });
-  }
+  });
   if (env.GEMINI_API_KEY) {
     chain.push({ name: 'gemini', url: BYOK_PROVIDERS.gemini.url, model: 'gemini-2.5-flash-lite', key: env.GEMINI_API_KEY });
   }
@@ -110,7 +160,8 @@ export function buildLaneChain(env = {}, opts = {}) {
   // Pollinations' legacy anonymous endpoint answers only non-streamed requests
   // (stream:true returns a 402), so it is called with one JSON body; OVH is
   // last because its anonymous tier allows only 2 requests per minute per IP.
-  chain.push({ name: 'llm7', url: 'https://api.llm7.io/v1/chat/completions', model: 'gemini-3.1-flash-lite', keyless: true, browser: false });
+  // `default` is LLM7's own alias for a live model; named ids get retired.
+  chain.push({ name: 'llm7', url: 'https://api.llm7.io/v1/chat/completions', model: 'default', keyless: true, browser: false });
   chain.push({ name: 'pollinations', url: 'https://text.pollinations.ai/openai', model: 'openai-fast', keyless: true, noStream: true });
   chain.push({ name: 'ovh', url: 'https://oai.endpoints.kepler.ai.cloud.ovh.net/v1/chat/completions', model: 'Meta-Llama-3_3-70B-Instruct', keyless: true });
   // A BYOK lane always stays: the user's own key authenticates the call, and
@@ -149,8 +200,8 @@ async function* readStream(body) {
  * answered and the full text; rejects only when every lane failed.
  *
  * @param {ReturnType<typeof buildLaneChain>} chain
- * @param {Array<{ role: string, content: string }>} messages
- * @param {{ onLane?: (name: string) => void, onDelta?: (text: string) => void, timeoutMs?: number, maxTokens?: number, signal?: AbortSignal }} [opts]
+ * @param {Array<{ role: string, content: string | Array<object> }>} messages  content may be OpenAI-style parts (text, image_url)
+ * @param {{ onLane?: (name: string) => void, onDelta?: (text: string) => void, timeoutMs?: number, maxTokens?: number, temperature?: number, signal?: AbortSignal }} [opts]
  */
 export async function streamCompletion(chain, messages, opts = {}) {
   const errors = [];
@@ -169,7 +220,7 @@ export async function streamCompletion(chain, messages, opts = {}) {
         method: 'POST',
         headers,
         signal: controller.signal,
-        body: JSON.stringify({ model, messages, stream: !lane.noStream, temperature: 0.2, max_tokens: opts.maxTokens ?? 1200 }),
+        body: JSON.stringify({ model, messages, stream: !lane.noStream, temperature: opts.temperature ?? 0.2, max_tokens: opts.maxTokens ?? 1200, ...(lane.body || {}) }),
       });
       if (!res.ok) {
         const detail = (await res.text().catch(() => '')).slice(0, 200);

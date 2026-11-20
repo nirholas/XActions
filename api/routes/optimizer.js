@@ -2,9 +2,9 @@
 /**
  * XActions AI Content Optimizer API Routes
  *
- * Every route needs a signed-in user. Three of them call OpenRouter with the
- * operator's OPENROUTER_API_KEY when one is set, so leaving them open let any
- * visitor spend that key, and gave away for free what /api/ai/optimizer/*
+ * Every route needs a signed-in user. Three of them call an LLM (free models
+ * only, src/ai/freeLLM.js), so leaving them open let any visitor use up the
+ * server's free-tier quota, and gave away for free what /api/ai/optimizer/*
  * charges for over x402.
  *
  * @author nich (@nichxbt) - https://github.com/nirholas
