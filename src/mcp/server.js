@@ -315,7 +315,18 @@ const TOOLS = [
       properties: {
         text: {
           type: 'string',
-          description: 'Tweet content (max 280 characters)',
+          description: 'Tweet content (max 280 characters; longer requires X Premium)',
+        },
+        mediaPath: {
+          description: 'Local media file path, or array of up to 4 paths (image, GIF, video). Posts via the HTTP lane.',
+          anyOf: [
+            { type: 'string' },
+            { type: 'array', items: { type: 'string' }, maxItems: 4 },
+          ],
+        },
+        altText: {
+          type: 'string',
+          description: 'Alt text applied to each media file in mediaPath',
         },
       },
       required: ['text'],
@@ -419,14 +430,37 @@ const TOOLS = [
   // ====== Posting & Content ======
   {
     name: 'x_post_thread',
-    description: 'Publish a multi-tweet thread from an ordered list of texts. Each entry becomes a reply to the previous one.',
+    description: 'Publish a multi-tweet thread from an ordered list of texts or {text, mediaPath?, altText?} objects. Each entry becomes a reply to the previous one. mediaPath on any item posts the whole thread via the HTTP lane.',
     inputSchema: {
       type: 'object',
       properties: {
         tweets: {
           type: 'array',
-          items: { type: 'string' },
-          description: 'Array of tweet texts for the thread (2+ tweets)',
+          items: {
+            anyOf: [
+              { type: 'string' },
+              {
+                type: 'object',
+                properties: {
+                  text: { type: 'string', description: 'Tweet text' },
+                  mediaPath: {
+                    description: 'Local media file path, or array of up to 4 paths',
+                    anyOf: [
+                      { type: 'string' },
+                      { type: 'array', items: { type: 'string' }, maxItems: 4 },
+                    ],
+                  },
+                  altText: { type: 'string', description: 'Alt text for this item\'s media' },
+                },
+                required: ['text'],
+              },
+            ],
+          },
+          description: 'Array of tweet texts or {text, mediaPath?, altText?} objects (2+ entries)',
+        },
+        altText: {
+          type: 'string',
+          description: 'Default alt text applied to media uploads that do not set their own',
         },
       },
       required: ['tweets'],
@@ -451,12 +485,23 @@ const TOOLS = [
   },
   {
     name: 'x_schedule_post',
-    description: 'Schedule a tweet for future posting (requires Premium).',
+    description: 'Schedule a tweet for future posting (requires Premium). mediaPath posts via the HTTP lane.',
     inputSchema: {
       type: 'object',
       properties: {
         text: { type: 'string', description: 'Tweet text' },
         scheduledAt: { type: 'string', description: 'ISO 8601 datetime for posting' },
+        mediaPath: {
+          description: 'Local media file path, or array of up to 4 paths',
+          anyOf: [
+            { type: 'string' },
+            { type: 'array', items: { type: 'string' }, maxItems: 4 },
+          ],
+        },
+        altText: {
+          type: 'string',
+          description: 'Alt text applied to each media file in mediaPath',
+        },
       },
       required: ['text', 'scheduledAt'],
     },
@@ -475,14 +520,27 @@ const TOOLS = [
   // ====== Engagement ======
   {
     name: 'x_reply',
-    description: 'Reply to a tweet by its URL with the given text. The reply is posted from the authenticated account.',
+    description: 'Reply to a tweet by its URL (or raw tweetId) with the given text. The reply is posted from the authenticated account. mediaPath posts via the HTTP lane.',
     inputSchema: {
       type: 'object',
       properties: {
         url: { type: 'string', description: 'URL of the tweet to reply to' },
+        tweetUrl: { type: 'string', description: 'URL of the tweet to reply to (alternative to url)' },
+        tweetId: { type: 'string', description: 'Raw tweet id to reply to (alternative to url)' },
         text: { type: 'string', description: 'Reply text' },
+        mediaPath: {
+          description: 'Local media file path, or array of up to 4 paths',
+          anyOf: [
+            { type: 'string' },
+            { type: 'array', items: { type: 'string' }, maxItems: 4 },
+          ],
+        },
+        altText: {
+          type: 'string',
+          description: 'Alt text applied to each media file in mediaPath',
+        },
       },
-      required: ['url', 'text'],
+      required: ['text'],
     },
   },
   {
@@ -2173,14 +2231,26 @@ const TOOLS = [
   // ====== Engagement Automation (from xeepy) ======
   {
     name: 'x_quote_tweet',
-    description: 'Quote tweet — retweet with your own comment/text added.',
+    description: 'Quote tweet — retweet with your own comment/text added. mediaPath posts via the HTTP lane.',
     inputSchema: {
       type: 'object',
       properties: {
         tweetUrl: { type: 'string', description: 'URL of the tweet to quote' },
+        tweetId: { type: 'string', description: 'Raw tweet id to quote (alternative to tweetUrl)' },
         text: { type: 'string', description: 'Your comment text to add' },
+        mediaPath: {
+          description: 'Local media file path, or array of up to 4 paths',
+          anyOf: [
+            { type: 'string' },
+            { type: 'array', items: { type: 'string' }, maxItems: 4 },
+          ],
+        },
+        altText: {
+          type: 'string',
+          description: 'Alt text applied to each media file in mediaPath',
+        },
       },
-      required: ['tweetUrl', 'text'],
+      required: ['text'],
     },
   },
   {
@@ -2665,6 +2735,34 @@ async function executeDownloadMediaTool(args) {
   };
 }
 
+// Tools whose local implementation can attach media via mediaPath/altText.
+// In remote mode these args are rejected — the remote API cannot read local files.
+const MEDIA_CAPABLE_TOOLS = new Set([
+  'x_post_tweet',
+  'x_post_thread',
+  'x_reply',
+  'x_quote_tweet',
+  'x_schedule_post',
+]);
+
+/**
+ * Returns a rejection reason when args carry media or structured items the
+ * remote API cannot handle, else null. x_post_thread items may be
+ * {text, mediaPath?} objects — those are local-only too, even without media.
+ */
+function remoteMediaRejection(name, args) {
+  if (!args) return null;
+  if (name === 'x_post_thread' && Array.isArray(args.tweets)) {
+    if (args.tweets.some((t) => t !== null && typeof t === 'object')) {
+      return `${name} structured tweet items are not supported in remote mode — send plain text strings, or run with XACTIONS_MODE=local`;
+    }
+  }
+  if (args.mediaPath !== undefined && args.mediaPath !== null) {
+    return `${name} mediaPath is not supported in remote mode — run with XACTIONS_MODE=local to attach media`;
+  }
+  return null;
+}
+
 async function executeTool(name, args, options = {}) {
   // One context per call, so the call holds the shared Puppeteer page for as
   // long as it needs it and no parallel call can drive the page under it.
@@ -2753,6 +2851,13 @@ async function dispatchTool(name, args, options = {}) {
     return await executePersonaTool(name, args);
   }
 
+  // Remote mode cannot read the caller's local files — reject media args
+  // loudly before any backend dispatch instead of silently dropping them.
+  if (MODE === 'remote' && MEDIA_CAPABLE_TOOLS.has(name)) {
+    const rejection = remoteMediaRejection(name, args);
+    if (rejection) throw new Error(rejection);
+  }
+
   // Handle xeepy-ported tools (scrapers, follow/unfollow automation, engagement, AI, monitoring)
   const xeepyTools = [
     'x_get_replies', 'x_get_hashtag', 'x_get_likers', 'x_get_retweeters',
@@ -2789,6 +2894,10 @@ async function dispatchTool(name, args, options = {}) {
   }
 
   if (MODE === 'remote') {
+    // mediaPath names a file on this machine — the remote server cannot read it.
+    if (name === 'x_post_tweet' && args?.mediaPath != null) {
+      throw new Error('x_post_tweet mediaPath is not supported in remote mode — run with XACTIONS_MODE=local to attach media');
+    }
     return await remoteClient.execute(name, args);
   } else {
     // Check if a non-Twitter platform param is set and dispatch to multi-platform variant
@@ -3344,38 +3453,8 @@ async function executeXeepyTool(name, args) {
     }
 
     // ── Engagement Automation ──
-    case 'x_quote_tweet': {
-      const page = await localTools.getPage();
-      await gotoAndRender(page, args.tweetUrl, '[data-testid="retweet"]');
-      // Click retweet button, select quote.
-      // Each step is checked: a quote that never reached the composer is a
-      // failure, not a success.
-      const retweetButton = await page.$('[data-testid="retweet"]');
-      if (!retweetButton) {
-        return { success: false, message: 'The repost button was not on the post', quotedUrl: args.tweetUrl };
-      }
-      await retweetButton.click();
-      await new Promise(r => setTimeout(r, 1000));
-      const quoteOption = await page.$('text/Quote');
-      if (!quoteOption) {
-        return { success: false, message: 'The Quote option was not in the repost menu', quotedUrl: args.tweetUrl };
-      }
-      await quoteOption.click();
-      await new Promise(r => setTimeout(r, 1500));
-      // The quote opens the same contenteditable composer as a new post, so it
-      // takes the same click-then-keyboard input and the same confirmation.
-      if (!(await typeIntoComposer(page, 0, args.text))) {
-        return { success: false, message: 'The quote text did not reach the composer, so nothing was posted', quotedUrl: args.tweetUrl };
-      }
-      await new Promise(r => setTimeout(r, 500));
-      if (!(await clickPostButton(page))) {
-        return { success: false, message: 'The post button never became enabled, so nothing was posted', quotedUrl: args.tweetUrl };
-      }
-      const confirmation = await confirmPosted(page, { typed: args.text });
-      if (!confirmation.ok) return { success: false, message: confirmation.reason, quotedUrl: args.tweetUrl };
-      return { success: true, quotedUrl: args.tweetUrl, text: args.text, confirmedBy: confirmation.via };
-    }
-
+    // x_quote_tweet is a local tool now (toolMap), so executeXeepyTool's
+    // localTools[name] check above resolves it before this switch is reached.
     case 'x_auto_comment': {
       const searchResults = await localTools.x_search_tweets?.({ query: args.query, limit: args.limit || 5 });
       const commented = [];
@@ -5350,4 +5429,4 @@ if (isEntryPoint()) {
 }
 
 // Exported so the tool list can be inspected without starting a transport.
-export { TOOLS, main, createMcpServer, executeTool, startHttpTransport, parseCliArgs };
+export { TOOLS, main, createMcpServer, executeTool, initializeBackend, startHttpTransport, parseCliArgs };

@@ -179,7 +179,16 @@ export async function postThread(client, tweets, options = {}) {
       tweetOptions.replyTo = previousTweetId;
     }
 
-    const result = await postTweet(client, text, tweetOptions);
+    let result;
+    try {
+      result = await postTweet(client, text, tweetOptions);
+    } catch (err) {
+      // Still reject — but carry the confirmed prefix and the stop position
+      // so callers can report which tweets are live instead of losing them.
+      err.partialResults = results;
+      err.failedIndex = i;
+      throw err;
+    }
     results.push(result);
 
     // Extract tweet ID for the next reply in the chain
@@ -188,6 +197,19 @@ export async function postThread(client, tweets, options = {}) {
       result?.legacy?.id_str ??
       result?.tweet?.rest_id ??
       null;
+
+    if (!previousTweetId) {
+      // The post was submitted but returned no id, so the rest of the thread
+      // cannot be chained to it. Stop here rather than publish the remaining
+      // tweets as unrelated root posts.
+      const err = new TwitterApiError(
+        `Tweet ${i + 1} of ${tweets.length} was submitted but X did not return an id — thread stopped`,
+      );
+      err.partialResults = results;
+      err.failedIndex = i;
+      err.missingId = true;
+      throw err;
+    }
 
     // Rate-limit safety: delay between posts (skip after the last one)
     if (i < tweets.length - 1) {

@@ -399,7 +399,23 @@ export function createBridge(options = {}) {
           clearTimeout(timer);
         }
       } else {
-        // Remote mode: HTTP POST to API
+        // Remote mode: HTTP POST to API. The remote API cannot read the
+        // caller's local files, so mediaPath / structured thread items are
+        // rejected here with the same contract as the MCP server guard.
+        if (params && params.mediaPath !== undefined && params.mediaPath !== null) {
+          throw new Error(
+            `${toolName} mediaPath is not supported in remote mode — run with XACTIONS_MODE=local to attach media`,
+          );
+        }
+        if (
+          toolName === 'x_post_thread' &&
+          Array.isArray(params?.tweets) &&
+          params.tweets.some((t) => t !== null && typeof t === 'object')
+        ) {
+          throw new Error(
+            `${toolName} structured tweet items are not supported in remote mode — send plain text strings, or run with XACTIONS_MODE=local`,
+          );
+        }
         const controller = new AbortController();
         const timer = setTimeout(() => controller.abort(), timeout);
         try {
