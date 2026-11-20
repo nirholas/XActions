@@ -36,7 +36,13 @@ import { loadSavedSession, sessionDir } from '../utils/savedSession.js';
 import { performFollow, performUnfollow, FOLLOW_STATUS } from './followAction.js';
 import { TwitterHttpClient } from '../scrapers/twitter/http/client.js';
 import { uploadMedia } from '../scrapers/twitter/http/media.js';
-import { postTweet as httpPostTweet } from '../scrapers/twitter/http/actions.js';
+import {
+  postTweet as httpPostTweet,
+  postThread as httpPostThread,
+  replyToTweet as httpReplyToTweet,
+  quoteTweet as httpQuoteTweet,
+  schedulePost as httpSchedulePost,
+} from '../scrapers/twitter/http/actions.js';
 import { gotoAndRender } from '../utils/navigation.js';
 import {
   openComposer,
@@ -748,45 +754,112 @@ async function postAndConfirm(pg, typed, { testids } = {}) {
   return { ok: true, confirmation };
 }
 
+// ============================================================================
+// HTTP write-lane helpers — shared by every tool that accepts mediaPath
+// ============================================================================
+
+/**
+ * Normalise a mediaPath arg (string | string[]) into 1-4 non-empty paths.
+ * Throws on empty input or more than 4 paths — callers turn that into
+ * { success: false } before any upload happens.
+ */
+export function validateMediaPaths(mediaPath) {
+  const paths = (Array.isArray(mediaPath) ? mediaPath : [mediaPath])
+    .filter((p) => typeof p === 'string' && p.length > 0);
+  if (paths.length === 0 || paths.length > 4) {
+    throw new Error('mediaPath accepts 1-4 file paths');
+  }
+  return paths;
+}
+
+/**
+ * Authenticated HTTP client from the saved session cookie jar — the same
+ * auth_token/ct0 pattern x_post_tweet established. Returns { client } or
+ * { error } so callers can fail with a readable message.
+ */
+export async function httpClientFromSavedSession() {
+  const session = await loadSavedSession();
+  if (!session) {
+    return {
+      error: 'No saved session — run `xactions login` or export XACTIONS_SESSION_COOKIE to post media',
+    };
+  }
+  const cookies = `auth_token=${session.authToken}${session.ct0 ? `; ct0=${session.ct0}` : ''}`;
+  return { client: new TwitterHttpClient({ cookies, rateLimitStrategy: 'wait' }) };
+}
+
+/**
+ * Upload every path in a mediaPath arg and return the media ids in order.
+ * altText (optional) is applied to each upload of the call.
+ */
+export async function uploadMediaPaths(client, mediaPath, altText) {
+  const paths = validateMediaPaths(mediaPath);
+  const mediaIds = [];
+  for (const filePath of paths) {
+    const { mediaId } = await uploadMedia(client, filePath, altText ? { altText } : {});
+    mediaIds.push(mediaId);
+  }
+  return mediaIds;
+}
+
+/**
+ * Pull { id, url } out of a CreateTweet result — the result nests differently
+ * depending on the mutation (post, reply, quote, thread entry).
+ */
+export function tweetPostedResult(result) {
+  const id = result?.rest_id ?? result?.legacy?.id_str ?? result?.tweet?.rest_id ?? null;
+  const user = result?.core?.user_results?.result;
+  const handle = user?.core?.screen_name ?? user?.legacy?.screen_name;
+  const url = id ? (handle ? `https://x.com/${handle}/status/${id}` : `https://x.com/i/web/status/${id}`) : null;
+  return { id, url };
+}
+
+/**
+ * Resolve the tweet id a reply/quote targets. Accepts a status URL
+ * (x.com or twitter.com, with or without query string) or a raw tweetId —
+ * the A2A registry sends the raw id.
+ */
+export function resolveTweetId({ url, tweetUrl, tweetId } = {}) {
+  // Try each key in priority order: a status URL anywhere wins, then a bare
+  // numeric id. A non-status `url` must not shadow a usable `tweetUrl`/`tweetId`.
+  for (const raw of [url, tweetUrl, tweetId]) {
+    if (raw === undefined || raw === null || raw === '') continue;
+    const str = String(raw).trim();
+    const fromUrl = str.match(/status\/(\d+)/)?.[1];
+    if (fromUrl) return fromUrl;
+    if (/^\d+$/.test(str)) return str;
+  }
+  return null;
+}
+
 export async function x_post_tweet({ text, mediaPath, altText }) {
   // With media, post through the HTTP lane: the Puppeteer composer never
   // attached files, and uploadMedia → CreateTweet mediaIds is the flow the
   // API processors already use. Text-only posts keep the browser lane.
   if (mediaPath !== undefined && mediaPath !== null) {
-    const paths = (Array.isArray(mediaPath) ? mediaPath : [mediaPath]).filter(
-      (p) => typeof p === 'string' && p.length > 0,
-    );
-    if (paths.length === 0 || paths.length > 4) {
-      return { success: false, message: 'mediaPath accepts 1-4 file paths' };
+    try {
+      validateMediaPaths(mediaPath);
+    } catch (e) {
+      return { success: false, message: e.message };
     }
     if (typeof text !== 'string' || !text.trim()) {
       return { success: false, message: 'text is required' };
     }
-    const session = await loadSavedSession();
-    if (!session) {
+    const session = await httpClientFromSavedSession();
+    if (session.error) return { success: false, message: session.error };
+    try {
+      const mediaIds = await uploadMediaPaths(session.client, mediaPath, altText);
+      const result = await httpPostTweet(session.client, text, { mediaIds, premium: text.length > 280 });
+      const { id, url } = tweetPostedResult(result);
       return {
-        success: false,
-        message: 'No saved session — run `xactions login` or export XACTIONS_SESSION_COOKIE to post media',
+        success: Boolean(id),
+        tweetId: id,
+        url,
+        message: id ? 'Tweet posted successfully' : 'Tweet posted but X did not return an id',
       };
+    } catch (e) {
+      return { success: false, message: e.message };
     }
-    const cookies = `auth_token=${session.authToken}${session.ct0 ? `; ct0=${session.ct0}` : ''}`;
-    const client = new TwitterHttpClient({ cookies, rateLimitStrategy: 'wait' });
-    const mediaIds = [];
-    for (const filePath of paths) {
-      const { mediaId } = await uploadMedia(client, filePath, altText ? { altText } : {});
-      mediaIds.push(mediaId);
-    }
-    const result = await httpPostTweet(client, text, { mediaIds, premium: text.length > 280 });
-    const id = result?.rest_id ?? result?.legacy?.id_str ?? result?.tweet?.rest_id ?? null;
-    const user = result?.core?.user_results?.result;
-    const handle = user?.core?.screen_name ?? user?.legacy?.screen_name;
-    const url = id ? (handle ? `https://x.com/${handle}/status/${id}` : `https://x.com/i/web/status/${id}`) : null;
-    return {
-      success: Boolean(id),
-      tweetId: id,
-      url,
-      message: id ? 'Tweet posted successfully' : 'Tweet posted but X did not return an id',
-    };
   }
 
   const { page: pg } = await ensureBrowser();
@@ -1068,9 +1141,72 @@ export async function x_update_profile({ name, bio, location, website }) {
 // 17–20. Posting & Content
 // ============================================================================
 
-export async function x_post_thread({ tweets }) {
+export async function x_post_thread({ tweets, altText }) {
   if (!tweets || tweets.length < 2) {
     return { success: false, message: 'Thread requires at least 2 tweets' };
+  }
+
+  // Items may be plain strings or { text, mediaPath?, altText? } objects.
+  // mediaPath on ANY item (or any object item) flips the whole thread to the
+  // HTTP lane — the browser composer cannot attach files.
+  const useHttp = tweets.some((t) => t !== null && typeof t === 'object');
+
+  if (useHttp) {
+    const items = tweets.map((t) =>
+      typeof t === 'string' ? { text: t } : { text: t?.text, mediaPath: t?.mediaPath, altText: t?.altText },
+    );
+    for (const item of items) {
+      if (typeof item.text !== 'string' || !item.text.trim()) {
+        return { success: false, message: 'Each thread tweet requires non-empty text' };
+      }
+      if (item.mediaPath !== undefined && item.mediaPath !== null) {
+        try {
+          validateMediaPaths(item.mediaPath);
+        } catch (e) {
+          return { success: false, message: e.message };
+        }
+      }
+    }
+
+    const session = await httpClientFromSavedSession();
+    if (session.error) return { success: false, message: session.error };
+    try {
+      const threadTweets = [];
+      for (const item of items) {
+        const mediaIds =
+          item.mediaPath !== undefined && item.mediaPath !== null
+            ? await uploadMediaPaths(session.client, item.mediaPath, item.altText ?? altText)
+            : [];
+        threadTweets.push({ text: item.text, mediaIds });
+      }
+      const results = await httpPostThread(session.client, threadTweets, {
+        premium: items.some((i) => i.text.length > 280),
+      });
+      const parsed = results.map((r) => tweetPostedResult(r));
+      const tweetIds = parsed.map((p) => p.id);
+      const url = parsed[0]?.url;
+      return {
+        success: parsed.every((p) => p.id),
+        tweetIds,
+        url,
+        message: `Thread posted (${tweetIds.length} tweets)`,
+      };
+    } catch (e) {
+      // postThread still rejects, but carries the confirmed prefix
+      // (partialResults) and the stop position (failedIndex) — surface them
+      // so the caller can resume instead of re-posting tweets already live.
+      const partial = Array.isArray(e?.partialResults) ? e.partialResults : [];
+      const confirmed = partial.map((r) => tweetPostedResult(r)).filter((p) => p.id);
+      return {
+        success: false,
+        message: `post ${(e?.failedIndex ?? confirmed.length) + 1} failed: ${e.message}`,
+        tweetIds: confirmed.map((p) => p.id),
+        url: confirmed[0]?.url ?? null,
+        postedCount: confirmed.length,
+        totalCount: items.length,
+        stoppedAt: typeof e?.failedIndex === 'number' ? e.failedIndex : null,
+      };
+    }
   }
 
   const { page: pg } = await ensureBrowser();
@@ -1163,15 +1299,49 @@ export async function x_create_poll({ question, options, durationMinutes = 1440 
   };
 }
 
-export async function x_schedule_post({ text, scheduledAt }) {
-  // The dialog takes a local date and time, so the date is parsed and
-  // checked before anything is opened.
-  const when = new Date(scheduledAt);
+export async function x_schedule_post({ text, scheduledAt, scheduledTime, mediaPath, altText }) {
+  // A2A callers send scheduledTime; the MCP schema uses scheduledAt — accept both.
+  const scheduledFor = scheduledAt ?? scheduledTime;
+  const when = scheduledFor instanceof Date ? scheduledFor : new Date(scheduledFor);
   if (Number.isNaN(when.getTime())) {
-    return { success: false, message: `scheduledAt is not a valid date/time: "${scheduledAt}"` };
+    return { success: false, message: `scheduledAt is not a valid date/time: "${scheduledFor}"` };
   }
   if (when.getTime() <= Date.now()) {
     return { success: false, message: 'scheduledAt is in the past; pick a future date/time' };
+  }
+
+  // With media, schedule through the HTTP lane (CreateScheduledTweet): it
+  // sends an explicit execute_at with media_ids and returns a
+  // scheduledTweetId the caller can verify. The browser dialog has no
+  // file-attach step.
+  if (mediaPath !== undefined && mediaPath !== null) {
+    if (typeof text !== 'string' || !text.trim()) {
+      return { success: false, message: 'text is required' };
+    }
+    try {
+      validateMediaPaths(mediaPath);
+    } catch (e) {
+      return { success: false, message: e.message };
+    }
+    const session = await httpClientFromSavedSession();
+    if (session.error) return { success: false, message: session.error };
+    try {
+      const mediaIds = await uploadMediaPaths(session.client, mediaPath, altText);
+      const { scheduledTweetId } = await httpSchedulePost(session.client, text, when, {
+        mediaIds,
+        premium: text.length > 280,
+      });
+      return {
+        success: Boolean(scheduledTweetId),
+        scheduledTweetId,
+        scheduledAt: when.toISOString(),
+        message: scheduledTweetId
+          ? `Tweet scheduled for ${when.toISOString()}`
+          : 'Tweet scheduled but X did not return an id',
+      };
+    } catch (e) {
+      return { success: false, message: e.message };
+    }
   }
 
   const { page: pg } = await ensureBrowser();
@@ -1244,9 +1414,52 @@ export async function x_delete_tweet({ url }) {
 // 21–25. Engagement
 // ============================================================================
 
-export async function x_reply({ url, text }) {
+export async function x_reply({ url, tweetUrl, tweetId, text, mediaPath, altText }) {
+  // With media, reply through the HTTP lane (CreateTweet reply + mediaIds);
+  // the browser path below has no file-attach step.
+  if (mediaPath !== undefined && mediaPath !== null) {
+    const targetId = resolveTweetId({ url, tweetUrl, tweetId });
+    if (!targetId) {
+      return { success: false, message: 'url or tweetId of the tweet to reply to is required' };
+    }
+    if (typeof text !== 'string' || !text.trim()) {
+      return { success: false, message: 'text is required' };
+    }
+    try {
+      validateMediaPaths(mediaPath);
+    } catch (e) {
+      return { success: false, message: e.message };
+    }
+    const session = await httpClientFromSavedSession();
+    if (session.error) return { success: false, message: session.error };
+    try {
+      const mediaIds = await uploadMediaPaths(session.client, mediaPath, altText);
+      const result = await httpReplyToTweet(session.client, targetId, text, {
+        mediaIds,
+        premium: text.length > 280,
+      });
+      const { id, url: postUrl } = tweetPostedResult(result);
+      return {
+        success: Boolean(id),
+        tweetId: id,
+        url: postUrl,
+        inReplyTo: targetId,
+        message: id ? 'Reply posted' : 'Reply posted but X did not return an id',
+      };
+    } catch (e) {
+      return { success: false, message: e.message };
+    }
+  }
+
+  // Same target rule as the HTTP lane: resolve a status id from
+  // url/tweetUrl/tweetId before navigating — a non-status url cannot shadow
+  // a usable tweetId.
+  const targetId = resolveTweetId({ url, tweetUrl, tweetId });
+  if (!targetId) {
+    return { success: false, message: 'url or tweetId of the tweet to reply to is required' };
+  }
   const { page: pg } = await ensureBrowser();
-  await gotoAndRender(pg, url, '[data-testid="tweetTextarea_0"]');
+  await gotoAndRender(pg, `https://x.com/i/status/${targetId}`, '[data-testid="tweetTextarea_0"]');
   await randomDelay();
 
   // The inline reply box is the same contenteditable editor as the compose
@@ -1261,6 +1474,92 @@ export async function x_reply({ url, text }) {
   if (!posted.ok) return { success: false, message: `Could not reply to tweet: ${posted.message}` };
   await randomDelay();
   return { success: true, message: 'Reply posted', confirmedBy: posted.confirmation.via };
+}
+
+/**
+ * Media-capable quote tweet. Called by x_quote_tweet when mediaPath is set —
+ * the Puppeteer quote path has no file-attach step, so media args route
+ * through the HTTP lane instead.
+ */
+export async function quoteTweetWithMedia({ url, tweetUrl, tweetId, text, mediaPath, altText }) {
+  const targetId = resolveTweetId({ url, tweetUrl, tweetId });
+  if (!targetId) {
+    return { success: false, message: 'tweetUrl or tweetId of the tweet to quote is required' };
+  }
+  if (typeof text !== 'string' || !text.trim()) {
+    return { success: false, message: 'text is required' };
+  }
+  try {
+    validateMediaPaths(mediaPath);
+  } catch (e) {
+    return { success: false, message: e.message };
+  }
+  const session = await httpClientFromSavedSession();
+  if (session.error) return { success: false, message: session.error };
+  try {
+    const mediaIds = await uploadMediaPaths(session.client, mediaPath, altText);
+    const result = await httpQuoteTweet(session.client, targetId, text, {
+      mediaIds,
+      premium: text.length > 280,
+    });
+    const { id, url: postUrl } = tweetPostedResult(result);
+    return {
+      success: Boolean(id),
+      tweetId: id,
+      url: postUrl,
+      quoteOf: targetId,
+      message: id ? 'Quote tweet posted' : 'Quote tweet posted but X did not return an id',
+    };
+  } catch (e) {
+    return { success: false, message: e.message };
+  }
+}
+
+/**
+ * Quote tweet. Registered in toolMap so MCP local dispatch, the A2A bridge
+ * and executeXeepyTool all share this one handler. mediaPath goes through
+ * the HTTP lane; text-only quotes use the browser composer.
+ */
+export async function x_quote_tweet({ url, tweetUrl, tweetId, text, mediaPath, altText }) {
+  if (mediaPath !== undefined && mediaPath !== null) {
+    return quoteTweetWithMedia({ url, tweetUrl, tweetId, text, mediaPath, altText });
+  }
+
+  if (typeof text !== 'string' || !text.trim()) {
+    return { success: false, message: 'text is required' };
+  }
+  // Same target rule as the HTTP lane: resolve a status id from
+  // url/tweetUrl/tweetId before navigating — never goto(undefined), and a
+  // non-status url cannot shadow a usable tweetId.
+  const targetId = resolveTweetId({ url, tweetUrl, tweetId });
+  if (!targetId) {
+    return { success: false, message: 'url or tweetId of the tweet to quote is required' };
+  }
+  const quoteUrl = `https://x.com/i/status/${targetId}`;
+
+  const { page: pg } = await ensureBrowser();
+  await gotoAndRender(pg, quoteUrl, '[data-testid="retweet"]');
+  const retweetButton = await pg.$('[data-testid="retweet"]');
+  if (!retweetButton) {
+    return { success: false, message: 'The repost button was not on the post', quoteOf: targetId };
+  }
+  await retweetButton.click();
+  await sleep(1000);
+  const quoteOption = await pg.$('text/Quote');
+  if (!quoteOption) {
+    return { success: false, message: 'The Quote option was not in the repost menu', quoteOf: targetId };
+  }
+  await quoteOption.click();
+  await sleep(1500);
+
+  if (!(await typeIntoComposer(pg, 0, text))) {
+    return { success: false, message: 'The quote text did not reach the composer, so nothing was posted', quoteOf: targetId };
+  }
+  await sleep(500);
+  const posted = await postAndConfirm(pg, text);
+  if (!posted.ok) return { success: false, message: posted.message, quoteOf: targetId };
+  await randomDelay();
+  return { success: true, quoteOf: targetId, quotedUrl: quoteUrl, text, confirmedBy: posted.confirmation.via };
 }
 
 export async function x_bookmark({ url }) {
@@ -2095,6 +2394,7 @@ export const toolMap = {
   x_delete_tweet,
   // Engagement
   x_reply,
+  x_quote_tweet,
   x_bookmark,
   x_get_bookmarks,
   x_clear_bookmarks,
