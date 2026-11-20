@@ -113,6 +113,19 @@ export function createAgentCard(config) {
 }
 
 /**
+ * A task as createTask builds it and the task store keeps it.
+ *
+ * @typedef {object} A2ATask
+ * @property {string} id
+ * @property {string} contextId
+ * @property {{ state: string, message?: string, timestamp?: string }} status
+ * @property {Array<object>} messages
+ * @property {Array<{ state: string, message?: string, timestamp?: string }>} history
+ * @property {Array<object>} artifacts
+ * @property {Record<string, any>} metadata
+ */
+
+/**
  * Create a new Task object.
  *
  * @param {object} [params={}]
@@ -120,7 +133,7 @@ export function createAgentCard(config) {
  * @param {string} [params.contextId] - Conversation context
  * @param {object} [params.message] - Initial input message
  * @param {object} [params.metadata={}] - Arbitrary metadata (skillId, etc.)
- * @returns {object} A2A Task
+ * @returns {A2ATask}
  */
 export function createTask(params = {}) {
   const now = new Date().toISOString();

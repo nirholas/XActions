@@ -82,7 +82,7 @@ export class TaskStore {
    * Get a task by ID.
    *
    * @param {string} taskId
-   * @returns {object|null}
+   * @returns {Promise<import('./types.js').A2ATask|null>}
    */
   async get(taskId) {
     return this.tasks.get(taskId) || null;
