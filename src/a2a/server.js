@@ -39,6 +39,7 @@ import {
   createDataPart,
   ERROR_CODES,
 } from './types.js';
+import { isEntryPoint } from '../utils/entryPoint.js';
 
 // ============================================================================
 // Rate Limiter (in-memory, per IP)
@@ -497,9 +498,7 @@ export function createA2AServer(options = {}) {
 // Standalone start
 // ============================================================================
 
-const isMainModule = process.argv[1]?.includes('a2a/server');
-
-if (isMainModule) {
+if (isEntryPoint(import.meta.url)) {
   const { start } = createA2AServer();
   start().catch((err) => {
     console.error('🔴 Failed to start A2A server:', err);

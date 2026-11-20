@@ -28,6 +28,7 @@ import { generateApiKey, PERMISSION_PRESETS } from './auth.js';
 export { AgentRegistry, SkillMatcher, TrustScorer, createDiscovery } from './discovery.js';
 export { TaskDecomposer, Delegator, Orchestrator, createOrchestrator } from './orchestrator.js';
 import { createA2AServer } from './server.js';
+import { isEntryPoint } from '../utils/entryPoint.js';
 export { createA2AServer };
 
 // ── Convenience Factory ─────────────────────────────────────────────────────
@@ -57,9 +58,7 @@ function await_lazy() {
 
 // ── Standalone startup ───────────────────────────────────────────────────────
 
-const isMain = process.argv[1]?.endsWith('a2a/index.js') || process.argv[1]?.endsWith('a2a/index');
-
-if (isMain) {
+if (isEntryPoint(import.meta.url)) {
   (async () => {
     const args = parseArgs(process.argv.slice(2));
 

@@ -13,6 +13,7 @@ import { AgentDatabase } from './database.js';
 import { Persona } from './persona.js';
 import { ContentCalendar } from './contentCalendar.js';
 import { EngagementNetwork } from './engagementNetwork.js';
+import { isEntryPoint } from '../utils/entryPoint.js';
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 const rand = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
@@ -722,13 +723,10 @@ async function main() {
   await agent.start();
 }
 
-// Run CLI if this file is executed directly
-const isMainModule = process.argv[1] && (
-  process.argv[1].endsWith('thoughtLeaderAgent.js') ||
-  process.argv[1].endsWith('thoughtLeaderAgent')
-);
-
-if (isMainModule) {
+// Run CLI if this file is executed directly. The `xactions-agent` bin is an npm
+// symlink, which a file-name test on argv[1] never matched, so the bin used to
+// exit without doing anything.
+if (isEntryPoint(import.meta.url)) {
   main().catch((err) => {
     console.error('💀 Fatal error:', err);
     process.exit(1);
