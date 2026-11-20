@@ -169,8 +169,9 @@ export function discardDraft(id) {
  */
 export function reportsFailure(result) {
   if (!result || typeof result !== 'object' || Array.isArray(result)) return false;
-  if (result.success === false) return true;
-  return result.success !== true && typeof result.error === 'string' && result.error.length > 0;
+  const { success, error } = /** @type {{ success?: unknown, error?: unknown }} */ (result);
+  if (success === false) return true;
+  return success !== true && typeof error === 'string' && error.length > 0;
 }
 
 /**
