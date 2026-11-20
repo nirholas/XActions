@@ -668,6 +668,7 @@ function generateScriptPage({ slug, title, description, category, icon, sourceDi
     .article a:hover { text-decoration: underline; }
     .article strong { color: var(--text-primary); }
     .article code { background: var(--bg-tertiary); padding: 2px 6px; border-radius: 4px; font-family: 'Monaco','Menlo','Consolas', monospace; font-size: 0.875rem; color: var(--accent); }
+    .article p, .article li, .article td, .article :not(pre) > code { overflow-wrap: anywhere; }
     .article pre { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 16px; overflow-x: auto; margin: 16px 0; }
     .article pre code { background: none; padding: 0; color: var(--text-primary); font-size: 0.8125rem; display: block; }
     .article table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.875rem; }
@@ -884,7 +885,7 @@ function generateIndexPage(allPages) {
     .cat-section h2 { font-size: 1.25rem; font-weight: 700; margin-bottom: 16px; padding-top: 16px; border-top: 1px solid var(--border); }
     .cat-section h2 .count { color: var(--text-secondary); font-weight: 400; font-size: 0.875rem; }
     .script-grid { display: grid; gap: 8px; }
-    .script-card { display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 12px; text-decoration: none; color: var(--text-primary); transition: background .2s; }
+    .script-card { min-width: 0; display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 12px; text-decoration: none; color: var(--text-primary); transition: background .2s; }
     .script-card:hover { background: var(--bg-secondary); }
     .script-icon { font-size: 1.5rem; width: 36px; text-align: center; flex-shrink: 0; }
     .script-info { display: flex; flex-direction: column; min-width: 0; }

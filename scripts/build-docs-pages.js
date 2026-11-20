@@ -367,6 +367,7 @@ function generateHTML(slug, markdown) {
     .article blockquote { border-left: 3px solid var(--accent); padding: 12px 16px; margin: 16px 0; background: var(--bg-secondary); border-radius: 0 8px 8px 0; }
     .article blockquote p { margin: 0; color: var(--text-secondary); font-style: italic; }
     .article code { background: var(--bg-tertiary); padding: 2px 6px; border-radius: 4px; font-family: 'Monaco', 'Menlo', 'Consolas', monospace; font-size: 0.875rem; color: var(--accent); }
+    .article p, .article li, .article td, .article :not(pre) > code { overflow-wrap: anywhere; }
     .article pre { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 16px; overflow-x: auto; margin: 16px 0; position: relative; }
     .article pre code { background: none; padding: 0; color: var(--text-primary); font-size: 0.8125rem; display: block; }
     .article table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.875rem; }

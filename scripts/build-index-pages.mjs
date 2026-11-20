@@ -28,6 +28,25 @@ import { fileURLToPath } from 'url';
 import { renderPage, escapeHtml, REPO_URL } from './lib/page-shell.mjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
+
+// Counts quoted in the copy, read from what they count. The docs index said
+// "144 MCP tools" and "93 browser console scripts" long after both had moved.
+// Same counting rule as scripts/audit-docs.mjs: one `  {` line per tool entry.
+function countMcpTools() {
+  const source = fs.readFileSync(path.join(__dirname, '..', 'src', 'mcp', 'server.js'), 'utf8');
+  const start = source.indexOf('const TOOLS = [');
+  const end = source.indexOf('\n];', start);
+  const n = start === -1 || end === -1 ? 0 : (source.slice(start, end).match(/^\s{2}\{\s*$/gm) || []).length;
+  if (!n) throw new Error('could not count MCP tools in src/mcp/server.js');
+  return n;
+}
+/** Published /scripts/<slug> pages, from the manifest build-script-pages.js writes. */
+function countScriptPages() {
+  const manifest = path.join(__dirname, '..', 'dashboard', 'scripts', '_manifest.json');
+  return JSON.parse(fs.readFileSync(manifest, 'utf8')).length;
+}
+const MCP_TOOLS = countMcpTools();
+const SCRIPT_PAGES = countScriptPages();
 const ROOT = path.join(__dirname, '..');
 const DASHBOARD = path.join(ROOT, 'dashboard');
 const MANIFEST = path.join(DASHBOARD, 'docs', '_pages-manifest.json');
@@ -189,7 +208,7 @@ ${sections}
 
   return renderPage({
     title: 'Documentation',
-    description: `Complete XActions documentation: ${pages.length} pages on scraping X without an API key, the CLI, the Node.js library, 144 MCP tools for AI agents, and 93 browser console scripts.`,
+    description: `XActions documentation: ${pages.length} pages on the CLI, the Node.js library, ${MCP_TOOLS} MCP tools for AI agents and ${SCRIPT_PAGES} browser scripts. No X API key needed.`,
     urlPath: '/docs',
     navCurrent: 'docs',
     body,

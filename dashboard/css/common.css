@@ -231,9 +231,10 @@ nav::-webkit-scrollbar { width: 0; }
 /* Phones: a wide table or code block scrolls inside its own box instead of
    widening the whole page. */
 @media (max-width: 768px) {
-  .main-content table { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; }
-  .main-content pre { overflow-x: auto; }
-  .main-content img, .main-content video, .main-content iframe { max-width: 100%; height: auto; }
+  main table { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  main pre { overflow-x: auto; }
+  main p, main li, main :not(pre) > code { overflow-wrap: anywhere; }
+  main img, main video, main iframe, main canvas { max-width: 100%; }
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════ */

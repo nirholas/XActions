@@ -200,6 +200,11 @@
     .nav-item.active .nav-icon svg { stroke-width: 2.5; }
     .action-btn { display: block; width: 90%; padding: 16px; background: linear-gradient(135deg, #1d9bf0, #22d3ee); color: white; text-decoration: none; border: none; border-radius: 9999px; font-size: 1.0625rem; font-weight: 700; text-align: center; cursor: pointer; box-shadow: 0 8px 24px -8px rgba(29,155,240,0.65); transition: transform 0.16s cubic-bezier(.22,1,.36,1), box-shadow 0.25s, filter 0.2s; margin: 16px 0; }
     .action-btn:hover { filter: brightness(1.06); transform: translateY(-2px); box-shadow: 0 14px 34px -8px rgba(29,155,240,0.75); }
+    /* The rail sits in a flex row beside the page's column. A flex item will not
+       shrink below its widest child, so without min-width: 0 a wide table, code
+       line or button row pushed the page past the screen on phones. */
+    .sidebar-left { flex-shrink: 0; }
+    .sidebar-left ~ * { min-width: 0; }
     .sidebar-left nav { overflow-y: auto; flex: 1; }
     .sidebar-left nav::-webkit-scrollbar { width: 0; }
     .user-menu { padding: 12px; border-radius: 9999px; display: flex; align-items: center; gap: 12px; cursor: pointer; transition: background 0.2s; margin-bottom: 12px; text-decoration: none; color: var(--text-primary); }

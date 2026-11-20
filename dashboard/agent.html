@@ -413,7 +413,11 @@
       .layout { grid-template-columns: 1fr; }
       .sidebar-left { display: none; }
       .stats-grid { grid-template-columns: repeat(2, 1fr); }
-      .two-col { grid-template-columns: 1fr; }
+      .two-col { grid-template-columns: minmax(0, 1fr); }
+    }
+    @media (max-width: 600px) {
+      .page-header { flex-wrap: wrap; gap: 12px; }
+      .controls { flex-wrap: wrap; }
     }
   </style>
 </head>

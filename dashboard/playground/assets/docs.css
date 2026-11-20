@@ -568,6 +568,16 @@ video {
   color: var(--text-faint);
 }
 
+.prose a,
+.prose :not(pre) > code {
+  overflow-wrap: anywhere;
+}
+
+.prose p,
+.prose li {
+  overflow-wrap: break-word;
+}
+
 .prose a {
   color: var(--accent);
   text-decoration: none;
@@ -955,6 +965,7 @@ video {
 }
 
 .card {
+  min-width: 0;
   display: flex;
   flex-direction: column;
   padding: 20px;
@@ -984,6 +995,7 @@ video {
 }
 
 .card__desc {
+  overflow-wrap: anywhere;
   font-size: 0.875rem;
   color: var(--text-muted);
   line-height: 1.55;
