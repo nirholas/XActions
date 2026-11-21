@@ -317,7 +317,18 @@ const TOOLS = [
       properties: {
         text: {
           type: 'string',
-          description: 'Tweet content (max 280 characters)',
+          description: 'Tweet content (max 280 characters; longer requires X Premium)',
+        },
+        mediaPath: {
+          description: 'Local media file path, or array of up to 4 paths (image, GIF, video). Posts via the HTTP lane.',
+          anyOf: [
+            { type: 'string' },
+            { type: 'array', items: { type: 'string' }, maxItems: 4 },
+          ],
+        },
+        altText: {
+          type: 'string',
+          description: 'Alt text applied to each media file in mediaPath',
         },
       },
       required: ['text'],
@@ -2791,6 +2802,10 @@ async function dispatchTool(name, args, options = {}) {
   }
 
   if (MODE === 'remote') {
+    // mediaPath names a file on this machine — the remote server cannot read it.
+    if (name === 'x_post_tweet' && args?.mediaPath != null) {
+      throw new Error('x_post_tweet mediaPath is not supported in remote mode — run with XACTIONS_MODE=local to attach media');
+    }
     return await remoteClient.execute(name, args);
   } else {
     // Check if a non-Twitter platform param is set and dispatch to multi-platform variant

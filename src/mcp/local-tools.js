@@ -34,6 +34,9 @@ import path from 'path';
 import { isBrowserConnected, isPageUsable } from '../utils/browserState.js';
 import { loadSavedSession, sessionDir } from '../utils/savedSession.js';
 import { performFollow, performUnfollow, FOLLOW_STATUS } from './followAction.js';
+import { TwitterHttpClient } from '../scrapers/twitter/http/client.js';
+import { uploadMedia } from '../scrapers/twitter/http/media.js';
+import { postTweet as httpPostTweet } from '../scrapers/twitter/http/actions.js';
 import { gotoAndRender } from '../utils/navigation.js';
 import {
   openComposer,
@@ -745,7 +748,47 @@ async function postAndConfirm(pg, typed, { testids } = {}) {
   return { ok: true, confirmation };
 }
 
-export async function x_post_tweet({ text }) {
+export async function x_post_tweet({ text, mediaPath, altText }) {
+  // With media, post through the HTTP lane: the Puppeteer composer never
+  // attached files, and uploadMedia → CreateTweet mediaIds is the flow the
+  // API processors already use. Text-only posts keep the browser lane.
+  if (mediaPath !== undefined && mediaPath !== null) {
+    const paths = (Array.isArray(mediaPath) ? mediaPath : [mediaPath]).filter(
+      (p) => typeof p === 'string' && p.length > 0,
+    );
+    if (paths.length === 0 || paths.length > 4) {
+      return { success: false, message: 'mediaPath accepts 1-4 file paths' };
+    }
+    if (typeof text !== 'string' || !text.trim()) {
+      return { success: false, message: 'text is required' };
+    }
+    const session = await loadSavedSession();
+    if (!session) {
+      return {
+        success: false,
+        message: 'No saved session — run `xactions login` or export XACTIONS_SESSION_COOKIE to post media',
+      };
+    }
+    const cookies = `auth_token=${session.authToken}${session.ct0 ? `; ct0=${session.ct0}` : ''}`;
+    const client = new TwitterHttpClient({ cookies, rateLimitStrategy: 'wait' });
+    const mediaIds = [];
+    for (const filePath of paths) {
+      const { mediaId } = await uploadMedia(client, filePath, altText ? { altText } : {});
+      mediaIds.push(mediaId);
+    }
+    const result = await httpPostTweet(client, text, { mediaIds, premium: text.length > 280 });
+    const id = result?.rest_id ?? result?.legacy?.id_str ?? result?.tweet?.rest_id ?? null;
+    const user = result?.core?.user_results?.result;
+    const handle = user?.core?.screen_name ?? user?.legacy?.screen_name;
+    const url = id ? (handle ? `https://x.com/${handle}/status/${id}` : `https://x.com/i/web/status/${id}`) : null;
+    return {
+      success: Boolean(id),
+      tweetId: id,
+      url,
+      message: id ? 'Tweet posted successfully' : 'Tweet posted but X did not return an id',
+    };
+  }
+
   const { page: pg } = await ensureBrowser();
   if (!(await openComposer(pg))) return { success: false, message: COMPOSE_FAIL.open };
   await randomDelay();
