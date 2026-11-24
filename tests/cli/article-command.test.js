@@ -57,7 +57,6 @@ beforeEach(() => {
   logLines = [];
   vi.spyOn(console, 'error').mockImplementation((line) => errorLines.push(String(line)));
   vi.spyOn(console, 'log').mockImplementation((line) => logLines.push(String(line)));
-  vi.stubEnv('XACTIONS_SESSION_COOKIE', '');
   process.exitCode = undefined;
 });
 

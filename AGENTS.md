@@ -155,7 +155,7 @@ The rest of the read surface, same flags:
 ```bash
 xactions hashtag ai --limit 50 --compact
 xactions thread https://x.com/NASA/status/1234567890 --compact
-xactions article https://x.com/<user>/status/1234567890 --json | jq -r .text
+xactions article https://x.com/nichxbt/status/1234567890 --json | jq -r .text
 xactions media NASA --limit 30 --compact
 ```
 

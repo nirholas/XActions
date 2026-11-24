@@ -739,10 +739,10 @@ xactions article <url> [options]
 
 ```bash
 # Title, author and the whole body
-xactions article https://x.com/<user>/status/1234567890123456789
+xactions article https://x.com/nichxbt/status/1234567890123456789
 
 # Just the body, for piping
-xactions article https://x.com/<user>/status/1234567890123456789 --json | jq -r .text
+xactions article https://x.com/nichxbt/status/1234567890123456789 --json | jq -r .text
 ```
 
 From Node, the same read is `scrapeArticle(client, url)` from `xactions/scrapers/twitter/http`, and the MCP tool is `x_get_article`.

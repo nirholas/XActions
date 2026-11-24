@@ -81,6 +81,15 @@ describe('x_get_article', () => {
     expect(article.text).toBe(BODY);
   });
 
+  it('fails before any request when no session is saved', async () => {
+    fs.rmSync(path.join(home, 'cookies.json'));
+    const fetch = stubFetch(articleResponse({ plain_text: BODY }));
+    const { x_get_article } = await import('../../src/mcp/local-tools.js');
+
+    await expect(x_get_article({ url: TWEET_ID })).rejects.toThrow(/xactions login/);
+    expect(fetch).not.toHaveBeenCalled();
+  });
+
   it('rejects an answer that carries only the preview', async () => {
     stubFetch(articleResponse());
     const { x_get_article } = await import('../../src/mcp/local-tools.js');
