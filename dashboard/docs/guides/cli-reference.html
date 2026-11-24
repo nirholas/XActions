@@ -1120,6 +1120,7 @@ xactions thread https://x.com/user/status/123456789 -o thread.json
 <h3 id="xactions-article">xactions article</h3>
 <p>Read the full text of an X long-form Article in one GraphQL request, with no browser.</p>
 <p>X&#39;s own web client asks for articles with <code>withArticlePlainText: false</code> and gets only the short preview back. This command sets it to <code>true</code>, so the response carries the whole body. If X still answers with the preview only, the command fails rather than printing a teaser as if it were the article.</p>
+<p>It needs a session from <code>xactions login</code>; without one it stops before sending any request. Pass the status URL of the post that carries the Article, or its id. Article links (<code>x.com/i/article/&lt;id&gt;</code>, <code>x.com/&lt;user&gt;/article/&lt;id&gt;</code>) are refused because they carry the article&#39;s own id, not the post&#39;s.</p>
 <p><strong>Syntax:</strong></p>
 <pre><code class="language-bash">xactions article &lt;url&gt; [options]
 </code></pre>
@@ -1134,7 +1135,7 @@ xactions thread https://x.com/user/status/123456789 -o thread.json
 </thead>
 <tbody><tr>
 <td><code>url</code></td>
-<td><code>x.com/i/article/&lt;id&gt;</code> URL, a status URL, or the numeric id</td>
+<td>Status URL of the post that carries the Article, or its numeric id</td>
 <td>Yes</td>
 </tr>
 </tbody></table>
@@ -1164,10 +1165,10 @@ xactions thread https://x.com/user/status/123456789 -o thread.json
 <p><code>--compact</code> prints <code>id username date likes views title url text</code> on one line.</p>
 <p><strong>Examples:</strong></p>
 <pre><code class="language-bash"># Title, author and the whole body
-xactions article https://x.com/i/article/1234567890123456789
+xactions article https://x.com/nichxbt/status/1234567890123456789
 
 # Just the body, for piping
-xactions article https://x.com/i/article/1234567890123456789 --json | jq -r .text
+xactions article https://x.com/nichxbt/status/1234567890123456789 --json | jq -r .text
 </code></pre>
 <p>From Node, the same read is <code>scrapeArticle(client, url)</code> from <code>xactions/scrapers/twitter/http</code>, and the MCP tool is <code>x_get_article</code>.</p>
 <hr>

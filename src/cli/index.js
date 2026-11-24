@@ -1071,7 +1071,7 @@ program
 
 program
   .command('article <url>')
-  .description('Read the full text of an X long-form Article')
+  .description('Read the full text of an X long-form Article (needs xactions login)')
   .option('-o, --output <file>', 'Output file')
   .option('--json', 'Force JSON on stdout, ignoring --output and --google-sheets')
   .action(async (url, options) => {
@@ -1082,12 +1082,6 @@ program
       const client = await createTwitterHttpClient();
       const { scrapeArticle } = await import('../scrapers/twitter/http/tweets.js');
       const article = await scrapeArticle(client, url);
-
-      // The preview alone is not the article; reporting it as one would be the
-      // silent partial result the read commands refuse to give.
-      if (!article.text) {
-        throw new Error(`X returned only the preview of article ${article.id}, not its body.\n  ${AUTH_HINT}`);
-      }
       spinner.succeed(`Fetched "${article.title || article.id}"`);
 
       if (mode.compact) {
@@ -1105,6 +1099,8 @@ program
     } catch (error) {
       spinner.fail('Failed to fetch article');
       console.error(chalk.red(error.message));
+      const { AuthError } = await import('../scrapers/twitter/http/errors.js');
+      if (error instanceof AuthError) console.error(chalk.gray(AUTH_HINT));
       process.exitCode = 1;
     }
   });

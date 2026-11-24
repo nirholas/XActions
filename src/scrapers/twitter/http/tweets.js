@@ -17,7 +17,8 @@ import {
   operationFieldToggles,
 } from './endpoints.js';
 import { bindCheckpoint } from './checkpoint.js';
-import { NotFoundError } from './errors.js';
+import { AuthError, NotFoundError } from './errors.js';
+import { requireAuth } from './paging.js';
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -236,7 +237,10 @@ const ARTICLE_FEATURES = Object.freeze({
  * `withArticlePlainText` is the one that matters: x.com's web client sends it
  * as `false`, and with that value the response carries only `preview_text`.
  * Set to `true`, `article_results.result.plain_text` holds the whole article.
- * The other toggles TweetResultByRestId declares keep their usual values.
+ * `withArticleRichContentState` and `withArticleSummaryText` are pinned `true`,
+ * the values the body was last read live with, so a regenerated toggle table
+ * cannot drop them. The other toggles TweetResultByRestId declares keep their
+ * usual values.
  *
  * @returns {Record<string, boolean>}
  */
@@ -246,28 +250,38 @@ function articleFieldToggles() {
     withArticleRichContentState: true,
     withArticlePlainText: true,
     withArticleSummaryText: true,
-    withArticleVoiceOver: true,
   };
 }
 
 /**
- * Read the tweet id out of an Article reference.
+ * Read the id of the post that carries an Article out of a reference to it.
  *
- * Accepts a bare numeric id, an `x.com/i/article/<id>` URL, or any
- * `/status/<id>` URL (with or without scheme, `www.` or query string).
+ * Only status ids are post ids: accepts a numeric id string or a
+ * `/status/<id>` URL (with or without scheme, `www.` or query string). Any
+ * `/article/<id>` path (`x.com/i/article/<id>`, `x.com/<user>/article/<id>`) is
+ * refused: its id is the article's own, not the post's, and
+ * `TweetResultByRestId` cannot read it.
  *
- * @param {string|number} tweetIdOrUrl
- * @returns {string} The numeric id.
- * @throws {Error} When no id can be found in the input.
+ * @param {string} tweetIdOrUrl
+ * @returns {string} The numeric post id.
+ * @throws {TypeError} When the input is not a string (a number cannot hold a
+ *   19-digit id exactly).
+ * @throws {Error} For an `/article/<id>` URL, or when no id can be found.
  */
 export function parseArticleId(tweetIdOrUrl) {
-  const input = String(tweetIdOrUrl ?? '').trim();
+  if (typeof tweetIdOrUrl !== 'string') {
+    throw new TypeError('Pass a status URL or the post id as a string: a number cannot hold a 19-digit id exactly.');
+  }
+  const input = tweetIdOrUrl.trim().split(/[?#]/)[0];
   if (/^\d+$/.test(input)) return input;
-  const match = input.match(/\/(?:article|status|statuses)\/(\d+)/);
-  if (!match) {
+  if (/(?:^|\/)article\/\d+/i.test(input)) {
     throw new Error(
-      `Could not find an article or tweet id in "${input}". Pass an x.com/i/article/<id> URL, a status URL, or a numeric id.`,
+      `Article links (x.com/i/article/<id> or x.com/<user>/article/<id>) carry the article's own id, not the id of the post that published it. Pass the post's status URL (x.com/<user>/status/<id>) or its id.`,
     );
+  }
+  const match = input.match(/\/(?:status|statuses)\/(\d+)/i);
+  if (!match) {
+    throw new Error(`Could not find a post id in "${tweetIdOrUrl}". Pass a status URL or a numeric id.`);
   }
   return match[1];
 }
@@ -278,23 +292,30 @@ export function parseArticleId(tweetIdOrUrl) {
  *
  * The request is the one `scrapeTweetById` makes, plus the field toggles that
  * ask for the article text (see `articleFieldToggles`). `text` is the whole
- * article as plain text; `previewText` is the short teaser x.com shows in the
- * timeline. When X answers without the body, `text` is null and `previewText`
- * is what there is.
+ * article as plain text (empty string for an empty article); `previewText` is
+ * the short teaser x.com shows in the timeline.
  *
  * @param {import('./client.js').TwitterHttpClient} client
- * @param {string} tweetIdOrUrl Numeric id, `x.com/i/article/<id>` or a status URL.
+ * @param {string} tweetIdOrUrl Id of the post that carries the article, or its
+ *   status URL. Article links (`x.com/i/article/<id>`,
+ *   `x.com/<user>/article/<id>`) are refused (see `parseArticleId`).
  * @returns {Promise<{
  *   id: string, articleId: string|null, url: string, title: string|null,
- *   text: string|null, previewText: string|null, summaryText: string|null,
+ *   text: string, previewText: string|null, summaryText: string|null,
  *   coverImageUrl: string|null, createdAt: string|null,
  *   author: object, metrics: object
  * }>}
+ * @throws {TypeError} When `tweetIdOrUrl` is not a string.
+ * @throws {Error} For an `/article/<id>` URL, or when no id can be found.
+ * @throws {AuthError} When the client has no session (before any request), or
+ *   when X answers with the preview only and no body, which is what a session
+ *   without access gets.
  * @throws {NotFoundError} When the tweet does not exist, is unavailable, or is
  *   not an Article.
  */
 export async function scrapeArticle(client, tweetIdOrUrl) {
   const tweetId = parseArticleId(tweetIdOrUrl);
+  requireAuth(client, 'TweetResultByRestId');
   const { queryId, operationName } = GRAPHQL.TweetResultByRestId;
 
   const resp = await client.graphql(
@@ -317,13 +338,19 @@ export async function scrapeArticle(client, tweetIdOrUrl) {
   }
 
   const id = tweet.id || tweetId;
+  if (article.plain_text == null) {
+    throw new AuthError(
+      `X returned only the preview of article ${id}, not its body. Check that the session is logged in and can open the article on x.com.`,
+    );
+  }
+
   const { username } = tweet.author;
   return {
     id,
     articleId: article.rest_id || null,
     url: username ? `https://x.com/${username}/status/${id}` : `https://x.com/i/status/${id}`,
     title: article.title || null,
-    text: article.plain_text || null,
+    text: article.plain_text,
     previewText: article.preview_text || null,
     summaryText: article.summary_text || null,
     coverImageUrl: article.cover_media?.media_info?.original_img_url || null,

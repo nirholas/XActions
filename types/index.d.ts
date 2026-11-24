@@ -530,8 +530,8 @@ export interface HttpArticle {
   articleId: string | null;
   url: string;
   title: string | null;
-  /** The whole article as plain text; null when X answered with the preview only */
-  text: string | null;
+  /** The whole article as plain text */
+  text: string;
   /** The short teaser shown in the timeline */
   previewText: string | null;
   summaryText: string | null;
@@ -559,7 +559,7 @@ export interface HttpScraper {
   scrapeTweets(username: string, options?: ScrapeOptions): Promise<Record<string, unknown>[]>;
   scrapeTweetsAndReplies(username: string, options?: ScrapeOptions): Promise<Record<string, unknown>[]>;
   scrapeTweetById(tweetId: string): Promise<Record<string, unknown>>;
-  /** Full body of an X long-form Article, from its id, x.com/i/article/<id> or status URL */
+  /** Full body of an X long-form Article, from its post id or status URL */
   scrapeArticle(tweetIdOrUrl: string): Promise<HttpArticle>;
   parseTweetData(raw: Record<string, unknown>): Record<string, unknown>;
   parseTimelineInstructions(instructions: unknown[]): Record<string, unknown>[];

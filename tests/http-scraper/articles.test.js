@@ -15,7 +15,7 @@
 import { describe, it, expect, vi } from 'vitest';
 import { scrapeArticle, scrapeTweetById, parseArticleId } from '../../src/scrapers/twitter/http/tweets.js';
 import { TwitterHttpClient } from '../../src/scrapers/twitter/http/client.js';
-import { NotFoundError } from '../../src/scrapers/twitter/http/errors.js';
+import { AuthError, NotFoundError } from '../../src/scrapers/twitter/http/errors.js';
 
 const TWEET_ID = '2091905664704745583';
 
@@ -101,20 +101,43 @@ describe('parseArticleId', () => {
     expect(parseArticleId(TWEET_ID)).toBe(TWEET_ID);
   });
 
-  it('parses the id from an x.com/i/article/<id> URL', () => {
-    expect(parseArticleId(`x.com/i/article/${TWEET_ID}`)).toBe(TWEET_ID);
+  it.each([
+    'x.com/i/article/2091905657058533378',
+    'https://www.x.com/i/article/2091905657058533378?s=09',
+    'i/article/2091905657058533378',
+    'x.com/I/article/2091905657058533378',
+    'https://x.com/someuser/article/2091905657058533378',
+  ])('refuses the Article link %s and names the status URL to use', (link) => {
+    expect(() => parseArticleId(link)).toThrow(
+      /^Article links \(x\.com\/i\/article\/<id> or x\.com\/<user>\/article\/<id>\) carry the article's own id.*x\.com\/<user>\/status\/<id>/,
+    );
   });
 
-  it('parses the id from a full https URL with www and query params', () => {
-    expect(parseArticleId(`https://www.x.com/i/article/${TWEET_ID}?s=09`)).toBe(TWEET_ID);
+  it.each([2091905664704745583, undefined, null])('refuses %s, which is not a string', (input) => {
+    expect(() => parseArticleId(input)).toThrow(
+      new TypeError('Pass a status URL or the post id as a string: a number cannot hold a 19-digit id exactly.'),
+    );
   });
 
   it('accepts a /status/<id> URL', () => {
     expect(parseArticleId(`https://x.com/EXM7777/status/${TWEET_ID}`)).toBe(TWEET_ID);
   });
 
+  it('reads the path case-insensitively', () => {
+    expect(parseArticleId(`x.com/User/Status/${TWEET_ID}`)).toBe(TWEET_ID);
+  });
+
+  it('ignores an /i/article/ link that only appears in the query string', () => {
+    const url = `https://x.com/user/status/${TWEET_ID}?ref=https://x.com/i/article/2091905657058533378`;
+    expect(parseArticleId(url)).toBe(TWEET_ID);
+  });
+
+  it('ignores a fragment after the id', () => {
+    expect(parseArticleId(`https://x.com/user/status/${TWEET_ID}#replies`)).toBe(TWEET_ID);
+  });
+
   it('throws when no id can be found', () => {
-    expect(() => parseArticleId('not-a-url')).toThrow(/Could not find an article or tweet id/);
+    expect(() => parseArticleId('not-a-url')).toThrow(/Could not find a post id/);
     expect(() => parseArticleId('')).toThrow(/Could not find/);
   });
 });
@@ -151,10 +174,22 @@ describe('scrapeArticle', () => {
     expect(article.author).toMatchObject({ username: 'old', name: 'Old Shape' });
   });
 
-  it('accepts an x.com/i/article/<id> URL', async () => {
+  it('rejects an x.com/i/article/<id> URL before any request', async () => {
     const client = createMockClient(buildArticleResult());
-    await scrapeArticle(client, `https://x.com/i/article/${TWEET_ID}`);
-    expect(client.graphql.mock.calls[0][2].tweetId).toBe(TWEET_ID);
+    await expect(scrapeArticle(client, 'https://x.com/i/article/2091905657058533378')).rejects.toThrow(
+      /carry the article's own id/,
+    );
+    expect(client.graphql).not.toHaveBeenCalled();
+  });
+
+  it('throws AuthError and makes no request when the client has no session', async () => {
+    const client = createMockClient(buildArticleResult());
+    client.isAuthenticated.mockReturnValue(false);
+
+    const error = await scrapeArticle(client, TWEET_ID).catch((rejection) => rejection);
+    expect(error).toBeInstanceOf(AuthError);
+    expect(error.message).toMatch(/requires authentication/);
+    expect(client.graphql).not.toHaveBeenCalled();
   });
 
   it('asks TweetResultByRestId for the article body', async () => {
@@ -169,6 +204,7 @@ describe('scrapeArticle', () => {
       withArticlePlainText: true,
       withArticleRichContentState: true,
       withArticleSummaryText: true,
+      withArticleVoiceOver: false,
     });
     expect(options.features).toMatchObject({
       articles_preview_enabled: true,
@@ -184,11 +220,18 @@ describe('scrapeArticle', () => {
     expect(article.text).toBe('A'.repeat(2500));
   });
 
-  it('returns text null with the preview when X sends no body', async () => {
-    const client = createMockClient(buildArticleResult({ article: { plain_text: undefined } }));
+  it.each([undefined, null])('throws AuthError when X sends only the preview (plain_text %s)', async (plainText) => {
+    const client = createMockClient(buildArticleResult({ article: { plain_text: plainText } }));
+    const err = await scrapeArticle(client, TWEET_ID).catch((error) => error);
+    expect(err).toBeInstanceOf(AuthError);
+    expect(err.message).toMatch(/^X returned only the preview of article 2091905664704745583, not its body/);
+    expect(err.message).toMatch(/Check that the session is logged in and can open the article on x\.com\./);
+  });
+
+  it('returns an empty string for an article whose body is empty', async () => {
+    const client = createMockClient(buildArticleResult({ article: { plain_text: '' } }));
     const article = await scrapeArticle(client, TWEET_ID);
-    expect(article.text).toBeNull();
-    expect(article.previewText).toBe('I am going to show you how Grok Bot works...');
+    expect(article.text).toBe('');
   });
 
   it('throws NotFoundError when the tweet does not exist', async () => {
@@ -228,7 +271,7 @@ describe('scrapeArticle', () => {
 describe('scrapeArticle over the real client', () => {
   it('sends withArticlePlainText:true in the GET query string', async () => {
     const { client, fetch } = createFetchClient({ data: { tweetResult: { result: buildArticleResult() } } });
-    const article = await scrapeArticle(client, `x.com/i/article/${TWEET_ID}`);
+    const article = await scrapeArticle(client, `https://x.com/EXM7777/status/${TWEET_ID}`);
 
     expect(article.text).toBe('A'.repeat(2500));
     expect(fetch).toHaveBeenCalledTimes(1);
