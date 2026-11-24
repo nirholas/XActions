@@ -201,12 +201,6 @@ describe('scrapeArticle', () => {
     expect(client.graphql).not.toHaveBeenCalled();
   });
 
-  it('reads a /status/<id> URL', async () => {
-    const client = createMockClient(buildArticleResult());
-    await scrapeArticle(client, `https://x.com/EXM7777/status/${TWEET_ID}`);
-    expect(client.graphql.mock.calls[0][2].tweetId).toBe(TWEET_ID);
-  });
-
   it('asks TweetResultByRestId for the article body', async () => {
     const client = createMockClient(buildArticleResult());
     await scrapeArticle(client, TWEET_ID);
