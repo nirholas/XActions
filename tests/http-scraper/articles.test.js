@@ -207,6 +207,7 @@ describe('scrapeArticle', () => {
     const err = await scrapeArticle(client, TWEET_ID).catch((error) => error);
     expect(err).toBeInstanceOf(AuthError);
     expect(err.message).toMatch(/^X returned only the preview of article 2091905664704745583, not its body/);
+    expect(err.message).toMatch(/Check that the session is logged in and can open the article on x\.com\./);
   });
 
   it('returns an empty string for an article whose body is empty', async () => {
