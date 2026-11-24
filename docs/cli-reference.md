@@ -712,7 +712,7 @@ Read the full text of an X long-form Article in one GraphQL request, with no bro
 
 X's own web client asks for articles with `withArticlePlainText: false` and gets only the short preview back. This command sets it to `true`, so the response carries the whole body. If X still answers with the preview only, the command fails rather than printing a teaser as if it were the article.
 
-It needs a session from `xactions login`: logged out, X answers 403. Pass the status URL of the post that carries the Article, or its id. Article links (`x.com/i/article/<id>`, `x.com/<user>/article/<id>`) are refused because they carry the article's own id, not the post's.
+It needs a session from `xactions login`; without one it stops before sending any request. Pass the status URL of the post that carries the Article, or its id. Article links (`x.com/i/article/<id>`, `x.com/<user>/article/<id>`) are refused because they carry the article's own id, not the post's.
 
 **Syntax:**
 
