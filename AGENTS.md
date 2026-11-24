@@ -178,8 +178,8 @@ xactions followers nichxbt --limit 1000 --json | jq -r '.[] | select(.followers 
 ### What needs a login
 
 Public reads work with no account: `profile`, `tweets`, `thread`, `media`,
-`analyze`, `hashtag`. Search, `article`, `followers`, `following`, `non-followers`, likes,
-bookmarks and DMs need a session.
+`analyze`, `hashtag`. Search, `article`, `followers`, `following`,
+`non-followers`, likes, bookmarks and DMs need a session.
 
 ```bash
 xactions doctor    # what works right now, and what each failure needs
