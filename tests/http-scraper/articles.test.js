@@ -15,7 +15,7 @@
 import { describe, it, expect, vi } from 'vitest';
 import { scrapeArticle, scrapeTweetById, parseArticleId } from '../../src/scrapers/twitter/http/tweets.js';
 import { TwitterHttpClient } from '../../src/scrapers/twitter/http/client.js';
-import { NotFoundError } from '../../src/scrapers/twitter/http/errors.js';
+import { AuthError, NotFoundError } from '../../src/scrapers/twitter/http/errors.js';
 
 const TWEET_ID = '2091905664704745583';
 
@@ -101,12 +101,21 @@ describe('parseArticleId', () => {
     expect(parseArticleId(TWEET_ID)).toBe(TWEET_ID);
   });
 
-  it('parses the id from an x.com/i/article/<id> URL', () => {
-    expect(parseArticleId(`x.com/i/article/${TWEET_ID}`)).toBe(TWEET_ID);
+  it('refuses an x.com/i/article/<id> URL and names the status URL to use', () => {
+    const articleUrlId = '2091905657058533378';
+    expect(() => parseArticleId(`x.com/i/article/${articleUrlId}`)).toThrow(/carry the article's own id/);
+    expect(() => parseArticleId(`x.com/i/article/${articleUrlId}`)).toThrow(/x\.com\/<user>\/status\/<id>/);
   });
 
-  it('parses the id from a full https URL with www and query params', () => {
-    expect(parseArticleId(`https://www.x.com/i/article/${TWEET_ID}?s=09`)).toBe(TWEET_ID);
+  it('refuses a full https /i/article/ URL with www and query params', () => {
+    const url = 'https://www.x.com/i/article/2091905657058533378?s=09';
+    expect(() => parseArticleId(url)).toThrow(/carry the article's own id/);
+    expect(() => parseArticleId(url)).toThrow(/status/);
+  });
+
+  it('refuses a number, which cannot hold a 19-digit id exactly', () => {
+    expect(() => parseArticleId(2091905664704745583)).toThrow(TypeError);
+    expect(() => parseArticleId(undefined)).toThrow(TypeError);
   });
 
   it('accepts a /status/<id> URL', () => {
@@ -151,9 +160,17 @@ describe('scrapeArticle', () => {
     expect(article.author).toMatchObject({ username: 'old', name: 'Old Shape' });
   });
 
-  it('accepts an x.com/i/article/<id> URL', async () => {
+  it('rejects an x.com/i/article/<id> URL before any request', async () => {
     const client = createMockClient(buildArticleResult());
-    await scrapeArticle(client, `https://x.com/i/article/${TWEET_ID}`);
+    await expect(scrapeArticle(client, 'https://x.com/i/article/2091905657058533378')).rejects.toThrow(
+      /carry the article's own id/,
+    );
+    expect(client.graphql).not.toHaveBeenCalled();
+  });
+
+  it('reads a /status/<id> URL', async () => {
+    const client = createMockClient(buildArticleResult());
+    await scrapeArticle(client, `https://x.com/EXM7777/status/${TWEET_ID}`);
     expect(client.graphql.mock.calls[0][2].tweetId).toBe(TWEET_ID);
   });
 
@@ -169,6 +186,7 @@ describe('scrapeArticle', () => {
       withArticlePlainText: true,
       withArticleRichContentState: true,
       withArticleSummaryText: true,
+      withArticleVoiceOver: false,
     });
     expect(options.features).toMatchObject({
       articles_preview_enabled: true,
@@ -184,11 +202,17 @@ describe('scrapeArticle', () => {
     expect(article.text).toBe('A'.repeat(2500));
   });
 
-  it('returns text null with the preview when X sends no body', async () => {
-    const client = createMockClient(buildArticleResult({ article: { plain_text: undefined } }));
+  it.each([undefined, null])('throws AuthError when X sends only the preview (plain_text %s)', async (plainText) => {
+    const client = createMockClient(buildArticleResult({ article: { plain_text: plainText } }));
+    const err = await scrapeArticle(client, TWEET_ID).catch((error) => error);
+    expect(err).toBeInstanceOf(AuthError);
+    expect(err.message).toMatch(/^X returned only the preview of article 2091905664704745583, not its body/);
+  });
+
+  it('returns an empty string for an article whose body is empty', async () => {
+    const client = createMockClient(buildArticleResult({ article: { plain_text: '' } }));
     const article = await scrapeArticle(client, TWEET_ID);
-    expect(article.text).toBeNull();
-    expect(article.previewText).toBe('I am going to show you how Grok Bot works...');
+    expect(article.text).toBe('');
   });
 
   it('throws NotFoundError when the tweet does not exist', async () => {
@@ -228,7 +252,7 @@ describe('scrapeArticle', () => {
 describe('scrapeArticle over the real client', () => {
   it('sends withArticlePlainText:true in the GET query string', async () => {
     const { client, fetch } = createFetchClient({ data: { tweetResult: { result: buildArticleResult() } } });
-    const article = await scrapeArticle(client, `x.com/i/article/${TWEET_ID}`);
+    const article = await scrapeArticle(client, `https://x.com/EXM7777/status/${TWEET_ID}`);
 
     expect(article.text).toBe('A'.repeat(2500));
     expect(fetch).toHaveBeenCalledTimes(1);
