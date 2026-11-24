@@ -96,15 +96,6 @@ function sentParams(fetch) {
   };
 }
 
-function thrownBy(call) {
-  try {
-    call();
-  } catch (error) {
-    return error;
-  }
-  return undefined;
-}
-
 describe('parseArticleId', () => {
   it('passes bare numeric ids through', () => {
     expect(parseArticleId(TWEET_ID)).toBe(TWEET_ID);
@@ -123,9 +114,9 @@ describe('parseArticleId', () => {
   });
 
   it('refuses a number, which cannot hold a 19-digit id exactly', () => {
-    const error = thrownBy(() => parseArticleId(2091905664704745583));
-    expect(error).toBeInstanceOf(TypeError);
-    expect(error.message).toBe('Pass the id as a string: a number cannot hold a 19-digit post id exactly.');
+    expect(() => parseArticleId(2091905664704745583)).toThrow(
+      new TypeError('Pass the id as a string: a number cannot hold a 19-digit post id exactly.'),
+    );
   });
 
   it('names the type it got when the input is not a string at all', () => {
