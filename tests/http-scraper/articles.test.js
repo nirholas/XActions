@@ -127,10 +127,26 @@ describe('parseArticleId', () => {
     expect(() => parseArticleId(undefined)).toThrow(
       new TypeError('Expected a status URL or a post id as a string, got undefined.'),
     );
+    expect(() => parseArticleId(null)).toThrow(
+      new TypeError('Expected a status URL or a post id as a string, got null.'),
+    );
   });
 
   it('accepts a /status/<id> URL', () => {
     expect(parseArticleId(`https://x.com/EXM7777/status/${TWEET_ID}`)).toBe(TWEET_ID);
+  });
+
+  it('reads the path case-insensitively', () => {
+    expect(parseArticleId(`x.com/User/Status/${TWEET_ID}`)).toBe(TWEET_ID);
+  });
+
+  it('ignores an /i/article/ link that only appears in the query string', () => {
+    const url = `https://x.com/user/status/${TWEET_ID}?ref=https://x.com/i/article/2091905657058533378`;
+    expect(parseArticleId(url)).toBe(TWEET_ID);
+  });
+
+  it('ignores a fragment after the id', () => {
+    expect(parseArticleId(`https://x.com/user/status/${TWEET_ID}#replies`)).toBe(TWEET_ID);
   });
 
   it('throws when no id can be found', () => {

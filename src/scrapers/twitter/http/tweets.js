@@ -271,18 +271,20 @@ export function parseArticleId(tweetIdOrUrl) {
     throw new TypeError('Pass the id as a string: a number cannot hold a 19-digit post id exactly.');
   }
   if (typeof tweetIdOrUrl !== 'string') {
-    throw new TypeError(`Expected a status URL or a post id as a string, got ${typeof tweetIdOrUrl}.`);
+    let received = String(typeof tweetIdOrUrl);
+    if (tweetIdOrUrl === null) received = 'null';
+    throw new TypeError(`Expected a status URL or a post id as a string, got ${received}.`);
   }
-  const input = tweetIdOrUrl.trim();
+  const input = tweetIdOrUrl.trim().split(/[?#]/)[0];
   if (/^\d+$/.test(input)) return input;
   if (/(?:^|\/)i\/article\/\d+/i.test(input)) {
     throw new Error(
       `x.com/i/article/ links carry the article's own id, not the id of the post that published it. Pass the post's status URL (x.com/<user>/status/<id>) or its id.`,
     );
   }
-  const match = input.match(/\/(?:article|status|statuses)\/(\d+)/);
+  const match = input.match(/\/(?:article|status|statuses)\/(\d+)/i);
   if (!match) {
-    throw new Error(`Could not find an article or tweet id in "${input}". Pass a status URL or a numeric id.`);
+    throw new Error(`Could not find an article or tweet id in "${tweetIdOrUrl}". Pass a status URL or a numeric id.`);
   }
   return match[1];
 }

@@ -13,8 +13,6 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 
-import { AuthError } from '../../src/scrapers/twitter/http/errors.js';
-
 const TWEET_ID = '2091905664704745583';
 const BODY = 'Full body of the article.';
 
@@ -83,13 +81,12 @@ describe('x_get_article', () => {
     expect(article.text).toBe(BODY);
   });
 
-  it('fails with AuthError before any request when no session is saved', async () => {
+  it('names the login steps and makes no request when no session is saved', async () => {
     fs.rmSync(path.join(home, 'cookies.json'));
     const fetch = stubFetch(articleResponse({ plain_text: BODY }));
     const { x_get_article } = await import('../../src/mcp/local-tools.js');
 
-    await expect(x_get_article({ url: TWEET_ID })).rejects.toThrow(AuthError);
-    await expect(x_get_article({ url: TWEET_ID })).rejects.toThrow(/requires authentication/);
+    await expect(x_get_article({ url: TWEET_ID })).rejects.toThrow(/xactions login/);
     expect(fetch).not.toHaveBeenCalled();
   });
 
