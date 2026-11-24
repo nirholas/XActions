@@ -474,8 +474,7 @@ export async function x_get_thread({ url }) {
  * Full text of an X long-form Article, in one GraphQL read and no browser.
  *
  * The session comes from the environment or the one `xactions login` saved;
- * without one the tool fails with the login steps. Other errors come from
- * `scrapeArticle`.
+ * without one the tool fails with the login steps.
  *
  * @param {{url: string}} args Status URL of the post that carries the Article, or its numeric id
  * @returns {Promise<object>}

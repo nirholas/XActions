@@ -269,13 +269,8 @@ function articleFieldToggles() {
  * @throws {Error} For an `/article/<id>` URL, or when no id can be found.
  */
 export function parseArticleId(tweetIdOrUrl) {
-  if (typeof tweetIdOrUrl === 'number') {
-    throw new TypeError('Pass the id as a string: a number cannot hold a 19-digit post id exactly.');
-  }
   if (typeof tweetIdOrUrl !== 'string') {
-    let received = String(typeof tweetIdOrUrl);
-    if (tweetIdOrUrl === null) received = 'null';
-    throw new TypeError(`Expected a status URL or a post id as a string, got ${received}.`);
+    throw new TypeError('Pass a status URL or the post id as a string: a number cannot hold a 19-digit id exactly.');
   }
   const input = tweetIdOrUrl.trim().split(/[?#]/)[0];
   if (/^\d+$/.test(input)) return input;

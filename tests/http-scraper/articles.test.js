@@ -113,18 +113,9 @@ describe('parseArticleId', () => {
     );
   });
 
-  it('refuses a number, which cannot hold a 19-digit id exactly', () => {
-    expect(() => parseArticleId(2091905664704745583)).toThrow(
-      new TypeError('Pass the id as a string: a number cannot hold a 19-digit post id exactly.'),
-    );
-  });
-
-  it('names the type it got when the input is not a string at all', () => {
-    expect(() => parseArticleId(undefined)).toThrow(
-      new TypeError('Expected a status URL or a post id as a string, got undefined.'),
-    );
-    expect(() => parseArticleId(null)).toThrow(
-      new TypeError('Expected a status URL or a post id as a string, got null.'),
+  it.each([2091905664704745583, undefined, null])('refuses %s, which is not a string', (input) => {
+    expect(() => parseArticleId(input)).toThrow(
+      new TypeError('Pass a status URL or the post id as a string: a number cannot hold a 19-digit id exactly.'),
     );
   });
 
