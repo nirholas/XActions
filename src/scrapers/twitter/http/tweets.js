@@ -236,14 +236,16 @@ const ARTICLE_FEATURES = Object.freeze({
  * `withArticlePlainText` is the one that matters: x.com's web client sends it
  * as `false`, and with that value the response carries only `preview_text`.
  * Set to `true`, `article_results.result.plain_text` holds the whole article.
- * `withArticleSummaryText` adds `summary_text`. The other toggles
- * TweetResultByRestId declares keep their usual values.
+ * `withArticleRichContentState` and `withArticleSummaryText` are pinned `true`
+ * (the first as in the PR #45 request) so a regenerated toggle table cannot drop
+ * them. The other toggles TweetResultByRestId declares keep their usual values.
  *
  * @returns {Record<string, boolean>}
  */
 function articleFieldToggles() {
   return {
     ...operationFieldToggles(GRAPHQL.TweetResultByRestId.operationName),
+    withArticleRichContentState: true,
     withArticlePlainText: true,
     withArticleSummaryText: true,
   };
@@ -328,7 +330,9 @@ export async function scrapeArticle(client, tweetIdOrUrl) {
 
   const id = tweet.id || tweetId;
   if (article.plain_text == null) {
-    throw new AuthError(`X returned only the preview of article ${id}, not its body. Read it with a logged-in session.`);
+    throw new AuthError(
+      `X returned only the preview of article ${id}, not its body. Check that the session is logged in and can open the article on x.com.`,
+    );
   }
 
   const { username } = tweet.author;

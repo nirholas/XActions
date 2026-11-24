@@ -102,15 +102,15 @@ describe('parseArticleId', () => {
   });
 
   it('refuses an x.com/i/article/<id> URL and names the status URL to use', () => {
-    const articleUrlId = '2091905657058533378';
-    expect(() => parseArticleId(`x.com/i/article/${articleUrlId}`)).toThrow(/carry the article's own id/);
-    expect(() => parseArticleId(`x.com/i/article/${articleUrlId}`)).toThrow(/x\.com\/<user>\/status\/<id>/);
+    expect(() => parseArticleId('x.com/i/article/2091905657058533378')).toThrow(
+      /carry the article's own id.*x\.com\/<user>\/status\/<id>/,
+    );
   });
 
   it('refuses a full https /i/article/ URL with www and query params', () => {
-    const url = 'https://www.x.com/i/article/2091905657058533378?s=09';
-    expect(() => parseArticleId(url)).toThrow(/carry the article's own id/);
-    expect(() => parseArticleId(url)).toThrow(/status/);
+    expect(() => parseArticleId('https://www.x.com/i/article/2091905657058533378?s=09')).toThrow(
+      /carry the article's own id.*status/,
+    );
   });
 
   it('refuses a number, which cannot hold a 19-digit id exactly', () => {
