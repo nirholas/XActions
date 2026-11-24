@@ -113,9 +113,20 @@ describe('parseArticleId', () => {
     );
   });
 
+  it('refuses an /i/article/ link without a leading slash or with an uppercase I', () => {
+    expect(() => parseArticleId('i/article/2091905657058533378')).toThrow(/carry the article's own id/);
+    expect(() => parseArticleId('x.com/I/article/2091905657058533378')).toThrow(/carry the article's own id/);
+  });
+
   it('refuses a number, which cannot hold a 19-digit id exactly', () => {
     expect(() => parseArticleId(2091905664704745583)).toThrow(TypeError);
-    expect(() => parseArticleId(undefined)).toThrow(TypeError);
+    expect(() => parseArticleId(2091905664704745583)).toThrow(/cannot hold a 19-digit post id exactly/);
+  });
+
+  it('names the type it got when the input is not a string at all', () => {
+    expect(() => parseArticleId(undefined)).toThrow(
+      new TypeError('Expected a status URL or a post id as a string, got undefined.'),
+    );
   });
 
   it('accepts a /status/<id> URL', () => {
@@ -165,6 +176,15 @@ describe('scrapeArticle', () => {
     await expect(scrapeArticle(client, 'https://x.com/i/article/2091905657058533378')).rejects.toThrow(
       /carry the article's own id/,
     );
+    expect(client.graphql).not.toHaveBeenCalled();
+  });
+
+  it('throws AuthError and makes no request when the client has no session', async () => {
+    const client = createMockClient(buildArticleResult());
+    client.isAuthenticated.mockReturnValue(false);
+
+    await expect(scrapeArticle(client, TWEET_ID)).rejects.toThrow(AuthError);
+    await expect(scrapeArticle(client, TWEET_ID)).rejects.toThrow(/requires authentication/);
     expect(client.graphql).not.toHaveBeenCalled();
   });
 

@@ -476,8 +476,8 @@ export async function x_get_thread({ url }) {
  * Uses the http layer's `scrapeArticle`, which asks `TweetResultByRestId` for
  * the article body (`withArticlePlainText`). The session is the one from the
  * environment or the one `xactions login` saved. Logged out, X refuses this
- * read with 403, so the call throws before any request when there is no
- * session; `scrapeArticle` throws when an answer carries only the preview.
+ * read with 403, so `scrapeArticle` throws `AuthError` before any request when
+ * there is no session, and when an answer carries only the preview.
  *
  * @param {{url: string}} args Status URL of the post that carries the Article, or its numeric id
  * @returns {Promise<object>}
@@ -489,13 +489,13 @@ export async function x_get_article({ url }) {
   ]);
 
   const session = await loadSavedSession();
-  if (!session) {
-    throw new Error('Not logged in to X: run `xactions login` (or `xactions connect`), or set XACTIONS_SESSION_COOKIE, then retry.');
+  const options = {};
+  if (session) {
+    const parts = [`auth_token=${session.authToken}`];
+    if (session.ct0) parts.push(`ct0=${session.ct0}`);
+    options.cookies = parts.join('; ');
   }
-  const parts = [`auth_token=${session.authToken}`];
-  if (session.ct0) parts.push(`ct0=${session.ct0}`);
-  const client = new TwitterHttpClient({ cookies: parts.join('; ') });
-  return scrapeArticle(client, url);
+  return scrapeArticle(new TwitterHttpClient(options), url);
 }
 
 /**

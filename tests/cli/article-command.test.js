@@ -1,8 +1,9 @@
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
 /**
- * `xactions article` against a stubbed fetch and no saved session: a refused
- * or preview-only read prints the login hint and fails the exit code, while an
- * empty body is a valid article.
+ * `xactions article` against a stubbed fetch: an auth failure (no session, a
+ * refused read or a preview-only answer) prints the login hint and fails the
+ * exit code, any other failure does not print it, and an empty body is a valid
+ * article.
  *
  * @author nich (@nichxbt)
  * @license Apache-2.0
@@ -36,12 +37,24 @@ function articleResponse(article = {}) {
 }
 
 function stubFetch(status, body = {}) {
-  vi.stubGlobal('fetch', vi.fn().mockResolvedValue({
+  const fetch = vi.fn().mockResolvedValue({
     status,
     headers: { get: () => null },
     json: () => Promise.resolve(body),
     text: () => Promise.resolve(JSON.stringify(body)),
-  }));
+  });
+  vi.stubGlobal('fetch', fetch);
+  return fetch;
+}
+
+const sessionDir = process.env.XACTIONS_HOME;
+
+function saveSession() {
+  fs.mkdirSync(sessionDir, { recursive: true });
+  fs.writeFileSync(
+    path.join(sessionDir, 'cookies.json'),
+    JSON.stringify([{ name: 'auth_token', value: 'saved-token' }, { name: 'ct0', value: 'saved-ct0' }]),
+  );
 }
 
 let program;
@@ -58,9 +71,11 @@ beforeEach(() => {
   vi.spyOn(console, 'error').mockImplementation((line) => errorLines.push(String(line)));
   vi.spyOn(console, 'log').mockImplementation((line) => logLines.push(String(line)));
   process.exitCode = undefined;
+  saveSession();
 });
 
 afterEach(() => {
+  fs.rmSync(sessionDir, { recursive: true, force: true });
   vi.restoreAllMocks();
   vi.unstubAllEnvs();
   vi.unstubAllGlobals();
@@ -71,11 +86,22 @@ afterAll(() => {
   fs.rmSync(home, { recursive: true, force: true });
 });
 
-async function runArticle() {
-  await program.parseAsync(['article', TWEET_ID], { from: 'user' });
+async function runArticle(reference = TWEET_ID) {
+  await program.parseAsync(['article', reference], { from: 'user' });
 }
 
 describe('xactions article', () => {
+  it('prints the login hint and makes no request when no session is saved', async () => {
+    fs.rmSync(path.join(sessionDir, 'cookies.json'));
+    const fetch = stubFetch(200, articleResponse({ plain_text: 'body' }));
+
+    await runArticle();
+
+    expect(errorLines.join('\n')).toContain('xactions login');
+    expect(process.exitCode).toBe(1);
+    expect(fetch).not.toHaveBeenCalled();
+  });
+
   it('prints the login hint and exits 1 when X answers 403', async () => {
     stubFetch(403);
 
@@ -93,6 +119,17 @@ describe('xactions article', () => {
     expect(errorLines.join('\n')).toMatch(/only the preview/);
     expect(errorLines.join('\n')).toContain('xactions login');
     expect(process.exitCode).toBe(1);
+  });
+
+  it('does not print the login hint for a failure that is not about auth', async () => {
+    const fetch = stubFetch(200, articleResponse({ plain_text: 'body' }));
+
+    await runArticle('https://x.com/i/article/2091905657058533378');
+
+    expect(errorLines.join('\n')).toMatch(/own id/);
+    expect(errorLines.join('\n')).not.toContain('xactions login');
+    expect(process.exitCode).toBe(1);
+    expect(fetch).not.toHaveBeenCalled();
   });
 
   it('prints an article with an empty body without failing', async () => {

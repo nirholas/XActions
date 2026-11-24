@@ -18,6 +18,7 @@ import {
 } from './endpoints.js';
 import { bindCheckpoint } from './checkpoint.js';
 import { AuthError, NotFoundError } from './errors.js';
+import { requireAuth } from './paging.js';
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -266,12 +267,15 @@ function articleFieldToggles() {
  * @throws {Error} For an `/i/article/` URL, or when no id can be found.
  */
 export function parseArticleId(tweetIdOrUrl) {
+  if (typeof tweetIdOrUrl === 'number') {
+    throw new TypeError('Pass the id as a string: a number cannot hold a 19-digit post id exactly.');
+  }
   if (typeof tweetIdOrUrl !== 'string') {
-    throw new TypeError(`Pass the id as a string: a ${typeof tweetIdOrUrl} cannot hold a 19-digit post id exactly.`);
+    throw new TypeError(`Expected a status URL or a post id as a string, got ${typeof tweetIdOrUrl}.`);
   }
   const input = tweetIdOrUrl.trim();
   if (/^\d+$/.test(input)) return input;
-  if (/\/i\/article\/\d+/.test(input)) {
+  if (/(?:^|\/)i\/article\/\d+/i.test(input)) {
     throw new Error(
       `x.com/i/article/ links carry the article's own id, not the id of the post that published it. Pass the post's status URL (x.com/<user>/status/<id>) or its id.`,
     );
@@ -301,13 +305,17 @@ export function parseArticleId(tweetIdOrUrl) {
  *   coverImageUrl: string|null, createdAt: string|null,
  *   author: object, metrics: object
  * }>}
+ * @throws {TypeError} When `tweetIdOrUrl` is not a string.
+ * @throws {Error} For an `x.com/i/article/` URL, or when no id can be found.
+ * @throws {AuthError} When the client has no session (before any request), or
+ *   when X answers with the preview only and no body, which is what a session
+ *   without access gets.
  * @throws {NotFoundError} When the tweet does not exist, is unavailable, or is
  *   not an Article.
- * @throws {AuthError} When X answers with the preview only and no body, which
- *   is what a session without access gets.
  */
 export async function scrapeArticle(client, tweetIdOrUrl) {
   const tweetId = parseArticleId(tweetIdOrUrl);
+  requireAuth(client, 'TweetResultByRestId');
   const { queryId, operationName } = GRAPHQL.TweetResultByRestId;
 
   const resp = await client.graphql(
