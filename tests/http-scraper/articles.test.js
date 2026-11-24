@@ -96,31 +96,36 @@ function sentParams(fetch) {
   };
 }
 
+function thrownBy(call) {
+  try {
+    call();
+  } catch (error) {
+    return error;
+  }
+  return undefined;
+}
+
 describe('parseArticleId', () => {
   it('passes bare numeric ids through', () => {
     expect(parseArticleId(TWEET_ID)).toBe(TWEET_ID);
   });
 
-  it('refuses an x.com/i/article/<id> URL and names the status URL to use', () => {
-    expect(() => parseArticleId('x.com/i/article/2091905657058533378')).toThrow(
-      /carry the article's own id.*x\.com\/<user>\/status\/<id>/,
+  it.each([
+    'x.com/i/article/2091905657058533378',
+    'https://www.x.com/i/article/2091905657058533378?s=09',
+    'i/article/2091905657058533378',
+    'x.com/I/article/2091905657058533378',
+    'https://x.com/someuser/article/2091905657058533378',
+  ])('refuses the Article link %s and names the status URL to use', (link) => {
+    expect(() => parseArticleId(link)).toThrow(
+      /^Article links \(x\.com\/i\/article\/<id>\) carry the article's own id.*x\.com\/<user>\/status\/<id>/,
     );
-  });
-
-  it('refuses a full https /i/article/ URL with www and query params', () => {
-    expect(() => parseArticleId('https://www.x.com/i/article/2091905657058533378?s=09')).toThrow(
-      /carry the article's own id.*status/,
-    );
-  });
-
-  it('refuses an /i/article/ link without a leading slash or with an uppercase I', () => {
-    expect(() => parseArticleId('i/article/2091905657058533378')).toThrow(/carry the article's own id/);
-    expect(() => parseArticleId('x.com/I/article/2091905657058533378')).toThrow(/carry the article's own id/);
   });
 
   it('refuses a number, which cannot hold a 19-digit id exactly', () => {
-    expect(() => parseArticleId(2091905664704745583)).toThrow(TypeError);
-    expect(() => parseArticleId(2091905664704745583)).toThrow(/cannot hold a 19-digit post id exactly/);
+    const error = thrownBy(() => parseArticleId(2091905664704745583));
+    expect(error).toBeInstanceOf(TypeError);
+    expect(error.message).toBe('Pass the id as a string: a number cannot hold a 19-digit post id exactly.');
   });
 
   it('names the type it got when the input is not a string at all', () => {
@@ -150,7 +155,7 @@ describe('parseArticleId', () => {
   });
 
   it('throws when no id can be found', () => {
-    expect(() => parseArticleId('not-a-url')).toThrow(/Could not find an article or tweet id/);
+    expect(() => parseArticleId('not-a-url')).toThrow(/Could not find a post id/);
     expect(() => parseArticleId('')).toThrow(/Could not find/);
   });
 });
@@ -199,8 +204,9 @@ describe('scrapeArticle', () => {
     const client = createMockClient(buildArticleResult());
     client.isAuthenticated.mockReturnValue(false);
 
-    await expect(scrapeArticle(client, TWEET_ID)).rejects.toThrow(AuthError);
-    await expect(scrapeArticle(client, TWEET_ID)).rejects.toThrow(/requires authentication/);
+    const error = await scrapeArticle(client, TWEET_ID).catch((rejection) => rejection);
+    expect(error).toBeInstanceOf(AuthError);
+    expect(error.message).toMatch(/requires authentication/);
     expect(client.graphql).not.toHaveBeenCalled();
   });
 

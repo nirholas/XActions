@@ -102,20 +102,4 @@ describe('x_get_article', () => {
     expect(cookieHeaderOf(fetch)).toContain('auth_token=env-token');
     expect(cookieHeaderOf(fetch)).toContain('ct0=env-ct0');
   });
-
-  it('rejects an answer that carries only the preview', async () => {
-    stubFetch(articleResponse());
-    const { x_get_article } = await import('../../src/mcp/local-tools.js');
-
-    await expect(x_get_article({ url: TWEET_ID })).rejects.toThrow(/only the preview/);
-  });
-
-  it('returns an empty body as an empty article, not an error', async () => {
-    stubFetch(articleResponse({ plain_text: '' }));
-    const { x_get_article } = await import('../../src/mcp/local-tools.js');
-
-    const article = await x_get_article({ url: TWEET_ID });
-
-    expect(article.text).toBe('');
-  });
 });

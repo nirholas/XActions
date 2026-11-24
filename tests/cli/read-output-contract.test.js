@@ -38,7 +38,7 @@ import { DEFAULT_FIELDS } from '../../src/utils/output.js';
  * with no data at all, and `missing` handles whose profile lookup is empty.
  */
 const transport = vi.hoisted(() => {
-  const state = { routes: {}, empty: new Set(), missing: new Set(), requests: [], headers: [] };
+  const state = { routes: {}, empty: new Set(), missing: new Set(), forbidden: new Set(), requests: [], headers: [] };
   state.fetch = async (input, init = {}) => {
     const url = String(input);
     state.requests.push(url);
@@ -49,6 +49,7 @@ const transport = vi.hoisted(() => {
     const op = url.match(/\/graphql\/[^/]+\/(\w+)/)?.[1];
     if (!op) return new Response('', { status: 404 });
     const decoded = decodeURIComponent(url);
+    if (state.forbidden.has(op)) return json({}, 403);
     const handle = decoded.match(/"screen_name":"([^"]+)"/)?.[1];
     if (state.empty.has(op) || (handle && state.missing.has(handle.toLowerCase()))) return json({ data: {} });
     if (decoded.includes('"cursor"')) return json({ data: {} });
@@ -197,6 +198,7 @@ beforeEach(() => {
   transport.routes = { ...PAGES };
   transport.empty = new Set();
   transport.missing = new Set();
+  transport.forbidden = new Set();
   transport.requests = [];
   transport.headers = [];
   browser.records = [];
@@ -610,5 +612,33 @@ describe('a saved session', () => {
       expect(h.get('cookie')).toContain(`auth_token=${AUTH}`);
       expect(h.get('x-csrf-token')).toBe(CT0);
     }
+  });
+
+  describe('article', () => {
+    const AUTH_HINT = /with your auth_token cookie/;
+    const graphqlRequests = () => transport.requests.filter((url) => url.includes('/graphql/'));
+
+    it('prints the error and the login hint, and exits 1, when X answers 403', async () => {
+      transport.forbidden.add('TweetResultByRestId');
+      const result = await cli(['article', '2091905664704745583']);
+      expect(result.code).toBe(1);
+      expect(result.stderr).toMatch(AUTH_HINT);
+    });
+
+    it('prints the error without the login hint for a failure that is not about auth', async () => {
+      const result = await cli(['article', 'https://x.com/i/article/2091905657058533378']);
+      expect(result.code).toBe(1);
+      expect(result.stderr).toMatch(/carry the article's own id/);
+      expect(result.stderr).not.toMatch(AUTH_HINT);
+      expect(graphqlRequests()).toEqual([]);
+    });
+
+    it('fails with the login hint before any request when no session is saved', async () => {
+      fs.rmSync(jar);
+      const result = await cli(['article', '2091905664704745583']);
+      expect(result.code).toBe(1);
+      expect(result.stderr).toMatch(AUTH_HINT);
+      expect(graphqlRequests()).toEqual([]);
+    });
   });
 });

@@ -256,15 +256,17 @@ function articleFieldToggles() {
 /**
  * Read the id of the post that carries an Article out of a reference to it.
  *
- * Accepts a numeric id string or a `/status/<id>` URL (with or without scheme,
- * `www.` or query string). An `x.com/i/article/<id>` URL is refused: its id is
- * the article's own, not the post's, and `TweetResultByRestId` cannot read it.
+ * Only status ids are post ids: accepts a numeric id string or a
+ * `/status/<id>` URL (with or without scheme, `www.` or query string). Any
+ * `/article/<id>` path (`x.com/i/article/<id>`, `x.com/<user>/article/<id>`) is
+ * refused: its id is the article's own, not the post's, and
+ * `TweetResultByRestId` cannot read it.
  *
  * @param {string} tweetIdOrUrl
  * @returns {string} The numeric post id.
  * @throws {TypeError} When the input is not a string (a number cannot hold a
  *   19-digit id exactly).
- * @throws {Error} For an `/i/article/` URL, or when no id can be found.
+ * @throws {Error} For an `/article/<id>` URL, or when no id can be found.
  */
 export function parseArticleId(tweetIdOrUrl) {
   if (typeof tweetIdOrUrl === 'number') {
@@ -277,14 +279,14 @@ export function parseArticleId(tweetIdOrUrl) {
   }
   const input = tweetIdOrUrl.trim().split(/[?#]/)[0];
   if (/^\d+$/.test(input)) return input;
-  if (/(?:^|\/)i\/article\/\d+/i.test(input)) {
+  if (/(?:^|\/)article\/\d+/i.test(input)) {
     throw new Error(
-      `x.com/i/article/ links carry the article's own id, not the id of the post that published it. Pass the post's status URL (x.com/<user>/status/<id>) or its id.`,
+      `Article links (x.com/i/article/<id>) carry the article's own id, not the id of the post that published it. Pass the post's status URL (x.com/<user>/status/<id>) or its id.`,
     );
   }
-  const match = input.match(/\/(?:article|status|statuses)\/(\d+)/i);
+  const match = input.match(/\/(?:status|statuses)\/(\d+)/i);
   if (!match) {
-    throw new Error(`Could not find an article or tweet id in "${tweetIdOrUrl}". Pass a status URL or a numeric id.`);
+    throw new Error(`Could not find a post id in "${tweetIdOrUrl}". Pass a status URL or a numeric id.`);
   }
   return match[1];
 }
@@ -300,7 +302,8 @@ export function parseArticleId(tweetIdOrUrl) {
  *
  * @param {import('./client.js').TwitterHttpClient} client
  * @param {string} tweetIdOrUrl Id of the post that carries the article, or its
- *   status URL. `x.com/i/article/<id>` URLs are refused (see `parseArticleId`).
+ *   status URL. Article links (`x.com/i/article/<id>`) are refused (see
+ *   `parseArticleId`).
  * @returns {Promise<{
  *   id: string, articleId: string|null, url: string, title: string|null,
  *   text: string, previewText: string|null, summaryText: string|null,
@@ -308,7 +311,7 @@ export function parseArticleId(tweetIdOrUrl) {
  *   author: object, metrics: object
  * }>}
  * @throws {TypeError} When `tweetIdOrUrl` is not a string.
- * @throws {Error} For an `x.com/i/article/` URL, or when no id can be found.
+ * @throws {Error} For an `/article/<id>` URL, or when no id can be found.
  * @throws {AuthError} When the client has no session (before any request), or
  *   when X answers with the preview only and no body, which is what a session
  *   without access gets.
