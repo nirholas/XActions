@@ -109,7 +109,7 @@ describe('parseArticleId', () => {
     'https://x.com/someuser/article/2091905657058533378',
   ])('refuses the Article link %s and names the status URL to use', (link) => {
     expect(() => parseArticleId(link)).toThrow(
-      /^Article links \(x\.com\/i\/article\/<id>\) carry the article's own id.*x\.com\/<user>\/status\/<id>/,
+      /^Article links \(x\.com\/i\/article\/<id> or x\.com\/<user>\/article\/<id>\) carry the article's own id.*x\.com\/<user>\/status\/<id>/,
     );
   });
 

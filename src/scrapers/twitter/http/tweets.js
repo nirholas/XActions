@@ -281,7 +281,7 @@ export function parseArticleId(tweetIdOrUrl) {
   if (/^\d+$/.test(input)) return input;
   if (/(?:^|\/)article\/\d+/i.test(input)) {
     throw new Error(
-      `Article links (x.com/i/article/<id>) carry the article's own id, not the id of the post that published it. Pass the post's status URL (x.com/<user>/status/<id>) or its id.`,
+      `Article links (x.com/i/article/<id> or x.com/<user>/article/<id>) carry the article's own id, not the id of the post that published it. Pass the post's status URL (x.com/<user>/status/<id>) or its id.`,
     );
   }
   const match = input.match(/\/(?:status|statuses)\/(\d+)/i);
@@ -302,8 +302,8 @@ export function parseArticleId(tweetIdOrUrl) {
  *
  * @param {import('./client.js').TwitterHttpClient} client
  * @param {string} tweetIdOrUrl Id of the post that carries the article, or its
- *   status URL. Article links (`x.com/i/article/<id>`) are refused (see
- *   `parseArticleId`).
+ *   status URL. Article links (`x.com/i/article/<id>`,
+ *   `x.com/<user>/article/<id>`) are refused (see `parseArticleId`).
  * @returns {Promise<{
  *   id: string, articleId: string|null, url: string, title: string|null,
  *   text: string, previewText: string|null, summaryText: string|null,

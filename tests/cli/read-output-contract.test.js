@@ -35,7 +35,8 @@ import { DEFAULT_FIELDS } from '../../src/utils/output.js';
  * The fake transport. `routes` maps a GraphQL operation name to the payload
  * served for its first page; a request carrying a cursor gets an empty page,
  * so pagination ends deterministically. `empty` names operations that answer
- * with no data at all, and `missing` handles whose profile lookup is empty.
+ * with no data at all, `missing` handles whose profile lookup is empty, and
+ * `forbidden` names operations answered with 403.
  */
 const transport = vi.hoisted(() => {
   const state = { routes: {}, empty: new Set(), missing: new Set(), forbidden: new Set(), requests: [], headers: [] };
@@ -616,12 +617,31 @@ describe('a saved session', () => {
 
   describe('article', () => {
     const AUTH_HINT = /with your auth_token cookie/;
-    const graphqlRequests = () => transport.requests.filter((url) => url.includes('/graphql/'));
+
+    it('prints an article with an empty body as a success', async () => {
+      transport.routes.TweetResultByRestId = {
+        data: {
+          tweetResult: {
+            result: {
+              __typename: 'Tweet',
+              rest_id: '2091905664704745583',
+              article: { article_results: { result: { rest_id: '2091905657058533378', title: 'An empty article', plain_text: '' } } },
+              core: { user_results: { result: { __typename: 'User', rest_id: '1', core: { screen_name: 'testuser', name: 'Test' }, legacy: {} } } },
+              legacy: { id_str: '2091905664704745583', full_text: 'https://t.co/abc', created_at: 'Mon Aug 25 12:00:00 +0000 2026' },
+            },
+          },
+        },
+      };
+      const result = await cli(['article', '2091905664704745583']);
+      expect(result.code, result.stderr).toBe(0);
+      expect(result.stdout).toContain('An empty article');
+    });
 
     it('prints the error and the login hint, and exits 1, when X answers 403', async () => {
       transport.forbidden.add('TweetResultByRestId');
       const result = await cli(['article', '2091905664704745583']);
       expect(result.code).toBe(1);
+      expect(result.stderr).toMatch(/Authentication failed \(403\)/);
       expect(result.stderr).toMatch(AUTH_HINT);
     });
 
@@ -630,7 +650,7 @@ describe('a saved session', () => {
       expect(result.code).toBe(1);
       expect(result.stderr).toMatch(/carry the article's own id/);
       expect(result.stderr).not.toMatch(AUTH_HINT);
-      expect(graphqlRequests()).toEqual([]);
+      expect(transport.requests).toEqual([]);
     });
 
     it('fails with the login hint before any request when no session is saved', async () => {
@@ -638,7 +658,7 @@ describe('a saved session', () => {
       const result = await cli(['article', '2091905664704745583']);
       expect(result.code).toBe(1);
       expect(result.stderr).toMatch(AUTH_HINT);
-      expect(graphqlRequests()).toEqual([]);
+      expect(transport.requests).toEqual([]);
     });
   });
 });
