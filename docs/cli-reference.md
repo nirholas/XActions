@@ -712,6 +712,8 @@ Read the full text of an X long-form Article in one GraphQL request, with no bro
 
 X's own web client asks for articles with `withArticlePlainText: false` and gets only the short preview back. This command sets it to `true`, so the response carries the whole body. If X still answers with the preview only, the command fails rather than printing a teaser as if it were the article.
 
+It needs a session from `xactions login`: logged out, X answers 403. Pass the status URL of the post that carries the Article, or its id. `x.com/i/article/<id>` links are refused because they carry the article's own id, not the post's.
+
 **Syntax:**
 
 ```bash
@@ -722,7 +724,7 @@ xactions article <url> [options]
 
 | Argument | Description                                                        | Required |
 |----------|--------------------------------------------------------------------|----------|
-| `url`    | `x.com/i/article/<id>` URL, a status URL, or the numeric id        | Yes      |
+| `url`    | Status URL of the post that carries the Article, or its numeric id | Yes      |
 
 **Options:**
 
@@ -737,10 +739,10 @@ xactions article <url> [options]
 
 ```bash
 # Title, author and the whole body
-xactions article https://x.com/i/article/1234567890123456789
+xactions article https://x.com/<user>/status/1234567890123456789
 
 # Just the body, for piping
-xactions article https://x.com/i/article/1234567890123456789 --json | jq -r .text
+xactions article https://x.com/<user>/status/1234567890123456789 --json | jq -r .text
 ```
 
 From Node, the same read is `scrapeArticle(client, url)` from `xactions/scrapers/twitter/http`, and the MCP tool is `x_get_article`.

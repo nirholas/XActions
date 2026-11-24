@@ -474,10 +474,11 @@ export async function x_get_thread({ url }) {
  * Full text of an X long-form Article, in one GraphQL read and no browser.
  *
  * Uses the http layer's `scrapeArticle`, which asks `TweetResultByRestId` for
- * the article body (`withArticlePlainText`). A response carrying only the
- * preview is an error, not a short article.
+ * the article body (`withArticlePlainText`). The session is the one from the
+ * environment or the one `xactions login` saved; logged out, X refuses the
+ * read, and `scrapeArticle` throws when an answer carries only the preview.
  *
- * @param {{url: string}} args Article URL, status URL, or numeric id
+ * @param {{url: string}} args Status URL of the post that carries the Article, or its numeric id
  * @returns {Promise<object>}
  */
 export async function x_get_article({ url }) {
@@ -486,16 +487,10 @@ export async function x_get_article({ url }) {
     import('../scrapers/twitter/http/tweets.js'),
   ]);
 
-  const authToken = process.env.XACTIONS_SESSION_COOKIE;
-  const csrfToken = process.env.XACTIONS_CSRF_TOKEN;
-  const cookies = authToken ? [`auth_token=${authToken}`, csrfToken && `ct0=${csrfToken}`].filter(Boolean).join('; ') : null;
+  const session = await loadSavedSession();
+  const cookies = session ? [`auth_token=${session.authToken}`, session.ct0 && `ct0=${session.ct0}`].filter(Boolean).join('; ') : null;
   const client = new TwitterHttpClient(cookies ? { cookies } : {});
-
-  const article = await scrapeArticle(client, url);
-  if (!article.text) {
-    throw new Error(`X returned only the preview of article ${article.id}, not its body. Set XACTIONS_SESSION_COOKIE and retry.`);
-  }
-  return article;
+  return scrapeArticle(client, url);
 }
 
 /**

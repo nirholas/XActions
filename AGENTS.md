@@ -155,7 +155,7 @@ The rest of the read surface, same flags:
 ```bash
 xactions hashtag ai --limit 50 --compact
 xactions thread https://x.com/NASA/status/1234567890 --compact
-xactions article https://x.com/i/article/1234567890 --json | jq -r .text
+xactions article https://x.com/<user>/status/1234567890 --json | jq -r .text
 xactions media NASA --limit 30 --compact
 ```
 
@@ -178,7 +178,7 @@ xactions followers nichxbt --limit 1000 --json | jq -r '.[] | select(.followers 
 ### What needs a login
 
 Public reads work with no account: `profile`, `tweets`, `thread`, `media`,
-`analyze`, `hashtag`. Search, `followers`, `following`, `non-followers`, likes,
+`analyze`, `hashtag`. Search, `article`, `followers`, `following`, `non-followers`, likes,
 bookmarks and DMs need a session.
 
 ```bash

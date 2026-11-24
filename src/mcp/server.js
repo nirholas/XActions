@@ -1210,13 +1210,13 @@ const TOOLS = [
   },
   {
     name: 'x_get_article',
-    description: 'Read the full text of an X long-form Article (x.com/i/article/<id>) with no browser: title, the whole body as plain text, preview and summary text, cover image, author and engagement counts. Accepts the article URL, the status URL of the post that carries it, or its numeric id.',
+    description: 'Read the full text of an X long-form Article with no browser: title, the whole body as plain text, preview and summary text, cover image, author and engagement counts. Takes the status URL of the post that carries the Article, or its numeric id; x.com/i/article/<id> links are refused because they carry the id of the Article itself, not of the post. Requires a saved session (`xactions login` / `xactions connect`, or XACTIONS_SESSION_COOKIE).',
     inputSchema: {
       type: 'object',
       properties: {
         url: {
           type: 'string',
-          description: 'x.com/i/article/<id> URL, a status URL, or a numeric id',
+          description: 'Status URL of the post that carries the Article (x.com/<user>/status/<id>), or its numeric id',
         },
       },
       required: ['url'],
