@@ -176,6 +176,8 @@ Then use `xactions-mcp` as the command instead of `npx`:
 | `XACTIONS_SESSION_COOKIE` | For most tools | Your X/Twitter `auth_token` cookie |
 | `GROQ_API_KEY`, `NVIDIA_API_KEY`, `OPENROUTER_API_KEY` | No | AI tools use free models and work with no key; these free-tier keys add capacity. Image analysis needs `OPENROUTER_API_KEY` or `NVIDIA_API_KEY`. See [Free LLM lanes](ask.md#free-llm-lanes) |
 | `XACTIONS_MODE` | No | `local` (default, free) or `remote` |
+| `X_BEARER_TOKEN` | For the `xapi` tools | App-only token from your X developer app. Reads public data through the official X API v2 (see [Official X API v2 tools](#official-x-api-v2-tools)) |
+| `X_API_KEY`, `X_API_SECRET`, `X_ACCESS_TOKEN`, `X_ACCESS_TOKEN_SECRET` | For `x_api_write` | OAuth 1.0a user context for official X API writes. An OAuth 2.0 user token saved by `xactions xapi auth login` (or `X_OAUTH2_ACCESS_TOKEN`) works too |
 | `XACTIONS_MCP_TOOLS` | No | Allowlist of tool or group names to expose (see [Tool filtering](#tool-filtering)) |
 | `XACTIONS_MCP_EXCLUDE` | No | Denylist of tool or group names to hide; wins over the allowlist |
 | `XACTIONS_MCP_REQUIRE_APPROVAL` | No | `1` holds every write tool as a draft until approved (see [Approval mode](#approval-mode-draft-before-you-post)) |
@@ -212,6 +214,8 @@ Groups (run `npx xactions-mcp --list-groups` to see every member):
 | `persona` | The persona autopilot |
 | `graph` | Social graph building and analysis |
 | `data` | Account export and migration, datasets, CRM, teams, format conversion |
+| `orgs` | Organisation accounts: the shared queue, the content calendar, and drafts for review |
+| `xapi` | The official X API v2: search the catalog, describe an operation, call reads, sample a stream, and run writes |
 | `auth` | `x_login` |
 | `x402` | Paid plugin tools, when a plugin registers them |
 | `drafts` | The four approval tools; these are never filtered out |
@@ -251,6 +255,20 @@ The same thing as CLI flags (Cursor, `.cursor/mcp.json`):
 ```
 
 Unknown names are reported on stderr at startup and otherwise ignored, so a typo hides nothing silently.
+
+---
+
+## Official X API v2 tools
+
+Every other tool drives x.com the way a browser does, with your session cookie. The `xapi` group is the other lane: it calls the official X API v2 with your own developer app's credentials, so it follows X's published rate limits and terms, and it works on servers where a browser session would be fragile. Both lanes can be loaded at once.
+
+- `x_api_list_operations` searches the catalog of all 274 operations by keyword, tag, or accepted credential. No keys needed.
+- `x_api_describe` returns one operation's parameters, body, accepted credentials and OAuth 2.0 scopes, published rate limits, and the link to the official reference page. No keys needed.
+- `x_api_get` calls any read operation. Parameters are checked against the catalog before a request is sent, and `all: true` follows pagination.
+- `x_api_stream_sample` opens a streaming operation, returns the first messages, and closes it, bounded by a message count and a time limit.
+- `x_api_write` calls any operation that changes state. It is a write tool: approval mode holds it as a draft, and each call counts against the daily action caps for what it does (posting, liking, following, and so on). `dryRun: true` shows the request without sending it.
+
+Load only this lane with `--tools xapi`, or add it to an existing allowlist such as `read,xapi`. Set `X_BEARER_TOKEN` for reads; writes need user context, either the four OAuth 1.0a variables or an OAuth 2.0 token from `npx xactions xapi auth login`. The full guide, including the CLI and the JavaScript client, is [docs/x-api](x-api/README.md).
 
 ---
 

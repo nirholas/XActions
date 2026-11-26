@@ -49,7 +49,7 @@ export function createState() {
  * @param {object} args
  * @param {string} args.clientId
  * @param {string} args.redirectUri   must match a callback URL registered on the app
- * @param {string[]} [args.scopes]
+ * @param {ReadonlyArray<string>} [args.scopes]
  * @param {string} args.state
  * @param {string} args.codeChallenge
  * @param {string} [args.authorizeUrl]
@@ -112,7 +112,18 @@ export function normalizeToken(json, now = Date.now()) {
   };
 }
 
-/** Trade the authorization code for tokens. */
+/**
+ * Trade the authorization code for tokens.
+ *
+ * @param {object} args
+ * @param {string} args.clientId
+ * @param {string} [args.clientSecret]  confidential clients only
+ * @param {string} args.code
+ * @param {string} args.redirectUri
+ * @param {string} args.codeVerifier
+ * @param {typeof globalThis.fetch} [args.fetch]
+ * @param {string} [args.tokenUrl]
+ */
 export async function exchangeCode({ clientId, clientSecret, code, redirectUri, codeVerifier, fetch, tokenUrl = TOKEN_URL }) {
   const json = await tokenRequest(
     tokenUrl,
@@ -122,7 +133,17 @@ export async function exchangeCode({ clientId, clientSecret, code, redirectUri, 
   return normalizeToken(json);
 }
 
-/** Use a refresh token (needs the offline.access scope at authorization). */
+/**
+ * Use a refresh token (needs the offline.access scope at authorization).
+ *
+ * @param {object} args
+ * @param {string} args.clientId
+ * @param {string} [args.clientSecret]
+ * @param {string} args.refreshToken
+ * @param {typeof globalThis.fetch} [args.fetch]
+ * @param {string} [args.tokenUrl]
+ * @param {number} [args.now]
+ */
 export async function refreshAccessToken({ clientId, clientSecret, refreshToken, fetch, tokenUrl = TOKEN_URL, now = Date.now() }) {
   if (!refreshToken) throw new XApiError('No refresh token. Authorize again with the offline.access scope.', { code: 'auth_required' });
   const json = await tokenRequest(tokenUrl, { grant_type: 'refresh_token', refresh_token: refreshToken }, { clientId, clientSecret, fetch });
@@ -131,7 +152,17 @@ export async function refreshAccessToken({ clientId, clientSecret, refreshToken,
   return token;
 }
 
-/** Revoke an access or refresh token. */
+/**
+ * Revoke an access or refresh token.
+ *
+ * @param {object} args
+ * @param {string} args.clientId
+ * @param {string} [args.clientSecret]
+ * @param {string} args.token
+ * @param {'access_token'|'refresh_token'} [args.tokenTypeHint]
+ * @param {typeof globalThis.fetch} [args.fetch]
+ * @param {string} [args.revokeUrl]
+ */
 export async function revokeToken({ clientId, clientSecret, token, tokenTypeHint = 'access_token', fetch, revokeUrl = REVOKE_URL }) {
   await tokenRequest(revokeUrl, { token, token_type_hint: tokenTypeHint }, { clientId, clientSecret, fetch });
   return true;

@@ -297,6 +297,7 @@ export function registerXapiCommand(program) {
         }
         if (plan.op.streaming) throw new XApiError(`${plan.op.id} is a stream. Use: xactions xapi stream ${plan.op.id}`, { code: 'invalid_params' });
 
+        /** @type {{data: any, includes?: object, meta?: object, errors?: any[], rateLimit: import('../../xapi/types.js').XApiRateLimit|null, pages?: number, body?: any}} */
         const result = options.all
           ? await client.collect(plan.op.id, params, { auth: options.auth, limit: optionalNumber(options.limit), maxPages: optionalNumber(options.maxPages) })
           : await client.call(plan.op.id, params, { body, auth: options.auth });

@@ -347,10 +347,11 @@ export class XApiClient {
    * @param {(token: object) => void|Promise<void>} [options.onTokenRefresh]
    * @param {string} [options.baseUrl]            default https://api.x.com
    * @param {typeof globalThis.fetch} [options.fetch]
-   * @param {number} [options.maxRetries]         5xx and network retries, default 3
-   * @param {number} [options.maxRateLimitWaitMs] longest 429 wait before throwing, default 15 min
+   * @param {number} [options.maxRetries]         server error and network retries, default 3
+   * @param {number} [options.maxRateLimitWaitMs] longest rate-limit wait before throwing, default 15 minutes
    * @param {string} [options.userAgent]
    * @param {(ms: number, signal?: AbortSignal) => Promise<void>} [options.sleep]
+   * @param {() => number} [options.now]           clock in epoch ms, for tests
    */
   constructor(options = {}) {
     this.bearerToken = options.bearerToken ?? null;
@@ -622,7 +623,7 @@ export class XApiClient {
 
   /**
    * Collect up to `limit` items across pages into one result.
-   * @returns {Promise<{data: any[], includes: Record<string, any[]>, meta: object, errors: any[], pages: number, rateLimit: object|null}>}
+   * @returns {Promise<{data: any[], includes: Record<string, any[]>, meta: object, errors: any[], pages: number, rateLimit: import('./types.js').XApiRateLimit|null, warnings?: string[]}>}
    */
   async collect(idOrRoute, params = {}, options = {}) {
     const limit = options.limit ?? Infinity;
@@ -663,6 +664,7 @@ export class XApiClient {
    * @param {boolean} [options.reconnect]   default true
    * @param {number} [options.maxReconnects] default Infinity
    * @param {number} [options.stallMs]      default 30000
+   * @param {'bearer'|'oauth2'|'oauth1'} [options.auth]
    * @param {(event: {type: string, attempt?: number, waitMs?: number, status?: number, error?: string}) => void} [options.onEvent]
    */
   async *stream(idOrRoute, params = {}, options = {}) {
@@ -796,7 +798,7 @@ export class XApiClient {
     for (let offset = 0, segment = 0; offset < data.byteLength; offset += chunkSize, segment++) {
       const form = new FormData();
       form.append('segment_index', String(segment));
-      form.append('media', new Blob([data.subarray(offset, offset + chunkSize)], { type: 'application/octet-stream' }), 'chunk');
+      form.append('media', new Blob([data.slice(offset, offset + chunkSize)], { type: 'application/octet-stream' }), 'chunk');
       await this.call('appendMediaUpload', { id: mediaId }, { auth, body: form });
     }
 

@@ -33,7 +33,10 @@
     "./mcp": "./src/mcp/server.js",
     "./cli": "./src/cli/index.js",
     "./client": "./src/client/index.js",
-    "./xapi": "./src/xapi/index.js",
+    "./xapi": {
+      "types": "./types/xapi.d.ts",
+      "default": "./src/xapi/index.js"
+    },
     "./spaces": "./src/spaces/agent.js",
     "./portability": "./src/portability/index.js",
     "./media": "./src/media/index.js",

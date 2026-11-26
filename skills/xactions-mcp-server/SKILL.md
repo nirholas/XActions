@@ -53,7 +53,7 @@ xactions mcp-config --client vscode --write
 
 ### 3. Restart your client
 
-## Available Tools (68+)
+## Available Tools (165)
 
 ### Scraping
 `x_get_profile`, `x_get_followers`, `x_get_following`, `x_get_non_followers`, `x_get_tweets`, `x_search_tweets`, `x_get_thread`, `x_download_video`
@@ -85,6 +85,11 @@ xactions mcp-config --client vscode --write
 - **Social Graph:** `x_graph_build/analyze/recommendations/list`
 - **Portability:** `x_export_account/migrate_account/diff_exports`
 
+### Official X API v2 (`xapi` group)
+`x_api_list_operations`, `x_api_describe`, `x_api_get`, `x_api_stream_sample`, `x_api_write`
+
+These call the official X API v2 with your own developer app keys instead of a browser session. Listing and describing operations needs no keys; `x_api_get` and `x_api_stream_sample` need `X_BEARER_TOKEN` (or user credentials); `x_api_write` needs user context and is held as a draft under approval mode. Expose only this lane with `--tools xapi`. See `docs/x-api/README.md`.
+
 ## Example Prompts
 
 ```
@@ -104,6 +109,8 @@ xactions mcp-config --client vscode --write
 | Variable | Required | Purpose |
 |----------|----------|---------|
 | `XACTIONS_SESSION_COOKIE` | Yes | X auth_token for authentication |
+| `X_BEARER_TOKEN` | For `xapi` reads | App-only token from your X developer app |
+| `X_API_KEY`, `X_API_SECRET`, `X_ACCESS_TOKEN`, `X_ACCESS_TOKEN_SECRET` | For `x_api_write` | OAuth 1.0a user context (or an OAuth 2.0 token from `xactions xapi auth login`) |
 | `GROQ_API_KEY`, `NVIDIA_API_KEY`, `OPENROUTER_API_KEY` | No | Optional free-tier keys that add capacity to the AI tools (which use free models only). Image analysis needs `OPENROUTER_API_KEY` or `NVIDIA_API_KEY` |
 
 ## Full Documentation
