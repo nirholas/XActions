@@ -53,6 +53,7 @@ es/
 .next/
 pages-out/
 *.tsbuildinfo
+.turbo/
 next-env.d.ts
 
 # ─── Test and lint caches ──────────────────────────────────────────────────────
