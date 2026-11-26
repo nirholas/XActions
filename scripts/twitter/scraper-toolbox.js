@@ -11,8 +11,8 @@
  *              clipboard). Captures data from X's own GraphQL responses,
  *              so engagement numbers are exact and long posts are complete.
  * @author      nichxbt (https://x.com/nichxbt)
- * @version     1.0.0
- * @date        2026-07-19
+ * @version     1.1.0
+ * @date        2026-11-26
  * @repository  https://github.com/nirholas/XActions
  *
  * ============================================================
@@ -39,15 +39,32 @@
  * auto-scrolls. That means:
  *   - exact like/repost/reply/view/bookmark counts (not "1.2K")
  *   - full text of long posts (no "Show more" truncation)
- *   - media URLs, language, quote/reply/repost structure
+ *   - media URLs, video length, language, quote/reply/repost structure
+ *   - who each post replies to (reply-to post ID and handle), with the
+ *     parent post itself linked in when it was captured
+ *   - the quoted post (text, author, follower count, engagement)
+ *   - follower counts for every author
  * Anything already on screen before you pasted the script is picked up
  * by a DOM sweep as a fallback (marked source:"dom", approximate counts).
  *
+ * REPLIES AND THEIR PARENTS
+ * A profile's Replies tab sends each parent post along with the reply, so
+ * those link up on their own. Search results do not. Press "Fetch missing
+ * parents" (or call .resolveParents()) after a run: the toolbox opens each
+ * missing parent inside the page, reads it from X's response, and returns
+ * to where you were. Deleted or protected parents are marked unavailable.
+ *
+ * QUOTE POSTS OF ONE POST
+ * Open x.com/<handle>/status/<id>/quotes and run the toolbox there.
+ *
  * Console API (after pasting): window.XActionsToolbox
  *   .tweets()      all captured tweets
- *   .matched()     tweets passing current filters
+ *   .matched()     tweets passing current filters, with parent context
  *   .export('json'|'csv'|'markdown'|'text'|'html')
+ *   .build(format) the same export as a string, without downloading
  *   .copy('json'|'text')
+ *   .missingParents()   replies whose parent post is not captured yet
+ *   .resolveParents({ delay, timeout, limit })   fetch them in-page
  *   .start() .pause() .stop() .clear() .destroy()
  */
 
@@ -59,7 +76,7 @@
     try { window.XActionsToolbox.destroy(); } catch (e) { /* ignore */ }
   }
 
-  const VERSION = '1.0.0';
+  const VERSION = '1.1.0';
   const LS_KEY = 'xactions_toolbox_config_v1';
   const TAG = '[XActions Toolbox]';
 
@@ -125,11 +142,26 @@
     scrolls: 0,
     stalls: 0,
     lastChangeCount: 0,
+    retries: 0,            // consecutive Retry-button clicks in the current stall
+    resolving: false,      // true while resolveParents() is visiting parent posts
+    lastDetailFor: '',     // focal post id of the latest TweetDetail response
+    rateLimitedAt: 0,      // time of the latest 429 from X's GraphQL API
     destroyed: false
   };
 
   /** id -> normalized tweet record. Map preserves capture order. */
   const store = new Map();
+
+  /**
+   * id -> record for every post seen anywhere: timeline items, quoted and
+   * reposted posts, and the posts resolveParents() visits. Parent lookups
+   * read this, so a parent counts as captured without being exported as a
+   * timeline item of its own.
+   */
+  const seen = new Map();
+
+  /** id -> reason, for parents X answered as deleted, withheld or protected. */
+  const unavailable = new Map();
 
   // ==========================================
   // SMALL UTILITIES
@@ -234,7 +266,10 @@
       try {
         const url = typeof args[0] === 'string' ? args[0] : (args[0] && args[0].url) || '';
         if (GQL_URL.test(url)) {
-          res.clone().json().then(ingestGraphql).catch(() => { /* not JSON */ });
+          const status = res.status;
+          res.clone().json()
+            .then((payload) => ingestGraphql(payload, { url, status }))
+            .catch(() => { /* not JSON */ });
         }
       } catch (e) { /* never break the page's own fetch */ }
       return res;
@@ -246,12 +281,32 @@
     };
     XMLHttpRequest.prototype.send = function patchedSend(...args) {
       if (this.__xatUrl && GQL_URL.test(String(this.__xatUrl))) {
+        const url = String(this.__xatUrl);
         this.addEventListener('load', () => {
-          try { ingestGraphql(JSON.parse(this.responseText)); } catch (e) { /* not JSON */ }
+          try {
+            ingestGraphql(JSON.parse(this.responseText), { url, status: this.status });
+          } catch (e) { /* not JSON */ }
         });
       }
       return origXhrSend.apply(this, args);
     };
+  }
+
+  /** "SearchTimeline", "UserTweetsAndReplies", "TweetDetail", ... from a GraphQL URL. */
+  function operationName(url) {
+    const match = String(url || '').match(/\/graphql\/[^/]+\/([A-Za-z0-9_]+)/);
+    return match ? match[1] : '';
+  }
+
+  /** The post a TweetDetail request asked for, read from its `variables` query parameter. */
+  function focalTweetId(url) {
+    try {
+      const vars = new URL(url, location.origin).searchParams.get('variables');
+      const parsed = vars ? JSON.parse(vars) : null;
+      return parsed && parsed.focalTweetId ? String(parsed.focalTweetId) : '';
+    } catch (e) {
+      return '';
+    }
   }
 
   function removeInterceptor() {
@@ -279,19 +334,65 @@
     for (const key of Object.keys(node)) collectTweetNodes(node[key], out);
   }
 
+  /** A number when the payload carries one, otherwise null (never a guessed 0). */
+  function countOrNull(...values) {
+    for (const v of values) if (typeof v === 'number' && Number.isFinite(v)) return v;
+    return null;
+  }
+
+  /**
+   * The author fields from a GraphQL user result. X is moving User fields out
+   * of `legacy` into `core`, `verification` and `relationship_counts`, and
+   * sends either shape depending on the endpoint, so both are read.
+   */
   function userFromResult(userResult) {
     const u = (userResult && (userResult.result || userResult)) || null;
-    if (!u) return { handle: '', name: '', verified: false, followers: null };
+    if (!u) return { id: '', handle: '', name: '', verified: false, followers: null, following: null };
     const legacy = u.legacy || {};
     const core = u.core || {};
+    const counts = u.relationship_counts || {};
     return {
-      handle: legacy.screen_name || core.screen_name || '',
-      name: legacy.name || core.name || '',
-      verified: !!u.is_blue_verified,
-      followers: typeof legacy.followers_count === 'number' ? legacy.followers_count : null
+      id: u.rest_id || '',
+      handle: core.screen_name || legacy.screen_name || '',
+      name: core.name || legacy.name || '',
+      verified: !!(u.is_blue_verified || (u.verification && u.verification.verified) || legacy.verified),
+      followers: countOrNull(legacy.followers_count, counts.followers),
+      following: countOrNull(legacy.friends_count, counts.following)
     };
   }
 
+  /** Unwrap TweetWithVisibilityResults; null for tombstones and unavailable posts. */
+  function tweetNode(result) {
+    if (!result) return null;
+    const node = result.__typename === 'TweetWithVisibilityResults' ? result.tweet : result;
+    return node && node.rest_id && node.legacy ? node : null;
+  }
+
+  /**
+   * The compact form of a post used for linked context (parent, quoted,
+   * reposted): enough to judge it without opening it.
+   */
+  function summarize(rec) {
+    if (!rec) return null;
+    return {
+      id: rec.id,
+      url: rec.url,
+      author: rec.author,
+      text: rec.text,
+      createdAt: rec.createdAt,
+      metrics: rec.metrics,
+      media: rec.media,
+      inReplyTo: rec.inReplyTo || null,
+      quoted: rec.quoted || null
+    };
+  }
+
+  /**
+   * @param {object} raw     a Tweet node with rest_id and legacy
+   * @param {object} opts
+   * @param {string} [opts.nested]  'retweet' | 'quote' when raw is embedded in another post
+   * @param {object[]} [opts.sink]  receives every embedded record, so they reach `seen`
+   */
   function normalizeGraphqlTweet(raw, opts = {}) {
     const legacy = raw.legacy || {};
     const author = userFromResult(raw.core && raw.core.user_results);
@@ -310,18 +411,27 @@
           .filter((v) => v.content_type === 'video/mp4')
           .sort((a, b) => (b.bitrate || 0) - (a.bitrate || 0))[0];
         if (best) entry.videoUrl = best.url;
+        if (typeof m.video_info.duration_millis === 'number') entry.durationMs = m.video_info.duration_millis;
       }
       return entry;
     });
 
-    const rtRaw = legacy.retweeted_status_result && legacy.retweeted_status_result.result;
-    const rtNode = rtRaw && (rtRaw.__typename === 'TweetWithVisibilityResults' ? rtRaw.tweet : rtRaw);
-    const retweetOf = rtNode ? normalizeGraphqlTweet(rtNode, { nested: true }) : null;
+    // A repost carries its original, and that original may quote a third post,
+    // so a quote is kept unless this node is itself a quote (one level deep).
+    const rtNode = tweetNode(legacy.retweeted_status_result && legacy.retweeted_status_result.result);
+    const retweetOf = rtNode ? normalizeGraphqlTweet(rtNode, { nested: 'retweet', sink: opts.sink }) : null;
 
-    const qRaw = raw.quoted_status_result && raw.quoted_status_result.result;
-    const qNode = qRaw && (qRaw.__typename === 'TweetWithVisibilityResults' ? qRaw.tweet : qRaw);
-    const quoted = (!opts.nested && qNode && qNode.legacy)
-      ? normalizeGraphqlTweet(qNode, { nested: true })
+    const qNode = opts.nested === 'quote'
+      ? null
+      : tweetNode(raw.quoted_status_result && raw.quoted_status_result.result);
+    const quoted = qNode ? normalizeGraphqlTweet(qNode, { nested: 'quote', sink: opts.sink }) : null;
+
+    const inReplyTo = legacy.in_reply_to_status_id_str
+      ? {
+        id: legacy.in_reply_to_status_id_str,
+        handle: legacy.in_reply_to_screen_name || '',
+        userId: legacy.in_reply_to_user_id_str || ''
+      }
       : null;
 
     const record = {
@@ -331,6 +441,8 @@
       text,
       lang: legacy.lang || '',
       createdAt: legacy.created_at ? new Date(legacy.created_at).toISOString() : null,
+      conversationId: legacy.conversation_id_str || '',
+      inReplyTo,
       metrics: {
         likes: legacy.favorite_count || 0,
         retweets: legacy.retweet_count || 0,
@@ -353,23 +465,42 @@
       },
       sensitive: !!legacy.possibly_sensitive,
       source: 'graphql',
+      operation: opts.operation || '',
       approx: false,
       scrapedAt: new Date().toISOString()
     };
-    if (retweetOf) record.retweetOf = { id: retweetOf.id, author: retweetOf.author, url: retweetOf.url, text: retweetOf.text };
-    if (quoted) record.quoted = { id: quoted.id, author: quoted.author, url: quoted.url, text: quoted.text };
+    record.retweetOf = retweetOf ? summarize(retweetOf) : null;
+    record.quoted = quoted ? summarize(quoted) : null;
+    if (opts.nested && opts.sink) opts.sink.push(record);
     return record;
   }
 
-  function ingestGraphql(payload) {
+  /**
+   * @param {object} payload  parsed GraphQL response body
+   * @param {object} [meta]
+   * @param {string} [meta.url]     request URL, for the operation name and TweetDetail's focal post
+   * @param {number} [meta.status]  HTTP status
+   */
+  function ingestGraphql(payload, meta = {}) {
     if (state.destroyed) return;
+    const operation = operationName(meta.url);
+    if (meta.status === 429) {
+      state.rateLimitedAt = Date.now();
+      log('X answered 429 (rate limited). Slow down: raise the scroll delay and wait a few minutes.');
+    }
     const nodes = [];
     try { collectTweetNodes(payload, nodes); } catch (e) { return; }
     let added = 0;
     for (const node of nodes) {
       try {
-        const rec = normalizeGraphqlTweet(node);
+        const embedded = [];
+        const rec = normalizeGraphqlTweet(node, { operation, sink: embedded });
+        for (const e of embedded) if (e.id && !seen.has(e.id)) seen.set(e.id, e);
         if (!rec.id || (!rec.text && rec.media.length === 0)) continue;
+        seen.set(rec.id, rec);
+        // While resolving parents, the pages visited are context only: their
+        // replies and suggestions must not join the export.
+        if (state.resolving) continue;
         const existing = store.get(rec.id);
         if (!existing || existing.source === 'dom') {
           if (existing && existing.type.isPinned) rec.type.isPinned = true;
@@ -378,10 +509,40 @@
         }
       } catch (e) { /* one malformed node never aborts the batch */ }
     }
+    // A TweetDetail answer without its focal post means X will not show it
+    // (deleted, withheld, or from a protected account).
+    if (operation === 'TweetDetail' && meta.status !== 429) {
+      const focal = focalTweetId(meta.url);
+      if (focal) {
+        state.lastDetailFor = focal;
+        if (!seen.has(focal)) unavailable.set(focal, 'X returned no post (deleted, withheld or protected)');
+      }
+    }
     if (added > 0) {
       updateStats();
       previewLatest();
     }
+  }
+
+  /** A post from anywhere in the capture: timeline items first, then context. */
+  function lookup(id) {
+    return (id && (store.get(id) || seen.get(id))) || null;
+  }
+
+  /**
+   * A record with its reply context attached: the parent post when it was
+   * captured, and parentStatus 'captured' | 'missing' | 'unavailable'
+   * (null for posts that are not replies).
+   */
+  function withContext(t) {
+    if (!t.inReplyTo) return { ...t, parent: null, parentStatus: null };
+    const parent = lookup(t.inReplyTo.id);
+    if (parent) return { ...t, parent: summarize(parent), parentStatus: 'captured' };
+    return {
+      ...t,
+      parent: null,
+      parentStatus: unavailable.has(t.inReplyTo.id) ? 'unavailable' : 'missing'
+    };
   }
 
   // ==========================================
@@ -426,14 +587,18 @@
           id,
           url: `https://x.com/${handle}/status/${id}`,
           author: {
+            id: '',
             handle,
             name: nameEl ? nameEl.innerText.split('\n')[0] : handle,
             verified: !!tweet.querySelector('[data-testid="icon-verified"]'),
-            followers: null
+            followers: null,
+            following: null
           },
           text,
           lang: '',
           createdAt: timeEl.getAttribute('datetime'),
+          conversationId: '',
+          inReplyTo: null,
           metrics: {
             likes: metric('like') || metric('unlike'),
             retweets: metric('retweet') || metric('unretweet'),
@@ -454,8 +619,11 @@
             mentions: (text.match(/@[\w]+/g) || []),
             urls: (text.match(/https?:\/\/[^\s]+/g) || [])
           },
+          retweetOf: null,
+          quoted: null,
           sensitive: false,
           source: 'dom',
+          operation: '',
           approx: true,
           scrapedAt: new Date().toISOString()
         });
@@ -550,8 +718,24 @@
     return stats;
   }
 
+  /** Matched posts with their reply context attached, newest first. */
+  function exportTweets() { return matchedTweets().map(withContext); }
+
+  /** How many matched replies have their parent captured, missing or unavailable. */
+  function parentCounts(tweets) {
+    const counts = { replies: 0, captured: 0, missing: 0, unavailable: 0 };
+    for (const t of tweets) {
+      if (!t.inReplyTo) continue;
+      counts.replies++;
+      if (lookup(t.inReplyTo.id)) counts.captured++;
+      else if (unavailable.has(t.inReplyTo.id)) counts.unavailable++;
+      else counts.missing++;
+    }
+    return counts;
+  }
+
   function exportBundle() {
-    const tweets = matchedTweets();
+    const tweets = exportTweets();
     return {
       source: pageLabel(),
       pageUrl: location.href,
@@ -560,6 +744,7 @@
       filters: config.filters,
       totalCaptured: store.size,
       totalMatched: tweets.length,
+      parents: parentCounts(tweets),
       statistics: buildStats(tweets),
       tweets
     };
@@ -567,24 +752,76 @@
 
   function toJSON() { return JSON.stringify(exportBundle(), null, 2); }
 
+  // The first 20 columns are the 1.0 layout, unchanged, so existing
+  // spreadsheets keep working. Context columns are appended after them.
+  const CSV_HEADERS = ['id', 'date', 'author', 'text', 'likes', 'retweets', 'replies', 'quotes', 'bookmarks', 'views',
+    'lang', 'isRetweet', 'isReply', 'isQuote', 'isPinned', 'mediaCount', 'mediaUrls', 'hashtags', 'url', 'source',
+    'authorId', 'authorName', 'authorFollowers', 'authorVerified', 'conversationId', 'operation',
+    'mediaTypes', 'videoDurationMs', 'links',
+    'replyToId', 'replyToHandle', 'parentStatus', 'parentText', 'parentAuthorFollowers', 'parentLikes', 'parentDate', 'parentUrl',
+    'quotedId', 'quotedAuthor', 'quotedAuthorFollowers', 'quotedText', 'quotedLikes', 'quotedUrl',
+    'retweetOfId', 'retweetOfAuthor', 'retweetOfAuthorFollowers'];
+
   function toCSV() {
-    const headers = ['id', 'date', 'author', 'text', 'likes', 'retweets', 'replies', 'quotes', 'bookmarks', 'views',
-      'lang', 'isRetweet', 'isReply', 'isQuote', 'isPinned', 'mediaCount', 'mediaUrls', 'hashtags', 'url', 'source'];
-    const rows = matchedTweets().map((t) => [
-      t.id,
-      t.createdAt || '',
-      '@' + t.author.handle,
-      csvCell(t.text),
-      t.metrics.likes, t.metrics.retweets, t.metrics.replies, t.metrics.quotes, t.metrics.bookmarks, t.metrics.views,
-      t.lang,
-      t.type.isRetweet, t.type.isReply, t.type.isQuote, t.type.isPinned,
-      t.media.length,
-      csvCell(t.media.map((m) => m.videoUrl || m.url).join(' ')),
-      csvCell(t.entities.hashtags.join(' ')),
-      t.url,
-      t.source
-    ].join(','));
-    return [headers.join(','), ...rows].join('\n');
+    const rows = exportTweets().map((t) => {
+      const p = t.parent;
+      const q = t.quoted;
+      const rt = t.retweetOf;
+      const videoMs = t.media.reduce((sum, m) => sum + (m.durationMs || 0), 0);
+      return [
+        t.id,
+        t.createdAt || '',
+        '@' + t.author.handle,
+        csvCell(t.text),
+        t.metrics.likes, t.metrics.retweets, t.metrics.replies, t.metrics.quotes, t.metrics.bookmarks, t.metrics.views,
+        t.lang,
+        t.type.isRetweet, t.type.isReply, t.type.isQuote, t.type.isPinned,
+        t.media.length,
+        csvCell(t.media.map((m) => m.videoUrl || m.url).join(' ')),
+        csvCell(t.entities.hashtags.join(' ')),
+        t.url,
+        t.source,
+        t.author.id || '',
+        csvCell(t.author.name),
+        t.author.followers ?? '',
+        t.author.verified,
+        t.conversationId || '',
+        t.operation || '',
+        csvCell(t.media.map((m) => m.type).join(' ')),
+        videoMs || '',
+        csvCell(t.entities.urls.join(' ')),
+        t.inReplyTo ? t.inReplyTo.id : '',
+        t.inReplyTo && t.inReplyTo.handle ? '@' + t.inReplyTo.handle : '',
+        t.parentStatus || '',
+        csvCell(p ? p.text : ''),
+        p ? (p.author.followers ?? '') : '',
+        p ? p.metrics.likes : '',
+        p ? (p.createdAt || '') : '',
+        p ? p.url : '',
+        q ? q.id : '',
+        q ? '@' + q.author.handle : '',
+        q ? (q.author.followers ?? '') : '',
+        csvCell(q ? q.text : ''),
+        q ? q.metrics.likes : '',
+        q ? q.url : '',
+        rt ? rt.id : '',
+        rt ? '@' + rt.author.handle : '',
+        rt ? (rt.author.followers ?? '') : ''
+      ].join(',');
+    });
+    return [CSV_HEADERS.join(','), ...rows].join('\n');
+  }
+
+  /** One-line "replying to" and "quoting" context for the text-style exports. */
+  function contextLines(t) {
+    const lines = [];
+    if (t.inReplyTo) {
+      const who = t.inReplyTo.handle ? '@' + t.inReplyTo.handle : 'a post';
+      if (t.parent) lines.push(`Replying to ${who}: ${t.parent.text.replace(/\s+/g, ' ')}`);
+      else lines.push(`Replying to ${who} (parent ${t.parentStatus}: https://x.com/i/status/${t.inReplyTo.id})`);
+    }
+    if (t.quoted) lines.push(`Quoting @${t.quoted.author.handle}: ${t.quoted.text.replace(/\s+/g, ' ')}`);
+    return lines;
   }
 
   function toMarkdown() {
@@ -599,6 +836,8 @@
     md += `## Posts\n\n`;
     for (const [i, t] of bundle.tweets.entries()) {
       md += `### ${i + 1}. @${t.author.handle} (${t.createdAt ? t.createdAt.slice(0, 10) : 'unknown date'})\n\n`;
+      for (const line of contextLines(t)) md += `> ${line}\n`;
+      if (t.inReplyTo || t.quoted) md += '\n';
       md += `${t.text}\n\n`;
       md += `Likes ${fmtInt(t.metrics.likes)} | Reposts ${fmtInt(t.metrics.retweets)} | Replies ${fmtInt(t.metrics.replies)} | Views ${fmtInt(t.metrics.views)}\n\n`;
       md += `[View post](${t.url})\n\n---\n\n`;
@@ -607,13 +846,15 @@
   }
 
   function toPlainText() {
-    const tweets = matchedTweets();
+    const tweets = exportTweets();
     const sep = '='.repeat(60);
     let txt = `X POSTS EXPORT (${pageLabel()})\n${sep}\n`;
     txt += `Scraped: ${new Date().toISOString()}\nMatching posts: ${tweets.length} (of ${store.size} captured)\n\n`;
     tweets.forEach((t, i) => {
       txt += `[${i + 1}] @${t.author.handle}${t.createdAt ? ' | ' + t.createdAt : ''}\n`;
-      txt += `${'-'.repeat(60)}\n${t.text}\n\n`;
+      txt += `${'-'.repeat(60)}\n`;
+      for (const line of contextLines(t)) txt += `${line}\n`;
+      txt += `${t.text}\n\n`;
       txt += `Likes: ${fmtInt(t.metrics.likes)} | Reposts: ${fmtInt(t.metrics.retweets)} | Replies: ${fmtInt(t.metrics.replies)} | Views: ${fmtInt(t.metrics.views)}\n`;
       txt += `URL: ${t.url}\n${sep}\n\n`;
     });
@@ -637,6 +878,7 @@
     tr:hover { background: #f5f8fa; }
     .stats { background: #f5f8fa; padding: 16px 20px; border-radius: 10px; }
     .tweet-text { max-width: 480px; white-space: pre-wrap; }
+    .ctx { color: #536471; font-size: 12px; border-left: 3px solid #cfd9de; padding-left: 8px; margin-bottom: 6px; }
     a { color: #1d9bf0; text-decoration: none; }
     a:hover { text-decoration: underline; }
     td.num { text-align: right; font-variant-numeric: tabular-nums; }
@@ -662,7 +904,7 @@
         <td>${i + 1}</td>
         <td>${t.createdAt ? t.createdAt.slice(0, 10) : ''}</td>
         <td>@${escapeHtml(t.author.handle)}</td>
-        <td class="tweet-text">${escapeHtml(t.text)}</td>
+        <td class="tweet-text">${contextLines(t).map((line) => `<div class="ctx">${escapeHtml(line)}</div>`).join('')}${escapeHtml(t.text)}</td>
         <td class="num">${fmtInt(t.metrics.likes)}</td>
         <td class="num">${fmtInt(t.metrics.retweets)}</td>
         <td class="num">${fmtInt(t.metrics.replies)}</td>
@@ -688,6 +930,13 @@
     text: { build: toPlainText, ext: 'txt', mime: 'text/plain' },
     html: { build: toHTML, ext: 'html', mime: 'text/html' }
   };
+
+  /** The export as a string, for the console API. */
+  function buildAs(format) {
+    const exporter = EXPORTERS[format];
+    if (!exporter) throw new Error(`Unknown export format "${format}". Use one of: ${Object.keys(EXPORTERS).join(', ')}.`);
+    return exporter.build();
+  }
 
   function exportAs(format) {
     const exporter = EXPORTERS[format];
@@ -813,6 +1062,10 @@
     #${PANEL_ID} .xat-exports .xat-btn { padding: 7px 0; font-size: 11px; background: #192734; border: 1px solid #38444d; }
     #${PANEL_ID} .xat-copyrow { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 8px; }
     #${PANEL_ID} .xat-copyrow .xat-btn { background: #192734; border: 1px solid #38444d; font-size: 12px; }
+    #${PANEL_ID} .xat-parentrow { display: grid; gap: 6px; margin-bottom: 8px; }
+    #${PANEL_ID} .xat-parentrow span { color: #8899a6; font-size: 11.5px; }
+    #${PANEL_ID} .xat-parentrow .xat-btn { background: #192734; border: 1px solid #38444d; font-size: 12px; }
+    #${PANEL_ID} .xat-btn:focus-visible { outline: 2px solid #1d9bf0; outline-offset: 2px; }
 
     #${PANEL_ID} .xat-preview {
       background: #192734; border-radius: 10px; padding: 8px 10px; margin-bottom: 8px;
@@ -961,6 +1214,10 @@
           <button class="xat-btn" id="xat-copyjson">📋 Copy JSON</button>
           <button class="xat-btn" id="xat-copytext">📋 Copy clear text</button>
         </div>
+        <div class="xat-parentrow">
+          <span id="xat-parentinfo">No replies captured yet.</span>
+          <button class="xat-btn" id="xat-parents" disabled title="Open each missing parent post in this tab, read it, then come back">⤴ Fetch missing parents</button>
+        </div>
       </div>
     </details>
 
@@ -1000,7 +1257,8 @@
       minlikes: $('xat-minlikes'), minrts: $('xat-minrts'), minviews: $('xat-minviews'), days: $('xat-days'),
       media: $('xat-media'), lang: $('xat-lang'),
       nort: $('xat-nort'), noreply: $('xat-noreply'), noquote: $('xat-noquote'), nopin: $('xat-nopin'),
-      preview: $('xat-preview'), log: $('xat-log')
+      preview: $('xat-preview'), log: $('xat-log'),
+      parentInfo: $('xat-parentinfo'), parents: $('xat-parents')
     };
 
     els.page.textContent = '/' + pageLabel();
@@ -1015,6 +1273,10 @@
     $('xat-close').addEventListener('click', destroy);
     $('xat-copyjson').addEventListener('click', () => copyAs('json'));
     $('xat-copytext').addEventListener('click', () => copyAs('text'));
+    els.parents.addEventListener('click', () => {
+      if (state.resolving) cancelResolve();
+      else resolveParents();
+    });
     panel.querySelectorAll('[data-export]').forEach((btn) =>
       btn.addEventListener('click', () => exportAs(btn.dataset.export)));
 
@@ -1120,6 +1382,8 @@
     els.pause.disabled = !running && !paused;
     els.pause.textContent = paused ? '▶ Resume' : '⏸ Pause';
     els.stop.disabled = !running && !paused;
+    if (state.resolving) els.start.disabled = true;
+    updateParentInfo();
   }
 
   function updateStats() {
@@ -1130,6 +1394,27 @@
     els.scrolls.textContent = fmtInt(state.scrolls);
     const target = config.targetCount;
     els.bar.style.width = target > 0 ? Math.min(100, (matched / target) * 100) + '%' : (store.size > 0 ? '100%' : '0%');
+    updateParentInfo();
+  }
+
+  function updateParentInfo() {
+    if (!els.parentInfo) return;
+    const c = parentCounts(allTweets().filter(matchesFilters));
+    const busy = state.status === 'running' || state.status === 'paused';
+    if (state.resolving) {
+      els.parentInfo.textContent = `Fetching parents: ${c.missing} left. Capture of this page is paused.`;
+      els.parents.textContent = '⏹ Stop fetching';
+      els.parents.disabled = false;
+      return;
+    }
+    els.parents.textContent = '⤴ Fetch missing parents';
+    if (c.replies === 0) {
+      els.parentInfo.textContent = 'No replies among the matching posts.';
+    } else {
+      const extra = c.unavailable ? `, ${c.unavailable} unavailable` : '';
+      els.parentInfo.textContent = `Replies: ${c.replies}. Parent captured for ${c.captured}, missing ${c.missing}${extra}.`;
+    }
+    els.parents.disabled = busy || c.missing === 0;
   }
 
   function previewLatest() {
@@ -1158,10 +1443,12 @@
 
   async function start() {
     if (state.status === 'running' || state.status === 'paused') return;
+    if (state.resolving) { log('Fetching parents is in progress. Stop it first, then start a run.'); return; }
     readConfigFromUI();
     saveConfig();
     state.scrolls = 0;
     state.stalls = 0;
+    state.retries = 0;
     state.startedAt = Date.now();
     state.elapsedBefore = 0;
     state.lastChangeCount = store.size;
@@ -1195,17 +1482,178 @@
       domSweep();
 
       if (store.size === state.lastChangeCount) {
+        // A rate-limited timeline shows a Retry button instead of more posts,
+        // which would otherwise look like the end of the results.
+        if (state.retries < MAX_RETRY_CLICKS && clickRetryIfPresent()) {
+          state.retries++;
+          log(`X showed a Retry button (attempt ${state.retries}/${MAX_RETRY_CLICKS}). Clicked it; waiting before the next scroll.`);
+          await sleep(config.scrollDelay * 3);
+          continue;
+        }
         state.stalls++;
         if (state.stalls >= config.stallLimit) {
+          if (state.retries >= MAX_RETRY_CLICKS) {
+            finishRun(`Stopped: X kept refusing to load more after ${MAX_RETRY_CLICKS} retries (rate limited). Wait a few minutes, then press Start to continue.`);
+            break;
+          }
           finishRun(`End of timeline: nothing new after ${config.stallLimit} scrolls (${matchedTweets().length} matching posts).`);
           break;
         }
       } else {
         state.stalls = 0;
+        state.retries = 0;
         state.lastChangeCount = store.size;
       }
       updateStats();
     }
+  }
+
+  const MAX_RETRY_CLICKS = 5;
+
+  /** Click X's "Retry" / "Try again" button on the page (never one in the panel). */
+  function clickRetryIfPresent() {
+    const btn = Array.from(document.querySelectorAll('button, [role="button"]'))
+      .find((b) => !(panel && panel.contains(b)) &&
+        /^(retry|try again)$/i.test((b.innerText || b.textContent || '').trim()));
+    if (!btn) return false;
+    btn.click();
+    return true;
+  }
+
+  // ==========================================
+  // PARENT RESOLUTION
+  // ==========================================
+  // Search results carry a reply's parent only as an id. To get the post
+  // itself the toolbox opens it the way a click would: an in-app route
+  // change, which makes the page request TweetDetail, which the interceptor
+  // reads. No request is made by hand, so nothing needs signing.
+
+  let resolveToken = 0;
+
+  /** Replies among the matching posts whose parent is not captured, one entry per parent. */
+  function missingParents() {
+    const byParent = new Map();
+    for (const t of matchedTweets()) {
+      if (!t.inReplyTo || lookup(t.inReplyTo.id) || unavailable.has(t.inReplyTo.id)) continue;
+      const entry = byParent.get(t.inReplyTo.id) || {
+        parentId: t.inReplyTo.id,
+        parentHandle: t.inReplyTo.handle,
+        parentUrl: `https://x.com/${t.inReplyTo.handle || 'i'}/status/${t.inReplyTo.id}`,
+        replyIds: []
+      };
+      entry.replyIds.push(t.id);
+      byParent.set(t.inReplyTo.id, entry);
+    }
+    return Array.from(byParent.values());
+  }
+
+  /** Change the route inside X's single-page app, as clicking a link does. */
+  function spaNavigate(path) {
+    history.pushState({}, '', path);
+    window.dispatchEvent(new PopStateEvent('popstate', { state: {} }));
+  }
+
+  async function waitFor(check, timeoutMs, token) {
+    const until = Date.now() + timeoutMs;
+    while (Date.now() < until) {
+      if (token !== resolveToken || state.destroyed) return false;
+      if (check()) return true;
+      await sleep(250);
+    }
+    return check();
+  }
+
+  /**
+   * Visit every missing parent post in this tab and read it from X's own
+   * TweetDetail response, then return to the page the run started on.
+   *
+   * @param {object} [opts]
+   * @param {number} [opts.delay]    ms to wait between posts (default: the scroll delay, at least 2500)
+   * @param {number} [opts.timeout]  ms to wait for each post (default 15000)
+   * @param {number} [opts.limit]    visit at most this many parents (default: all)
+   * @returns {Promise<{resolved: number, unavailable: number, failed: string[], remaining: number}>}
+   */
+  async function resolveParents(opts = {}) {
+    const result = { resolved: 0, unavailable: 0, failed: [], remaining: 0 };
+    if (state.status === 'running' || state.status === 'paused') {
+      log('Stop the scroll run first, then fetch parents.');
+      result.remaining = missingParents().length;
+      return result;
+    }
+    if (state.resolving) { log('Already fetching parents.'); return result; }
+
+    const delay = Number.isFinite(opts.delay) ? opts.delay : Math.max(config.scrollDelay, 2500);
+    const timeout = Number.isFinite(opts.timeout) ? opts.timeout : 15000;
+    const limit = Number.isFinite(opts.limit) && opts.limit > 0 ? opts.limit : Infinity;
+    const queue = missingParents().slice(0, limit);
+    if (queue.length === 0) {
+      log('Every matching reply already has its parent.');
+      return result;
+    }
+
+    const home = location.pathname + location.search;
+    const token = ++resolveToken;
+    let silentInARow = 0;
+    state.resolving = true;
+    setStatus(state.status);
+    log(`Fetching ${queue.length} parent post${queue.length === 1 ? '' : 's'}, one every ${Math.round(delay / 1000)}s.`);
+
+    try {
+      for (const item of queue) {
+        if (token !== resolveToken || state.destroyed) break;
+        if (lookup(item.parentId) || unavailable.has(item.parentId)) {
+          if (lookup(item.parentId)) result.resolved++;
+          continue;
+        }
+        state.lastDetailFor = '';
+        spaNavigate(`/${item.parentHandle || 'i'}/status/${item.parentId}`);
+        const answered = await waitFor(
+          () => !!lookup(item.parentId) || unavailable.has(item.parentId),
+          timeout,
+          token
+        );
+        if (token !== resolveToken || state.destroyed) break;
+
+        if (lookup(item.parentId)) {
+          result.resolved++;
+          silentInARow = 0;
+        } else if (unavailable.has(item.parentId)) {
+          result.unavailable++;
+          silentInARow = 0;
+        } else {
+          result.failed.push(item.parentId);
+          // No TweetDetail at all means the route change did not load the post.
+          silentInARow = state.lastDetailFor ? 0 : silentInARow + 1;
+          if (!answered && state.rateLimitedAt > Date.now() - timeout) {
+            log('X is rate limiting post pages. Stopped; wait a few minutes and press Fetch again.');
+            break;
+          }
+          if (silentInARow >= 2) {
+            log('X did not load posts through in-page navigation. Stopped. The list is in XActionsToolbox.missingParents().');
+            break;
+          }
+        }
+        updateParentInfo();
+        await sleep(delay + Math.floor(Math.random() * 600));
+      }
+    } finally {
+      state.resolving = false;
+      if (!state.destroyed) {
+        spaNavigate(home);
+        setStatus(state.status);
+        updateStats();
+      }
+    }
+
+    result.remaining = missingParents().length;
+    log(`Parents: ${result.resolved} fetched, ${result.unavailable} unavailable, ${result.failed.length} failed, ${result.remaining} still missing.`);
+    return result;
+  }
+
+  function cancelResolve() {
+    if (!state.resolving) return;
+    resolveToken++;
+    log('Stopping after the current post...');
   }
 
   function togglePause() {
@@ -1238,7 +1686,10 @@
 
   function clearData() {
     runToken++;
+    resolveToken++;
     store.clear();
+    seen.clear();
+    unavailable.clear();
     state.scrolls = 0;
     state.stalls = 0;
     state.elapsedBefore = 0;
@@ -1267,6 +1718,7 @@
   function destroy() {
     state.destroyed = true;
     runToken++;
+    resolveToken++;
     clearInterval(ticker);
     removeInterceptor();
     if (panel) {
@@ -1296,9 +1748,13 @@
   window.XActionsToolbox = {
     version: VERSION,
     tweets: allTweets,
-    matched: matchedTweets,
+    matched: exportTweets,
     export: exportAs,
+    build: buildAs,
     copy: copyAs,
+    missingParents,
+    resolveParents,
+    cancelResolve,
     start,
     pause: togglePause,
     stop,

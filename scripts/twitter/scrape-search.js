@@ -7,8 +7,8 @@
  * @name         scrape-search
  * @description  Scroll the current X search results and export every post (text, author, counts, media) to JSON/CSV.
  * @author       nichxbt
- * @version      1.0.0
- * @date         2026-07-20
+ * @version      1.1.0
+ * @date         2026-11-26
  * @website      https://xactions.app
  *
  * Usage:
@@ -48,6 +48,10 @@
 
     // Hard cap on scroll attempts so the loop can never run forever
     maxScrollAttempts: 400,
+
+    // When X rate-limits the search it shows a Retry button instead of more
+    // posts. Click it up to this many times in a row before giving up.
+    maxRetryClicks: 5,
 
     // Auto-download a CSV file too (JSON always downloads)
     downloadCsv: true
@@ -185,6 +189,15 @@
     }
   };
 
+  // Click X's "Retry" / "Try again" button when a rate-limited search stalls.
+  const clickRetryIfPresent = () => {
+    const btn = Array.from(document.querySelectorAll('button, [role="button"]'))
+      .find((b) => /^(retry|try again)$/i.test((b.innerText || b.textContent || '').trim()));
+    if (!btn) return false;
+    btn.click();
+    return true;
+  };
+
   const csvCell = (value) => `"${String(value == null ? '' : value).replace(/"/g, '""').replace(/\r?\n/g, ' ')}"`;
 
   const toCSV = (posts) => {
@@ -240,6 +253,8 @@
 
   let scrollAttempts = 0;
   let noNewCount = 0;
+  let retryClicks = 0;
+  let endReason = '';
 
   while (!stopped && posts.size < CONFIG.maxPosts && scrollAttempts < CONFIG.maxScrollAttempts) {
     const before = posts.size;
@@ -259,10 +274,25 @@
     if (posts.size > before) {
       log.progress(posts.size, CONFIG.maxPosts);
       noNewCount = 0;
+      retryClicks = 0;
     } else {
+      // A rate-limited search looks exactly like the end of the results
+      // unless the Retry button is pressed, so try that before counting a stall.
+      if (retryClicks < CONFIG.maxRetryClicks && clickRetryIfPresent()) {
+        retryClicks++;
+        log.warning(`X showed a Retry button (attempt ${retryClicks}/${CONFIG.maxRetryClicks}). Clicked it, waiting...`);
+        await sleep(CONFIG.scrollDelay * 3);
+        continue;
+      }
       noNewCount++;
       if (noNewCount >= CONFIG.noNewPostsThreshold) {
-        log.warning('No new posts after several scrolls. Reached the end of the results.');
+        if (retryClicks >= CONFIG.maxRetryClicks) {
+          endReason = 'rate-limited';
+          log.warning(`X kept refusing to load more after ${CONFIG.maxRetryClicks} retries (rate limited). Exporting what was collected. Wait a few minutes, then search again with until: set to the date of the oldest post collected.`);
+        } else {
+          endReason = 'end-of-results';
+          log.warning('No new posts after several scrolls. Reached the end of the results.');
+        }
         break;
       }
     }
@@ -304,7 +334,13 @@
 
   const safeQuery = query.replace(/[^a-z0-9]/gi, '_').slice(0, 30) || 'search';
   const stamp = new Date().toISOString().split('T')[0];
-  const result = { query, scrapedAt: new Date().toISOString(), count: list.length, posts: list };
+  // Why the run ended, so a rate-limited export is not mistaken for a complete one.
+  if (!endReason) {
+    if (stopped) endReason = 'stopped';
+    else if (posts.size >= CONFIG.maxPosts) endReason = 'max-posts';
+    else endReason = 'max-scroll-attempts';
+  }
+  const result = { query, scrapedAt: new Date().toISOString(), endReason, count: list.length, posts: list };
 
   if (downloadFile(JSON.stringify(result, null, 2), `search_${safeQuery}_${stamp}.json`, 'application/json')) {
     log.success('JSON downloaded');

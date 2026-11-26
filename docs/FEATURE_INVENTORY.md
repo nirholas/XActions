@@ -675,7 +675,7 @@ bookmarks and DMs need a session.
 | 24 | `update-bio.js` (147 lines) | Update profile bio text | `x.com/settings/profile` |
 | 25 | `update-profile-picture.js` (162 lines) | Helper for updating profile picture | `x.com/USERNAME` |
 | 26 | `scrape-profile-posts.js` (887 lines) | Advanced tweet scraper with filtering, analytics, multi-format export | Any profile page |
-| 27 | `scraper-toolbox.js` (1309 lines) | Interactive scraper control panel: GraphQL capture (exact counts, full long-post text), start/pause/stop, live filters, user exclusions, 5 export formats + clipboard | Any timeline (profile, search, list, likes, bookmarks, home) |
+| 27 | `scraper-toolbox.js` (1765 lines) | Interactive scraper control panel: GraphQL capture (exact counts, full long-post text, follower counts), reply-to-parent linking with in-page parent fetching, quoted-post context, Retry on rate limits, start/pause/stop, live filters, user exclusions, 5 export formats + clipboard | Any timeline (profile, search, list, likes, bookmarks, home) |
 
 ### 8.2 Scripts that MIRROR `browser/` features (shared as standalone versions)
 
