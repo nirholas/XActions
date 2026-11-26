@@ -1,8 +1,13 @@
 # XActions for agents
 
-X/Twitter automation with no X API key: a 59-command CLI, a Node library, 160
+X/Twitter automation with no X API key: a 60-command CLI, a Node library, 165
 MCP tools, 50 agent skills, 95 browser console scripts, and a web dashboard.
 Apache-2.0, by nichxbt.
+
+It also carries an optional keyed lane: the official X API v2 with the user's
+own developer credentials, every published operation by id (`xactions xapi`,
+`xactions/xapi`, the `xapi` MCP group). Nothing below needs it. See
+[`docs/x-api/README.md`](docs/x-api/README.md).
 
 This file is for the agent, not the human. It answers one question first,
 because getting it wrong costs the whole session: **do you shell out to the
@@ -23,7 +28,7 @@ difference is what each costs you before you have read a single tweet.
 | Writes | reads, plus `engage` and `bulk` | every write tool, with an approval gate |
 | Usable without client configuration | yes, it is just a process | no, the client must be configured first |
 
-The tool list is not small. The server advertises 160 tools, and the
+The tool list is not small. The server advertises 165 tools, and the
 `tools/list` payload it serves is about 60 KB of JSON before you have done any
 work at all. Measure it yourself:
 
@@ -241,12 +246,13 @@ stdio is the default and is what a local client wants. `--http` (or
 remote or hosted client; set `XACTIONS_MCP_TOKEN` and send
 `Authorization: Bearer <token>` to require auth on it.
 
-### Do not load all 160 tools
+### Do not load all 165 tools
 
 The tool list is filterable by group, and a filtered tool is neither advertised
 nor callable, so the schema cost drops with it. Groups: `read`, `write`, `dm`,
 `lists`, `spaces`, `analytics`, `ai`, `grok`, `automation`, `monitoring`,
-`workflows`, `persona`, `orgs`, `graph`, `data`, `x402`, `drafts`, `auth`.
+`workflows`, `persona`, `orgs`, `graph`, `data`, `x402`, `drafts`, `auth`,
+`xapi`.
 
 ```bash
 XACTIONS_MCP_TOOLS=read,analytics node src/mcp/server.js
@@ -300,6 +306,7 @@ published limits. `src/mcp/action-caps.js`.
 | `XACTIONS_MCP_TOKEN` | Bearer token required by the `--http` transport |
 | `XACTIONS_HOME` | Where sessions, checkpoints, the action ledger and the query-ID cache live (default `~/.xactions`) |
 | `XACTIONS_WEBHOOK_SECRET` | Signing key for outbound webhook deliveries |
+| `X_BEARER_TOKEN`, `X_API_KEY`, `X_CLIENT_ID` and the rest of `X_*` | Credentials for the official X API tools (`x_api_*`) only. The full list is in [`docs/x-api/README.md`](docs/x-api/README.md#credentials) |
 
 ### Installing without a config file
 
@@ -337,6 +344,9 @@ is not, that is a bug in this table.
 | Watch an account in real time | `xactions stream start tweet <user>`, or `src/streaming/livePipeline.js` for x.com's own event pipeline |
 | Send an event to another service | `src/notifications/webhook.js`, signed with `XACTIONS_WEBHOOK_SECRET` |
 | Keep a big scrape alive across rate limits | `src/scrapers/twitter/http/accountPool.js` and `checkpoint.js` |
+| Call the official X API with the user's own keys | `xactions xapi call <operationId> key=value`, `XApiClient` in `src/xapi/client.js`, or the `x_api_get` / `x_api_write` MCP tools. See [`docs/x-api/README.md`](docs/x-api/README.md) |
+| Find which official X API endpoint does something | `xactions xapi list <words>` then `xactions xapi describe <operationId>`, or [`docs/x-api/endpoints.md`](docs/x-api/endpoints.md) |
+| Receive X webhooks (CRC check and signature) | `createWebhookHandler` in `src/xapi/webhooks.js`. See [`docs/x-api/guides/webhooks-and-activity.md`](docs/x-api/guides/webhooks-and-activity.md) |
 
 ---
 
@@ -375,6 +385,8 @@ src/cli/          The xactions command. index.js registers most commands,
 src/mcp/          MCP server, tool groups, draft-approval gate
 src/scrapers/     HTTP and browser scrapers
 src/client/       The low-level HTTP Twitter client
+src/xapi/         The official X API v2 client, generated from X's OpenAPI
+                  document by scripts/sync-x-api.mjs (needs developer keys)
 src/automation/   Browser console scripts (paste core.js first)
 src/a2a/          Agent-to-Agent protocol server
 src/*.js          Node modules only: index.js (the library entry), version.js,

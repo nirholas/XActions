@@ -3,7 +3,7 @@
 **Time:** 10 minutes · **Login required:** optional · **You need:** Node.js 18+ and an MCP client
 
 MCP (Model Context Protocol) is how AI assistants call external tools. This
-tutorial connects the XActions MCP server's 160 tools to Claude Desktop, Cursor,
+tutorial connects the XActions MCP server's 165 tools to Claude Desktop, Cursor,
 or Windsurf, so
 you can ask for a competitor analysis in English and have the assistant actually
 go and get the data.
@@ -27,7 +27,7 @@ You should see, on stderr:
 💻 XActions MCP Server: Local mode (free)
    Using Puppeteer for browser automation
 
-⚡ XActions MCP Server v3.5.0 — 160 tools
+⚡ XActions MCP Server v3.5.0 — 165 tools
    The free, open-source Twitter/X MCP server
    https://github.com/nirholas/XActions
 
@@ -57,7 +57,7 @@ node examples/08-mcp-tool-call.js
 
 ```
 Connected to xactions-mcp v3.5.0
-Server offers 160 tools.
+Server offers 165 tools.
 
 Calling x_get_profile — Get profile information for a user including bio, follower count, etc. Supports Twitter, Bluesky, Threads, and Mastodon.
 
@@ -129,7 +129,7 @@ claude mcp add xactions -- npx -y xactions-mcp
 
 ## Step 3 — Add a session
 
-Without a session the MCP server still starts and still offers all 160 tools. The
+Without a session the MCP server still starts and still offers all 165 tools. The
 guest-tier ones work; the rest report that they need a login. To unlock
 everything, put your cookies in the `env` block:
 
@@ -187,7 +187,7 @@ The assistant chains tools on its own: `x_get_profile` to resolve the account,
 
 ## Step 5 — Know what it can do
 
-The MCP server's 160 tools group roughly like this:
+The MCP server's 165 tools group roughly like this:
 
 | Group | Examples | Session |
 |-------|----------|:-------:|

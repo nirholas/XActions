@@ -103,7 +103,7 @@ Set them in the `env` block of your AI client's MCP configuration, not in a
 }
 ```
 
-Without them the server still starts and still serves all 160 tools. The
+Without them the server still starts and still serves all 165 tools. The
 guest-tier ones (profiles, public timelines) work and the rest report that they
 need a session.
 
@@ -200,7 +200,8 @@ scripts.
 |----------|---------|
 | `GROQ_API_KEY`, `NVIDIA_API_KEY`, `OPENROUTER_API_KEY`, `OPENROUTER_API_KEYS`, `CEREBRAS_API_KEY`, `GEMINI_API_KEY`, `MISTRAL_API_KEY` | More capacity for the AI features. XActions uses free LLMs only; each of these is a provider's free tier and adds a lane. None is required: three keyless lanes answer without any. Images need `OPENROUTER_API_KEY` or `NVIDIA_API_KEY`. See [Free LLM lanes](ask.md#free-llm-lanes). |
 | `XACTIONS_LLM` | `off` turns every LLM call off; features fall back to rule-based output. |
-| `TWITTER_CLIENT_ID` / `TWITTER_CLIENT_SECRET` | OAuth 2.0 login in the dashboard. |
+| `TWITTER_CLIENT_ID` / `TWITTER_CLIENT_SECRET` | OAuth 2.0 login in the dashboard. The official X API lane also falls back to these when `X_CLIENT_ID` / `X_CLIENT_SECRET` are unset. |
+| `X_BEARER_TOKEN`, `X_API_KEY` / `X_API_SECRET`, `X_ACCESS_TOKEN` / `X_ACCESS_TOKEN_SECRET`, `X_CLIENT_ID` / `X_CLIENT_SECRET`, `X_OAUTH2_ACCESS_TOKEN` / `X_OAUTH2_REFRESH_TOKEN`, `X_API_BASE_URL` | The optional official X API lane (`xactions xapi`, `xactions/xapi`, the `x_api_*` MCP tools), with your own developer credentials. Each also reads its `TWITTER_*` spelling. See [x-api/README.md](x-api/README.md#credentials). |
 | `STRIPE_*` | Subscription billing. |
 | `X402_*` | Per-request payments on the hosted API. Documented inline in [`.env.example`](../.env.example); verify a setup with `npm run verify:x402`. |
 | `SENTRY_DSN` | Error reporting. |

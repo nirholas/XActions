@@ -27,6 +27,7 @@ here is a build failure rather than a surprise for a reader.
 11. [Transport and sessions (`src/scrapers/twitter/http/`)](#11-transport-and-sessions)
 12. [Delivery: streams, notifications, webhooks](#12-delivery-streams-notifications-webhooks)
 13. [Portability: the X archive, export, migrate](#13-portability-the-x-archive-export-migrate)
+14. [The official X API (`src/xapi/`)](#14-the-official-x-api)
 
 ---
 
@@ -319,7 +320,7 @@ Streamable HTTP on `/mcp` for remote and hosted clients; set
 advertised list by group. A filtered tool is neither advertised nor callable,
 so the schema cost drops with it. Groups: `read`, `write`, `dm`, `lists`,
 `spaces`, `analytics`, `ai`, `grok`, `automation`, `monitoring`, `workflows`,
-`persona`, `graph`, `data`, `x402`, `drafts`, `auth`.
+`persona`, `orgs`, `graph`, `data`, `x402`, `drafts`, `auth`, `xapi`.
 
 **Approval gate.** `XACTIONS_MCP_REQUIRE_APPROVAL=1` turns every write tool
 into a draft. Release or bin drafts with the `x_list_drafts`,
@@ -335,14 +336,14 @@ call that would exceed it is refused before anything reaches X.
 onto Claude Desktop > Settings > Extensions; it prompts for the session cookie
 and tool groups at install time.
 
-### 6.2 Complete MCP Tool List (160 tools)
+### 6.2 Complete MCP Tool List (165 tools)
 
 Grouped by tool group, alphabetical within each group. "Write" marks the tools
 the approval gate holds and the daily caps charge.
 
 | # | Tool | Group | Write | Required args | What it does |
 |---|------|-------|-------|---------------|--------------|
-| 1 | `x_approve_draft` | drafts |  | `id` | Approve a pending draft and execute the stored tool call exactly as it was submitted. Returns the tool result and marks the draft executed; a draft that already ran is refused so nothing is posted twice. |
+| 1 | `x_approve_draft` | drafts |  | `id` | Approve a pending draft and execute the stored tool call exactly as it was submitted. Only offered when approval mode is off (drafts left from an earlier session); with approval mode on, a person approves with `xactions drafts approve <id>`. A draft that already ran is refused so nothing is posted twice. |
 | 2 | `x_discard_draft` | drafts |  | `id` | Delete a draft without executing it. Use this to reject a held write, or to clean up drafts that have already been executed or failed. |
 | 3 | `x_draft_status` | drafts |  | `id` | Show one draft in full: the tool, the arguments it will run with, its current state, and the result or error if it has already been approved. |
 | 4 | `x_list_drafts` | drafts |  | none | List tool calls held as drafts by the approval gate (XACTIONS_MCP_REQUIRE_APPROVAL). Each draft records the tool, its arguments, when it was created, and whether it is still pending, has been executed, or failed. Newest first. |
@@ -358,7 +359,7 @@ the approval gate holds and the daily caps charge.
 | 14 | `x_space_leave` | spaces |  | none | Leave the currently active X Space and get a summary of the session. |
 | 15 | `x_space_status` | spaces |  | none | Get the status of the currently active X Space agent, including duration, transcription count, and recent events. |
 | 16 | `x_space_transcript` | spaces |  | none | Get recent transcriptions from the active X Space session. |
-| 17 | `x_grok_analyze_image` | grok |  | none | Analyze an image using Grok's multimodal vision capabilities. Extract text, describe content, identify objects, or answer questions about images in tweets. |
+| 17 | `x_grok_analyze_image` | grok |  | none | Analyze an image with a free vision model (OpenRouter free tier or NVIDIA; needs OPENROUTER_API_KEY or NVIDIA_API_KEY). Extract text, describe content, identify objects, or answer questions about images in tweets. |
 | 18 | `x_grok_query` | grok |  | `query` | Query Grok AI on X/Twitter. Requires Premium access. |
 | 19 | `x_grok_summarize` | grok |  | `topic` | Use Grok to summarize a topic from X/Twitter posts. |
 | 20 | `x_persona_create` | persona |  | `name`, `preset` | Create a new persona for algorithm building and automated account growth. A persona defines niche, topics, engagement strategy, activity patterns, and LLM voice settings. Use presets for quick setup. |
@@ -366,7 +367,7 @@ the approval gate holds and the daily caps charge.
 | 22 | `x_persona_edit` | persona |  | `personaId` | Edit an existing persona configuration (topics, search terms, target accounts, strategy, activity pattern). |
 | 23 | `x_persona_list` | persona |  | none | List all saved personas with their stats (sessions, follows, likes, comments, last active). |
 | 24 | `x_persona_presets` | persona |  | none | List all available niche presets, engagement strategies, and activity patterns for persona creation. |
-| 25 | `x_persona_run` | persona | yes | `personaId` | Start the 24/7 Algorithm Builder for a persona. Launches headless Puppeteer with LLM-powered engagement (search, like, comment, follow, post). Requires auth token and OPENROUTER_API_KEY for AI comments. |
+| 25 | `x_persona_run` | persona | yes | `personaId` | Start the 24/7 Algorithm Builder for a persona. Launches headless Puppeteer with LLM-powered engagement (search, like, comment, follow, post). Requires an auth token; AI comments use free models. |
 | 26 | `x_persona_status` | persona |  | `personaId` | Get detailed status and lifetime stats for a specific persona. |
 | 27 | `x_graph_analyze` | graph |  | `graphId` | Analyze a built social graph. Returns: mutual connections, bridge accounts (betweenness centrality), clusters (label propagation), influence ranking (PageRank), ghost followers, orbit analysis (inner circle vs periphery). |
 | 28 | `x_graph_build` | graph |  | `username` | Build a social network graph by crawling an account's followers and following. Maps relationships, identifies clusters, bridge accounts, and influence scores. Returns a graph ID for further analysis. |
@@ -376,18 +377,18 @@ the approval gate holds and the daily caps charge.
 | 32 | `x_clear_bookmarks` | write | yes | none | Clear all bookmarks. This cannot be undone. |
 | 33 | `x_create_poll` | write | yes | `question`, `options` | Create a poll tweet with a question, two to four options, and a duration in minutes (default 24 hours). |
 | 34 | `x_delete_tweet` | write | yes | `url` | Permanently delete one of the authenticated account's tweets by its URL. This cannot be undone. |
-| 35 | `x_follow` | write | yes | `username` | Follow an X/Twitter account by username. Requires an authenticated session (XACTIONS_SESSION_COOKIE). |
+| 35 | `x_follow` | write | yes | `username` | Follow an X/Twitter account by username. Requires a saved session (`xactions login` / `xactions connect`, or XACTIONS_SESSION_COOKIE). Returns success only once the profile shows Following. |
 | 36 | `x_like` | write | yes | `url` | Like a tweet by its URL from the authenticated account. Idempotent: liking an already-liked tweet is a no-op. |
 | 37 | `x_mute_user` | write | yes | `username` | Mute an account by username so its posts stop appearing in the authenticated user's timeline and notifications. |
 | 38 | `x_post_thread` | write | yes | `tweets` | Publish a multi-tweet thread from an ordered list of texts. Each entry becomes a reply to the previous one. |
 | 39 | `x_post_tweet` | write | yes | `text` | Publish a new tweet from the authenticated account. Returns the posted tweet URL when X reports success. |
 | 40 | `x_publish_article` | write | yes | `title`, `body` | Publish a long-form article (requires Premium+). |
-| 41 | `x_quote_tweet` | write | yes | `tweetUrl`, `text` | Quote tweet: retweet with your own comment/text added. |
+| 41 | `x_quote_tweet` | write | yes | `tweetUrl`, `text` | Quote tweet — retweet with your own comment/text added. |
 | 42 | `x_reply` | write | yes | `url`, `text` | Reply to a tweet by its URL with the given text. The reply is posted from the authenticated account. |
 | 43 | `x_retweet` | write | yes | `url` | Retweet (repost) a tweet by its URL from the authenticated account, without adding a quote comment. |
 | 44 | `x_schedule_post` | write | yes | `text`, `scheduledAt` | Schedule a tweet for future posting (requires Premium). |
 | 45 | `x_toggle_protected` | write | yes | `enabled` | Toggle protected (private) account mode. |
-| 46 | `x_unfollow` | write | yes | `username` | Unfollow an X/Twitter account by username. Requires an authenticated session (XACTIONS_SESSION_COOKIE). |
+| 46 | `x_unfollow` | write | yes | `username` | Unfollow an X/Twitter account by username. Requires a saved session (`xactions login` / `xactions connect`, or XACTIONS_SESSION_COOKIE). Returns success only once the profile no longer shows Following. |
 | 47 | `x_unfollow_non_followers` | write | yes | `username` | Bulk unfollow accounts that don't follow you back. |
 | 48 | `x_unmute_user` | write | yes | `username` | Unmute a previously muted account by username, restoring its posts to the authenticated user's timeline. |
 | 49 | `x_update_profile` | write | yes | none | Update your X/Twitter profile fields (name, bio, location, website). |
@@ -395,11 +396,11 @@ the approval gate holds and the daily caps charge.
 | 51 | `x_auto_follow` | automation | yes | `source`, `query` | Auto-follow users matching criteria. Specify a source (hashtag, keyword, or target account followers) and optional filters. |
 | 52 | `x_auto_like` | automation | yes | none | Auto-like tweets matching keywords in your feed. |
 | 53 | `x_auto_retweet` | automation | yes | `query` | Auto-retweet tweets matching a search query or from specific accounts. |
-| 54 | `x_bulk_execute` | automation | yes | `usernames`, `action` | Execute bulk follow/unfollow/block/mute from a list of usernames. |
+| 54 | `x_bulk_execute` | automation | yes | `usernames`, `action` | Execute bulk follow/unfollow/mute/DM from a list of usernames. Charged against the daily action caps for the whole list before it runs. |
 | 55 | `x_engage` | automation | yes | none | Sweep a feed and engage every post on it: like, repost, and reply across a profile, a search, or a list. Replies come from your templates or from an LLM given a plain-language brief. Defaults to a dry run; pass dryRun: false to act. Progress is saved per feed, so a second call skips what the first already did. |
 | 56 | `x_follow_engagers` | automation | yes | `username` | Follow people who engage with a specific account (likers, retweeters, repliers). Great for finding active users in a niche. |
-| 57 | `x_smart_unfollow` | automation | yes | `criteria` | Smart unfollow based on criteria: inactive accounts, spam/bot accounts, accounts that never engage with you, or accounts outside your niche. |
-| 58 | `x_unfollow_all` | automation | yes | `confirm` | Mass unfollow everyone you follow. Nuclear option: unfollows ALL accounts. Use with caution. |
+| 57 | `x_smart_unfollow` | automation | yes | `criteria` | Unfollow accounts you follow that match a criteria read from your following list. Supported today: no_bio (accounts with an empty bio). For accounts that do not follow back, use x_unfollow_non_followers. |
+| 58 | `x_unfollow_all` | automation | yes | `confirm` | Mass unfollow everyone you follow. Nuclear option — unfollows ALL accounts. Use with caution. |
 | 59 | `x_brand_monitor` | monitoring |  | `brand` | Monitor brand mentions with sentiment analysis. |
 | 60 | `x_follower_alerts` | monitoring |  | `username` | Set up alerts for follower changes. Get notified when notable accounts follow/unfollow you, when you hit milestones, or when there are unusual changes. |
 | 61 | `x_monitor_account` | monitoring |  | `username` | Start monitoring an account for changes: new tweets, bio updates, follower surges, and profile changes. Get real-time alerts. |
@@ -418,21 +419,21 @@ the approval gate holds and the daily caps charge.
 | 74 | `x_rss_add` | workflows |  | `name`, `url` | Subscribe to an RSS or Atom feed URL so new entries can be turned into tweet drafts by x_rss_check. |
 | 75 | `x_rss_check` | workflows |  | none | Poll the subscribed RSS feeds for entries published since the last check and stage them as tweet drafts. |
 | 76 | `x_rss_drafts` | workflows |  | none | List the tweet drafts generated from RSS feed entries, ready for review, editing, or posting. |
-| 77 | `x_schedule_add` | workflows | yes | `name`, `cron` | Queue a tweet to be posted later at the given ISO timestamp by the local scheduler. Returns the scheduled job id. |
-| 78 | `x_schedule_list` | workflows |  | none | List every tweet queued in the local scheduler with its id, text, scheduled time, and status. |
-| 79 | `x_schedule_remove` | workflows |  | `name` | Cancel a queued tweet in the local scheduler by its job id so it is never posted. |
+| 77 | `x_schedule_add` | workflows | yes | `name`, `cron` | Add a cron job to the local scheduler — a shell/xactions command run on a cron expression (persisted in ~/.xactions/scheduler.json). Returns the registered job name. |
+| 78 | `x_schedule_list` | workflows |  | none | List every job registered in the local scheduler with its name, cron expression, command, enabled flag, and last-run status. |
+| 79 | `x_schedule_remove` | workflows |  | `name` | Remove a job from the local scheduler by its name so it never runs again. |
 | 80 | `x_workflow_actions` | workflows |  | none | List all available actions that can be used in workflow steps (scrapers, transforms, AI, utilities). |
 | 81 | `x_workflow_create` | workflows |  | `name`, `steps` | Create a new automation workflow. Workflows chain multiple actions (scrape, filter, summarize, etc.) into pipelines with triggers and conditions. |
 | 82 | `x_workflow_list` | workflows |  | none | List all saved workflows with their trigger type, step count, and enabled status. |
 | 83 | `x_workflow_run` | workflows | yes | `workflow` | Run a workflow by ID or name. Returns execution results with step-by-step logs. |
-| 84 | `x_analyze_voice` | ai |  | `username` | Analyze a user's writing style/voice from their tweets. Returns tone, vocabulary patterns, emoji usage, avg length, and a voice profile. Requires OPENROUTER_API_KEY for full analysis. |
-| 85 | `x_generate_tweet` | ai |  | `username`, `topic` | Generate a tweet in the style of a user. First analyzes their voice, then generates content matching their tone. Requires OPENROUTER_API_KEY. |
+| 84 | `x_analyze_voice` | ai |  | `username` | Analyze a user's writing style/voice from their tweets. Returns tone, vocabulary patterns, emoji usage, avg length, and a voice profile. |
+| 85 | `x_generate_tweet` | ai |  | `username`, `topic` | Generate a tweet in the style of a user. First analyzes their voice, then generates content matching their tone. Uses free models; no key needed. |
 | 86 | `x_generate_variations` | ai |  | `text` | Generate alternative versions of a tweet. |
 | 87 | `x_optimize_tweet` | ai |  | `text` | AI-optimize a tweet for maximum engagement. |
 | 88 | `x_predict_performance` | ai |  | `text` | Predict how well a tweet will perform (score, strengths, weaknesses). |
-| 89 | `x_rewrite_tweet` | ai |  | `username`, `text` | Rewrite/improve an existing tweet to be more engaging, shorter, add a hook, etc. Uses a voice profile for style matching. Requires OPENROUTER_API_KEY. |
+| 89 | `x_rewrite_tweet` | ai |  | `username`, `text` | Rewrite/improve an existing tweet to be more engaging, shorter, add a hook, etc. Uses a voice profile for style matching. Uses free models; no key needed. |
 | 90 | `x_suggest_hashtags` | ai |  | `text` | Suggest relevant hashtags for a draft tweet based on its topic, current trends, and the account's niche. |
-| 91 | `x_summarize_thread` | ai |  | `url` | AI-powered summarization of a Twitter/X thread. Unrolls the thread and generates a concise summary. Requires OPENROUTER_API_KEY. |
+| 91 | `x_summarize_thread` | ai |  | `url` | AI-powered summarization of a Twitter/X thread. Unrolls the thread and generates a concise summary. Uses free models; no key needed. |
 | 92 | `x_convert_format` | data |  | `data`, `from`, `to` | Convert data between Apify/Phantombuster/CSV formats. |
 | 93 | `x_crm_search` | data |  | `query` | Search CRM contacts by username or display name. |
 | 94 | `x_crm_segment` | data |  | `name` | Group the local CRM into segments by tag, follower count, or engagement level and return each segment's contacts. |
@@ -446,54 +447,67 @@ the approval gate holds and the daily caps charge.
 | 102 | `x_migrate_account` | data | yes | `username`, `platform` | Migrate exported Twitter data to Bluesky or Mastodon. Supports dry-run mode to preview actions without executing. Requires a prior export. |
 | 103 | `x_team_create` | data |  | `name`, `owner` | Create a named team workspace for shared accounts, roles, and audit history across several operators. |
 | 104 | `x_team_members` | data |  | `teamId` | List the members of a team workspace with their roles and when they were added. |
-| 105 | `x_account_report` | analytics |  | `username` | Full account report for one or more public X accounts, computed from public data with no login: engagement rate, median interactions per post, posting cadence, content mix (original vs reply vs repost, media and link share), best hour and weekday by median engagement, top posts, top hashtags, and plain-language observations. Pass an array of usernames to get a side-by-side comparison as well. Use this instead of fetching a profile and a timeline separately when the question is about how an account is performing. |
-| 106 | `x_analyze_sentiment` | analytics |  | none | Analyze the sentiment of text. Returns a score (-1 to 1), label (positive/neutral/negative), confidence, and key sentiment-bearing words. Uses a built-in rule-based analyzer by default (zero dependencies), or optionally an LLM via OpenRouter for nuanced analysis. |
-| 107 | `x_audience_insights` | analytics |  | `username` | Get detailed audience demographics and interests for an account. Analyzes followers to determine top locations, active hours, interests, and audience quality. |
-| 108 | `x_audience_overlap` | analytics |  | `username1`, `username2` | Analyze follower overlap between two Twitter accounts. |
-| 109 | `x_best_time_to_post` | analytics |  | `username` | Analyze a user's tweet history to determine the best times and days to post for maximum engagement. |
-| 110 | `x_check_premium` | analytics |  | none | Check premium subscription status and available features. |
-| 111 | `x_compare_accounts` | analytics |  | `usernames`, `metric` | Compare multiple accounts on a metric over time. |
-| 112 | `x_competitor_analysis` | analytics |  | `handles` | Compare metrics across competitor accounts. |
-| 113 | `x_creator_analytics` | analytics |  | none | Get creator dashboard analytics including revenue and subscribers. |
-| 114 | `x_crypto_analyze` | analytics |  | `query` | Analyze crypto/token sentiment on X. Scrapes tweets about a coin/token and returns sentiment score, volume, key influencer opinions, and price correlation. |
-| 115 | `x_detect_bots` | analytics |  | `username` | Detect bot/spam accounts using heuristic and AI analysis. Checks posting patterns, bio, followers ratio, account age, and tweet content. |
-| 116 | `x_detect_unfollowers` | analytics |  | `username` | Get current followers for comparison. Run periodically to detect unfollowers. |
-| 117 | `x_engagement_report` | analytics |  | `username` | Generate a comprehensive engagement analytics report. Includes engagement rate, best performing content, optimal posting times, and growth trends. |
-| 118 | `x_evergreen_analyze` | analytics |  | `username` | Find top-performing evergreen tweets that can be recycled. |
-| 119 | `x_find_influencers` | analytics |  | `niche` | Find influencers in a specific niche or topic. Returns accounts ranked by engagement rate, niche relevance, and audience quality. |
-| 120 | `x_get_analytics` | analytics |  | none | Fetch the authenticated account's analytics dashboard: impressions, engagements, profile visits, and follower change for the period. |
-| 121 | `x_get_post_analytics` | analytics |  | `url` | Get detailed analytics for a specific post. |
-| 122 | `x_growth_rate` | analytics |  | `username` | Calculate follower growth rate for an account over N days. |
-| 123 | `x_history_get` | analytics |  | `username` | Get account history / time-series snapshots for a username. Returns followers, following, tweet count over time. |
-| 124 | `x_history_snapshot` | analytics |  | `username` | Take a snapshot of account metrics right now and save to history. |
-| 125 | `x_reputation_report` | analytics |  | `username` | Generate a reputation report for a monitored username. Shows sentiment distribution, top positive/negative mentions, timeline data, keyword frequency, and alerts. Requires an active monitor for the target. |
-| 126 | `x_smart_target` | analytics |  | `username` | Find ideal accounts to engage with for growth. Uses AI to analyze your niche and find users most likely to follow back or engage. |
-| 127 | `x_action_budget` | read |  | none | Report the remaining daily action budget for the active account: for each action class (post, reply, like, repost, follow, unfollow, dm, block, mute, delete) the cap, how many actions were used in the rolling 24 hour window, how many remain, and when the next slot frees. Caps persist across restarts and are set by XACTIONS_ACTION_CAPS or ~/.xactions/action-caps.json. |
-| 128 | `x_ask` | read |  | `question` | Ask how to do something with XActions and get an answer grounded in the toolkit's own documentation, skills, browser scripts and repository, with sources and the exact runnable action (browser script, CLI command or MCP tool). Use this before guessing at a workflow, inventing a script name, or telling a user something is unsupported: it is the toolkit describing itself. Needs no API key. |
-| 129 | `x_download_video` | read |  | `tweetUrl` | Download the video attached to a tweet and return the local file path plus the resolved media URL and metadata. |
-| 130 | `x_get_blocked` | read |  | none | List the accounts the authenticated user has blocked, with usernames and display names. |
-| 131 | `x_get_bookmarks` | read |  | none | List the authenticated account's saved bookmarks, newest first, up to the requested limit. |
-| 132 | `x_get_explore` | read |  | none | Scrape the Explore feed for trending content. |
-| 133 | `x_get_followers` | read |  | `username` | Scrape followers for an account. Supports Twitter, Bluesky, Mastodon, and Threads. |
-| 134 | `x_get_following` | read |  | `username` | Scrape accounts that a user is following. Supports Twitter, Bluesky, Mastodon, and Threads. |
-| 135 | `x_get_hashtag` | read |  | `hashtag` | Scrape tweets containing a specific hashtag. More focused than general search: returns trending metrics and top contributors. |
-| 136 | `x_get_likers` | read |  | `tweetUrl` | Get the list of users who liked a specific tweet. Useful for finding engaged audiences. |
-| 137 | `x_get_likes` | read |  | `username` | Scrape tweets that a user has liked. Shows what content a user engages with. |
-| 138 | `x_get_media` | read |  | `username` | Scrape all media (images, videos, GIFs) from a user profile. Returns direct download URLs. |
-| 139 | `x_get_mentions` | read |  | `username` | Scrape tweets that mention a specific user. Includes replies, quote tweets, and direct mentions. |
-| 140 | `x_get_non_followers` | read |  | `username` | Get accounts you follow that do not follow you back. |
-| 141 | `x_get_notifications` | read |  | none | Scrape your recent notifications with type classification. |
-| 142 | `x_get_profile` | read |  | `username` | Get profile information for a user including bio, follower count, etc. Supports Twitter, Bluesky, Threads, and Mastodon. |
-| 143 | `x_get_quote_tweets` | read |  | `tweetUrl` | Get all quote tweets of a specific tweet. Shows how people are commenting on/sharing a tweet. |
-| 144 | `x_get_recommendations` | read |  | none | Get "Who to follow" recommendations based on a user or topic. Useful for discovering accounts in a niche. |
-| 145 | `x_get_replies` | read |  | `tweetUrl` | Scrape replies to a specific tweet. Returns reply text, author, timestamp, likes, and nested reply chains. |
-| 146 | `x_get_retweeters` | read |  | `tweetUrl` | Get the list of users who retweeted a specific tweet. |
-| 147 | `x_get_settings` | read |  | none | Get a snapshot of your account settings and privacy configuration. |
-| 148 | `x_get_thread` | read |  | `url` | Unroll and scrape an entire Twitter/X thread given the URL of the first tweet. |
-| 149 | `x_get_trends` | read |  | none | Get current trending topics on X/Twitter. |
-| 150 | `x_get_tweets` | read |  | `username` | Scrape recent tweets/posts from a user profile. Supports Twitter, Bluesky, Mastodon, and Threads. |
-| 151 | `x_list_platforms` | read |  | none | List all supported social media platforms (Twitter, Bluesky, Mastodon, Threads) and their capabilities. |
-| 152 | `x_search_tweets` | read |  | `query` | Search for tweets/posts matching a query. Supports Twitter, Bluesky, Mastodon, and Threads. |
+| 105 | `x_account_brief` | analytics |  | `usernames` | Research a list of public X accounts before posting about or tagging them, with no login. For each account: its own account statistics worded as things you could say (followers, best post versus typical post, views), the figures it has posted about itself (money, percentages, multiples, counts like "1.2M transactions") quoted in context with a link to the source post, its posts about a topic, its recent posts, and who it tags, reposts and links to. Across the list: a ready-to-paste tag line, and accounts that several listed accounts mention but that are not on the list yet. Returns Markdown by default, suited to drafting posts from; pass format "json" for the structured data. Cached for six hours, so calling again with one more account only fetches the new one. |
+| 106 | `x_account_report` | analytics |  | `username` | Full account report for one or more public X accounts, computed from public data with no login: engagement rate, median interactions per post, posting cadence, content mix (original vs reply vs repost, media and link share), best hour and weekday by median engagement, top posts, top hashtags, and plain-language observations. Pass an array of usernames to get a side-by-side comparison as well. Use this instead of fetching a profile and a timeline separately when the question is about how an account is performing. |
+| 107 | `x_analyze_sentiment` | analytics |  | none | Analyze the sentiment of text. Returns a score (-1 to 1), label (positive/neutral/negative), confidence, and key sentiment-bearing words. Uses a built-in rule-based analyzer by default (zero dependencies), or optionally an LLM via OpenRouter for nuanced analysis. |
+| 108 | `x_audience_insights` | analytics |  | `username` | Get detailed audience demographics and interests for an account. Analyzes followers to determine top locations, active hours, interests, and audience quality. |
+| 109 | `x_audience_overlap` | analytics |  | `username1`, `username2` | Analyze follower overlap between two Twitter accounts. |
+| 110 | `x_best_time_to_post` | analytics |  | `username` | Analyze a user's tweet history to determine the best times and days to post for maximum engagement. |
+| 111 | `x_check_premium` | analytics |  | none | Check premium subscription status and available features. |
+| 112 | `x_compare_accounts` | analytics |  | `usernames`, `metric` | Compare multiple accounts on a metric over time. |
+| 113 | `x_competitor_analysis` | analytics |  | `handles` | Compare metrics across competitor accounts. |
+| 114 | `x_creator_analytics` | analytics |  | none | Get creator dashboard analytics including revenue and subscribers. |
+| 115 | `x_crypto_analyze` | analytics |  | `query` | Analyze crypto/token sentiment on X. Scrapes tweets about a coin/token and returns sentiment score, volume, key influencer opinions, and price correlation. |
+| 116 | `x_detect_bots` | analytics |  | `username` | Detect bot/spam accounts using heuristic and AI analysis. Checks posting patterns, bio, followers ratio, account age, and tweet content. |
+| 117 | `x_detect_unfollowers` | analytics |  | `username` | Get current followers for comparison. Run periodically to detect unfollowers. |
+| 118 | `x_engagement_report` | analytics |  | `username` | Generate a comprehensive engagement analytics report. Includes engagement rate, best performing content, optimal posting times, and growth trends. |
+| 119 | `x_evergreen_analyze` | analytics |  | `username` | Find top-performing evergreen tweets that can be recycled. |
+| 120 | `x_find_influencers` | analytics |  | `niche` | Find influencers in a specific niche or topic. Returns accounts ranked by engagement rate, niche relevance, and audience quality. |
+| 121 | `x_get_analytics` | analytics |  | none | Fetch the authenticated account's analytics dashboard: impressions, engagements, profile visits, and follower change for the period. |
+| 122 | `x_get_post_analytics` | analytics |  | `url` | Get detailed analytics for a specific post. |
+| 123 | `x_growth_rate` | analytics |  | `username` | Calculate follower growth rate for an account over N days. |
+| 124 | `x_history_get` | analytics |  | `username` | Get account history / time-series snapshots for a username. Returns followers, following, tweet count over time. |
+| 125 | `x_history_snapshot` | analytics |  | `username` | Take a snapshot of account metrics right now and save to history. |
+| 126 | `x_reputation_report` | analytics |  | `username` | Generate a reputation report for a monitored username. Shows sentiment distribution, top positive/negative mentions, timeline data, keyword frequency, and alerts. Requires an active monitor for the target. |
+| 127 | `x_smart_target` | analytics |  | `username` | Find ideal accounts to engage with for growth. Uses AI to analyze your niche and find users most likely to follow back or engage. |
+| 128 | `x_action_budget` | read |  | none | Report the remaining daily action budget for the active account: for each action class (post, reply, like, repost, follow, unfollow, dm, block, mute, delete) the cap, how many actions were used in the rolling 24 hour window, how many remain, and when the next slot frees. Caps persist across restarts and are set by XACTIONS_ACTION_CAPS or ~/.xactions/action-caps.json. |
+| 129 | `x_ask` | read |  | `question` | Ask how to do something with XActions and get an answer grounded in the toolkit's own documentation, skills, browser scripts and repository, with sources and the exact runnable action (browser script, CLI command or MCP tool). Use this before guessing at a workflow, inventing a script name, or telling a user something is unsupported: it is the toolkit describing itself. Needs no API key. |
+| 130 | `x_download_media` | read |  | `target` | Download every photo, video and GIF from a profile, a single tweet, a search or a community to local files. Handles the media tab, avatars and banners at original resolution, filename templates, and an archive file so re-runs only fetch what is new. Use this to build or sync a local media archive; use x_get_media to only list media without saving it. |
+| 131 | `x_download_video` | read |  | `tweetUrl` | Download the video attached to a tweet and return the local file path plus the resolved media URL and metadata. |
+| 132 | `x_get_article` | read |  | `url` | Read the full text of an X long-form Article (x.com/i/article/<id>) with no browser: title, the whole body as plain text, preview and summary text, cover image, author and engagement counts. Accepts the article URL, the status URL of the post that carries it, or its numeric id. |
+| 133 | `x_get_blocked` | read |  | none | List the accounts the authenticated user has blocked, with usernames and display names. |
+| 134 | `x_get_bookmarks` | read |  | none | List the authenticated account's saved bookmarks, newest first, up to the requested limit. |
+| 135 | `x_get_explore` | read |  | none | Scrape the Explore feed for trending content. |
+| 136 | `x_get_followers` | read |  | `username` | Scrape followers for an account. Supports Twitter, Bluesky, Mastodon, and Threads. |
+| 137 | `x_get_following` | read |  | `username` | Scrape accounts that a user is following. Supports Twitter, Bluesky, Mastodon, and Threads. |
+| 138 | `x_get_hashtag` | read |  | `hashtag` | Scrape tweets containing a specific hashtag. More focused than general search — returns trending metrics and top contributors. |
+| 139 | `x_get_home_timeline` | read |  | none | Read posts from your home timeline on X/Twitter. Supports For You or Following. |
+| 140 | `x_get_likers` | read |  | `tweetUrl` | Get the list of users who liked a specific tweet. Useful for finding engaged audiences. |
+| 141 | `x_get_likes` | read |  | `username` | Scrape tweets that a user has liked. Shows what content a user engages with. |
+| 142 | `x_get_media` | read |  | `username` | Scrape all media (images, videos, GIFs) from a user profile. Returns direct download URLs. |
+| 143 | `x_get_mentions` | read |  | `username` | Scrape tweets that mention a specific user. Includes replies, quote tweets, and direct mentions. |
+| 144 | `x_get_non_followers` | read |  | `username` | Get accounts you follow that do not follow you back. |
+| 145 | `x_get_notifications` | read |  | none | Scrape your recent notifications with type classification. |
+| 146 | `x_get_profile` | read |  | `username` | Get profile information for a user including bio, follower count, etc. Supports Twitter, Bluesky, Threads, and Mastodon. |
+| 147 | `x_get_quote_tweets` | read |  | `tweetUrl` | Get all quote tweets of a specific tweet. Shows how people are commenting on/sharing a tweet. |
+| 148 | `x_get_recommendations` | read |  | none | Get "Who to follow" recommendations based on a user or topic. Useful for discovering accounts in a niche. |
+| 149 | `x_get_replies` | read |  | `tweetUrl` | Scrape replies to a specific tweet. Returns reply text, author, timestamp, likes, and nested reply chains. |
+| 150 | `x_get_retweeters` | read |  | `tweetUrl` | Get the list of users who retweeted a specific tweet. |
+| 151 | `x_get_settings` | read |  | none | Get a snapshot of your account settings and privacy configuration. |
+| 152 | `x_get_thread` | read |  | `url` | Unroll and scrape an entire Twitter/X thread given the URL of the first tweet. |
+| 153 | `x_get_trends` | read |  | none | Get current trending topics on X/Twitter. |
+| 154 | `x_get_tweets` | read |  | `username` | Scrape recent tweets/posts from a user profile. Supports Twitter, Bluesky, Mastodon, and Threads. |
+| 155 | `x_list_platforms` | read |  | none | List all supported social media platforms (Twitter, Bluesky, Mastodon, Threads) and their capabilities. |
+| 156 | `x_search_tweets` | read |  | `query` | Search for tweets/posts matching a query. Supports Twitter, Bluesky, Mastodon, and Threads. |
+| 157 | `x_org_calendar` | orgs |  | `org` | Drafted and approved posts of one organization grouped by day, with overdue posts first and unscheduled ones apart. Use it to find gaps before drafting. |
+| 158 | `x_org_draft` | orgs |  | `org`, `account`, `text` | Draft a post into an organization's queue. Nothing is published: an editor approves it with `xactions org approve` and it ships on `xactions org publish`. Give the primary account and its text; put the same news on other accounts either as a variant written for that audience or as a repost of the primary. Variants that are too alike are refused, because X forbids duplicate posts across accounts you run; affiliate accounts get their disclosure tag added and cannot repost. |
+| 159 | `x_org_list` | orgs |  | none | List the organizations set up with `xactions org`: families of X accounts a team runs in the open (a newsroom's main and regional handles, a company's main, dev and status accounts). Returns each org id, name, and how many accounts and members it has. |
+| 160 | `x_org_queue` | orgs |  | `org` | The post queue of one organization, newest first: each post with its primary account, the variants and reposts on other accounts, its status (draft, approved, rejected, published, partial, failed), its schedule, and per-account publish results. Also returns the connected accounts with their labels and kinds. |
+| 161 | `x_api_describe` | xapi |  | `operation` | Everything needed to call one official X API v2 operation: parameters with types, allowed values and ranges, the request body properties, which credentials and OAuth 2.0 scopes it accepts, its published rate limits, and the official reference page. Needs no keys. |
+| 162 | `x_api_get` | xapi |  | `operation` | Call a read (GET) operation of the official X API v2 with the configured developer credentials (X_BEARER_TOKEN, OAuth 1.0a keys, or an OAuth 2.0 user token from `xactions xapi auth login`). Parameters are validated against the catalog before any request. Set all: true to follow pagination. Returns data, includes, meta, errors and the rate-limit state. |
+| 163 | `x_api_list_operations` | xapi |  | none | Search the catalog of every official X API v2 operation (generated from X's published OpenAPI document). Returns operation ids, routes, accepted credentials and the official reference link. Use it to find the id to pass to x_api_describe, x_api_get or x_api_write. Needs no keys. |
+| 164 | `x_api_stream_sample` | xapi |  | `operation` | Open a streaming operation of the official X API v2 (filtered stream, sample stream, firehose, activity stream) and return the first messages, then close it. Bounded by a message count and a time limit. Needs app or user credentials the operation accepts. |
+| 165 | `x_api_write` | xapi | yes | `operation` | Call an operation of the official X API v2 that changes state (POST, PUT, PATCH, DELETE): create or delete posts, like, repost, follow, block, mute, send DMs, manage lists, bookmarks, webhooks and more. Uses the configured user credentials. Held as a draft when approval is required, and charged against the daily action caps by what the operation does. Pass dryRun: true to see the exact request first. |
 
 
 ---
@@ -503,8 +517,8 @@ the approval gate holds and the daily caps charge.
 > **How to use:** `npx xactions <command>`, or `npm run cli -- <command>` from a clone.
 > **Auth:** stored under `~/.xactions` (override with `XACTIONS_HOME`).
 
-59 commands, grouped by task exactly as `xactions` with no arguments prints
-them, plus 106 subcommands. Two more are registered but ungrouped: `completion`,
+60 commands, grouped by task exactly as `xactions` with no arguments prints
+them, plus 108 subcommands. Two more are registered but ungrouped: `completion`,
 which prints a shell completion script generated from the live command tree,
 and `ask`.
 
@@ -557,80 +571,84 @@ bookmarks and DMs need a session.
 | 10 | `profile` | Get profile information for a user | none |
 | 11 | `tweets` | Scrape tweets from a user | none |
 | 12 | `thread` | Scrape a full tweet thread | none |
-| 13 | `media` | Scrape media from a user | none |
-| 14 | `analyze` | Account report: engagement rate, cadence, content mix, best posting hour. No login needed. | none |
-| 15 | `report` | Generate a reputation report for a monitored username | none |
-| 16 | `history` | View account history over time | none |
-| 17 | `snapshot` | Start auto-snapshotting an account | none |
+| 13 | `article` | Read the full text of an X long-form Article | none |
+| 14 | `media` | Scrape media from a user | none |
+| 15 | `analyze` | Account report: engagement rate, cadence, content mix, best posting hour. No login needed. | none |
+| 16 | `brief` | Research accounts before you tag them: recent posts, numbers they publish, stats, who they tag | none |
+| 17 | `report` | Generate a reputation report for a monitored username | none |
+| 18 | `history` | View account history over time | none |
+| 19 | `snapshot` | Start auto-snapshotting an account | none |
 
 ### Followers and audience
 
 | # | Command | What it does | Subcommands |
 |---|---------|--------------|-------------|
-| 18 | `followers` | Scrape followers for a user | none |
-| 19 | `following` | Scrape accounts a user is following | none |
-| 20 | `non-followers` | Find accounts that don't follow back | none |
-| 21 | `audience` | Analyze follower overlap between two accounts | none |
-| 22 | `crm` | Follower CRM: tags, scores, segments | `sync`, `tag`, `search`, `score`, `segment` |
-| 23 | `graph` | Build and analyze social network graphs | `build`, `analyze`, `recommend`, `export`, `list`, `delete` |
+| 20 | `followers` | Scrape followers for a user | none |
+| 21 | `following` | Scrape accounts a user is following | none |
+| 22 | `non-followers` | Find accounts that don't follow back | none |
+| 23 | `audience` | Analyze follower overlap between two accounts | none |
+| 24 | `crm` | Follower CRM — tags, scores, segments | `sync`, `tag`, `search`, `score`, `segment` |
+| 25 | `graph` | Build and analyze social network graphs | `build`, `analyze`, `recommend`, `export`, `list`, `delete` |
 
 ### Search and monitor
 
 | # | Command | What it does | Subcommands |
 |---|---------|--------------|-------------|
-| 24 | `search` | Search for tweets | none |
-| 25 | `hashtag` | Scrape tweets for a hashtag | none |
-| 26 | `scrape` | Multi-platform scrape: profile, followers, following, tweets, search, hashtag, trending | none |
-| 27 | `platforms` | List supported social media platforms | none |
-| 28 | `monitor` | Start monitoring sentiment for a username or keyword | none |
-| 29 | `sentiment` | Analyze sentiment of text or tweet content | none |
-| 30 | `reputation` | AI risk-score an account's posts (professional, hostile, legal, spam) and print a reputation report | none |
-| 31 | `rss` | RSS feed monitoring & auto-posting | `add`, `list`, `check`, `drafts` |
-| 32 | `stream` | Real-time event streaming for X/Twitter accounts | `start`, `stop`, `list`, `history`, `pause`, `resume`, `status`, `stop-all` |
+| 26 | `search` | Search for tweets | none |
+| 27 | `hashtag` | Scrape tweets for a hashtag | none |
+| 28 | `scrape` | Multi-platform scrape: profile, followers, following, tweets, search, hashtag, trending | none |
+| 29 | `platforms` | List supported social media platforms | none |
+| 30 | `monitor` | Start monitoring sentiment for a username or keyword | none |
+| 31 | `sentiment` | Analyze sentiment of text or tweet content | none |
+| 32 | `reputation` | AI risk-score an account's posts (professional, hostile, legal, spam) and print a reputation report | none |
+| 33 | `rss` | RSS feed monitoring & auto-posting | `add`, `list`, `check`, `drafts` |
+| 34 | `stream` | Real-time event streaming for X/Twitter accounts | `start`, `stop`, `list`, `history`, `pause`, `resume`, `status`, `stop-all` |
 
 ### Write and grow
 
 | # | Command | What it does | Subcommands |
 |---|---------|--------------|-------------|
-| 33 | `engage` | Like, repost, and reply across a profile, a search, or a list, with template or AI-written comments | none |
-| 34 | `ai` | AI Tweet Writer: analyze voice, generate & rewrite tweets | `analyze`, `generate`, `rewrite`, `calendar` |
-| 35 | `optimize` | AI-optimize a tweet for engagement | none |
-| 36 | `hashtags` | Suggest hashtags for tweet text | none |
-| 37 | `predict` | Predict tweet performance | none |
-| 38 | `variations` | Generate tweet variations | none |
-| 39 | `evergreen` | Find and recycle top-performing evergreen tweets | none |
-| 40 | `persona` | Manage personas for algorithm building & automated growth | `create`, `list`, `run`, `status`, `delete`, `edit` |
-| 41 | `schedule` | Cron-based task scheduler | `add`, `list`, `remove`, `run` |
-| 42 | `bulk` | Bulk follow/unfollow/block/mute/scrape from CSV/JSON/TXT | none |
+| 35 | `engage` | Like, repost, and reply across a profile, a search, or a list, with template or AI-written comments | none |
+| 36 | `ai` | AI Tweet Writer — analyze voice, generate & rewrite tweets | `analyze`, `generate`, `rewrite`, `calendar` |
+| 37 | `optimize` | AI-optimize a tweet for engagement | none |
+| 38 | `hashtags` | Suggest hashtags for tweet text | none |
+| 39 | `predict` | Predict tweet performance | none |
+| 40 | `variations` | Generate tweet variations | none |
+| 41 | `evergreen` | Find and recycle top-performing evergreen tweets | none |
+| 42 | `persona` | Manage personas for algorithm building & automated growth | `create`, `list`, `run`, `status`, `delete`, `edit` |
+| 43 | `schedule` | Cron-based task scheduler | `add`, `list`, `remove`, `run` |
+| 44 | `bulk` | Bulk follow/unfollow/block/mute/scrape from CSV/JSON/TXT | none |
 
 ### Automate
 
 | # | Command | What it does | Subcommands |
 |---|---------|--------------|-------------|
-| 43 | `workflow` | Manage and run automation workflows | `create`, `run`, `list`, `delete`, `actions`, `runs` |
-| 44 | `agent` | 24/7 LLM-powered thought leadership agent | `start`, `test`, `login`, `setup`, `status`, `report` |
-| 45 | `notify` | Notification hub: Email, Slack, Discord, Telegram | `test`, `send`, `configure` |
-| 46 | `plugin` | Manage XActions plugins | `install`, `remove`, `list`, `enable`, `disable`, `discover` |
-| 47 | `team` | Team & multi-user management | `create`, `invite`, `members`, `activity` |
-| 48 | `dataset` | Manage scraping datasets (Apify-style) | `list`, `export`, `delete` |
+| 45 | `workflow` | Manage and run automation workflows | `create`, `run`, `list`, `delete`, `actions`, `runs` |
+| 46 | `agent` | 24/7 LLM-powered thought leadership agent | `start`, `test`, `login`, `setup`, `status`, `report` |
+| 47 | `notify` | Notification hub — Email, Slack, Discord, Telegram | `test`, `send`, `configure` |
+| 48 | `plugin` | Manage XActions plugins | `install`, `remove`, `list`, `enable`, `disable`, `discover` |
+| 49 | `org` | Run a team's family of X accounts: roles, approvals, audit log | `create`, `list`, `show`, `settings`, `member`, `account`, `draft`, `edit`, `posts`, `post`, `approve`, `reject`, `publish`, `calendar`, `stats`, `log` |
+| 50 | `team` | Team & multi-user management | `create`, `invite`, `members`, `activity` |
+| 51 | `dataset` | Manage scraping datasets (Apify-style) | `list`, `export`, `delete` |
 
 ### Move data
 
 | # | Command | What it does | Subcommands |
 |---|---------|--------------|-------------|
-| 49 | `export` | Export a Twitter account (profile, tweets, followers, following, bookmarks) | none |
-| 50 | `export-data` | Export data in external tool format | none |
-| 51 | `archive` | Read the X data export zip: summary, export to files, migrate elsewhere | `summary`, `export`, `migrate` |
-| 52 | `import` | Import data from Apify, Phantombuster, or CSV | none |
-| 53 | `convert` | Convert between Apify/Phantombuster/CSV formats | none |
-| 54 | `migrate` | Migrate Twitter data to Bluesky or Mastodon | none |
-| 55 | `diff` | Compare two account exports and show changes | none |
+| 52 | `export` | Export a Twitter account (profile, tweets, followers, following, bookmarks) | none |
+| 53 | `export-data` | Export data in external tool format | none |
+| 54 | `archive` | Read the X data export zip: summary, export to files, migrate elsewhere | `summary`, `export`, `migrate` |
+| 55 | `import` | Import data from Apify, Phantombuster, or CSV | none |
+| 56 | `convert` | Convert between Apify/Phantombuster/CSV formats | none |
+| 57 | `migrate` | Migrate Twitter data to Bluesky or Mastodon | none |
+| 58 | `diff` | Compare two account exports and show changes | none |
 
 ### Low level
 
 | # | Command | What it does | Subcommands |
 |---|---------|--------------|-------------|
-| 56 | `client` | HTTP-only Twitter client (fast, no browser needed) | `login`, `profile`, `tweet`, `search`, `post`, `followers`, `trends`, `whoami` |
+| 59 | `client` | HTTP-only Twitter client (fast, no browser needed) | `login`, `profile`, `tweet`, `search`, `post`, `followers`, `trends`, `whoami` |
+| 60 | `xapi` | Official X API v2: every endpoint, by operation id (needs your own developer keys) | `tags`, `list`, `describe`, `call`, `stream`, `upload`, `auth` |
 
 
 ---
@@ -840,6 +858,31 @@ passed. Full guide: [portability.md](portability.md).
 
 ---
 
+## 14. The official X API
+
+An optional lane that needs the user's own X developer credentials. Everything
+else in this inventory works without it. It covers every operation in X's
+published API v2 OpenAPI document: 274 operations in 23 areas as of spec 2.175.
+
+| File | What it does |
+|------|--------------|
+| `src/xapi/catalog.generated.js` | Every operation as data: id, method, path, area, credentials and scopes, parameters with types, enums and patterns, body, pagination, and the link to the official reference page. Generated, no prose copied |
+| `src/xapi/rate-limits.generated.js`, `src/xapi/rate-limits.js` | The published per-endpoint limits, looked up with `rateLimitsFor(method, path)` |
+| `src/xapi/client.js` | `XApiClient`: parameter checks against the spec, credential choice, 429 waits from the reset header, `usage_capped`, retries, OAuth 2.0 refresh, `paginate`/`collect`, `stream` with reconnects, chunked `uploadMedia` |
+| `src/xapi/oauth1.js`, `src/xapi/oauth2.js` | OAuth 1.0a request signing; OAuth 2.0 PKCE, code exchange, refresh and revoke |
+| `src/xapi/token-store.js` | The stored OAuth 2.0 login (`$XACTIONS_HOME/xapi-oauth2.json`, mode 0600, never the client secret) and `clientFromStore()` |
+| `src/xapi/webhooks.js` | CRC response, signature check, and a ready `node:http` handler for Account Activity and X Activity deliveries |
+| `src/cli/commands/xapi.js` | `xactions xapi`: `tags`, `list`, `describe`, `call`, `stream`, `upload`, `auth` |
+| `scripts/sync-x-api.mjs` | `npm run sync:xapi` regenerates the catalog, the limits and `docs/x-api/endpoints.md`; `npm run sync:xapi:check` reports drift |
+
+MCP tools, in the `xapi` group: `x_api_list_operations`, `x_api_describe`,
+`x_api_get`, `x_api_stream_sample` and `x_api_write` (a write tool, held by the
+approval gate and charged against the daily caps). Full guide:
+[x-api/README.md](x-api/README.md). Every endpoint:
+[x-api/endpoints.md](x-api/endpoints.md).
+
+---
+
 ## Quick Stats
 
 Every figure below is a count of files or of declarations in the code, so it can
@@ -848,9 +891,9 @@ rows on every run and fails the build when one has drifted.
 
 | Category | Count | Where it comes from |
 |----------|-------|---------------------|
-| MCP tools * | 160 | the `TOOLS` array in `src/mcp/server.js` |
-| CLI commands * | 59 | the `GROUPS` arrays in `src/cli/help-groups.js`, which is what `xactions --help` prints |
-| CLI subcommands | 106 | the subcommands registered under those commands |
+| MCP tools * | 165 | the `TOOLS` array in `src/mcp/server.js` |
+| CLI commands * | 60 | the `GROUPS` arrays in `src/cli/help-groups.js`, which is what `xactions --help` prints |
+| CLI subcommands | 108 | the subcommands registered under those commands |
 | Agent skills * | 50 | directories under `skills/`, indexed in `skills/index.json` |
 | API route modules * | 41 | `.js` files in `api/routes/` |
 | Browser console scripts | 95 | files in `scripts/` carrying a "Paste in DevTools" header, catalogued in [browser-scripts.md](browser-scripts.md) |

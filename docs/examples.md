@@ -127,7 +127,7 @@ docker run -e XACTIONS_SESSION_COOKIE=your_auth_token xactions xactions follower
 
 ## AI agents (MCP)
 
-Point Claude Desktop, Cursor, or Windsurf at the MCP server and it gets 160
+Point Claude Desktop, Cursor, or Windsurf at the MCP server and it gets 165
 tools:
 
 ```json

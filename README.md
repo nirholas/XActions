@@ -28,7 +28,7 @@ Scrapers &nbsp;·&nbsp; MCP Server for AI Agents &nbsp;·&nbsp; CLI &nbsp;·&nbs
 </p>
 
 <p>
-  <a href="docs/mcp-setup.md"><img src="https://img.shields.io/badge/MCP_Tools-160-8B5CF6?style=flat-square&logo=data:image/svg+xml;base64,PHN2Zz48L3N2Zz4=" alt="160 MCP Tools"></a>&nbsp;
+  <a href="docs/mcp-setup.md"><img src="https://img.shields.io/badge/MCP_Tools-165-8B5CF6?style=flat-square&logo=data:image/svg+xml;base64,PHN2Zz48L3N2Zz4=" alt="165 MCP Tools"></a>&nbsp;
   <a href="https://smithery.ai/server/xactions"><img src="https://smithery.ai/badge/xactions" alt="Smithery"></a>&nbsp;
   <a href="https://registry.modelcontextprotocol.io"><img src="https://img.shields.io/badge/MCP_Registry-deployed-6366f1?style=flat-square&logo=data:image/svg+xml;base64,PHN2Zz48L3N2Zz4=" alt="MCP Registry"></a>&nbsp;
   <a href="Dockerfile"><img src="https://img.shields.io/badge/Docker-ready-2496ED?style=flat-square&logo=docker&logoColor=white" alt="Docker"></a>&nbsp;
@@ -104,10 +104,10 @@ npx xactions search "your brand" --limit 50               # what people are sayi
 | Feature | **XActions** | twikit | twscrape | x-use | xmcp (official) | bird | twitter-cli | Agent-Reach |
 |---------|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
 | **No API Key Required** | ✅ | ✅ Cookies | ✅ Account pool | ✅ Browser | ❌ X API keys | ✅ Cookies | ❌ X API keys | ✅ |
-| **MCP Server (AI agents)** | ✅ **160 tools** | ❌ | ❌ | ✅ (33-tool server) | ✅ (140-tool, metered) | ❌ | ❌ | ❌ Skills, not MCP |
+| **MCP Server (AI agents)** | ✅ **165 tools** | ❌ | ❌ | ✅ (33-tool server) | ✅ (140-tool, metered) | ❌ | ❌ | ❌ Skills, not MCP |
 | **Browser Console Scripts** | ✅ 95 | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
 | **AI Voice Agent in Spaces** | ✅ Join, listen, speak | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
-| **CLI** | ✅ 59 commands | ❌ | ✅ | ❌ | ❌ | ✅ | ✅ | ✅ |
+| **CLI** | ✅ 60 commands | ❌ | ✅ | ❌ | ❌ | ✅ | ✅ | ✅ |
 | **Human approval gate on writes** | ✅ Every write held as a draft | ❌ | ❌ | ✅ | ❌ | ❌ | ❌ | ❌ |
 | **Daily action caps that survive a restart** | ✅ Per account, on disk | ❌ | ❌ | ✅ | ❌ | ❌ | ❌ | ❌ |
 | **Account pool with rotation** | ✅ SQLite, per-operation windows | ❌ | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ |
@@ -126,9 +126,10 @@ Competitor columns come from the [competitive audit](docs/audits/2026-08-27-comp
 
 | Area | What changed |
 |------|-------------|
+| **The official X API, if you have keys** | An optional keyed lane beside the no-key one: every operation in X's published API v2 OpenAPI document (274 of them) by operation id, from `xactions xapi call <op>`, from `import { clientFromStore } from 'xactions/xapi'`, and from five `x_api_*` MCP tools. Parameters are checked against the spec before sending, 429s are waited out from the reset header, pagination and streams are handled, and `xactions xapi auth login` runs OAuth 2.0 with PKCE. Nothing in the no-key lane needs it. [Docs](docs/x-api/README.md). |
 | **Delete every reply you sent one account** | [`scripts/searchSweep.js`](scripts/searchSweep.js) turns any X search into a bulk action. Open `x.com/search?q=from:you @someone&f=live`, paste it, and delete, like, repost, or reply to every result, with a floating panel, a dry run, filters that protect posts that did numbers, and multiple passes because X search returns a slice at a time. Deletes only ever touch your own posts. [Docs](docs/search-sweep.md). |
 | **Sweep a whole profile** | [`scripts/engageProfile.js`](scripts/engageProfile.js) likes, reposts, and replies to every post on an account from the console, with a floating panel, dry run, resume, undo, and replies from your templates or from an LLM given a one-line brief (Grok works straight from the console; any provider through the extension). `xactions engage USERNAME --like --repost --comment --prompt "..."` does the same from the terminal with any provider. [Docs](docs/engage.md). |
-| **A CLI you can find your way around** | All 59 commands are now grouped by task instead of listed alphabetically. `xactions quickstart` gives a guided first run that adapts to what you already have set up. |
+| **A CLI you can find your way around** | All 60 commands are now grouped by task instead of listed alphabetically. `xactions quickstart` gives a guided first run that adapts to what you already have set up. |
 | **Tab completion** | `xactions completion bash\|zsh\|fish` prints a completion script generated from the live command tree, so every command, sub-command, and flag completes. |
 | **Log in without touching DevTools** | `xactions login --from-browser` reads x.com cookies straight out of an installed Chrome, Chromium, Brave, Edge, Arc or Firefox profile. `--cookies-file` imports a Netscape `cookies.txt`, a Cookie-Editor or EditThisCookie JSON export, or a Playwright / Puppeteer `storageState`. A full cookie jar beats a bare `auth_token`, because it carries the `ct0` every write needs. |
 | **Query IDs that heal themselves** | X rotates its GraphQL query IDs and every pinned client 404s at once. Ours are discovered from x.com's own bundles and cached, so a rotation is invisible. `xactions doctor` reports the cache age. |
@@ -136,7 +137,7 @@ Competitor columns come from the [competitive audit](docs/audits/2026-08-27-comp
 | **An account pool, and scrapes that resume** | Sessions live in a SQLite database with their own proxy and a per-operation rate-limit window read from X's own headers. The pooled client rotates on a 429 and locks an account on a 401. A checkpoint written after every page means a 50,000-follower scrape that dies at page 400 restarts from its cursor, not from page one. |
 | **Daily action caps** | Every MCP write is charged against a rolling 24 hour per-account budget stored on disk. The cap survives a restart, a crash, and a fresh `npx xactions-mcp`, and a call that would go over is refused before it reaches X. Defaults follow X's own published limits. |
 | **Writes a human releases** | `XACTIONS_MCP_REQUIRE_APPROVAL=1` turns every write tool into a draft. Review with `xactions drafts list`, release with `xactions drafts approve <id>`, or use the `x_list_drafts` / `x_approve_draft` / `x_discard_draft` tools. |
-| **MCP tool groups** | The tool list is filterable: `--tools read,analytics` or `XACTIONS_MCP_TOOLS=read` advertises only what the session needs, and a filtered tool is neither advertised nor callable. Groups: read, write, dm, lists, spaces, analytics, ai, grok, automation, monitoring, workflows, persona, graph, data, x402, drafts, auth. |
+| **MCP tool groups** | The tool list is filterable: `--tools read,analytics` or `XACTIONS_MCP_TOOLS=read` advertises only what the session needs, and a filtered tool is neither advertised nor callable. Groups: read, write, dm, lists, spaces, analytics, ai, grok, automation, monitoring, workflows, persona, orgs, graph, data, x402, drafts, auth, xapi. |
 | **MCP over HTTP** | `xactions-mcp --http` serves the Streamable HTTP transport on `/mcp` for remote and hosted clients, with optional bearer auth via `XACTIONS_MCP_TOKEN`. stdio is still the default. |
 | **One-drag install for Claude Desktop** | The `.mcpb` bundle carries the server and its dependencies and prompts for the session cookie and tool groups at install time, so nothing is typed into a config file. Attached to every release. |
 | **Skills you can install** | `xactions skills install --all` copies the 50 bundled skills into Claude Code, Cursor, Codex, Windsurf, or the current project. `xactions skills show <name>` reads one without installing it. |
@@ -612,7 +613,7 @@ xactions connect
 xactions search "your topic" --limit 50
 ```
 
-Running `xactions` with no arguments prints all 59 commands grouped by task. `xactions completion bash` (or `zsh`, `fish`) turns on tab completion.
+Running `xactions` with no arguments prints all 60 commands grouped by task. `xactions completion bash` (or `zsh`, `fish`) turns on tab completion.
 
 ### Example 1: Unfollow Non-Followers (30 seconds)
 
@@ -1106,7 +1107,7 @@ const summary = await leaveSpace();
 
 ## 💻 CLI Reference
 
-59 commands, grouped by task, with 106 subcommands under them. Run `xactions`
+60 commands, grouped by task, with 106 subcommands under them. Run `xactions`
 with no arguments for the grouped screen, `xactions help <command>` for one
 command, and `xactions completion bash|zsh|fish` for tab completion generated
 from the live command tree.
@@ -1496,7 +1497,7 @@ No console, no code, no setup!
 stdio is the default transport and is what a local client wants. For a remote
 or hosted client, the same server speaks
 [MCP Streamable HTTP](https://modelcontextprotocol.io/specification/2025-03-26/basic/transports#streamable-http)
-on `/mcp`, with the same 160 tools and the same tool-group filtering:
+on `/mcp`, with the same 165 tools and the same tool-group filtering:
 
 ```bash
 npx xactions-mcp --http --port 3000
@@ -1565,6 +1566,7 @@ Full documentation site: **https://nirholas.github.io/XActions/**
 
 - [Getting started](docs/getting-started.md) covers install and first run.
 - [Examples](docs/examples.md) has copy-paste snippets.
+- [The official X API](docs/x-api/README.md) covers the optional keyed lane: every API v2 endpoint, authentication, rate limits, streaming and webhooks.
 
 <!-- three.ws:growth -->
 ## Support the project
