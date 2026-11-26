@@ -35,6 +35,7 @@ import { registerSkillsCommand } from './commands/skills.js';
 import { registerDraftsCommand } from './commands/drafts.js';
 import { registerOrgCommand } from './commands/org.js';
 import { registerArchiveCommand } from './commands/archive.js';
+import { registerXapiCommand } from './commands/xapi.js';
 import { renderRootHelp } from './help-groups.js';
 import { createSpinner, printCompact, resolveOutputMode } from '../utils/output.js';
 import { xactionsHome } from '../utils/savedSession.js';
@@ -502,6 +503,7 @@ registerSkillsCommand(program);
 registerDraftsCommand(program);
 registerOrgCommand(program);
 registerArchiveCommand(program);
+registerXapiCommand(program);
 
 // ============================================================================
 // Auth Commands

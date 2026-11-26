@@ -73,8 +73,8 @@ export const GROUPS = [
   },
   {
     title: 'Low level',
-    hint: 'The raw HTTP client',
-    commands: ['client'],
+    hint: 'The raw HTTP client, and the official X API with your own keys',
+    commands: ['client', 'xapi'],
   },
 ];
 

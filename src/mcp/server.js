@@ -2483,6 +2483,79 @@ const TOOLS = [
       },
     },
   },
+
+  // ====== Official X API v2 with your own developer keys (src/xapi) ======
+  {
+    name: 'x_api_list_operations',
+    description: 'Search the catalog of every official X API v2 operation (generated from X\'s published OpenAPI document). Returns operation ids, routes, accepted credentials and the official reference link. Use it to find the id to pass to x_api_describe, x_api_get or x_api_write. Needs no keys.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        query: { type: 'string', description: 'Words to match against the id, path and area, e.g. "followers", "search recent", "bookmarks"' },
+        tag: { type: 'string', description: 'Only this API area, e.g. Posts, Users, Direct Messages, Lists, Spaces, Media, Stream' },
+        writes: { type: 'boolean', description: 'true: only operations that change state; false: only reads' },
+        streaming: { type: 'boolean', description: 'Only streaming operations' },
+        limit: { type: 'number', description: 'Most operations to return (default 40)' },
+      },
+    },
+  },
+  {
+    name: 'x_api_describe',
+    description: 'Everything needed to call one official X API v2 operation: parameters with types, allowed values and ranges, the request body properties, which credentials and OAuth 2.0 scopes it accepts, its published rate limits, and the official reference page. Needs no keys.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        operation: { type: 'string', description: 'Operation id (e.g. getUsersFollowers) or route (e.g. "GET /2/users/:id/followers")' },
+      },
+      required: ['operation'],
+    },
+  },
+  {
+    name: 'x_api_get',
+    description: 'Call a read (GET) operation of the official X API v2 with the configured developer credentials (X_BEARER_TOKEN, OAuth 1.0a keys, or an OAuth 2.0 user token from `xactions xapi auth login`). Parameters are validated against the catalog before any request. Set all: true to follow pagination. Returns data, includes, meta, errors and the rate-limit state.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        operation: { type: 'string', description: 'Operation id or route, e.g. searchPostsRecent' },
+        params: { type: 'object', description: 'Path and query parameters by name, e.g. {"query": "from:XDevelopers", "max_results": 100, "tweet.fields": ["created_at", "public_metrics"]}' },
+        all: { type: 'boolean', description: 'Follow next_token through every page' },
+        limit: { type: 'number', description: 'With all: stop after this many items (default 500)' },
+        maxPages: { type: 'number', description: 'With all: stop after this many pages' },
+        auth: { type: 'string', enum: ['bearer', 'oauth2', 'oauth1'], description: 'Force a credential instead of the automatic choice' },
+      },
+      required: ['operation'],
+    },
+  },
+  {
+    name: 'x_api_stream_sample',
+    description: 'Open a streaming operation of the official X API v2 (filtered stream, sample stream, firehose, activity stream) and return the first messages, then close it. Bounded by a message count and a time limit. Needs app or user credentials the operation accepts.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        operation: { type: 'string', description: 'Streaming operation id, e.g. streamPosts or streamPostsSample' },
+        params: { type: 'object', description: 'Query parameters, e.g. {"tweet.fields": ["created_at"]}' },
+        limit: { type: 'number', description: 'Messages to collect (default 20, max 500)' },
+        timeoutSeconds: { type: 'number', description: 'Stop after this long even if fewer messages arrived (default 30, max 300)' },
+        auth: { type: 'string', enum: ['bearer', 'oauth2', 'oauth1'] },
+      },
+      required: ['operation'],
+    },
+  },
+  {
+    name: 'x_api_write',
+    description: 'Call an operation of the official X API v2 that changes state (POST, PUT, PATCH, DELETE): create or delete posts, like, repost, follow, block, mute, send DMs, manage lists, bookmarks, webhooks and more. Uses the configured user credentials. Held as a draft when approval is required, and charged against the daily action caps by what the operation does. Pass dryRun: true to see the exact request first.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        operation: { type: 'string', description: 'Operation id or route, e.g. createPosts, likePost, followUser' },
+        params: { type: 'object', description: 'Path and query parameters, e.g. {"id": "<your user id>"}' },
+        body: { type: 'object', description: 'JSON request body, e.g. {"text": "hello"} for createPosts or {"tweet_id": "123"} for likePost' },
+        dryRun: { type: 'boolean', description: 'Return the request that would be sent without sending it' },
+        auth: { type: 'string', enum: ['oauth2', 'oauth1', 'bearer'] },
+      },
+      required: ['operation'],
+    },
+  },
 ];
 
 // ============================================================================
@@ -2667,6 +2740,110 @@ async function executeDownloadMediaTool(args) {
   };
 }
 
+/**
+ * x_api_*: the official X API v2 lane (src/xapi). The client is rebuilt from
+ * the environment and the token store on every call. X rotates the refresh
+ * token on each refresh, so a client cached here would go stale the moment
+ * the CLI logs in again or refreshes the shared token file. A refresh made
+ * here is written back to that file for the same reason.
+ */
+async function getXApiClient() {
+  const { clientFromStore } = await import('../xapi/index.js');
+  return clientFromStore();
+}
+
+function xApiResult(result) {
+  const { body: _raw, ...rest } = result;
+  return rest;
+}
+
+async function executeXApiTool(name, args = {}) {
+  const xapi = await import('../xapi/index.js');
+  const params = args.params && typeof args.params === 'object' ? args.params : {};
+  try {
+    switch (name) {
+      case 'x_api_list_operations': {
+        const limit = Math.max(1, Math.min(Number(args.limit) || 40, 300));
+        const ops = xapi.listOperations({
+          query: args.query,
+          tag: args.tag,
+          write: typeof args.writes === 'boolean' ? args.writes : undefined,
+          streaming: args.streaming ? true : undefined,
+        });
+        return {
+          spec: xapi.SOURCE.version,
+          total: ops.length,
+          operations: ops.slice(0, limit).map((op) => ({
+            id: op.id,
+            method: op.method,
+            path: op.path,
+            tag: op.tag,
+            write: op.write,
+            streaming: op.streaming,
+            auth: { bearer: op.auth.bearer, oauth2Scopes: op.auth.oauth2User, oauth1: op.auth.oauth1User },
+            docsUrl: op.docsUrl,
+          })),
+          ...(ops.length > limit ? { more: `${ops.length - limit} more; narrow the query or raise limit` } : {}),
+          tags: args.query || args.tag ? undefined : xapi.listTags(),
+        };
+      }
+      case 'x_api_describe':
+        return xapi.describeOperation(String(args.operation || ''));
+      case 'x_api_get': {
+        const op = xapi.getOperation(String(args.operation || ''));
+        if (op.write) throw new xapi.XApiError(`${op.id} is ${op.method}, which changes state. Use x_api_write.`, { code: 'invalid_params', operationId: op.id });
+        if (op.streaming) throw new xapi.XApiError(`${op.id} is a stream. Use x_api_stream_sample.`, { code: 'invalid_params', operationId: op.id });
+        const client = await getXApiClient();
+        if (args.all) {
+          const limit = Math.max(1, Math.min(Number(args.limit) || 500, 10_000));
+          return xApiResult(await client.collect(op.id, params, { auth: args.auth, limit, maxPages: Number(args.maxPages) || undefined }));
+        }
+        return xApiResult(await client.call(op.id, params, { auth: args.auth }));
+      }
+      case 'x_api_stream_sample': {
+        const op = xapi.getOperation(String(args.operation || ''));
+        if (!op.streaming) throw new xapi.XApiError(`${op.id} is not a stream. Use x_api_get.`, { code: 'invalid_params', operationId: op.id });
+        const limit = Math.max(1, Math.min(Number(args.limit) || 20, 500));
+        const timeoutMs = Math.max(1, Math.min(Number(args.timeoutSeconds) || 30, 300)) * 1000;
+        const client = await getXApiClient();
+        const controller = new AbortController();
+        const timer = setTimeout(() => controller.abort(new Error('time limit')), timeoutMs);
+        const messages = [];
+        const events = [];
+        try {
+          for await (const message of client.stream(op.id, params, {
+            auth: args.auth,
+            signal: controller.signal,
+            maxReconnects: 2,
+            onEvent: (e) => events.push(e),
+          })) {
+            messages.push(message);
+            if (messages.length >= limit) break;
+          }
+        } finally {
+          clearTimeout(timer);
+        }
+        return { operation: op.id, received: messages.length, timedOut: controller.signal.aborted, messages, events };
+      }
+      case 'x_api_write': {
+        const op = xapi.getOperation(String(args.operation || ''));
+        if (!op.write) throw new xapi.XApiError(`${op.id} is a read. Use x_api_get.`, { code: 'invalid_params', operationId: op.id });
+        const client = await getXApiClient();
+        if (args.dryRun) {
+          const plan = client.build(op.id, params, { body: args.body, auth: args.auth, requireAuth: false });
+          return { dryRun: true, operation: op.id, method: op.method, url: plan.url, auth: plan.auth ?? 'none configured', body: plan.body ?? null, docsUrl: op.docsUrl };
+        }
+        return xApiResult(await client.call(op.id, params, { body: args.body, auth: args.auth }));
+      }
+      default:
+        throw new Error(`Unknown X API tool: ${name}`);
+    }
+  } catch (error) {
+    if (error instanceof xapi.XApiError) return { error: error.message, ...error.toJSON() };
+    throw error;
+  }
+}
+
 async function executeTool(name, args, options = {}) {
   // One context per call, so the call holds the shared Puppeteer page for as
   // long as it needs it and no parallel call can drive the page under it.
@@ -2705,6 +2882,11 @@ async function dispatchTool(name, args, options = {}) {
   // Ask XActions: reads the shipped documentation index, needs no browser
   if (name === 'x_ask') {
     return await executeAskTool(args);
+  }
+
+  // Official X API v2: plain HTTPS with the user's own keys, needs no browser
+  if (name.startsWith('x_api_')) {
+    return await executeXApiTool(name, args);
   }
 
   if (name === 'x_download_media') {

@@ -7,7 +7,7 @@
  *
  * 1. GROUP_RULES assigns every tool name to exactly one group (read, write,
  *    dm, lists, spaces, analytics, ai, grok, automation, monitoring,
- *    workflows, persona, orgs, graph, data, x402, drafts, auth). Groups are what a
+ *    workflows, persona, orgs, graph, data, x402, drafts, auth, xapi). Groups are what a
  *    user names in XACTIONS_MCP_TOOLS / XACTIONS_MCP_EXCLUDE or on the
  *    --tools / --exclude flags, so a config can say "read,analytics" instead
  *    of listing forty tool names.
@@ -22,6 +22,8 @@
  *
  * Modelled on the allowlist in xdevplatform/xmcp and the draft flow in x-use.
  */
+
+import { getOperation } from '../xapi/client.js';
 
 /**
  * Tools that exist regardless of any filter. Removing these would strand
@@ -136,6 +138,11 @@ export const GROUP_RULES = Object.freeze([
     prefixes: ['x_history_'],
   },
   {
+    // The official X API v2 with the user's own developer keys (src/xapi).
+    group: 'xapi',
+    prefixes: ['x_api_'],
+  },
+  {
     group: 'read',
     names: ['x_list_platforms', 'x_download_video', 'x_get_settings', 'x_action_budget', 'x_ask', 'x_download_media'],
     prefixes: ['x_get_', 'x_search_', 'x_client_'],
@@ -174,6 +181,8 @@ export const WRITE_TOOLS = Object.freeze(new Set([
   'x_space_join',
   // Outbound notifications
   'x_notify_send',
+  // Official X API v2: any POST, PUT, PATCH or DELETE operation
+  'x_api_write',
 ]));
 
 /**
@@ -229,8 +238,49 @@ export const ACTION_CLASS = Object.freeze({
  * these explicitly, so they are exempt from the name-to-class table.
  */
 export const ARGUMENT_RESOLVED_WRITE_TOOLS = Object.freeze(new Set([
-  'x_bulk_execute', 'x_engage',
+  'x_bulk_execute', 'x_engage', 'x_api_write',
 ]));
+
+/**
+ * The daily-cap class of each official X API operation that x_api_write can
+ * call, keyed by operation id in lower case. Operations not listed (lists,
+ * media, bookmarks folders, webhooks, account settings) change nothing a
+ * per-day action cap governs and pass uncharged. A post with a `reply`
+ * object in its body is charged as a reply.
+ */
+export const X_API_ACTION_CLASS = Object.freeze({
+  createposts: 'post',
+  articlepublish: 'post',
+  deleteposts: 'delete',
+  deletedirectmessagesevents: 'delete',
+  likepost: 'like',
+  unlikepost: 'like',
+  createusersbookmark: 'like',
+  repostpost: 'repost',
+  unrepostpost: 'repost',
+  followuser: 'follow',
+  unfollowuser: 'unfollow',
+  createdirectmessagesconversation: 'dm',
+  createdirectmessagesbyconversationid: 'dm',
+  createdirectmessagesbyparticipantid: 'dm',
+  usersidblock: 'block',
+  usersidunblock: 'block',
+  blockusersdms: 'block',
+  unblockusersdms: 'block',
+  muteuser: 'mute',
+  unmuteuser: 'mute',
+});
+
+/** Operation id behind an x_api_write call: an id, or a "METHOD /path" route. */
+function xApiOperationId(operation) {
+  const value = String(operation ?? '').trim();
+  if (!/\s/.test(value)) return value.toLowerCase();
+  try {
+    return getOperation(value).id.toLowerCase();
+  } catch {
+    return '';
+  }
+}
 
 export const UNCAPPED_WRITE_TOOLS = Object.freeze(new Set([
   'x_update_profile', 'x_toggle_protected', 'x_migrate_account',
@@ -301,6 +351,13 @@ export function resolveActionCharge(name, args = {}) {
     if (args?.repost) charges.push({ actionClass: 'repost', count });
     if (args?.comment) charges.push({ actionClass: 'reply', count });
     return charges.length > 0 ? charges : null;
+  }
+  if (name === 'x_api_write') {
+    if (args?.dryRun) return null;
+    const id = xApiOperationId(args?.operation);
+    const cls = X_API_ACTION_CLASS[id];
+    if (!cls) return null;
+    return { actionClass: id === 'createposts' && args?.body?.reply ? 'reply' : cls, count: 1 };
   }
   if (name === 'x_bulk_execute') {
     if (args?.dryRun) return null;
@@ -468,6 +525,8 @@ export default {
   WRITE_TOOLS,
   ACTION_CLASS,
   UNCAPPED_WRITE_TOOLS,
+  ARGUMENT_RESOLVED_WRITE_TOOLS,
+  X_API_ACTION_CLASS,
   resolveActionCharge,
   groupOf,
   buildGroups,
