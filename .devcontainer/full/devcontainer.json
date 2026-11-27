@@ -1,0 +1,32 @@
+{
+  "name": "XActions (full: API, PostgreSQL, Redis)",
+  "dockerComposeFile": "compose.yaml",
+  "service": "app",
+  "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
+  "shutdownAction": "stopCompose",
+  "features": {
+    "ghcr.io/devcontainers/features/github-cli:1": {}
+  },
+  "forwardPorts": [3001],
+  "portsAttributes": {
+    "3001": {
+      "label": "API and dashboard",
+      "onAutoForward": "notify"
+    }
+  },
+  "postCreateCommand": "bash .devcontainer/post-create.sh --full",
+  "postAttachCommand": "bash .devcontainer/first-run.sh",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "dbaeumer.vscode-eslint",
+        "editorconfig.editorconfig",
+        "vitest.explorer",
+        "prisma.prisma"
+      ]
+    },
+    "codespaces": {
+      "openFiles": ["AGENTS.md"]
+    }
+  }
+}

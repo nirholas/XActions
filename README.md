@@ -207,6 +207,18 @@ No install needed. Copy-paste scripts into your browser console on x.com
 
 </td>
 </tr>
+<tr>
+<td><strong>Contribute</strong></td>
+<td>
+
+[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/nirholas/XActions?quickstart=1)
+
+A ready workspace with dependencies installed, tests runnable and `xactions` on
+the path. Also opens locally as a dev container: see
+[Develop in a container](CONTRIBUTING.md#develop-in-a-container).
+
+</td>
+</tr>
 </table>
 
 ---

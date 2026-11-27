@@ -1,0 +1,61 @@
+# Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
+#
+# The full dev container: the workspace, PostgreSQL and Redis. Used by
+# .devcontainer/full/devcontainer.json; not a deployment file (that is
+# /docker-compose.yml, which this mirrors on database and Redis versions).
+#
+# @author nich (@nichxbt)
+
+services:
+  app:
+    build:
+      context: ..
+      dockerfile: Dockerfile
+    # The parent of the repository, so the workspace keeps its own folder name
+    # under /workspaces, the way Codespaces lays it out.
+    volumes:
+      - ../../..:/workspaces:cached
+    command: sleep infinity
+    environment:
+      DATABASE_URL: postgresql://xactions@postgres:5432/xactions?schema=public
+      # The job queue reads REDIS_URL first. The streaming and messaging modules
+      # read only REDIS_HOST and REDIS_PORT, so both forms are set.
+      REDIS_URL: redis://redis:6379
+      REDIS_HOST: redis
+      REDIS_PORT: "6379"
+      PORT: "3001"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  # No port is published from either service: they are reachable only from the
+  # app container, over this compose network. That is why PostgreSQL can trust
+  # local connections and no password has to be written down anywhere.
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: xactions
+      POSTGRES_DB: xactions
+      POSTGRES_HOST_AUTH_METHOD: trust
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U xactions -d xactions"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  postgres-data:

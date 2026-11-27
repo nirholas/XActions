@@ -1,0 +1,24 @@
+{
+  "name": "XActions",
+  "build": {
+    "dockerfile": "Dockerfile"
+  },
+  "features": {
+    "ghcr.io/devcontainers/features/github-cli:1": {}
+  },
+  "postCreateCommand": "bash .devcontainer/post-create.sh",
+  "postAttachCommand": "bash .devcontainer/first-run.sh",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "dbaeumer.vscode-eslint",
+        "editorconfig.editorconfig",
+        "vitest.explorer",
+        "prisma.prisma"
+      ]
+    },
+    "codespaces": {
+      "openFiles": ["AGENTS.md"]
+    }
+  }
+}

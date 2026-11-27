@@ -40,6 +40,29 @@ XActions needs Node.js 22.19 or newer (`engines.node` is `>=22.19`, the floor
 undici 8 sets). CI runs the test suite on 22 and 24, so either is a safe
 local choice.
 
+### Develop in a container
+
+[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/nirholas/XActions?quickstart=1)
+
+Open the repository in GitHub Codespaces, or in VS Code with the Dev Containers
+extension (**Reopen in Container**), and the setup above is already done: Node
+22, the dependencies, Chromium for Puppeteer, the GitHub CLI, and the `xactions`
+command on the path, linked to your checkout. Two configurations:
+
+- **XActions** (the default): the library, the CLI, the MCP server and the
+  tests. Pick this one unless you are changing the API server.
+- **XActions (full: API, PostgreSQL, Redis)**: adds both services, sets
+  `DATABASE_URL` and the Redis variables, runs `prisma migrate deploy`, and
+  forwards port 3001, so `npm run dev` serves the API and the dashboard.
+
+Nothing has to be configured. Public reads work logged out. For logged-in
+features in Codespaces, add a Codespaces secret named `XACTIONS_SESSION_COOKIE`
+(GitHub > Settings > Codespaces > Secrets) holding the `auth_token` cookie of a
+**dedicated X account, not your main one**: automation can get an account
+limited, and any code running in the codespace can read the secret. In a local
+container, run `xactions login` inside it instead. What each file does:
+[.devcontainer/README.md](.devcontainer/README.md).
+
 ## ✅ Before you open a PR
 
 These all run in CI, so running them locally saves a round trip:
