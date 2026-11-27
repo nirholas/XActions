@@ -59,7 +59,7 @@ XActions provides **5 interfaces** to the same underlying toolkit:
 └──────────┴──────────┴───────┴──────────┴────────────┘
 ```
 
-1. **CLI**: `xactions <command>` from your terminal. 60 commands, grouped by task, with 106 subcommands under them.
+1. **CLI**: `xactions <command>` from your terminal. 61 commands, grouped by task, with 106 subcommands under them.
 2. **MCP Server**: 165 tools for Claude, Cursor, Windsurf, GPT. stdio or Streamable HTTP, filterable by tool group.
 3. **REST API**: 41 route modules served at `localhost:3001/api`.
 4. **Web Dashboard**: full-featured UI at `localhost:3001`.

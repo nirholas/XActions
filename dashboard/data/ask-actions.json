@@ -1,4 +1,4 @@
-{"version":1,"digest":"ca5e9c8714be029f","counts":{"cli":167,"mcp":165,"script":171},"actions":[
+{"version":1,"digest":"388b6c04b4d69c8a","counts":{"cli":168,"mcp":165,"script":171},"actions":[
 {"kind":"cli","id":"account-add","title":"xactions account add <org> <handle>","command":"xactions account add <org> <handle>","description":"Connect an account the organization runs; the session is checked against the handle","alias":null,"path":"src/cli/commands/org.js"},
 {"kind":"cli","id":"account-list","title":"xactions account list <org>","command":"xactions account list <org>","description":"List connected accounts","alias":null,"path":"src/cli/commands/org.js"},
 {"kind":"cli","id":"account-remove","title":"xactions account remove <org> <handle>","command":"xactions account remove <org> <handle>","description":"Disconnect an account and delete its saved session","alias":null,"path":"src/cli/commands/org.js"},
@@ -73,6 +73,7 @@
 {"kind":"cli","id":"info","title":"xactions info","command":"xactions info","description":"Show XActions information","alias":null,"path":"src/cli/index.js"},
 {"kind":"cli","id":"login","title":"xactions login","command":"xactions login","description":"Set up authentication with session cookie","alias":null,"path":"src/cli/index.js"},
 {"kind":"cli","id":"logout","title":"xactions logout","command":"xactions logout","description":"Remove saved authentication","alias":null,"path":"src/cli/index.js"},
+{"kind":"cli","id":"mcp","title":"xactions mcp","command":"xactions mcp","description":"Run the MCP server over stdio, or Streamable HTTP with --http (same as xactions-mcp; see xactions mcp --help)","alias":null,"path":"src/cli/index.js"},
 {"kind":"cli","id":"mcp-config","title":"xactions mcp-config","command":"xactions mcp-config","description":"Generate MCP server config for Claude Desktop, Cursor, Windsurf, etc.","alias":null,"path":"src/cli/index.js"},
 {"kind":"cli","id":"media","title":"xactions media <username>","command":"xactions media <username>","description":"Scrape media from a user","alias":null,"path":"src/cli/index.js"},
 {"kind":"cli","id":"member-remove","title":"xactions member remove <org> <name>","command":"xactions member remove <org> <name>","description":"Remove a member","alias":null,"path":"src/cli/commands/org.js"},

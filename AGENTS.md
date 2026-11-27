@@ -1,6 +1,6 @@
 # XActions for agents
 
-X/Twitter automation with no X API key: a 60-command CLI, a Node library, 165
+X/Twitter automation with no X API key: a 61-command CLI, a Node library, 165
 MCP tools, 50 agent skills, 95 browser console scripts, and a web dashboard.
 Apache-2.0, by nichxbt.
 
@@ -298,7 +298,8 @@ published limits. `src/mcp/action-caps.js`.
 
 | Variable | Effect |
 |---|---|
-| `XACTIONS_SESSION_COOKIE` | The `auth_token` cookie. Without it the server runs the guest tier |
+| `XACTIONS_SESSION_COOKIE` | The `auth_token` cookie, used ahead of a saved session by the server and the CLI's reads. Without either the server runs the guest tier |
+| `XACTIONS_CSRF_TOKEN` | The matching `ct0` cookie, which search, followers and every write need |
 | `XACTIONS_MODE` | `local` (default, free, Puppeteer) or `remote` |
 | `XACTIONS_MCP_TOOLS` | Allowlist of tool names or groups |
 | `XACTIONS_MCP_EXCLUDE` | Denylist, applied after the allowlist |
@@ -335,6 +336,7 @@ is not, that is a bug in this table.
 | Grow an account over time | [`skills/algorithm-cultivation/SKILL.md`](skills/algorithm-cultivation/SKILL.md) |
 | Run a long-lived LLM-driven agent | `src/algorithmBuilder.js` with `src/personaEngine.js`, via `xactions persona run <id>` |
 | Read an account without logging in | `xactions profile <user>`, `xactions tweets <user>` |
+| Run the CLI or MCP server on a machine without Node | `docker run --rm ghcr.io/nirholas/xactions-cli profile nasa`; `xactions mcp-config --docker` for a client. Image: `deploy/docker/cli.Dockerfile`. See [`docs/docker.md`](docs/docker.md) |
 | Research accounts before tagging them in a post | `xactions brief --file accounts.txt --topic x402`, or the `x_account_brief` MCP tool. See [`docs/brief.md`](docs/brief.md) |
 | Read the full text of a long-form Article | `xactions article <url>`, the `x_get_article` MCP tool, or `scrapeArticle` in `src/scrapers/twitter/http/tweets.js` |
 | Import an official X archive | `xactions archive <path-to-zip>` |

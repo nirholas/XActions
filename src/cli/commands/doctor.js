@@ -133,9 +133,29 @@ async function checkTimeline() {
 
 /**
  * Is a session saved, and does it carry both cookies.
- * @returns {Promise<CheckResult & {cookies?: Record<string, string>}>}
+ *
+ * XACTIONS_SESSION_COOKIE comes first, because every read uses it ahead of a
+ * saved session; in a container it is often the only session there is.
+ *
+ * @param {NodeJS.ProcessEnv} [env=process.env]
+ * @returns {Promise<CheckResult & {cookies?: Record<string, string>, cookieString?: string}>}
  */
-async function checkSessionStored() {
+export async function checkSessionStored(env = process.env) {
+  if (env.XACTIONS_SESSION_COOKIE) {
+    if (!env.XACTIONS_CSRF_TOKEN) {
+      return {
+        status: 'fail',
+        detail: 'XACTIONS_SESSION_COOKIE is set but XACTIONS_CSRF_TOKEN (ct0) is not',
+        fix: 'X treats a session without ct0 as logged out. Set XACTIONS_CSRF_TOKEN to the ct0 cookie, or unset both and run `xactions login`.',
+        cookieString: `auth_token=${env.XACTIONS_SESSION_COOKIE}`,
+      };
+    }
+    return {
+      status: 'ok',
+      detail: 'Both cookies present in XACTIONS_SESSION_COOKIE and XACTIONS_CSRF_TOKEN',
+      cookieString: `auth_token=${env.XACTIONS_SESSION_COOKIE}; ct0=${env.XACTIONS_CSRF_TOKEN}`,
+    };
+  }
   try {
     const jar = JSON.parse(await fs.readFile(COOKIE_FILE, 'utf-8'));
     const cookies = Object.fromEntries(jar.map((c) => [c.name, c.value]));
@@ -177,7 +197,7 @@ async function checkSessionStored() {
 /**
  * Does the saved session still work. A session can be present and expired,
  * which looks identical to a broken tool from the outside.
- * @param {CheckResult} stored
+ * @param {CheckResult & {cookieString?: string}} stored
  * @returns {Promise<CheckResult>}
  */
 async function checkSessionLive(stored) {
@@ -187,10 +207,14 @@ async function checkSessionLive(stored) {
   try {
     const { Scraper } = await import('../../client/index.js');
     const scraper = new Scraper();
-    await scraper.loadCookies(COOKIE_FILE).catch(async () => {
-      const config = JSON.parse(await fs.readFile(CONFIG_FILE, 'utf-8'));
-      await scraper.setCookies(`auth_token=${config.authToken}; ct0=${config.csrfToken}`);
-    });
+    if (stored.cookieString) {
+      await scraper.setCookies(stored.cookieString);
+    } else {
+      await scraper.loadCookies(COOKIE_FILE).catch(async () => {
+        const config = JSON.parse(await fs.readFile(CONFIG_FILE, 'utf-8'));
+        await scraper.setCookies(`auth_token=${config.authToken}; ct0=${config.csrfToken}`);
+      });
+    }
     const me = await scraper.me();
     if (!me?.username) throw new Error('X returned no account for this session');
     return { status: 'ok', detail: `Signed in as @${me.username}` };

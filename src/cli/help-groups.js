@@ -28,7 +28,7 @@ export const GROUPS = [
   {
     title: 'Start here',
     hint: 'Set up and verify the install',
-    commands: ['quickstart', 'doctor', 'connect', 'login', 'logout', 'mcp-config', 'skills', 'drafts', 'info'],
+    commands: ['quickstart', 'doctor', 'connect', 'login', 'logout', 'mcp', 'mcp-config', 'skills', 'drafts', 'info'],
   },
   {
     title: 'Read an account',

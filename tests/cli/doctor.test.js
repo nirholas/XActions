@@ -3,7 +3,7 @@
 
 import { describe, it, expect } from 'vitest';
 
-import { describeAccounts, describeQueryIds, describeRefreshFailure, formatCacheAge } from '../../src/cli/commands/doctor.js';
+import { checkSessionStored, describeAccounts, describeQueryIds, describeRefreshFailure, formatCacheAge } from '../../src/cli/commands/doctor.js';
 
 const NOW = Date.parse('2026-08-27T12:00:00.000Z');
 const CACHE = '/tmp/xactions-home/query-ids.json';
@@ -96,6 +96,31 @@ describe('doctor', () => {
       const result = describeAccounts({ total: 2, locked: 2, leased: 0, available: 0, coolingDown: 0, nextResetAt: null }, store, NOW);
       expect(result.status).toBe('fail');
       expect(result.detail).toBe('2 accounts, 0 available, 2 locked');
+    });
+  });
+
+  // In a container the session usually arrives as XACTIONS_SESSION_COOKIE,
+  // which every read uses ahead of a saved one; doctor reported "No session
+  // saved" for it.
+  describe('checkSessionStored with the session in the environment', () => {
+    const AUTH = '1'.repeat(40);
+    const CT0 = 'e'.repeat(32);
+
+    it('reports the environment session as present when both cookies are set', async () => {
+      const result = await checkSessionStored({ XACTIONS_SESSION_COOKIE: AUTH, XACTIONS_CSRF_TOKEN: CT0 });
+      expect(result.status).toBe('ok');
+      expect(result.detail).toBe('Both cookies present in XACTIONS_SESSION_COOKIE and XACTIONS_CSRF_TOKEN');
+      expect(result.cookieString).toBe(`auth_token=${AUTH}; ct0=${CT0}`);
+    });
+
+    it('fails with the variable to set when ct0 is missing', async () => {
+      const result = await checkSessionStored({ XACTIONS_SESSION_COOKIE: AUTH });
+      expect(result.status).toBe('fail');
+      expect(result.detail).toBe('XACTIONS_SESSION_COOKIE is set but XACTIONS_CSRF_TOKEN (ct0) is not');
+      expect(result.fix).toMatch(/Set XACTIONS_CSRF_TOKEN/);
+      // The live check then tests the cookie that reads will actually send,
+      // not a saved file the environment overrides.
+      expect(result.cookieString).toBe(`auth_token=${AUTH}`);
     });
   });
 });

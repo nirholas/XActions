@@ -99,3 +99,147 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
           platforms: linux/amd64,linux/arm64
+
+  # The CLI and MCP image (deploy/docker/cli.Dockerfile), a separate package
+  # from the API image above: ghcr.io/<owner>/<repo>-cli. Its tags therefore
+  # never collide with the API image's, and the API image's job is untouched.
+  #
+  #   cli target:      latest, X.Y.Z, X.Y          (release tags)
+  #                    main                         (main, after CI passes)
+  #                    <short sha>                  (every build)
+  #   browser target:  the same names with -browser, and `browser` for latest
+  #
+  # Each variant is built for amd64 and smoke-tested before the multi-arch
+  # push, so a tag push (which does not wait for CI) cannot publish an image
+  # that does not start.
+  cli-image:
+    name: CLI image (${{ matrix.target }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    concurrency:
+      group: docker-publish-cli-${{ matrix.target }}-${{ github.ref }}
+      cancel-in-progress: true
+
+    if: >-
+      github.event_name != 'workflow_run' ||
+      (github.event.workflow_run.conclusion == 'success' &&
+       github.event.workflow_run.event == 'push' &&
+       github.event.workflow_run.head_repository.full_name == github.repository)
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - target: cli
+            suffix: ''
+            latest: latest
+            smoke-flag: ''
+          - target: browser
+            suffix: -browser
+            latest: browser
+            smoke-flag: --browser
+
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          ref: ${{ github.event.workflow_run.head_sha || github.sha }}
+          persist-credentials: false
+
+      # Tags are worked out here rather than with metadata-action's semver
+      # type so the browser variant can carry `browser` for its latest tag.
+      # Only a stable X.Y.Z release moves latest and X.Y.
+      - name: Resolve tags
+        id: tags
+        env:
+          SHA: ${{ github.event.workflow_run.head_sha || github.sha }}
+          REF: ${{ github.ref }}
+          EVENT: ${{ github.event_name }}
+          SUFFIX: ${{ matrix.suffix }}
+          LATEST: ${{ matrix.latest }}
+        run: |
+          version="$(node -p "require('./package.json').version")"
+          tags=("type=raw,value=${SHA::7}${SUFFIX}")
+          if [[ "$EVENT" == workflow_run ]]; then
+            tags+=("type=raw,value=main${SUFFIX}")
+          fi
+          if [[ "$REF" == refs/tags/v* ]]; then
+            v="${REF#refs/tags/v}"
+            tags+=("type=raw,value=${v}${SUFFIX}")
+            if [[ "$v" =~ ^([0-9]+)\.([0-9]+)\.[0-9]+$ ]]; then
+              tags+=("type=raw,value=${BASH_REMATCH[1]}.${BASH_REMATCH[2]}${SUFFIX}")
+              tags+=("type=raw,value=${LATEST}")
+            fi
+          fi
+          {
+            echo "version=$version"
+            echo "sha=$SHA"
+            echo 'list<<TAGS_EOF'
+            printf '%s\n' "${tags[@]}"
+            echo 'TAGS_EOF'
+          } >> "$GITHUB_OUTPUT"
+          printf '%s\n' "${tags[@]}"
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@99012661954931238ded8c8b007157a8430204e1 # v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@f87e5991a6d7451dcb8d9637bfbc97413f497069 # v4
+
+      - name: Build for the smoke test (amd64)
+        uses: docker/build-push-action@c3c9e263c25d99ce0380d002d59b67737d91b0dc # v7
+        with:
+          context: .
+          file: deploy/docker/cli.Dockerfile
+          target: ${{ matrix.target }}
+          platforms: linux/amd64
+          load: true
+          push: false
+          tags: xactions-cli:smoke
+          build-args: VERSION=${{ steps.tags.outputs.version }}
+          cache-from: type=gha,scope=cli-${{ matrix.target }}
+          cache-to: type=gha,scope=cli-${{ matrix.target }},mode=max
+
+      - name: Image size
+        run: docker image ls xactions-cli:smoke --format '{{.Repository}}:{{.Tag}} {{.Size}}'
+
+      - name: Smoke test
+        env:
+          SMOKE_FLAG: ${{ matrix.smoke-flag }}
+        run: deploy/docker/smoke.sh xactions-cli:smoke $SMOKE_FLAG
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@8aa5831fb8d48d8f76594c7ddde61ae58019f550 # v4
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata
+        id: meta
+        uses: docker/metadata-action@dc802804100637a589fabce1cb79ff13a1411302 # v6
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-cli
+          flavor: latest=false
+          tags: ${{ steps.tags.outputs.list }}
+          labels: |
+            org.opencontainers.image.title=xactions-cli
+            org.opencontainers.image.revision=${{ steps.tags.outputs.sha }}
+
+      - name: Build and push (amd64, arm64)
+        uses: docker/build-push-action@c3c9e263c25d99ce0380d002d59b67737d91b0dc # v7
+        with:
+          context: .
+          file: deploy/docker/cli.Dockerfile
+          target: ${{ matrix.target }}
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          build-args: VERSION=${{ steps.tags.outputs.version }}
+          cache-from: type=gha,scope=cli-${{ matrix.target }}
+          cache-to: type=gha,scope=cli-${{ matrix.target }},mode=max

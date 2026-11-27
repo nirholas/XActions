@@ -135,7 +135,7 @@ portability (21), customer service (19), session logging and rate-limit safety
 (20).
 
 These prompts are context for an assistant, not a reference manual. They do not
-enumerate all 165 tools or all 60 commands; `xactions --help`, `xactions help
+enumerate all 165 tools or all 61 commands; `xactions --help`, `xactions help
 <command>`, and the docs linked above do.
 
 ---

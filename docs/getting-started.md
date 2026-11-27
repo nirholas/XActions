@@ -8,6 +8,7 @@ XActions is the complete X/Twitter automation toolkit. Browser scripts, CLI, Nod
 |-----------|----------|------------|
 | **Browser Scripts** | Quick one-off tasks, free usage | 30 seconds |
 | **CLI** | Power users, scripting, automation | 2 minutes |
+| **Docker** | The CLI and MCP server on a machine without Node | 1 minute |
 | **Node.js Library** | Custom integrations, bots | 5 minutes |
 | **MCP Server** | AI agents (Claude, GPT, Cursor) | 3 minutes |
 | **Dashboard** | Visual monitoring, team use | 1 minute |
@@ -46,6 +47,26 @@ Go to the [browser/ folder](https://github.com/nirholas/XActions/tree/main/brows
 
 ---
 
+## Quick Start: Docker (no Node needed)
+
+```bash
+docker run --rm ghcr.io/nirholas/xactions-cli profile nasa
+```
+
+That runs the CLI with nothing installed but Docker. Keep the session and caches
+in a volume, and log in from an exported cookies file:
+
+```bash
+docker run -i --rm -v xactions:/data ghcr.io/nirholas/xactions-cli login --cookies-file - < cookies.txt
+docker run --rm -v xactions:/data ghcr.io/nirholas/xactions-cli followers nasa --limit 100 --compact
+```
+
+`docker run --rm ghcr.io/nirholas/xactions-cli mcp-config --docker` prints an MCP
+client config that runs the same image. Tags, the `:browser` variant, HTTP mode
+and building it yourself: [docker.md](docker.md).
+
+---
+
 ## Quick Start: CLI
 
 ```bash
@@ -56,7 +77,7 @@ xactions followers elonmusk --limit 500 --output followers.csv
 xactions non-followers myhandle
 ```
 
-See the full [CLI Reference](cli-reference.md) for all 60 commands.
+See the full [CLI Reference](cli-reference.md) for all 61 commands.
 
 Two global flags make the CLI easy to pipe into another program: `--compact`
 prints one record per line with no colours or spinners, and `--fields` picks
@@ -268,7 +289,7 @@ X. Ask an agent to call `x_action_budget` to see what is left.
 
 | Guide | Description |
 |-------|-------------|
-| [CLI Reference](cli-reference.md) | All 60 CLI commands |
+| [CLI Reference](cli-reference.md) | All 61 CLI commands |
 | [API Reference](api-reference.md) | Node.js library functions |
 | [MCP Setup](mcp-setup.md) | AI agent integration |
 | [Browser Scripts](browser-scripts.md) | Complete script catalog |

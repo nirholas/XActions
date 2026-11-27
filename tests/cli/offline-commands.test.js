@@ -18,6 +18,7 @@ import { describe, it, expect, beforeAll, beforeEach, afterEach, afterAll, vi } 
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
+import { Readable } from 'node:stream';
 import { CommanderError } from 'commander';
 
 const home = fs.mkdtempSync(path.join(os.tmpdir(), 'xactions-cli-offline-'));
@@ -143,6 +144,39 @@ describe('login --cookies-file', () => {
     expect(JSON.parse(fs.readFileSync(CONFIG_FILE, 'utf-8'))).toEqual({ authToken: AUTH, csrfToken: CT0 });
   });
 
+  describe('with - for stdin', () => {
+    const realStdin = Object.getOwnPropertyDescriptor(process, 'stdin');
+    const pipeIn = (text, isTTY = false) => {
+      const stream = Readable.from([Buffer.from(text)]);
+      stream.isTTY = isTTY;
+      Object.defineProperty(process, 'stdin', { value: stream, configurable: true });
+    };
+    afterEach(() => Object.defineProperty(process, 'stdin', realStdin));
+
+    // `docker run -i ... login --cookies-file - < cookies.txt` imports a file
+    // the container user could not read through a bind mount.
+    it('reads the cookies from stdin and saves them the same as a file', async () => {
+      pipeIn([
+        `.x.com\tTRUE\t/\tTRUE\t0\tauth_token\t${AUTH}`,
+        `.x.com\tTRUE\t/\tTRUE\t0\tct0\t${CT0}`,
+      ].join('\n'));
+      const result = await cli(['login', '--cookies-file', '-']);
+      expect(result.code, result.stderr).toBe(0);
+      expect(result.stderr).toMatch(/Imported 2 x\.com cookies from stdin/);
+      const jar = JSON.parse(fs.readFileSync(COOKIE_FILE, 'utf-8'));
+      expect(jar.find((c) => c.name === 'auth_token').value).toBe(AUTH);
+      expect(mode(COOKIE_FILE)).toBe(0o600);
+    });
+
+    it('exits 1 instead of waiting when stdin is a terminal', async () => {
+      pipeIn('', true);
+      const result = await cli(['login', '--cookies-file', '-']);
+      expect(result.code).toBe(1);
+      expect(result.stderr).toMatch(/stdin is a terminal/);
+      expect(fs.existsSync(COOKIE_FILE)).toBe(false);
+    });
+  });
+
   it('exits 1 for a file that does not exist, and saves nothing', async () => {
     const result = await cli(['login', '--cookies-file', path.join(home, 'missing.txt')]);
     expect(result.code).toBe(1);
@@ -232,6 +266,63 @@ describe('mcp-config', () => {
     expect(result.code).toBe(1);
     expect(result.stderr).toMatch(/Unknown --client "emacs"\. Use one of: claude, cursor, windsurf, vscode\./);
     expect(result.stdout).toBe('');
+  });
+
+  it('--docker runs the CLI image over stdio with the state volume, and keeps the cookie out of argv', async () => {
+    const result = await cli(['mcp-config', '--docker']);
+    expect(result.code, result.stderr).toBe(0);
+    const entry = printedConfig(result.stdout.split('Tip:')[0]).mcpServers.xactions;
+    expect(entry.command).toBe('docker');
+    expect(entry.args).toEqual([
+      'run', '-i', '--rm',
+      '-v', 'xactions:/data',
+      '-e', 'XACTIONS_SESSION_COOKIE',
+      'ghcr.io/nirholas/xactions-cli:latest',
+      'mcp',
+    ]);
+    // `-e NAME` with no value forwards the client's variable, so the cookie
+    // never appears in the docker command line that `ps` shows.
+    expect(entry.args.join(' ')).not.toContain('your_auth_token_here');
+    expect(entry.env).toEqual({ XACTIONS_SESSION_COOKIE: 'your_auth_token_here' });
+  });
+
+  it('--docker --image swaps in another image, in the VS Code shape too', async () => {
+    const result = await cli(['mcp-config', '--docker', '--image', 'xactions-cli:dev', '--client', 'vscode']);
+    expect(result.code, result.stderr).toBe(0);
+    const entry = printedConfig(result.stdout.split('Tip:')[0]).mcp.servers.xactions;
+    expect(entry.command).toBe('docker');
+    expect(entry.args.slice(-2)).toEqual(['xactions-cli:dev', 'mcp']);
+  });
+
+  it('--docker --write merges the docker entry into the client config', async () => {
+    const target = path.join(home, '.codeium', 'windsurf', 'mcp_config.json');
+    const result = await cli(['mcp-config', '--docker', '--client', 'windsurf', '--write']);
+    expect(result.code, result.stderr).toBe(0);
+    const written = JSON.parse(fs.readFileSync(target, 'utf-8'));
+    expect(written.mcpServers.xactions.command).toBe('docker');
+  });
+
+  it('exits 1 for --image without --docker instead of ignoring it', async () => {
+    const result = await cli(['mcp-config', '--image', 'xactions-cli:dev']);
+    expect(result.code).toBe(1);
+    expect(result.stderr).toMatch(/--image only applies with --docker/);
+    expect(result.stdout).toBe('');
+  });
+});
+
+describe('mcp', () => {
+  it('hands its arguments to the MCP server, so `xactions mcp --help` prints the server usage', async () => {
+    const result = await cli(['mcp', '--help']);
+    expect(result.code, result.stderr).toBe(0);
+    expect(result.stdout).toContain('Usage: xactions-mcp [options]');
+    expect(result.stdout).toContain('--http');
+  });
+
+  it('passes server flags through untouched: `xactions mcp --list-groups` lists the tool groups', async () => {
+    const result = await cli(['mcp', '--list-groups']);
+    expect(result.code, result.stderr).toBe(0);
+    expect(result.stdout).toMatch(/^read \(\d+\)$/m);
+    expect(result.stdout).toContain('always available:');
   });
 });
 

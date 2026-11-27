@@ -169,6 +169,61 @@ Then use `xactions-mcp` as the command instead of `npx`:
 
 ---
 
+## Docker (no Node on the machine)
+
+The `ghcr.io/nirholas/xactions-cli` image carries the server and its runtime.
+Print a config for your client, from the image itself if XActions is not
+installed:
+
+```bash
+docker run --rm ghcr.io/nirholas/xactions-cli mcp-config --docker
+docker run --rm ghcr.io/nirholas/xactions-cli mcp-config --docker --client cursor
+xactions mcp-config --docker --write          # with XActions installed: write it into Claude Desktop's config
+```
+
+It prints this (Claude Desktop shape):
+
+```json
+{
+  "mcpServers": {
+    "xactions": {
+      "command": "docker",
+      "args": ["run", "-i", "--rm", "-v", "xactions:/data", "-e", "XACTIONS_SESSION_COOKIE", "ghcr.io/nirholas/xactions-cli:latest", "mcp"],
+      "env": { "XACTIONS_SESSION_COOKIE": "your_auth_token_here" }
+    }
+  }
+}
+```
+
+- `-i` keeps stdin open, which stdio MCP needs. `--rm` removes the container when
+  the client disconnects.
+- `-v xactions:/data` keeps the session, the query-ID cache, held drafts and the
+  daily action ledger between runs, so the write caps hold across restarts.
+- `-e XACTIONS_SESSION_COOKIE` with no value forwards the variable from `env`, so
+  the cookie never appears on the docker command line. Delete `env` to use a
+  session saved in the volume instead:
+  `docker run -i --rm -v xactions:/data ghcr.io/nirholas/xactions-cli login --cookies-file - < cookies.txt`.
+- Add server flags after `mcp`, for example `"mcp", "--tools", "read,analytics"`
+  or `"mcp", "--require-approval"`. Environment variables go in as more
+  `"-e", "NAME"` pairs plus the value in `env`.
+- The write tools drive a browser. Use `--image ghcr.io/nirholas/xactions-cli:browser`
+  (or that tag in `args`) when the agent will post, follow or like; the default
+  tag has none.
+
+Streamable HTTP from the same image listens on port 3000:
+
+```bash
+docker run -d --name xactions-mcp -p 3000:3000 \
+  -e XACTIONS_MCP_TOKEN=change-me -v xactions:/data \
+  ghcr.io/nirholas/xactions-cli mcp --http
+```
+
+Point the client at `http://localhost:3000/mcp` with
+`Authorization: Bearer change-me`, as in [HTTP transport](#http-transport) below.
+More on the image: [docker.md](docker.md).
+
+---
+
 ## Environment Variables
 
 | Variable | Required | Description |

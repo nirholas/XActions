@@ -107,7 +107,7 @@ npx xactions search "your brand" --limit 50               # what people are sayi
 | **MCP Server (AI agents)** | ✅ **165 tools** | ❌ | ❌ | ✅ (33-tool server) | ✅ (140-tool, metered) | ❌ | ❌ | ❌ Skills, not MCP |
 | **Browser Console Scripts** | ✅ 95 | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
 | **AI Voice Agent in Spaces** | ✅ Join, listen, speak | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
-| **CLI** | ✅ 60 commands | ❌ | ✅ | ❌ | ❌ | ✅ | ✅ | ✅ |
+| **CLI** | ✅ 61 commands | ❌ | ✅ | ❌ | ❌ | ✅ | ✅ | ✅ |
 | **Human approval gate on writes** | ✅ Every write held as a draft | ❌ | ❌ | ✅ | ❌ | ❌ | ❌ | ❌ |
 | **Daily action caps that survive a restart** | ✅ Per account, on disk | ❌ | ❌ | ✅ | ❌ | ❌ | ❌ | ❌ |
 | **Account pool with rotation** | ✅ SQLite, per-operation windows | ❌ | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ |
@@ -129,7 +129,7 @@ Competitor columns come from the [competitive audit](docs/audits/2026-08-27-comp
 | **The official X API, if you have keys** | An optional keyed lane beside the no-key one: every operation in X's published API v2 OpenAPI document (274 of them) by operation id, from `xactions xapi call <op>`, from `import { clientFromStore } from 'xactions/xapi'`, and from five `x_api_*` MCP tools. Parameters are checked against the spec before sending, 429s are waited out from the reset header, pagination and streams are handled, and `xactions xapi auth login` runs OAuth 2.0 with PKCE. Nothing in the no-key lane needs it. [Docs](docs/x-api/README.md). |
 | **Delete every reply you sent one account** | [`scripts/searchSweep.js`](scripts/searchSweep.js) turns any X search into a bulk action. Open `x.com/search?q=from:you @someone&f=live`, paste it, and delete, like, repost, or reply to every result, with a floating panel, a dry run, filters that protect posts that did numbers, and multiple passes because X search returns a slice at a time. Deletes only ever touch your own posts. [Docs](docs/search-sweep.md). |
 | **Sweep a whole profile** | [`scripts/engageProfile.js`](scripts/engageProfile.js) likes, reposts, and replies to every post on an account from the console, with a floating panel, dry run, resume, undo, and replies from your templates or from an LLM given a one-line brief (Grok works straight from the console; any provider through the extension). `xactions engage USERNAME --like --repost --comment --prompt "..."` does the same from the terminal with any provider. [Docs](docs/engage.md). |
-| **A CLI you can find your way around** | All 60 commands are now grouped by task instead of listed alphabetically. `xactions quickstart` gives a guided first run that adapts to what you already have set up. |
+| **A CLI you can find your way around** | All 61 commands are now grouped by task instead of listed alphabetically. `xactions quickstart` gives a guided first run that adapts to what you already have set up. |
 | **Tab completion** | `xactions completion bash\|zsh\|fish` prints a completion script generated from the live command tree, so every command, sub-command, and flag completes. |
 | **Log in without touching DevTools** | `xactions login --from-browser` reads x.com cookies straight out of an installed Chrome, Chromium, Brave, Edge, Arc or Firefox profile. `--cookies-file` imports a Netscape `cookies.txt`, a Cookie-Editor or EditThisCookie JSON export, or a Playwright / Puppeteer `storageState`. A full cookie jar beats a bare `auth_token`, because it carries the `ct0` every write needs. |
 | **Query IDs that heal themselves** | X rotates its GraphQL query IDs and every pinned client 404s at once. Ours are discovered from x.com's own bundles and cached, so a rotation is invisible. `xactions doctor` reports the cache age. |
@@ -303,27 +303,43 @@ This only applies to the hosted remote API. Local mode is always free.
 
 ## 🐳 Docker
 
-Run XActions anywhere with one command:
+No Node on the machine? The CLI and the MCP server ship as an image:
 
 ```bash
-# Quick start
-docker build -t xactions .
-docker run -it xactions xactions profile elonmusk
-
-# Run the MCP server
-docker run -p 3000:3000 xactions npm run mcp
-
-# With environment variables
-docker run -e XACTIONS_SESSION_COOKIE=your_cookie xactions xactions followers elonmusk
+docker run --rm ghcr.io/nirholas/xactions-cli profile nasa
 ```
 
-Or use Docker Compose:
+Add `-v xactions:/data` to keep the session, the query-ID cache, checkpoints and
+the action ledger between runs:
 
 ```bash
-docker compose up
+# Log in once, from an exported cookies file; the session lands in the volume
+docker run -i --rm -v xactions:/data ghcr.io/nirholas/xactions-cli login --cookies-file - < cookies.txt
+
+# Every later run reads it
+docker run --rm -v xactions:/data ghcr.io/nirholas/xactions-cli followers nasa --limit 200 --compact
+
+# Or pass the auth_token per run instead
+docker run --rm -e XACTIONS_SESSION_COOKIE ghcr.io/nirholas/xactions-cli search "mcp server" --compact
 ```
 
-See [Dockerfile](Dockerfile) for details.
+The MCP server is the same image. Print a client config that runs it with
+`docker run -i --rm` and the volume, or serve Streamable HTTP on a port:
+
+```bash
+docker run --rm ghcr.io/nirholas/xactions-cli mcp-config --docker
+docker run --rm -p 3000:3000 -e XACTIONS_MCP_TOKEN=change-me -v xactions:/data ghcr.io/nirholas/xactions-cli mcp --http
+```
+
+The default tag has no browser: HTTP reads, the guest tier and MCP.
+`ghcr.io/nirholas/xactions-cli:browser` adds Chromium for the commands that drive
+one (`bulk`, `persona run`, the MCP write tools). Neither carries the API
+server's database stack. Details, volumes and building it yourself:
+[docs/docker.md](docs/docker.md).
+
+The API server and dashboard are a separate image, `ghcr.io/nirholas/xactions`,
+built from the root [Dockerfile](Dockerfile); `docker compose up` runs it with
+PostgreSQL and Redis.
 
 ---
 
@@ -613,7 +629,7 @@ xactions connect
 xactions search "your topic" --limit 50
 ```
 
-Running `xactions` with no arguments prints all 60 commands grouped by task. `xactions completion bash` (or `zsh`, `fish`) turns on tab completion.
+Running `xactions` with no arguments prints all 61 commands grouped by task. `xactions completion bash` (or `zsh`, `fish`) turns on tab completion.
 
 ### Example 1: Unfollow Non-Followers (30 seconds)
 
@@ -1107,7 +1123,7 @@ const summary = await leaveSpace();
 
 ## 💻 CLI Reference
 
-60 commands, grouped by task, with 106 subcommands under them. Run `xactions`
+61 commands, grouped by task, with 106 subcommands under them. Run `xactions`
 with no arguments for the grouped screen, `xactions help <command>` for one
 command, and `xactions completion bash|zsh|fish` for tab completion generated
 from the live command tree.

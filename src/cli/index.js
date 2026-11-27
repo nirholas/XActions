@@ -37,6 +37,7 @@ import { registerOrgCommand } from './commands/org.js';
 import { registerArchiveCommand } from './commands/archive.js';
 import { registerXapiCommand } from './commands/xapi.js';
 import { renderRootHelp } from './help-groups.js';
+import { DOCKER_IMAGE, DOCKER_VOLUME, dockerMcpEntry } from './dockerImage.js';
 import { createSpinner, printCompact, resolveOutputMode } from '../utils/output.js';
 import { xactionsHome } from '../utils/savedSession.js';
 
@@ -66,6 +67,13 @@ async function saveConfig(config) {
   await fs.mkdir(CONFIG_DIR, { recursive: true, mode: 0o700 });
   await fs.writeFile(CONFIG_FILE, JSON.stringify(config, null, 2), { mode: 0o600 });
   await fs.chmod(CONFIG_FILE, 0o600);
+}
+
+/** Read all of stdin as UTF-8 text. */
+async function readStdinText() {
+  const chunks = [];
+  for await (const chunk of process.stdin) chunks.push(Buffer.from(chunk));
+  return Buffer.concat(chunks).toString('utf-8');
 }
 
 /** Where the full cookie jar lives; `createHttpScraper` reads this first. */
@@ -140,9 +148,31 @@ async function loadOptionalCookies(scraper, cookiePath) {
  *
  * @returns {Promise<import('../client/index.js').Scraper>}
  */
+/**
+ * The session from the environment as a cookie string, or null when
+ * XACTIONS_SESSION_COOKIE is unset. It wins over a saved session, the rule
+ * `loadSavedSession` documents for the MCP server and the browser paths, so
+ * `docker run -e XACTIONS_SESSION_COOKIE ...` reads logged in with nothing
+ * saved in the container.
+ *
+ * @returns {string|null}
+ */
+function envCookieString() {
+  const authToken = process.env.XACTIONS_SESSION_COOKIE;
+  if (!authToken) return null;
+  const ct0 = process.env.XACTIONS_CSRF_TOKEN;
+  return ct0 ? `auth_token=${authToken}; ct0=${ct0}` : `auth_token=${authToken}`;
+}
+
 async function createHttpScraper() {
   const { Scraper } = await import('../client/index.js');
   const scraper = new Scraper();
+
+  const fromEnv = envCookieString();
+  if (fromEnv) {
+    await scraper.setCookies(fromEnv);
+    return scraper;
+  }
 
   // Prefer a full cookie jar exported from the browser — it carries ct0, which
   // X requires as a CSRF header before it will treat a session as logged in.
@@ -206,12 +236,16 @@ async function createTwitterHttpClient() {
 }
 
 /**
- * The saved session as a `name=value; ...` cookie string, or null when there
- * is none: the cookie jar first, then the two tokens `xactions login` stores.
+ * The session as a `name=value; ...` cookie string, or null when there is
+ * none: XACTIONS_SESSION_COOKIE first, then the cookie jar, then the two
+ * tokens `xactions login` stores.
  *
  * @returns {Promise<string|null>}
  */
 async function loadSavedCookieString() {
+  const fromEnv = envCookieString();
+  if (fromEnv) return fromEnv;
+
   try {
     const jar = JSON.parse(await fs.readFile(COOKIE_FILE, 'utf-8'));
     const cookies = (Array.isArray(jar) ? jar : jar.cookies || [])
@@ -514,7 +548,7 @@ program
   .description('Set up authentication with session cookie')
   .option(
     '--cookies-file <path>',
-    'Import cookies from a file: Netscape cookies.txt, Cookie-Editor / EditThisCookie JSON, Playwright / Puppeteer storageState, or a raw "auth_token=...; ct0=..." string',
+    'Import cookies from a file (or - for stdin): Netscape cookies.txt, Cookie-Editor / EditThisCookie JSON, Playwright / Puppeteer storageState, or a raw "auth_token=...; ct0=..." string',
   )
   .option(
     '--from-browser [browser]',
@@ -524,12 +558,19 @@ program
     // --cookies-file: parse an export and save it through the session path.
     if (options.cookiesFile) {
       const { parseCookieInput } = await import('../client/auth/cookieImport.js');
-      const spinner = ora(`Reading cookies from ${options.cookiesFile}`).start();
+      // `-` reads stdin, so `docker run -i ... login --cookies-file - < cookies.txt`
+      // imports a file the container user could not read through a mount.
+      const fromStdin = options.cookiesFile === '-';
+      const source = fromStdin ? 'stdin' : options.cookiesFile;
+      const spinner = ora(`Reading cookies from ${source}`).start();
       try {
-        const text = await fs.readFile(options.cookiesFile, 'utf-8');
+        if (fromStdin && process.stdin.isTTY) {
+          throw new Error('--cookies-file - reads stdin, but stdin is a terminal. Pipe the file in: xactions login --cookies-file - < cookies.txt');
+        }
+        const text = fromStdin ? await readStdinText() : await fs.readFile(options.cookiesFile, 'utf-8');
         const cookies = parseCookieInput(text);
         const { authToken, csrfToken, count } = await saveImportedSession(cookies);
-        spinner.succeed(chalk.green(`Imported ${count} x.com cookie${count === 1 ? '' : 's'}`));
+        spinner.succeed(chalk.green(`Imported ${count} x.com cookie${count === 1 ? '' : 's'}${fromStdin ? ' from stdin' : ''}`));
         reportSessionSaved(authToken, csrfToken);
       } catch (error) {
         spinner.fail(chalk.red(error.message));
@@ -2128,6 +2169,26 @@ program
   });
 
 // ============================================================================
+// MCP Server
+// ============================================================================
+
+// The same server as the `xactions-mcp` bin, reachable through the one
+// command a container's ENTRYPOINT names: `docker run -i <image> mcp`. Every
+// argument goes to the server untouched (its own parser reads --http, --port,
+// --tools and --help), so commander must neither claim nor reject any of them.
+program
+  .command('mcp')
+  .description('Run the MCP server over stdio, or Streamable HTTP with --http (same as xactions-mcp; see xactions mcp --help)')
+  .helpOption(false)
+  .allowUnknownOption()
+  .allowExcessArguments()
+  .argument('[args...]', 'Arguments for the MCP server')
+  .action(async (args) => {
+    const { main } = await import('../mcp/server.js');
+    await main(args);
+  });
+
+// ============================================================================
 // MCP Config Generator
 // ============================================================================
 
@@ -2136,8 +2197,16 @@ program
   .description('Generate MCP server config for Claude Desktop, Cursor, Windsurf, etc.')
   .option('-w, --write', 'Write config to Claude Desktop config file')
   .option('-c, --client <client>', 'Target client: claude, cursor, windsurf, vscode (default: claude)')
+  .option('--docker', `Run the server from the Docker image (${DOCKER_IMAGE}) instead of npx`)
+  .option('--image <ref>', 'With --docker: the image to run, e.g. ghcr.io/nirholas/xactions-cli:browser')
   .action(async (options) => {
     const client = options.client || 'claude';
+
+    if (options.image && !options.docker) {
+      console.error(chalk.red('--image only applies with --docker. Add --docker, or drop --image.'));
+      process.exitCode = 1;
+      return;
+    }
 
     // Detect OS
     const platform = process.platform;
@@ -2178,13 +2247,15 @@ program
     const configPath = configPaths[client][platform] || configPaths[client].linux;
 
     // Build the MCP config snippet
-    const mcpEntry = {
-      command: 'npx',
-      args: ['-y', 'xactions-mcp'],
-      env: {
-        XACTIONS_SESSION_COOKIE: 'your_auth_token_here',
-      },
-    };
+    const mcpEntry = options.docker
+      ? dockerMcpEntry(options.image || DOCKER_IMAGE)
+      : {
+        command: 'npx',
+        args: ['-y', 'xactions-mcp'],
+        env: {
+          XACTIONS_SESSION_COOKIE: 'your_auth_token_here',
+        },
+      };
 
     const fullConfig = client === 'vscode'
       ? { mcp: { servers: { xactions: mcpEntry } } }
@@ -2200,6 +2271,12 @@ program
     console.log(chalk.bold('Add this to your config file:\n'));
     console.log(chalk.white(JSON.stringify(fullConfig, null, 2)));
     console.log();
+    if (options.docker) {
+      console.log(chalk.gray('Docker forwards XACTIONS_SESSION_COOKIE from "env", so the cookie stays out of the'));
+      console.log(chalk.gray('command line. To use a session saved in the volume instead, delete "env" and log in once:'));
+      console.log(chalk.gray(`  docker run -i --rm -v ${DOCKER_VOLUME} ${options.image || DOCKER_IMAGE} login --cookies-file - < cookies.txt`));
+      console.log();
+    }
 
     if (options.write && configPath) {
       try {
@@ -4037,4 +4114,4 @@ if (isEntryPoint()) {
   program.parse();
 }
 
-export { program, isEntryPoint, createMediaScrapers };
+export { program, isEntryPoint, createMediaScrapers, createHttpScraper, loadSavedCookieString };

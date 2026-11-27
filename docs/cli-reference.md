@@ -85,6 +85,7 @@ The answer streams as it is written and ends with a **Run it** block naming the 
 - [Team Management](#team-management)
 - [Bulk Operations](#bulk-operations)
 - [Import/Export Compatibility](#importexport-compatibility)
+- [MCP Server](#mcp-server)
 - [MCP Config](#mcp-config)
 - [Output Formats](#output-formats)
   - [Compact output for agents](#compact-output-for-agents)
@@ -209,7 +210,7 @@ xactions login [--from-browser [browser]] [--cookies-file <path>]
 | Option | Description |
 |--------|-------------|
 | `--from-browser [browser]` | Read x.com cookies from a locally installed browser: `chrome`, `chromium`, `brave`, `edge`, `arc`, or `firefox` (default `firefox`). |
-| `--cookies-file <path>` | Import cookies from a file: Netscape `cookies.txt`, Cookie-Editor / EditThisCookie JSON, Playwright / Puppeteer `storageState`, or a raw `auth_token=...; ct0=...` string. |
+| `--cookies-file <path>` | Import cookies from a file: Netscape `cookies.txt`, Cookie-Editor / EditThisCookie JSON, Playwright / Puppeteer `storageState`, or a raw `auth_token=...; ct0=...` string. `-` reads the same formats from stdin. |
 
 With no flags, `xactions login` prompts you to paste `auth_token` and `ct0` by hand.
 
@@ -236,6 +237,13 @@ $ xactions login --cookies-file ~/Downloads/x.com_cookies.txt
 ✔ Imported 4 x.com cookies
   Saved to ~/.xactions/cookies.json (owner-only)
   auth_token + ct0 captured. Session-tier commands are unlocked.
+```
+
+`--cookies-file -` reads stdin instead, which is how a container logs in without
+a bind mount the container user may not be able to read:
+
+```bash
+docker run -i --rm -v xactions:/data ghcr.io/nirholas/xactions-cli login --cookies-file - < x.com_cookies.txt
 ```
 
 Accepted formats (auto-detected):
@@ -2277,6 +2285,22 @@ xactions convert <file> [options]
 
 ---
 
+## MCP Server
+
+Run the MCP server. The same server as the `xactions-mcp` binary, reachable
+through the `xactions` command, which is what the Docker image's entrypoint
+names (`docker run -i --rm <image> mcp`). Every argument is passed to the
+server unchanged.
+
+```bash
+xactions mcp                                  # stdio, for a local client
+xactions mcp --tools read,analytics           # only these tool groups
+xactions mcp --http --port 3000               # Streamable HTTP on /mcp
+xactions mcp --help                           # the server's own flags
+```
+
+---
+
 ## MCP Config
 
 Generate MCP server configuration for AI tools.
@@ -2289,6 +2313,8 @@ xactions mcp-config [options]
 |--------|-------------|---------|
 | `-w, --write` | Write to config file | `false` |
 | `-c, --client <client>` | claude, cursor, windsurf, vscode | `claude` |
+| `--docker` | Run the server from the Docker image with `docker run -i --rm` and the `xactions:/data` volume, instead of `npx` | `false` |
+| `--image <ref>` | With `--docker`: the image to run | `ghcr.io/nirholas/xactions-cli:latest` |
 
 **Example:**
 
@@ -2298,6 +2324,10 @@ xactions mcp-config -c claude
 
 # Write directly to Claude config file
 xactions mcp-config -c claude --write
+
+# Run the server from the Docker image instead (no Node on the machine)
+xactions mcp-config --docker
+xactions mcp-config --docker --image ghcr.io/nirholas/xactions-cli:browser --client cursor
 ```
 
 ---
@@ -2363,7 +2393,8 @@ page (`XACTIONS_AUTH_TOKEN`, `XACTIONS_CONFIG_DIR`, `XACTIONS_HEADLESS`,
 | Variable | Read by | Effect |
 |---|---|---|
 | `XACTIONS_HOME` | every command | Where the config, the saved session (`config.json`, `cookies.json`), the brief cache, the query-ID cache and drafts live. Default `~/.xactions`. The MCP server honours the same variable, so one setting points both lanes at the same account |
-| `XACTIONS_SESSION_COOKIE` | `persona run`, `workflow run`, the MCP server | An `auth_token` used when no `--token` / `--auth` is passed and nothing is saved |
+| `XACTIONS_SESSION_COOKIE` | the HTTP reads (`profile`, `tweets`, `search`, `followers` and the rest), `doctor`, `persona run`, `workflow run`, the MCP server | An `auth_token`. The reads and `doctor` use it ahead of a saved session; `persona run` and `workflow run` use it when no `--token` / `--auth` is passed and nothing is saved |
+| `XACTIONS_CSRF_TOKEN` | with `XACTIONS_SESSION_COOKIE` | The matching `ct0` cookie. X treats a session without it as logged out, so search, followers and DMs need both |
 | `TWITTER_AUTH_TOKEN` | `ai analyze`, `ai generate`, `ai rewrite`, `ai calendar` | Fallback `auth_token` when `xactions login` has not saved one |
 | `GROQ_API_KEY`, `NVIDIA_API_KEY`, `OPENROUTER_API_KEY`(`S`) | `ai`, `optimize` and every other AI feature | Optional free-tier keys; each adds a lane to the free models those features use ([Free LLM lanes](ask.md#free-llm-lanes)). `XACTIONS_LLM=off` turns LLM calls off |
 | `OPENAI_API_KEY`, `XAI_API_KEY` (or `GROK_API_KEY`), `ANTHROPIC_API_KEY` | `engage`, `reputation`, `ask --provider` | Your own key for the matching `--provider` when `--api-key` / `--key` is not passed. Only used when you name that provider |

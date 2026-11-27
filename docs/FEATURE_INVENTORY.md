@@ -517,7 +517,7 @@ the approval gate holds and the daily caps charge.
 > **How to use:** `npx xactions <command>`, or `npm run cli -- <command>` from a clone.
 > **Auth:** stored under `~/.xactions` (override with `XACTIONS_HOME`).
 
-60 commands, grouped by task exactly as `xactions` with no arguments prints
+61 commands, grouped by task exactly as `xactions` with no arguments prints
 them, plus 108 subcommands. Two more are registered but ungrouped: `completion`,
 which prints a shell completion script generated from the live command tree,
 and `ask`.
@@ -541,7 +541,7 @@ Every read command takes these:
 | `xactions connect` | Log in through a real browser and capture the session. No DevTools. |
 | `xactions login` | Paste an `auth_token` cookie |
 | `xactions login --from-browser [browser]` | Read x.com cookies from an installed chrome, chromium, brave, edge, arc or firefox profile |
-| `xactions login --cookies-file <path>` | Import a Netscape `cookies.txt`, a Cookie-Editor or EditThisCookie JSON export, a Playwright or Puppeteer `storageState`, or a raw `auth_token=...; ct0=...` string |
+| `xactions login --cookies-file <path>` | Import a Netscape `cookies.txt`, a Cookie-Editor or EditThisCookie JSON export, a Playwright or Puppeteer `storageState`, or a raw `auth_token=...; ct0=...` string. `-` reads stdin |
 | `xactions doctor` | What works right now: guest tier, saved session, query-ID cache, installed skills, with the fix beside each failure |
 
 Public reads need no account at all: `profile`, `tweets`, `thread`, `media`,
@@ -559,96 +559,97 @@ bookmarks and DMs need a session.
 | 3 | `connect` | Log in through a real browser and capture the session. No DevTools needed. | none |
 | 4 | `login` | Set up authentication with session cookie | none |
 | 5 | `logout` | Remove saved authentication | none |
-| 6 | `mcp-config` | Generate MCP server config for Claude Desktop, Cursor, Windsurf, etc. | none |
-| 7 | `skills` | List, install and remove the bundled agent skills (Claude Code, Cursor, Codex, Windsurf) | `list`, `show`, `install`, `uninstall` |
-| 8 | `drafts` | Review, approve or discard MCP write calls held by approval mode | `list`, `show`, `approve`, `discard`, `clear` |
-| 9 | `info` | Show XActions information | none |
+| 6 | `mcp` | Run the MCP server over stdio, or Streamable HTTP with --http (same as xactions-mcp; see xactions mcp --help) | none |
+| 7 | `mcp-config` | Generate MCP server config for Claude Desktop, Cursor, Windsurf, etc. | none |
+| 8 | `skills` | List, install and remove the bundled agent skills (Claude Code, Cursor, Codex, Windsurf) | `list`, `show`, `install`, `uninstall` |
+| 9 | `drafts` | Review, approve or discard MCP write calls held by approval mode | `list`, `show`, `approve`, `discard`, `clear` |
+| 10 | `info` | Show XActions information | none |
 
 ### Read an account
 
 | # | Command | What it does | Subcommands |
 |---|---------|--------------|-------------|
-| 10 | `profile` | Get profile information for a user | none |
-| 11 | `tweets` | Scrape tweets from a user | none |
-| 12 | `thread` | Scrape a full tweet thread | none |
-| 13 | `article` | Read the full text of an X long-form Article | none |
-| 14 | `media` | Scrape media from a user | none |
-| 15 | `analyze` | Account report: engagement rate, cadence, content mix, best posting hour. No login needed. | none |
-| 16 | `brief` | Research accounts before you tag them: recent posts, numbers they publish, stats, who they tag | none |
-| 17 | `report` | Generate a reputation report for a monitored username | none |
-| 18 | `history` | View account history over time | none |
-| 19 | `snapshot` | Start auto-snapshotting an account | none |
+| 11 | `profile` | Get profile information for a user | none |
+| 12 | `tweets` | Scrape tweets from a user | none |
+| 13 | `thread` | Scrape a full tweet thread | none |
+| 14 | `article` | Read the full text of an X long-form Article | none |
+| 15 | `media` | Scrape media from a user | none |
+| 16 | `analyze` | Account report: engagement rate, cadence, content mix, best posting hour. No login needed. | none |
+| 17 | `brief` | Research accounts before you tag them: recent posts, numbers they publish, stats, who they tag | none |
+| 18 | `report` | Generate a reputation report for a monitored username | none |
+| 19 | `history` | View account history over time | none |
+| 20 | `snapshot` | Start auto-snapshotting an account | none |
 
 ### Followers and audience
 
 | # | Command | What it does | Subcommands |
 |---|---------|--------------|-------------|
-| 20 | `followers` | Scrape followers for a user | none |
-| 21 | `following` | Scrape accounts a user is following | none |
-| 22 | `non-followers` | Find accounts that don't follow back | none |
-| 23 | `audience` | Analyze follower overlap between two accounts | none |
-| 24 | `crm` | Follower CRM — tags, scores, segments | `sync`, `tag`, `search`, `score`, `segment` |
-| 25 | `graph` | Build and analyze social network graphs | `build`, `analyze`, `recommend`, `export`, `list`, `delete` |
+| 21 | `followers` | Scrape followers for a user | none |
+| 22 | `following` | Scrape accounts a user is following | none |
+| 23 | `non-followers` | Find accounts that don't follow back | none |
+| 24 | `audience` | Analyze follower overlap between two accounts | none |
+| 25 | `crm` | Follower CRM — tags, scores, segments | `sync`, `tag`, `search`, `score`, `segment` |
+| 26 | `graph` | Build and analyze social network graphs | `build`, `analyze`, `recommend`, `export`, `list`, `delete` |
 
 ### Search and monitor
 
 | # | Command | What it does | Subcommands |
 |---|---------|--------------|-------------|
-| 26 | `search` | Search for tweets | none |
-| 27 | `hashtag` | Scrape tweets for a hashtag | none |
-| 28 | `scrape` | Multi-platform scrape: profile, followers, following, tweets, search, hashtag, trending | none |
-| 29 | `platforms` | List supported social media platforms | none |
-| 30 | `monitor` | Start monitoring sentiment for a username or keyword | none |
-| 31 | `sentiment` | Analyze sentiment of text or tweet content | none |
-| 32 | `reputation` | AI risk-score an account's posts (professional, hostile, legal, spam) and print a reputation report | none |
-| 33 | `rss` | RSS feed monitoring & auto-posting | `add`, `list`, `check`, `drafts` |
-| 34 | `stream` | Real-time event streaming for X/Twitter accounts | `start`, `stop`, `list`, `history`, `pause`, `resume`, `status`, `stop-all` |
+| 27 | `search` | Search for tweets | none |
+| 28 | `hashtag` | Scrape tweets for a hashtag | none |
+| 29 | `scrape` | Multi-platform scrape: profile, followers, following, tweets, search, hashtag, trending | none |
+| 30 | `platforms` | List supported social media platforms | none |
+| 31 | `monitor` | Start monitoring sentiment for a username or keyword | none |
+| 32 | `sentiment` | Analyze sentiment of text or tweet content | none |
+| 33 | `reputation` | AI risk-score an account's posts (professional, hostile, legal, spam) and print a reputation report | none |
+| 34 | `rss` | RSS feed monitoring & auto-posting | `add`, `list`, `check`, `drafts` |
+| 35 | `stream` | Real-time event streaming for X/Twitter accounts | `start`, `stop`, `list`, `history`, `pause`, `resume`, `status`, `stop-all` |
 
 ### Write and grow
 
 | # | Command | What it does | Subcommands |
 |---|---------|--------------|-------------|
-| 35 | `engage` | Like, repost, and reply across a profile, a search, or a list, with template or AI-written comments | none |
-| 36 | `ai` | AI Tweet Writer — analyze voice, generate & rewrite tweets | `analyze`, `generate`, `rewrite`, `calendar` |
-| 37 | `optimize` | AI-optimize a tweet for engagement | none |
-| 38 | `hashtags` | Suggest hashtags for tweet text | none |
-| 39 | `predict` | Predict tweet performance | none |
-| 40 | `variations` | Generate tweet variations | none |
-| 41 | `evergreen` | Find and recycle top-performing evergreen tweets | none |
-| 42 | `persona` | Manage personas for algorithm building & automated growth | `create`, `list`, `run`, `status`, `delete`, `edit` |
-| 43 | `schedule` | Cron-based task scheduler | `add`, `list`, `remove`, `run` |
-| 44 | `bulk` | Bulk follow/unfollow/block/mute/scrape from CSV/JSON/TXT | none |
+| 36 | `engage` | Like, repost, and reply across a profile, a search, or a list, with template or AI-written comments | none |
+| 37 | `ai` | AI Tweet Writer — analyze voice, generate & rewrite tweets | `analyze`, `generate`, `rewrite`, `calendar` |
+| 38 | `optimize` | AI-optimize a tweet for engagement | none |
+| 39 | `hashtags` | Suggest hashtags for tweet text | none |
+| 40 | `predict` | Predict tweet performance | none |
+| 41 | `variations` | Generate tweet variations | none |
+| 42 | `evergreen` | Find and recycle top-performing evergreen tweets | none |
+| 43 | `persona` | Manage personas for algorithm building & automated growth | `create`, `list`, `run`, `status`, `delete`, `edit` |
+| 44 | `schedule` | Cron-based task scheduler | `add`, `list`, `remove`, `run` |
+| 45 | `bulk` | Bulk follow/unfollow/block/mute/scrape from CSV/JSON/TXT | none |
 
 ### Automate
 
 | # | Command | What it does | Subcommands |
 |---|---------|--------------|-------------|
-| 45 | `workflow` | Manage and run automation workflows | `create`, `run`, `list`, `delete`, `actions`, `runs` |
-| 46 | `agent` | 24/7 LLM-powered thought leadership agent | `start`, `test`, `login`, `setup`, `status`, `report` |
-| 47 | `notify` | Notification hub — Email, Slack, Discord, Telegram | `test`, `send`, `configure` |
-| 48 | `plugin` | Manage XActions plugins | `install`, `remove`, `list`, `enable`, `disable`, `discover` |
-| 49 | `org` | Run a team's family of X accounts: roles, approvals, audit log | `create`, `list`, `show`, `settings`, `member`, `account`, `draft`, `edit`, `posts`, `post`, `approve`, `reject`, `publish`, `calendar`, `stats`, `log` |
-| 50 | `team` | Team & multi-user management | `create`, `invite`, `members`, `activity` |
-| 51 | `dataset` | Manage scraping datasets (Apify-style) | `list`, `export`, `delete` |
+| 46 | `workflow` | Manage and run automation workflows | `create`, `run`, `list`, `delete`, `actions`, `runs` |
+| 47 | `agent` | 24/7 LLM-powered thought leadership agent | `start`, `test`, `login`, `setup`, `status`, `report` |
+| 48 | `notify` | Notification hub — Email, Slack, Discord, Telegram | `test`, `send`, `configure` |
+| 49 | `plugin` | Manage XActions plugins | `install`, `remove`, `list`, `enable`, `disable`, `discover` |
+| 50 | `org` | Run a team's family of X accounts: roles, approvals, audit log | `create`, `list`, `show`, `settings`, `member`, `account`, `draft`, `edit`, `posts`, `post`, `approve`, `reject`, `publish`, `calendar`, `stats`, `log` |
+| 51 | `team` | Team & multi-user management | `create`, `invite`, `members`, `activity` |
+| 52 | `dataset` | Manage scraping datasets (Apify-style) | `list`, `export`, `delete` |
 
 ### Move data
 
 | # | Command | What it does | Subcommands |
 |---|---------|--------------|-------------|
-| 52 | `export` | Export a Twitter account (profile, tweets, followers, following, bookmarks) | none |
-| 53 | `export-data` | Export data in external tool format | none |
-| 54 | `archive` | Read the X data export zip: summary, export to files, migrate elsewhere | `summary`, `export`, `migrate` |
-| 55 | `import` | Import data from Apify, Phantombuster, or CSV | none |
-| 56 | `convert` | Convert between Apify/Phantombuster/CSV formats | none |
-| 57 | `migrate` | Migrate Twitter data to Bluesky or Mastodon | none |
-| 58 | `diff` | Compare two account exports and show changes | none |
+| 53 | `export` | Export a Twitter account (profile, tweets, followers, following, bookmarks) | none |
+| 54 | `export-data` | Export data in external tool format | none |
+| 55 | `archive` | Read the X data export zip: summary, export to files, migrate elsewhere | `summary`, `export`, `migrate` |
+| 56 | `import` | Import data from Apify, Phantombuster, or CSV | none |
+| 57 | `convert` | Convert between Apify/Phantombuster/CSV formats | none |
+| 58 | `migrate` | Migrate Twitter data to Bluesky or Mastodon | none |
+| 59 | `diff` | Compare two account exports and show changes | none |
 
 ### Low level
 
 | # | Command | What it does | Subcommands |
 |---|---------|--------------|-------------|
-| 59 | `client` | HTTP-only Twitter client (fast, no browser needed) | `login`, `profile`, `tweet`, `search`, `post`, `followers`, `trends`, `whoami` |
-| 60 | `xapi` | Official X API v2: every endpoint, by operation id (needs your own developer keys) | `tags`, `list`, `describe`, `call`, `stream`, `upload`, `auth` |
+| 60 | `client` | HTTP-only Twitter client (fast, no browser needed) | `login`, `profile`, `tweet`, `search`, `post`, `followers`, `trends`, `whoami` |
+| 61 | `xapi` | Official X API v2: every endpoint, by operation id (needs your own developer keys) | `tags`, `list`, `describe`, `call`, `stream`, `upload`, `auth` |
 
 
 ---
@@ -892,7 +893,7 @@ rows on every run and fails the build when one has drifted.
 | Category | Count | Where it comes from |
 |----------|-------|---------------------|
 | MCP tools * | 165 | the `TOOLS` array in `src/mcp/server.js` |
-| CLI commands * | 60 | the `GROUPS` arrays in `src/cli/help-groups.js`, which is what `xactions --help` prints |
+| CLI commands * | 61 | the `GROUPS` arrays in `src/cli/help-groups.js`, which is what `xactions --help` prints |
 | CLI subcommands | 108 | the subcommands registered under those commands |
 | Agent skills * | 50 | directories under `skills/`, indexed in `skills/index.json` |
 | API route modules * | 41 | `.js` files in `api/routes/` |

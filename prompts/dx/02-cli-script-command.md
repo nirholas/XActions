@@ -9,7 +9,7 @@ A user can find, read and copy any browser console script without opening GitHub
 
 ## Why
 
-The CLI has about 60 commands (`node src/cli/index.js --help`) and none of them surfaces the
+The CLI has about 61 commands (`node src/cli/index.js --help`) and none of them surfaces the
 browser scripts, which are the most used part of the project. Today the path is: find
 the right file on GitHub among several look-alikes, open raw, select all, copy.
 

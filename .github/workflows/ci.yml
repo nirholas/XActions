@@ -262,3 +262,49 @@ jobs:
           tags: xactions:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
+
+  # The CLI and MCP image (deploy/docker/cli.Dockerfile), both targets, on
+  # every pull request: build it, then run the same smoke test the publish
+  # workflow gates on (--version, a live guest-tier profile read, the volume's
+  # owner, MCP initialize and tools/list over stdio).
+  cli-image:
+    name: CLI image (${{ matrix.target }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - target: cli
+            smoke-flag: ''
+          - target: browser
+            smoke-flag: --browser
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@f87e5991a6d7451dcb8d9637bfbc97413f497069 # v4
+
+      - name: Build the image
+        uses: docker/build-push-action@c3c9e263c25d99ce0380d002d59b67737d91b0dc # v7
+        with:
+          context: .
+          file: deploy/docker/cli.Dockerfile
+          target: ${{ matrix.target }}
+          load: true
+          push: false
+          tags: xactions-cli:ci
+          cache-from: type=gha,scope=cli-${{ matrix.target }}
+          cache-to: type=gha,scope=cli-${{ matrix.target }},mode=max
+
+      - name: Image size
+        run: docker image ls xactions-cli:ci --format '{{.Repository}}:{{.Tag}} {{.Size}}'
+
+      - name: Smoke test
+        env:
+          SMOKE_FLAG: ${{ matrix.smoke-flag }}
+        run: deploy/docker/smoke.sh xactions-cli:ci $SMOKE_FLAG
