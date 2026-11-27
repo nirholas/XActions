@@ -1,5 +1,14 @@
+// GENERATED FILE: a copy of browser/tweetPriceCorrelation.js, written by scripts/build-script-manifest.mjs. Edit browser/tweetPriceCorrelation.js instead, then run: npm run browser:build
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
-// scripts/tweetPriceCorrelation.js
+/**
+ * @name        tweetPriceCorrelation.js
+ * @title       Post and Price Correlation
+ * @description Correlate how often an account posts with token or stock price movements.
+ * @category    analytics
+ * @page        x.com/<username>
+ * @writes      false
+ * @aliases     scripts/tweetPriceCorrelation.js
+ */
 // Browser console script — correlate a founder's tweet frequency with token price movements
 // Paste in DevTools console on x.com/USERNAME (any crypto founder's profile)
 // Inspired by https://github.com/rohunvora/tweet-price-charts
@@ -98,7 +107,7 @@
     const data = await resp.json();
     const candles = data?.data?.attributes?.ohlcv_list || [];
     return candles
-      .map(([ts, o, h, l, c]) => ({ ts: ts * 1000, price: parseFloat(c) }))
+      .map(([ts, , , , c]) => ({ ts: ts * 1000, price: parseFloat(c) }))
       .filter(p => p.ts >= startTs * 1000 && p.ts <= endTs * 1000)
       .sort((a, b) => a.ts - b.ts);
   };

@@ -1,11 +1,17 @@
+// GENERATED FILE: a copy of browser/blockListTransfer.js, written by scripts/build-script-manifest.mjs. Edit browser/blockListTransfer.js instead, then run: npm run browser:build
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
 /**
  * ============================================
  * 🚫 Block List Transfer - XActions
  * ============================================
  *
- * @name         block-list-transfer
- * @description  Export your block list to JSON, import and block a list of users, or block-chain an account's followers.
+ * @name        blockListTransfer.js
+ * @description Export your block list to JSON, import and block a list of users, or block the followers of an account.
+ * @title       Block List Import and Export
+ * @category    safety
+ * @page        x.com/settings/blocked/all
+ * @writes      true
+ * @aliases     scripts/twitter/block-list-transfer.js
  * @author       nichxbt
  * @version      1.0.0
  * @date         2026-07-20

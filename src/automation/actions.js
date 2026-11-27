@@ -1,4 +1,14 @@
+// GENERATED FILE: a copy of browser/actions.js, written by scripts/build-script-manifest.mjs. Edit browser/actions.js instead, then run: npm run browser:build
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
+/**
+ * @name        actions.js
+ * @title       Actions Library
+ * @description Library of X actions (like, follow, post, DM, lists and more) on window.XActions for the other automation scripts.
+ * @category    automation
+ * @page        x.com/*
+ * @writes      true
+ * @aliases     src/automation/actions.js
+ */
 // XActions Actions Library - Complete X/Twitter Actions
 // https://github.com/nirholas/XActions
 //
@@ -18,7 +28,7 @@ window.XActions = (() => {
     return null;
   }
 
-  const { sleep, randomDelay, log, storage, waitForElement, waitForElements, clickElement, typeText } = Core;
+  const { sleep, randomDelay, log, waitForElement, clickElement, typeText } = Core;
 
   // ============================================
   // EXTENDED SELECTORS (All X UI Elements)
@@ -444,7 +454,7 @@ window.XActions = (() => {
     },
     
     // Report a tweet
-    report: async (tweetElement, reason) => {
+    report: async (tweetElement, _reason) => {
       log('Opening report dialog...', 'action');
       
       const caret = tweetElement.querySelector(SEL.caret);
@@ -1099,7 +1109,7 @@ window.XActions = (() => {
     },
     
     // Create group DM
-    createGroup: async (usernames, groupName = null) => {
+    createGroup: async (usernames, _groupName = null) => {
       log(`Creating group DM with ${usernames.length} users...`, 'action');
       
       window.location.href = `https://x.com/messages`;
@@ -1543,7 +1553,7 @@ window.XActions = (() => {
     blockedAccounts: async () => { window.location.href = 'https://x.com/settings/blocked/all'; await sleep(2000); },
     
     // Add muted word
-    addMutedWord: async (word, options = {}) => {
+    addMutedWord: async (word, _options = {}) => {
       log(`Muting word: "${word}"...`, 'action');
       
       window.location.href = 'https://x.com/settings/add_muted_keyword';

@@ -1,24 +1,75 @@
+// GENERATED FILE: a copy of browser/tweetScheduleOptimizer.js, written by scripts/build-script-manifest.mjs. Edit browser/tweetScheduleOptimizer.js instead, then run: npm run browser:build
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
-// scripts/tweetScheduleOptimizer.js
-// Browser console script for generating an optimal weekly posting schedule
-// Paste in DevTools console on x.com/USERNAME
-// by nichxbt
-
+/**
+ * ============================================================
+ * ⏱️ Tweet Schedule Optimizer — Production Grade
+ * ============================================================
+ *
+ * @name        tweetScheduleOptimizer.js
+ * @title       Tweet Schedule Optimizer
+ * @description Score your past posts by day and hour, weighting engagement, replies and reposts, and build a personalized weekly posting schedule.
+ * @category    analytics
+ * @page        x.com/<you>
+ * @writes      false
+ * @aliases     scripts/tweetScheduleOptimizer.js
+ * @author      nichxbt (https://x.com/nichxbt)
+ * @version     1.0.0
+ * @date        2026-11-27
+ * @repository  https://github.com/nirholas/XActions
+ *
+ * ============================================================
+ * 📋 USAGE:
+ *
+ * 1. Go to your profile (x.com/YOUR_USERNAME)
+ * 2. Open DevTools Console (F12)
+ * 3. Paste browser/tweetScheduleOptimizer.js and run: auto-scrolls and collects data
+ * 4. Outputs your personalized optimal schedule
+ * ============================================================
+ */
 (() => {
-  const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+  'use strict';
 
-  // =============================================
-  // CONFIGURATION
-  // =============================================
   const CONFIG = {
-    scrollRounds: 5,
-    scrollDelay: 1500,
-    topSlots: 7,
+    scrollRounds: 12,        // More rounds = more data = better accuracy
+    scrollDelay: 1800,
+    minTweetsForSlot: 2,     // Minimum tweets in a slot to be considered
+    topSlots: 7,             // Show top N time slots
+    weights: {
+      engagement: 0.5,       // Weight for total engagement score
+      replies: 0.25,         // Weight for reply-to-engagement ratio (conversation quality)
+      retweets: 0.25,        // Weight for retweet ratio (shareability)
+    },
     exportResults: true,
   };
-  // =============================================
 
-  const parseCount = (text) => {
+  const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+  const DAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+  const DAY_SHORT = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+
+  // ── Parse engagement metrics from a tweet article ──────────
+  const parseMetrics = (article) => {
+    const metrics = { likes: 0, retweets: 0, replies: 0, views: 0 };
+
+    // Like count
+    const likeBtn = article.querySelector('[data-testid="like"] span') || article.querySelector('[data-testid="unlike"] span');
+    if (likeBtn) metrics.likes = parseNum(likeBtn.textContent);
+
+    // Retweet count
+    const rtBtn = article.querySelector('[data-testid="retweet"] span');
+    if (rtBtn) metrics.retweets = parseNum(rtBtn.textContent);
+
+    // Reply count
+    const replyBtn = article.querySelector('[data-testid="reply"] span');
+    if (replyBtn) metrics.replies = parseNum(replyBtn.textContent);
+
+    // Views (analytics link)
+    const viewEl = article.querySelector('a[href*="/analytics"] span');
+    if (viewEl) metrics.views = parseNum(viewEl.textContent);
+
+    return metrics;
+  };
+
+  const parseNum = (text) => {
     if (!text) return 0;
     text = text.trim().replace(/,/g, '');
     if (text.endsWith('K')) return Math.round(parseFloat(text) * 1000);
@@ -26,160 +77,264 @@
     return parseInt(text) || 0;
   };
 
-  const DAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-  const DAY_SHORT = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-
-  const download = (data, filename) => {
-    const a = document.createElement('a');
-    a.href = URL.createObjectURL(new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' }));
-    a.download = filename;
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-  };
-
+  // ── Collect tweet data ─────────────────────────────────────
   const collectTweets = async () => {
     const tweets = [];
     const seen = new Set();
 
     for (let round = 0; round < CONFIG.scrollRounds; round++) {
-      document.querySelectorAll('article[data-testid="tweet"]').forEach(article => {
+      const articles = document.querySelectorAll('article[data-testid="tweet"]');
+
+      for (const article of articles) {
         const timeEl = article.querySelector('time');
-        if (!timeEl) return;
+        if (!timeEl) continue;
+
         const datetime = timeEl.getAttribute('datetime');
-        if (!datetime) return;
+        if (!datetime) continue;
+
+        const ts = new Date(datetime).getTime();
+        if (isNaN(ts)) continue;
+
         const fingerprint = `${datetime}-${(article.textContent || '').slice(0, 30)}`;
-        if (seen.has(fingerprint)) return;
+        if (seen.has(fingerprint)) continue;
         seen.add(fingerprint);
 
-        const date = new Date(datetime);
-        if (isNaN(date.getTime())) return;
+        const date = new Date(ts);
+        const metrics = parseMetrics(article);
+        const totalEng = metrics.likes + metrics.retweets + metrics.replies;
 
-        const likeSpan = article.querySelector('[data-testid="like"] span, [data-testid="unlike"] span');
-        const rtSpan = article.querySelector('[data-testid="retweet"] span');
-        const replySpan = article.querySelector('[data-testid="reply"] span');
-        const viewSpan = article.querySelector('a[href*="/analytics"] span');
-
-        const likes = parseCount(likeSpan?.textContent);
-        const retweets = parseCount(rtSpan?.textContent);
-        const replies = parseCount(replySpan?.textContent);
-        const views = parseCount(viewSpan?.textContent);
-        const totalEng = likes + retweets + replies;
-
+        // Detect media type
         const hasImage = !!article.querySelector('[data-testid="tweetPhoto"]');
         const hasVideo = !!article.querySelector('video');
-        const mediaType = hasVideo ? 'video' : hasImage ? 'image' : 'text';
+        const hasLink = !!article.querySelector('[data-testid="card.wrapper"]');
+        const mediaType = hasVideo ? 'video' : hasImage ? 'image' : hasLink ? 'link' : 'text';
+
+        // Tweet text
+        const textEl = article.querySelector('[data-testid="tweetText"]');
+        const text = textEl ? textEl.textContent.trim().slice(0, 120) : '';
+        const isThread = text.includes('🧵') || !!article.querySelector('a[href*="/status/"][dir="auto"]');
 
         tweets.push({
-          dayOfWeek: date.getDay(), hour: date.getHours(), day: DAY_SHORT[date.getDay()],
-          likes, retweets, replies, views, totalEng, mediaType,
+          timestamp: ts,
+          dayOfWeek: date.getDay(),
+          hour: date.getHours(),
+          day: DAY_SHORT[date.getDay()],
+          ...metrics,
+          totalEng,
+          engRate: metrics.views > 0 ? totalEng / metrics.views : 0,
+          mediaType,
+          isThread,
+          text,
         });
-      });
+      }
 
       console.log(`   📜 Round ${round + 1}: ${tweets.length} tweets`);
       window.scrollTo(0, document.body.scrollHeight);
       await sleep(CONFIG.scrollDelay);
     }
+
     return tweets;
   };
 
-  const run = async () => {
-    console.log('⏱️ TWEET SCHEDULE OPTIMIZER — by nichxbt\n');
+  // ── Score time slots ───────────────────────────────────────
+  const scoreSlots = (tweets) => {
+    const slotMap = {};
 
-    console.log('📊 Collecting tweet data...\n');
+    for (const t of tweets) {
+      const key = `${t.dayOfWeek}-${t.hour}`;
+      if (!slotMap[key]) {
+        slotMap[key] = { dayOfWeek: t.dayOfWeek, hour: t.hour, tweets: [] };
+      }
+      slotMap[key].tweets.push(t);
+    }
+
+    // Calculate slot scores
+    const slots = Object.values(slotMap).filter(s => s.tweets.length >= CONFIG.minTweetsForSlot);
+
+    if (slots.length === 0) return [];
+
+    // Normalize each dimension
+    const maxEng = Math.max(...slots.map(s => s.tweets.reduce((a, t) => a + t.totalEng, 0) / s.tweets.length), 1);
+    const maxReplies = Math.max(...slots.map(s => s.tweets.reduce((a, t) => a + t.replies, 0) / s.tweets.length), 1);
+    const maxRts = Math.max(...slots.map(s => s.tweets.reduce((a, t) => a + t.retweets, 0) / s.tweets.length), 1);
+
+    for (const slot of slots) {
+      const n = slot.tweets.length;
+      const avgEng = slot.tweets.reduce((a, t) => a + t.totalEng, 0) / n;
+      const avgReplies = slot.tweets.reduce((a, t) => a + t.replies, 0) / n;
+      const avgRts = slot.tweets.reduce((a, t) => a + t.retweets, 0) / n;
+      const avgViews = slot.tweets.reduce((a, t) => a + t.views, 0) / n;
+
+      const engNorm = avgEng / maxEng;
+      const replyNorm = avgReplies / maxReplies;
+      const rtNorm = avgRts / maxRts;
+
+      slot.score = (
+        CONFIG.weights.engagement * engNorm +
+        CONFIG.weights.replies * replyNorm +
+        CONFIG.weights.retweets * rtNorm
+      );
+
+      // Confidence bonus: more data = more reliable
+      const confidenceMultiplier = Math.min(1, 0.5 + (n / 10) * 0.5);
+      slot.adjustedScore = slot.score * confidenceMultiplier;
+
+      slot.avgEng = avgEng;
+      slot.avgReplies = avgReplies;
+      slot.avgRts = avgRts;
+      slot.avgViews = avgViews;
+      slot.count = n;
+    }
+
+    return slots.sort((a, b) => b.adjustedScore - a.adjustedScore);
+  };
+
+  // ── Main ───────────────────────────────────────────────────
+  const run = async () => {
+    const W = 60;
+    console.log('╔' + '═'.repeat(W) + '╗');
+    console.log('║  ⏱️  TWEET SCHEDULE OPTIMIZER' + ' '.repeat(W - 31) + '║');
+    console.log('║  by nichxbt — v1.0' + ' '.repeat(W - 21) + '║');
+    console.log('╚' + '═'.repeat(W) + '╝');
+
+    console.log('\n📊 Collecting your tweet data...\n');
     const tweets = await collectTweets();
 
-    if (tweets.length < 10) { console.error(`❌ Only ${tweets.length} tweets. Need 10+.`); return; }
+    if (tweets.length < 10) {
+      console.error(`❌ Only ${tweets.length} tweets found. Need at least 10. Try more scrollRounds or ensure you're on your profile.`);
+      return;
+    }
+
     console.log(`\n✅ Analyzing ${tweets.length} tweets...\n`);
 
-    // Score time slots
-    const slotMap = {};
-    tweets.forEach(t => {
-      const key = `${t.dayOfWeek}-${t.hour}`;
-      if (!slotMap[key]) slotMap[key] = { dayOfWeek: t.dayOfWeek, hour: t.hour, tweets: [] };
-      slotMap[key].tweets.push(t);
-    });
+    const slots = scoreSlots(tweets);
 
-    const slots = Object.values(slotMap).filter(s => s.tweets.length >= 2);
-    if (slots.length === 0) { console.error('❌ Not enough data per slot.'); return; }
+    if (slots.length === 0) {
+      console.error('❌ Not enough data in any time slot. Increase scrollRounds or minTweetsForSlot.');
+      return;
+    }
 
-    const maxEng = Math.max(...slots.map(s => s.tweets.reduce((a, t) => a + t.totalEng, 0) / s.tweets.length), 1);
+    // ── Top Time Slots ──────────────────────────────────────
+    console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+    console.log('  🏆 YOUR OPTIMAL POSTING SCHEDULE');
+    console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
 
-    slots.forEach(s => {
-      const n = s.tweets.length;
-      s.avgEng = s.tweets.reduce((a, t) => a + t.totalEng, 0) / n;
-      s.avgReplies = s.tweets.reduce((a, t) => a + t.replies, 0) / n;
-      s.avgRts = s.tweets.reduce((a, t) => a + t.retweets, 0) / n;
-      s.avgViews = s.tweets.reduce((a, t) => a + t.views, 0) / n;
-      s.score = s.avgEng / maxEng;
-      s.adjustedScore = s.score * Math.min(1, 0.5 + (n / 10) * 0.5);
-      s.count = n;
-    });
-
-    slots.sort((a, b) => b.adjustedScore - a.adjustedScore);
-
-    // Top slots
-    console.log('🏆 OPTIMAL POSTING SCHEDULE:');
-    slots.slice(0, CONFIG.topSlots).forEach((s, i) => {
+    const topN = slots.slice(0, CONFIG.topSlots);
+    for (let i = 0; i < topN.length; i++) {
+      const s = topN[i];
       const medal = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : '  ';
       const timeStr = `${DAYS[s.dayOfWeek]} ${String(s.hour).padStart(2, '0')}:00`;
       const scoreBar = '█'.repeat(Math.round(s.adjustedScore * 20));
-      console.log(`\n  ${medal} #${i + 1} ${timeStr}`);
+
+      console.log(`\n  ${medal} #${i + 1}  ${timeStr}`);
       console.log(`     Score: ${(s.adjustedScore * 100).toFixed(0)}/100 ${scoreBar}`);
-      console.log(`     Avg eng: ${s.avgEng.toFixed(0)} | Replies: ${s.avgReplies.toFixed(0)} | RTs: ${s.avgRts.toFixed(0)} (${s.count} tweets)`);
-    });
+      console.log(`     Avg engagement: ${s.avgEng.toFixed(0)} (${s.count} tweets)`);
+      console.log(`     Avg replies: ${s.avgReplies.toFixed(0)} | Avg RTs: ${s.avgRts.toFixed(0)} | Avg views: ${s.avgViews.toFixed(0)}`);
+    }
 
-    // Worst times
-    console.log('\n\n❌ WORST TIMES:');
-    slots.slice(-3).reverse().forEach(s => {
-      console.log(`  ${DAYS[s.dayOfWeek]} ${String(s.hour).padStart(2, '0')}:00 — score ${(s.adjustedScore * 100).toFixed(0)} (avg eng: ${s.avgEng.toFixed(0)})`);
-    });
+    // ── Worst times ─────────────────────────────────────────
+    console.log('\n━━━ ❌ WORST TIMES (avoid these) ━━━');
+    const worstN = slots.slice(-3).reverse();
+    for (const s of worstN) {
+      console.log(`  ${DAYS[s.dayOfWeek]} ${String(s.hour).padStart(2, '0')}:00 — score ${(s.adjustedScore * 100).toFixed(0)}/100 (avg eng: ${s.avgEng.toFixed(0)})`);
+    }
 
-    // Day ranking
-    console.log('\n📅 DAY RANKING:');
+    // ── Day-of-week ranking ─────────────────────────────────
+    console.log('\n━━━ 📅 DAY RANKING ━━━');
     const dayScores = {};
-    tweets.forEach(t => {
+    for (const t of tweets) {
       if (!dayScores[t.dayOfWeek]) dayScores[t.dayOfWeek] = { total: 0, count: 0 };
       dayScores[t.dayOfWeek].total += t.totalEng;
       dayScores[t.dayOfWeek].count++;
-    });
-    const dayRank = Object.entries(dayScores)
-      .map(([d, v]) => ({ day: DAYS[d], avg: v.total / v.count, count: v.count }))
-      .sort((a, b) => b.avg - a.avg);
-    const maxDayAvg = Math.max(...dayRank.map(d => d.avg), 1);
-    dayRank.forEach(d => {
-      const bar = '█'.repeat(Math.round(d.avg / maxDayAvg * 20));
-      console.log(`  ${d.day.padEnd(10)} avg ${String(d.avg.toFixed(0)).padStart(5)} eng (${d.count} tweets) ${bar}`);
-    });
-
-    // Media performance
-    console.log('\n🖼️ CONTENT FORMAT:');
-    const mediaGroups = {};
-    tweets.forEach(t => { mediaGroups[t.mediaType] = mediaGroups[t.mediaType] || []; mediaGroups[t.mediaType].push(t); });
-    Object.entries(mediaGroups)
-      .map(([type, arr]) => ({ type, count: arr.length, avgEng: arr.reduce((s, t) => s + t.totalEng, 0) / arr.length }))
-      .sort((a, b) => b.avgEng - a.avgEng)
-      .forEach(m => console.log(`  ${m.type.padEnd(8)} avg ${m.avgEng.toFixed(0)} eng (${m.count} tweets)`));
-
-    // Weekly schedule
-    console.log('\n📋 SUGGESTED WEEKLY SCHEDULE:');
-    const bestPerDay = {};
-    slots.forEach(s => {
-      const d = s.dayOfWeek;
-      if (!bestPerDay[d] || s.adjustedScore > bestPerDay[d].adjustedScore) bestPerDay[d] = s;
-    });
-    for (let d = 0; d < 7; d++) {
-      const s = bestPerDay[d];
-      console.log(s ? `  ${DAY_SHORT[d]} → ${String(s.hour).padStart(2, '0')}:00 (score: ${(s.adjustedScore * 100).toFixed(0)})` : `  ${DAY_SHORT[d]} → No data`);
     }
 
+    const dayRanking = Object.entries(dayScores)
+      .map(([d, v]) => ({ day: DAYS[d], avg: v.total / v.count, count: v.count }))
+      .sort((a, b) => b.avg - a.avg);
+
+    for (const d of dayRanking) {
+      const bar = '█'.repeat(Math.round(d.avg / Math.max(...dayRanking.map(x => x.avg), 1) * 20));
+      console.log(`  ${d.day.padEnd(10)} avg ${String(d.avg.toFixed(0)).padStart(5)} eng (${d.count} tweets) ${bar}`);
+    }
+
+    // ── Media type analysis ─────────────────────────────────
+    console.log('\n━━━ 🖼️ CONTENT FORMAT PERFORMANCE ━━━');
+    const mediaGroups = {};
+    for (const t of tweets) {
+      if (!mediaGroups[t.mediaType]) mediaGroups[t.mediaType] = [];
+      mediaGroups[t.mediaType].push(t);
+    }
+
+    const mediaRanking = Object.entries(mediaGroups)
+      .map(([type, arr]) => ({
+        type,
+        count: arr.length,
+        avgEng: arr.reduce((s, t) => s + t.totalEng, 0) / arr.length,
+      }))
+      .sort((a, b) => b.avgEng - a.avgEng);
+
+    for (const m of mediaRanking) {
+      console.log(`  ${m.type.padEnd(8)} avg ${m.avgEng.toFixed(0)} engagement (${m.count} tweets)`);
+    }
+
+    // Thread performance
+    const threads = tweets.filter(t => t.isThread);
+    const nonThreads = tweets.filter(t => !t.isThread);
+    if (threads.length > 0 && nonThreads.length > 0) {
+      const threadAvg = threads.reduce((s, t) => s + t.totalEng, 0) / threads.length;
+      const nonThreadAvg = nonThreads.reduce((s, t) => s + t.totalEng, 0) / nonThreads.length;
+      console.log(`\n  🧵 Threads: avg ${threadAvg.toFixed(0)} eng (${threads.length} threads)`);
+      console.log(`  📝 Singles: avg ${nonThreadAvg.toFixed(0)} eng (${nonThreads.length} tweets)`);
+      if (threadAvg > nonThreadAvg * 1.2) {
+        console.log('  💡 Threads significantly outperform singles — post more threads!');
+      }
+    }
+
+    // ── Weekly schedule ─────────────────────────────────────
+    console.log('\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+    console.log('  📋 SUGGESTED WEEKLY SCHEDULE');
+    console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+
+    // Pick best slot per day
+    const bestPerDay = {};
+    for (const s of slots) {
+      const d = s.dayOfWeek;
+      if (!bestPerDay[d] || s.adjustedScore > bestPerDay[d].adjustedScore) {
+        bestPerDay[d] = s;
+      }
+    }
+
+    for (let d = 0; d < 7; d++) {
+      const s = bestPerDay[d];
+      if (s) {
+        console.log(`  ${DAY_SHORT[d]}  →  ${String(s.hour).padStart(2, '0')}:00  (score: ${(s.adjustedScore * 100).toFixed(0)})`);
+      } else {
+        console.log(`  ${DAY_SHORT[d]}  →  No data — try posting at varied times`);
+      }
+    }
+
+    console.log('\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n');
+
     if (CONFIG.exportResults) {
-      download({
-        optimalSlots: slots.slice(0, CONFIG.topSlots).map(s => ({ day: DAYS[s.dayOfWeek], hour: s.hour, score: Math.round(s.adjustedScore * 100), avgEng: Math.round(s.avgEng), tweets: s.count })),
-        dayRanking: dayRank.map(d => ({ day: d.day, avgEng: Math.round(d.avg), tweets: d.count })),
-        totalTweets: tweets.length, analyzedAt: new Date().toISOString(),
-      }, `xactions-schedule-optimizer-${new Date().toISOString().slice(0, 10)}.json`);
-      console.log('\n📥 Schedule exported as JSON.');
+      const data = {
+        optimalSlots: topN.map(s => ({
+          day: DAYS[s.dayOfWeek], hour: s.hour,
+          score: Math.round(s.adjustedScore * 100),
+          avgEng: Math.round(s.avgEng), tweets: s.count,
+        })),
+        dayRanking: dayRanking.map(d => ({ day: d.day, avgEng: Math.round(d.avg), tweets: d.count })),
+        mediaPerformance: mediaRanking,
+        weeklySchedule: Object.entries(bestPerDay).map(([d, s]) => ({
+          day: DAYS[d], hour: s.hour, score: Math.round(s.adjustedScore * 100),
+        })),
+        totalTweetsAnalyzed: tweets.length,
+        analyzedAt: new Date().toISOString(),
+      };
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+      const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+      a.download = `xactions-schedule-optimizer-${new Date().toISOString().slice(0, 10)}.json`;
+      document.body.appendChild(a); a.click(); a.remove();
+      console.log('📥 Schedule optimization exported.');
     }
   };
 

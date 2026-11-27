@@ -1,3 +1,4 @@
+// GENERATED FILE: a copy of browser/whitelist.js, written by scripts/build-script-manifest.mjs. Edit browser/whitelist.js instead, then run: npm run browser:build
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
 /**
  * ============================================================
@@ -5,7 +6,12 @@
  * ============================================================
  * 
  * @name        whitelist.js
- * @description Manage a whitelist of protected users
+ * @description Keep a list of users the other automation scripts never act on.
+ * @title       Whitelist Manager
+ * @category    automation
+ * @page        x.com/*
+ * @writes      false
+ * @aliases     scripts/twitter/whitelist.js
  * @author      nichxbt (https://x.com/nichxbt)
  * @version     1.0.0
  * @date        2026-01-26

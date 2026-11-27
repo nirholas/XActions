@@ -1,3 +1,4 @@
+// GENERATED FILE: a copy of browser/scrapeCashtagSearch.js, written by scripts/build-script-manifest.mjs. Edit browser/scrapeCashtagSearch.js instead, then run: npm run browser:build
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
 /**
  * X Cashtag Search Scraper — Browser Console Script
@@ -19,6 +20,14 @@
  * - Progress counter in real-time
  *
  * CONFIG (edit before pasting if needed):
+ *
+ * @name        scrapeCashtagSearch.js
+ * @title       Scrape Cashtag Search
+ * @description Scrape cashtag search results with sentiment, for stock and crypto ticker mentions.
+ * @category    scrape
+ * @page        x.com/search?q=<query>
+ * @writes      false
+ * @aliases     scripts/scrapeCashtagSearch.js
  */
 const SCRAPER_CONFIG = {
   /** Set to filter posts ON or AFTER this date (inclusive). null = no limit */
@@ -344,7 +353,7 @@ const SCRAPER_CONFIG = {
     } catch (e) {
       console.warn(`[Scraper] Failed to scrape replies for ${post.id}:`, e.message);
       // Try to go back if something went wrong
-      try { window.history.back(); } catch (_) {}
+      try { window.history.back(); } catch { /* already on the search page */ }
       await sleep(SCRAPER_CONFIG.replyDelay);
     }
 
@@ -796,7 +805,6 @@ const SCRAPER_CONFIG = {
         if (!state.running) break;
       }
 
-      const prevCount = state.posts.size;
       const newPosts = extractPostsFromDOM();
 
       if (newPosts.length > 0) {

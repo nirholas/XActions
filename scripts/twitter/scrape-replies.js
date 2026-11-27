@@ -1,21 +1,27 @@
+// GENERATED FILE: a copy of browser/scrapeReplies.js, written by scripts/build-script-manifest.mjs. Edit browser/scrapeReplies.js instead, then run: npm run browser:build
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
 /**
  * ============================================
  * 💬 Scrape Replies - XActions
  * ============================================
  *
- * @name         scrape-replies
- * @description  Scroll the conversation under an open post and export every reply (author, text, counts) to JSON/CSV.
- * @author       nichxbt
- * @version      1.0.0
- * @date         2026-07-20
- * @website      https://xactions.app
+ * @name        scrapeReplies.js
+ * @title       Scrape Replies
+ * @description Scroll the conversation under an open post and export every reply (author, text, counts) to JSON and CSV.
+ * @category    scrape
+ * @page        x.com/<username>/status/<id>
+ * @writes      false
+ * @aliases     scripts/scrapeReplies.js, scripts/twitter/scrape-replies.js
+ * @author      nichxbt
+ * @version     1.1.0
+ * @date        2026-11-27
+ * @website     https://xactions.app
  *
  * Usage:
  *   1. Open a post's status page, e.g. x.com/nichxbt/status/1780000000000000000
  *   2. Open the browser console (F12 or Cmd+Option+I -> Console)
  *   3. (Optional) edit the CONFIG options at the top of the script
- *   4. Paste this entire script and press Enter
+ *   4. Paste browser/scrapeReplies.js and press Enter
  *
  * Example:
  *   On x.com/nichxbt/status/1780000000000000000 the script scrolls the replies below the
@@ -46,8 +52,14 @@
     // Hard cap on scroll attempts so the loop can never run forever
     maxScrollAttempts: 400,
 
-    // Auto-download a CSV file too (JSON always downloads)
-    downloadCsv: true
+    // Auto-download a CSV file too
+    downloadCsv: true,
+
+    // Auto-download the JSON file (false + downloadCsv: true = CSV only)
+    downloadJson: true,
+
+    // Sort the exported replies by likes, most liked first (false = page order)
+    sortByLikes: false
   };
 
   // ============================================
@@ -262,6 +274,7 @@
   }
 
   const list = Array.from(replies.values()).slice(0, CONFIG.maxReplies);
+  if (CONFIG.sortByLikes) list.sort((a, b) => b.likes - a.likes);
 
   // ============================================
   // 📊 SUMMARY + EXPORT
@@ -297,7 +310,7 @@
     replies: list
   };
 
-  if (downloadFile(JSON.stringify(result, null, 2), `replies_${statusId}_${stamp}.json`, 'application/json')) {
+  if (CONFIG.downloadJson && downloadFile(JSON.stringify(result, null, 2), `replies_${statusId}_${stamp}.json`, 'application/json')) {
     log.success('JSON downloaded');
   }
   if (CONFIG.downloadCsv && downloadFile(toCSV(list), `replies_${statusId}_${stamp}.csv`, 'text/csv')) {

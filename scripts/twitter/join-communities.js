@@ -1,217 +1,267 @@
+// GENERATED FILE: a copy of browser/joinCommunities.js, written by scripts/build-script-manifest.mjs. Edit browser/joinCommunities.js instead, then run: npm run browser:build
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
 /**
- * ============================================================
- * 🏘️ Join Communities from List
- * ============================================================
- * 
- * @name        join-communities.js
- * @description Join multiple X/Twitter communities from a list of IDs
+ * Join Communities on X - by nichxbt
+ * https://github.com/nirholas/xactions
+ *
+ * @name        joinCommunities.js
+ * @title       Join Communities
+ * @description Join X communities found by keyword on the suggested page, or from a list of community IDs, dry run by default.
+ * @category    communities
+ * @page        x.com/i/communities/suggested or x.com/i/communities/<id>
+ * @writes      true
+ * @aliases     scripts/joinCommunities.js, scripts/twitter/join-communities.js
  * @author      nichxbt (https://x.com/nichxbt)
- * @version     1.0.0
- * @date        2026-01-26
- * @repository  https://github.com/nirholas/XActions
- * 
- * ============================================================
- * 📋 USAGE INSTRUCTIONS:
- * ============================================================
- * 
- * 1. Add community IDs to the COMMUNITIES array below
- * 2. Open Chrome DevTools (F12 or Cmd+Option+I)
- * 3. Paste this script and press Enter
- * 4. The script will navigate to each community and join
- * 
- * ============================================================
- * ⚙️ CONFIGURATION
- * ============================================================
+ * @version     1.1.0
+ * @date        2026-11-26
+ *
+ * Discover and join X communities based on keywords
+ * 1. Go to https://x.com/i/communities/suggested
+ * 2. Open the Developer Console (F12)
+ * 3. Paste browser/joinCommunities.js into the Developer Console and run it
+ *
+ * List mode: put community IDs (from x.com/i/communities/<id>) in
+ * CONFIG.communities. The script opens each community in turn; re-paste it after
+ * each page load to continue (progress is kept in sessionStorage).
+ *
+ * Last Updated: 26 November 2026
  */
+(() => {
+  const CONFIG = {
+    // Keywords to filter communities (leave empty to join all visible)
+    keywords: [
+      // 'crypto',
+      // 'AI',
+      // 'javascript',
+    ],
+    // Community IDs to join instead of the keyword scan (list mode)
+    // e.g. '1234567890123456789' from x.com/i/communities/1234567890123456789
+    communities: [],
+    skipAlreadyJoined: true,  // List mode: skip communities you are already in
+    navigationDelay: 3000,    // List mode: wait for the community page to load
+    maxJoins: 5,
+    actionDelay: 3000,
+    scrollDelay: 2000,
+    maxScrollAttempts: 15,
+    dryRun: true, // Set to false to actually join
+  };
 
-// `var` (not `const`): this script explicitly asks you to re-paste it across
-// page navigations to resume, and a repeated top-level `const` paste in the
-// same tab throws "already been declared" instead of resuming.
-var CONFIG = {
-  // Community IDs to join (get from URL: x.com/i/communities/1234567890)
-  communities: [
-    // '1234567890123456789',
-    // '9876543210987654321',
-  ],
-  
-  // Delay between joining communities (ms)
-  joinDelay: 3000,
-  
-  // Delay for page load (ms)
-  navigationDelay: 3000,
-  
-  // Maximum communities to join (0 = all in list)
-  maxJoin: 0,
-  
-  // Skip communities you've already joined
-  skipAlreadyJoined: true
-};
+  const $communityCard = 'div[data-testid="communityCard"], a[href^="/i/communities/"]';
+  const $joinButton = 'button[data-testid="join"]';
 
-/**
- * ============================================================
- * 🚀 SCRIPT START - by nichxbt
- * ============================================================
- */
-
-(async function joinCommunities() {
   const sleep = (ms) => new Promise(r => setTimeout(r, ms));
-  
-  // DOM Selectors
-  const $joinButton = 'button[aria-label^="Join"]:not([aria-label^="Joined"])';
-  const $joinedButton = 'button[aria-label^="Joined"]';
-  const $pendingButton = 'button[aria-label^="Pending"]';
-  
-  console.log('╔════════════════════════════════════════════════════════════╗');
-  console.log('║  🏘️ JOIN COMMUNITIES FROM LIST                             ║');
-  console.log('║  by nichxbt - https://github.com/nirholas/XActions         ║');
-  console.log('╚════════════════════════════════════════════════════════════╝');
-  console.log('');
-  
-  // Validate configuration
-  if (!CONFIG.communities || CONFIG.communities.length === 0) {
-    console.error('❌ ERROR: No communities configured!');
-    console.log('');
-    console.log('📋 How to configure:');
-    console.log('   1. Find community IDs from URLs: x.com/i/communities/1234567890');
-    console.log('   2. Add them to CONFIG.communities array:');
-    console.log('      communities: [');
-    console.log('        "1234567890123456789",');
-    console.log('        "9876543210987654321",');
-    console.log('      ]');
-    return;
-  }
-  
-  // State tracking (persists across page navigations)
+
+  let joined = 0;
+  const processedCommunities = new Set();
+
+  const run = async () => {
+    console.log('🏘️ JOIN COMMUNITIES - XActions by nichxbt');
+
+    if (CONFIG.dryRun) {
+      console.log('⚠️ DRY RUN MODE - Set CONFIG.dryRun = false to actually join');
+    }
+
+    if (CONFIG.keywords.length > 0) {
+      console.log(`🔍 Keywords: ${CONFIG.keywords.join(', ')}`);
+    }
+
+    let scrollAttempts = 0;
+
+    while (joined < CONFIG.maxJoins && scrollAttempts < CONFIG.maxScrollAttempts) {
+      const cards = document.querySelectorAll($communityCard);
+      let foundNew = false;
+
+      for (const card of cards) {
+        if (joined >= CONFIG.maxJoins) break;
+
+        const linkEl = card.tagName === 'A' ? card : card.querySelector('a[href^="/i/communities/"]');
+        const communityId = linkEl?.href?.match(/communities\/(\d+)/)?.[1] || '';
+        if (!communityId || processedCommunities.has(communityId)) continue;
+        processedCommunities.add(communityId);
+        foundNew = true;
+
+        const name = card.textContent?.trim()?.substring(0, 80) || 'Unknown';
+
+        // Filter by keywords
+        if (CONFIG.keywords.length > 0) {
+          const nameLC = name.toLowerCase();
+          const matches = CONFIG.keywords.some(kw => nameLC.includes(kw.toLowerCase()));
+          if (!matches) continue;
+        }
+
+        if (CONFIG.dryRun) {
+          console.log(`   🏘️ Would join: ${name}`);
+          joined++;
+          continue;
+        }
+
+        try {
+          // Navigate to community and join
+          const joinBtn = card.querySelector($joinButton) || card.querySelector('button');
+          if (joinBtn && joinBtn.textContent.toLowerCase().includes('join')) {
+            joinBtn.click();
+            await sleep(CONFIG.actionDelay);
+            console.log(`✅ Joined: ${name}`);
+            joined++;
+          } else {
+            // Navigate to community page to find join button
+            if (linkEl) {
+              linkEl.click();
+              await sleep(2000);
+              const joinOnPage = document.querySelector('button[data-testid="join"]');
+              if (joinOnPage) {
+                joinOnPage.click();
+                console.log(`✅ Joined: ${name}`);
+                joined++;
+                await sleep(1000);
+              }
+              // Return to the list even when no Join button was found
+              window.history.back();
+              await sleep(1500);
+            }
+          }
+        } catch (e) {
+          console.warn(`⚠️ Failed to join: ${name}`);
+        }
+      }
+
+      if (!foundNew) scrollAttempts++;
+      else scrollAttempts = 0;
+
+      window.scrollTo(0, document.body.scrollHeight);
+      await sleep(CONFIG.scrollDelay);
+    }
+
+    console.log(`\n✅ Done! ${CONFIG.dryRun ? 'Would join' : 'Joined'} ${joined} communities.`);
+  };
+
+  // ── List mode: join communities by ID, resuming across page loads ──
+  const $listJoinButton = 'button[aria-label^="Join"]:not([aria-label^="Joined"]), button[data-testid="join"]';
+  const $listJoinedButton = 'button[aria-label^="Joined"]';
+  const $listPendingButton = 'button[aria-label^="Pending"]';
+  const STATE_KEY = 'xactions_joined_communities';
+  const INDEX_KEY = 'xactions_join_index';
+
   const getJoinedCommunities = () => {
     try {
-      return JSON.parse(sessionStorage.getItem('xactions_joined_communities') || '[]');
+      return JSON.parse(sessionStorage.getItem(STATE_KEY) || '[]');
     } catch { return []; }
   };
-  
+
   const markAsJoined = (id, status) => {
-    const joined = getJoinedCommunities();
-    if (!joined.find(c => c.id === id)) {
-      joined.push({ id, status, timestamp: Date.now() });
-      sessionStorage.setItem('xactions_joined_communities', JSON.stringify(joined));
+    const list = getJoinedCommunities();
+    if (!list.find(c => c.id === id)) {
+      list.push({ id, status, timestamp: Date.now() });
+      try { sessionStorage.setItem(STATE_KEY, JSON.stringify(list)); } catch { /* sessionStorage unavailable */ }
     }
   };
-  
+
   const getCurrentIndex = () => {
-    return parseInt(sessionStorage.getItem('xactions_join_index') || '0', 10);
+    try { return parseInt(sessionStorage.getItem(INDEX_KEY) || '0', 10); } catch { return 0; }
   };
-  
+
   const setCurrentIndex = (idx) => {
-    sessionStorage.setItem('xactions_join_index', idx.toString());
+    try { sessionStorage.setItem(INDEX_KEY, idx.toString()); } catch { /* sessionStorage unavailable */ }
   };
-  
-  console.log(`📋 Communities to join: ${CONFIG.communities.length}`);
-  console.log(`✅ Already processed: ${getJoinedCommunities().length}`);
-  console.log('');
-  
-  const processCurrentCommunity = async () => {
-    const index = getCurrentIndex();
-    
-    // Check if we're done
-    if (index >= CONFIG.communities.length) {
-      const joined = getJoinedCommunities();
-      console.log('');
-      console.log('╔════════════════════════════════════════════════════════════╗');
-      console.log(`║  🎉 COMPLETE! Processed ${joined.length} communities       `);
-      console.log('╚════════════════════════════════════════════════════════════╝');
-      
-      // Summary
-      const successful = joined.filter(c => c.status === 'joined').length;
-      const pending = joined.filter(c => c.status === 'pending').length;
-      const skipped = joined.filter(c => c.status === 'already_joined').length;
-      const failed = joined.filter(c => c.status === 'failed').length;
-      
-      console.log(`   ✅ Joined: ${successful}`);
-      console.log(`   ⏳ Pending approval: ${pending}`);
-      console.log(`   ⏭️ Already joined: ${skipped}`);
-      console.log(`   ❌ Failed: ${failed}`);
-      
-      // Cleanup
-      sessionStorage.removeItem('xactions_joined_communities');
-      sessionStorage.removeItem('xactions_join_index');
+
+  const runFromList = async () => {
+    console.log('🏘️ JOIN COMMUNITIES FROM LIST - XActions by nichxbt');
+    const ids = CONFIG.communities.map(String);
+
+    if (CONFIG.dryRun) {
+      console.log('⚠️ DRY RUN MODE - Set CONFIG.dryRun = false to actually join');
+      ids.slice(0, CONFIG.maxJoins).forEach((id, i) => console.log(`   🏘️ Would join ${i + 1}/${ids.length}: x.com/i/communities/${id}`));
+      if (ids.length > CONFIG.maxJoins) console.log(`   (capped at maxJoins = ${CONFIG.maxJoins})`);
       return;
     }
-    
-    // Check limits
-    if (CONFIG.maxJoin > 0) {
-      const successCount = getJoinedCommunities().filter(c => c.status === 'joined').length;
-      if (successCount >= CONFIG.maxJoin) {
-        console.log(`🛑 Reached limit of ${CONFIG.maxJoin} communities. Stopping.`);
+
+    console.log(`📋 Communities to join: ${ids.length}`);
+    console.log(`✅ Already processed: ${getJoinedCommunities().length}`);
+
+    const processCurrentCommunity = async () => {
+      const index = getCurrentIndex();
+
+      // Check if we're done
+      if (index >= ids.length) {
+        const list = getJoinedCommunities();
+        console.log(`\n🎉 COMPLETE! Processed ${list.length} communities`);
+        console.log(`   ✅ Joined: ${list.filter(c => c.status === 'joined').length}`);
+        console.log(`   ⏳ Pending approval: ${list.filter(c => c.status === 'pending').length}`);
+        console.log(`   ⏭️ Already joined: ${list.filter(c => c.status === 'already_joined').length}`);
+        console.log(`   ❌ Failed: ${list.filter(c => c.status === 'failed').length}`);
+        try {
+          sessionStorage.removeItem(STATE_KEY);
+          sessionStorage.removeItem(INDEX_KEY);
+        } catch { /* sessionStorage unavailable */ }
         return;
       }
-    }
-    
-    const communityId = CONFIG.communities[index];
-    const urlMatch = window.location.href.match(/\/i\/communities\/(\d+)/);
-    const currentId = urlMatch ? urlMatch[1] : null;
-    
-    // Navigate to community if not there
-    if (currentId !== communityId) {
-      console.log(`📍 Navigating to community ${index + 1}/${CONFIG.communities.length}: ${communityId}`);
-      console.log('💡 Re-paste this script after the page loads to continue (progress is saved).');
-      window.location.href = `https://x.com/i/communities/${communityId}`;
-      return;
-    }
-    
-    console.log(`🔍 Processing community ${index + 1}/${CONFIG.communities.length}: ${communityId}`);
-    await sleep(CONFIG.navigationDelay);
-    
-    // Check if already joined
-    const joinedBtn = document.querySelector($joinedButton);
-    if (joinedBtn && CONFIG.skipAlreadyJoined) {
-      console.log(`⏭️ Already a member, skipping...`);
-      markAsJoined(communityId, 'already_joined');
-      setCurrentIndex(index + 1);
-      await sleep(1000);
-      return processCurrentCommunity();
-    }
-    
-    // Check if pending
-    const pendingBtn = document.querySelector($pendingButton);
-    if (pendingBtn) {
-      console.log(`⏳ Request pending, skipping...`);
-      markAsJoined(communityId, 'pending');
-      setCurrentIndex(index + 1);
-      await sleep(1000);
-      return processCurrentCommunity();
-    }
-    
-    // Try to join
-    const joinBtn = document.querySelector($joinButton);
-    if (joinBtn) {
-      console.log(`👆 Clicking Join button...`);
-      joinBtn.click();
-      await sleep(CONFIG.joinDelay);
-      
-      // Check result
-      const nowJoined = document.querySelector($joinedButton);
-      const nowPending = document.querySelector($pendingButton);
-      
-      if (nowJoined) {
-        console.log(`✅ Successfully joined community: ${communityId}`);
-        markAsJoined(communityId, 'joined');
-      } else if (nowPending) {
-        console.log(`⏳ Request sent (awaiting approval): ${communityId}`);
-        markAsJoined(communityId, 'pending');
-      } else {
-        console.log(`❓ Join status unknown for: ${communityId}`);
-        markAsJoined(communityId, 'unknown');
+
+      // Check limits
+      const successCount = getJoinedCommunities().filter(c => c.status === 'joined' || c.status === 'pending').length;
+      if (CONFIG.maxJoins > 0 && successCount >= CONFIG.maxJoins) {
+        console.log(`🛑 Reached limit of ${CONFIG.maxJoins} communities. Stopping.`);
+        return;
       }
-    } else {
-      console.log(`❌ Join button not found for: ${communityId}`);
-      markAsJoined(communityId, 'failed');
-    }
-    
-    // Move to next
-    setCurrentIndex(index + 1);
-    await sleep(CONFIG.joinDelay);
-    return processCurrentCommunity();
+
+      const communityId = ids[index];
+      const currentId = window.location.href.match(/\/i\/communities\/(\d+)/)?.[1] || null;
+
+      // Navigate to community if not there
+      if (currentId !== communityId) {
+        console.log(`📍 Navigating to community ${index + 1}/${ids.length}: ${communityId}`);
+        console.log('💡 Re-paste this script after the page loads to continue (progress is saved).');
+        window.location.href = `https://x.com/i/communities/${communityId}`;
+        return;
+      }
+
+      console.log(`🔍 Processing community ${index + 1}/${ids.length}: ${communityId}`);
+      await sleep(CONFIG.navigationDelay);
+
+      if (document.querySelector($listJoinedButton) && CONFIG.skipAlreadyJoined) {
+        console.log('⏭️ Already a member, skipping...');
+        markAsJoined(communityId, 'already_joined');
+        setCurrentIndex(index + 1);
+        await sleep(1000);
+        return processCurrentCommunity();
+      }
+
+      if (document.querySelector($listPendingButton)) {
+        console.log('⏳ Request pending, skipping...');
+        markAsJoined(communityId, 'pending');
+        setCurrentIndex(index + 1);
+        await sleep(1000);
+        return processCurrentCommunity();
+      }
+
+      const joinBtn = document.querySelector($listJoinButton);
+      if (joinBtn) {
+        console.log('👆 Clicking Join button...');
+        joinBtn.click();
+        await sleep(CONFIG.actionDelay);
+        if (document.querySelector($listJoinedButton)) {
+          console.log(`✅ Successfully joined community: ${communityId}`);
+          markAsJoined(communityId, 'joined');
+        } else if (document.querySelector($listPendingButton)) {
+          console.log(`⏳ Request sent (awaiting approval): ${communityId}`);
+          markAsJoined(communityId, 'pending');
+        } else {
+          console.log(`❓ Join status unknown for: ${communityId}`);
+          markAsJoined(communityId, 'unknown');
+        }
+      } else {
+        console.log(`❌ Join button not found for: ${communityId}`);
+        markAsJoined(communityId, 'failed');
+      }
+
+      // Move to next
+      setCurrentIndex(index + 1);
+      await sleep(CONFIG.actionDelay);
+      return processCurrentCommunity();
+    };
+
+    await processCurrentCommunity();
   };
-  
-  processCurrentCommunity();
+
+  if (Array.isArray(CONFIG.communities) && CONFIG.communities.length > 0) runFromList();
+  else run();
 })();

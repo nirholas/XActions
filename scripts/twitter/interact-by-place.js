@@ -1,11 +1,17 @@
+// GENERATED FILE: a copy of browser/interactByPlace.js, written by scripts/build-script-manifest.mjs. Edit browser/interactByPlace.js instead, then run: npm run browser:build
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
 /**
  * ============================================================
  * 📍 Interact By Place/Location
  * ============================================================
  * 
- * @name        interact-by-place.js
- * @description Interact with posts from specific locations
+ * @name        interactByPlace.js
+ * @description Like, follow and reply on posts from specific locations.
+ * @title       Interact by Place
+ * @category    engage
+ * @page        x.com/search?q=<query>&f=live
+ * @writes      true
+ * @aliases     scripts/twitter/interact-by-place.js
  * @author      nichxbt (https://x.com/nichxbt)
  * @version     1.0.0
  * @date        2026-01-26

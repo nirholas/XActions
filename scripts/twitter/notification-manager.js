@@ -1,21 +1,27 @@
+// GENERATED FILE: a copy of browser/notificationManager.js, written by scripts/build-script-manifest.mjs. Edit browser/notificationManager.js instead, then run: npm run browser:build
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
 /**
  * ============================================
  * 🔔 Notification Manager - XActions
  * ============================================
  *
- * @name         notification-manager
- * @description  Mark all notifications as read, or scrape a categorized summary you can export.
- * @author       nichxbt
- * @version      1.0.0
- * @date         2026-07-20
- * @website      https://xactions.app
+ * @name        notificationManager.js
+ * @title       Notification Manager
+ * @description Scrape a categorized summary of your notifications and export it, or mark all notifications as read.
+ * @category    monitor
+ * @page        x.com/notifications or x.com/notifications/mentions
+ * @writes      false
+ * @aliases     scripts/manageNotifications.js, scripts/notificationManager.js, scripts/twitter/notification-manager.js
+ * @author      nichxbt (https://x.com/nichxbt)
+ * @version     1.1.0
+ * @date        2026-11-27
+ * @website     https://xactions.app
  *
  * Usage:
  *   1. Go to x.com/notifications
  *   2. Open the browser console (F12 or Cmd+Option+I -> Console)
  *   3. Set CONFIG.action to 'markRead' or 'summary'
- *   4. Paste this entire script and press Enter
+ *   4. Paste browser/notificationManager.js and press Enter
  *
  * Example:
  *   action: 'markRead' -> opens the notifications overflow (...) menu and clicks
@@ -23,6 +29,9 @@
  *   marked read on view. action: 'summary' -> scrolls the feed, classifies each
  *   notification (like / repost / follow / mention / quote), prints the counts,
  *   and downloads a JSON + CSV report.
+ *
+ *   filterType: 'mentions' switches to the Mentions tab and keeps only mentions
+ *   and replies; 'verified' keeps only notifications from verified accounts.
  *
  * ============================================
  */
@@ -39,11 +48,17 @@
 
     // ---- summary options ----
     maxNotifications: 100,   // cap for the summary scrape
+    filterType: 'all',       // 'all' | 'mentions' | 'verified'
+    separateReplies: false,  // count "replied" as its own 'reply' type instead of 'mention'
+    includeLinks: false,     // add the first 5 profile/post links of each notification as `users`
     exportResults: true,     // download JSON + CSV when action is 'summary'
+    logJSON: false,          // also print the full JSON report to the console
+    copyToClipboard: false,  // also copy the JSON report to the clipboard
 
     // ---- shared scrolling ----
     maxScrollRounds: 30,
-    scrollDelay: 1400
+    maxScrollRetries: 5,     // summary stops after N scrolls with nothing new
+    scrollDelay: 1500
   };
 
   // ============================================
@@ -56,7 +71,8 @@
     verified: '[data-testid="icon-verified"]',
     caret: '[data-testid="caret"]',
     menuItem: '[role="menuitem"]',
-    confirm: '[data-testid="confirmationSheetConfirm"]'
+    confirm: '[data-testid="confirmationSheetConfirm"]',
+    mentionsTab: 'a[href="/notifications/mentions"]'
   };
 
   // ============================================
@@ -93,6 +109,7 @@
     if (lc.includes('reposted') || lc.includes('retweeted')) return 'repost';
     if (lc.includes('followed you')) return 'follow';
     if (lc.includes('quoted')) return 'quote';
+    if (CONFIG.separateReplies && lc.includes('replied')) return 'reply';
     if (lc.includes('replied') || lc.includes('mentioned') || lc.includes(' tagged ')) return 'mention';
     return 'other';
   };
@@ -183,12 +200,18 @@
   // 📊 ACTION: SUMMARY (SCRAPE + EXPORT)
   // ============================================
   const summary = async () => {
-    log.info(`Scraping up to ${CONFIG.maxNotifications} notifications...`);
+    // Switch to the Mentions tab when filtering for mentions
+    if (CONFIG.filterType === 'mentions' && !/\/notifications\/mentions/.test(window.location.pathname)) {
+      const mentionsTab = document.querySelector(SELECTORS.mentionsTab);
+      if (mentionsTab) { mentionsTab.click(); await sleep(2000); }
+    }
+
+    log.info(`Scraping up to ${CONFIG.maxNotifications} notifications (filter: ${CONFIG.filterType})...`);
     const seen = new Map();
     let rounds = 0;
     let empty = 0;
 
-    while (seen.size < CONFIG.maxNotifications && rounds < CONFIG.maxScrollRounds && empty < 5) {
+    while (seen.size < CONFIG.maxNotifications && rounds < CONFIG.maxScrollRounds && empty < CONFIG.maxScrollRetries) {
       const before = seen.size;
       const cells = document.querySelectorAll(`${SELECTORS.cell}, ${SELECTORS.notification}, ${SELECTORS.tweet}`);
       for (const cell of cells) {
@@ -197,12 +220,18 @@
         const time = cell.querySelector('time')?.getAttribute('datetime') || '';
         const key = text.slice(0, 90) + time;
         if (seen.has(key)) continue;
-        seen.set(key, {
-          type: classify(text),
-          text,
-          time,
-          isVerified: !!cell.querySelector(SELECTORS.verified)
-        });
+        const type = classify(text);
+        const isVerified = !!cell.querySelector(SELECTORS.verified);
+        if (CONFIG.filterType === 'mentions' && type !== 'mention' && type !== 'reply') continue;
+        if (CONFIG.filterType === 'verified' && !isVerified) continue;
+        const entry = { type, text, time, isVerified };
+        if (CONFIG.includeLinks) {
+          entry.users = Array.from(cell.querySelectorAll('a[href^="/"]'))
+            .map(a => ({ text: (a.textContent || '').trim(), href: a.href }))
+            .filter(l => l.href.includes('x.com/'))
+            .slice(0, 5);
+        }
+        seen.set(key, entry);
       }
 
       if (seen.size === before) empty++;
@@ -211,6 +240,7 @@
       window.scrollTo(0, document.body.scrollHeight);
       await sleep(CONFIG.scrollDelay);
       rounds++;
+      if (rounds % 5 === 0) log.info(`Scraped ${seen.size} notifications...`);
     }
     window.scrollTo(0, 0);
 
@@ -224,17 +254,30 @@
     for (const n of all) byType[n.type] = (byType[n.type] || 0) + 1;
 
     console.log(`\n🔔 Total notifications: ${all.length}\n📊 BY TYPE:`);
-    const emoji = { like: '❤️', repost: '🔁', follow: '👤', mention: '💬', quote: '💭', other: '📌' };
+    const emoji = { like: '❤️', repost: '🔁', follow: '👤', mention: '💬', reply: '↩️', quote: '💭', other: '📌' };
     Object.entries(byType).sort((a, b) => b[1] - a[1]).forEach(([t, c]) => {
       console.log(`   ${emoji[t] || '📌'} ${t}: ${c}`);
     });
 
+    const report = { exportedAt: new Date().toISOString(), filter: CONFIG.filterType, total: all.length, byType, notifications: all };
+
+    if (CONFIG.logJSON) {
+      console.log('\n📦 Full JSON:');
+      console.log(JSON.stringify(report, null, 2));
+    }
+
+    if (CONFIG.copyToClipboard) {
+      try {
+        await navigator.clipboard.writeText(JSON.stringify(report, null, 2));
+        log.success('Copied to clipboard!');
+      } catch (e) {
+        log.warning('Could not copy to clipboard.');
+      }
+    }
+
     if (CONFIG.exportResults) {
       const date = new Date().toISOString().slice(0, 10);
-      downloadJSON(
-        { exportedAt: new Date().toISOString(), total: all.length, byType, notifications: all },
-        `xactions-notifications-${date}.json`
-      );
+      downloadJSON(report, `xactions-notifications-${date}.json`);
       downloadCSV(all, `xactions-notifications-${date}.csv`);
     }
   };

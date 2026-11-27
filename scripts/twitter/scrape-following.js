@@ -1,21 +1,27 @@
+// GENERATED FILE: a copy of browser/scrapeFollowing.js, written by scripts/build-script-manifest.mjs. Edit browser/scrapeFollowing.js instead, then run: npm run browser:build
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
 /**
  * ============================================
  * 👣 Scrape Following - XActions
  * ============================================
  *
- * @name         scrape-following
- * @description  Scroll the following list of any profile and export everyone it follows (handle, name, bio, verified, follows-you) to JSON and CSV.
- * @author       nichxbt
- * @version      1.0.0
- * @date         2026-07-20
- * @website      https://xactions.app
+ * @name        scrapeFollowing.js
+ * @title       Scrape Following
+ * @description Scroll the following list of any profile and export everyone it follows (handle, name, bio, verified, follows-you) to JSON and CSV.
+ * @category    scrape
+ * @page        x.com/<username>/following
+ * @writes      false
+ * @aliases     scripts/scrapeFollowing.js, scripts/twitter/scrape-following.js
+ * @author      nichxbt
+ * @version     1.1.0
+ * @date        2026-11-27
+ * @website     https://xactions.app
  *
  * Usage:
  *   1. Go to x.com/<user>/following (for your own list: x.com/<you>/following)
  *   2. Open the browser console (F12 or Cmd+Option+I -> Console)
  *   3. (Optional) edit the CONFIG options at the top of the script
- *   4. Paste this entire script and press Enter
+ *   4. Paste browser/scrapeFollowing.js and press Enter
  *
  * Example:
  *   On x.com/nasa/following the script auto-scrolls, prints a running count
@@ -48,8 +54,12 @@
     // Hard cap on scroll attempts, independent of stalls
     maxScrollAttempts: 400,
 
-    // Also trigger a browser download of the CSV file (JSON always downloads)
-    autoDownloadCsv: false
+    // Also trigger a browser download of the CSV file
+    autoDownloadCsv: false,
+
+    // Which files to download: 'json', 'csv' or 'both'
+    // ('json' plus autoDownloadCsv: true is the same as 'both')
+    format: 'json'
   };
 
   // ============================================
@@ -112,12 +122,11 @@
     }
     if (!handle) return null;
 
-    let displayName = '';
     const nameAnchor = anchors.find((a) => {
       const t = a.textContent.trim();
       return t && !t.startsWith('@');
     });
-    displayName = (nameAnchor && nameAnchor.textContent.trim()) ||
+    const displayName = (nameAnchor && nameAnchor.textContent.trim()) ||
       (cell.querySelector('div[dir="ltr"] span')?.textContent.trim()) || '';
 
     let bio = cell.querySelector(SELECTORS.userDescription)?.textContent?.trim() || '';
@@ -236,9 +245,11 @@
   if (list.length === 0) {
     log.warning('No accounts were collected. The list may be empty, private, or blocked from view.');
   } else {
-    download(JSON.stringify(result, null, 2), `${username}_following_${dateStr}.json`, 'application/json');
-    log.success(`Downloaded ${username}_following_${dateStr}.json`);
-    if (CONFIG.autoDownloadCsv) {
+    if (CONFIG.format !== 'csv') {
+      download(JSON.stringify(result, null, 2), `${username}_following_${dateStr}.json`, 'application/json');
+      log.success(`Downloaded ${username}_following_${dateStr}.json`);
+    }
+    if (CONFIG.autoDownloadCsv || CONFIG.format === 'csv' || CONFIG.format === 'both') {
       download(csv, `${username}_following_${dateStr}.csv`, 'text/csv');
       log.success(`Downloaded ${username}_following_${dateStr}.csv`);
     }
@@ -260,6 +271,7 @@
 ║  👣 Accounts collected:  ${String(stats.collected).padEnd(30)}║
 ║  ✔️  Verified:            ${String(stats.verified).padEnd(30)}║
 ║  🤝 Mutuals (follow you):${String(stats.mutuals).padEnd(30)}║
+║  🙅 Don't follow you:    ${String(stats.collected - stats.mutuals).padEnd(30)}║
 ║  📜 Scrolls:             ${String(stats.scrolls).padEnd(30)}║
 ║  ❌ Row errors:          ${String(stats.errors).padEnd(30)}║
 ╚══════════════════════════════════════════════════════════╝

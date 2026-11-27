@@ -1,11 +1,17 @@
+// GENERATED FILE: a copy of browser/bulkDm.js, written by scripts/build-script-manifest.mjs. Edit browser/bulkDm.js instead, then run: npm run browser:build
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
 /**
  * ============================================
  * 💬 Bulk DM - XActions
  * ============================================
  *
- * @name         bulk-dm
- * @description  Send a personalized DM to a list of users from one message template.
+ * @name        bulkDm.js
+ * @description Send a personalized DM to a list of users from one message template.
+ * @title       Bulk DM
+ * @category    messages
+ * @page        x.com/messages
+ * @writes      true
+ * @aliases     scripts/twitter/bulk-dm.js
  * @author       nichxbt
  * @version      1.0.0
  * @date         2026-07-20

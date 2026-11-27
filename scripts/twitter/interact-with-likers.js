@@ -1,11 +1,17 @@
+// GENERATED FILE: a copy of browser/interactWithLikers.js, written by scripts/build-script-manifest.mjs. Edit browser/interactWithLikers.js instead, then run: npm run browser:build
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
 /**
  * ============================================================
  * ❤️ Interact With Likers
  * ============================================================
  * 
- * @name        interact-with-likers.js
- * @description Interact with users who liked specific posts
+ * @name        interactWithLikers.js
+ * @description Engage the users who liked a specific post.
+ * @title       Interact with Likers
+ * @category    engage
+ * @page        x.com/<username>/status/<id>/likes
+ * @writes      true
+ * @aliases     scripts/twitter/interact-with-likers.js
  * @author      nichxbt (https://x.com/nichxbt)
  * @version     1.0.0
  * @date        2026-01-26

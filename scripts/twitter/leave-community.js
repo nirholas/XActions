@@ -1,11 +1,17 @@
+// GENERATED FILE: a copy of browser/leaveCommunity.js, written by scripts/build-script-manifest.mjs. Edit browser/leaveCommunity.js instead, then run: npm run browser:build
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
 /**
  * ============================================================
  * 🚪 Leave Specific Community
  * ============================================================
  * 
- * @name        leave-community.js
- * @description Leave a specific X/Twitter community by ID or name
+ * @name        leaveCommunity.js
+ * @description Leave one Community by name or ID.
+ * @title       Leave a Community
+ * @category    communities
+ * @page        x.com/i/communities
+ * @writes      true
+ * @aliases     scripts/twitter/leave-community.js
  * @author      nichxbt (https://x.com/nichxbt)
  * @version     1.0.0
  * @date        2026-01-26
@@ -50,7 +56,6 @@ var CONFIG = {
   const sleep = (ms) => new Promise(r => setTimeout(r, ms));
   
   // DOM Selectors
-  const $communityLinks = 'a[href^="/i/communities/"]';
   const $joinedButton = 'button[aria-label^="Joined"]';
   const $confirmButton = '[data-testid="confirmationSheetConfirm"]';
   

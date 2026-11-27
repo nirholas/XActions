@@ -1,28 +1,35 @@
+// GENERATED FILE: a copy of browser/scrapeLikers.js, written by scripts/build-script-manifest.mjs. Edit browser/scrapeLikers.js instead, then run: npm run browser:build
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
 /**
  * ============================================
  * ❤️ Scrape Likers - XActions
  * ============================================
  *
- * @name         scrape-likers
- * @description  Scroll the Likes view of a post and export every user who liked it (handle, name, bio, verified, follows-you) to JSON and CSV.
- * @author       nichxbt
- * @version      1.0.0
- * @date         2026-07-20
- * @website      https://xactions.app
+ * @name        scrapeLikers.js
+ * @title       Scrape Likers
+ * @description Scroll the Likes view of a post and export every user who liked it (handle, name, bio, verified, follows-you) to JSON and CSV.
+ * @category    scrape
+ * @page        x.com/<username>/status/<id>/likes
+ * @writes      false
+ * @aliases     scripts/scrapeLikers.js, scripts/twitter/scrape-likers.js
+ * @author      nichxbt (https://x.com/nichxbt)
+ * @version     1.1.0
+ * @date        2026-11-27
+ * @website     https://xactions.app
  *
  * Usage:
  *   1. Open a post's Likes page: x.com/<user>/status/<id>/likes
  *      (open the post, then click its likes count to reveal "Liked by")
  *   2. Open the browser console (F12 or Cmd+Option+I -> Console)
  *   3. (Optional) edit the CONFIG options at the top of the script
- *   4. Paste this entire script and press Enter
+ *   4. Paste browser/scrapeLikers.js and press Enter
  *
  * Example:
  *   On x.com/nasa/status/1234567890/likes the script scrolls the "Liked by"
  *   list, prints a running count ("Collected 95 likers..."), then downloads
  *   tweet_1234567890_likers_<date>.json and reports how many are verified.
  *   To stop early: window.stopScrapeLikers().
+ *   For CSV only, set autoDownloadCsv: true and downloadJson: false.
  *
  * ============================================
  */
@@ -49,8 +56,11 @@
     // Hard cap on scroll attempts, independent of stalls
     maxScrollAttempts: 400,
 
-    // Also trigger a browser download of the CSV file (JSON always downloads)
-    autoDownloadCsv: false
+    // Also trigger a browser download of the CSV file
+    autoDownloadCsv: false,
+
+    // Trigger a browser download of the JSON file
+    downloadJson: true
   };
 
   // ============================================
@@ -113,12 +123,11 @@
     }
     if (!handle) return null;
 
-    let displayName = '';
     const nameAnchor = anchors.find((a) => {
       const t = a.textContent.trim();
       return t && !t.startsWith('@');
     });
-    displayName = (nameAnchor && nameAnchor.textContent.trim()) ||
+    const displayName = (nameAnchor && nameAnchor.textContent.trim()) ||
       (cell.querySelector('div[dir="ltr"] span')?.textContent.trim()) || '';
 
     let bio = cell.querySelector(SELECTORS.userDescription)?.textContent?.trim() || '';
@@ -238,8 +247,10 @@
   if (list.length === 0) {
     log.warning('No likers were collected. The post may have zero likes, or the list is hidden.');
   } else {
-    download(JSON.stringify(result, null, 2), `tweet_${tweetId}_likers_${dateStr}.json`, 'application/json');
-    log.success(`Downloaded tweet_${tweetId}_likers_${dateStr}.json`);
+    if (CONFIG.downloadJson) {
+      download(JSON.stringify(result, null, 2), `tweet_${tweetId}_likers_${dateStr}.json`, 'application/json');
+      log.success(`Downloaded tweet_${tweetId}_likers_${dateStr}.json`);
+    }
     if (CONFIG.autoDownloadCsv) {
       download(csv, `tweet_${tweetId}_likers_${dateStr}.csv`, 'text/csv');
       log.success(`Downloaded tweet_${tweetId}_likers_${dateStr}.csv`);

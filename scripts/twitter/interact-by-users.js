@@ -1,11 +1,17 @@
+// GENERATED FILE: a copy of browser/interactByUsers.js, written by scripts/build-script-manifest.mjs. Edit browser/interactByUsers.js instead, then run: npm run browser:build
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
 /**
  * ============================================================
  * 👤 Interact By Users
  * ============================================================
  * 
- * @name        interact-by-users.js
- * @description Full interaction suite for specific users on X/Twitter
+ * @name        interactByUsers.js
+ * @description Like, follow and reply to the posts of specific users.
+ * @title       Interact with Users
+ * @category    engage
+ * @page        x.com/<username>
+ * @writes      true
+ * @aliases     scripts/twitter/interact-by-users.js
  * @author      nichxbt (https://x.com/nichxbt)
  * @version     1.0.0
  * @date        2026-01-26
@@ -120,10 +126,6 @@ var CONFIG = {
   
   const saveHistory = () => storage.set('history', history);
   
-  const getInteractionCount = (username, type) => {
-    if (!history[username]) history[username] = { likes: 0, retweets: 0, replies: 0, followed: false };
-    return history[username][type] || 0;
-  };
   
   const recordInteraction = (username, type) => {
     if (!history[username]) history[username] = { likes: 0, retweets: 0, replies: 0, followed: false };

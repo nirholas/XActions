@@ -1,11 +1,17 @@
+// GENERATED FILE: a copy of browser/findFakeFollowers.js, written by scripts/build-script-manifest.mjs. Edit browser/findFakeFollowers.js instead, then run: npm run browser:build
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
 /**
  * ============================================================
  * 🕵️ Find Fake Followers
  * ============================================================
  * 
- * @name        find-fake-followers.js
- * @description Identify likely fake/bot followers in your audience
+ * @name        findFakeFollowers.js
+ * @description Identify likely fake or bot followers in your audience.
+ * @title       Fake Follower Finder
+ * @category    analytics
+ * @page        x.com/<you>/followers
+ * @writes      false
+ * @aliases     scripts/twitter/find-fake-followers.js
  * @author      nichxbt (https://x.com/nichxbt)
  * @version     1.0.0
  * @date        2026-01-26

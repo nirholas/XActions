@@ -1,4 +1,14 @@
+// GENERATED FILE: a copy of browser/core.js, written by scripts/build-script-manifest.mjs. Edit browser/core.js instead, then run: npm run browser:build
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
+/**
+ * @name        core.js
+ * @title       Automation Core
+ * @description Shared config, selectors, storage, logging and rate limiting that the automation scripts load from window.XActions.Core.
+ * @category    automation
+ * @page        x.com/*
+ * @writes      false
+ * @aliases     src/automation/core.js
+ */
 // XActions Automation Framework - Core Utilities
 // https://github.com/nirholas/XActions
 //

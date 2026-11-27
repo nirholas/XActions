@@ -1,11 +1,17 @@
+// GENERATED FILE: a copy of browser/profileStats.js, written by scripts/build-script-manifest.mjs. Edit browser/profileStats.js instead, then run: npm run browser:build
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
 /**
  * ============================================================
  * 📊 Profile Stats
  * ============================================================
  * 
- * @name        profile-stats.js
- * @description Get comprehensive profile statistics
+ * @name        profileStats.js
+ * @description Comprehensive statistics for any profile.
+ * @title       Profile Stats
+ * @category    analytics
+ * @page        x.com/<username>
+ * @writes      false
+ * @aliases     scripts/twitter/profile-stats.js
  * @author      nichxbt (https://x.com/nichxbt)
  * @version     1.0.0
  * @date        2026-01-26
@@ -23,7 +29,6 @@
  */
 
 (async function profileStats() {
-  const sleep = (ms) => new Promise(r => setTimeout(r, ms));
 
   console.log(`
 ╔══════════════════════════════════════════════════════════════╗
@@ -51,7 +56,7 @@
     return n.toString();
   };
 
-  const username = window.location.pathname.match(/^\/([^\/]+)/)?.[1];
+  const username = window.location.pathname.match(/^\/([^/]+)/)?.[1];
   if (!username || ['home', 'explore', 'notifications', 'messages', 'i'].includes(username)) {
     console.error('❌ Please navigate to a profile page first!');
     return;

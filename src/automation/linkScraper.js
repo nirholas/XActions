@@ -1,32 +1,82 @@
+// GENERATED FILE: a copy of browser/linkScraper.js, written by scripts/build-script-manifest.mjs. Edit browser/linkScraper.js instead, then run: npm run browser:build
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
-// XActions Automation - Link Scraper
-// https://github.com/nirholas/XActions
-//
-// REQUIRES: Paste core.js first!
-//
-// Extracts all links shared by a specific user.
-// Great for research, finding resources, tracking promotions.
-//
-// HOW TO USE:
-// 1. Go to a user's profile: x.com/USERNAME
-// 2. Paste core.js, then paste this script
-// 3. Let it scroll and collect all links!
+/**
+ * ============================================================
+ * 🔗 Link Scraper
+ * ============================================================
+ *
+ * @name        linkScraper.js
+ * @title       Link Scraper
+ * @description Scroll a user's profile and collect every external link they shared, grouped by domain, with JSON and text downloads.
+ * @category    scrape
+ * @page        x.com/<username>
+ * @writes      false
+ * @aliases     scripts/linkScraper.js, src/automation/linkScraper.js, scripts/twitter/link-scraper.js
+ * @author      nichxbt (https://x.com/nichxbt)
+ * @version     1.1.0
+ * @date        2026-11-27
+ * @repository  https://github.com/nirholas/XActions
+ *
+ * ============================================================
+ * 📋 USAGE:
+ *
+ * Extracts all links shared by a specific user.
+ * Great for research, finding resources, tracking promotions.
+ *
+ * 1. Go to a user's profile: x.com/USERNAME
+ * 2. Paste browser/linkScraper.js into the DevTools console and press Enter
+ *    (src/automation/core.js is optional: when it is pasted first its
+ *    logger, storage and selectors are used)
+ * 3. Let it scroll and collect all links!
+ * 4. Run stopLinkScraper() to stop early. Results: window.scrapedLinks
+ *    and window.XActions.linkData()
+ * ============================================================
+ */
 
 (() => {
-  if (!window.XActions?.Core) {
-    console.error('❌ Core module not loaded! Paste core.js first.');
-    return;
-  }
+  // ============================================
+  // CORE (optional): use core.js when present, built-ins otherwise
+  // ============================================
+  const Core = window.XActions?.Core;
 
-  const { log, sleep, scrollBy, storage, SELECTORS } = window.XActions.Core;
+  const sleep = Core?.sleep || ((ms) => new Promise(resolve => setTimeout(resolve, ms)));
+  const log = Core?.log || ((message, type = 'info') => {
+    const prefix = { info: '📘', success: '✅', warning: '⚠️', error: '❌', action: '🔧' }[type] || '📘';
+    console.log(`${prefix} [${new Date().toLocaleTimeString()}] ${message}`);
+  });
+  const scrollBy = Core?.scrollBy || ((pixels) => window.scrollBy({ top: pixels, behavior: 'smooth' }));
+  // Same key layout as core.js storage (xactions_ prefix, JSON values)
+  const storage = Core?.storage || {
+    get: (key) => {
+      try {
+        const data = localStorage.getItem('xactions_' + key);
+        return data ? JSON.parse(data) : null;
+      } catch {
+        return null;
+      }
+    },
+    set: (key, value) => {
+      try {
+        localStorage.setItem('xactions_' + key, JSON.stringify(value));
+        return true;
+      } catch {
+        return false;
+      }
+    },
+  };
+  const SELECTORS = Core?.SELECTORS || {
+    tweet: '[data-testid="tweet"]',
+  };
 
   // ============================================
   // CONFIGURATION
   // ============================================
-  const OPTIONS = {
+  const CONFIG = {
     // Scraping limits
     MAX_SCROLLS: 100,            // How far to scroll
     MAX_TWEETS: 500,             // Max tweets to process
+    SCROLL_DELAY: 1500,          // Wait after each scroll (ms)
+    MAX_RETRIES: 0,              // Stop after N scrolls with no new posts or links (0 = never, scroll MAX_SCROLLS times)
     
     // Filter options
     INCLUDE_TWITTER_LINKS: false, // Include links to other tweets/profiles
@@ -38,6 +88,7 @@
     
     // Output
     AUTO_DOWNLOAD: true,          // Auto-download results as file
+    EXPORT_CSV: false,            // Also download a CSV (URL, Domain, Times Shared, First Tweet)
   };
 
   // ============================================
@@ -57,7 +108,10 @@
   };
 
   const getTweetId = (tweetElement) => {
-    const link = tweetElement.querySelector('a[href*="/status/"]');
+    // Prefer the permalink around the timestamp: the first /status/ link can
+    // belong to a quoted tweet
+    const timeAnchor = tweetElement.querySelector('time')?.closest('a[href*="/status/"]');
+    const link = timeAnchor || tweetElement.querySelector('a[href*="/status/"]');
     if (link) {
       const match = link.href.match(/status\/(\d+)/);
       return match ? match[1] : null;
@@ -71,22 +125,24 @@
       const domain = parsed.hostname.replace('www.', '');
 
       // Skip Twitter internal links unless opted in
-      if (!OPTIONS.INCLUDE_TWITTER_LINKS) {
-        if (['x.com', 'x.com'].includes(domain)) return false;
+      if (!CONFIG.INCLUDE_TWITTER_LINKS) {
+        if (['x.com', 'twitter.com'].includes(domain)) return false;
       }
 
       // Skip media links unless opted in
-      if (!OPTIONS.INCLUDE_MEDIA) {
+      if (!CONFIG.INCLUDE_MEDIA) {
         if (['pic.x.com', 'pbs.twimg.com', 'video.twimg.com'].includes(domain)) return false;
+        if (domain.endsWith('twimg.com')) return false;
+        if (['x.com', 'twitter.com'].includes(domain) && /\/(photo|video)\//.test(parsed.pathname)) return false;
       }
 
       // Domain whitelist
-      if (OPTIONS.DOMAINS_ONLY.length > 0) {
-        if (!OPTIONS.DOMAINS_ONLY.some(d => domain.includes(d))) return false;
+      if (CONFIG.DOMAINS_ONLY.length > 0) {
+        if (!CONFIG.DOMAINS_ONLY.some(d => domain.includes(d))) return false;
       }
 
       // Domain blacklist
-      if (OPTIONS.EXCLUDE_DOMAINS.some(d => domain.includes(d))) return false;
+      if (CONFIG.EXCLUDE_DOMAINS.some(d => domain.includes(d))) return false;
 
       return true;
     } catch (e) {
@@ -205,7 +261,17 @@
       }
     }
 
-    return { username, sortedLinks, byDomain, tweetsProcessed };
+    console.log(`\n📊 Total domains: ${sortedDomains.length}`);
+
+    return { username, sortedLinks, byDomain, sortedDomains, tweetsProcessed };
+  };
+
+  const domainOf = (url) => {
+    try {
+      return new URL(url).hostname.replace('www.', '');
+    } catch {
+      return 'unknown';
+    }
   };
 
   const downloadResults = (report) => {
@@ -217,10 +283,13 @@
       scrapedAt: new Date().toISOString(),
       totalLinks: links.size,
       tweetsProcessed: report.tweetsProcessed,
+      byDomain: Object.fromEntries(report.sortedDomains.map(([domain, domainLinks]) => [domain, domainLinks.length])),
       links: sortedLinks.map(([url, data]) => ({
         url,
+        domain: domainOf(url),
         timesShared: data.count,
         tweets: data.tweets,
+        firstSeen: data.firstSeen,
       })),
     };
 
@@ -245,7 +314,28 @@
     textLink.click();
     document.body.removeChild(textLink);
 
-    log('📥 Downloaded JSON and TXT files!', 'success');
+    if (CONFIG.EXPORT_CSV) {
+      // Quote every field: URLs can contain commas and quotes
+      const csvEscape = (v) => `"${String(v).replace(/"/g, '""')}"`;
+      const headers = ['URL', 'Domain', 'Times Shared', 'First Tweet'];
+      const rows = sortedLinks.map(([url, data]) => [
+        url,
+        domainOf(url),
+        data.count,
+        data.tweets[0],
+      ].map(csvEscape).join(','));
+      const csvBlob = new Blob([[headers.join(','), ...rows].join('\n')], { type: 'text/csv' });
+      const csvUrl = URL.createObjectURL(csvBlob);
+      const csvLink = document.createElement('a');
+      csvLink.href = csvUrl;
+      csvLink.download = `${username}-links-${Date.now()}.csv`;
+      document.body.appendChild(csvLink);
+      csvLink.click();
+      document.body.removeChild(csvLink);
+      URL.revokeObjectURL(csvUrl);
+    }
+
+    log(`📥 Downloaded JSON${CONFIG.EXPORT_CSV ? ', TXT and CSV' : ' and TXT'} files!`, 'success');
   };
 
   // ============================================
@@ -253,15 +343,36 @@
   // ============================================
   const run = async () => {
     const username = getUsername();
+    if (['home', 'explore', 'search', 'notifications', 'messages', 'i', 'unknown'].includes(username)) {
+      log('Must be on a user\'s profile page! Go to: https://x.com/username', 'error');
+      return;
+    }
     log(`🔗 Starting Link Scraper for @${username}...`, 'info');
-    log(`Max scrolls: ${OPTIONS.MAX_SCROLLS}`, 'info');
+    log(`Max scrolls: ${CONFIG.MAX_SCROLLS}`, 'info');
 
-    while (scrollCount < OPTIONS.MAX_SCROLLS && tweetsProcessed < OPTIONS.MAX_TWEETS) {
+    let retries = 0;
+    let lastLinkCount = 0;
+    let lastTweetCount = 0;
+
+    while (scrollCount < CONFIG.MAX_SCROLLS && tweetsProcessed < CONFIG.MAX_TWEETS) {
       processTweets();
+
+      // Progress means new links OR new tweets scanned
+      if (links.size === lastLinkCount && tweetsProcessed === lastTweetCount) {
+        retries++;
+        if (CONFIG.MAX_RETRIES > 0 && retries >= CONFIG.MAX_RETRIES) {
+          log(`No new posts after ${retries} scrolls, reached the end`, 'info');
+          break;
+        }
+      } else {
+        retries = 0;
+        lastLinkCount = links.size;
+        lastTweetCount = tweetsProcessed;
+      }
       
       scrollBy(800);
       scrollCount++;
-      await sleep(1500);
+      await sleep(CONFIG.SCROLL_DELAY);
       
       if (scrollCount % 10 === 0) {
         log(`Progress: ${tweetsProcessed} tweets, ${links.size} unique links`, 'info');
@@ -276,9 +387,20 @@
       scrapedAt: Date.now(),
     });
 
-    if (OPTIONS.AUTO_DOWNLOAD) {
+    if (CONFIG.AUTO_DOWNLOAD) {
       downloadResults(report);
     }
+
+    window.scrapedLinks = {
+      username,
+      scrapedAt: new Date().toISOString(),
+      totalLinks: links.size,
+      totalTweets: tweetsProcessed,
+      links: report.sortedLinks,
+      byDomain: report.byDomain,
+      allLinks: report.sortedLinks.map(([url, data]) => ({ url, domain: domainOf(url), ...data })),
+    };
+    log('Access data: window.scrapedLinks', 'info');
 
     log(`\n✅ Done! Found ${links.size} unique links from ${tweetsProcessed} tweets.`, 'success');
   };
@@ -286,9 +408,10 @@
   run();
 
   // Expose data for manual access
+  window.XActions = window.XActions || {};
   window.XActions.linkData = () => links;
   window.stopLinkScraper = () => {
-    OPTIONS.MAX_SCROLLS = 0;
+    CONFIG.MAX_SCROLLS = 0;
     log('Stopping...', 'warning');
   };
 })();

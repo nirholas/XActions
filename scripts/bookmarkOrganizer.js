@@ -1,77 +1,99 @@
+// GENERATED FILE: a copy of browser/bookmarkOrganizer.js, written by scripts/build-script-manifest.mjs. Edit browser/bookmarkOrganizer.js instead, then run: npm run browser:build
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
-// scripts/bookmarkOrganizer.js
-// Browser console script for categorizing bookmarks by keywords on X/Twitter
-// Paste in DevTools console on x.com/i/bookmarks
-// by nichxbt
-
+/**
+ * @name        bookmarkOrganizer.js
+ * @title       Bookmark Organizer
+ * @description Scan your bookmarks, sort them into keyword categories and export them as JSON or CSV.
+ * @category    scrape
+ * @page        x.com/i/bookmarks
+ * @writes      false
+ * @aliases     scripts/bookmarkOrganizer.js
+ * @author      nichxbt (https://x.com/nichxbt)
+ * @version     1.1.0
+ * @date        2026-11-26
+ * @repository  https://github.com/nirholas/XActions
+ *
+ * Usage (browser/bookmarkOrganizer.js):
+ * 1. Go to https://x.com/i/bookmarks
+ * 2. Open the Developer Console (F12)
+ * 3. Paste this into the Developer Console and run it
+ */
 (() => {
+  const CONFIG = {
+    maxBookmarks: 200,
+    scrollDelay: 1500,
+    maxScrollRetries: 5,  // Stop after this many scrolls in a row that load no new bookmarks
+    exportFormat: 'json', // 'json' or 'csv'
+    // Auto-categorize by keywords
+    categories: {
+      'Tech': ['javascript', 'python', 'coding', 'programming', 'dev', 'software', 'ai', 'ml'],
+      'News': ['breaking', 'report', 'update', 'announced', 'confirmed'],
+      'Crypto': ['bitcoin', 'btc', 'eth', 'crypto', 'defi', 'web3', 'blockchain'],
+      'Funny': ['lmao', 'lol', '😂', '🤣', 'hilarious', 'meme'],
+      'Business': ['startup', 'revenue', 'funding', 'investor', 'market', 'growth'],
+    },
+  };
+
+  const $tweet = 'article[data-testid="tweet"]';
+  const $tweetText = '[data-testid="tweetText"]';
+  const $like = '[data-testid="like"], [data-testid="unlike"]';
+
   const sleep = (ms) => new Promise(r => setTimeout(r, ms));
 
-  // =============================================
-  // CONFIGURATION
-  // =============================================
-  const CONFIG = {
-    maxBookmarks: 100,
-    categories: {
-      tech: ['code', 'programming', 'dev', 'javascript', 'python', 'software', 'ai', 'ml'],
-      crypto: ['bitcoin', 'eth', 'web3', 'crypto', 'defi', 'blockchain', 'btc'],
-      news: ['breaking', 'report', 'update', 'announced', 'confirmed'],
-      business: ['startup', 'revenue', 'funding', 'investor', 'market', 'growth'],
-    },
-    exportFormat: 'json',       // 'json' | 'csv'
-    scrollDelay: 1500,
-    maxScrollRetries: 5,
-  };
-  // =============================================
-
-  const download = (data, filename) => {
-    const a = document.createElement('a');
-    a.href = URL.createObjectURL(new Blob([typeof data === 'string' ? data : JSON.stringify(data, null, 2)], { type: typeof data === 'string' ? 'text/csv' : 'application/json' }));
-    a.download = filename;
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-    console.log(`📥 Downloaded: ${filename}`);
+  const parseCount = (str) => {
+    if (!str) return 0;
+    str = str.replace(/,/g, '').trim();
+    const match = str.match(/([\d.]+)([KMB])?/i);
+    if (!match) return 0;
+    let num = parseFloat(match[1]);
+    if (match[2]) num *= { K: 1000, M: 1000000, B: 1000000000 }[match[2].toUpperCase()];
+    return Math.round(num);
   };
 
   const categorize = (text) => {
-    const lc = text.toLowerCase();
+    const textLC = text.toLowerCase();
     const matched = [];
-    for (const [cat, keywords] of Object.entries(CONFIG.categories)) {
-      if (keywords.some(kw => lc.includes(kw))) matched.push(cat);
+    for (const [category, keywords] of Object.entries(CONFIG.categories)) {
+      if (keywords.some(kw => textLC.includes(kw))) {
+        matched.push(category);
+      }
     }
-    return matched.length > 0 ? matched : ['uncategorized'];
+    return matched.length > 0 ? matched : ['Uncategorized'];
   };
 
   const run = async () => {
-    console.log('🔖 BOOKMARK ORGANIZER — XActions by nichxbt\n');
+    console.log('🔖 BOOKMARK ORGANIZER - XActions by nichxbt');
 
     if (!window.location.href.includes('/bookmarks')) {
       console.error('❌ Navigate to x.com/i/bookmarks first!');
       return;
     }
 
-    console.log('📊 Scanning bookmarks...');
+    console.log('📊 Scanning bookmarks...\n');
+
     const bookmarks = new Map();
     let retries = 0;
 
     while (bookmarks.size < CONFIG.maxBookmarks && retries < CONFIG.maxScrollRetries) {
       const prevSize = bookmarks.size;
 
-      document.querySelectorAll('article[data-testid="tweet"]').forEach(tweet => {
+      document.querySelectorAll($tweet).forEach(tweet => {
         const linkEl = tweet.querySelector('a[href*="/status/"]');
         if (!linkEl || bookmarks.has(linkEl.href)) return;
 
-        const text = tweet.querySelector('[data-testid="tweetText"]')?.textContent || '';
+        const textEl = tweet.querySelector($tweetText);
+        const likeEl = tweet.querySelector($like);
+        const timeEl = tweet.querySelector('time');
         const userLink = tweet.querySelector('a[href^="/"][role="link"]');
-        const username = userLink?.href?.match(/x\.com\/([^/]+)/)?.[1] || '';
-        const time = tweet.querySelector('time')?.getAttribute('datetime') || '';
+        const username = userLink?.href?.match(/x\.com\/([^\/]+)/)?.[1] || '';
+        const text = textEl?.textContent || '';
 
         bookmarks.set(linkEl.href, {
           text: text.substring(0, 300),
           url: linkEl.href,
           username,
-          time,
+          timestamp: timeEl?.dateTime || '',
+          likes: parseCount(likeEl?.getAttribute('aria-label') || '0'),
           categories: categorize(text),
         });
       });
@@ -94,8 +116,11 @@
       });
     });
 
-    // Print report
-    console.log(`\n📚 Total bookmarks: ${all.length}\n`);
+    console.log('╔════════════════════════════════════════════════════════════╗');
+    console.log('║  🔖 BOOKMARK REPORT                                        ║');
+    console.log('╚════════════════════════════════════════════════════════════╝');
+    console.log(`\n📊 Total bookmarks: ${all.length}\n`);
+
     console.log('📁 BY CATEGORY:');
     Object.entries(byCategory)
       .sort((a, b) => b[1].length - a[1].length)
@@ -108,16 +133,37 @@
       });
 
     // Export
-    const date = new Date().toISOString().slice(0, 10);
-
     if (CONFIG.exportFormat === 'csv') {
-      const header = 'URL,Username,Text,Categories,Time';
-      const rows = all.map(b =>
-        `"${b.url}","${b.username}","${b.text.replace(/"/g, '""')}","${b.categories.join(';')}","${b.time}"`
+      const csvHeader = 'URL,Username,Text,Categories,Likes,Timestamp';
+      const csvRows = all.map(b =>
+        `"${b.url}","${b.username}","${b.text.replace(/"/g, '""')}","${b.categories.join(';')}",${b.likes},"${b.timestamp}"`
       );
-      download([header, ...rows].join('\n'), `xactions-bookmarks-organized-${date}.csv`);
+      const csv = [csvHeader, ...csvRows].join('\n');
+      const blob = new Blob([csv], { type: 'text/csv' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `xactions-bookmarks-${new Date().toISOString().slice(0, 10)}.csv`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      console.log('\n📥 Bookmarks exported as CSV');
     } else {
-      download({ exportedAt: new Date().toISOString(), total: all.length, byCategory, bookmarks: all }, `xactions-bookmarks-organized-${date}.json`);
+      const report = {
+        exportedAt: new Date().toISOString(),
+        total: all.length,
+        byCategory,
+        bookmarks: all,
+      };
+      const blob = new Blob([JSON.stringify(report, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `xactions-bookmarks-${new Date().toISOString().slice(0, 10)}.json`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      console.log('\n📥 Bookmarks exported as JSON');
     }
 
     console.log('\n🏁 Done!');

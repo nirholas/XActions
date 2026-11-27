@@ -1,28 +1,36 @@
+// GENERATED FILE: a copy of browser/scrapeLikes.js, written by scripts/build-script-manifest.mjs. Edit browser/scrapeLikes.js instead, then run: npm run browser:build
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
 /**
  * ============================================
  * 💛 Scrape User Likes - XActions
  * ============================================
  *
- * @name         scrape-user-likes
- * @description  Scroll a user's Likes timeline and export the posts they liked (url, author, text, counts) to JSON and CSV.
- * @author       nichxbt
- * @version      1.0.0
- * @date         2026-07-20
- * @website      https://xactions.app
+ * @name        scrapeLikes.js
+ * @title       Scrape Likes
+ * @description Scroll a user's Likes timeline and export the posts they liked (url, author, text, counts) to JSON and CSV.
+ * @category    scrape
+ * @page        x.com/<you>/likes or x.com/<username>/likes
+ * @writes      false
+ * @aliases     scripts/scrapeLikes.js, scripts/twitter/scrape-user-likes.js
+ * @author      nichxbt (https://x.com/nichxbt)
+ * @version     1.1.0
+ * @date        2026-11-27
+ * @website     https://xactions.app
  *
  * Usage:
  *   1. Go to the Likes tab of a profile: x.com/<user>/likes
  *      (X only shows the Likes tab for your own account unless it is public)
  *   2. Open the browser console (F12 or Cmd+Option+I -> Console)
  *   3. (Optional) edit the CONFIG options at the top of the script
- *   4. Paste this entire script and press Enter
+ *   4. Paste browser/scrapeLikes.js and press Enter
  *
  * Example:
  *   On x.com/<you>/likes the script scrolls your liked posts, prints a running
  *   count ("Collected 120 liked posts..."), then downloads <you>_likes_<date>.json
  *   with each post's url, author, text and like/repost/reply/view counts, and
  *   reports the accounts you like most. To stop early: window.stopScrapeUserLikes().
+ *   For CSV only, set autoDownloadCsv: true and downloadJson: false.
+ *   The posts array is also on window.scrapedLikes.
  *
  * ============================================
  */
@@ -49,8 +57,11 @@
     // Hard cap on scroll attempts, independent of stalls
     maxScrollAttempts: 400,
 
-    // Also trigger a browser download of the CSV file (JSON always downloads)
-    autoDownloadCsv: false
+    // Also trigger a browser download of the CSV file
+    autoDownloadCsv: false,
+
+    // Trigger a browser download of the JSON file
+    downloadJson: true
   };
 
   // ============================================
@@ -263,8 +274,10 @@
   if (list.length === 0) {
     log.warning('No liked posts were collected. The Likes tab may be empty or hidden (X hides it for other users).');
   } else {
-    download(JSON.stringify(result, null, 2), `${username}_likes_${dateStr}.json`, 'application/json');
-    log.success(`Downloaded ${username}_likes_${dateStr}.json`);
+    if (CONFIG.downloadJson) {
+      download(JSON.stringify(result, null, 2), `${username}_likes_${dateStr}.json`, 'application/json');
+      log.success(`Downloaded ${username}_likes_${dateStr}.json`);
+    }
     if (CONFIG.autoDownloadCsv) {
       download(csv, `${username}_likes_${dateStr}.csv`, 'text/csv');
       log.success(`Downloaded ${username}_likes_${dateStr}.csv`);
@@ -272,6 +285,7 @@
   }
 
   window.scrapedUserLikes = result;
+  window.scrapedLikes = list;
   window.scrapeUserLikesExportCSV = () => {
     download(csv, `${username}_likes_${dateStr}.csv`, 'text/csv');
     return csv;
@@ -303,7 +317,7 @@
 
   console.log('\n📋 CSV preview (full string via window.scrapeUserLikesExportCSV()):');
   console.log(csv.split('\n').slice(0, 6).join('\n'));
-  console.log('\n💡 window.scrapedUserLikes = full data. window.scrapeUserLikesExportCSV() = download + return CSV.');
+  console.log('\n💡 window.scrapedUserLikes = full data. window.scrapedLikes = posts array. window.scrapeUserLikesExportCSV() = download + return CSV.');
 
   return result;
 })();

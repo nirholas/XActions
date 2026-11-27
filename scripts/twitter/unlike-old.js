@@ -1,11 +1,17 @@
+// GENERATED FILE: a copy of browser/unlikeOld.js, written by scripts/build-script-manifest.mjs. Edit browser/unlikeOld.js instead, then run: npm run browser:build
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
 /**
  * ============================================================================
  * 📅 Unlike Old Tweets - XActions
  * ============================================================================
  * 
- * @name        unlike-old.js
- * @description Unlikes tweets older than a specified number of days from your likes page
+ * @name        unlikeOld.js
+ * @description Remove likes older than a number of days you set.
+ * @title       Unlike Old Likes
+ * @category    cleanup
+ * @page        x.com/<you>/likes
+ * @writes      true
+ * @aliases     scripts/twitter/unlike-old.js
  * @author      nichxbt
  * @version     1.0.0
  * @date        2026-01-26

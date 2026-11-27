@@ -1,11 +1,17 @@
+// GENERATED FILE: a copy of browser/followListMembers.js, written by scripts/build-script-manifest.mjs. Edit browser/followListMembers.js instead, then run: npm run browser:build
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
 /**
  * ============================================
  * 👥 Follow List Members - XActions
  * ============================================
  *
- * @name         follow-list-members
- * @description  Follow every member of a Twitter List, skipping accounts you already follow, rate-limited.
+ * @name        followListMembers.js
+ * @description Follow every member of a List, skipping accounts you already follow, rate-limited.
+ * @title       Follow List Members
+ * @category    lists
+ * @page        x.com/i/lists/<id>/members
+ * @writes      true
+ * @aliases     scripts/twitter/follow-list-members.js
  * @author       nichxbt
  * @version      1.0.0
  * @date         2026-07-20

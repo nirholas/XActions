@@ -1,5 +1,14 @@
+// GENERATED FILE: a copy of browser/keywordLiker.js, written by scripts/build-script-manifest.mjs. Edit browser/keywordLiker.js instead, then run: npm run browser:build
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
-// scripts/keywordLiker.js
+/**
+ * @name        keywordLiker.js
+ * @title       Keyword Liker
+ * @description Like only posts containing keywords you enter in a prompt box.
+ * @category    engage
+ * @page        x.com/home
+ * @writes      true
+ * @aliases     scripts/keywordLiker.js
+ */
 // Like only posts containing specific keywords — with a prompt input box
 // Paste in DevTools console on x.com/home or any feed/search page
 // by nichxbt

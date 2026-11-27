@@ -1,5 +1,14 @@
+// GENERATED FILE: a copy of browser/personaEngine.js, written by scripts/build-script-manifest.mjs. Edit browser/personaEngine.js instead, then run: npm run browser:build
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
-// scripts/personaEngine.js
+/**
+ * @name        personaEngine.js
+ * @title       Persona Engine
+ * @description Analyze your posting style and build a persona profile for the algorithm builder.
+ * @category    ai
+ * @page        x.com/<you>
+ * @writes      false
+ * @aliases     scripts/personaEngine.js
+ */
 // Browser console script for analyzing your posting style and generating a persona profile
 // Paste in DevTools console on x.com/YOUR_USERNAME
 // by nichxbt

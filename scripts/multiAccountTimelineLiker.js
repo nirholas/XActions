@@ -1,5 +1,14 @@
+// GENERATED FILE: a copy of browser/multiAccountTimelineLiker.js, written by scripts/build-script-manifest.mjs. Edit browser/multiAccountTimelineLiker.js instead, then run: npm run browser:build
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
-// scripts/multiAccountTimelineLiker.js
+/**
+ * @name        multiAccountTimelineLiker.js
+ * @title       Multi-Account Timeline Liker
+ * @description Like the whole timeline of several accounts in sequence.
+ * @category    engage
+ * @page        x.com/<username>
+ * @writes      true
+ * @aliases     scripts/multiAccountTimelineLiker.js
+ */
 // Like the entire timeline of multiple X accounts in sequence
 // Example: like 500 posts on @nichxbt, then 500 on @doi, etc.
 // Paste in DevTools console on x.com
@@ -158,53 +167,6 @@
   };
 
   // ── Main ───────────────────────────────────────────────────
-  const run = async () => {
-    console.log('╔════════════════════════════════════════════════╗');
-    console.log('║  🔄 MULTI-ACCOUNT TIMELINE LIKER              ║');
-    console.log('║  by nichxbt — XActions                         ║');
-    console.log('╚════════════════════════════════════════════════╝');
-    console.log(`   Accounts: ${TARGETS.map(t => `@${t.username} (${t.maxLikes})`).join(', ')}`);
-    console.log(`   Dry run: ${CONFIG.dryRun}`);
-    console.log(`   ℹ️ Type XActions.stop() to abort at any time\n`);
-
-    const results = [];
-
-    for (let i = 0; i < TARGETS.length; i++) {
-      if (aborted) break;
-
-      const { username, maxLikes } = TARGETS[i];
-
-      // Navigate to profile
-      await goToProfile(username);
-      await sleep(2000); // Let page settle
-
-      // Like their timeline
-      const result = await likeTimeline(username, maxLikes);
-      results.push(result);
-
-      console.log(`\n   ✅ @${username}: ${result.liked} posts liked (${result.stopped})`);
-
-      // Pause between accounts
-      if (i < TARGETS.length - 1 && !aborted) {
-        console.log(`\n   ⏳ Pausing ${CONFIG.pauseBetweenAccounts / 1000}s before next account...`);
-        await sleep(CONFIG.pauseBetweenAccounts);
-      }
-    }
-
-    // ── Summary ──────────────────────────────────────────────
-    const total = results.reduce((sum, r) => sum + r.liked, 0);
-    console.log('\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-    console.log('  🔄 MULTI-ACCOUNT TIMELINE LIKER — RESULTS');
-    console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-    for (const r of results) {
-      console.log(`  👤 @${r.username}: ${r.liked} liked (${r.stopped})`);
-    }
-    console.log(`  ─────────────────────────────────`);
-    console.log(`  ❤️  Total: ${total} posts liked`);
-    if (CONFIG.dryRun) console.log('  🏃 (Dry run — nothing was liked)');
-    console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n');
-  };
-
   // ⚠️ IMPORTANT: This script navigates between pages.
   // After navigation, the script context is lost.
   // For multi-account, we use sessionStorage to track progress.

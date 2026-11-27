@@ -1,21 +1,27 @@
+// GENERATED FILE: a copy of browser/scrapeMedia.js, written by scripts/build-script-manifest.mjs. Edit browser/scrapeMedia.js instead, then run: npm run browser:build
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
 /**
  * ============================================
  * 🖼️ Scrape Media - XActions
  * ============================================
  *
- * @name         scrape-media
- * @description  Collect every image, video, and GIF URL from a profile's Media tab and export to JSON/CSV.
- * @author       nichxbt
- * @version      1.0.0
- * @date         2026-07-20
- * @website      https://xactions.app
+ * @name        scrapeMedia.js
+ * @title       Scrape Media
+ * @description Collect every image, video and GIF URL from a profile's Media tab and export them as JSON, CSV and a URL list.
+ * @category    scrape
+ * @page        x.com/<username>/media
+ * @writes      false
+ * @aliases     scripts/scrapeMedia.js, scripts/twitter/scrape-media.js
+ * @author      nichxbt (https://x.com/nichxbt)
+ * @version     1.1.0
+ * @date        2026-11-27
+ * @website     https://xactions.app
  *
  * Usage:
  *   1. Go to a profile's Media tab, e.g. x.com/nichxbt/media
  *   2. Open the browser console (F12 or Cmd+Option+I -> Console)
  *   3. (Optional) edit the CONFIG options at the top of the script
- *   4. Paste this entire script and press Enter
+ *   4. Paste browser/scrapeMedia.js and press Enter
  *
  * Example:
  *   On x.com/nichxbt/media the script scrolls the media grid and collects up to CONFIG.maxItems
@@ -23,6 +29,7 @@
  *   to &name=orig), and video/GIF sources are captured where the browser exposes them. It
  *   downloads a JSON manifest plus a plain-text list of URLs, and offers window.exportCSV().
  *   Stop early with window.stopScrapeMedia().
+ *   Set mediaTabOnly = false to also scrape from the profile's Posts tab or any timeline.
  *
  * ============================================
  */
@@ -54,6 +61,9 @@
     // Hard cap on scroll attempts so the loop can never run forever
     maxScrollAttempts: 400,
 
+    // Refuse to run off a profile's Media tab. false = warn and scrape the current timeline anyway
+    mediaTabOnly: true,
+
     // Auto-download a CSV file and a plain-text URL list too (JSON always downloads)
     downloadCsv: true,
     downloadUrlList: true
@@ -66,6 +76,8 @@
     tweet: 'article[data-testid="tweet"]',
     userName: '[data-testid="User-Name"]',
     tweetPhoto: '[data-testid="tweetPhoto"] img',
+    // Fallback when a post has no tweetPhoto wrapper
+    mediaImg: 'img[src*="pbs.twimg.com/media"]',
     video: 'video',
     gifThumb: 'img[src*="tweet_video_thumb"]'
   };
@@ -118,7 +130,9 @@
     }
 
     if (CONFIG.includeImages) {
-      article.querySelectorAll(SELECTORS.tweetPhoto).forEach((img) => {
+      let photos = article.querySelectorAll(SELECTORS.tweetPhoto);
+      if (photos.length === 0) photos = article.querySelectorAll(SELECTORS.mediaImg);
+      photos.forEach((img) => {
         if (isDecorative(img.src) || (img.src && img.src.includes('tweet_video_thumb'))) return;
         const url = CONFIG.highestRes ? toOriginalImage(img.src) : img.src;
         out.push({ type: 'image', url, ...ctx });
@@ -179,9 +193,12 @@
 
   // Page guard: warn and return, never hard-redirect.
   if (!/\/media\/?$/.test(window.location.pathname)) {
-    log.warning('You are not on a profile Media tab.');
-    log.info(`Go to x.com/${username}/media, then run this script again.`);
-    return;
+    if (CONFIG.mediaTabOnly) {
+      log.warning('You are not on a profile Media tab.');
+      log.info(`Go to x.com/${username}/media, then run this script again (or set CONFIG.mediaTabOnly = false).`);
+      return;
+    }
+    log.warning(`For best results, go to x.com/${username}/media. Scraping the current timeline.`);
   }
 
   const media = new Map();

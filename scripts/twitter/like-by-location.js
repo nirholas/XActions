@@ -1,11 +1,17 @@
+// GENERATED FILE: a copy of browser/likeByLocation.js, written by scripts/build-script-manifest.mjs. Edit browser/likeByLocation.js instead, then run: npm run browser:build
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
 /**
  * ============================================
  * 📍 Like By Location - XActions
  * ============================================
  * 
- * @name         like-by-location
- * @description  Automatically like tweets from specific geographic locations
+ * @name        likeByLocation.js
+ * @description Like posts from specific geographic locations.
+ * @title       Like by Location
+ * @category    engage
+ * @page        x.com/search?q=<query>&f=live
+ * @writes      true
+ * @aliases     scripts/twitter/like-by-location.js
  * @author       nichxbt
  * @version      1.0.0
  * @date         2026-01-26
@@ -99,7 +105,7 @@
         window.dispatchEvent(new PopStateEvent('popstate', { state: {} }));
         return;
       }
-    } catch (e) {}
+    } catch { /* fall through to a full page load below */ }
     window.location.href = url;
   };
 

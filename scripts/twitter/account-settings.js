@@ -1,11 +1,17 @@
+// GENERATED FILE: a copy of browser/accountSettings.js, written by scripts/build-script-manifest.mjs. Edit browser/accountSettings.js instead, then run: npm run browser:build
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
 /**
  * ============================================
  * ⚙️ Account Settings - XActions
  * ============================================
  *
- * @name         account-settings
- * @description  Toggle common X privacy and safety settings (protect posts, DMs, tagging, discoverability) from one script.
+ * @name        accountSettings.js
+ * @description Toggle common privacy and safety settings (protected posts, DMs, tagging, discoverability) from one script.
+ * @title       Privacy and Safety Settings
+ * @category    profile
+ * @page        x.com/settings
+ * @writes      true
+ * @aliases     scripts/twitter/account-settings.js
  * @author       nichxbt
  * @version      1.0.0
  * @date         2026-07-20

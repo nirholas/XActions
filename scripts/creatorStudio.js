@@ -1,5 +1,14 @@
+// GENERATED FILE: a copy of browser/creatorStudio.js, written by scripts/build-script-manifest.mjs. Edit browser/creatorStudio.js instead, then run: npm run browser:build
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
-// scripts/creatorStudio.js
+/**
+ * @name        creatorStudio.js
+ * @title       Creator Studio
+ * @description Creator analytics: subscriptions, tips, Super Follows revenue and audience.
+ * @category    analytics
+ * @page        x.com/<you>
+ * @writes      false
+ * @aliases     scripts/creatorStudio.js
+ */
 // Browser console script for analyzing account analytics and content performance
 // Paste in DevTools console on x.com/USERNAME (your profile)
 // by nichxbt

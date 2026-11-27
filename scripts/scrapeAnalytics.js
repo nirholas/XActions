@@ -1,5 +1,14 @@
+// GENERATED FILE: a copy of browser/scrapeAnalytics.js, written by scripts/build-script-manifest.mjs. Edit browser/scrapeAnalytics.js instead, then run: npm run browser:build
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
-// scripts/scrapeAnalytics.js
+/**
+ * @name        scrapeAnalytics.js
+ * @title       Scrape Analytics
+ * @description Scrape account and post analytics: impressions, engagement rates and audience.
+ * @category    analytics
+ * @page        x.com/i/account_analytics
+ * @writes      false
+ * @aliases     scripts/scrapeAnalytics.js
+ */
 // Browser console script to scrape X/Twitter analytics data
 // Paste in DevTools console on x.com/i/account_analytics or any post
 // by nichxbt
@@ -137,7 +146,7 @@
     try {
       await navigator.clipboard.writeText(JSON.stringify(result, null, 2));
       console.log('\n✅ Copied to clipboard!');
-    } catch (e) {}
+    } catch { /* clipboard needs page focus; the result is already printed above */ }
   };
 
   run();

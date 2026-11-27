@@ -1,11 +1,17 @@
+// GENERATED FILE: a copy of browser/updateBanner.js, written by scripts/build-script-manifest.mjs. Edit browser/updateBanner.js instead, then run: npm run browser:build
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
 /**
  * ============================================================
  * 🏞️ Update Banner Image
  * ============================================================
  * 
- * @name        update-banner.js
- * @description Guide and helper for updating X/Twitter profile banner
+ * @name        updateBanner.js
+ * @description Guided helper for changing your profile banner.
+ * @title       Update Banner
+ * @category    profile
+ * @page        x.com/settings/profile
+ * @writes      true
+ * @aliases     scripts/twitter/update-banner.js
  * @author      nichxbt (https://x.com/nichxbt)
  * @version     1.0.0
  * @date        2026-01-26
@@ -50,7 +56,6 @@ var CONFIG = {
   // DOM Selectors
   const $editProfileBtn = '[data-testid="editProfileButton"]';
   const $addBannerBtn = '[data-testid="addBannerButton"], [data-testid="editProfileHeader"]';
-  const $bannerImageInput = 'input[data-testid="fileInput"]';
   const $saveButton = '[data-testid="Profile_Save_Button"]';
   const $cancelBtn = '[data-testid="cancelButton"]';
   

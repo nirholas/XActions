@@ -1,15 +1,21 @@
+// GENERATED FILE: a copy of browser/scrapeList.js, written by scripts/build-script-manifest.mjs. Edit browser/scrapeList.js instead, then run: npm run browser:build
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
 /**
  * ============================================
  * 📋 Scrape List - XActions
  * ============================================
  *
- * @name         scrape-list
- * @description  Export an X List's timeline posts, or its members, to JSON/CSV.
- * @author       nichxbt
- * @version      1.0.0
- * @date         2026-07-20
- * @website      https://xactions.app
+ * @name        scrapeList.js
+ * @title       Scrape List
+ * @description Export an X List's timeline posts, or its members, to JSON and CSV.
+ * @category    lists
+ * @page        x.com/i/lists/<id>/members or x.com/i/lists/<id>
+ * @writes      false
+ * @aliases     scripts/scrapeList.js, scripts/twitter/scrape-list.js
+ * @author      nichxbt (https://x.com/nichxbt)
+ * @version     1.1.0
+ * @date        2026-11-27
+ * @website     https://xactions.app
  *
  * Usage:
  *   1. Go to a List page:
@@ -17,14 +23,14 @@
  *      - members mode:  x.com/i/lists/1699807431709041070/members
  *   2. Open the browser console (F12 or Cmd+Option+I -> Console)
  *   3. (Optional) set CONFIG.mode to 'timeline' or 'members' to match the page
- *   4. Paste this entire script and press Enter
+ *   4. Paste browser/scrapeList.js and press Enter
  *
  * Example:
  *   On x.com/i/lists/1699807431709041070 with CONFIG.mode = 'timeline', the script scrolls
  *   the List timeline, collects up to CONFIG.maxItems posts (text, author, counts, media),
  *   and downloads JSON + CSV. Switch to the /members tab and set CONFIG.mode = 'members' to
  *   export each member's handle, name, bio, and verified flag instead. Stop early with
- *   window.stopScrapeList().
+ *   window.stopScrapeList(). For CSV only, set downloadJson: false.
  *
  * ============================================
  */
@@ -56,8 +62,11 @@
     // Hard cap on scroll attempts so the loop can never run forever
     maxScrollAttempts: 500,
 
-    // Auto-download a CSV file too (JSON always downloads)
-    downloadCsv: true
+    // Auto-download a CSV file too
+    downloadCsv: true,
+
+    // Auto-download the JSON file
+    downloadJson: true
   };
 
   // ============================================
@@ -356,7 +365,7 @@
     list.slice(0, 5).forEach((m, i) => console.log(`${i + 1}. @${m.handle}${m.verified ? ' ✓' : ''} - ${m.name}`));
 
     const result = { listId, listName, mode, scrapedAt: new Date().toISOString(), count: list.length, members: list };
-    if (downloadFile(JSON.stringify(result, null, 2), `list_${safeName}_members_${stamp}.json`, 'application/json')) log.success('JSON downloaded');
+    if (CONFIG.downloadJson && downloadFile(JSON.stringify(result, null, 2), `list_${safeName}_members_${stamp}.json`, 'application/json')) log.success('JSON downloaded');
     if (CONFIG.downloadCsv && downloadFile(membersToCSV(list), `list_${safeName}_members_${stamp}.csv`, 'text/csv')) log.success('CSV downloaded');
     window.scrapedList = result;
     window.exportCSV = () => membersToCSV(list);
@@ -374,7 +383,7 @@
     list.slice(0, 5).forEach((p, i) => console.log(`${i + 1}. @${p.author.handle} (${p.likes} ❤️): "${p.text.slice(0, 60)}"`));
 
     const result = { listId, listName, mode, scrapedAt: new Date().toISOString(), count: list.length, posts: list };
-    if (downloadFile(JSON.stringify(result, null, 2), `list_${safeName}_timeline_${stamp}.json`, 'application/json')) log.success('JSON downloaded');
+    if (CONFIG.downloadJson && downloadFile(JSON.stringify(result, null, 2), `list_${safeName}_timeline_${stamp}.json`, 'application/json')) log.success('JSON downloaded');
     if (CONFIG.downloadCsv && downloadFile(postsToCSV(list), `list_${safeName}_timeline_${stamp}.csv`, 'text/csv')) log.success('CSV downloaded');
     window.scrapedList = result;
     window.exportCSV = () => postsToCSV(list);

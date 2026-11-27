@@ -1,4 +1,14 @@
+// GENERATED FILE: a copy of browser/thoughtLeaderCultivator.js, written by scripts/build-script-manifest.mjs. Edit browser/thoughtLeaderCultivator.js instead, then run: npm run browser:build
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
+/**
+ * @name        thoughtLeaderCultivator.js
+ * @title       Thought Leader Cultivator
+ * @description Train the algorithm for your niche by simulating natural browsing: read, like and bookmark.
+ * @category    grow
+ * @page        x.com/home
+ * @writes      true
+ * @aliases     scripts/thoughtLeaderCultivator.js
+ */
 // XActions - Thought Leader Algorithm Cultivator (Standalone)
 // https://github.com/nirholas/XActions
 // by nichxbt

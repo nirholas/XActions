@@ -1,282 +1,302 @@
+// GENERATED FILE: a copy of browser/followerGrowthTracker.js, written by scripts/build-script-manifest.mjs. Edit browser/followerGrowthTracker.js instead, then run: npm run browser:build
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
 /**
  * ============================================================
- * 📈 Followers Growth Tracker
+ * 📈 Follower Growth Tracker — Production Grade
  * ============================================================
- * 
- * @name        followers-growth-tracker.js
- * @description Track follower growth over time with historical data
+ *
+ * @name        followerGrowthTracker.js
+ * @title       Follower Growth Tracker
+ * @description Snapshot a profile's follower count on each run and report growth, velocity, projections and a trendline from the saved history.
+ * @category    analytics
+ * @page        x.com/<username>
+ * @writes      false
+ * @aliases     scripts/followerGrowthTracker.js, scripts/twitter/followers-growth-tracker.js
  * @author      nichxbt (https://x.com/nichxbt)
- * @version     1.0.0
- * @date        2026-01-26
+ * @version     1.1.0
+ * @date        2026-11-27
  * @repository  https://github.com/nirholas/XActions
- * 
+ *
  * ============================================================
- * 📋 USAGE INSTRUCTIONS:
- * 
- * 1. Go to any profile page: https://x.com/USERNAME
- * 2. Open Chrome DevTools (F12 or Cmd+Option+I)
- * 3. Paste this script and press Enter
- * 4. Run periodically to track growth over time
- * 
- * ============================================================
- * ⚙️ CONFIGURATION
- * ============================================================
- */
-
-// `var` (not `const`): this script's whole point is "run it periodically" in
-// the same tab, and DevTools throws "already been declared" on a repeated
-// top-level `const` paste - which would silently break that workflow.
-var CONFIG = {
-  // Storage key prefix
-  storageKey: 'xactions_growth_tracker',
-  
-  // Maximum history entries to keep
-  maxHistory: 365,
-  
-  // Show chart in console
-  showChart: true
-};
-
-/**
- * ============================================================
- * 🚀 SCRIPT START
+ * 📋 USAGE:
+ *
+ * 1. Go to: https://x.com/YOUR_USERNAME (or any profile)
+ * 2. Open DevTools Console (F12)
+ * 3. Paste browser/followerGrowthTracker.js and press Enter
+ * 4. Run again daily/weekly to build trendline
+ *
+ * Each run takes a snapshot. Over time, you'll see:
+ * - Daily/weekly growth rates
+ * - Growth velocity changes
+ * - Best/worst days
+ * - Projected milestones
  * ============================================================
  */
+(() => {
+  'use strict';
 
-(async function followersGrowthTracker() {
-  console.log(`
-╔══════════════════════════════════════════════════════════════╗
-║  📈 XActions — Followers Growth Tracker                      ║
-║  Track follower growth over time                             ║
-╚══════════════════════════════════════════════════════════════╝
-  `);
-
-  // Get username from URL
-  const pathMatch = window.location.pathname.match(/^\/([^\/]+)/);
-  if (!pathMatch) {
-    console.error('❌ Please navigate to a profile page first!');
-    console.log('👉 Example: https://x.com/elonmusk');
-    return;
-  }
-  
-  const username = pathMatch[1].toLowerCase();
-  
-  // Skip non-profile pages
-  const invalidPaths = ['home', 'explore', 'notifications', 'messages', 'i', 'settings', 'search'];
-  if (invalidPaths.includes(username)) {
-    console.error('❌ Please navigate to a profile page first!');
-    return;
-  }
-
-  console.log(`📊 Tracking growth for @${username}\n`);
-
-  // Extract follower/following counts from the page
-  const getStats = () => {
-    const stats = { followers: 0, following: 0 };
-    
-    // Try to find follower count
-    const links = document.querySelectorAll('a[href$="/verified_followers"], a[href$="/followers"]');
-    links.forEach(link => {
-      const text = link.textContent;
-      const match = text.match(/([\d,.]+[KMB]?)\s*Followers/i);
-      if (match) {
-        stats.followers = parseCount(match[1]);
-      }
-    });
-    
-    // Try to find following count
-    const followingLinks = document.querySelectorAll('a[href$="/following"]');
-    followingLinks.forEach(link => {
-      const text = link.textContent;
-      const match = text.match(/([\d,.]+[KMB]?)\s*Following/i);
-      if (match) {
-        stats.following = parseCount(match[1]);
-      }
-    });
-    
-    // Alternative: look for span elements with counts
-    if (stats.followers === 0) {
-      document.querySelectorAll('span').forEach(span => {
-        const text = span.textContent;
-        if (text.match(/^\d[\d,.]*[KMB]?$/) && span.closest('a[href*="followers"]')) {
-          stats.followers = parseCount(text);
-        }
-        if (text.match(/^\d[\d,.]*[KMB]?$/) && span.closest('a[href*="following"]')) {
-          stats.following = parseCount(text);
-        }
-      });
-    }
-    
-    return stats;
+  const CONFIG = {
+    autoSchedule: false,            // If true, auto-runs every intervalMs (keep tab open)
+    intervalMs: 3600000,            // 1 hour between auto-snapshots
+    exportHistory: true,            // Download full history as JSON
+    showChart: true,                // Print the ASCII trendline (needs 3+ snapshots)
+    maxHistory: 0,                  // Keep only the last N snapshots (0 = keep all)
+    onePerDay: false,               // true = replace today's snapshot instead of adding another
+    legacyStorageKey: 'xactions_growth_tracker', // Import history saved by the old followers-growth-tracker script ('' = skip)
   };
 
   const parseCount = (str) => {
-    str = str.replace(/,/g, '');
-    const multipliers = { 'K': 1000, 'M': 1000000, 'B': 1000000000 };
-    const match = str.match(/([\d.]+)([KMB])?/i);
-    if (match) {
-      let num = parseFloat(match[1]);
-      if (match[2]) {
-        num *= multipliers[match[2].toUpperCase()];
-      }
-      return Math.round(num);
-    }
-    return parseInt(str) || 0;
+    if (!str) return 0;
+    if (typeof str === 'number') return str;
+    str = str.replace(/,/g, '').trim();
+    const m = str.match(/([\d.]+)\s*([KMBkmb])?/);
+    if (!m) return 0;
+    let n = parseFloat(m[1]);
+    if (m[2]) n *= { k: 1e3, m: 1e6, b: 1e9 }[m[2].toLowerCase()] || 1;
+    return Math.round(n);
   };
 
-  const storageKey = `${CONFIG.storageKey}_${username}`;
+  const fmt = (n) => n >= 1e6 ? (n/1e6).toFixed(1)+'M' : n >= 1e3 ? (n/1e3).toFixed(1)+'K' : String(n);
+  const sign = (n) => n > 0 ? `+${fmt(n)}` : n < 0 ? `-${fmt(Math.abs(n))}` : '0';
 
-  const loadHistory = () => {
+  const takeSnapshot = () => {
+    const pathMatch = window.location.pathname.match(/^\/([A-Za-z0-9_]+)/);
+    if (!pathMatch || ['home', 'explore', 'notifications', 'messages', 'i', 'settings', 'search'].includes(pathMatch[1])) return null;
+    const username = pathMatch[1];
+
+    let followers = 0, following = 0;
+    let verifiedFollowers = 0, foundFollowers = false;
+    const links = document.querySelectorAll('a[href*="/followers"], a[href*="/following"]');
+    for (const link of links) {
+      const href = link.getAttribute('href') || '';
+      const count = parseCount(link.textContent);
+      if (href.includes('/following')) following = count;
+      else if (href.includes('/followers') && !href.includes('/verified')) { followers = count; foundFollowers = true; }
+      else if (href.endsWith('/verified_followers')) verifiedFollowers = count;
+    }
+    // Some profiles only link the follower count through /verified_followers
+    if (!foundFollowers && verifiedFollowers > 0) { followers = verifiedFollowers; foundFollowers = true; }
+    if (!foundFollowers) return { username, missing: true };
+
+    return {
+      username,
+      followers,
+      following,
+      ratio: following > 0 ? (followers / following).toFixed(3) : '∞',
+      timestamp: new Date().toISOString(),
+      epoch: Date.now(),
+    };
+  };
+
+  const run = () => {
+    const W = 60;
+    console.log('╔' + '═'.repeat(W) + '╗');
+    console.log('║  📈 FOLLOWER GROWTH TRACKER' + ' '.repeat(W - 29) + '║');
+    console.log('║  by nichxbt — v1.0' + ' '.repeat(W - 21) + '║');
+    console.log('╚' + '═'.repeat(W) + '╝');
+
+    const snapshot = takeSnapshot();
+    if (!snapshot) {
+      console.error('❌ Navigate to a profile page first!');
+      return;
+    }
+    if (snapshot.missing) {
+      console.warn('⚠️ Could not detect the follower count. Make sure you\'re on a profile page.');
+      console.log('   Try scrolling up so the profile header is visible. Nothing was saved.');
+      return;
+    }
+
+    console.log(`\n👤 @${snapshot.username}`);
+    console.log(`📊 Current: ${fmt(snapshot.followers)} followers | ${fmt(snapshot.following)} following | ratio: ${snapshot.ratio}`);
+
+    // Load history
+    const storageKey = `xactions_growth_${snapshot.username}`;
+    let history = [];
     try {
-      const data = localStorage.getItem(storageKey);
-      return data ? JSON.parse(data) : [];
-    } catch (e) {
-      return [];
-    }
-  };
+      history = JSON.parse(localStorage.getItem(storageKey) || '[]');
+    } catch { history = []; }
 
-  const saveHistory = (history) => {
-    // Keep only last N entries
-    const trimmed = history.slice(-CONFIG.maxHistory);
-    localStorage.setItem(storageKey, JSON.stringify(trimmed));
-  };
-
-  const formatDate = (iso) => {
-    const d = new Date(iso);
-    return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-  };
-
-  const formatNumber = (n) => {
-    if (n >= 1000000) return (n / 1000000).toFixed(1) + 'M';
-    if (n >= 1000) return (n / 1000).toFixed(1) + 'K';
-    return n.toString();
-  };
-
-  // Get current stats
-  const currentStats = getStats();
-  
-  if (currentStats.followers === 0) {
-    console.warn('⚠️ Could not detect follower count. Make sure you\'re on a profile page.');
-    console.log('   Try scrolling up to make sure the profile header is visible.');
-    return;
-  }
-
-  console.log(`📌 Current Stats:`);
-  console.log(`   Followers: ${formatNumber(currentStats.followers)}`);
-  console.log(`   Following: ${formatNumber(currentStats.following)}`);
-  console.log(`   Ratio: ${(currentStats.followers / (currentStats.following || 1)).toFixed(2)}`);
-
-  // Load history and add new entry
-  const history = loadHistory();
-  const now = new Date().toISOString();
-  const today = now.split('T')[0];
-
-  // Check if we already have an entry for today
-  const todayIndex = history.findIndex(h => h.date.startsWith(today));
-  
-  const entry = {
-    date: now,
-    followers: currentStats.followers,
-    following: currentStats.following
-  };
-
-  if (todayIndex >= 0) {
-    history[todayIndex] = entry;
-    console.log('\n📝 Updated today\'s entry');
-  } else {
-    history.push(entry);
-    console.log('\n📝 Added new entry');
-  }
-
-  saveHistory(history);
-
-  // Calculate growth metrics
-  if (history.length >= 2) {
-    console.log('\n📈 GROWTH ANALYSIS:\n');
-    console.log('─'.repeat(50));
-
-    const sorted = [...history].sort((a, b) => new Date(a.date) - new Date(b.date));
-    const oldest = sorted[0];
-    const newest = sorted[sorted.length - 1];
-    const daysDiff = Math.max(1, Math.round((new Date(newest.date) - new Date(oldest.date)) / (1000 * 60 * 60 * 24)));
-
-    const totalGrowth = newest.followers - oldest.followers;
-    const dailyAvg = totalGrowth / daysDiff;
-    const weeklyProjection = dailyAvg * 7;
-    const monthlyProjection = dailyAvg * 30;
-
-    console.log(`📅 Tracking period: ${daysDiff} days`);
-    console.log(`   From: ${formatDate(oldest.date)} (${formatNumber(oldest.followers)} followers)`);
-    console.log(`   To:   ${formatDate(newest.date)} (${formatNumber(newest.followers)} followers)`);
-    console.log('');
-    console.log(`📊 Total growth: ${totalGrowth >= 0 ? '+' : ''}${formatNumber(totalGrowth)} followers`);
-    console.log(`   Daily average: ${dailyAvg >= 0 ? '+' : ''}${dailyAvg.toFixed(1)} followers/day`);
-    console.log(`   Weekly projection: ${weeklyProjection >= 0 ? '+' : ''}${formatNumber(Math.round(weeklyProjection))}`);
-    console.log(`   Monthly projection: ${monthlyProjection >= 0 ? '+' : ''}${formatNumber(Math.round(monthlyProjection))}`);
-
-    // Recent changes
-    if (sorted.length >= 2) {
-      const prev = sorted[sorted.length - 2];
-      const recentChange = newest.followers - prev.followers;
-      console.log(`\n🔄 Since last check (${formatDate(prev.date)}):`);
-      console.log(`   ${recentChange >= 0 ? '+' : ''}${recentChange} followers`);
-    }
-
-    // ASCII chart
-    if (CONFIG.showChart && sorted.length >= 3) {
-      console.log('\n📉 Growth Chart (last 14 days):\n');
-      
-      const recent = sorted.slice(-14);
-      const values = recent.map(h => h.followers);
-      const min = Math.min(...values);
-      const max = Math.max(...values);
-      const range = max - min || 1;
-      const height = 8;
-
-      // Build chart
-      const chart = [];
-      for (let row = height; row >= 0; row--) {
-        let line = '';
-        const threshold = min + (range * row / height);
-        
-        if (row === height) {
-          line = formatNumber(max).padStart(6) + ' ┤';
-        } else if (row === 0) {
-          line = formatNumber(min).padStart(6) + ' ┤';
-        } else {
-          line = '      ┤';
-        }
-        
-        recent.forEach((h, i) => {
-          const normalized = (h.followers - min) / range * height;
-          if (normalized >= row) {
-            line += '█';
-          } else {
-            line += ' ';
-          }
+    // Import history saved by the old followers-growth-tracker script
+    // (key `${legacyStorageKey}_<lowercase username>`, entries { date, followers, following })
+    if (CONFIG.legacyStorageKey) {
+      let legacy = [];
+      try {
+        legacy = JSON.parse(localStorage.getItem(`${CONFIG.legacyStorageKey}_${snapshot.username.toLowerCase()}`) || '[]');
+      } catch { legacy = []; }
+      const known = new Set(history.map(h => h.epoch));
+      let imported = 0;
+      for (const h of Array.isArray(legacy) ? legacy : []) {
+        const epoch = new Date(h.date).getTime();
+        if (!h.date || Number.isNaN(epoch) || known.has(epoch)) continue;
+        history.push({
+          username: snapshot.username,
+          followers: h.followers || 0,
+          following: h.following || 0,
+          ratio: h.following > 0 ? (h.followers / h.following).toFixed(3) : '∞',
+          timestamp: new Date(epoch).toISOString(),
+          epoch,
         });
-        
-        chart.push(line);
+        known.add(epoch);
+        imported++;
       }
-      
-      chart.push('       └' + '─'.repeat(recent.length));
-      // One column per entry: a 3-char label every 3rd entry lines up with its column
-      chart.push('        ' + recent.map((h, i) => i % 3 === 0 ? formatDate(h.date).slice(0, 3).padEnd(3) : '').join('').slice(0, recent.length + 2));
-      
-      chart.forEach(line => console.log(line));
+      if (imported > 0) {
+        history.sort((a, b) => a.epoch - b.epoch);
+        localStorage.setItem(storageKey, JSON.stringify(history));
+        console.log(`\n📦 Imported ${imported} snapshot(s) from ${CONFIG.legacyStorageKey}_${snapshot.username.toLowerCase()}.`);
+      }
     }
 
-    console.log('\n' + '─'.repeat(50));
-  } else {
-    console.log('\n📸 First snapshot saved!');
-    console.log('   Run this script again later to see growth metrics.');
+    const saveHistory = () => {
+      if (CONFIG.maxHistory > 0 && history.length > CONFIG.maxHistory) history = history.slice(-CONFIG.maxHistory);
+      localStorage.setItem(storageKey, JSON.stringify(history));
+    };
+
+    // Deduplicate (don't save if last snapshot was < 10 min ago)
+    const lastSnap = history[history.length - 1];
+    const today = snapshot.timestamp.slice(0, 10);
+    if (CONFIG.onePerDay && lastSnap && lastSnap.timestamp.slice(0, 10) === today) {
+      history[history.length - 1] = snapshot;
+      saveHistory();
+      console.log('\n📝 Updated today\'s snapshot.');
+    } else if (lastSnap && (snapshot.epoch - lastSnap.epoch) < 600000) {
+      console.log('\nℹ️ Snapshot already taken within last 10 minutes. Showing existing data.\n');
+    } else {
+      history.push(snapshot);
+      saveHistory();
+      console.log(`\n💾 Snapshot #${history.length} saved.`);
+    }
+
+    if (history.length < 2) {
+      console.log('\n📋 First snapshot recorded! Run again later to see growth data.');
+      console.log('   Tip: Run daily for best trendline.\n');
+      return;
+    }
+
+    // ── Analysis ────────────────────────────────────────────
+
+    console.log('\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+    console.log('  📊 GROWTH ANALYSIS');
+    console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+
+    const first = history[0];
+    const prev = history[history.length - 2];
+    const curr = snapshot;
+
+    // Since last check
+    const sinceLast = curr.followers - prev.followers;
+    const timeSinceLast = (curr.epoch - prev.epoch) / 3600000; // hours
+    console.log(`\n🔄 Since last check (${timeSinceLast.toFixed(1)}h ago):`);
+    console.log(`   Followers: ${sign(sinceLast)}`);
+    console.log(`   Following: ${sign(curr.following - prev.following)}`);
+
+    // All-time
+    const allTimeGrowth = curr.followers - first.followers;
+    const totalDays = (curr.epoch - first.epoch) / 86400000;
+    console.log(`\n📈 All-time (${totalDays.toFixed(1)} days, ${history.length} snapshots):`);
+    console.log(`   From: ${new Date(first.timestamp).toLocaleDateString()} (${fmt(first.followers)} followers)`);
+    console.log(`   To:   ${new Date(curr.timestamp).toLocaleDateString()} (${fmt(curr.followers)} followers)`);
+    console.log(`   Total growth: ${sign(allTimeGrowth)}`);
+
+    if (totalDays > 0) {
+      const dailyRate = allTimeGrowth / totalDays;
+      const weeklyRate = dailyRate * 7;
+      const monthlyRate = dailyRate * 30;
+      console.log(`   Daily avg:    ${sign(Math.round(dailyRate))}/day`);
+      console.log(`   Weekly avg:   ${sign(Math.round(weeklyRate))}/week`);
+      console.log(`   Monthly avg:  ${sign(Math.round(monthlyRate))}/month`);
+
+      // Projections
+      console.log('\n🎯 Projections (if trend continues):');
+      const milestones = [100, 500, 1000, 5000, 10000, 50000, 100000, 500000, 1000000];
+      for (const milestone of milestones) {
+        if (milestone <= curr.followers) continue;
+        if (dailyRate <= 0) {
+          console.log(`   ${fmt(milestone)} followers: ❌ Growth stalled — need positive trend`);
+          break;
+        }
+        const daysToMilestone = (milestone - curr.followers) / dailyRate;
+        if (daysToMilestone > 3650) break; // 10 years max
+        const targetDate = new Date(Date.now() + daysToMilestone * 86400000);
+        console.log(`   ${fmt(milestone)} followers: ~${Math.round(daysToMilestone)} days (${targetDate.toLocaleDateString()})`);
+        if (milestone >= curr.followers * 10) break; // Stop at 10x current
+      }
+    }
+
+    // ── Trend Chart (ASCII) ─────────────────────────────────
+
+    if (CONFIG.showChart && history.length >= 3) {
+      console.log('\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+      console.log('  📉 GROWTH TRENDLINE');
+      console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+
+      // Take last 20 data points
+      const recent = history.slice(-20);
+      const counts = recent.map(s => s.followers);
+      const min = Math.min(...counts);
+      const max = Math.max(...counts);
+      const range = max - min || 1;
+      const chartHeight = 10;
+      const chartWidth = Math.min(recent.length, 40);
+
+      for (let row = chartHeight; row >= 0; row--) {
+        const threshold = min + (range * row / chartHeight);
+        let line = `${fmt(Math.round(threshold)).padStart(6)} │`;
+        for (let col = 0; col < chartWidth; col++) {
+          const val = counts[Math.floor(col * recent.length / chartWidth)];
+          const barHeight = Math.round((val - min) / range * chartHeight);
+          line += barHeight >= row ? '█' : ' ';
+        }
+        console.log(line);
+      }
+      console.log('       └' + '─'.repeat(chartWidth));
+
+      // Show date range
+      const start = new Date(recent[0].timestamp).toLocaleDateString();
+      const end = new Date(recent[recent.length - 1].timestamp).toLocaleDateString();
+      console.log(`        ${start}${' '.repeat(Math.max(0, chartWidth - start.length - end.length))}${end}`);
+    }
+
+    // ── Best/Worst Periods ──────────────────────────────────
+
+    if (history.length >= 3) {
+      console.log('\n━━━ 🏆 BEST / WORST PERIODS ━━━');
+
+      let bestGain = -Infinity, worstLoss = Infinity;
+      let bestIdx = 0, worstIdx = 0;
+
+      for (let i = 1; i < history.length; i++) {
+        const diff = history[i].followers - history[i - 1].followers;
+        if (diff > bestGain) { bestGain = diff; bestIdx = i; }
+        if (diff < worstLoss) { worstLoss = diff; worstIdx = i; }
+      }
+
+      const bestDate = new Date(history[bestIdx].timestamp).toLocaleString();
+      const worstDate = new Date(history[worstIdx].timestamp).toLocaleString();
+
+      console.log(`  📈 Best:  ${sign(bestGain)} (${bestDate})`);
+      console.log(`  📉 Worst: ${sign(worstLoss)} (${worstDate})`);
+    }
+
+    // Export
+    if (CONFIG.exportHistory && history.length > 1) {
+      console.log('\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+      console.log(`📥 Export: copy(localStorage.getItem("${storageKey}"))`);
+
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(new Blob([JSON.stringify(history, null, 2)], { type: 'application/json' }));
+      a.download = `xactions-growth-${snapshot.username}-${new Date().toISOString().slice(0, 10)}.json`;
+      document.body.appendChild(a); a.click(); a.remove();
+    }
+
+    console.log('\n💡 Run again tomorrow to build your growth trendline.\n');
+  };
+
+  run();
+
+  // Auto-schedule if configured
+  if (CONFIG.autoSchedule) {
+    console.log(`\n⏰ Auto-snapshot scheduled every ${CONFIG.intervalMs / 60000} minutes.`);
+    console.log('   Keep this tab open. Kill with: clearInterval(window._xactionsGrowthInterval)');
+    window._xactionsGrowthInterval = setInterval(run, CONFIG.intervalMs);
   }
-
-  console.log(`\n💾 History saved (${history.length} entries)`);
-  console.log('   Run this script periodically to track growth over time.\n');
-
-  // Export data option
-  console.log('📥 To export your data, run: copy(localStorage.getItem("' + storageKey + '"))');
-
 })();

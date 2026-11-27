@@ -1,21 +1,27 @@
+// GENERATED FILE: a copy of browser/scrapeNotifications.js, written by scripts/build-script-manifest.mjs. Edit browser/scrapeNotifications.js instead, then run: npm run browser:build
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
 /**
  * ============================================
  * 🔔 Scrape Notifications - XActions
  * ============================================
  *
- * @name         scrape-notifications
- * @description  Export your notifications feed (type, actor handles, text, timestamp) to JSON and CSV.
- * @author       nichxbt
- * @version      1.0.0
- * @date         2026-07-20
- * @website      https://xactions.app
+ * @name        scrapeNotifications.js
+ * @title       Scrape Notifications
+ * @description Export your notifications feed (type, actor handles, text, timestamp) to JSON and CSV, with a breakdown by type and top interactors.
+ * @category    scrape
+ * @page        x.com/notifications
+ * @writes      false
+ * @aliases     scripts/scrapeNotifications.js, scripts/twitter/scrape-notifications.js
+ * @author      nichxbt (https://x.com/nichxbt)
+ * @version     1.0.0
+ * @date        2026-11-27
+ * @website     https://xactions.app
  *
  * Usage:
  *   1. Go to https://x.com/notifications (the "All" tab captures the most)
  *   2. Open the browser console (F12 or Cmd+Option+I -> Console)
  *   3. (Optional) edit the CONFIG options at the top of the script
- *   4. Paste this entire script and press Enter
+ *   4. Paste browser/scrapeNotifications.js and press Enter
  *
  * Example:
  *   Leave CONFIG.maxNotifications at 500 and paste. The script auto-scrolls the

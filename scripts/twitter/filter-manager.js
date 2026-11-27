@@ -1,11 +1,17 @@
+// GENERATED FILE: a copy of browser/filterManager.js, written by scripts/build-script-manifest.mjs. Edit browser/filterManager.js instead, then run: npm run browser:build
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
 /**
  * ============================================================
  * ⚙️ Filter Manager
  * ============================================================
  * 
- * @name        filter-manager.js
- * @description Configure filters for XActions automation
+ * @name        filterManager.js
+ * @description Configure the shared filters the automation scripts apply.
+ * @title       Filter Manager
+ * @category    automation
+ * @page        x.com/*
+ * @writes      false
+ * @aliases     scripts/twitter/filter-manager.js
  * @author      nichxbt (https://x.com/nichxbt)
  * @version     1.0.0
  * @date        2026-01-26

@@ -1,11 +1,17 @@
+// GENERATED FILE: a copy of browser/blockByRatio.js, written by scripts/build-script-manifest.mjs. Edit browser/blockByRatio.js instead, then run: npm run browser:build
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
 /**
  * ============================================================
  * 📊 Block By Ratio
  * ============================================================
  * 
- * @name        block-by-ratio.js
- * @description Block accounts by follower/following ratio
+ * @name        blockByRatio.js
+ * @description Block accounts by follower to following ratio.
+ * @title       Block by Ratio
+ * @category    safety
+ * @page        x.com/<you>/followers
+ * @writes      true
+ * @aliases     scripts/twitter/block-by-ratio.js
  * @author      nichxbt (https://x.com/nichxbt)
  * @version     1.0.0
  * @date        2026-01-26

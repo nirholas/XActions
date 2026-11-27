@@ -1,121 +1,163 @@
+// GENERATED FILE: a copy of browser/scrapeProfile.js, written by scripts/build-script-manifest.mjs. Edit browser/scrapeProfile.js instead, then run: npm run browser:build
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
-// scripts/profileManager.js
-// Browser console script for scraping profile data from any X/Twitter profile page
-// Paste in DevTools console on x.com/USERNAME
-// by nichxbt
+/**
+ * Profile Scraper
+ * Get detailed profile data for a user
+ *
+ * @name        scrapeProfile.js
+ * @title       Scrape Profile
+ * @description Read a profile's name, bio, location, website, join date, counts, verified badge and images, and download them as JSON.
+ * @category    scrape
+ * @page        x.com/<username>
+ * @writes      false
+ * @aliases     scripts/profileManager.js, scripts/scrapeProfile.js
+ * @author      nichxbt (https://x.com/nichxbt)
+ * @version     1.1.0
+ * @date        2026-11-27
+ *
+ * HOW TO USE:
+ * 1. Go to any user's profile: x.com/USERNAME
+ * 2. Open Developer Console (Ctrl+Shift+J or Cmd+Option+J)
+ * 3. Paste browser/scrapeProfile.js and press Enter
+ *
+ * by nichxbt - https://github.com/nirholas/XActions
+ */
 
 (() => {
-  const sleep = (ms) => new Promise(r => setTimeout(r, ms));
-
-  // =============================================
-  // CONFIGURATION
-  // =============================================
   const CONFIG = {
     exportResults: true,      // Download profile data as JSON
   };
-  // =============================================
 
-  const download = (data, filename) => {
+  const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+
+  const download = (content, filename, type) => {
+    const blob = new Blob([content], { type });
+    const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
-    a.href = URL.createObjectURL(new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' }));
+    a.href = url;
     a.download = filename;
-    document.body.appendChild(a);
     a.click();
-    a.remove();
+    URL.revokeObjectURL(url);
   };
 
-  const parseCount = (text) => {
-    if (!text) return 0;
-    const clean = text.replace(/,/g, '').trim();
+  const parseNumber = (str) => {
+    if (!str) return 0;
+    const clean = str.replace(/,/g, '').trim();
     const num = parseFloat(clean);
-    if (clean.includes('K')) return Math.round(num * 1000);
-    if (clean.includes('M')) return Math.round(num * 1000000);
-    return isNaN(num) ? 0 : num;
+    if (isNaN(num)) return 0;
+    if (str.includes('K')) return Math.round(num * 1000);
+    if (str.includes('M')) return Math.round(num * 1000000);
+    return num;
   };
 
   const run = async () => {
-    console.log('👤 PROFILE MANAGER — XActions by nichxbt');
-    console.log('━'.repeat(45));
-
-    const pathMatch = window.location.pathname.match(/^\/([A-Za-z0-9_]+)/);
-    const username = pathMatch ? pathMatch[1] : null;
+    const username = window.location.pathname.split('/')[1];
 
     if (!username || ['home', 'explore', 'notifications', 'messages', 'i', 'settings', 'search'].includes(username)) {
-      console.error('❌ Navigate to a profile page first! (x.com/USERNAME)');
+      console.error('❌ Please go to a user profile first!');
       return;
     }
 
-    console.log(`🔍 Scraping profile: @${username}\n`);
+    console.log(`👤 Scraping profile of @${username}...`);
     await sleep(1000);
 
-    const getText = (sel) => document.querySelector(sel)?.textContent?.trim() || null;
-
-    // Display name
-    const nameEl = document.querySelector('[data-testid="UserName"]');
-    const displayName = nameEl?.querySelector('span')?.textContent?.trim() || null;
-    console.log(`   📛 Name: ${displayName || '—'}`);
-
-    // Bio
-    const bio = getText('[data-testid="UserDescription"]');
-    console.log(`   📝 Bio: ${bio ? bio.substring(0, 60) + (bio.length > 60 ? '...' : '') : '—'}`);
-
-    // Location
-    const location = getText('[data-testid="UserLocation"]');
-    console.log(`   📍 Location: ${location || '—'}`);
-
-    // Website
-    const website = getText('[data-testid="UserUrl"]');
-    console.log(`   🔗 Website: ${website || '—'}`);
-
-    // Join date
-    const joinDate = getText('[data-testid="UserJoinDate"]');
-    console.log(`   📅 Joined: ${joinDate || '—'}`);
-
-    // Verified status
-    const isVerified = !!document.querySelector('[data-testid="icon-verified"]');
-    console.log(`   ✅ Verified: ${isVerified ? 'Yes' : 'No'}`);
-
-    // Follower / Following counts
-    const followerEl = document.querySelector('a[href$="/followers"] span');
-    const followingEl = document.querySelector('a[href$="/following"] span');
-    const followers = followerEl?.textContent?.trim() || '0';
-    const following = followingEl?.textContent?.trim() || '0';
-    console.log(`   👥 Followers: ${followers}`);
-    console.log(`   👣 Following: ${following}`);
-
-    // Avatar
-    const avatarUrl = document.querySelector('[data-testid="UserAvatar-Container"] img')?.src || null;
-
+    // Extract profile data from the page
     const profile = {
-      username,
-      displayName,
-      bio,
-      location,
-      website,
-      joinDate,
-      isVerified,
-      followers: parseCount(followers),
-      followersRaw: followers,
-      following: parseCount(following),
-      followingRaw: following,
-      avatarUrl,
+      handle: username,
+      displayName: '',
+      bio: '',
+      location: '',
+      website: '',
+      joinDate: '',
+      followersCount: 0,
+      followingCount: 0,
+      followersRaw: '',
+      followingRaw: '',
+      tweetsCount: 0,
+      verified: false,
+      profileImageUrl: '',
+      bannerImageUrl: '',
       scrapedAt: new Date().toISOString(),
       url: window.location.href,
     };
 
-    console.log('\n' + '━'.repeat(45));
-    console.log('✅ Profile data scraped successfully!');
+    // Display name
+    const displayNameEl = document.querySelector('[data-testid="UserName"] span');
+    profile.displayName = displayNameEl?.textContent || username;
 
-    if (CONFIG.exportResults) {
-      download(profile, `profile-${username}-${new Date().toISOString().slice(0, 10)}.json`);
-      console.log('📥 Profile exported as JSON');
+    // Bio
+    const bioEl = document.querySelector('[data-testid="UserDescription"]');
+    profile.bio = bioEl?.textContent || '';
+
+    // Location
+    const locationEl = document.querySelector('[data-testid="UserLocation"]');
+    profile.location = locationEl?.textContent || '';
+
+    // Website
+    const websiteEl = document.querySelector('[data-testid="UserUrl"]');
+    profile.website = websiteEl?.href || websiteEl?.querySelector('a')?.href || websiteEl?.textContent || '';
+
+    // Join date
+    const joinDateEl = document.querySelector('[data-testid="UserJoinDate"]');
+    profile.joinDate = joinDateEl?.textContent || '';
+
+    // Followers/Following counts (raw text kept as shown, e.g. "1.2K")
+    const followLinks = document.querySelectorAll('a[href*="/followers"], a[href*="/following"]');
+    followLinks.forEach(link => {
+      const text = link.textContent || '';
+      const raw = link.querySelector('span')?.textContent?.trim() || '';
+      if (link.href.includes('/followers')) {
+        profile.followersCount = parseNumber(text);
+        profile.followersRaw = raw;
+      } else if (link.href.includes('/following')) {
+        profile.followingCount = parseNumber(text);
+        profile.followingRaw = raw;
+      }
+    });
+
+    // Verified badge
+    profile.verified = !!document.querySelector('[data-testid="UserName"] svg[aria-label*="Verified"]') ||
+                       !!document.querySelector('[data-testid="icon-verified"]');
+
+    // Profile image
+    const profileImg = document.querySelector('a[href*="/photo"] img') ||
+                       document.querySelector('[data-testid="UserAvatar-Container"] img');
+    if (profileImg) {
+      profile.profileImageUrl = profileImg.src.replace('_normal', '_400x400');
     }
 
-    console.log('\n💡 Access data: copy(JSON.parse(JSON.stringify(profile)))');
-    console.log('');
+    // Banner image
+    const bannerImg = document.querySelector('a[href*="/header_photo"] img');
+    profile.bannerImageUrl = bannerImg?.src || '';
 
-    // Store in window for easy access
+    // Tweet count (from nav or header)
+    const tweetCountEl = document.querySelector('[data-testid="primaryColumn"] h2')?.parentElement?.querySelector('span');
+    if (tweetCountEl) {
+      const match = tweetCountEl.textContent?.match(/[\d,.]+[KM]?/);
+      if (match) profile.tweetsCount = parseNumber(match[0]);
+    }
+
+    console.log('\n' + '='.repeat(60));
+    console.log(`👤 PROFILE: @${profile.handle}`);
+    console.log('='.repeat(60));
+    console.log(`📛 Name: ${profile.displayName}`);
+    console.log(`📝 Bio: ${profile.bio.slice(0, 100)}${profile.bio.length > 100 ? '...' : ''}`);
+    console.log(`📍 Location: ${profile.location || 'N/A'}`);
+    console.log(`🔗 Website: ${profile.website || 'N/A'}`);
+    console.log(`📅 Joined: ${profile.joinDate}`);
+    console.log(`👥 Followers: ${profile.followersCount.toLocaleString()}`);
+    console.log(`👥 Following: ${profile.followingCount.toLocaleString()}`);
+    console.log(`${profile.verified ? '✅ Verified' : ''}`);
+    console.log('='.repeat(60) + '\n');
+
+    if (CONFIG.exportResults) {
+      download(JSON.stringify(profile, null, 2), `profile_${username}_${Date.now()}.json`, 'application/json');
+      console.log('💾 Downloaded profile.json');
+    }
+
+    window.scrapedProfile = profile;
     window.__xactions_profile = profile;
+    console.log('\n✅ Done! Access data: window.scrapedProfile');
     return profile;
   };
 

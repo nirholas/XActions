@@ -1,5 +1,5 @@
+// GENERATED FILE: a copy of browser/engageProfile.js, written by scripts/build-script-manifest.mjs. Edit browser/engageProfile.js instead, then run: npm run browser:build
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
-// scripts/engageProfile.js
 // Like, repost, and comment on every post in a feed: a profile, a search, a list, a hashtag, or home
 // Paste in DevTools console on x.com/USERNAME, a search, a list, a hashtag, or x.com/home
 // by nichxbt
@@ -30,7 +30,12 @@
  * ============================================================
  *
  * @name        engageProfile.js
- * @description Like, repost, and comment on every post of one profile, with comments from your templates or from an LLM.
+ * @description Like, repost and comment on every post of one profile, with comments from your templates or from an LLM.
+ * @title       Engage Profile
+ * @category    engage
+ * @page        x.com/<username>
+ * @writes      true
+ * @aliases     scripts/engageProfile.js
  * @author      nichxbt (https://x.com/nichxbt)
  * @version     1.0.0
  * @date        2026-08-27
@@ -449,7 +454,7 @@
     t = t.replace(/^```[a-z]*\n?/i, '').replace(/\n?```$/, '').trim();
     const unquote = (s) => { const m = s.match(/^["“'‘](.*)["”'’]$/s); return m ? m[1].trim() : s; };
     t = unquote(t);
-    t = t.replace(/^(reply|comment|response|answer)\s*[:\-]\s*/i, '').trim();
+    t = t.replace(/^(reply|comment|response|answer)\s*[:-]\s*/i, '').trim();
     t = unquote(t);
     if (!CONFIG.comments.allowHashtags) t = t.replace(/(^|\s)#[\w]+/g, '$1');
     t = t.replace(/[ \t]+/g, ' ').replace(/\n{3,}/g, '\n\n').trim();

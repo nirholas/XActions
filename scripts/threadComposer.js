@@ -1,182 +1,340 @@
+// GENERATED FILE: a copy of browser/threadComposer.js, written by scripts/build-script-manifest.mjs. Edit browser/threadComposer.js instead, then run: npm run browser:build
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
-// scripts/threadComposer.js
-// Browser console script for interactive thread composing with draft persistence
-// Paste in DevTools console on x.com
-// by nichxbt
-
+/**
+ * ============================================================
+ * 🧵 Thread Composer & Publisher — Production Grade
+ * ============================================================
+ *
+ * @name        threadComposer.js
+ * @title       Thread Composer
+ * @description Compose, preview and publish a multi-post thread with character counts, numbering, saved drafts and a dry run by default.
+ * @category    post
+ * @page        x.com/*
+ * @writes      true
+ * @aliases     scripts/threadComposer.js
+ * @author      nichxbt (https://x.com/nichxbt)
+ * @version     1.1.0
+ * @date        2026-11-26
+ * @repository  https://github.com/nirholas/XActions
+ *
+ * ============================================================
+ * 📋 USAGE:
+ *
+ * 1. Open x.com in browser
+ * 2. Paste browser/threadComposer.js in DevTools Console
+ * 3. Use window.XActions commands:
+ *
+ *   XActions.thread([
+ *     "First tweet of my thread 🧵",
+ *     "Second tweet with more context...",
+ *     "Third tweet — the conclusion!",
+ *   ])
+ *
+ *   XActions.thread("One more tweet") // Append a single tweet
+ *
+ *   XActions.preview()        // See the thread with char counts
+ *   XActions.publish()        // Post the thread (dryRun by default)
+ *   XActions.saveDraft('name') // Save to localStorage
+ *   XActions.loadDraft('name') // Load from localStorage
+ *   XActions.listDrafts()      // See all saved drafts
+ *   XActions.deleteDraft('name')
+ * ============================================================
+ */
 (() => {
-  const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+  'use strict';
 
-  // =============================================
-  // CONFIGURATION
-  // =============================================
   const CONFIG = {
-    autoNumber: true,   // Add "1/N" numbering to tweets
+    dryRun: true,             // Set false to actually post
+    autoNumber: false,         // Add "1/N" numbering
+    addThreadEmoji: true,      // Add 🧵 to first tweet if missing
+    delayBetween: [3000, 6000], // Delay (ms range) after adding each tweet to the composer
     maxChars: 280,
-    dryRun: true,       // SET FALSE TO ACTUALLY POST
-    delayBetween: 3000, // ms between posting each tweet
   };
-  // =============================================
 
-  const STORAGE_KEY = 'xactions_thread_draft_';
+  const STORAGE_PREFIX = 'xactions_thread_draft_';
+  const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+  const gaussian = (a, b) => Math.floor(a + ((Math.random() + Math.random()) / 2) * (b - a));
+
+  const SEL = {
+    tweetBox: '[data-testid="tweetTextarea_0"]',
+    tweetButton: '[data-testid="tweetButton"]',
+    addTweet: '[data-testid="addButton"]',     // The "+" button to add another tweet in thread
+    closeCompose: '[data-testid="app-bar-close"]',
+  };
+
+  const $ = (sel, ctx = document) => ctx.querySelector(sel);
+
   let currentThread = [];
+  let rawThread = [];
+  let aborted = false;
 
-  const typeIntoInput = async (input, text) => {
-    input.focus();
-    await sleep(100);
-    document.execCommand('insertText', false, text);
-    await sleep(200);
-  };
+  // Apply numbering and the thread emoji to the raw tweets. A leading
+  // "N/M" block this tool added earlier is replaced so appending a tweet
+  // renumbers the whole thread.
+  const formatThread = (tweets) => tweets.map((t, i) => {
+    let text = t.trim();
 
+    // Auto-numbering
+    if (CONFIG.autoNumber) {
+      const num = `${i + 1}/${tweets.length}`;
+      text = text.replace(/^\d+\/\d+\n\n/, '');
+      if (!text.startsWith(num)) {
+        text = `${num}\n\n${text}`;
+      }
+    }
+
+    // Thread emoji on first tweet
+    if (i === 0 && CONFIG.addThreadEmoji && !text.includes('🧵')) {
+      text = text + ' 🧵';
+    }
+
+    return text;
+  });
+
+  // ── Thread management ──────────────────────────────────────
   window.XActions = window.XActions || {};
 
-  // ── Add tweets to the thread ───────────────────
-  window.XActions.thread = (text) => {
-    if (Array.isArray(text)) {
-      currentThread = text.map(t => t.trim());
-      console.log(`✅ Thread loaded: ${currentThread.length} tweets`);
-    } else if (typeof text === 'string') {
-      currentThread.push(text.trim());
-      console.log(`➕ Tweet ${currentThread.length} added (${text.length}/${CONFIG.maxChars} chars)`);
-    } else {
-      console.log('❌ Usage: XActions.thread("tweet text") or XActions.thread(["t1","t2"])');
+  window.XActions.thread = (tweets) => {
+    if (typeof tweets === 'string' && tweets.trim()) {
+      // Append one tweet to the thread being built
+      rawThread = [...rawThread, tweets.trim()];
+      currentThread = formatThread(rawThread);
+      const added = currentThread[currentThread.length - 1];
+      console.log(`➕ Tweet ${currentThread.length} added (${added.length}/${CONFIG.maxChars} chars)`);
+      window.XActions.preview();
       return;
     }
+
+    if (!Array.isArray(tweets) || tweets.length === 0) {
+      console.log('❌ Usage: XActions.thread(["tweet1", "tweet2", ...]) or XActions.thread("tweet text")');
+      return;
+    }
+
+    rawThread = tweets.map(t => t.trim());
+    currentThread = formatThread(rawThread);
+
+    console.log(`✅ Thread loaded: ${currentThread.length} tweets.`);
     window.XActions.preview();
   };
 
-  // ── Preview the current thread ─────────────────
   window.XActions.preview = () => {
     if (currentThread.length === 0) {
-      console.log('📭 No thread loaded. Use XActions.thread("text") to add tweets.');
+      console.log('📭 No thread loaded. Use XActions.thread([...])');
       return;
     }
 
-    const numbered = currentThread.map((t, i) => {
-      return CONFIG.autoNumber ? `${i + 1}/${currentThread.length}\n\n${t}` : t;
-    });
+    const W = 58;
+    console.log('\n╔' + '═'.repeat(W) + '╗');
+    console.log('║  🧵 THREAD PREVIEW' + ' '.repeat(W - 20) + '║');
+    console.log('╚' + '═'.repeat(W) + '╝');
 
-    console.log('\n🧵 ─── THREAD PREVIEW ───────────────────────');
-    numbered.forEach((t, i) => {
-      const len = t.length;
-      const status = len > CONFIG.maxChars ? '🔴 OVER' : len > CONFIG.maxChars - 20 ? '🟡 CLOSE' : '🟢 OK';
-      console.log(`\n  Tweet ${i + 1}/${numbered.length} [${len}/${CONFIG.maxChars}] ${status}`);
-      t.split('\n').forEach(line => console.log(`  │ ${line}`));
-    });
+    for (let i = 0; i < currentThread.length; i++) {
+      const text = currentThread[i];
+      const charCount = text.length;
+      const status = charCount > CONFIG.maxChars ? '🔴 OVER' : charCount > CONFIG.maxChars - 20 ? '🟡 CLOSE' : '🟢 OK';
 
-    const overLimit = numbered.filter(t => t.length > CONFIG.maxChars);
+      console.log(`\n┌─ Tweet ${i + 1}/${currentThread.length} ─ ${charCount}/${CONFIG.maxChars} chars [${status}] ${'─'.repeat(Math.max(0, 30 - String(charCount).length))}`);
+
+      // Word wrap display
+      const lines = text.split('\n');
+      for (const line of lines) {
+        console.log(`│ ${line}`);
+      }
+      console.log('└' + '─'.repeat(W));
+    }
+
+    const overLimit = currentThread.filter(t => t.length > CONFIG.maxChars);
     if (overLimit.length > 0) {
       console.log(`\n⚠️ ${overLimit.length} tweet(s) exceed ${CONFIG.maxChars} characters!`);
     }
-    console.log(`\n📊 ${currentThread.length} tweets | ${currentThread.reduce((s, t) => s + t.length, 0)} total chars`);
+
+    const totalChars = currentThread.reduce((s, t) => s + t.length, 0);
+    console.log(`\n📊 ${currentThread.length} tweets | ${totalChars} total chars | ~${Math.ceil(totalChars / 200)} min read`);
   };
 
-  // ── Publish the thread ─────────────────────────
   window.XActions.publish = async () => {
     if (currentThread.length === 0) {
       console.log('❌ No thread loaded. Use XActions.thread([...]) first.');
       return;
     }
 
-    const tweets = currentThread.map((t, i) => {
-      return CONFIG.autoNumber ? `${i + 1}/${currentThread.length}\n\n${t}` : t;
-    });
-
-    const overLimit = tweets.filter(t => t.length > CONFIG.maxChars);
+    const overLimit = currentThread.filter(t => t.length > CONFIG.maxChars);
     if (overLimit.length > 0) {
       console.log(`❌ ${overLimit.length} tweet(s) exceed character limit. Fix them first.`);
       return;
     }
 
     if (CONFIG.dryRun) {
-      console.log('\n🏃 DRY RUN — simulating publish...');
-      tweets.forEach((t, i) => console.log(`  [${i + 1}/${tweets.length}] Would post: "${t.slice(0, 60)}..."`));
+      console.log('\n🏃 DRY RUN — simulating thread publish...\n');
+      for (let i = 0; i < currentThread.length; i++) {
+        console.log(`  [${i + 1}/${currentThread.length}] Would post: "${currentThread[i].slice(0, 60)}..."`);
+        await sleep(500);
+      }
       console.log('\n✅ Dry run complete. Set CONFIG.dryRun = false to actually post.');
       return;
     }
 
-    console.log(`\n🚀 Publishing thread (${tweets.length} tweets)...`);
+    aborted = false;
+    console.log(`\n🚀 Publishing thread (${currentThread.length} tweets)...\n`);
 
     // Open compose
-    const composeBtn = document.querySelector('a[data-testid="SideNav_NewTweet_Button"]');
-    if (composeBtn) { composeBtn.click(); await sleep(2000); }
+    const composeBtn = document.querySelector('[data-testid="SideNav_NewTweet_Button"]') ||
+                       document.querySelector('a[href="/compose/tweet"]');
+    if (composeBtn) {
+      composeBtn.click();
+      await sleep(2000);
+    }
 
-    for (let i = 0; i < tweets.length; i++) {
-      const boxes = document.querySelectorAll('[data-testid="tweetTextarea_0"]');
-      const box = boxes[boxes.length - 1];
-      if (!box) { console.error(`❌ Tweet box not found at tweet ${i + 1}`); break; }
+    for (let i = 0; i < currentThread.length; i++) {
+      if (aborted) {
+        console.log('🛑 Aborted by user.');
+        break;
+      }
 
-      await typeIntoInput(box, tweets[i]);
-      console.log(`  ✅ [${i + 1}/${tweets.length}] typed`);
+      const text = currentThread[i];
+      console.log(`  [${i + 1}/${currentThread.length}] Posting: "${text.slice(0, 50)}..."`);
 
-      if (i < tweets.length - 1) {
-        const addBtn = document.querySelector('[data-testid="addButton"]');
-        if (addBtn) { addBtn.click(); await sleep(CONFIG.delayBetween); }
-        else { console.error('❌ Add-tweet button not found'); break; }
+      // Find the tweet box (for thread, the latest/last one)
+      const tweetBoxes = document.querySelectorAll('[data-testid="tweetTextarea_0"]');
+      const tweetBox = tweetBoxes[tweetBoxes.length - 1];
+      if (!tweetBox) {
+        console.error(`  ❌ Tweet box not found at tweet ${i + 1}. Aborting.`);
+        break;
+      }
+
+      // Type the text
+      tweetBox.focus();
+      await sleep(300);
+      document.execCommand('insertText', false, text);
+      await sleep(800);
+
+      if (i < currentThread.length - 1) {
+        // Add another tweet to thread (click "+" button)
+        const addBtn = $(SEL.addTweet);
+        if (addBtn) {
+          addBtn.click();
+          await sleep(gaussian(CONFIG.delayBetween[0], CONFIG.delayBetween[1]));
+        } else {
+          console.error('  ❌ "Add tweet" button not found. Cannot continue thread.');
+          break;
+        }
       }
     }
 
-    await sleep(1000);
-    const postBtn = document.querySelector('[data-testid="tweetButton"]') ||
-                    document.querySelector('[data-testid="tweetButtonInline"]');
-    if (postBtn) { postBtn.click(); console.log('\n🧵 Thread published!'); }
-    else { console.error('❌ Post button not found. Click "Post all" manually.'); }
+    if (!aborted) {
+      // Post the thread
+      console.log('\n  📤 Sending thread...');
+      const tweetBtn = $(SEL.tweetButton);
+      if (!tweetBtn) {
+        // Try alternate: "Post all" button
+        const postAll = document.querySelector('[data-testid="tweetButtonInline"]') ||
+                        document.querySelector('div[data-testid="tweetButton"]');
+        if (postAll) postAll.click();
+        else console.error('  ❌ Post button not found.');
+      } else {
+        tweetBtn.click();
+      }
+
+      await sleep(3000);
+      console.log('✅ Thread published successfully! 🧵');
+    }
   };
 
-  // ── Save / Load / List / Delete Drafts ─────────
+  window.XActions.abort = () => { aborted = true; console.log('🛑 Aborting...'); };
+
+  // ── Draft Management ───────────────────────────────────────
   window.XActions.saveDraft = (name) => {
-    if (!name) { console.log('❌ Usage: XActions.saveDraft("name")'); return; }
-    if (currentThread.length === 0) { console.log('❌ No thread to save.'); return; }
-    localStorage.setItem(STORAGE_KEY + name, JSON.stringify({
-      tweets: currentThread, savedAt: new Date().toISOString(), name,
-    }));
+    if (!name) { console.log('❌ Usage: XActions.saveDraft("myThread")'); return; }
+    if (currentThread.length === 0) { console.log('❌ No thread loaded.'); return; }
+
+    const draft = {
+      tweets: currentThread,
+      savedAt: new Date().toISOString(),
+      name,
+    };
+    localStorage.setItem(STORAGE_PREFIX + name, JSON.stringify(draft));
     console.log(`💾 Draft "${name}" saved (${currentThread.length} tweets).`);
   };
 
   window.XActions.loadDraft = (name) => {
-    if (!name) { console.log('❌ Usage: XActions.loadDraft("name")'); return; }
-    const raw = localStorage.getItem(STORAGE_KEY + name);
+    if (!name) { console.log('❌ Usage: XActions.loadDraft("myThread")'); return; }
+
+    const raw = localStorage.getItem(STORAGE_PREFIX + name);
     if (!raw) { console.log(`❌ Draft "${name}" not found.`); return; }
+
     try {
       const draft = JSON.parse(raw);
       currentThread = draft.tweets;
-      console.log(`📂 Loaded "${name}" (${currentThread.length} tweets, saved ${draft.savedAt})`);
+      rawThread = draft.tweets;
+      console.log(`📂 Loaded draft "${name}" (${currentThread.length} tweets, saved ${draft.savedAt}).`);
       window.XActions.preview();
-    } catch { console.log('❌ Failed to parse draft.'); }
+    } catch {
+      console.log('❌ Failed to parse draft.');
+    }
   };
 
   window.XActions.listDrafts = () => {
-    const drafts = [];
+    const keys = [];
     for (let i = 0; i < localStorage.length; i++) {
       const key = localStorage.key(i);
-      if (key.startsWith(STORAGE_KEY)) {
+      if (key.startsWith(STORAGE_PREFIX)) {
+        const name = key.slice(STORAGE_PREFIX.length);
         try {
-          const d = JSON.parse(localStorage.getItem(key));
-          drafts.push({ name: key.slice(STORAGE_KEY.length), tweets: d.tweets.length, saved: d.savedAt });
-        } catch { /* skip */ }
+          const draft = JSON.parse(localStorage.getItem(key));
+          keys.push({ name, tweets: draft.tweets.length, savedAt: draft.savedAt });
+        } catch { /* skip corrupt */ }
       }
     }
-    if (drafts.length === 0) { console.log('📭 No saved drafts.'); return; }
-    console.log(`\n📋 DRAFTS (${drafts.length}):`);
-    drafts.forEach(d => console.log(`  📝 "${d.name}" — ${d.tweets} tweets (${d.saved})`));
+
+    if (keys.length === 0) {
+      console.log('📭 No saved drafts.');
+      return;
+    }
+
+    console.log(`\n📋 SAVED DRAFTS (${keys.length}):\n`);
+    for (const d of keys) {
+      console.log(`  📝 "${d.name}" — ${d.tweets} tweets (saved ${d.savedAt})`);
+    }
   };
 
   window.XActions.deleteDraft = (name) => {
-    if (!name) { console.log('❌ Usage: XActions.deleteDraft("name")'); return; }
-    if (!localStorage.getItem(STORAGE_KEY + name)) { console.log(`❌ Draft "${name}" not found.`); return; }
-    localStorage.removeItem(STORAGE_KEY + name);
+    if (!name) { console.log('❌ Usage: XActions.deleteDraft("myThread")'); return; }
+    if (!localStorage.getItem(STORAGE_PREFIX + name)) {
+      console.log(`❌ Draft "${name}" not found.`);
+      return;
+    }
+    localStorage.removeItem(STORAGE_PREFIX + name);
     console.log(`🗑️ Draft "${name}" deleted.`);
   };
 
-  // ── Init ───────────────────────────────────────
-  console.log('🧵 THREAD COMPOSER — XActions by nichxbt');
-  console.log('📋 Commands:');
-  console.log('  XActions.thread("text")         — add a tweet');
-  console.log('  XActions.thread(["t1","t2"])     — load full thread');
-  console.log('  XActions.preview()               — preview with char counts');
-  console.log('  XActions.publish()               — post the thread');
-  console.log('  XActions.saveDraft("name")       — save to localStorage');
-  console.log('  XActions.loadDraft("name")       — load a draft');
-  console.log('  XActions.listDrafts()            — list all drafts');
-  console.log('  XActions.deleteDraft("name")     — delete a draft');
+  window.XActions.exportThread = () => {
+    if (currentThread.length === 0) {
+      console.log('❌ No thread loaded.');
+      return;
+    }
+    const blob = new Blob([JSON.stringify({ tweets: currentThread, exportedAt: new Date().toISOString() }, null, 2)], { type: 'application/json' });
+    const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+    a.download = `xactions-thread-${new Date().toISOString().slice(0, 10)}.json`;
+    document.body.appendChild(a); a.click(); a.remove();
+    console.log('📥 Thread exported.');
+  };
+
+  // ── Initialization ─────────────────────────────────────────
+  const W = 60;
+  console.log('╔' + '═'.repeat(W) + '╗');
+  console.log('║  🧵 THREAD COMPOSER & PUBLISHER' + ' '.repeat(W - 33) + '║');
+  console.log('║  by nichxbt — v1.0' + ' '.repeat(W - 21) + '║');
+  console.log('╚' + '═'.repeat(W) + '╝');
+  console.log('\n📋 Commands:');
+  console.log('  XActions.thread(["tweet1", "tweet2", ...])');
+  console.log('  XActions.thread("tweet text")  (append one tweet)');
+  console.log('  XActions.preview()');
+  console.log('  XActions.publish()');
+  console.log('  XActions.saveDraft("name")');
+  console.log('  XActions.loadDraft("name")');
+  console.log('  XActions.listDrafts()');
+  console.log('  XActions.deleteDraft("name")');
+  console.log('  XActions.exportThread()');
+  console.log('\n💡 Tip: Start with XActions.thread([...]) then XActions.preview()');
+
 })();

@@ -1,188 +1,327 @@
+// GENERATED FILE: a copy of browser/scrapeReplies.js, written by scripts/build-script-manifest.mjs. Edit browser/scrapeReplies.js instead, then run: npm run browser:build
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
 /**
- * Replies Scraper
- * Get all replies to a specific tweet
- * 
- * HOW TO USE:
- * 1. Go to any tweet: x.com/USERNAME/status/TWEETID
- * 2. Open Developer Console (Ctrl+Shift+J or Cmd+Option+J)
- * 3. Paste this script and press Enter
- * 
- * by nichxbt - https://github.com/nirholas/XActions
+ * ============================================
+ * 💬 Scrape Replies - XActions
+ * ============================================
+ *
+ * @name        scrapeReplies.js
+ * @title       Scrape Replies
+ * @description Scroll the conversation under an open post and export every reply (author, text, counts) to JSON and CSV.
+ * @category    scrape
+ * @page        x.com/<username>/status/<id>
+ * @writes      false
+ * @aliases     scripts/scrapeReplies.js, scripts/twitter/scrape-replies.js
+ * @author      nichxbt
+ * @version     1.1.0
+ * @date        2026-11-27
+ * @website     https://xactions.app
+ *
+ * Usage:
+ *   1. Open a post's status page, e.g. x.com/nichxbt/status/1780000000000000000
+ *   2. Open the browser console (F12 or Cmd+Option+I -> Console)
+ *   3. (Optional) edit the CONFIG options at the top of the script
+ *   4. Paste browser/scrapeReplies.js and press Enter
+ *
+ * Example:
+ *   On x.com/nichxbt/status/1780000000000000000 the script scrolls the replies below the
+ *   original post, skips the original post itself, and collects up to CONFIG.maxReplies
+ *   replies (author handle/name, text, likes/reposts/replies counts, timestamp). It
+ *   downloads JSON + CSV and offers window.exportCSV(). Stop early with
+ *   window.stopScrapeReplies().
+ *
+ * ============================================
  */
 
-(() => {
+(async function scrapeReplies() {
+  'use strict';
+
+  // ============================================
+  // 📝 CONFIGURATION - Customize these options
+  // ============================================
   const CONFIG = {
-    MAX_REPLIES: 500,
-    SCROLL_DELAY: 1500,
-    FORMAT: 'both', // 'json', 'csv', 'both'
+    // Maximum number of replies to collect before stopping
+    maxReplies: 500,
+
+    // Delay between scrolls (ms). Raise if replies load slowly.
+    scrollDelay: 1800,
+
+    // Give up after this many scrolls that add no new replies
+    noNewRepliesThreshold: 6,
+
+    // Hard cap on scroll attempts so the loop can never run forever
+    maxScrollAttempts: 400,
+
+    // Auto-download a CSV file too
+    downloadCsv: true,
+
+    // Auto-download the JSON file (false + downloadCsv: true = CSV only)
+    downloadJson: true,
+
+    // Sort the exported replies by likes, most liked first (false = page order)
+    sortByLikes: false
   };
 
-  const sleep = (ms) => new Promise(r => setTimeout(r, ms));
-
-  const download = (content, filename, type) => {
-    const blob = new Blob([content], { type });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = filename;
-    a.click();
-    URL.revokeObjectURL(url);
+  // ============================================
+  // 🔧 SELECTORS
+  // ============================================
+  const SELECTORS = {
+    tweet: 'article[data-testid="tweet"]',
+    tweetText: '[data-testid="tweetText"]',
+    userName: '[data-testid="User-Name"]',
+    actionGroup: '[role="group"]',
+    photo: '[data-testid="tweetPhoto"] img',
+    video: 'video'
   };
 
-  const parseNumber = (str) => {
-    if (!str) return 0;
-    const num = parseFloat(str.replace(/,/g, ''));
-    if (str.includes('K')) return num * 1000;
-    if (str.includes('M')) return num * 1000000;
-    return num;
+  // ============================================
+  // 🛠️ HELPERS
+  // ============================================
+  const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+
+  const log = {
+    info: (msg) => console.log(`ℹ️ ${msg}`),
+    success: (msg) => console.log(`✅ ${msg}`),
+    warning: (msg) => console.log(`⚠️ ${msg}`),
+    error: (msg) => console.log(`❌ ${msg}`),
+    progress: (n, total) => console.log(`📊 Collected ${n}/${total} replies...`)
+  };
+
+  const countFromLabel = (label) => {
+    if (!label) return 0;
+    const raw = (label.match(/[\d.,]+\s*[KMB]?/i) || ['0'])[0].trim().toUpperCase();
+    const num = parseFloat(raw.replace(/,/g, '')) || 0;
+    if (raw.includes('K')) return Math.round(num * 1e3);
+    if (raw.includes('M')) return Math.round(num * 1e6);
+    if (raw.includes('B')) return Math.round(num * 1e9);
+    return Math.round(num);
+  };
+
+  const getCounts = (article) => {
+    const counts = { replies: 0, reposts: 0, likes: 0, views: 0 };
+    const group = article.querySelector(SELECTORS.actionGroup);
+    const nodes = group ? group.querySelectorAll('[aria-label]') : [];
+    nodes.forEach((node) => {
+      const label = (node.getAttribute('aria-label') || '').toLowerCase();
+      const value = countFromLabel(label);
+      if (label.includes('repl')) counts.replies = value;
+      else if (label.includes('repost') || label.includes('retweet')) counts.reposts = value;
+      else if (label.includes('like')) counts.likes = value;
+      else if (label.includes('view')) counts.views = value;
+    });
+    return counts;
+  };
+
+  const toOriginalImage = (url) => {
+    if (!url) return url;
+    return url.replace(/&name=[^&]*/i, '&name=orig').replace(/\?name=[^&]*/i, '?name=orig');
+  };
+
+  const getMediaUrls = (article) => {
+    const urls = new Set();
+    article.querySelectorAll(SELECTORS.photo).forEach((img) => {
+      if (img.src) urls.add(toOriginalImage(img.src));
+    });
+    article.querySelectorAll(SELECTORS.video).forEach((v) => {
+      if (v.src) urls.add(v.src);
+      else if (v.poster) urls.add(v.poster);
+    });
+    return Array.from(urls);
   };
 
   const extractReply = (article) => {
+    const timeEl = article.querySelector('time');
+    const permalink = timeEl ? timeEl.closest('a[href*="/status/"]') : null;
+    const anchor = permalink || article.querySelector('a[href*="/status/"]');
+    const url = anchor ? anchor.href : '';
+    const id = url ? (url.split('/status/')[1] || '').split(/[?/]/)[0] : '';
+    if (!id) return null;
+
+    const nameBlock = article.querySelector(SELECTORS.userName);
+    const nameText = nameBlock ? nameBlock.textContent : '';
+    const handle = (nameText.match(/@(\w+)/) || [, ''])[1];
+    const name = nameText.split('@')[0].trim();
+    const verified = !!article.querySelector(`${SELECTORS.userName} svg[aria-label*="Verified"]`);
+
+    const textEl = article.querySelector(SELECTORS.tweetText);
+    const text = textEl ? textEl.textContent : '';
+
+    const counts = getCounts(article);
+
+    return {
+      id,
+      url,
+      author: { handle, name },
+      verified,
+      text,
+      likes: counts.likes,
+      reposts: counts.reposts,
+      replies: counts.replies,
+      views: counts.views,
+      timestamp: timeEl ? timeEl.getAttribute('datetime') : null,
+      mediaUrls: getMediaUrls(article),
+      scrapedAt: new Date().toISOString()
+    };
+  };
+
+  const downloadFile = (content, filename, mime) => {
     try {
-      const tweetText = article.querySelector('[data-testid="tweetText"]')?.textContent || '';
-      const userName = article.querySelector('[data-testid="User-Name"]')?.textContent || '';
-      const handle = userName.match(/@(\w+)/)?.[1] || '';
-      const displayName = userName.split('@')[0]?.trim() || '';
-      const verified = !!article.querySelector('[data-testid="User-Name"] svg[aria-label*="Verified"]');
-      
-      const timeLink = article.querySelector('time')?.closest('a');
-      const replyUrl = timeLink?.href || '';
-      const replyId = replyUrl.split('/status/')[1]?.split('?')[0] || '';
-      const time = article.querySelector('time')?.getAttribute('datetime') || '';
-
-      const buttons = article.querySelectorAll('[role="group"] button');
-      let replies = 0, retweets = 0, likes = 0;
-      
-      buttons.forEach(btn => {
-        const label = btn.getAttribute('aria-label') || '';
-        const num = parseNumber(label.match(/[\d,.]+[KM]?/)?.[0] || '0');
-        
-        if (label.includes('repl')) replies = num;
-        else if (label.includes('repost') || label.includes('Retweet')) retweets = num;
-        else if (label.includes('like')) likes = num;
-      });
-
-      return {
-        replyId,
-        handle,
-        displayName,
-        verified,
-        text: tweetText,
-        url: replyUrl,
-        time,
-        likes,
-        retweets,
-        replies,
-      };
+      const blob = new Blob([content], { type: mime });
+      const href = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = href;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(href);
+      return true;
     } catch (e) {
-      return null;
+      log.error(`Failed to download ${filename}: ${e.message}`);
+      return false;
     }
   };
 
-  const getTweetId = () => {
+  const csvCell = (value) => `"${String(value == null ? '' : value).replace(/"/g, '""').replace(/\r?\n/g, ' ')}"`;
+
+  const toCSV = (replies) => {
+    const headers = ['id', 'handle', 'name', 'verified', 'text', 'likes', 'reposts', 'replies', 'views', 'timestamp', 'url'];
+    const rows = replies.map((r) => [
+      r.id, '@' + r.author.handle, r.author.name, r.verified, r.text,
+      r.likes, r.reposts, r.replies, r.views, r.timestamp || '', r.url
+    ].map(csvCell).join(','));
+    return [headers.join(','), ...rows].join('\n');
+  };
+
+  const getStatusId = () => {
     const match = window.location.pathname.match(/status\/(\d+)/);
     return match ? match[1] : null;
   };
 
   const getOriginalAuthor = () => {
-    const match = window.location.pathname.match(/\/(\w+)\/status/);
+    const match = window.location.pathname.match(/^\/(\w+)\/status\//);
     return match ? match[1] : null;
   };
 
-  const run = async () => {
-    const tweetId = getTweetId();
-    const originalAuthor = getOriginalAuthor();
+  // ============================================
+  // 🎯 MAIN
+  // ============================================
+  console.log(`
+╔══════════════════════════════════════════════════════════╗
+║  💬 SCRAPE REPLIES - XActions                           ║
+║  👤 Author: nichxbt                                      ║
+║  🌐 https://xactions.app                                 ║
+╚══════════════════════════════════════════════════════════╝
+  `);
 
-    if (!tweetId) {
-      console.error('❌ Please go to a tweet first!');
-      console.log('   Example: x.com/user/status/123456');
-      return;
-    }
+  const statusId = getStatusId();
+  const originalAuthor = getOriginalAuthor();
 
-    console.log(`💬 Scraping replies to @${originalAuthor}'s tweet...`);
+  // Page guard: warn and return, never hard-redirect.
+  if (!statusId) {
+    log.warning('You are not on a post status page.');
+    log.info('Open a post (x.com/<user>/status/<id>), then run this script again.');
+    return;
+  }
 
-    const replies = new Map();
-    let scrolls = 0;
-    let noNewCount = 0;
-    let isFirstTweet = true;
+  const replies = new Map();
 
-    while (replies.size < CONFIG.MAX_REPLIES && noNewCount < 5) {
-      const articles = document.querySelectorAll('article[data-testid="tweet"]');
-      const beforeCount = replies.size;
-
-      articles.forEach(article => {
-        const reply = extractReply(article);
-        
-        // Skip the original tweet (first one)
-        if (reply && reply.replyId) {
-          if (reply.replyId === tweetId) {
-            isFirstTweet = false;
-            return; // Skip original tweet
-          }
-          
-          if (!replies.has(reply.replyId)) {
-            replies.set(reply.replyId, reply);
-          }
-        }
-      });
-
-      const added = replies.size - beforeCount;
-      if (added > 0) {
-        console.log(`💬 Collected ${replies.size} replies...`);
-        noNewCount = 0;
-      } else {
-        noNewCount++;
-      }
-
-      window.scrollBy(0, 800);
-      await sleep(CONFIG.SCROLL_DELAY);
-      scrolls++;
-
-      if (scrolls > 100) break;
-    }
-
-    const replyList = Array.from(replies.values());
-    replyList.sort((a, b) => b.likes - a.likes);
-
-    console.log('\n' + '='.repeat(60));
-    console.log(`💬 SCRAPED ${replyList.length} REPLIES`);
-    console.log('='.repeat(60) + '\n');
-
-    // Stats
-    const verifiedReplies = replyList.filter(r => r.verified).length;
-    const uniqueUsers = new Set(replyList.map(r => r.handle)).size;
-    console.log(`📊 Stats: ${uniqueUsers} unique users, ${verifiedReplies} verified accounts`);
-
-    replyList.slice(0, 5).forEach((r, i) => {
-      console.log(`${i + 1}. @${r.handle}${r.verified ? ' ✓' : ''} (${r.likes} ❤️): "${r.text.slice(0, 50)}..."`);
-    });
-
-    if (CONFIG.FORMAT === 'json' || CONFIG.FORMAT === 'both') {
-      const data = { 
-        originalTweetId: tweetId, 
-        originalAuthor,
-        replyCount: replyList.length,
-        replies: replyList 
-      };
-      download(JSON.stringify(data, null, 2), `tweet_${tweetId}_replies_${Date.now()}.json`, 'application/json');
-      console.log('💾 Downloaded replies.json');
-    }
-
-    if (CONFIG.FORMAT === 'csv' || CONFIG.FORMAT === 'both') {
-      const csv = [
-        'Handle,DisplayName,Verified,Text,Likes,Retweets,URL,Time',
-        ...replyList.map(r => 
-          `"@${r.handle}","${r.displayName.replace(/"/g, '""')}",${r.verified},"${r.text.replace(/"/g, '""').replace(/\n/g, ' ')}",${r.likes},${r.retweets},"${r.url}","${r.time}"`
-        )
-      ].join('\n');
-      download(csv, `tweet_${tweetId}_replies_${Date.now()}.csv`, 'text/csv');
-      console.log('💾 Downloaded replies.csv');
-    }
-
-    window.scrapedReplies = { tweetId, originalAuthor, replies: replyList };
-    console.log('\n✅ Done! Access data: window.scrapedReplies');
+  // Stop switch: run window.stopScrapeReplies() to end the scroll loop.
+  let stopped = false;
+  window.stopScrapeReplies = () => {
+    stopped = true;
+    log.warning('Stop requested. Finishing the current pass, then exporting.');
   };
 
-  run();
+  log.info(`Original post: @${originalAuthor || 'unknown'} / ${statusId}`);
+  log.info(`Max replies: ${CONFIG.maxReplies}`);
+  log.info('To stop early: window.stopScrapeReplies()');
+
+  let scrollAttempts = 0;
+  let noNewCount = 0;
+
+  while (!stopped && replies.size < CONFIG.maxReplies && scrollAttempts < CONFIG.maxScrollAttempts) {
+    const before = replies.size;
+
+    document.querySelectorAll(SELECTORS.tweet).forEach((article) => {
+      try {
+        const reply = extractReply(article);
+        if (!reply) return;
+        // Skip the original post: it shares the status id in the URL.
+        if (reply.id === statusId) return;
+        if (!replies.has(reply.id)) replies.set(reply.id, reply);
+      } catch (e) {
+        log.error(`Skipped a reply: ${e.message}`);
+      }
+    });
+
+    if (replies.size > before) {
+      log.progress(replies.size, CONFIG.maxReplies);
+      noNewCount = 0;
+    } else {
+      noNewCount++;
+      if (noNewCount >= CONFIG.noNewRepliesThreshold) {
+        log.warning('No new replies after several scrolls. Reached the end of the conversation.');
+        break;
+      }
+    }
+
+    if (replies.size >= CONFIG.maxReplies) break;
+
+    window.scrollTo(0, document.body.scrollHeight);
+    await sleep(CONFIG.scrollDelay);
+    scrollAttempts++;
+  }
+
+  const list = Array.from(replies.values()).slice(0, CONFIG.maxReplies);
+  if (CONFIG.sortByLikes) list.sort((a, b) => b.likes - a.likes);
+
+  // ============================================
+  // 📊 SUMMARY + EXPORT
+  // ============================================
+  if (list.length === 0) {
+    log.warning('No replies were found. The post may have no replies, or the thread had not loaded yet.');
+    return;
+  }
+
+  const uniqueUsers = new Set(list.map((r) => r.author.handle)).size;
+  const verifiedCount = list.filter((r) => r.verified).length;
+
+  console.log(`
+╔══════════════════════════════════════════════════════════╗
+║  📊 SCRAPE REPLIES - COMPLETE                           ║
+╠══════════════════════════════════════════════════════════╣
+║  💬 Replies:      ${String(list.length).padEnd(37)}║
+║  👥 Unique users: ${String(uniqueUsers).padEnd(37)}║
+║  ✓  Verified:     ${String(verifiedCount).padEnd(37)}║
+╚══════════════════════════════════════════════════════════╝
+  `);
+
+  list.slice(0, 5).forEach((r, i) => {
+    console.log(`${i + 1}. @${r.author.handle}${r.verified ? ' ✓' : ''} (${r.likes} ❤️): "${r.text.slice(0, 60)}"`);
+  });
+
+  const stamp = new Date().toISOString().split('T')[0];
+  const result = {
+    originalStatusId: statusId,
+    originalAuthor,
+    scrapedAt: new Date().toISOString(),
+    count: list.length,
+    replies: list
+  };
+
+  if (CONFIG.downloadJson && downloadFile(JSON.stringify(result, null, 2), `replies_${statusId}_${stamp}.json`, 'application/json')) {
+    log.success('JSON downloaded');
+  }
+  if (CONFIG.downloadCsv && downloadFile(toCSV(list), `replies_${statusId}_${stamp}.csv`, 'text/csv')) {
+    log.success('CSV downloaded');
+  }
+
+  window.scrapedReplies = result;
+  window.exportCSV = () => toCSV(list);
+  console.log('');
+  log.info('window.scrapedReplies holds the full data. window.exportCSV() returns the CSV string.');
+  log.success('Done! by nichxbt');
+
+  return result;
 })();

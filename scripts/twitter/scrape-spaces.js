@@ -1,22 +1,29 @@
+// GENERATED FILE: a copy of browser/scrapeSpaces.js, written by scripts/build-script-manifest.mjs. Edit browser/scrapeSpaces.js instead, then run: npm run browser:build
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
 /**
  * ============================================
  * 🎙️ Scrape Spaces - XActions
  * ============================================
  *
- * @name         scrape-spaces
- * @description  Scrape Twitter Spaces from the DOM: list a profile's Spaces, or capture a single Space card's title, host, and listeners.
- * @author       nichxbt
- * @version      1.0.0
- * @date         2026-07-20
- * @website      https://xactions.app
+ * @name        scrapeSpaces.js
+ * @title       Scrape Spaces
+ * @description List the Spaces on a profile, search or timeline (live, scheduled, ended), or capture the open Space's title, host, listeners and speakers.
+ * @category    spaces
+ * @page        x.com/<username> or x.com/search?q=<query>&f=live or x.com/i/spaces/<id>
+ * @writes      false
+ * @aliases     scripts/scrapeSpaces.js, scripts/spacesManager.js, scripts/twitter/scrape-spaces.js
+ * @author      nichxbt (https://x.com/nichxbt)
+ * @version     1.1.0
+ * @date        2026-11-27
+ * @website     https://xactions.app
  *
  * Usage:
- *   1. Go to a profile that hosts Spaces (e.g. https://x.com/<handle>), scroll to
- *      any Space cards, OR open a Space page / listening view directly.
+ *   1. Go to a profile that hosts Spaces (e.g. https://x.com/<handle>), a search
+ *      (x.com/search?q=your-topic&f=live) or any timeline with Space cards, OR
+ *      open a Space page / listening view directly.
  *   2. Open the browser console (F12 or Cmd+Option+I -> Console)
  *   3. (Optional) edit the CONFIG options at the top of the script
- *   4. Paste this entire script and press Enter
+ *   4. Paste browser/scrapeSpaces.js and press Enter
  *
  * Example:
  *   On a profile, paste and the script auto-scrolls, collects every Space card it
@@ -45,11 +52,17 @@
     noNewThreshold: 4,
 
     // Delay between scrolls (ms)
-    scrollDelay: 1500,
+    scrollDelay: 2000,
 
     // Auto-download the results as files when finished
     downloadJSON: true,
-    downloadCSV: true
+    downloadCSV: true,
+
+    // Also print the full JSON result to the console
+    logJSON: false,
+
+    // Also copy the JSON result to the clipboard
+    copyToClipboard: false
   };
 
   // ============================================
@@ -60,10 +73,16 @@
     inSpace: '[data-testid="spaceSpeakers"], [data-testid="audioSpaceInlineTitle"], [aria-label="Space"]',
     // Space title inside an open Space
     spaceTitle: '[data-testid="audioSpaceInlineTitle"], [data-testid="spaceTitle"]',
+    // Fallback title inside an open Space
+    spaceHeading: 'h1, [role="heading"]',
+    spaceTopic: '[data-testid="spaceTopic"]',
+    spaceListeners: '[data-testid="spaceListeners"]',
+    spaceHost: '[data-testid="spaceHost"]',
+    spaceSpeakersText: '[data-testid="spaceSpeakers"]',
     // Speaker/participant cells
-    userCell: '[data-testid="UserCell"]',
+    userCell: '[data-testid="UserCell"], [data-testid="spaceSpeaker"]',
     // A Space card / link anywhere in the timeline
-    spaceCard: 'a[href*="/i/spaces/"], [data-testid="placementTracking"] a[href*="/spaces/"]'
+    spaceCard: 'a[href*="/i/spaces/"], [data-testid="placementTracking"] a[href*="/spaces/"], [data-testid="SpaceCard"], [data-testid="space"]'
   };
 
   // ============================================
@@ -93,6 +112,27 @@
     } catch (e) {
       log.error(`Failed to download ${filename}: ${e.message}`);
       return false;
+    }
+  };
+
+  const textOf = (root, selector) => {
+    const el = root.querySelector(selector);
+    return el ? (el.textContent || '').trim() : '';
+  };
+
+  const shareJSON = async (result) => {
+    const json = JSON.stringify(result, null, 2);
+    if (CONFIG.logJSON) {
+      console.log('\n📦 Full JSON:');
+      console.log(json);
+    }
+    if (CONFIG.copyToClipboard) {
+      try {
+        await navigator.clipboard.writeText(json);
+        log.success('Copied to clipboard!');
+      } catch (e) {
+        log.warning('Could not copy to clipboard.');
+      }
     }
   };
 
@@ -128,16 +168,19 @@
   if (insideSpace) {
     log.info('Detected an open Space. Capturing metadata and speakers...');
 
-    const titleEl = document.querySelector(SELECTORS.spaceTitle);
-    const title = titleEl ? titleEl.textContent.trim() : '';
+    const title = textOf(document, SELECTORS.spaceTitle) || textOf(document, SELECTORS.spaceHeading);
+    const topic = textOf(document, SELECTORS.spaceTopic);
 
-    // Listener count: X renders it as text like "1,234 listening". Find the
-    // nearest element whose text mentions listening/tuned in.
-    let listeners = '';
-    const candidates = document.querySelectorAll('span, div');
-    for (const el of candidates) {
-      const t = el.textContent.trim();
-      if (/^[\d,\.KMB]+\s+(listening|listeners|tuned in)/i.test(t)) { listeners = t; break; }
+    // Listener count: X renders it as text like "1,234 listening". Prefer the
+    // spaceListeners testid, else find the nearest element whose text mentions
+    // listening/tuned in.
+    let listeners = textOf(document, SELECTORS.spaceListeners);
+    if (!listeners) {
+      const candidates = document.querySelectorAll('span, div');
+      for (const el of candidates) {
+        const t = el.textContent.trim();
+        if (/^[\d,\.KMB]+\s+(listening|listeners|tuned in)/i.test(t)) { listeners = t; break; }
+      }
     }
 
     const speakers = [];
@@ -159,6 +202,7 @@
       mode: 'space',
       url: window.location.href,
       title,
+      topic,
       listeners,
       host: speakers.length > 0 ? speakers[0].handle : '',
       speakers,
@@ -167,6 +211,7 @@
 
     console.log('');
     console.log(`📋 Title: ${title || '(not found)'}`);
+    if (topic) console.log(`🏷️ Topic: ${topic}`);
     console.log(`👥 Listeners: ${listeners || '(not found)'}`);
     console.log(`🎤 Speakers captured: ${speakers.length}`);
     if (speakers.length > 0) {
@@ -190,6 +235,8 @@
         log.success('CSV (speakers) downloaded');
       }
     }
+
+    await shareJSON(result);
 
     window.scrapedSpace = result;
     console.log('\n💡 Access your data: window.scrapedSpace');
@@ -222,25 +269,34 @@
         const text = (container.textContent || '').trim();
         const lower = text.toLowerCase();
         const isLive = lower.includes('live') && !lower.includes('recorded');
+        const scheduledFor = container.querySelector('time')?.getAttribute('datetime') || null;
+        const isScheduled = !isLive && (lower.includes('scheduled') || lower.includes('upcoming'));
+        const status = isLive ? 'live' : isScheduled ? 'scheduled' : 'ended';
 
-        // Listener/participant count if present in the card text
+        // Listener/participant count: spaceListeners testid, else the card text
         const listenersMatch = text.match(/([\d,\.KMB]+)\s+(listening|listeners|tuned in|played)/i);
-        const listeners = listenersMatch ? listenersMatch[0] : '';
+        const listeners = textOf(container, SELECTORS.spaceListeners) || (listenersMatch ? listenersMatch[0] : '');
 
-        // Host handle: first bare profile link in the card container
+        // Host handle: first bare profile link in the card container, else the spaceHost label
         let host = '';
         for (const a of container.querySelectorAll('a[href^="/"]')) {
           const h = handleFromLink(a);
           if (h) { host = h; break; }
         }
+        if (!host) host = textOf(container, SELECTORS.spaceHost);
 
         spaces.set(id, {
           id,
-          title: text.slice(0, 140),
+          title: (textOf(container, SELECTORS.spaceTitle) || text).slice(0, 140),
           host,
           listeners,
+          speakers: textOf(container, SELECTORS.spaceSpeakersText),
+          topic: textOf(container, SELECTORS.spaceTopic),
           isLive,
-          link: link.startsWith('http') ? link : `https://x.com${link}`
+          status,
+          scheduledFor: isScheduled ? scheduledFor : null,
+          link: link.startsWith('http') ? link : `https://x.com${link}`,
+          foundAt: new Date().toISOString()
         });
       } catch (e) {
         // Skip malformed card
@@ -284,12 +340,43 @@
     return { spaces: [] };
   }
 
+  const live = list.filter(s => s.status === 'live');
+  const scheduled = list.filter(s => s.status === 'scheduled');
+  const ended = list.filter(s => s.status === 'ended');
+  console.log(`   🔴 Live: ${live.length}`);
+  console.log(`   📅 Scheduled: ${scheduled.length}`);
+  console.log(`   ⏹️ Ended: ${ended.length}`);
+
   list.forEach((s, i) => {
     console.log(`   ${s.isLive ? '🔴' : '⏳'} ${i + 1}. ${s.title.slice(0, 70)}${s.listeners ? ` (${s.listeners})` : ''}`);
   });
 
+  if (live.length > 0) {
+    console.log('\n🔴 LIVE NOW:');
+    live.forEach((s, i) => {
+      console.log(`   ${i + 1}. "${s.title.slice(0, 70)}" by @${s.host}`);
+      console.log(`      ${s.link}`);
+    });
+  }
+
+  if (scheduled.length > 0) {
+    console.log('\n📅 UPCOMING:');
+    scheduled.forEach((s, i) => {
+      console.log(`   ${i + 1}. "${s.title.slice(0, 70)}" by @${s.host}${s.scheduledFor ? ` (${s.scheduledFor})` : ''}`);
+      console.log(`      ${s.link}`);
+    });
+  }
+
   const dateStr = new Date().toISOString().split('T')[0];
-  const result = { mode: 'listing', count: list.length, spaces: list, scrapedAt: new Date().toISOString() };
+  const result = {
+    mode: 'listing',
+    count: list.length,
+    live: live.length,
+    scheduled: scheduled.length,
+    ended: ended.length,
+    spaces: list,
+    scrapedAt: new Date().toISOString()
+  };
 
   console.log('');
   if (CONFIG.downloadJSON) {
@@ -300,13 +387,15 @@
   if (CONFIG.downloadCSV) {
     const esc = (v) => `"${String(v).replace(/"/g, '""').replace(/\n/g, ' ')}"`;
     const csv = [
-      ['Title', 'Host', 'Listeners', 'IsLive', 'Link'].join(','),
-      ...list.map(s => [esc(s.title), esc(s.host), esc(s.listeners), s.isLive, esc(s.link)].join(','))
+      ['Title', 'Host', 'Listeners', 'IsLive', 'Status', 'ScheduledFor', 'Link'].join(','),
+      ...list.map(s => [esc(s.title), esc(s.host), esc(s.listeners), s.isLive, s.status, esc(s.scheduledFor || ''), esc(s.link)].join(','))
     ].join('\n');
     if (download(csv, `spaces_${dateStr}.csv`, 'text/csv')) {
       log.success('CSV downloaded');
     }
   }
+
+  await shareJSON(result);
 
   window.scrapedSpaces = result;
   console.log('\n💡 Access your data: window.scrapedSpaces');

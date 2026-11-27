@@ -1,5 +1,14 @@
+// GENERATED FILE: a copy of browser/engagementManager.js, written by scripts/build-script-manifest.mjs. Edit browser/engagementManager.js instead, then run: npm run browser:build
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
-// scripts/engagementManager.js
+/**
+ * @name        engagementManager.js
+ * @title       Engagement Manager
+ * @description Like, unlike, reply to and bookmark the posts on screen.
+ * @category    engage
+ * @page        x.com/home
+ * @writes      true
+ * @aliases     scripts/engagementManager.js
+ */
 // Browser console script for liking, bookmarking, or replying to visible tweets
 // Paste in DevTools console on x.com/home or any timeline
 // by nichxbt

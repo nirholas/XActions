@@ -1,11 +1,17 @@
+// GENERATED FILE: a copy of browser/updateProfilePicture.js, written by scripts/build-script-manifest.mjs. Edit browser/updateProfilePicture.js instead, then run: npm run browser:build
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
 /**
  * ============================================================
  * 🖼️ Update Profile Picture
  * ============================================================
  * 
- * @name        update-profile-picture.js
- * @description Guide and helper for updating X/Twitter profile picture
+ * @name        updateProfilePicture.js
+ * @description Guided helper for changing your profile picture.
+ * @title       Update Profile Picture
+ * @category    profile
+ * @page        x.com/settings/profile
+ * @writes      true
+ * @aliases     scripts/twitter/update-profile-picture.js
  * @author      nichxbt (https://x.com/nichxbt)
  * @version     1.0.0
  * @date        2026-01-26
@@ -71,8 +77,6 @@ var CONFIG = {
       console.log('📍 Opening profile editor...');
       editBtn.click();
       await sleep(CONFIG.actionDelay * 2);
-      avatarBtn = document.querySelector($addAvatarBtn);
-      fileInput = document.querySelector($avatarImageInput);
     } else {
       console.error('❌ ERROR: Edit profile button not found!');
       console.log('');

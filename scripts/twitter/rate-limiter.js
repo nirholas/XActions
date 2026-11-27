@@ -1,11 +1,17 @@
+// GENERATED FILE: a copy of browser/rateLimiter.js, written by scripts/build-script-manifest.mjs. Edit browser/rateLimiter.js instead, then run: npm run browser:build
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
 /**
  * ============================================================
  * ⏱️ Rate Limiter
  * ============================================================
  * 
- * @name        rate-limiter.js
- * @description Rate limiting and quota management utility
+ * @name        rateLimiter.js
+ * @description Rate limiting and quota helper shared by the action scripts.
+ * @title       Rate Limiter
+ * @category    automation
+ * @page        x.com/*
+ * @writes      false
+ * @aliases     scripts/twitter/rate-limiter.js
  * @author      nichxbt (https://x.com/nichxbt)
  * @version     1.0.0
  * @date        2026-01-26

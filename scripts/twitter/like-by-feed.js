@@ -1,11 +1,17 @@
+// GENERATED FILE: a copy of browser/likeByFeed.js, written by scripts/build-script-manifest.mjs. Edit browser/likeByFeed.js instead, then run: npm run browser:build
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
 /**
  * ============================================
  * 🏠 Like By Feed - XActions
  * ============================================
  * 
- * @name         like-by-feed
- * @description  Automatically like tweets from your home timeline/feed
+ * @name        likeByFeed.js
+ * @description Like posts as it scrolls your home timeline.
+ * @title       Like Home Feed
+ * @category    engage
+ * @page        x.com/home
+ * @writes      true
+ * @aliases     scripts/twitter/like-by-feed.js
  * @author       nichxbt
  * @version      1.0.0
  * @date         2026-01-26

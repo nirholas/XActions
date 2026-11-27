@@ -1,92 +1,60 @@
+// GENERATED FILE: a copy of browser/postThread.js, written by scripts/build-script-manifest.mjs. Edit browser/postThread.js instead, then run: npm run browser:build
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
 /**
- * ============================================
- * 🧵 Post Thread - XActions
- * ============================================
- *
- * @name         post-thread
- * @description  Compose and post a multi-tweet thread in one pass.
- * @author       nichxbt
- * @version      1.0.0
- * @date         2026-07-20
- * @website      https://xactions.app
- *
- * Usage:
- *   1. Go to x.com/compose/post
- *   2. Open the browser console (F12 or Cmd+Option+I -> Console)
- *   3. (Optional) edit the CONFIG options at the top of the script
- *   4. Paste this entire script and press Enter
- *
- * Example:
- *   Set CONFIG.tweets = ["Part 1 🧵", "Part 2", "Part 3, wrap up"] and
- *   dryRun = true to validate lengths. Flip dryRun = false and re-paste: the
- *   script types the first tweet, adds a box per remaining tweet, then Posts all.
- *
- * ============================================
+ * @name        postThread.js
+ * @title       Post Thread
+ * @description Compose and post a thread of connected tweets in one pass, with length checks and a dry run by default.
+ * @category    post
+ * @page        x.com/home or x.com/compose/post
+ * @writes      true
+ * @aliases     scripts/postThread.js, scripts/twitter/post-thread.js
+ * @author      nichxbt (https://x.com/nichxbt)
+ * @version     1.1.0
+ * @date        2026-11-27
  */
-
-(async function postThread() {
-  'use strict';
-
-  // ============================================
-  // 📝 CONFIGURATION - Customize these options
-  // ============================================
+// Post Thread on X - by nichxbt
+// https://github.com/nirholas/xactions
+// Compose and post a thread of connected tweets
+// 1. Go to x.com (or x.com/compose/post)
+// 2. Open the Developer Console (F12)
+// 3. Edit the CONFIG.thread array below. dryRun: true only validates and lists
+//    the tweets; set dryRun = false to post. autoNumber prefixes "1/N".
+// 4. Paste browser/postThread.js into the Developer Console and run it
+//
+// Last Updated: 27 November 2026
+(() => {
   const CONFIG = {
-    // Each string is one tweet in the thread, top to bottom.
-    tweets: [
-      'Thread part 1 🧵',
-      'Thread part 2: the details.',
-      'Thread part 3: wrap up. Follow for more.'
+    thread: [
+      // Add your thread posts here (in order)
+      // 'First tweet in the thread 🧵',
+      // 'Second tweet continues the thought...',
+      // 'Final tweet wraps it up!',
     ],
-
-    // Prepend "1/N" numbering to each tweet automatically.
-    autoNumber: false,
-
-    // Max characters per tweet before the script refuses to post.
-    maxChars: 280,
-
-    // Milliseconds to wait after adding each new tweet box.
-    delayBetween: 2000,
-
-    // Preview only: validate and log without clicking Post.
-    dryRun: true
+    autoNumber: false, // Prepend "1/N " numbering to each tweet
+    maxChars: 280,     // Refuse to post when a tweet is longer than this
+    delayBetweenTweets: 2000,
+    dryRun: true, // Set to false to actually post
   };
 
-  // ============================================
-  // 🔧 SELECTORS
-  // ============================================
-  const SELECTORS = {
-    composer: '[data-testid="tweetTextarea_0"]',
-    anyComposer: '[data-testid^="tweetTextarea_"]',
-    newTweetButton: 'a[data-testid="SideNav_NewTweet_Button"]',
-    addButton: '[data-testid="addButton"]',
-    postButton: '[data-testid="tweetButton"]',
-    postButtonInline: '[data-testid="tweetButtonInline"]'
-  };
+  const $composeButton = '[data-testid="SideNav_NewTweet_Button"]';
+  const $tweetInput = '[data-testid="tweetTextarea_0"]';
+  const $addThreadButton = '[data-testid="addButton"]'; // The "+" button to add another tweet
+  const $tweetButton = '[data-testid="tweetButtonInline"]';
+  const $tweetAllButton = '[data-testid="tweetButton"]';
 
-  // ============================================
-  // 🛠️ HELPERS
-  // ============================================
-  const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+  const sleep = (ms) => new Promise(r => setTimeout(r, ms));
 
-  const log = {
-    info: (msg) => console.log(`ℹ️ ${msg}`),
-    success: (msg) => console.log(`✅ ${msg}`),
-    warning: (msg) => console.log(`⚠️ ${msg}`),
-    error: (msg) => console.log(`❌ ${msg}`)
-  };
-
-  // Real input dispatch into X's contenteditable composer.
-  const typeIntoComposer = async (el, text) => {
-    el.focus();
-    await sleep(150);
+  const typeIntoInput = async (input, text) => {
+    input.focus();
+    await sleep(100);
     const inserted = document.execCommand('insertText', false, text);
     if (!inserted) {
-      el.dispatchEvent(new InputEvent('beforeinput', { inputType: 'insertText', data: text, bubbles: true, cancelable: true }));
-      el.textContent = text;
-      el.dispatchEvent(new InputEvent('input', { inputType: 'insertText', data: text, bubbles: true }));
+      // Fallback when execCommand is refused: dispatch real input events
+      input.dispatchEvent(new InputEvent('beforeinput', { inputType: 'insertText', data: text, bubbles: true, cancelable: true }));
+      input.textContent = text;
+      input.dispatchEvent(new InputEvent('input', { inputType: 'insertText', data: text, bubbles: true }));
     }
-    await sleep(300);
+    await sleep(200);
   };
 
   const waitForSelector = async (selector, timeoutMs = 6000) => {
@@ -99,140 +67,146 @@
     return null;
   };
 
-  // ============================================
-  // 🎯 MAIN LOGIC
-  // ============================================
   const stats = { total: 0, typed: 0, posted: false, errors: 0 };
 
-  console.log(`
-╔══════════════════════════════════════════════════════════╗
-║  🧵 POST THREAD - XActions                               ║
-║  👤 Author: nichxbt                                      ║
-║  🌐 https://xactions.app                                 ║
-╚══════════════════════════════════════════════════════════╝
-  `);
+  const printSummary = () => {
+    console.log(`\n📊 Thread: ${stats.total} tweets | Typed: ${stats.typed} | Posted: ${stats.posted} | Errors: ${stats.errors}`);
+  };
 
-  try {
+  const run = async () => {
+    console.log('🧵 POST THREAD - XActions by nichxbt');
+
     const host = window.location.hostname;
     if (!/(^|\.)x\.com$/.test(host) && !/(^|\.)twitter\.com$/.test(host)) {
-      log.warning('Not on x.com. Open x.com/compose/post, then re-run.');
-      return stats;
+      console.warn('⚠️ Not on x.com. Open x.com/compose/post, then re-run.');
+      return;
     }
 
-    const raw = (CONFIG.tweets || []).map((t) => (t || '').trim()).filter(Boolean);
+    const raw = CONFIG.thread.map(t => (t || '').trim()).filter(Boolean);
+
     if (raw.length === 0) {
-      log.error('CONFIG.tweets is empty. Add at least one tweet string.');
-      return stats;
+      console.log('❌ No thread content! Edit CONFIG.thread array.');
+      console.log('\nExample:');
+      console.log('  thread: [');
+      console.log('    "First tweet in the thread 🧵",');
+      console.log('    "Second tweet continues...",');
+      console.log('    "Final tweet! 🎉",');
+      console.log('  ]');
+      return;
     }
 
-    // Apply numbering, then validate lengths.
-    const tweets = raw.map((t, i) => (CONFIG.autoNumber ? `${i + 1}/${raw.length} ${t}` : t));
-    stats.total = tweets.length;
+    const thread = raw.map((t, i) => (CONFIG.autoNumber ? `${i + 1}/${raw.length} ${t}` : t));
+    stats.total = thread.length;
 
-    let overLimit = false;
-    tweets.forEach((t, i) => {
-      const status = t.length > CONFIG.maxChars ? '🔴 OVER' : '🟢 OK';
-      log.info(`Tweet ${i + 1}/${tweets.length} [${t.length}/${CONFIG.maxChars}] ${status}`);
-      if (t.length > CONFIG.maxChars) overLimit = true;
+    // Validate character counts
+    const invalid = thread.filter((t, i) => {
+      if (t.length > CONFIG.maxChars) {
+        console.error(`❌ Tweet ${i + 1} exceeds ${CONFIG.maxChars} chars (${t.length})`);
+        return true;
+      }
+      return false;
     });
 
-    if (overLimit) {
-      log.error(`One or more tweets exceed ${CONFIG.maxChars} characters. Fix them and re-run.`);
-      return stats;
+    if (invalid.length > 0) {
+      console.error('Fix the above tweets before posting.');
+      return;
     }
+
+    console.log(`📋 Thread: ${thread.length} tweets`);
+    thread.forEach((t, i) => {
+      console.log(`   ${i + 1}. (${t.length}/${CONFIG.maxChars}) ${t.substring(0, 60)}${t.length > 60 ? '...' : ''}`);
+    });
 
     if (CONFIG.dryRun) {
-      log.warning('DRY RUN. Nothing posted. Set CONFIG.dryRun = false to post for real.');
-      return stats;
+      console.log('\n⚠️ DRY RUN MODE - Set CONFIG.dryRun = false to actually post');
+      return;
     }
 
-    // Open the composer if needed.
-    let firstBox = document.querySelector(SELECTORS.composer);
-    if (!firstBox) {
-      const newBtn = document.querySelector(SELECTORS.newTweetButton);
-      if (newBtn) {
-        newBtn.click();
-        firstBox = await waitForSelector(SELECTORS.composer, 6000);
+    // Open compose, unless a composer is already open (e.g. on x.com/compose/post)
+    let firstInput = document.querySelector($tweetInput);
+    if (!firstInput) {
+      const composeBtn = document.querySelector($composeButton);
+      if (composeBtn) {
+        composeBtn.click();
+        await sleep(1500);
+        firstInput = await waitForSelector($tweetInput, 6000);
       }
     }
-    if (!firstBox) {
-      log.error('Composer not found. Open x.com/compose/post and re-run.');
+
+    // Type first tweet
+    if (!firstInput) {
+      console.error('❌ Compose box not found! Try clicking the compose button manually.');
       stats.errors++;
-      return stats;
+      printSummary();
+      return;
     }
 
-    await typeIntoComposer(firstBox, tweets[0]);
+    await typeIntoInput(firstInput, thread[0]);
     stats.typed = 1;
-    log.success(`Tweet 1/${tweets.length} typed.`);
+    console.log(`✅ Tweet 1/${thread.length} typed`);
 
-    // Add each subsequent tweet via the "+" add button, then type into the newest box.
-    for (let i = 1; i < tweets.length; i++) {
-      const addBtn = document.querySelector(SELECTORS.addButton);
+    // Add remaining tweets
+    for (let i = 1; i < thread.length; i++) {
+      await sleep(CONFIG.delayBetweenTweets);
+
+      // Click the "+" button to add next tweet in thread
+      const addBtn = document.querySelector($addThreadButton);
       if (!addBtn) {
-        log.error(`Add-tweet button not found before tweet ${i + 1}. Stopping.`);
+        console.error(`❌ Could not find add-tweet button for tweet ${i + 1}`);
         stats.errors++;
         break;
       }
-      addBtn.click();
-      await sleep(CONFIG.delayBetween);
 
-      const boxes = document.querySelectorAll(SELECTORS.anyComposer);
-      const newBox = boxes[boxes.length - 1];
-      if (!newBox) {
-        log.error(`New composer box not found for tweet ${i + 1}. Stopping.`);
+      addBtn.click();
+      await sleep(1000);
+
+      // Find the new (latest) input field
+      const inputs = document.querySelectorAll('[data-testid^="tweetTextarea_"]');
+      const newInput = inputs[inputs.length - 1];
+
+      if (!newInput) {
+        console.error(`❌ Input field for tweet ${i + 1} not found`);
         stats.errors++;
         break;
       }
-      await typeIntoComposer(newBox, tweets[i]);
+
+      await typeIntoInput(newInput, thread[i]);
       stats.typed++;
-      log.success(`Tweet ${i + 1}/${tweets.length} typed.`);
+      console.log(`✅ Tweet ${i + 1}/${thread.length} typed`);
     }
 
-    await sleep(800);
-    const postBtn =
-      document.querySelector(SELECTORS.postButton) ||
-      document.querySelector(SELECTORS.postButtonInline);
+    // Post the thread
+    await sleep(1000);
+    const postBtn = document.querySelector($tweetAllButton) || document.querySelector($tweetButton);
     if (!postBtn) {
-      log.error('Post button not found. Thread is typed. Click "Post all" manually.');
+      console.error('❌ Post button not found. Thread is typed but not posted.');
+      console.log('💡 Click "Post all" manually to publish.');
       stats.errors++;
-      return stats;
+      printSummary();
+      return;
     }
     if (postBtn.getAttribute('aria-disabled') === 'true' || postBtn.disabled) {
-      log.error('Post button is disabled. Check the composer for an empty or over-limit tweet.');
+      console.error('❌ Post button is disabled. Check the composer for an empty or over-limit tweet.');
       stats.errors++;
-      return stats;
+      printSummary();
+      return;
     }
 
     postBtn.click();
     await sleep(3000);
 
-    const stillOpen = document.querySelector(SELECTORS.composer);
+    // Verify: the composer closes (or empties) once the thread is posted
+    const stillOpen = document.querySelector($tweetInput);
     const openText = stillOpen ? (stillOpen.textContent || '').trim() : '';
     if (!stillOpen || openText.length === 0) {
       stats.posted = true;
-      log.success(`Thread posted: ${stats.typed} tweet(s).`);
+      console.log(`\n🧵 Thread posted! ${stats.typed} tweets.`);
     } else {
-      log.warning('Composer still open. The thread may not have posted. Check the page.');
+      console.warn('⚠️ Composer still open. The thread may not have posted. Check the page.');
       stats.errors++;
     }
-  } catch (error) {
-    log.error(`Error: ${error.message}`);
-    stats.errors++;
-  }
+    printSummary();
+  };
 
-  // ============================================
-  // 📊 SUMMARY
-  // ============================================
-  console.log(`
-╔══════════════════════════════════════════════════════════╗
-║  📊 POST THREAD - COMPLETE                               ║
-╠══════════════════════════════════════════════════════════╣
-║  🧵 Tweets in thread:  ${String(stats.total).padEnd(32)}║
-║  ⌨️  Typed:             ${String(stats.typed).padEnd(32)}║
-║  ✅ Posted:            ${String(stats.posted).padEnd(32)}║
-║  ❌ Errors:            ${String(stats.errors).padEnd(32)}║
-╚══════════════════════════════════════════════════════════╝
-  `);
-  log.success('Script completed! by nichxbt');
-  return stats;
+  run();
 })();

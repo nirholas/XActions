@@ -1,14 +1,20 @@
+// GENERATED FILE: a copy of browser/threadUnroller.js, written by scripts/build-script-manifest.mjs. Edit browser/threadUnroller.js instead, then run: npm run browser:build
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
 /**
  * ============================================================
  * 📜 Thread Unroller
  * ============================================================
  * 
- * @name        thread-unroller.js
- * @description Save any Twitter thread as clean text, markdown, or JSON
+ * @name        threadUnroller.js
+ * @title       Thread Unroller
+ * @description Collect every post the author wrote in a thread and save it as markdown, plain text or JSON.
+ * @category    scrape
+ * @page        x.com/<username>/status/<id>
+ * @writes      false
+ * @aliases     scripts/threadUnroller.js, scripts/twitter/thread-unroller.js
  * @author      nichxbt (https://x.com/nichxbt)
- * @version     1.0.0
- * @date        2026-01-26
+ * @version     1.1.0
+ * @date        2026-11-27
  * @repository  https://github.com/nirholas/XActions
  * 
  * ============================================================
@@ -18,7 +24,7 @@
  *    https://x.com/user/status/TWEET_ID
  * 
  * 2. Open Chrome DevTools (F12 or Cmd+Option+I)
- * 3. Paste this script and press Enter
+ * 3. Paste browser/threadUnroller.js and press Enter
  * 4. Thread will be extracted and downloaded
  * 
  * ============================================================
@@ -48,7 +54,10 @@ var CONFIG = {
   autoDownload: true,
   
   // Copy to clipboard
-  copyToClipboard: true
+  copyToClipboard: true,
+
+  // Print the full formatted thread to the console
+  printOutput: false
 };
 
 /**
@@ -77,7 +86,7 @@ var CONFIG = {
   }
   
   // Get thread author from URL
-  const pathMatch = window.location.pathname.match(/^\/([^\/]+)\/status/);
+  const pathMatch = window.location.pathname.match(/^\/([^/]+)\/status/);
   const threadAuthor = pathMatch ? pathMatch[1].toLowerCase() : null;
   
   if (!threadAuthor) {
@@ -146,6 +155,11 @@ var CONFIG = {
         }
       });
       
+      // Get videos (source URL, or the poster image for streamed video)
+      const videos = Array.from(tweetEl.querySelectorAll('video'))
+        .map(v => v.src || v.poster)
+        .filter(Boolean);
+
       return {
         id: tweetId,
         url: `https://x.com/${threadAuthor}/status/${tweetId}`,
@@ -157,7 +171,8 @@ var CONFIG = {
           retweets: getMetric('retweet'),
           likes: getMetric('like')
         },
-        images
+        images,
+        videos
       };
       
     } catch (e) {
@@ -289,9 +304,16 @@ var CONFIG = {
     try {
       await navigator.clipboard.writeText(output);
       console.log('📋 Copied to clipboard!');
-    } catch (e) {}
+    } catch {
+      console.log('📋 Could not copy (click the page first). Copy manually from window.unrolledThread.formatted');
+    }
   }
   
+  if (CONFIG.printOutput) {
+    console.log('');
+    console.log(output);
+  }
+
   // Display preview
   console.log('');
   console.log('📖 Thread preview:');
@@ -307,7 +329,7 @@ var CONFIG = {
   console.log('║  ✅ THREAD UNROLLED!                                       ║');
   console.log('╚════════════════════════════════════════════════════════════╝');
   
-  window.unrolledThread = { author: threadAuthor, tweets };
+  window.unrolledThread = { author: threadAuthor, tweets, formatted: output };
   console.log('💡 Access via: window.unrolledThread');
   
   return { author: threadAuthor, tweets };

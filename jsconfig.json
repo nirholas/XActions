@@ -17,5 +17,5 @@
     }
   },
   "include": ["src/**/*.js", "api/**/*.js", "types/**/*.d.ts"],
-  "exclude": ["node_modules", "archive", "dist", "dashboard", "site", "tests/**/fixtures/**"]
+  "exclude": ["node_modules", "archive", "dist", "dashboard", "site", "tests/**/fixtures/**", "src/automation/**"]
 }

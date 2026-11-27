@@ -1,11 +1,17 @@
+// GENERATED FILE: a copy of browser/autoReplyDms.js, written by scripts/build-script-manifest.mjs. Edit browser/autoReplyDms.js instead, then run: npm run browser:build
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
 /**
  * ============================================
  * 🤖 Auto Reply DMs - XActions
  * ============================================
  *
- * @name         auto-reply-dms
- * @description  Auto-reply to unread DM conversations with a single message template.
+ * @name        autoReplyDms.js
+ * @description Auto-reply to unread DM conversations with a single message template.
+ * @title       Auto-Reply DMs
+ * @category    messages
+ * @page        x.com/messages
+ * @writes      true
+ * @aliases     scripts/twitter/auto-reply-dms.js
  * @author       nichxbt
  * @version      1.0.0
  * @date         2026-07-20

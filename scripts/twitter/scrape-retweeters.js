@@ -1,22 +1,30 @@
+// GENERATED FILE: a copy of browser/scrapeRetweeters.js, written by scripts/build-script-manifest.mjs. Edit browser/scrapeRetweeters.js instead, then run: npm run browser:build
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
 /**
  * ============================================
  * 🔁 Scrape Reposters + Quoters - XActions
  * ============================================
  *
- * @name         scrape-retweeters
- * @description  Scroll a post's Reposts and Quotes tabs and export everyone who reposted or quote-tweeted it, each tagged repost or quote, to JSON and CSV.
- * @author       nichxbt
- * @version      1.0.0
- * @date         2026-07-20
- * @website      https://xactions.app
+ * @name        scrapeRetweeters.js
+ * @title       Scrape Reposters and Quotes
+ * @description Scroll a post's Reposts and Quotes tabs and export everyone who reposted or quote-tweeted it, each tagged repost or quote, to JSON and CSV.
+ * @category    scrape
+ * @page        x.com/<username>/status/<id>/retweets or x.com/<username>/status/<id>/quotes
+ * @writes      false
+ * @aliases     scripts/scrapeQuoteRetweets.js, scripts/twitter/scrape-retweeters.js
+ * @author      nichxbt (https://x.com/nichxbt)
+ * @version     1.1.0
+ * @date        2026-11-27
+ * @website     https://xactions.app
  *
  * Usage:
  *   1. Open a post's Reposts page: x.com/<user>/status/<id>/retweets
  *      (open the post, tap the reposts count, choose "Reposts")
+ *      For quote-tweets only, open x.com/<user>/status/<id>/quotes and set
+ *      collectReposts = false.
  *   2. Open the browser console (F12 or Cmd+Option+I -> Console)
  *   3. (Optional) edit the CONFIG options at the top of the script
- *   4. Paste this entire script and press Enter
+ *   4. Paste browser/scrapeRetweeters.js and press Enter
  *
  * Example:
  *   On x.com/nasa/status/1234567890/retweets the script scrapes the reposters,
@@ -59,7 +67,10 @@
     maxScrollAttempts: 300,
 
     // Also trigger a browser download of the CSV file (JSON always downloads)
-    autoDownloadCsv: false
+    autoDownloadCsv: false,
+
+    // Order quote-tweets by likes, most liked first (reposters keep page order)
+    sortQuotesByLikes: false
   };
 
   // ============================================
@@ -135,12 +146,11 @@
     }
     if (!handle) return null;
 
-    let displayName = '';
     const nameAnchor = anchors.find((a) => {
       const t = a.textContent.trim();
       return t && !t.startsWith('@');
     });
-    displayName = (nameAnchor && nameAnchor.textContent.trim()) ||
+    const displayName = (nameAnchor && nameAnchor.textContent.trim()) ||
       (cell.querySelector('div[dir="ltr"] span')?.textContent.trim()) || '';
 
     let bio = cell.querySelector(SELECTORS.userDescription)?.textContent?.trim() || '';
@@ -175,13 +185,22 @@
     const text = article.querySelector(SELECTORS.tweetText)?.textContent || '';
     const time = timeEl ? timeEl.getAttribute('datetime') : '';
 
-    const getMetric = (testId) => {
+    // Fallback: read a count from the action bar's aria-labels ("12 Likes")
+    const fromAriaLabel = (pattern) => {
+      for (const btn of article.querySelectorAll('[role="group"] button, [role="group"] a')) {
+        const label = btn.getAttribute('aria-label') || '';
+        if (pattern.test(label)) return parseNumber(label.match(/[\d,.]+[KM]?/i)?.[0] || '0');
+      }
+      return 0;
+    };
+    const getMetric = (testId, pattern) => {
       const el = article.querySelector(`[data-testid="${testId}"]`);
       const span = el?.querySelector('span span');
+      if (!el) return fromAriaLabel(pattern);
       return parseNumber(span ? span.textContent : '0');
     };
     const viewsEl = article.querySelector('a[href$="/analytics"]');
-    const views = parseNumber(viewsEl ? viewsEl.textContent : '0');
+    const views = viewsEl ? parseNumber(viewsEl.textContent) : fromAriaLabel(/view/i);
 
     return {
       type: 'quote',
@@ -192,9 +211,9 @@
       text,
       url,
       time,
-      replies: getMetric('reply'),
-      retweets: getMetric('retweet'),
-      likes: getMetric('like'),
+      replies: getMetric('reply', /repl/i),
+      retweets: getMetric('retweet', /repost|retweet/i),
+      likes: getMetric('like', /like/i),
       views
     };
   };
@@ -221,7 +240,9 @@
   `);
 
   const tweetId = getTweetId();
-  if (!tweetId || !/\/(retweets|quotes)\/?$/.test(window.location.pathname)) {
+  // A bare post page (x.com/<user>/status/<id>) is accepted too: the script
+  // then opens the Reposts/Quotes tabs itself through goToTab().
+  if (!tweetId || !/\/status\/\d+(\/(retweets|quotes))?\/?$/.test(window.location.pathname)) {
     log.warning('You are not on a post Reposts or Quotes page.');
     log.info('Open a post, tap its reposts count, and land on x.com/<user>/status/<id>/retweets (or /quotes), then run this again.');
     return;
@@ -328,10 +349,17 @@
     }
   }
 
-  const list = Array.from(items.values()).slice(0, CONFIG.maxEntries);
+  let list = Array.from(items.values()).slice(0, CONFIG.maxEntries);
+  if (CONFIG.sortQuotesByLikes) {
+    list = [
+      ...list.filter((e) => e.type !== 'quote'),
+      ...list.filter((e) => e.type === 'quote').sort((a, b) => (b.likes || 0) - (a.likes || 0))
+    ];
+  }
   stats.reposts = list.filter((e) => e.type === 'repost').length;
   stats.quotes = list.filter((e) => e.type === 'quote').length;
   stats.verified = list.filter((e) => e.verified).length;
+  stats.quoteLikes = list.reduce((sum, e) => sum + (e.type === 'quote' ? (e.likes || 0) : 0), 0);
 
   // ============================================
   // 📤 EXPORT
@@ -384,6 +412,7 @@
   }
 
   window.scrapedReposters = result;
+  window.scrapedQuotes = { tweetId, quotes: list.filter((e) => e.type === 'quote') };
   window.scrapeRepostersExportCSV = () => {
     download(csv, `tweet_${tweetId}_reposters_${dateStr}.csv`, 'text/csv');
     return csv;
@@ -398,6 +427,7 @@
 ╠══════════════════════════════════════════════════════════╣
 ║  🔁 Reposters:           ${String(stats.reposts).padEnd(30)}║
 ║  💬 Quote-tweets:        ${String(stats.quotes).padEnd(30)}║
+║  ❤️  Quote likes total:   ${String(stats.quoteLikes.toLocaleString()).padEnd(30)}║
 ║  ✔️  Verified (either):   ${String(stats.verified).padEnd(30)}║
 ║  📜 Scrolls:             ${String(stats.scrolls).padEnd(30)}║
 ║  ❌ Row errors:          ${String(stats.errors).padEnd(30)}║
@@ -415,7 +445,7 @@
 
   console.log('\n📋 CSV preview (full string via window.scrapeRepostersExportCSV()):');
   console.log(csv.split('\n').slice(0, 6).join('\n'));
-  console.log('\n💡 window.scrapedReposters = full data. window.scrapeRepostersExportCSV() = download + return CSV.');
+  console.log('\n💡 window.scrapedReposters = full data. window.scrapedQuotes = quote-tweets only. window.scrapeRepostersExportCSV() = download + return CSV.');
 
   return result;
 })();

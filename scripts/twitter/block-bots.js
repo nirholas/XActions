@@ -1,195 +1,70 @@
+// GENERATED FILE: a copy of browser/blockBots.js, written by scripts/build-script-manifest.mjs. Edit browser/blockBots.js instead, then run: npm run browser:build
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
 /**
- * ============================================================
- * 🤖 Block Bots
- * ============================================================
- * 
- * @name        block-bots.js
- * @description Detect and block bot accounts by ratio, age, bio keywords
+ * @name        blockBots.js
+ * @title       Block Bots
+ * @description Detect likely bot accounts in a follower or user list by heuristics and block them, dry run by default.
+ * @category    safety
+ * @page        x.com/<you>/followers or x.com/<username>/followers
+ * @writes      true
+ * @aliases     scripts/blockBots.js, scripts/twitter/block-bots.js
  * @author      nichxbt (https://x.com/nichxbt)
- * @version     1.0.0
- * @date        2026-01-26
- * @repository  https://github.com/nirholas/XActions
- * 
- * ============================================================
- * 📋 USAGE INSTRUCTIONS:
- * 
- * 1. Go to your followers page: https://x.com/YOUR_USERNAME/followers
- * 2. Open Chrome DevTools (F12 or Cmd+Option+I)
- * 3. Paste this script and press Enter
- * 4. Reviews followers and blocks suspected bots
- * 
- * ============================================================
- * ⚙️ CONFIGURATION
- * ============================================================
+ * @version     1.1.0
+ * @date        2026-11-26
  */
-
-// `var` (not `const`): a repeated top-level `const` paste in the same
-// DevTools tab throws "already been declared" instead of re-running.
-var CONFIG = {
-  // Scroll settings
-  scrollDelay: 1500,
-  maxScrolls: 50,
-  maxRetries: 3,
-  
-  // Action delay between blocks
-  blockDelay: 2000,
-  
-  // Bot detection thresholds
-  detection: {
-    // Following/Followers ratio threshold (e.g., following 5000, followers 50 = ratio 100)
-    maxFollowingRatio: 50,
-    
-    // Minimum account age in days
-    minAccountAgeDays: 30,
-    
-    // Maximum following count
-    maxFollowing: 5000,
-    
-    // Minimum followers count
-    minFollowers: 5,
-    
-    // Suspicious bio keywords (case-insensitive)
+// Block Bot Accounts on X - by nichxbt
+// https://github.com/nirholas/xactions
+// 1. Go to x.com/YOUR_USERNAME/followers or any user list
+// 2. Open the Developer Console (F12)
+// 3. Paste browser/blockBots.js into the Developer Console and run it
+//
+// Detects & blocks likely bot accounts based on heuristics.
+// A user is flagged when it collects at least CONFIG.thresholds.minReasons reasons.
+// Results are downloaded as JSON (and, with CONFIG.saveHistory, appended to localStorage "xactions_blocked_bots").
+// Last Updated: 26 November 2026
+(() => {
+  const CONFIG = {
+    // Bot detection thresholds
+    minFollowersToFollowingRatio: 0.01, // Very low ratio = likely bot
+    maxDefaultProfileAge: 30, // Days with default avatar = suspicious
+    noTweetThreshold: 0,      // Zero tweets = suspicious
+    nameLooksGenerated: true,  // Check for random-looking usernames
+    thresholds: {
+      minReasons: 2,          // Min reasons to flag as bot
+      digitRatio: 0.5,        // Username digit ratio threshold
+      longNameDigits: 0.3,    // Digit ratio for usernames > 14 chars
+    },
+    flagDefaultAvatar: true,  // Default profile picture counts as a reason
+    flagNoBio: true,          // Empty bio counts as a reason
+    flagManyDigits: false,    // 6+ digits anywhere in the username counts as a reason
+    flagBioKeywords: false,   // A suspicious keyword in the bio counts as a reason
     suspiciousBioKeywords: [
       'crypto', 'nft', 'giveaway', 'airdrop', 'free money',
       'onlyfans', 'dm for', 'follow back', 'f4f', 'follow4follow',
       'bitcoin', 'eth', '$btc', '$eth', 'forex', 'trading signals',
       'make money', 'passive income', 'work from home',
       'link in bio', 'check bio', 'clickhere', 'sexo', 'sex',
-      'camgirl', 'hot girl', 'sugar', 'seeking arrangement'
+      'camgirl', 'hot girl', 'sugar', 'seeking arrangement',
     ],
-    
-    // Flag accounts with default profile picture
-    flagDefaultAvatar: true,
-    
-    // Flag accounts with no bio
-    flagNoBio: true,
-    
-    // Flag accounts with very short usernames + numbers
-    flagRandomUsername: true
-  },
-  
-  // Dry run mode - set to false to actually block
-  dryRun: true,
-  
-  // Maximum accounts to block per run
-  maxBlocks: 50
-};
-
-/**
- * ============================================================
- * 🚀 SCRIPT START
- * ============================================================
- */
-
-(async function blockBots() {
-  const sleep = (ms) => new Promise(r => setTimeout(r, ms));
-
-  console.log(`
-╔══════════════════════════════════════════════════════════════╗
-║  🤖 XActions — Block Bots                                    ║
-║  Detect and block bot accounts                               ║
-${CONFIG.dryRun ? '║  ⚠️  DRY RUN MODE - No accounts will be blocked             ║' : '║  🔴 LIVE MODE - Accounts WILL be blocked                    ║'}
-╚══════════════════════════════════════════════════════════════╝
-  `);
-
-  if (!window.location.pathname.includes('/followers')) {
-    console.error('❌ Please navigate to your FOLLOWERS page first!');
-    console.log('👉 Go to: https://x.com/YOUR_USERNAME/followers');
-    return;
-  }
+    flagFollowStats: false,   // Use follower/following counts shown in the cell, when X shows them
+    maxFollowingRatio: 50,    // following / followers above this counts as a reason
+    maxFollowing: 5000,       // following above this counts as a reason
+    minFollowers: 5,          // followers below this counts as a reason
+    maxBlocks: 10,            // Max bots to block (or to flag, in dry run)
+    actionDelay: 3000,        // ms between blocks
+    scrollDelay: 2000,
+    maxScrollAttempts: 15,    // Give up after N scrolls with no new users
+    maxScrolls: 0,            // Hard cap on total scrolls, 0 = no cap
+    requireFollowersPage: false, // true: refuse to run anywhere but a /followers page
+    saveHistory: false,       // Append detected bots to localStorage "xactions_blocked_bots" (last 1000)
+    dryRun: true, // Set to false to actually block
+  };
 
   const $userCell = '[data-testid="UserCell"]';
+  const $userName = '[data-testid="User-Name"]';
+  const STORAGE_KEY = 'xactions_blocked_bots';
 
-  // Analyze a user cell for bot indicators
-  const analyzeUser = (cell) => {
-    const result = {
-      username: '',
-      displayName: '',
-      bio: '',
-      isBot: false,
-      reasons: [],
-      score: 0
-    };
-
-    // Get username
-    const usernameLink = cell.querySelector('a[href^="/"]');
-    if (usernameLink) {
-      result.username = usernameLink.getAttribute('href').replace('/', '').split('/')[0];
-    }
-
-    // Get display name
-    const nameEl = cell.querySelector('[dir="ltr"] span');
-    result.displayName = nameEl?.textContent || result.username;
-
-    // Get bio text
-    const bioEl = cell.querySelector('[data-testid="UserDescription"]');
-    result.bio = bioEl?.textContent?.toLowerCase() || '';
-
-    // Check for suspicious bio keywords
-    const c = CONFIG.detection;
-    c.suspiciousBioKeywords.forEach(keyword => {
-      if (result.bio.includes(keyword.toLowerCase())) {
-        result.score += 20;
-        result.reasons.push(`Bio contains "${keyword}"`);
-      }
-    });
-
-    // Check for no bio
-    if (c.flagNoBio && !result.bio) {
-      result.score += 10;
-      result.reasons.push('No bio');
-    }
-
-    // Check for default avatar
-    if (c.flagDefaultAvatar) {
-      const avatar = cell.querySelector('img[src*="default_profile"]');
-      if (avatar) {
-        result.score += 15;
-        result.reasons.push('Default profile picture');
-      }
-    }
-
-    // Check for random username pattern (short + many numbers)
-    if (c.flagRandomUsername) {
-      const numMatch = result.username.match(/\d+/g);
-      if (numMatch && numMatch.join('').length >= 6) {
-        result.score += 15;
-        result.reasons.push('Username has many numbers');
-      }
-    }
-
-    // Check follower/following stats from cell (if available)
-    const statsText = cell.textContent;
-    const followingMatch = statsText.match(/([\d,.]+[KMB]?)\s*Following/i);
-    const followersMatch = statsText.match(/([\d,.]+[KMB]?)\s*Followers/i);
-
-    if (followingMatch && followersMatch) {
-      const following = parseCount(followingMatch[1]);
-      const followers = parseCount(followersMatch[1]);
-      
-      if (following > c.maxFollowing) {
-        result.score += 15;
-        result.reasons.push(`Following ${following.toLocaleString()} accounts`);
-      }
-      
-      if (followers < c.minFollowers) {
-        result.score += 10;
-        result.reasons.push(`Only ${followers} followers`);
-      }
-      
-      const ratio = following / (followers || 1);
-      if (ratio > c.maxFollowingRatio) {
-        result.score += 25;
-        result.reasons.push(`High following ratio (${ratio.toFixed(0)}:1)`);
-      }
-    }
-
-    // Determine if bot based on score
-    result.isBot = result.score >= 30;
-
-    return result;
-  };
+  const sleep = (ms) => new Promise(r => setTimeout(r, ms));
 
   const parseCount = (str) => {
     if (!str) return 0;
@@ -204,132 +79,243 @@ ${CONFIG.dryRun ? '║  ⚠️  DRY RUN MODE - No accounts will be blocked      
     return 0;
   };
 
-  console.log('🔍 Scanning followers for bot patterns...\n');
+  // Bio extraction with fallback chain (canonical version: src/automation/core.js → extractUserFromCell)
+  const extractBio = (cell) => {
+    // Strategy 1: data-testid (most reliable)
+    const testId = cell.querySelector('[data-testid="UserDescription"]');
+    if (testId?.textContent?.trim()) return testId.textContent.trim();
+    // Strategy 2: dir="auto" excluding testid elements
+    const autoDir = cell.querySelector('[dir="auto"]:not([data-testid])');
+    if (autoDir?.textContent?.trim()?.length >= 10) return autoDir.textContent.trim();
+    // Strategy 3: dir="auto" excluding role (variant DOMs)
+    const noRole = cell.querySelector('[dir="auto"]:not([role])');
+    if (noRole && !noRole.closest('a') && noRole.textContent?.trim()?.length >= 10) return noRole.textContent.trim();
+    return '';
+  };
 
-  const scannedUsers = new Set();
-  const suspectedBots = [];
-  let retries = 0;
-  let scrollCount = 0;
+  const detected = [];
+  const processedUsers = new Set();
+  let blocked = 0;
 
-  while (scrollCount < CONFIG.maxScrolls && retries < CONFIG.maxRetries) {
-    const prevSize = scannedUsers.size;
+  const looksLikeBot = (userEl) => {
+    const nameEl = userEl.querySelector($userName);
+    if (!nameEl) return { isBot: false, reasons: [] };
 
-    document.querySelectorAll($userCell).forEach(cell => {
-      const analysis = analyzeUser(cell);
-      if (!analysis.username || scannedUsers.has(analysis.username)) return;
-      
-      scannedUsers.add(analysis.username);
-      
-      if (analysis.isBot) {
-        suspectedBots.push({ ...analysis, element: cell });
+    const fullText = nameEl.textContent || '';
+    const reasons = [];
+    let score = 0;
+
+    // Check for default/no avatar
+    const avatar = userEl.querySelector('img[src*="default_profile"]');
+    if (avatar && CONFIG.flagDefaultAvatar) { reasons.push('default avatar'); score += 15; }
+
+    // Check for generated-looking usernames (lots of numbers)
+    const usernameMatch = fullText.match(/@(\w+)/);
+    if (usernameMatch) {
+      const username = usernameMatch[1];
+      const digitRatio = (username.match(/\d/g) || []).length / username.length;
+      if (digitRatio > CONFIG.thresholds.digitRatio && CONFIG.nameLooksGenerated) {
+        reasons.push(`username ${digitRatio * 100}% digits`);
+        score += 15;
       }
-    });
-
-    if (scannedUsers.size === prevSize) retries++;
-    else retries = 0;
-
-    console.log(`   Scanned: ${scannedUsers.size} | Suspected bots: ${suspectedBots.length}`);
-
-    window.scrollTo(0, document.body.scrollHeight);
-    await sleep(CONFIG.scrollDelay);
-    scrollCount++;
-  }
-
-  console.log(`\n✅ Scan complete!`);
-  console.log(`   Total scanned: ${scannedUsers.size}`);
-  console.log(`   Suspected bots: ${suspectedBots.length}\n`);
-
-  if (suspectedBots.length === 0) {
-    console.log('🎉 No suspected bots found!');
-    return;
-  }
-
-  // Sort by score (highest first)
-  suspectedBots.sort((a, b) => b.score - a.score);
-
-  console.log('═'.repeat(60));
-  console.log('🤖 SUSPECTED BOT ACCOUNTS');
-  console.log('═'.repeat(60));
-
-  suspectedBots.slice(0, 20).forEach((bot, i) => {
-    console.log(`\n${i + 1}. @${bot.username} (Score: ${bot.score})`);
-    console.log(`   ${bot.displayName}`);
-    console.log(`   Reasons: ${bot.reasons.join(', ')}`);
-    console.log(`   https://x.com/${bot.username}`);
-  });
-
-  if (suspectedBots.length > 20) {
-    console.log(`\n... and ${suspectedBots.length - 20} more`);
-  }
-
-  if (CONFIG.dryRun) {
-    console.log('\n' + '═'.repeat(60));
-    console.log('⚠️  DRY RUN MODE');
-    console.log('═'.repeat(60));
-    console.log('\nTo actually block these accounts:');
-    console.log('1. Set CONFIG.dryRun = false at the top of the script');
-    console.log('2. Run the script again');
-    console.log('\nOr block manually by visiting each profile.');
-  } else {
-    console.log('\n' + '═'.repeat(60));
-    console.log('🔴 BLOCKING ACCOUNTS');
-    console.log('═'.repeat(60));
-
-    const toBlock = suspectedBots.slice(0, CONFIG.maxBlocks);
-    let blocked = 0;
-
-    for (const bot of toBlock) {
-      console.log(`\n⏳ Blocking @${bot.username}...`);
-      
-      try {
-        // Scroll user into view
-        bot.element.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        await sleep(500);
-
-        // Click on the user cell to open profile or find block option
-        const moreButton = bot.element.querySelector('[data-testid="userActions"]');
-        if (moreButton) {
-          moreButton.click();
-          await sleep(500);
-
-          // Find block option in dropdown
-          const blockOption = document.querySelector('[data-testid="block"]');
-          if (blockOption) {
-            blockOption.click();
-            await sleep(500);
-
-            // Confirm block
-            const confirmBtn = document.querySelector('[data-testid="confirmationSheetConfirm"]');
-            if (confirmBtn) {
-              confirmBtn.click();
-              blocked++;
-              console.log(`   ✅ Blocked @${bot.username}`);
-            }
-          }
+      if (username.length > 14 && digitRatio > CONFIG.thresholds.longNameDigits) {
+        reasons.push('long username with many digits');
+        score += 15;
+      }
+      if (CONFIG.flagManyDigits) {
+        const numMatch = username.match(/\d+/g);
+        if (numMatch && numMatch.join('').length >= 6) {
+          reasons.push('username has many numbers');
+          score += 15;
         }
-
-        await sleep(CONFIG.blockDelay);
-      } catch (e) {
-        console.log(`   ❌ Failed to block @${bot.username}: ${e.message}`);
       }
     }
 
-    console.log(`\n✅ Blocked ${blocked} accounts`);
-  }
+    // Check for no bio
+    const bio = extractBio(userEl);
+    if (!bio && CONFIG.flagNoBio) {
+      reasons.push('no bio');
+      score += 10;
+    }
 
-  // Save results
-  const storageKey = 'xactions_blocked_bots';
-  const existing = JSON.parse(localStorage.getItem(storageKey) || '[]');
-  const newEntries = suspectedBots.map(b => ({
-    username: b.username,
-    score: b.score,
-    reasons: b.reasons,
-    timestamp: new Date().toISOString()
-  }));
-  localStorage.setItem(storageKey, JSON.stringify([...existing, ...newEntries].slice(-1000)));
+    // Check for suspicious bio keywords
+    if (CONFIG.flagBioKeywords && bio) {
+      const lowerBio = bio.toLowerCase();
+      for (const keyword of CONFIG.suspiciousBioKeywords) {
+        if (lowerBio.includes(keyword.toLowerCase())) {
+          reasons.push(`bio contains "${keyword}"`);
+          score += 20;
+        }
+      }
+    }
 
-  console.log('\n' + '═'.repeat(60));
-  console.log(`💾 Results saved. Export: copy(localStorage.getItem("${storageKey}"))`);
-  console.log('═'.repeat(60) + '\n');
+    // Check for suspiciously low engagement text
+    const spans = userEl.querySelectorAll('span');
+    for (const span of spans) {
+      const t = span.textContent.toLowerCase();
+      if (t.includes('0 followers')) { reasons.push('0 followers'); score += 10; }
+      if (t.includes('0 following')) { reasons.push('0 following'); score += 10; }
+    }
 
+    // Check follower/following counts, when the cell shows them
+    if (CONFIG.flagFollowStats) {
+      const statsText = userEl.textContent;
+      const followingMatch = statsText.match(/([\d,.]+[KMB]?)\s*Following/i);
+      const followersMatch = statsText.match(/([\d,.]+[KMB]?)\s*Followers/i);
+      if (followingMatch && followersMatch) {
+        const following = parseCount(followingMatch[1]);
+        const followers = parseCount(followersMatch[1]);
+        if (following > CONFIG.maxFollowing) {
+          reasons.push(`following ${following.toLocaleString()} accounts`);
+          score += 15;
+        }
+        if (followers < CONFIG.minFollowers) {
+          reasons.push(`only ${followers} followers`);
+          score += 10;
+        }
+        const ratio = following / (followers || 1);
+        if (ratio > CONFIG.maxFollowingRatio) {
+          reasons.push(`high following ratio (${ratio.toFixed(0)}:1)`);
+          score += 25;
+        }
+      }
+    }
+
+    return {
+      isBot: reasons.length >= CONFIG.thresholds.minReasons,
+      reasons,
+      score,
+      username: usernameMatch ? usernameMatch[1] : 'unknown',
+    };
+  };
+
+  const blockUser = async (cell, username) => {
+    const moreBtn = cell.querySelector('[data-testid="userActions"]');
+    if (!moreBtn) return false;
+
+    cell.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    await sleep(500);
+
+    moreBtn.click();
+    await sleep(800);
+
+    let blockItem = document.querySelector('[data-testid="block"]');
+    if (!blockItem) {
+      const menuItems = document.querySelectorAll('[role="menuitem"]');
+      for (const item of menuItems) {
+        if (/\bblock\b/i.test(item.textContent)) { blockItem = item; break; }
+      }
+    }
+    if (!blockItem) { document.body.click(); await sleep(300); return false; }
+
+    blockItem.click();
+    await sleep(600);
+
+    const confirmBtn = document.querySelector('[data-testid="confirmationSheetConfirm"]');
+    if (!confirmBtn) return false;
+    confirmBtn.click();
+    await sleep(500);
+    console.log(`   🚫 Blocked @${username} [${blocked + 1}/${CONFIG.maxBlocks}]`);
+    return true;
+  };
+
+  const run = async () => {
+    console.log('🤖 BLOCK BOTS - XActions by nichxbt');
+    console.log(CONFIG.dryRun ? '⚠️ DRY RUN MODE - Set CONFIG.dryRun = false to actually block' : '🔴 LIVE MODE');
+    console.log(`⚙️ Max blocks: ${CONFIG.maxBlocks} | Delay: ${CONFIG.actionDelay}ms`);
+
+    if (CONFIG.requireFollowersPage && !window.location.pathname.includes('/followers')) {
+      console.error('❌ Please navigate to your FOLLOWERS page first!');
+      console.log('👉 Go to: https://x.com/YOUR_USERNAME/followers');
+      return;
+    }
+
+    let scrollAttempts = 0;
+    let scrollCount = 0;
+
+    while (blocked < CONFIG.maxBlocks && scrollAttempts < CONFIG.maxScrollAttempts
+      && (!CONFIG.maxScrolls || scrollCount < CONFIG.maxScrolls)) {
+      const userCells = document.querySelectorAll($userCell);
+      let foundNew = false;
+
+      for (const cell of userCells) {
+        if (blocked >= CONFIG.maxBlocks) break;
+
+        const linkEl = cell.querySelector('a[href^="/"]');
+        const userId = linkEl?.href || '';
+        if (processedUsers.has(userId)) continue;
+        processedUsers.add(userId);
+        foundNew = true;
+
+        const result = looksLikeBot(cell);
+        if (!result.isBot || result.username === 'unknown') continue;
+
+        detected.push(result);
+        console.log(`🤖 Bot detected: @${result.username} — ${result.reasons.join(', ')}`);
+
+        if (CONFIG.dryRun) {
+          blocked++;
+          continue;
+        }
+
+        if (await blockUser(cell, result.username)) {
+          blocked++;
+          result.blocked = true;
+        }
+        await sleep(CONFIG.actionDelay);
+      }
+
+      if (!foundNew) scrollAttempts++;
+      else scrollAttempts = 0;
+
+      window.scrollTo(0, document.body.scrollHeight);
+      await sleep(CONFIG.scrollDelay);
+      scrollCount++;
+    }
+
+    console.log(`\n📊 RESULTS:`);
+    console.log(`   🤖 Bots detected: ${detected.length}`);
+    if (!CONFIG.dryRun) console.log(`   🚫 Bots blocked: ${blocked}`);
+    console.log(`   👤 Users scanned: ${processedUsers.size}`);
+    console.log(`   📊 Bot rate: ${((detected.length / Math.max(processedUsers.size, 1)) * 100).toFixed(1)}%`);
+
+    if (detected.length > 0) {
+      console.log('\nDetected bots (highest score first):');
+      [...detected].sort((a, b) => b.score - a.score).forEach((b, i) => {
+        console.log(`   ${i + 1}. @${b.username} (score ${b.score}) — ${b.reasons.join(', ')} — https://x.com/${b.username}`);
+      });
+
+      // Export as JSON
+      const blob = new Blob([JSON.stringify(detected, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `xactions-bots-${new Date().toISOString().slice(0, 10)}.json`;
+      a.click();
+      console.log('📥 Bot list downloaded as JSON');
+
+      if (CONFIG.saveHistory) {
+        try {
+          const existing = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+          const newEntries = detected.map(b => ({
+            username: b.username,
+            score: b.score,
+            reasons: b.reasons,
+            blocked: !!b.blocked,
+            timestamp: new Date().toISOString(),
+          }));
+          localStorage.setItem(STORAGE_KEY, JSON.stringify([...existing, ...newEntries].slice(-1000)));
+          console.log(`💾 Results saved. Export: copy(localStorage.getItem("${STORAGE_KEY}"))`);
+        } catch (e) {
+          console.warn(`⚠️ Could not save history: ${e.message}`);
+        }
+      }
+    }
+
+    if (CONFIG.dryRun && detected.length > 0) {
+      console.log('\n⚠️ DRY RUN: nothing was blocked. Set CONFIG.dryRun = false and run again to block these accounts.');
+    }
+  };
+
+  run();
 })();

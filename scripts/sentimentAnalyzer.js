@@ -1,116 +1,222 @@
+// GENERATED FILE: a copy of browser/sentimentAnalyzer.js, written by scripts/build-script-manifest.mjs. Edit browser/sentimentAnalyzer.js instead, then run: npm run browser:build
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
-// scripts/sentimentAnalyzer.js
-// Browser console script for analyzing tweet sentiment using a basic lexicon
-// Paste in DevTools console on x.com (any timeline or search)
-// by nichxbt
-
+/**
+ * ============================================================
+ * 🧠 Tweet Sentiment Analyzer — Production Grade
+ * ============================================================
+ *
+ * @name        sentimentAnalyzer.js
+ * @title       Sentiment Analyzer
+ * @description Score the sentiment of posts on any timeline, search or profile with a weighted lexicon, and report the distribution, extremes, emotional words and toxicity.
+ * @category    analytics
+ * @page        x.com/* or x.com/search?q=<query>
+ * @writes      false
+ * @aliases     scripts/sentimentAnalyzer.js, scripts/twitter/sentiment-analyzer.js
+ * @author      nichxbt (https://x.com/nichxbt)
+ * @version     1.1.0
+ * @date        2026-11-27
+ * @repository  https://github.com/nirholas/XActions
+ *
+ * ============================================================
+ * 📋 USAGE:
+ *
+ * 1. Go to any timeline, profile, or search results on x.com
+ * 2. Open DevTools Console (F12)
+ * 3. Paste browser/sentimentAnalyzer.js and run
+ * 4. Auto-scrolls and analyzes visible tweets
+ *
+ * Scoring is a word lexicon, so sarcasm and slang are not detected.
+ * To stop the scroll early: window.stopSentimentAnalyzer()
+ * The full report object is left in window.xactionsSentiment.
+ * ============================================================
+ */
 (() => {
-  const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+  'use strict';
 
-  // =============================================
-  // CONFIGURATION
-  // =============================================
   const CONFIG = {
-    maxTweets: 30,
-    scrollRounds: 3,
-    scrollDelay: 1500,
+    maxTweets: 100,                   // Max tweets to analyze
+    scrollRounds: 5,                  // Number of scroll rounds to collect
+    scrollDelay: 2000,
+    noNewThreshold: 5,                // Stop scrolling after this many rounds in a row that add no posts
+    examples: 3,                      // How many most-positive / most-negative posts to show
     exportResults: true,
   };
-  // =============================================
 
-  const download = (data, filename) => {
-    const a = document.createElement('a');
-    a.href = URL.createObjectURL(new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' }));
-    a.download = filename;
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-  };
-
-  // Sentiment lexicon
+  // ── Sentiment Lexicon ──────────────────────────────────────
+  // Carefully curated with intensity weights
   const POSITIVE = {
+    // Strong positive (3)
     'amazing': 3, 'incredible': 3, 'fantastic': 3, 'brilliant': 3, 'outstanding': 3,
-    'excellent': 3, 'wonderful': 3, 'phenomenal': 3, 'revolutionary': 3, 'legendary': 3,
+    'excellent': 3, 'wonderful': 3, 'phenomenal': 3, 'exceptionally': 3, 'masterpiece': 3,
+    'extraordinary': 3, 'spectacular': 3, 'magnificent': 3, 'revolutionary': 3, 'legendary': 3,
+    // Medium positive (2)
     'great': 2, 'awesome': 2, 'love': 2, 'perfect': 2, 'beautiful': 2, 'impressive': 2,
     'thrilled': 2, 'excited': 2, 'grateful': 2, 'blessed': 2, 'proud': 2, 'inspired': 2,
-    'superb': 2, 'remarkable': 2, 'winning': 2, 'victory': 2,
-    'good': 1, 'nice': 1, 'happy': 1, 'like': 1, 'thanks': 1, 'helpful': 1,
+    'delighted': 2, 'superb': 2, 'remarkable': 2, 'succeed': 2, 'winning': 2, 'victory': 2,
+    // Light positive (1)
+    'good': 1, 'nice': 1, 'happy': 1, 'like': 1, 'thanks': 1, 'thank': 1, 'helpful': 1,
     'interesting': 1, 'cool': 1, 'agree': 1, 'support': 1, 'hope': 1, 'enjoy': 1,
-    'fun': 1, 'smart': 1, 'useful': 1, 'solid': 1, 'better': 1, 'congrats': 1,
+    'fun': 1, 'smart': 1, 'useful': 1, 'solid': 1, 'strong': 1, 'clean': 1, 'better': 1,
+    'congrats': 1, 'well': 1, 'glad': 1, 'fair': 1, 'kind': 1, 'sweet': 1, 'gain': 1,
+    'bullish': 2,
   };
 
   const NEGATIVE = {
+    // Strong negative (3)
     'terrible': 3, 'horrible': 3, 'disgusting': 3, 'pathetic': 3, 'disastrous': 3,
-    'hate': 3, 'despise': 3, 'devastating': 3, 'atrocious': 3, 'unforgivable': 3,
+    'catastrophic': 3, 'abysmal': 3, 'hate': 3, 'despise': 3, 'devastating': 3,
+    'outrageous': 3, 'infuriating': 3, 'atrocious': 3, 'repulsive': 3, 'unforgivable': 3,
+    // Medium negative (2)
     'bad': 2, 'awful': 2, 'worst': 2, 'angry': 2, 'furious': 2, 'disappointed': 2,
     'frustrated': 2, 'annoying': 2, 'stupid': 2, 'trash': 2, 'garbage': 2, 'broken': 2,
-    'scam': 2, 'toxic': 2, 'ridiculous': 2, 'ruined': 2, 'useless': 2, 'failed': 2,
+    'scam': 2, 'fraud': 2, 'toxic': 2, 'ridiculous': 2, 'dumb': 2, 'ruined': 2,
+    'failed': 2, 'crash': 2, 'ugly': 2, 'waste': 2, 'useless': 2, 'liar': 2,
+    // Light negative (1)
     'sad': 1, 'boring': 1, 'wrong': 1, 'slow': 1, 'confusing': 1, 'worried': 1,
-    'problem': 1, 'issue': 1, 'lost': 1, 'doubt': 1, 'fear': 1, 'weak': 1, 'worse': 1,
+    'difficult': 1, 'problem': 1, 'issue': 1, 'miss': 1, 'lost': 1, 'hard': 1,
+    'doubt': 1, 'concern': 1, 'risk': 1, 'fear': 1, 'weak': 1, 'lack': 1, 'worse': 1,
+    'bearish': 2,
   };
 
-  const NEGATORS = new Set(['not', "n't", 'no', 'never', 'hardly', 'barely']);
+  const NEGATORS = new Set(['not', "n't", 'no', 'never', 'neither', 'nobody', 'nothing', 'hardly', 'barely', 'rarely']);
+  const INTENSIFIERS = { 'very': 1.5, 'really': 1.5, 'extremely': 2, 'absolutely': 2, 'super': 1.5, 'so': 1.3, 'totally': 1.5, 'incredibly': 2 };
 
+  // ── Emoji sentiment. Alternations with the `u` flag, not character classes: a
+  // class of emoji without `u` matches UTF-16 surrogate halves, and nearly every
+  // emoji shares the same high surrogate, so each one scored as positive AND negative.
+  const EMOJI_POS = /(?:❤️|😀|😃|😄|😁|😆|😂|🤣|😊|😇|🥰|😍|🤩|😘|😗|😙|😚|😋|😛|😜|🤪|😝|🤑|🤗|🤭|🥳|🎉|🎊|💪|🔥|💯|👏|💕|💖|💗|💝|💘|🙏|👍|👌|🏆|🥇|🎯|💎|🚀|🌟|✨|✅|⭐|❤)/u;
+  const EMOJI_NEG = /(?:☠️|😢|😭|😤|😡|🤬|😠|😞|😔|😟|😣|😩|😫|😰|😱|🤮|💀|👎|🚫|💩|😒|😑|😐|🙄|❌|☠)/u;
+
+  // ── Analyze single tweet ──────────────────────────────────
   const analyzeTweet = (text) => {
-    const words = text.toLowerCase().replace(/[^\w\s']/g, ' ').split(/\s+/).filter(Boolean);
+    const words = text.toLowerCase().replace(/[^\w\s'@#]/g, ' ').split(/\s+/).filter(Boolean);
     let score = 0;
-    const posWords = [], negWords = [];
+    let posWords = [], negWords = [];
 
     for (let i = 0; i < words.length; i++) {
       const word = words[i];
-      const prev = i > 0 ? words[i - 1] : '';
-      const negated = NEGATORS.has(prev) || prev.endsWith("n't");
+      const prevWord = i > 0 ? words[i - 1] : '';
+      const negated = NEGATORS.has(prevWord) || (prevWord.endsWith("n't"));
+      const intensifier = INTENSIFIERS[prevWord] || 1;
 
       if (POSITIVE[word]) {
-        score += POSITIVE[word] * (negated ? -0.5 : 1);
+        const val = POSITIVE[word] * intensifier * (negated ? -0.5 : 1);
+        score += val;
         if (!negated) posWords.push(word);
       }
       if (NEGATIVE[word]) {
-        score -= NEGATIVE[word] * (negated ? -0.5 : 1);
+        const val = NEGATIVE[word] * intensifier * (negated ? -0.5 : 1);
+        score -= val;
         if (!negated) negWords.push(word);
       }
     }
 
+    // Emoji bonus
+    const emojiPosMatches = text.match(new RegExp(EMOJI_POS.source, 'gu'));
+    const emojiNegMatches = text.match(new RegExp(EMOJI_NEG.source, 'gu'));
+    if (emojiPosMatches) score += emojiPosMatches.length * 0.5;
+    if (emojiNegMatches) score -= emojiNegMatches.length * 0.5;
+
+    // ALL CAPS penalty (shouting)
+    const capsRatio = (text.match(/[A-Z]/g) || []).length / Math.max(text.length, 1);
+    if (capsRatio > 0.5 && text.length > 10) score *= 1.3; // Amplifies existing emotion
+
+    // Normalize to -1 to 1 range
     const normalized = Math.max(-1, Math.min(1, score / Math.max(words.length * 0.3, 1)));
-    const label = normalized > 0.15 ? 'positive' : normalized < -0.15 ? 'negative' : 'neutral';
-    return { score: Math.round(normalized * 100) / 100, label, positiveWords: [...new Set(posWords)], negativeWords: [...new Set(negWords)] };
+
+    let label = 'neutral';
+    if (normalized > 0.15) label = 'positive';
+    else if (normalized < -0.15) label = 'negative';
+
+    return {
+      score: Math.round(normalized * 100) / 100,
+      label,
+      positiveWords: [...new Set(posWords)],
+      negativeWords: [...new Set(negWords)],
+    };
   };
 
+  // ── Collect tweets from page ──────────────────────────────
   const collectTweets = () => {
+    const articles = document.querySelectorAll('article[data-testid="tweet"]');
     const tweets = [];
     const seen = new Set();
-    document.querySelectorAll('article[data-testid="tweet"]').forEach(article => {
+
+    for (const article of articles) {
       const textEl = article.querySelector('[data-testid="tweetText"]');
-      if (!textEl) return;
+      if (!textEl) continue;
       const text = textEl.textContent.trim();
-      if (text.length < 5 || seen.has(text)) return;
+      if (text.length < 5 || seen.has(text)) continue;
       seen.add(text);
+
       const authorLink = article.querySelector('a[href^="/"][role="link"]');
       const author = authorLink ? (authorLink.getAttribute('href') || '').replace('/', '').split('/')[0] : 'unknown';
+
       tweets.push({ text, author });
-    });
+    }
     return tweets;
   };
 
+  // ── Main ──────────────────────────────────────────────────
   const run = async () => {
-    console.log('🧠 SENTIMENT ANALYZER — by nichxbt\n');
+    const W = 60;
+    console.log('╔' + '═'.repeat(W) + '╗');
+    console.log('║  🧠 TWEET SENTIMENT ANALYZER' + ' '.repeat(W - 31) + '║');
+    console.log('║  by nichxbt — v1.0' + ' '.repeat(W - 21) + '║');
+    console.log('╚' + '═'.repeat(W) + '╝');
+
+    if (!/(^|\.)x\.com$/.test(location.hostname) && !/(^|\.)twitter\.com$/.test(location.hostname)) {
+      console.warn('⚠️ Not on x.com. Open a timeline, search, or profile and run again.');
+      return;
+    }
+
+    console.log(`\n📊 Collecting up to ${CONFIG.maxTweets} tweets (${CONFIG.scrollRounds} scroll rounds)...`);
+    console.log('⚠️ Lexicon-based scoring. It cannot detect sarcasm, slang, or context.');
+    console.log('💡 To stop early: window.stopSentimentAnalyzer()\n');
+
+    let stopped = false;
+    window.stopSentimentAnalyzer = () => {
+      stopped = true;
+      console.warn('⚠️ Stop requested. Finishing the current pass, then reporting.');
+    };
 
     const allTweets = new Map();
-    for (let round = 0; round < CONFIG.scrollRounds && allTweets.size < CONFIG.maxTweets; round++) {
-      const found = collectTweets();
-      for (const t of found) {
+    const addFound = () => {
+      for (const t of collectTweets()) {
         if (allTweets.size >= CONFIG.maxTweets) break;
         if (!allTweets.has(t.text)) allTweets.set(t.text, t);
       }
-      console.log(`   📜 Round ${round + 1}: ${allTweets.size} tweets`);
+    };
+    let stalls = 0;
+
+    for (let round = 0; round < CONFIG.scrollRounds && allTweets.size < CONFIG.maxTweets && !stopped; round++) {
+      const before = allTweets.size;
+      addFound();
+      console.log(`   📜 Round ${round + 1}: ${allTweets.size} tweets collected`);
+      if (allTweets.size === before) {
+        stalls++;
+        if (stalls >= CONFIG.noNewThreshold) {
+          console.warn('⚠️ No new posts after several scrolls. Reached the end of what loaded.');
+          break;
+        }
+      } else {
+        stalls = 0;
+      }
       window.scrollTo(0, document.body.scrollHeight);
-      await sleep(CONFIG.scrollDelay);
+      await new Promise(r => setTimeout(r, CONFIG.scrollDelay));
+    }
+    // Pick up the posts the last scroll loaded
+    addFound();
+
+    if (allTweets.size === 0) {
+      console.error('❌ No tweets found on this page!');
+      return;
     }
 
-    if (allTweets.size === 0) { console.error('❌ No tweets found!'); return; }
-
+    // Analyze all tweets
     const results = [];
-    let positive = 0, negative = 0, neutral = 0, totalScore = 0;
+    let positive = 0, negative = 0, neutral = 0;
+    let totalScore = 0;
 
     for (const [text, tweet] of allTweets) {
       const sentiment = analyzeTweet(text);
@@ -121,50 +227,80 @@
       else neutral++;
     }
 
+    // ── Results ─────────────────────────────────────────────
     const total = results.length;
     const avgScore = (totalScore / total).toFixed(3);
 
-    console.log('\n📊 SENTIMENT RESULTS:');
-    console.log(`  Tweets analyzed: ${total}`);
-    console.log(`  Average score: ${avgScore} (${avgScore > 0.1 ? '😊 Positive' : avgScore < -0.1 ? '😠 Negative' : '😐 Neutral'})`);
+    console.log('\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+    console.log('  📊 SENTIMENT ANALYSIS RESULTS');
+    console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+    console.log(`\n  Tweets analyzed: ${total}`);
+    console.log(`  Average score:   ${avgScore} (${avgScore > 0.1 ? '😊 Positive' : avgScore < -0.1 ? '😠 Negative' : '😐 Neutral'})`);
 
-    const barW = 40;
-    const posBar = Math.round((positive / total) * barW);
-    const negBar = Math.round((negative / total) * barW);
+    // Distribution bar
+    const barWidth = 40;
+    const posBar = Math.round((positive / total) * barWidth);
+    const negBar = Math.round((negative / total) * barWidth);
+    const neuBar = barWidth - posBar - negBar;
 
-    console.log(`\n  😊 Positive: ${String(positive).padStart(3)} (${((positive / total) * 100).toFixed(1)}%) ${'█'.repeat(posBar)}`);
-    console.log(`  😐 Neutral:  ${String(neutral).padStart(3)} (${((neutral / total) * 100).toFixed(1)}%) ${'░'.repeat(barW - posBar - negBar)}`);
+    console.log(`\n  Distribution:`);
+    console.log(`  😊 Positive: ${String(positive).padStart(3)} (${((positive / total) * 100).toFixed(1)}%) ${'█'.repeat(posBar)}`);
+    console.log(`  😐 Neutral:  ${String(neutral).padStart(3)} (${((neutral / total) * 100).toFixed(1)}%) ${'░'.repeat(neuBar)}`);
     console.log(`  😠 Negative: ${String(negative).padStart(3)} (${((negative / total) * 100).toFixed(1)}%) ${'▓'.repeat(negBar)}`);
 
+    // Top positive tweets
     const sorted = [...results].sort((a, b) => b.score - a.score);
-    console.log('\n🏆 Most Positive:');
-    sorted.slice(0, 3).forEach(t => console.log(`  [${t.score.toFixed(2)}] @${t.author}: "${t.text.slice(0, 100)}..."`));
-    console.log('\n💀 Most Negative:');
-    sorted.slice(-3).reverse().forEach(t => console.log(`  [${t.score.toFixed(2)}] @${t.author}: "${t.text.slice(0, 100)}..."`));
+    console.log('\n  🏆 Most Positive Tweets:');
+    for (const t of sorted.slice(0, CONFIG.examples)) {
+      console.log(`    [${t.score.toFixed(2)}] @${t.author}: "${t.text.slice(0, 100)}..."`);
+    }
 
-    // Word frequency
+    console.log('\n  💀 Most Negative Tweets:');
+    for (const t of sorted.slice(-CONFIG.examples).reverse()) {
+      console.log(`    [${t.score.toFixed(2)}] @${t.author}: "${t.text.slice(0, 100)}..."`);
+    }
+
+    // Most common positive/negative words
     const wordFreq = {};
-    results.forEach(r => {
-      [...r.positiveWords, ...r.negativeWords].forEach(w => { wordFreq[w] = (wordFreq[w] || 0) + 1; });
-    });
+    for (const r of results) {
+      for (const w of [...r.positiveWords, ...r.negativeWords]) {
+        wordFreq[w] = (wordFreq[w] || 0) + 1;
+      }
+    }
     const topWords = Object.entries(wordFreq).sort((a, b) => b[1] - a[1]).slice(0, 10);
     if (topWords.length > 0) {
-      console.log('\n📝 Top Emotional Words:');
-      topWords.forEach(([word, count]) => console.log(`  ${POSITIVE[word] ? '😊' : '😠'} "${word}" — ${count}x`));
+      console.log('\n  📝 Most Frequent Emotional Words:');
+      for (const [word, count] of topWords) {
+        const type = POSITIVE[word] ? '😊' : '😠';
+        console.log(`    ${type} "${word}" — ${count}x`);
+      }
     }
 
+    // Toxicity warning
     const toxicCount = results.filter(r => r.score < -0.5).length;
-    if (toxicCount > total * 0.2) console.log(`\n⚠️ HIGH TOXICITY: ${((toxicCount / total) * 100).toFixed(0)}% strongly negative`);
+    if (toxicCount > total * 0.2) {
+      console.log(`\n  ⚠️ HIGH TOXICITY WARNING: ${((toxicCount / total) * 100).toFixed(0)}% of tweets are strongly negative`);
+    }
+
+    console.log('\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n');
+
+    const data = {
+      summary: { total, positive, negative, neutral, avgScore: parseFloat(avgScore), toxicCount },
+      topWords,
+      tweets: results,
+      analyzedAt: new Date().toISOString(),
+      page: window.location.href,
+    };
+    window.xactionsSentiment = data;
 
     if (CONFIG.exportResults) {
-      download({
-        summary: { total, positive, negative, neutral, avgScore: parseFloat(avgScore), toxicCount },
-        tweets: results,
-        analyzedAt: new Date().toISOString(),
-        page: window.location.href,
-      }, `xactions-sentiment-${new Date().toISOString().slice(0, 10)}.json`);
-      console.log('\n📥 Results exported as JSON.');
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+      const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+      a.download = `xactions-sentiment-${new Date().toISOString().slice(0, 10)}.json`;
+      document.body.appendChild(a); a.click(); a.remove();
+      console.log('📥 Full results exported as JSON.');
     }
+    console.log('💡 Full report object: window.xactionsSentiment');
   };
 
   run();

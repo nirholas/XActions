@@ -1,33 +1,48 @@
+// GENERATED FILE: a copy of browser/followRatioManager.js, written by scripts/build-script-manifest.mjs. Edit browser/followRatioManager.js instead, then run: npm run browser:build
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
-// scripts/followRatioManager.js
-// Browser console script for analyzing and optimizing your follow/following ratio
-// Paste in DevTools console on x.com/YOUR_USERNAME
-// by nichxbt
-
+/**
+ * ============================================================
+ * ⚖️ Follow Ratio Manager — Production Grade
+ * ============================================================
+ *
+ * @name        followRatioManager.js
+ * @title       Follow Ratio Manager
+ * @description Grade your followers to following ratio, track it over time and plan how to reach a target ratio.
+ * @category    analytics
+ * @page        x.com/<you>
+ * @writes      false
+ * @aliases     scripts/followRatioManager.js
+ * @author      nichxbt (https://x.com/nichxbt)
+ * @version     1.1.0
+ * @date        2026-11-26
+ * @repository  https://github.com/nirholas/XActions
+ *
+ * ============================================================
+ * 📋 USAGE:
+ *
+ * 1. Go to your profile: x.com/YOUR_USERNAME
+ * 2. Open DevTools Console (F12)
+ * 3. Paste browser/followRatioManager.js and run
+ *
+ * Controls:
+ *   XActions.setTarget(2.0)        — target ratio (followers/following)
+ *   XActions.track()               — take a ratio snapshot
+ *   XActions.history()             — view ratio over time
+ *   XActions.plan()                — get a plan to reach target
+ * ============================================================
+ */
 (() => {
-  const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+  'use strict';
 
-  // =============================================
-  // CONFIGURATION
-  // =============================================
   const CONFIG = {
-    targetRatio: 2.0,        // Target followers/following ratio
-    scrollDelay: 2000,       // ms between scrolls
-    exportResults: true,     // Auto-download JSON
+    targetRatio: 2.0,         // Target followers/following ratio
+    scrollRoundsFollowing: 5, // Scroll rounds for following list analysis
+    scrollDelay: 2000,
+    exportResults: true,
   };
-  // =============================================
 
   const STORAGE_KEY = 'xactions_ratio_history';
-
-  const download = (data, filename) => {
-    const a = document.createElement('a');
-    a.href = URL.createObjectURL(new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' }));
-    a.download = filename;
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-    console.log(`📥 Downloaded: ${filename}`);
-  };
+  const sleep = (ms) => new Promise(r => setTimeout(r, ms));
 
   const parseNum = (text) => {
     if (!text) return 0;
@@ -37,112 +52,221 @@
     return parseInt(text) || 0;
   };
 
-  const loadHistory = () => { try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'); } catch { return []; } };
-  const saveHistory = (h) => localStorage.setItem(STORAGE_KEY, JSON.stringify(h));
+  const loadHistory = () => {
+    try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'); }
+    catch { return []; }
+  };
 
+  const saveHistory = (history) => {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(history));
+  };
+
+  // ── Scrape current stats from profile page ─────────────────
   const scrapeStats = () => {
+    // Look for follower/following counts in profile header
     const links = document.querySelectorAll('a[href$="/followers"], a[href$="/following"], a[href$="/verified_followers"]');
-    let followers = 0, following = 0;
+    let followers = 0;
+    let following = 0;
+
     for (const link of links) {
       const href = link.getAttribute('href') || '';
       const num = parseNum(link.textContent);
-      if (href.endsWith('/followers') || href.endsWith('/verified_followers')) { if (num > followers) followers = num; }
-      else if (href.endsWith('/following')) following = num;
+
+      if (href.endsWith('/followers') || href.endsWith('/verified_followers')) {
+        if (num > followers) followers = num; // Take the larger value
+      } else if (href.endsWith('/following')) {
+        following = num;
+      }
     }
+
+    // Fallback: look for aria-labels or spans near "Followers"/"Following"
+    if (followers === 0 || following === 0) {
+      const spans = document.querySelectorAll('span');
+      for (const span of spans) {
+        const text = span.textContent.trim();
+        if (text === 'Followers') {
+          const parent = span.closest('a') || span.parentElement;
+          const numEl = parent?.querySelector('span');
+          if (numEl) followers = parseNum(numEl.textContent) || followers;
+        }
+        if (text === 'Following') {
+          const parent = span.closest('a') || span.parentElement;
+          const numEl = parent?.querySelector('span');
+          if (numEl) following = parseNum(numEl.textContent) || following;
+        }
+      }
+    }
+
     return { followers, following };
   };
 
+  // ── Ratio assessment ───────────────────────────────────────
   const assessRatio = (ratio) => {
-    if (ratio >= 10) return { grade: 'S', label: 'ELITE', emoji: '👑' };
-    if (ratio >= 5) return { grade: 'A+', label: 'EXCELLENT', emoji: '🌟' };
-    if (ratio >= 3) return { grade: 'A', label: 'GREAT', emoji: '🔥' };
-    if (ratio >= 2) return { grade: 'B+', label: 'GOOD', emoji: '✅' };
-    if (ratio >= 1.5) return { grade: 'B', label: 'DECENT', emoji: '👍' };
-    if (ratio >= 1) return { grade: 'C', label: 'BALANCED', emoji: '⚖️' };
-    if (ratio >= 0.5) return { grade: 'D', label: 'LOW', emoji: '⚠️' };
-    return { grade: 'F', label: 'POOR', emoji: '🚨' };
+    if (ratio >= 10) return { grade: 'S', label: 'ELITE', emoji: '👑', desc: 'Incredibly strong. You\'re a major account.' };
+    if (ratio >= 5) return { grade: 'A+', label: 'EXCELLENT', emoji: '🌟', desc: 'Top-tier creator status.' };
+    if (ratio >= 3) return { grade: 'A', label: 'GREAT', emoji: '🔥', desc: 'Strong authority signal.' };
+    if (ratio >= 2) return { grade: 'B+', label: 'GOOD', emoji: '✅', desc: 'Healthy ratio. You\'re on the right track.' };
+    if (ratio >= 1.5) return { grade: 'B', label: 'DECENT', emoji: '👍', desc: 'Above average but room to grow.' };
+    if (ratio >= 1) return { grade: 'C', label: 'BALANCED', emoji: '⚖️', desc: 'Even ratio. Consider selective unfollowing.' };
+    if (ratio >= 0.5) return { grade: 'D', label: 'LOW', emoji: '⚠️', desc: 'Following more than your followers. Unfollow inactive accounts.' };
+    return { grade: 'F', label: 'POOR', emoji: '🚨', desc: 'Very unbalanced. Aggressive cleanup needed.' };
   };
 
+  // ── Main analysis ──────────────────────────────────────────
   const analyze = () => {
     const stats = scrapeStats();
+
     if (stats.followers === 0 && stats.following === 0) {
-      console.error('❌ Could not read counts. Make sure you\'re on your profile page.');
-      return;
+      console.error('❌ Could not read follower/following counts. Make sure you\'re on your profile page.');
+      return null;
     }
 
     const ratio = stats.following > 0 ? (stats.followers / stats.following) : Infinity;
     const assessment = assessRatio(ratio);
 
-    console.log('╔════════════════════════════════════════════════╗');
-    console.log('║  ⚖️ FOLLOW RATIO MANAGER                      ║');
-    console.log('║  by nichxbt — v1.0                            ║');
-    console.log('╚════════════════════════════════════════════════╝');
+    const W = 60;
+    console.log('╔' + '═'.repeat(W) + '╗');
+    console.log('║  ⚖️  FOLLOW RATIO MANAGER' + ' '.repeat(W - 27) + '║');
+    console.log('║  by nichxbt — v1.0' + ' '.repeat(W - 21) + '║');
+    console.log('╚' + '═'.repeat(W) + '╝');
 
-    console.log('\n━━━ 📊 CURRENT STATUS ━━━');
+    console.log('\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+    console.log('  📊 CURRENT STATUS');
+    console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
     console.log(`  Followers:  ${stats.followers.toLocaleString()}`);
     console.log(`  Following:  ${stats.following.toLocaleString()}`);
     console.log(`  Ratio:      ${ratio.toFixed(2)}:1`);
     console.log(`  Grade:      ${assessment.emoji} ${assessment.grade} — ${assessment.label}`);
+    console.log(`  ${assessment.desc}`);
 
-    const maxBar = 30;
-    const fBar = Math.min(maxBar, Math.round((stats.followers / Math.max(stats.followers, stats.following)) * maxBar));
-    const gBar = Math.min(maxBar, Math.round((stats.following / Math.max(stats.followers, stats.following)) * maxBar));
-    console.log(`\n  Followers: ${'█'.repeat(fBar)}${'░'.repeat(maxBar - fBar)} ${stats.followers}`);
-    console.log(`  Following: ${'█'.repeat(gBar)}${'░'.repeat(maxBar - gBar)} ${stats.following}`);
+    // Visual ratio bar
+    const maxBar = 40;
+    const followersBar = Math.min(maxBar, Math.round((stats.followers / Math.max(stats.followers, stats.following)) * maxBar));
+    const followingBar = Math.min(maxBar, Math.round((stats.following / Math.max(stats.followers, stats.following)) * maxBar));
+    console.log(`\n  Followers: ${'█'.repeat(followersBar)}${'░'.repeat(maxBar - followersBar)} ${stats.followers.toLocaleString()}`);
+    console.log(`  Following: ${'█'.repeat(followingBar)}${'░'.repeat(maxBar - followingBar)} ${stats.following.toLocaleString()}`);
 
-    console.log(`\n━━━ 🎯 TARGET: ${CONFIG.targetRatio}:1 ━━━`);
+    // ── Target analysis ─────────────────────────────────────
+    console.log('\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+    console.log(`  🎯 TARGET: ${CONFIG.targetRatio}:1 ratio`);
+    console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+
     if (ratio >= CONFIG.targetRatio) {
-      const surplus = Math.floor(stats.followers / CONFIG.targetRatio) - stats.following;
-      console.log(`  ✅ Target reached! You can follow ${surplus.toLocaleString()} more.`);
+      console.log(`  ✅ You've already reached your target ratio!`);
+      const surplus = Math.floor(stats.followers / CONFIG.targetRatio);
+      console.log(`  You could follow up to ${(surplus - stats.following).toLocaleString()} more without dropping below target.`);
     } else {
+      // Two paths to target ratio
       const unfollowsNeeded = Math.ceil(stats.following - (stats.followers / CONFIG.targetRatio));
       const followersNeeded = Math.ceil(CONFIG.targetRatio * stats.following - stats.followers);
-      console.log(`  Path A: Unfollow ${unfollowsNeeded.toLocaleString()} accounts`);
-      console.log(`  Path B: Gain ${followersNeeded.toLocaleString()} followers`);
-      console.log(`  Path C: Unfollow ~${Math.ceil(unfollowsNeeded / 2)} + Gain ~${Math.ceil(followersNeeded / 2)} (recommended)`);
+
+      console.log('\n  📋 TWO PATHS TO REACH TARGET:\n');
+      console.log(`  Path A — Unfollow ${unfollowsNeeded.toLocaleString()} accounts`);
+      console.log(`           (Reduce following from ${stats.following.toLocaleString()} to ${(stats.following - unfollowsNeeded).toLocaleString()})`);
+      console.log('           → Use unfollowback.js to remove non-followers first');
+      console.log('           → Use removeFollowers.js (smart mode) to clean bots');
+
+      console.log(`\n  Path B — Gain ${followersNeeded.toLocaleString()} new followers`);
+      console.log('           (Grow followers while keeping following steady)');
+      console.log('           → Use engagementBooster.js to increase visibility');
+      console.log('           → Use tweetScheduleOptimizer.js for optimal timing');
+
+      console.log(`\n  Path C — Combination (recommended)`);
+      const halfUnfollows = Math.ceil(unfollowsNeeded / 2);
+      const halfFollowers = Math.ceil(followersNeeded / 2);
+      console.log(`           Unfollow ~${halfUnfollows.toLocaleString()} + Gain ~${halfFollowers.toLocaleString()} followers`);
+
+      // Weekly projection
+      const weeklyGrowthRate = 0.02; // Assume 2% weekly growth
+      const weeksNeeded = Math.ceil(Math.log(CONFIG.targetRatio * stats.following / stats.followers) / Math.log(1 + weeklyGrowthRate));
+      if (weeksNeeded > 0 && weeksNeeded < 200) {
+        console.log(`\n  ⏱️ At 2% weekly growth: ~${weeksNeeded} weeks to reach target (Path B)`);
+      }
     }
 
-    // Save snapshot
+    // ── Save snapshot ───────────────────────────────────────
     const history = loadHistory();
-    history.push({ followers: stats.followers, following: stats.following, ratio: parseFloat(ratio.toFixed(4)), grade: assessment.grade, timestamp: new Date().toISOString() });
+    const snapshot = {
+      followers: stats.followers,
+      following: stats.following,
+      ratio: parseFloat(ratio.toFixed(4)),
+      grade: assessment.grade,
+      timestamp: new Date().toISOString(),
+    };
+    history.push(snapshot);
     while (history.length > 100) history.shift();
     saveHistory(history);
 
-    // Trend
+    // ── Trend analysis ──────────────────────────────────────
     if (history.length >= 2) {
       console.log('\n━━━ 📈 RATIO TREND ━━━');
-      history.slice(-8).forEach(snap => {
+      const recent = history.slice(-10);
+      for (const snap of recent) {
         const bar = '█'.repeat(Math.round(Math.min(snap.ratio, 10) * 3));
-        console.log(`  ${new Date(snap.timestamp).toLocaleDateString().padEnd(12)} ${snap.ratio.toFixed(2)}:1 ${bar}`);
-      });
-      const prev = history[history.length - 2];
-      const diff = ratio - prev.ratio;
-      if (diff > 0.01) console.log(`  📈 Improving: +${diff.toFixed(3)}`);
-      else if (diff < -0.01) console.log(`  📉 Declining: ${diff.toFixed(3)}`);
-      else console.log('  ⏸️ Stable');
+        const date = new Date(snap.timestamp).toLocaleDateString();
+        console.log(`  ${date.padEnd(12)} ${snap.ratio.toFixed(2)}:1 ${bar}`);
+      }
+
+      // Direction
+      if (history.length >= 2) {
+        const prev = history[history.length - 2];
+        const diff = snapshot.ratio - prev.ratio;
+        if (diff > 0.01) console.log(`  📈 Ratio improving: +${diff.toFixed(3)} since last check`);
+        else if (diff < -0.01) console.log(`  📉 Ratio declining: ${diff.toFixed(3)} since last check`);
+        else console.log('  ⏸️ Ratio stable since last check');
+      }
     }
 
-    console.log('');
+    console.log('\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n');
 
     if (CONFIG.exportResults) {
-      download({
-        current: { ...stats, ratio: parseFloat(ratio.toFixed(4)), grade: assessment.grade },
+      const data = {
+        current: { ...stats, ratio: parseFloat(ratio.toFixed(4)), grade: assessment.grade, label: assessment.label },
         target: CONFIG.targetRatio,
         history: history.slice(-30),
         analyzedAt: new Date().toISOString(),
-      }, `xactions-ratio-${new Date().toISOString().slice(0, 10)}.json`);
+      };
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+      const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+      a.download = `xactions-ratio-${new Date().toISOString().slice(0, 10)}.json`;
+      document.body.appendChild(a); a.click(); a.remove();
+      console.log('📥 Ratio data exported.');
+    }
+
+    return { stats, ratio, assessment };
+  };
+
+  // ── Controls ───────────────────────────────────────────────
+  window.XActions = window.XActions || {};
+
+  window.XActions.setTarget = (ratio) => {
+    if (typeof ratio !== 'number' || ratio < 0.1) { console.log('❌ Target must be a positive number.'); return; }
+    CONFIG.targetRatio = ratio;
+    console.log(`🎯 Target ratio set to ${ratio}:1`);
+  };
+
+  window.XActions.track = analyze;
+
+  window.XActions.history = () => {
+    const history = loadHistory();
+    if (history.length === 0) { console.log('📭 No history. Run XActions.track() first.'); return; }
+    console.log(`\n📊 RATIO HISTORY (${history.length} snapshots):\n`);
+    for (const snap of history) {
+      const date = new Date(snap.timestamp).toLocaleString();
+      console.log(`  ${date} — ${snap.ratio.toFixed(2)}:1 (${snap.grade}) [${snap.followers}/${snap.following}]`);
     }
   };
 
-  window.XActions = window.XActions || {};
-  window.XActions.track = analyze;
-  window.XActions.setTarget = (r) => { CONFIG.targetRatio = r; console.log(`🎯 Target: ${r}:1`); };
-  window.XActions.history = () => {
-    const h = loadHistory();
-    if (h.length === 0) { console.log('📭 No history. Run XActions.track() first.'); return; }
-    h.forEach(s => console.log(`  ${new Date(s.timestamp).toLocaleString()} — ${s.ratio.toFixed(2)}:1 (${s.grade}) [${s.followers}/${s.following}]`));
+  window.XActions.plan = () => {
+    console.log('📊 Re-analyzing...');
+    analyze();
   };
-  window.XActions.reset = () => { localStorage.removeItem(STORAGE_KEY); console.log('🗑️ History cleared.'); };
 
+  window.XActions.reset = () => {
+    localStorage.removeItem(STORAGE_KEY);
+    console.log('🗑️ Ratio history cleared.');
+  };
+
+  // Run analysis
   analyze();
 })();

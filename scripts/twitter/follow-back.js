@@ -1,11 +1,17 @@
+// GENERATED FILE: a copy of browser/followBack.js, written by scripts/build-script-manifest.mjs. Edit browser/followBack.js instead, then run: npm run browser:build
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
 /**
  * ============================================
  * 🔁 Follow Back - XActions
  * ============================================
  *
- * @name         follow-back
- * @description  Follow every account that follows you but that you don't follow back yet.
+ * @name        followBack.js
+ * @description Follow every account that follows you but that you do not follow back yet.
+ * @title       Follow Back
+ * @category    grow
+ * @page        x.com/<you>/followers
+ * @writes      true
+ * @aliases     scripts/twitter/follow-back.js
  * @author       nichxbt
  * @version      1.0.0
  * @date         2026-07-20

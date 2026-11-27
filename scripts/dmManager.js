@@ -1,5 +1,14 @@
+// GENERATED FILE: a copy of browser/dmManager.js, written by scripts/build-script-manifest.mjs. Edit browser/dmManager.js instead, then run: npm run browser:build
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
-// scripts/dmManager.js
+/**
+ * @name        dmManager.js
+ * @title       DM Manager
+ * @description Send DMs, export conversations and manage message requests.
+ * @category    messages
+ * @page        x.com/messages
+ * @writes      true
+ * @aliases     scripts/dmManager.js
+ */
 // Browser console script for sending DMs and exporting conversations on X/Twitter
 // Paste in DevTools console on x.com/messages
 // by nichxbt
@@ -103,7 +112,6 @@
         const lastMsg = conv.querySelector('[data-testid="lastMessage"]')?.textContent || conv.querySelector('[dir="auto"]')?.textContent || '';
         const time = conv.querySelector('time')?.getAttribute('datetime') || '';
         const unread = !!conv.querySelector('[data-testid="unread"]');
-        const id = name + time;
 
         if (!conversations.find(c => c.name === name && c.time === time)) {
           conversations.push({ name, lastMessage: lastMsg.substring(0, 200), time, unread });

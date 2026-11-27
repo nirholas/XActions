@@ -1,19 +1,37 @@
+// GENERATED FILE: a copy of browser/algorithmBuilder.js, written by scripts/build-script-manifest.mjs. Edit browser/algorithmBuilder.js instead, then run: npm run browser:build
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
+/**
+ * @name        algorithmBuilder.js
+ * @title       Algorithm Builder
+ * @description Train the X algorithm around your niche with human-paced search, like, reply, repost and follow cycles, with a dry run and daily caps.
+ * @category    grow
+ * @page        x.com/home
+ * @writes      true
+ * @aliases     scripts/algorithmBuilder.js, src/automation/algorithmBuilder.js
+ * @author      nichxbt (https://x.com/nichxbt)
+ * @version     1.1.0
+ * @date        2026-11-27
+ */
 // XActions Automation — Algorithm Builder
 // https://github.com/nirholas/XActions
 //
-// REQUIRES: Paste core.js first!
+// Runs on its own. If src/automation/core.js was pasted first, its helpers,
+// selectors, storage and rate limiter are used; otherwise built-in
+// equivalents with the same storage keys are used.
 //
 // 24/7 automation that builds up your X algorithm around specific topics/niches.
 // Mimics natural human behavior: search → scroll → like → comment → follow → browse.
 // Includes LLM-powered comment generation via OpenRouter or any compatible endpoint.
 //
 // HOW TO USE:
-// 1. Go to x.com (logged in on a fresh or existing account)
-// 2. Paste core.js, then paste this script
-// 3. Edit NICHE_CONFIG with your topics, keywords, target accounts
-// 4. (Optional) Set LLM_CONFIG.API_KEY for AI-generated comments
-// 5. The script runs continuously — stop with window.stopAlgoBuilder()
+// 1. Go to x.com/home (logged in on a fresh or existing account)
+// 2. Edit CONFIG.NICHE_CONFIG with your topics, keywords, target accounts
+// 3. (Optional) Set CONFIG.LLM_CONFIG.API_KEY for AI-generated comments
+// 4. CONFIG.dryRun is true by default: it logs what it would do and clicks
+//    nothing. Set it to false to engage for real.
+// 5. Paste browser/algorithmBuilder.js and press Enter
+// 6. The script runs continuously — stop with window.stopAlgoBuilder()
+//    (set CONFIG.singleSession = true to stop after one work session)
 //
 // ⚠️  Use responsibly. This interacts with real accounts.
 //     Spammy behavior will get your account limited or suspended.
@@ -21,67 +39,209 @@
 // by nichxbt
 
 (() => {
-  if (!window.XActions?.Core) {
-    console.error('❌ Core module not loaded! Paste core.js first.');
-    return;
-  }
+  window.XActions = window.XActions || {};
 
-  const {
-    log, sleep, randomDelay, scrollBy, scrollToTop, scrollToBottom,
-    clickElement, waitForElement, waitForElements,
-    SELECTORS, CONFIG, storage, rateLimit, parseCount,
-    extractTweetInfo, extractUserFromCell,
-  } = window.XActions.Core;
-
-  // ════════════════════════════════════════════════════════════════════════
-  // NICHE CONFIGURATION — Edit these to match your niche / topics
-  // ════════════════════════════════════════════════════════════════════════
-
-  const NICHE_CONFIG = {
-    // Your niche identity (used for LLM persona)
-    PERSONA: 'a crypto & web3 builder who shares alpha and builds in public',
-
-    // Search keywords — the builder cycles through these
-    KEYWORDS: [
-      'web3 builder',
-      'crypto alpha',
-      'DeFi yield',
-      'solana ecosystem',
-      'onchain analytics',
-    ],
-
-    // Target accounts to engage with (their posts & engagers)
-    TARGET_ACCOUNTS: [
-      // '@nichxbt',
-      // '@VitalikButerin',
-    ],
-
-    // Bio keywords — only follow users whose bio contains at least one
-    // Leave empty to follow anyone relevant
-    BIO_KEYWORDS: ['crypto', 'web3', 'defi', 'nft', 'blockchain', 'builder', 'dev', 'founder'],
-
-    // Topics to engage with on Explore page
-    EXPLORE_TOPICS: ['Technology', 'Crypto', 'Business'],
+  // ─── Helpers: core.js when present, built-in equivalents otherwise ───
+  const Core = window.XActions.Core || {};
+  const sleep = Core.sleep || ((ms) => new Promise((resolve) => setTimeout(resolve, ms)));
+  const randomDelay = Core.randomDelay || ((min, max) => sleep(Math.floor(Math.random() * (max - min + 1)) + min));
+  const log = Core.log || ((message, type = 'info') => {
+    const prefix = { info: '📘', success: '✅', warning: '⚠️', error: '❌', action: '🔧' }[type] || '📘';
+    console.log(`${prefix} [${new Date().toLocaleTimeString()}] ${message}`);
+  });
+  const scrollBy = Core.scrollBy || ((pixels) => window.scrollBy({ top: pixels, behavior: 'smooth' }));
+  const scrollToTop = Core.scrollToTop || (() => window.scrollTo({ top: 0, behavior: 'smooth' }));
+  const waitForElement = Core.waitForElement || (async (selector, timeout = 10000) => {
+    const startTime = Date.now();
+    while (Date.now() - startTime < timeout) {
+      const element = document.querySelector(selector);
+      if (element) return element;
+      await sleep(100);
+    }
+    return null;
+  });
+  const clickElement = Core.clickElement || (async (element) => {
+    if (!element) return false;
+    try {
+      element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      await sleep(300);
+      element.click();
+      return true;
+    } catch (e) {
+      log(`Click error: ${e.message}`, 'error');
+      return false;
+    }
+  });
+  const SELECTORS = Core.SELECTORS || {
+    followButton: '[data-testid$="-follow"]',
+    unfollowButton: '[data-testid$="-unfollow"]',
+    likeButton: '[data-testid="like"]',
+    unlikeButton: '[data-testid="unlike"]',
+    retweetButton: '[data-testid="retweet"]',
+    replyButton: '[data-testid="reply"]',
+    tweet: '[data-testid="tweet"]',
+    tweetText: '[data-testid="tweetText"]',
+    tweetLink: 'a[href*="/status/"]',
+    userCell: '[data-testid="UserCell"]',
+    userName: '[data-testid="User-Name"]',
+    userFollowIndicator: '[data-testid="userFollowIndicator"]',
+    userDescription: '[data-testid="UserDescription"]',
+    primaryColumn: '[data-testid="primaryColumn"]',
   };
+  // Same localStorage prefix as core.js, so state and daily counts are shared.
+  const storage = Core.storage || {
+    get: (key) => {
+      try {
+        const data = localStorage.getItem('xactions_' + key);
+        return data ? JSON.parse(data) : null;
+      } catch (e) {
+        log(`Storage get error: ${e.message}`, 'error');
+        return null;
+      }
+    },
+    set: (key, value) => {
+      try {
+        localStorage.setItem('xactions_' + key, JSON.stringify(value));
+        return true;
+      } catch (e) {
+        log(`Storage set error: ${e.message}`, 'error');
+        return false;
+      }
+    },
+    remove: (key) => {
+      try {
+        localStorage.removeItem('xactions_' + key);
+      } catch (e) {
+        log(`Storage remove error: ${e.message}`, 'error');
+      }
+    },
+  };
+  const rateLimit = Core.rateLimit || {
+    check: (action, limit, period = 'hour') => {
+      const data = storage.get(`ratelimit_${action}_${period}`) || { count: 0, timestamp: Date.now() };
+      const periodMs = period === 'hour' ? 3600000 : 86400000;
+      if (Date.now() - data.timestamp > periodMs) {
+        data.count = 0;
+        data.timestamp = Date.now();
+      }
+      return data.count < limit;
+    },
+    increment: (action, period = 'hour') => {
+      const key = `ratelimit_${action}_${period}`;
+      const data = storage.get(key) || { count: 0, timestamp: Date.now() };
+      data.count++;
+      storage.set(key, data);
+    },
+  };
+  const parseCount = (str) => {
+    if (!str) return 0;
+    const clean = str.replace(/,/g, '');
+    const num = parseFloat(clean);
+    if (clean.toUpperCase().includes('K')) return num * 1000;
+    if (clean.toUpperCase().includes('M')) return num * 1000000;
+    if (clean.toUpperCase().includes('B')) return num * 1000000000;
+    return num;
+  };
+  const extractTweetInfo = Core.extractTweetInfo || ((tweetElement) => {
+    try {
+      const text = tweetElement.querySelector(SELECTORS.tweetText)?.textContent || '';
+      const tweetLink = tweetElement.querySelector(SELECTORS.tweetLink)?.href || '';
+      const userName = tweetElement.querySelector(SELECTORS.userName)?.textContent || '';
+      return { text, tweetLink, userName };
+    } catch {
+      return null;
+    }
+  });
+  const extractUserFromCell = Core.extractUserFromCell || ((cell) => {
+    if (!cell) return null;
+    try {
+      const href = cell.querySelector('a[href^="/"]')?.getAttribute('href') || '';
+      const username = (href.match(/^\/([^/]+)$/) || [, ''])[1].toLowerCase();
+      const bio = cell.querySelector(SELECTORS.userDescription)?.textContent.trim() ||
+        [...cell.querySelectorAll('[dir="auto"]:not([data-testid])')]
+          .map((el) => el.textContent.trim())
+          .find((t) => t && !t.startsWith('@') && t.length >= 10) || '';
+      const followerMatch = (cell.textContent || '').match(/(\d[\d,]*\.?\d*[KMB]?)\s*Follower/i);
+      return {
+        username,
+        bio,
+        followers: followerMatch ? parseCount(followerMatch[1]) : 0,
+        isFollowing: !!cell.querySelector(SELECTORS.unfollowButton),
+        followsYou: !!cell.querySelector(SELECTORS.userFollowIndicator),
+        isVerified: !!cell.querySelector('[data-testid="icon-verified"]') || !!cell.querySelector('svg[aria-label*="Verified"]'),
+        isProtected: !!cell.querySelector('[data-testid="icon-lock"]'),
+      };
+    } catch (e) {
+      log(`extractUserFromCell error: ${e.message}`, 'error');
+      return null;
+    }
+  });
 
   // ════════════════════════════════════════════════════════════════════════
-  // LLM CONFIGURATION — For AI-generated comments
+  // CONFIG: the run options, plus the niche, LLM and behaviour sections
   // ════════════════════════════════════════════════════════════════════════
 
-  const LLM_CONFIG = {
-    // Set to true to enable LLM comments (requires API_KEY)
-    ENABLED: false,
+  const CONFIG = {
+    // true = preview: log what would be liked, replied to, reposted and
+    // followed, click nothing, and leave the daily counters untouched.
+    dryRun: true,
 
-    // OpenRouter (default) or any OpenAI-compatible endpoint
-    API_URL: 'https://openrouter.ai/api/v1/chat/completions',
-    API_KEY: '', // Set your OpenRouter or OpenAI API key here
+    // Stop after one work session instead of taking a break and continuing
+    // 24/7. Also stops once every per-session and daily cap is reached.
+    singleSession: false,
 
-    // Model to use (OpenRouter format)
-    // Free model router. Individual :free ids get retired; this alias does not.
-    MODEL: 'openrouter/free',
+    // Download a JSON log of this run's actions when the builder stops.
+    exportOnStop: false,
 
-    // System prompt — shapes how comments sound
-    SYSTEM_PROMPT: `You are a witty, knowledgeable person in the {niche} space on Twitter/X.
+    // ════════════════════════════════════════════════════════════════════════
+    // NICHE CONFIGURATION — Edit these to match your niche / topics
+    // ════════════════════════════════════════════════════════════════════════
+
+    NICHE_CONFIG: {
+      // Your niche identity (used for LLM persona)
+      PERSONA: 'a crypto & web3 builder who shares alpha and builds in public',
+
+      // Search keywords — the builder cycles through these
+      KEYWORDS: [
+        'web3 builder',
+        'crypto alpha',
+        'DeFi yield',
+        'solana ecosystem',
+        'onchain analytics',
+      ],
+
+      // Target accounts to engage with (their posts & engagers)
+      TARGET_ACCOUNTS: [
+        // '@nichxbt',
+        // '@VitalikButerin',
+      ],
+
+      // Bio keywords — only follow users whose bio contains at least one
+      // Leave empty to follow anyone relevant
+      BIO_KEYWORDS: ['crypto', 'web3', 'defi', 'nft', 'blockchain', 'builder', 'dev', 'founder'],
+
+      // Topics to engage with on Explore page
+      EXPLORE_TOPICS: ['Technology', 'Crypto', 'Business'],
+    },
+
+    // ════════════════════════════════════════════════════════════════════════
+    // LLM CONFIGURATION — For AI-generated comments
+    // ════════════════════════════════════════════════════════════════════════
+
+    LLM_CONFIG: {
+      // Set to true to enable LLM comments (requires API_KEY)
+      ENABLED: false,
+
+      // OpenRouter (default) or any OpenAI-compatible endpoint
+      API_URL: 'https://openrouter.ai/api/v1/chat/completions',
+      API_KEY: '', // Set your OpenRouter or OpenAI API key here
+
+      // Model to use (OpenRouter format)
+      // Free model router. Individual :free ids get retired; this alias does not.
+      MODEL: 'openrouter/free',
+
+      // System prompt — shapes how comments sound
+      SYSTEM_PROMPT: `You are a witty, knowledgeable person in the {niche} space on Twitter/X.
 Generate a short, authentic reply to the tweet below.
 Rules:
 - 1-2 sentences max, casual Twitter tone
@@ -92,77 +252,79 @@ Rules:
 - Never start with "Great post!" or similar generic openers
 - Match the energy of the original tweet (serious → thoughtful, funny → witty)`,
 
-    // Max tokens for the response
-    MAX_TOKENS: 80,
+      // Max tokens for the response
+      MAX_TOKENS: 80,
 
-    // Temperature (higher = more creative, lower = more focused)
-    TEMPERATURE: 0.9,
+      // Temperature (higher = more creative, lower = more focused)
+      TEMPERATURE: 0.9,
 
-    // Probability of using LLM vs fallback (0-1). If LLM fails, fallback is always used.
-    LLM_PROBABILITY: 0.7,
+      // Probability of using LLM vs fallback (0-1). If LLM fails, fallback is always used.
+      LLM_PROBABILITY: 0.7,
+    },
+
+    // ════════════════════════════════════════════════════════════════════════
+    // BEHAVIOR CONFIGURATION — Mimics natural human patterns
+    // ════════════════════════════════════════════════════════════════════════
+
+    BEHAVIOR: {
+      // ─── Session timing ───
+      // Work session length (minutes)
+      SESSION_MIN_MINUTES: 20,
+      SESSION_MAX_MINUTES: 45,
+
+      // Break between sessions (minutes)
+      BREAK_MIN_MINUTES: 5,
+      BREAK_MAX_MINUTES: 20,
+
+      // ─── Peak hours (UTC) — more active during these hours ───
+      PEAK_HOURS_START: 13,  // 1 PM UTC (≈ 8 AM EST)
+      PEAK_HOURS_END: 23,    // 11 PM UTC (≈ 6 PM EST)
+
+      // ─── Action probabilities per tweet encountered (0-1) ───
+      LIKE_PROBABILITY: 0.35,
+      COMMENT_PROBABILITY: 0.08,
+      RETWEET_PROBABILITY: 0.05,
+      FOLLOW_PROBABILITY: 0.15,   // follow the tweet author
+
+      // ─── During off-peak, multiply probabilities by this ───
+      OFF_PEAK_MULTIPLIER: 0.4,
+
+      // ─── Delays (milliseconds) ───
+      MIN_ACTION_DELAY: 2500,
+      MAX_ACTION_DELAY: 6000,
+      SCROLL_DELAY_MIN: 2000,
+      SCROLL_DELAY_MAX: 4000,
+      PAGE_LOAD_WAIT: 3000,
+      TYPING_DELAY: 60,           // per character
+      PRE_ACTION_PAUSE_MIN: 500,  // pause before acting (simulates reading)
+      PRE_ACTION_PAUSE_MAX: 3000,
+
+      // ─── Per-session limits ───
+      MAX_LIKES_PER_SESSION: 25,
+      MAX_COMMENTS_PER_SESSION: 5,
+      MAX_FOLLOWS_PER_SESSION: 10,
+      MAX_RETWEETS_PER_SESSION: 5,
+
+      // ─── Per-day hard limits ───
+      MAX_LIKES_PER_DAY: 150,
+      MAX_COMMENTS_PER_DAY: 25,
+      MAX_FOLLOWS_PER_DAY: 80,
+      MAX_RETWEETS_PER_DAY: 30,
+
+      // ─── Scroll behavior ───
+      SCROLL_PIXELS_MIN: 300,
+      SCROLL_PIXELS_MAX: 800,
+      MAX_SCROLLS_PER_FEED: 15,
+
+      // ─── Engagement filters ───
+      MIN_TWEET_LIKES: 2,          // only engage with tweets that have at least N likes
+      MAX_FOLLOWERS_TO_FOLLOW: 50000,  // don't follow huge accounts (they won't follow back)
+      MIN_FOLLOWERS_TO_FOLLOW: 10,     // skip brand new accounts
+      SKIP_PROTECTED_ACCOUNTS: true,
+      SKIP_VERIFIED_FOR_FOLLOW: false,
+    },
   };
-
-  // ════════════════════════════════════════════════════════════════════════
-  // BEHAVIOR CONFIGURATION — Mimics natural human patterns
-  // ════════════════════════════════════════════════════════════════════════
-
-  const BEHAVIOR = {
-    // ─── Session timing ───
-    // Work session length (minutes)
-    SESSION_MIN_MINUTES: 20,
-    SESSION_MAX_MINUTES: 45,
-
-    // Break between sessions (minutes)
-    BREAK_MIN_MINUTES: 5,
-    BREAK_MAX_MINUTES: 20,
-
-    // ─── Peak hours (UTC) — more active during these hours ───
-    PEAK_HOURS_START: 13,  // 1 PM UTC (≈ 8 AM EST)
-    PEAK_HOURS_END: 23,    // 11 PM UTC (≈ 6 PM EST)
-
-    // ─── Action probabilities per tweet encountered (0-1) ───
-    LIKE_PROBABILITY: 0.35,
-    COMMENT_PROBABILITY: 0.08,
-    RETWEET_PROBABILITY: 0.05,
-    FOLLOW_PROBABILITY: 0.15,   // follow the tweet author
-
-    // ─── During off-peak, multiply probabilities by this ───
-    OFF_PEAK_MULTIPLIER: 0.4,
-
-    // ─── Delays (milliseconds) ───
-    MIN_ACTION_DELAY: 2000,
-    MAX_ACTION_DELAY: 6000,
-    SCROLL_DELAY_MIN: 1500,
-    SCROLL_DELAY_MAX: 4000,
-    PAGE_LOAD_WAIT: 3000,
-    TYPING_DELAY: 60,           // per character
-    PRE_ACTION_PAUSE_MIN: 500,  // pause before acting (simulates reading)
-    PRE_ACTION_PAUSE_MAX: 3000,
-
-    // ─── Per-session limits ───
-    MAX_LIKES_PER_SESSION: 25,
-    MAX_COMMENTS_PER_SESSION: 5,
-    MAX_FOLLOWS_PER_SESSION: 15,
-    MAX_RETWEETS_PER_SESSION: 5,
-
-    // ─── Per-day hard limits ───
-    MAX_LIKES_PER_DAY: 150,
-    MAX_COMMENTS_PER_DAY: 25,
-    MAX_FOLLOWS_PER_DAY: 80,
-    MAX_RETWEETS_PER_DAY: 30,
-
-    // ─── Scroll behavior ───
-    SCROLL_PIXELS_MIN: 300,
-    SCROLL_PIXELS_MAX: 800,
-    MAX_SCROLLS_PER_FEED: 15,
-
-    // ─── Engagement filters ───
-    MIN_TWEET_LIKES: 2,          // only engage with tweets that have at least N likes
-    MAX_FOLLOWERS_TO_FOLLOW: 50000,  // don't follow huge accounts (they won't follow back)
-    MIN_FOLLOWERS_TO_FOLLOW: 10,     // skip brand new accounts
-    SKIP_PROTECTED_ACCOUNTS: true,
-    SKIP_VERIFIED_FOR_FOLLOW: false,
-  };
+  const { NICHE_CONFIG, LLM_CONFIG, BEHAVIOR } = CONFIG;
 
   // ════════════════════════════════════════════════════════════════════════
   // FALLBACK COMMENTS — Used when LLM is disabled or fails
@@ -273,8 +435,15 @@ Rules:
     state.sessionStats.retweets < BEHAVIOR.MAX_RETWEETS_PER_SESSION &&
     rateLimit.check('algo_retweet', BEHAVIOR.MAX_RETWEETS_PER_DAY, 'day');
 
-  const recordAction = (type) => {
+  // This run's actions, downloaded on stop when CONFIG.exportOnStop is set.
+  const runLog = [];
+
+  // A dry run counts toward the session caps, so the preview stops where a
+  // live run would, but leaves the persisted totals and daily counters alone.
+  const recordAction = (type, detail = {}) => {
+    runLog.push({ action: type, ...detail, dryRun: CONFIG.dryRun, timestamp: new Date().toISOString() });
     state.sessionStats[type]++;
+    if (CONFIG.dryRun) return;
     state[`total${type.charAt(0).toUpperCase() + type.slice(1)}s`]++;
     rateLimit.increment(`algo_${type}`, 'day');
     saveState();
@@ -391,9 +560,14 @@ Rules:
     if (!likeBtn) return false;
 
     await readingPause();
+    if (CONFIG.dryRun) {
+      recordAction('like', { tweetId: getTweetId(tweetEl) });
+      log(`🏃 [DRY] Would like tweet ${getTweetId(tweetEl) || ''}`, 'info');
+      return true;
+    }
     const success = await clickElement(likeBtn);
     if (success) {
-      recordAction('like');
+      recordAction('like', { tweetId: getTweetId(tweetEl) });
       log(`❤️  Liked tweet`, 'success');
     }
     return success;
@@ -404,6 +578,11 @@ Rules:
     if (!rtBtn) return false;
 
     await readingPause();
+    if (CONFIG.dryRun) {
+      recordAction('retweet', { tweetId: getTweetId(tweetEl) });
+      log(`🏃 [DRY] Would repost tweet ${getTweetId(tweetEl) || ''}`, 'info');
+      return true;
+    }
     await clickElement(rtBtn);
     await sleep(800);
 
@@ -412,7 +591,7 @@ Rules:
     for (const item of menuItems) {
       if (item.textContent.includes('Repost')) {
         await clickElement(item);
-        recordAction('retweet');
+        recordAction('retweet', { tweetId: getTweetId(tweetEl) });
         log(`🔁 Retweeted`, 'success');
         return true;
       }
@@ -434,6 +613,11 @@ Rules:
     if (!replyBtn) return false;
 
     await readingPause();
+    if (CONFIG.dryRun) {
+      recordAction('comment', { tweetId, text: comment });
+      log(`🏃 [DRY] Would reply: "${comment.substring(0, 50)}..."`, 'info');
+      return true;
+    }
     await clickElement(replyBtn);
     await sleep(1200);
 
@@ -472,7 +656,7 @@ Rules:
     await sleep(1200);
 
     state.commentedTweets.push(tweetId);
-    recordAction('comment');
+    recordAction('comment', { tweetId, text: comment });
     log(`💬 Commented: "${comment.substring(0, 50)}..."`, 'success');
     return true;
   };
@@ -492,10 +676,15 @@ Rules:
     if (tweetEl.querySelector(SELECTORS.unfollowButton)) return false;
 
     await readingPause();
+    if (CONFIG.dryRun) {
+      recordAction('follow', { username });
+      log(`🏃 [DRY] Would follow @${username}`, 'info');
+      return true;
+    }
     const success = await clickElement(followBtn);
     if (success) {
       state.followedUsers.push(username);
-      recordAction('follow');
+      recordAction('follow', { username });
       log(`➕ Followed @${username}`, 'success');
     }
     return success;
@@ -642,10 +831,17 @@ Rules:
         const followBtn = cell.querySelector(SELECTORS.followButton);
         if (followBtn) {
           await readingPause();
+          if (CONFIG.dryRun) {
+            recordAction('follow', { username: userInfo.username, followers: userInfo.followers });
+            followsThisCycle++;
+            log(`🏃 [DRY] Would follow @${userInfo.username} (${userInfo.followers} followers)`, 'info');
+            await humanDelay();
+            continue;
+          }
           const success = await clickElement(followBtn);
           if (success) {
             state.followedUsers.push(userInfo.username);
-            recordAction('follow');
+            recordAction('follow', { username: userInfo.username, followers: userInfo.followers });
             followsThisCycle++;
             log(`➕ Followed @${userInfo.username} (${userInfo.followers} followers)`, 'success');
             await humanDelay();
@@ -750,7 +946,7 @@ Rules:
           await humanDelay();
         }
 
-        if (didSomething) {
+        if (didSomething && !CONFIG.dryRun) {
           state.engagedTweets.push(tweetId);
           saveState();
         }
@@ -806,6 +1002,9 @@ Rules:
     log(`⚡ Back from break! Starting session #${state.totalSessions + 1}`, 'success');
   };
 
+  // Every per-session or daily cap is used up: nothing left to do this session.
+  const sessionCapsReached = () => !canLike() && !canComment() && !canFollow() && !canRetweet();
+
   const logSessionSummary = () => {
     const s = state.sessionStats;
     const elapsed = Math.round((Date.now() - state.sessionStartedAt) / 60000);
@@ -857,11 +1056,22 @@ Rules:
 ╚═══════════════════════════════════════════════════╝
     `);
 
+    if (CONFIG.dryRun) {
+      log('🏃 DRY RUN: nothing will be liked, replied to, reposted or followed. Set CONFIG.dryRun = false to engage for real.', 'warning');
+    }
+    log(`🎯 Session limits: ${BEHAVIOR.MAX_LIKES_PER_SESSION} likes, ${BEHAVIOR.MAX_COMMENTS_PER_SESSION} replies, ${BEHAVIOR.MAX_RETWEETS_PER_SESSION} reposts, ${BEHAVIOR.MAX_FOLLOWS_PER_SESSION} follows`, 'info');
+
     log(`🚀 Starting Algorithm Builder — Session #${state.totalSessions + 1}`, 'success');
     log(`📍 Current time: ${new Date().toLocaleTimeString()} (${isPeakHours() ? 'PEAK' : 'off-peak'} hours)`, 'info');
 
     while (isRunning) {
       try {
+        // singleSession: one work session, then stop instead of a break
+        if (CONFIG.singleSession && (isSessionExpired() || sessionCapsReached())) {
+          log('🏁 Session complete (CONFIG.singleSession), stopping', 'info');
+          break;
+        }
+
         // Check if session needs a break
         if (isSessionExpired()) {
           await takeBreak();
@@ -890,6 +1100,30 @@ Rules:
     log('🛑 Algorithm Builder stopped', 'warning');
     logSessionSummary();
     logOverallStats();
+    if (CONFIG.dryRun) log('🏃 (Dry run: nothing executed)', 'info');
+    if (CONFIG.exportOnStop) exportRunLog();
+  };
+
+  // Download this run's actions as JSON (CONFIG.exportOnStop).
+  const exportRunLog = () => {
+    if (runLog.length === 0) {
+      log('Nothing to export: no actions this run', 'info');
+      return;
+    }
+    const filename = `xactions-algorithm-builder-${Date.now()}.json`;
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(new Blob([JSON.stringify({
+      keywords: NICHE_CONFIG.KEYWORDS,
+      dryRun: CONFIG.dryRun,
+      session: { ...state.sessionStats },
+      engaged: runLog,
+      timestamp: new Date().toISOString(),
+    }, null, 2)], { type: 'application/json' }));
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    log(`📥 Downloaded: ${filename}`, 'success');
   };
 
   // ════════════════════════════════════════════════════════════════════════

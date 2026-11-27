@@ -1,172 +1,381 @@
+// GENERATED FILE: a copy of browser/scrapeSearch.js, written by scripts/build-script-manifest.mjs. Edit browser/scrapeSearch.js instead, then run: npm run browser:build
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
 /**
- * Search Scraper
- * Search and export tweets by keyword
- * 
- * HOW TO USE:
- * 1. Go to x.com/search?q=YOUR_SEARCH_TERM
- * 2. Open Developer Console (Ctrl+Shift+J or Cmd+Option+J)
- * 3. Paste this script and press Enter
- * 
- * by nichxbt - https://github.com/nirholas/XActions
+ * ============================================
+ * 🔍 Scrape Search - XActions
+ * ============================================
+ *
+ * @name        scrapeSearch.js
+ * @title       Scrape Search
+ * @description Scroll the current X search results and export every post (text, author, counts, media) to JSON and CSV.
+ * @category    scrape
+ * @page        x.com/search?q=<query>&f=live or x.com/search?q=<query>
+ * @writes      false
+ * @aliases     scripts/scrapeSearch.js, scripts/twitter/scrape-search.js
+ * @author      nichxbt (https://x.com/nichxbt)
+ * @version     1.2.0
+ * @date        2026-11-27
+ * @website     https://xactions.app
+ *
+ * Usage:
+ *   1. Go to a search results page, e.g. x.com/search?q=solana&f=live
+ *      (the &f=live tab surfaces the newest posts; the Top tab works too)
+ *   2. Open the browser console (F12 or Cmd+Option+I -> Console)
+ *   3. (Optional) edit the CONFIG options at the top of the script
+ *   4. Paste the entire browser/scrapeSearch.js and press Enter
+ *
+ * Example:
+ *   Search x.com/search?q=%22gm%22%20three.ws&f=live, set CONFIG.maxPosts = 200 and
+ *   CONFIG.includeReplies = false. The script scrolls, collects up to 200 original
+ *   posts, downloads a JSON file, and prints a "window.exportCSV()" helper. To stop
+ *   early at any time, run window.stopScrapeSearch() in the console.
+ *
+ * ============================================
  */
 
-(() => {
+(async function scrapeSearch() {
+  'use strict';
+
+  // ============================================
+  // 📝 CONFIGURATION - Customize these options
+  // ============================================
   const CONFIG = {
-    MAX_TWEETS: 500,
-    SCROLL_DELAY: 1500,
-    FORMAT: 'both', // 'json', 'csv', 'both'
-    MIN_LIKES: 0,   // Filter: minimum likes (0 = no filter)
+    // Maximum number of posts to collect before stopping
+    maxPosts: 300,
+
+    // Include reply posts in the results (false = original posts only)
+    includeReplies: true,
+
+    // Skip posts with fewer likes than this (0 = no filter)
+    minLikes: 0,
+
+    // Sort the export and the top-5 preview by engagement (likes + reposts +
+    // replies), highest first. false keeps the order the posts appeared in.
+    sortByEngagement: false,
+
+    // Delay between scrolls (ms). Raise if posts load slowly.
+    scrollDelay: 1800,
+
+    // Give up after this many scrolls that add no new posts
+    noNewPostsThreshold: 6,
+
+    // Hard cap on scroll attempts so the loop can never run forever
+    maxScrollAttempts: 400,
+
+    // When X rate-limits the search it shows a Retry button instead of more
+    // posts. Click it up to this many times in a row before giving up.
+    maxRetryClicks: 5,
+
+    // Auto-download a JSON file
+    downloadJson: true,
+
+    // Auto-download a CSV file too
+    downloadCsv: true
   };
 
-  const sleep = (ms) => new Promise(r => setTimeout(r, ms));
-
-  const download = (content, filename, type) => {
-    const blob = new Blob([content], { type });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = filename;
-    a.click();
-    URL.revokeObjectURL(url);
+  // ============================================
+  // 🔧 SELECTORS
+  // ============================================
+  const SELECTORS = {
+    primaryColumn: '[data-testid="primaryColumn"]',
+    tweet: 'article[data-testid="tweet"]',
+    tweetText: '[data-testid="tweetText"]',
+    userName: '[data-testid="User-Name"]',
+    actionGroup: '[role="group"]',
+    photo: '[data-testid="tweetPhoto"] img',
+    video: 'video'
   };
 
-  const parseNumber = (str) => {
-    if (!str) return 0;
-    const num = parseFloat(str.replace(/,/g, ''));
-    if (str.includes('K')) return num * 1000;
-    if (str.includes('M')) return num * 1000000;
-    return num;
+  // ============================================
+  // 🛠️ HELPERS
+  // ============================================
+  const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+
+  const log = {
+    info: (msg) => console.log(`ℹ️ ${msg}`),
+    success: (msg) => console.log(`✅ ${msg}`),
+    warning: (msg) => console.log(`⚠️ ${msg}`),
+    error: (msg) => console.log(`❌ ${msg}`),
+    progress: (n, total) => console.log(`📊 Collected ${n}/${total} posts...`)
   };
 
-  const extractTweet = (article) => {
+  // Turn an aria-label like "1,234 Likes. Like" into the number 1234.
+  const countFromLabel = (label) => {
+    if (!label) return 0;
+    const raw = (label.match(/[\d.,]+\s*[KMB]?/i) || ['0'])[0].trim().toUpperCase();
+    const num = parseFloat(raw.replace(/,/g, '')) || 0;
+    if (raw.includes('K')) return Math.round(num * 1e3);
+    if (raw.includes('M')) return Math.round(num * 1e6);
+    if (raw.includes('B')) return Math.round(num * 1e9);
+    return Math.round(num);
+  };
+
+  // Read the reply/repost/like counts from the action buttons' aria-labels.
+  const getCounts = (article) => {
+    const counts = { replies: 0, reposts: 0, likes: 0, views: 0 };
+    const group = article.querySelector(SELECTORS.actionGroup);
+    const nodes = group ? group.querySelectorAll('[aria-label]') : [];
+    nodes.forEach((node) => {
+      const label = (node.getAttribute('aria-label') || '').toLowerCase();
+      const value = countFromLabel(label);
+      if (label.includes('repl')) counts.replies = value;
+      else if (label.includes('repost') || label.includes('retweet')) counts.reposts = value;
+      else if (label.includes('like')) counts.likes = value;
+      else if (label.includes('view')) counts.views = value;
+    });
+    return counts;
+  };
+
+  // Strip the &name= sizing param so image URLs point at the original resolution.
+  const toOriginalImage = (url) => {
+    if (!url) return url;
+    return url.replace(/&name=[^&]*/i, '&name=orig').replace(/\?name=[^&]*/i, '?name=orig');
+  };
+
+  const getMediaUrls = (article) => {
+    const urls = new Set();
+    article.querySelectorAll(SELECTORS.photo).forEach((img) => {
+      if (img.src) urls.add(toOriginalImage(img.src));
+    });
+    article.querySelectorAll(SELECTORS.video).forEach((v) => {
+      if (v.src) urls.add(v.src);
+      else if (v.poster) urls.add(v.poster);
+    });
+    return Array.from(urls);
+  };
+
+  const isReply = (article) => {
+    if (article.querySelector('[data-testid="in-reply-to"]') !== null) return true;
+    return Array.from(article.querySelectorAll('div[dir]')).some((el) =>
+      (el.textContent || '').startsWith('Replying to'));
+  };
+
+  // Build a post object from an article, or null if it has no resolvable id.
+  const extractPost = (article) => {
+    // The permalink around the timestamp is the post's own URL; the first
+    // /status/ link in the article can belong to a quoted post.
+    const timeEl = article.querySelector('time');
+    const permalink = timeEl ? timeEl.closest('a[href*="/status/"]') : null;
+    const anchor = permalink || article.querySelector('a[href*="/status/"]');
+    const url = anchor ? anchor.href : '';
+    const id = url ? (url.split('/status/')[1] || '').split(/[?/]/)[0] : '';
+    if (!id) return null;
+
+    const nameBlock = article.querySelector(SELECTORS.userName);
+    const nameText = nameBlock ? nameBlock.textContent : '';
+    const handle = (nameText.match(/@(\w+)/) || [, ''])[1];
+    const name = nameText.split('@')[0].trim();
+
+    const textEl = article.querySelector(SELECTORS.tweetText);
+    const text = textEl ? textEl.textContent : '';
+
+    const counts = getCounts(article);
+
+    return {
+      id,
+      url,
+      author: { handle, name },
+      text,
+      likes: counts.likes,
+      reposts: counts.reposts,
+      replies: counts.replies,
+      views: counts.views,
+      timestamp: timeEl ? timeEl.getAttribute('datetime') : null,
+      mediaUrls: getMediaUrls(article),
+      isReply: isReply(article),
+      scrapedAt: new Date().toISOString()
+    };
+  };
+
+  const downloadFile = (content, filename, mime) => {
     try {
-      const tweetText = article.querySelector('[data-testid="tweetText"]')?.textContent || '';
-      const userName = article.querySelector('[data-testid="User-Name"]')?.textContent || '';
-      const handle = userName.match(/@(\w+)/)?.[1] || '';
-      const displayName = userName.split('@')[0]?.trim() || '';
-      
-      const timeLink = article.querySelector('time')?.closest('a');
-      const tweetUrl = timeLink?.href || '';
-      const tweetId = tweetUrl.split('/status/')[1]?.split('?')[0] || '';
-      const time = article.querySelector('time')?.getAttribute('datetime') || '';
-
-      const buttons = article.querySelectorAll('[role="group"] button');
-      let replies = 0, retweets = 0, likes = 0, views = 0;
-      
-      buttons.forEach(btn => {
-        const label = btn.getAttribute('aria-label') || '';
-        const num = parseNumber(label.match(/[\d,.]+[KM]?/)?.[0] || '0');
-        
-        if (label.includes('repl')) replies = num;
-        else if (label.includes('repost') || label.includes('Retweet')) retweets = num;
-        else if (label.includes('like')) likes = num;
-        else if (label.includes('view')) views = num;
-      });
-
-      return {
-        tweetId,
-        handle,
-        displayName,
-        text: tweetText,
-        url: tweetUrl,
-        time,
-        likes,
-        retweets,
-        replies,
-        views,
-        engagement: likes + retweets + replies,
-      };
+      const blob = new Blob([content], { type: mime });
+      const href = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = href;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(href);
+      return true;
     } catch (e) {
-      return null;
+      log.error(`Failed to download ${filename}: ${e.message}`);
+      return false;
     }
   };
 
-  const getSearchQuery = () => {
-    const params = new URLSearchParams(window.location.search);
-    return params.get('q') || 'unknown';
+  // Click X's "Retry" / "Try again" button when a rate-limited search stalls.
+  const clickRetryIfPresent = () => {
+    const btn = Array.from(document.querySelectorAll('button, [role="button"]'))
+      .find((b) => /^(retry|try again)$/i.test((b.innerText || b.textContent || '').trim()));
+    if (!btn) return false;
+    btn.click();
+    return true;
   };
 
-  const run = async () => {
-    if (!window.location.pathname.includes('/search')) {
-      console.error('❌ Please go to Twitter search first!');
-      console.log('   Example: x.com/search?q=your+search+term');
-      return;
-    }
+  const csvCell = (value) => `"${String(value == null ? '' : value).replace(/"/g, '""').replace(/\r?\n/g, ' ')}"`;
 
-    const query = getSearchQuery();
-    console.log(`🔍 Scraping search results for: "${query}"...`);
+  const toCSV = (posts) => {
+    const headers = ['id', 'handle', 'name', 'text', 'likes', 'reposts', 'replies', 'views', 'timestamp', 'mediaUrls', 'url'];
+    const rows = posts.map((p) => [
+      p.id,
+      '@' + p.author.handle,
+      p.author.name,
+      p.text,
+      p.likes,
+      p.reposts,
+      p.replies,
+      p.views,
+      p.timestamp || '',
+      p.mediaUrls.join(' '),
+      p.url
+    ].map(csvCell).join(','));
+    return [headers.join(','), ...rows].join('\n');
+  };
 
-    const tweets = new Map();
-    let scrolls = 0;
-    let noNewCount = 0;
+  // ============================================
+  // 🎯 MAIN
+  // ============================================
+  const query = new URLSearchParams(window.location.search).get('q') || 'search';
 
-    while (tweets.size < CONFIG.MAX_TWEETS && noNewCount < 5) {
-      const articles = document.querySelectorAll('article[data-testid="tweet"]');
-      const beforeCount = tweets.size;
+  console.log(`
+╔══════════════════════════════════════════════════════════╗
+║  🔍 SCRAPE SEARCH - XActions                            ║
+║  👤 Author: nichxbt                                      ║
+║  🌐 https://xactions.app                                 ║
+╚══════════════════════════════════════════════════════════╝
+  `);
 
-      articles.forEach(article => {
-        const tweet = extractTweet(article);
-        if (tweet && tweet.tweetId && !tweets.has(tweet.tweetId)) {
-          if (tweet.likes >= CONFIG.MIN_LIKES) {
-            tweets.set(tweet.tweetId, tweet);
-          }
-        }
-      });
+  // Page guard: warn and return, never hard-redirect (that kills the script).
+  if (!/\/search/.test(window.location.pathname)) {
+    log.warning('You are not on a search results page.');
+    log.info('Go to x.com/search?q=YOUR+TERM&f=live, then run this script again.');
+    return;
+  }
 
-      const added = tweets.size - beforeCount;
-      if (added > 0) {
-        console.log(`🔍 Collected ${tweets.size} tweets...`);
-        noNewCount = 0;
-      } else {
-        noNewCount++;
+  const posts = new Map();
+
+  // Stop switch: run window.stopScrapeSearch() to end the scroll loop.
+  let stopped = false;
+  window.stopScrapeSearch = () => {
+    stopped = true;
+    log.warning('Stop requested. Finishing the current pass, then exporting.');
+  };
+
+  log.info(`Search query: "${query}"`);
+  log.info(`Max posts: ${CONFIG.maxPosts} | Include replies: ${CONFIG.includeReplies}`);
+  if (CONFIG.minLikes > 0) log.info(`Min likes: ${CONFIG.minLikes}`);
+  log.info('To stop early: window.stopScrapeSearch()');
+
+  let scrollAttempts = 0;
+  let noNewCount = 0;
+  let retryClicks = 0;
+  let endReason = '';
+
+  while (!stopped && posts.size < CONFIG.maxPosts && scrollAttempts < CONFIG.maxScrollAttempts) {
+    const before = posts.size;
+    const articles = document.querySelectorAll(SELECTORS.tweet);
+
+    articles.forEach((article) => {
+      try {
+        const post = extractPost(article);
+        if (!post || posts.has(post.id)) return;
+        if (!CONFIG.includeReplies && post.isReply) return;
+        if (post.likes < CONFIG.minLikes) return;
+        posts.set(post.id, post);
+      } catch (e) {
+        log.error(`Skipped a post: ${e.message}`);
       }
-
-      window.scrollBy(0, 800);
-      await sleep(CONFIG.SCROLL_DELAY);
-      scrolls++;
-
-      if (scrolls > 100) break;
-    }
-
-    const tweetList = Array.from(tweets.values());
-    tweetList.sort((a, b) => b.engagement - a.engagement);
-
-    console.log('\n' + '='.repeat(60));
-    console.log(`🔍 SCRAPED ${tweetList.length} TWEETS FOR "${query}"`);
-    console.log('='.repeat(60) + '\n');
-
-    // Stats
-    const totalLikes = tweetList.reduce((sum, t) => sum + t.likes, 0);
-    const totalRetweets = tweetList.reduce((sum, t) => sum + t.retweets, 0);
-    console.log(`📊 Total engagement: ${totalLikes.toLocaleString()} likes, ${totalRetweets.toLocaleString()} retweets`);
-
-    tweetList.slice(0, 5).forEach((t, i) => {
-      console.log(`${i + 1}. @${t.handle} (${t.likes} ❤️): "${t.text.slice(0, 50)}..."`);
     });
 
-    const safeQuery = query.replace(/[^a-z0-9]/gi, '_').slice(0, 30);
-
-    if (CONFIG.FORMAT === 'json' || CONFIG.FORMAT === 'both') {
-      const data = { query, scrapedAt: new Date().toISOString(), tweets: tweetList };
-      download(JSON.stringify(data, null, 2), `search_${safeQuery}_${Date.now()}.json`, 'application/json');
-      console.log('💾 Downloaded search_results.json');
+    if (posts.size > before) {
+      log.progress(posts.size, CONFIG.maxPosts);
+      noNewCount = 0;
+      retryClicks = 0;
+    } else {
+      // A rate-limited search looks exactly like the end of the results
+      // unless the Retry button is pressed, so try that before counting a stall.
+      if (retryClicks < CONFIG.maxRetryClicks && clickRetryIfPresent()) {
+        retryClicks++;
+        log.warning(`X showed a Retry button (attempt ${retryClicks}/${CONFIG.maxRetryClicks}). Clicked it, waiting...`);
+        await sleep(CONFIG.scrollDelay * 3);
+        continue;
+      }
+      noNewCount++;
+      if (noNewCount >= CONFIG.noNewPostsThreshold) {
+        if (retryClicks >= CONFIG.maxRetryClicks) {
+          endReason = 'rate-limited';
+          log.warning(`X kept refusing to load more after ${CONFIG.maxRetryClicks} retries (rate limited). Exporting what was collected. Wait a few minutes, then search again with until: set to the date of the oldest post collected.`);
+        } else {
+          endReason = 'end-of-results';
+          log.warning('No new posts after several scrolls. Reached the end of the results.');
+        }
+        break;
+      }
     }
 
-    if (CONFIG.FORMAT === 'csv' || CONFIG.FORMAT === 'both') {
-      const csv = [
-        'Handle,Text,Likes,Retweets,Replies,Views,URL,Time',
-        ...tweetList.map(t => 
-          `"@${t.handle}","${t.text.replace(/"/g, '""').replace(/\n/g, ' ')}",${t.likes},${t.retweets},${t.replies},${t.views},"${t.url}","${t.time}"`
-        )
-      ].join('\n');
-      download(csv, `search_${safeQuery}_${Date.now()}.csv`, 'text/csv');
-      console.log('💾 Downloaded search_results.csv');
-    }
+    if (posts.size >= CONFIG.maxPosts) break;
 
-    window.scrapedSearch = { query, tweets: tweetList };
-    console.log('\n✅ Done! Access data: window.scrapedSearch');
-  };
+    window.scrollTo(0, document.body.scrollHeight);
+    await sleep(CONFIG.scrollDelay);
+    scrollAttempts++;
+  }
 
-  run();
+  const list = Array.from(posts.values()).slice(0, CONFIG.maxPosts);
+  if (CONFIG.sortByEngagement) {
+    const engagement = (p) => p.likes + p.reposts + p.replies;
+    list.sort((a, b) => engagement(b) - engagement(a));
+  }
+
+  // ============================================
+  // 📊 SUMMARY + EXPORT
+  // ============================================
+  if (list.length === 0) {
+    log.warning('No posts were found. The results may be empty, or the page had not loaded yet.');
+    return;
+  }
+
+  const totalLikes = list.reduce((s, p) => s + p.likes, 0);
+  const totalReposts = list.reduce((s, p) => s + p.reposts, 0);
+
+  console.log(`
+╔══════════════════════════════════════════════════════════╗
+║  📊 SCRAPE SEARCH - COMPLETE                            ║
+╠══════════════════════════════════════════════════════════╣
+║  🔍 Query:        ${String(query.slice(0, 36)).padEnd(37)}║
+║  📝 Posts:        ${String(list.length).padEnd(37)}║
+║  ❤️  Total likes:  ${String(totalLikes.toLocaleString()).padEnd(37)}║
+║  🔄 Total reposts:${String(totalReposts.toLocaleString()).padEnd(37)}║
+╚══════════════════════════════════════════════════════════╝
+  `);
+
+  list.slice(0, 5).forEach((p, i) => {
+    console.log(`${i + 1}. @${p.author.handle} (${p.likes} ❤️): "${p.text.slice(0, 60)}"`);
+  });
+
+  const safeQuery = query.replace(/[^a-z0-9]/gi, '_').slice(0, 30) || 'search';
+  const stamp = new Date().toISOString().split('T')[0];
+  // Why the run ended, so a rate-limited export is not mistaken for a complete one.
+  if (!endReason) {
+    if (stopped) endReason = 'stopped';
+    else if (posts.size >= CONFIG.maxPosts) endReason = 'max-posts';
+    else endReason = 'max-scroll-attempts';
+  }
+  const result = { query, scrapedAt: new Date().toISOString(), endReason, count: list.length, posts: list };
+
+  if (CONFIG.downloadJson && downloadFile(JSON.stringify(result, null, 2), `search_${safeQuery}_${stamp}.json`, 'application/json')) {
+    log.success('JSON downloaded');
+  }
+  if (CONFIG.downloadCsv && downloadFile(toCSV(list), `search_${safeQuery}_${stamp}.csv`, 'text/csv')) {
+    log.success('CSV downloaded');
+  }
+
+  window.scrapedSearch = result;
+  window.exportCSV = () => toCSV(list);
+  console.log('');
+  log.info('window.scrapedSearch holds the full data. window.exportCSV() returns the CSV string.');
+  log.success('Done! by nichxbt');
+
+  return result;
 })();

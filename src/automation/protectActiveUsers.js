@@ -1,23 +1,89 @@
+// GENERATED FILE: a copy of browser/protectActiveUsers.js, written by scripts/build-script-manifest.mjs. Edit browser/protectActiveUsers.js instead, then run: npm run browser:build
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
-// XActions Automation - Don't Unfollow Active Users
-// https://github.com/nirholas/XActions
-//
-// REQUIRES: Paste core.js first!
-//
-// Protect users who have engaged with your content from being unfollowed
-//
-// HOW TO USE:
-// 1. Paste core.js first
-// 2. Paste this script to scan your posts for active engagers
-// 3. Use with smartUnfollow.js - it will respect the protected list
+/**
+ * ============================================================
+ * 🛡️ Protect Active Users
+ * ============================================================
+ *
+ * @name        protectActiveUsers.js
+ * @title       Protect Active Users
+ * @description Scan your recent posts for likers, repliers, reposters and quoters and save them as a protected list that smart unfollow never touches.
+ * @category    cleanup
+ * @page        x.com/<you>
+ * @writes      false
+ * @aliases     src/automation/protectActiveUsers.js, scripts/twitter/protect-active-users.js
+ * @author      nichxbt (https://x.com/nichxbt)
+ * @version     1.1.0
+ * @date        2026-11-27
+ * @repository  https://github.com/nirholas/XActions
+ *
+ * ============================================================
+ * 📋 USAGE:
+ *
+ * Protect users who have engaged with your content from being unfollowed.
+ *
+ * 1. Go to your own profile: https://x.com/YOUR_USERNAME (or any page:
+ *    your handle is detected from the side menu)
+ * 2. Paste browser/protectActiveUsers.js into the DevTools console and press Enter
+ *    (src/automation/core.js is optional: when it is pasted first its
+ *    logger, storage and selectors are used)
+ * 3. Use with browser/smartUnfollow.js: it will respect the protected list
+ *    (saved to localStorage under xactions_protected_users)
+ * 4. Run stopProtect() to stop early; viewProtected() and
+ *    isProtected('user') to inspect the list; results: window.protectedUsers
+ * ============================================================
+ */
 
 (() => {
-  if (!window.XActions?.Core) {
-    console.error('❌ Core module not loaded! Paste core.js first.');
-    return;
-  }
+  // ============================================
+  // CORE (optional): use core.js when present, built-ins otherwise
+  // ============================================
+  const Core = window.XActions?.Core;
 
-  const { log, sleep, scrollBy, storage, SELECTORS } = window.XActions.Core;
+  const sleep = Core?.sleep || ((ms) => new Promise(resolve => setTimeout(resolve, ms)));
+  const log = Core?.log || ((message, type = 'info') => {
+    const prefix = { info: '📘', success: '✅', warning: '⚠️', error: '❌', action: '🔧' }[type] || '📘';
+    console.log(`${prefix} [${new Date().toLocaleTimeString()}] ${message}`);
+  });
+  const scrollBy = Core?.scrollBy || ((pixels) => window.scrollBy({ top: pixels, behavior: 'smooth' }));
+  // Same key layout as core.js storage (xactions_ prefix, JSON values)
+  const storage = Core?.storage || {
+    get: (key) => {
+      try {
+        const data = localStorage.getItem('xactions_' + key);
+        return data ? JSON.parse(data) : null;
+      } catch {
+        return null;
+      }
+    },
+    set: (key, value) => {
+      try {
+        localStorage.setItem('xactions_' + key, JSON.stringify(value));
+        return true;
+      } catch {
+        return false;
+      }
+    },
+  };
+  const SELECTORS = Core?.SELECTORS || {
+    tweet: '[data-testid="tweet"]',
+  };
+
+  // Navigate within the SPA. Assigning window.location.href triggers a full
+  // page load, which destroys this console script before the first scan.
+  const spaNavigate = (url) => {
+    try {
+      const target = new URL(url, window.location.href);
+      if (target.origin === window.location.origin) {
+        if (target.href !== window.location.href) {
+          window.history.pushState({}, '', target.href);
+          window.dispatchEvent(new PopStateEvent('popstate', { state: {} }));
+        }
+        return;
+      }
+    } catch { /* fall through to a full page load below */ }
+    window.location.href = url;
+  };
 
   // ============================================
   // CONFIGURATION
@@ -48,12 +114,21 @@
     // Also protect users you recently followed
     PROTECT_RECENT_FOLLOWS: true,
     RECENT_FOLLOW_DAYS: 7,
+
+    // Engagement list scrolling
+    SCROLL_DELAY: 1500,          // Wait after each scroll in a likes/reposts/quotes list (ms)
+    MAX_SCROLLS_PER_LIST: 10,    // Max scrolls per engagement list
   };
 
   // ============================================
   // STATE
   // ============================================
+  // Map { user: { engagements, count, protectedAt, expiresAt } } through
+  // storage (localStorage key xactions_xactions_protected_users)
   const KEY = 'xactions_protected_users';
+  // Shared list { savedAt, myUsername, postsScanned, totalProtected, users: [...] }
+  // at the raw localStorage key smartUnfollow and whitelist read
+  const SHARED_KEY = 'xactions_protected_users';
   
   const state = {
     postsScanned: 0,
@@ -62,9 +137,55 @@
     isRunning: true,
   };
 
-  const getProtectedList = () => storage.get(KEY) || {};
+  const getProtectedList = () => {
+    const list = storage.get(KEY) || {};
+    // Include users saved to the shared list by the scripts/twitter variant
+    try {
+      const shared = JSON.parse(localStorage.getItem(SHARED_KEY) || 'null');
+      const savedAt = (shared?.savedAt && Date.parse(shared.savedAt)) || Date.now();
+      (Array.isArray(shared?.users) ? shared.users : []).forEach((u) => {
+        const name = u?.username?.toLowerCase();
+        if (!name || list[name]) return;
+        const engagements = u.engagements || u.engagementTypes || [];
+        list[name] = {
+          engagements,
+          count: u.count ?? u.engagementCount ?? engagements.length,
+          tweets: u.tweets || [],
+          protectedAt: u.protectedAt || savedAt,
+          expiresAt: u.expiresAt || savedAt + (CONFIG.LOOKBACK_DAYS * 24 * 60 * 60 * 1000),
+        };
+      });
+    } catch {
+      // unreadable shared list: the storage map above is still complete
+    }
+    return list;
+  };
   
-  const saveProtectedList = (list) => storage.set(KEY, list);
+  const saveProtectedList = (list, meta = {}) => {
+    storage.set(KEY, list);
+    const users = Object.entries(list)
+      .map(([username, data]) => ({
+        username,
+        engagementCount: data.count,
+        engagementTypes: [...new Set(data.engagements || [])],
+        tweets: data.tweets || [],
+        ...data,
+      }))
+      .sort((a, b) => b.engagementCount - a.engagementCount);
+    const result = {
+      savedAt: new Date().toISOString(),
+      myUsername: meta.myUsername || null,
+      postsScanned: meta.postsScanned || 0,
+      totalProtected: users.length,
+      users,
+    };
+    try {
+      localStorage.setItem(SHARED_KEY, JSON.stringify(result));
+    } catch (e) {
+      log(`Could not save the shared protected list: ${e.message}`, 'error');
+    }
+    return result;
+  };
 
   // ============================================
   // DETECT CURRENT USER
@@ -82,6 +203,12 @@
     if (path.match(/^\/\w+\/(followers|following|status)/)) {
       return path.split('/')[1].toLowerCase();
     }
+
+    // Your own profile page
+    const profile = path.match(/^\/(\w+)\/?$/);
+    if (profile && !['home', 'explore', 'search', 'notifications', 'messages', 'i'].includes(profile[1].toLowerCase())) {
+      return profile[1].toLowerCase();
+    }
     
     return null;
   };
@@ -92,7 +219,7 @@
   const getMyPosts = async (username) => {
     log('📍 Fetching your recent posts...', 'info');
     
-    window.location.href = `https://x.com/${username}`;
+    spaNavigate(`https://x.com/${username}`);
     await sleep(3000);
     
     const posts = [];
@@ -105,13 +232,26 @@
       for (const tweet of tweets) {
         if (posts.length >= CONFIG.POSTS_TO_SCAN) break;
         
-        // Make sure it's my post (not a retweet)
+        // Make sure it's my post (not a retweet). Reposts render socialContext
+        // inside an <a>; pinned posts don't. Structural check works on any UI
+        // language; the English text is a fallback.
         const retweetIndicator = tweet.querySelector('[data-testid="socialContext"]');
+        if (retweetIndicator && retweetIndicator.closest('a') !== null) continue;
         if (retweetIndicator?.textContent?.includes('reposted')) continue;
-        
-        const link = tweet.querySelector('a[href*="/status/"]');
-        if (link && !posts.includes(link.href)) {
-          posts.push(link.href);
+
+        // Author must be you
+        const authorLink = tweet.querySelector('a[href^="/"][role="link"]');
+        const author = authorLink ? authorLink.getAttribute('href').replace('/', '').split('/')[0].toLowerCase() : null;
+        if (author && author !== username.toLowerCase()) continue;
+
+        // Prefer the permalink around the timestamp: the first /status/ link
+        // can belong to a quoted tweet
+        const timeAnchor = tweet.querySelector('time')?.closest('a[href*="/status/"]');
+        const link = timeAnchor || tweet.querySelector('a[href*="/status/"]');
+        const id = link?.href.match(/\/status\/(\d+)/)?.[1];
+        const postUrl = id ? `https://x.com/${username}/status/${id}` : null;
+        if (postUrl && !posts.includes(postUrl)) {
+          posts.push(postUrl);
         }
       }
       
@@ -127,6 +267,8 @@
   // ============================================
   // SCAN POST FOR ENGAGERS
   // ============================================
+  let myUsername = null;
+
   const scanPostEngagers = async (postUrl) => {
     const engagers = new Map();
     const postId = postUrl.match(/status\/(\d+)/)?.[1];
@@ -135,7 +277,7 @@
     // Scan likers
     if (CONFIG.ENGAGEMENT_TYPES.likers) {
       log('  Scanning likers...', 'action');
-      window.location.href = `${postUrl}/likes`;
+      spaNavigate(`${postUrl}/likes`);
       await sleep(2000);
       
       const users = await scrapeUserList();
@@ -143,12 +285,13 @@
         if (!engagers.has(u)) engagers.set(u, []);
         engagers.get(u).push('like');
       });
+      log(`   ❤️ Found ${users.size} likers`, 'info');
     }
     
     // Scan retweeters
     if (CONFIG.ENGAGEMENT_TYPES.retweeters) {
       log('  Scanning retweeters...', 'action');
-      window.location.href = `${postUrl}/retweets`;
+      spaNavigate(`${postUrl}/retweets`);
       await sleep(2000);
       
       const users = await scrapeUserList();
@@ -156,12 +299,13 @@
         if (!engagers.has(u)) engagers.set(u, []);
         engagers.get(u).push('retweet');
       });
+      log(`   🔄 Found ${users.size} retweeters`, 'info');
     }
     
     // Scan quoters
     if (CONFIG.ENGAGEMENT_TYPES.quoters) {
       log('  Scanning quoters...', 'action');
-      window.location.href = `${postUrl}/retweets/with_comments`;
+      spaNavigate(`${postUrl}/retweets/with_comments`);
       await sleep(2000);
       
       const users = await scrapeUserList();
@@ -169,12 +313,13 @@
         if (!engagers.has(u)) engagers.set(u, []);
         engagers.get(u).push('quote');
       });
+      log(`   💬 Found ${users.size} quoters`, 'info');
     }
     
     // Scan repliers (from the post itself)
     if (CONFIG.ENGAGEMENT_TYPES.repliers) {
       log('  Scanning repliers...', 'action');
-      window.location.href = postUrl;
+      spaNavigate(postUrl);
       await sleep(2000);
       
       // Scroll a bit to load replies
@@ -183,18 +328,24 @@
         await sleep(1000);
       }
       
+      let repliers = 0;
       const tweets = document.querySelectorAll(SELECTORS.tweet);
       for (const tweet of tweets) {
         const link = tweet.querySelector('a[href^="/"]');
         if (link) {
           const username = link.getAttribute('href').replace('/', '').toLowerCase();
-          if (username && !username.includes('/')) {
+          if (username && !username.includes('/') && username !== myUsername) {
             if (!engagers.has(username)) engagers.set(username, []);
             engagers.get(username).push('reply');
+            repliers++;
           }
         }
       }
+      log(`   💬 Found ${repliers} repliers`, 'info');
     }
+
+    // Never list yourself as your own engager
+    if (myUsername) engagers.delete(myUsername);
     
     return engagers;
   };
@@ -207,7 +358,7 @@
     let scrolls = 0;
     let prev = 0;
     
-    while (scrolls < 10) {
+    while (scrolls < CONFIG.MAX_SCROLLS_PER_LIST) {
       const cells = document.querySelectorAll('[data-testid="UserCell"]');
       
       for (const cell of cells) {
@@ -225,7 +376,7 @@
       
       scrollBy(500);
       scrolls++;
-      await sleep(1000);
+      await sleep(CONFIG.SCROLL_DELAY);
     }
     
     return users;
@@ -253,12 +404,14 @@
       return;
     }
     log(`Detected username: @${username}`, 'info');
+    myUsername = username.toLowerCase();
     
     // Get posts
     const posts = await getMyPosts(username);
     
     // Scan each post
     const allEngagers = new Map();
+    const engagedTweets = new Map(); // user -> post URLs
     
     for (const postUrl of posts) {
       if (!state.isRunning) break;
@@ -272,6 +425,8 @@
       for (const [user, types] of postEngagers) {
         if (!allEngagers.has(user)) allEngagers.set(user, []);
         allEngagers.get(user).push(...types);
+        if (!engagedTweets.has(user)) engagedTweets.set(user, []);
+        engagedTweets.get(user).push(postUrl);
       }
     }
     
@@ -284,6 +439,7 @@
         protectedUsers[user] = {
           engagements: engagements,
           count: engagements.length,
+          tweets: engagedTweets.get(user) || [],
           protectedAt: now,
           expiresAt: now + (CONFIG.LOOKBACK_DAYS * 24 * 60 * 60 * 1000),
         };
@@ -302,7 +458,8 @@
       }
     }
     
-    saveProtectedList(merged);
+    const result = saveProtectedList(merged, { myUsername: username, postsScanned: state.postsScanned });
+    window.protectedUsers = result;
 
     console.log(`
 ╔═══════════════════════════════════════════════════════════╗
@@ -328,6 +485,9 @@
         console.log(`  ${i + 1}. @${user}: ${engs.length} engagements (${[...new Set(engs)].join(', ')})`);
       });
     }
+
+    console.log('\n💡 smartUnfollow will respect this list!');
+    console.log('💡 Access via: window.protectedUsers');
   };
 
   run();
@@ -360,6 +520,7 @@
     return false;
   };
 
+  window.XActions = window.XActions || {};
   window.XActions.ActiveUsers = {
     getProtected: getProtectedList,
     isProtected: (u) => {
@@ -368,7 +529,7 @@
       return user && user.expiresAt > Date.now();
     },
     clearProtected: () => {
-      saveProtectedList({});
+      saveProtectedList({}, { myUsername });
       log('Protected list cleared', 'success');
     },
   };

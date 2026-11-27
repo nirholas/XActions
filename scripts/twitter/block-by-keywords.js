@@ -1,11 +1,17 @@
+// GENERATED FILE: a copy of browser/blockByKeywords.js, written by scripts/build-script-manifest.mjs. Edit browser/blockByKeywords.js instead, then run: npm run browser:build
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
 /**
  * ============================================================
  * 🚫 Block By Keywords
  * ============================================================
  * 
- * @name        block-by-keywords.js
- * @description Block users with specific keywords in their bio
+ * @name        blockByKeywords.js
+ * @description Block users whose bio contains keywords you set.
+ * @title       Block by Keywords
+ * @category    safety
+ * @page        x.com/<you>/followers
+ * @writes      true
+ * @aliases     scripts/twitter/block-by-keywords.js
  * @author      nichxbt (https://x.com/nichxbt)
  * @version     1.0.0
  * @date        2026-01-26

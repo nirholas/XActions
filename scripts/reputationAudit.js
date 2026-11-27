@@ -1,5 +1,5 @@
+// GENERATED FILE: a copy of browser/reputationAudit.js, written by scripts/build-script-manifest.mjs. Edit browser/reputationAudit.js instead, then run: npm run browser:build
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
-// scripts/reputationAudit.js
 // AI-score your own timeline for professional, hostile, legal, and spam risk, get a shareable score card, and clean up what it flags
 // Paste in DevTools console on x.com/USERNAME (your own profile, or /with_replies)
 // by nichxbt
@@ -31,7 +31,12 @@
  * ============================================================
  *
  * @name        reputationAudit.js
- * @description AI-scores your own posts across professional, hostile, legal, and spam risk, then renders a shareable score card and offers one-click cleanup of what it flags.
+ * @description AI-score your own posts for professional, hostile, legal and spam risk, then optionally delete what was flagged.
+ * @title       Reputation Audit
+ * @category    analytics
+ * @page        x.com/<you>
+ * @writes      true
+ * @aliases     scripts/reputationAudit.js
  * @author      nichxbt (https://x.com/nichxbt)
  * @version     1.0.0
  * @date        2026-08-28

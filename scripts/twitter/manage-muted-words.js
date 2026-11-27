@@ -1,28 +1,36 @@
+// GENERATED FILE: a copy of browser/manageMutedWords.js, written by scripts/build-script-manifest.mjs. Edit browser/manageMutedWords.js instead, then run: npm run browser:build
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
 /**
  * ============================================
  * 🔇 Manage Muted Words - XActions
  * ============================================
  *
- * @name         manage-muted-words
- * @description  Add, remove, or list your muted words and phrases on X in bulk.
- * @author       nichxbt
- * @version      1.0.0
- * @date         2026-07-20
- * @website      https://xactions.app
+ * @name        manageMutedWords.js
+ * @title       Manage Muted Words
+ * @description Add, remove, or list your muted words and phrases on X in bulk, with a dry run for add and remove.
+ * @category    safety
+ * @page        x.com/settings/muted_keywords
+ * @writes      false
+ * @aliases     scripts/manageMutedWords.js, scripts/twitter/manage-muted-words.js
+ * @author      nichxbt (https://x.com/nichxbt)
+ * @version     1.1.0
+ * @date        2026-11-26
+ * @website     https://xactions.app
  *
- * Usage:
+ * Usage (browser/manageMutedWords.js):
  *   1. Go to x.com/settings/muted_keywords
  *   2. Open the browser console (F12 or Cmd+Option+I -> Console)
  *   3. Set CONFIG.action to 'add', 'remove', or 'list', and fill CONFIG.words.
  *   4. Paste this entire script and press Enter
  *
  * Example:
- *   action: 'add', words: ['giveaway', 'airdrop scam', 'free nft']. Running it
- *   opens the Add flow for each phrase, applies your mute options, saves, and
- *   waits a randomized delay between adds so you are not rate-limited. Use
- *   action: 'list' first to see what is already muted, or action: 'remove' with
- *   the same words to unmute them. Call window.stopManageMutedWords() to abort.
+ *   action: 'add', words: ['giveaway', 'airdrop scam', 'free nft']. The first
+ *   run is a DRY RUN that only prints what would be muted; set dryRun: false to
+ *   really do it. A live run opens the Add flow for each phrase, applies your
+ *   mute options, saves, and waits a randomized delay between adds so you are
+ *   not rate-limited. Use action: 'list' first to see what is already muted, or
+ *   action: 'remove' with the same words to unmute them. Call
+ *   window.stopManageMutedWords() to abort.
  *
  * ============================================
  */
@@ -45,9 +53,14 @@
       'airdrop scam'
     ],
 
+    // Preview only: for 'add' and 'remove', print the words and the options,
+    // then stop without touching your account. Set false to really do it.
+    dryRun: true,
+
     // Options applied to each word when adding (X's mute settings).
     muteOptions: {
       // 'anyone' (from anyone) or 'follow' (from people you don't follow).
+      // 'everyone' and 'people_you_dont_follow' are accepted too.
       from: 'anyone',
       // Mute in the Home timeline.
       home: true,
@@ -58,7 +71,7 @@
     },
 
     // Minimum delay between actions (ms).
-    minDelay: 1500,
+    minDelay: 2000,
 
     // Maximum delay between actions (ms).
     maxDelay: 4000
@@ -122,6 +135,24 @@
         ctrl.click();
         return true;
       }
+    }
+    return false;
+  };
+
+  // Set a checkbox/switch whose visible label matches any of `needles` to `want`.
+  // Only clicks when the current state can be read and differs from `want`.
+  const setToggleByText = (needles, want) => {
+    const wants = needles.map(n => n.toLowerCase());
+    const controls = document.querySelectorAll('[role="checkbox"], [role="switch"], label');
+    for (const ctrl of controls) {
+      const txt = (ctrl.textContent || '').trim().toLowerCase();
+      if (!txt || !wants.some(w => txt.includes(w))) continue;
+      const input = ctrl.querySelector('input[type="checkbox"]');
+      const aria = ctrl.getAttribute('aria-checked');
+      const state = input ? input.checked : aria === 'true' ? true : aria === 'false' ? false : null;
+      if (state === null) return false;
+      if (state !== want) ctrl.click();
+      return true;
     }
     return false;
   };
@@ -216,6 +247,19 @@
     return stats;
   }
   log.info(`Action: ${action} | ${words.length} word(s)`);
+  words.forEach((w, i) => console.log(`   ${i + 1}. "${w}"`));
+  if (action === 'add') {
+    const o = CONFIG.muteOptions || {};
+    console.log(`   ⏱️ Duration: ${o.duration || 'forever'}`);
+    console.log(`   👤 From: ${o.from || 'anyone'}`);
+    console.log(`   🏠 Home timeline: ${o.home !== false} | 🔔 Notifications: ${o.notifications !== false}`);
+  }
+
+  if (CONFIG.dryRun) {
+    log.warning(`DRY RUN MODE - nothing was changed. Set CONFIG.dryRun = false to actually ${action === 'add' ? 'mute' : 'unmute'} these words.`);
+    return stats;
+  }
+
   log.info('To stop early: window.stopManageMutedWords()');
 
   // ---- ADD ----
@@ -232,11 +276,14 @@
 
     // Apply mute options (best-effort; X wording varies by build).
     const o = CONFIG.muteOptions || {};
-    if (o.from === 'follow') clickOptionByText(["people you don't follow", 'you don’t follow', "don't follow"]);
+    if (o.home === false) setToggleByText(['home timeline', 'home'], false);
+    if (o.notifications === false) setToggleByText(['notifications'], false);
+    if (o.from === 'follow' || o.from === 'people_you_dont_follow') clickOptionByText(["people you don't follow", 'you don’t follow', "don't follow"]);
     else clickOptionByText(['from anyone', 'anyone']);
-    if (o.duration && o.duration !== 'forever') {
+    const duration = String(o.duration || 'forever').toLowerCase();
+    if (duration !== 'forever') {
       const map = { '24h': ['24 hours', '24'], '7d': ['7 days', '7'], '30d': ['30 days', '30'] };
-      clickOptionByText(map[o.duration] || ['forever']);
+      clickOptionByText(map[duration] || ['forever']);
     }
     await sleep(300);
 

@@ -1,11 +1,17 @@
+// GENERATED FILE: a copy of browser/scraperToolbox.js, written by scripts/build-script-manifest.mjs. Edit browser/scraperToolbox.js instead, then run: npm run browser:build
 // Copyright (c) 2024-2026 nich (@nichxbt). All rights reserved.
 /**
  * ============================================================
  * 🧰 XActions Scraper Toolbox
  * ============================================================
  *
- * @name        scraper-toolbox.js
- * @description Interactive on-page control panel for scraping X/Twitter
+ * @name        scraperToolbox.js
+ * @description On-page scraping control panel with start, pause and stop, live filters and one-click exports.
+ * @title       Scraper Toolbox
+ * @category    scrape
+ * @page        x.com/*
+ * @writes      false
+ * @aliases     scripts/twitter/scraper-toolbox.js
  *              timelines. Start/pause/stop, live filters, user exclusions,
  *              keyword rules, and one-click exports (JSON/CSV/MD/TXT/HTML,
  *              clipboard). Captures data from X's own GraphQL responses,

@@ -1,11 +1,17 @@
+// GENERATED FILE: a copy of browser/commentByHashtag.js, written by scripts/build-script-manifest.mjs. Edit browser/commentByHashtag.js instead, then run: npm run browser:build
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
 /**
  * =============================================================================
  * XActions - Comment By Hashtag
  * =============================================================================
  * 
- * @name        Comment By Hashtag
- * @description Search for tweets with specific hashtags and automatically 
+ * @name        commentByHashtag.js
+ * @description Find posts with specific hashtags and comment on them from your templates.
+ * @title       Comment by Hashtag
+ * @category    engage
+ * @page        x.com/search?q=<query>&f=live
+ * @writes      true
+ * @aliases     scripts/twitter/comment-by-hashtag.js
  *              comment on them with customizable messages
  * @author      nichxbt
  * @version     1.0.0

@@ -1,183 +1,206 @@
+// GENERATED FILE: a copy of browser/clearAllReposts.js, written by scripts/build-script-manifest.mjs. Edit browser/clearAllReposts.js instead, then run: npm run browser:build
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
 /**
  * ============================================================
- * 🔄 Clear All Retweets
+ * 🔄 Clear All Reposts (Unretweet All) — Production Grade
  * ============================================================
- * 
- * @name        clear-all-retweets.js
- * @description Undo all retweets from your X/Twitter account
+ *
+ * @name        clearAllReposts.js
+ * @title       Clear All Reposts
+ * @description Undo the reposts on your profile, with a keyword skip list, a cap, a dry run and a JSON export.
+ * @category    cleanup
+ * @page        x.com/<you>
+ * @writes      true
+ * @aliases     scripts/clearAllReposts.js, scripts/twitter/clear-all-retweets.js
  * @author      nichxbt (https://x.com/nichxbt)
- * @version     1.0.0
- * @date        2026-01-26
+ * @version     2.1.0
+ * @date        2026-11-26
  * @repository  https://github.com/nirholas/XActions
- * 
+ *
  * ============================================================
- * ⚠️ WARNING: This will undo ALL your retweets!
- * ============================================================
- * 
- * 📋 USAGE INSTRUCTIONS:
- * 
- * 1. Go to your profile: https://x.com/YOUR_USERNAME
- * 2. Open Chrome DevTools (F12 or Cmd+Option+I)
- * 3. Paste this script and press Enter
- * 4. Watch the console for progress
- * 
- * ============================================================
- * ⚙️ CONFIGURATION
- * ============================================================
- */
-
-// `var` (not `const`): a repeated top-level `const` paste in the same
-// DevTools tab throws "already been declared" instead of re-running.
-var CONFIG = {
-  // Maximum retweets to undo (0 = unlimited)
-  maxUndo: 0,
-  
-  // Delay between unretweets (ms)
-  unretweetDelay: 2000,
-  
-  // Delay after scrolling (ms)
-  scrollDelay: 2500,
-  
-  // Max retries when no retweets found
-  maxRetries: 5,
-  
-  // Show confirmation prompt
-  confirmStart: true
-};
-
-/**
- * ============================================================
- * 🚀 SCRIPT START - by nichxbt
+ * 📋 USAGE:
+ *
+ * 1. Go to: https://x.com/YOUR_USERNAME (your profile page)
+ * 2. Open DevTools Console (F12)
+ * 3. Paste browser/clearAllReposts.js and run
+ *
+ * Starts as a DRY RUN capped at 50. Set dryRun: false to remove
+ * reposts for real (you are asked to confirm first when
+ * confirmStart is true).
+ *
+ * 🎮 CONTROLS:
+ *   window.XActions.pause()  / .resume() / .abort() / .status()
  * ============================================================
  */
+(() => {
+  'use strict';
 
-(async function clearAllRetweets() {
+  const CONFIG = {
+    maxRemovals: 50,                  // Cap per run (Infinity = no cap)
+    dryRun: true,                     // Preview without removing; set false to remove
+    confirmStart: true,               // Ask for confirmation before a live run
+    skipKeywords: [],                 // Keep reposts containing these words
+    minDelay: 2000,
+    maxDelay: 3000,
+    scrollDelay: 2500,
+    maxEmptyScrolls: 6,
+    maxConsecutiveErrors: 10,
+    rateLimitCooldown: 60000,
+    exportOnComplete: true,
+  };
+
+  const SEL = {
+    unretweet:        ['[data-testid="unretweet"]', 'button[data-testid="unretweet"]'],
+    unretweetConfirm: ['[data-testid="unretweetConfirm"]', '[data-testid="confirmationSheetConfirm"]'],
+    tweet:            ['article[data-testid="tweet"]', 'article[role="article"]'],
+    tweetText:        ['[data-testid="tweetText"]'],
+    toast:            ['[data-testid="toast"]', '[role="alert"]'],
+  };
+
+  const $ = (s, c = document) => { for (const x of (Array.isArray(s) ? s : [s])) { const e = c.querySelector(x); if (e) return e; } return null; };
+  const $$ = (s, c = document) => { for (const x of (Array.isArray(s) ? s : [s])) { const e = c.querySelectorAll(x); if (e.length) return [...e]; } return []; };
   const sleep = (ms) => new Promise(r => setTimeout(r, ms));
-  
-  // DOM Selectors
-  const $retweetBtn = '[data-testid="retweet"]';
-  const $unretweetBtn = '[data-testid="unretweet"]';
-  const $unretweetConfirm = '[data-testid="unretweetConfirm"]';
-  const $tweet = '[data-testid="tweet"]';
-  const $retweetIndicator = '[data-testid="socialContext"]';
-  
-  console.log('╔════════════════════════════════════════════════════════════╗');
-  console.log('║  🔄 CLEAR ALL RETWEETS                                     ║');
-  console.log('║  by nichxbt - https://github.com/nirholas/XActions         ║');
-  console.log('╚════════════════════════════════════════════════════════════╝');
-  console.log('');
-  
-  // Confirmation prompt
-  if (CONFIG.confirmStart) {
-    const confirmed = confirm(
-      '⚠️ WARNING: This will undo ALL your retweets!\n\n' +
-      'This removes retweets from your timeline.\n\n' +
-      'Are you sure you want to continue?'
-    );
-    if (!confirmed) {
-      console.log('❌ Cancelled by user.');
-      return;
-    }
-  }
-  
-  console.log('🚀 Starting to undo all retweets...');
-  console.log('📍 Looking for retweets on your profile...');
-  console.log('');
-  
-  let totalUndone = 0;
-  let retries = 0;
-  
-  // Helper to check if tweet is a retweet
-  const isRetweet = (tweet) => {
-    // Check for "You reposted" indicator
-    const socialContext = tweet.querySelector($retweetIndicator);
-    if (socialContext?.textContent?.toLowerCase()?.includes('repost')) {
-      return true;
-    }
-    
-    // Check for unretweet button (green retweet icon)
-    const unretweetBtn = tweet.querySelector($unretweetBtn);
-    return !!unretweetBtn;
+  const gaussian = (a, b) => Math.floor(a + ((Math.random() + Math.random()) / 2) * (b - a));
+  const isRateLimited = () => { const t = $(SEL.toast); return t && /rate limit|try again|too many|slow down/i.test(t.textContent); };
+
+  let paused = false, aborted = false;
+  let removed = 0, scanned = 0, skipped = 0, errors = 0, consecutiveErrors = 0;
+  const startTime = Date.now();
+  const removedLog = [];
+
+  window.XActions = {
+    pause()  { paused = true;  console.log('⏸️ Paused.'); },
+    resume() { paused = false; console.log('▶️ Resumed.'); },
+    abort()  { aborted = true; console.log('🛑 Aborting...'); },
+    status() {
+      const el = ((Date.now() - startTime) / 1000).toFixed(0);
+      console.log(`📊 Removed: ${removed} | Scanned: ${scanned} | Skipped: ${skipped} | Errors: ${errors} | ${el}s`);
+    },
   };
-  
-  // Helper to undo a retweet
-  const undoRetweet = async (tweet) => {
-    // Find the unretweet button
-    const unretweetBtn = tweet.querySelector($unretweetBtn);
-    
-    if (!unretweetBtn) {
-      return false;
-    }
-    
-    try {
-      // Click unretweet
-      unretweetBtn.click();
-      await sleep(500);
-      
-      // Look for confirmation menu
-      const confirmBtn = document.querySelector($unretweetConfirm);
-      if (confirmBtn) {
-        confirmBtn.click();
-        await sleep(300);
+
+  const shouldContinue = async () => { while (paused && !aborted) await sleep(500); return !aborted; };
+
+  const run = async () => {
+    const W = 60;
+    console.log('╔' + '═'.repeat(W) + '╗');
+    console.log('║  🔄 CLEAR ALL REPOSTS' + ' '.repeat(W - 23) + '║');
+    console.log('║  by nichxbt — v2.0' + ' '.repeat(W - 21) + '║');
+    console.log('╚' + '═'.repeat(W) + '╝');
+
+    console.log(CONFIG.dryRun ? '🔍 DRY RUN: preview only' : '⚠️ LIVE MODE: reposts WILL be removed!');
+    console.log(`⚙️ Max: ${CONFIG.maxRemovals === Infinity ? '∞' : CONFIG.maxRemovals} | Dry run: ${CONFIG.dryRun} | Skip keywords: ${CONFIG.skipKeywords.length}`);
+
+    if (!CONFIG.dryRun && CONFIG.confirmStart) {
+      const confirmed = confirm(
+        '⚠️ WARNING: This will undo your reposts!\n\n' +
+        'This removes reposts from your timeline.\n\n' +
+        'Are you sure you want to continue?'
+      );
+      if (!confirmed) {
+        console.log('❌ Cancelled by user.');
+        return;
       }
-      
-      return true;
-    } catch (e) {
-      console.warn('⚠️ Error undoing retweet:', e.message);
-      return false;
     }
-  };
-  
-  const processRetweets = async () => {
-    while (retries < CONFIG.maxRetries) {
-      // Check limit
-      if (CONFIG.maxUndo > 0 && totalUndone >= CONFIG.maxUndo) {
-        console.log(`🛑 Reached limit of ${CONFIG.maxUndo} unretweets. Stopping.`);
-        break;
+
+    let emptyScrolls = 0;
+    let lastHeight = document.body.scrollHeight;
+
+    while (removed < CONFIG.maxRemovals && emptyScrolls < CONFIG.maxEmptyScrolls) {
+      if (!(await shouldContinue())) break;
+      if (isRateLimited()) { console.warn('🚨 Rate limit! Cooling down...'); await sleep(CONFIG.rateLimitCooldown); continue; }
+
+      const buttons = $$(SEL.unretweet);
+      if (buttons.length === 0) {
+        window.scrollTo(0, document.body.scrollHeight);
+        await sleep(gaussian(CONFIG.scrollDelay, CONFIG.scrollDelay + 800));
+        const newHeight = document.body.scrollHeight;
+        if (newHeight === lastHeight) {
+          emptyScrolls++;
+        } else {
+          emptyScrolls = 0;
+          lastHeight = newHeight;
+        }
+        continue;
       }
-      
-      // Find all tweets
-      const tweets = document.querySelectorAll($tweet);
-      let foundRetweet = false;
-      
-      for (const tweet of tweets) {
-        if (isRetweet(tweet)) {
-          // Only count a pass as progress when an undo succeeds; otherwise a
-          // tweet that looks like a retweet but cannot be undone would spin
-          // this loop forever with no scroll, retry, or delay
-          if (await undoRetweet(tweet)) {
-            foundRetweet = true;
-            totalUndone++;
-            retries = 0;
-            console.log(`🔄 Undid retweet ${totalUndone}${CONFIG.maxUndo > 0 ? '/' + CONFIG.maxUndo : ''}`);
-            await sleep(CONFIG.unretweetDelay);
-            break; // Start over from top
+      emptyScrolls = 0;
+
+      for (const btn of buttons) {
+        if (!(await shouldContinue())) break;
+        if (removed >= CONFIG.maxRemovals) break;
+
+        const article = btn.closest('article');
+        const textEl = article ? $(SEL.tweetText, article) : null;
+        const text = textEl ? textEl.textContent.trim() : '';
+        scanned++;
+
+        // Keyword skip filter
+        if (CONFIG.skipKeywords.length > 0 && CONFIG.skipKeywords.some(kw => text.toLowerCase().includes(kw.toLowerCase()))) {
+          skipped++;
+          continue;
+        }
+
+        if (CONFIG.dryRun) {
+          console.log(`   🔍 Would remove repost: "${text.slice(0, 80)}..."`);
+          removedLog.push({ text: text.slice(0, 200), timestamp: new Date().toISOString(), dryRun: true });
+          removed++;
+          continue;
+        }
+
+        try {
+          btn.click();
+          await sleep(gaussian(400, 700));
+          const confirm = $(SEL.unretweetConfirm);
+          if (confirm) { confirm.click(); await sleep(gaussian(300, 500)); }
+
+          removed++;
+          consecutiveErrors = 0;
+          removedLog.push({ text: text.slice(0, 200), timestamp: new Date().toISOString() });
+
+          if (removed % 10 === 0) {
+            const rate = (removed / ((Date.now() - startTime) / 60000)).toFixed(1);
+            console.log(`🔄 Removed ${removed} reposts | ${rate}/min`);
           }
+          await sleep(gaussian(CONFIG.minDelay, CONFIG.maxDelay));
+        } catch (e) {
+          console.warn(`⚠️ Error removing repost: ${e.message}`);
+          errors++;
+          consecutiveErrors++;
+          if (consecutiveErrors >= CONFIG.maxConsecutiveErrors) { console.error('❌ Too many errors — aborting.'); break; }
         }
       }
-      
-      if (!foundRetweet) {
-        retries++;
-        console.log(`🔍 No retweets found on screen. Scrolling... (attempt ${retries}/${CONFIG.maxRetries})`);
-        
-        // Scroll to load more
-        window.scrollTo(0, document.body.scrollHeight);
-        await sleep(CONFIG.scrollDelay);
-      }
+
+      if (consecutiveErrors >= CONFIG.maxConsecutiveErrors) break;
+      window.scrollTo(0, document.body.scrollHeight);
+      await sleep(gaussian(CONFIG.scrollDelay, CONFIG.scrollDelay + 800));
+      lastHeight = document.body.scrollHeight;
     }
-    
-    // Done
-    console.log('');
-    console.log('╔════════════════════════════════════════════════════════════╗');
-    console.log(`║  🎉 COMPLETE! Undid ${totalUndone} retweets                `);
-    console.log('╚════════════════════════════════════════════════════════════╝');
-    
-    if (retries >= CONFIG.maxRetries) {
-      console.log('💡 No more retweets found on the visible timeline.');
-      console.log('   If you have more retweets, scroll down and run again.');
+
+    const elapsed = ((Date.now() - startTime) / 1000).toFixed(0);
+    console.log('\n╔' + '═'.repeat(48) + '╗');
+    console.log('║  📊 CLEAR REPOSTS — RESULTS' + ' '.repeat(20) + '║');
+    console.log('╠' + '═'.repeat(48) + '╣');
+    console.log(`║  Removed:     ${String(removed).padEnd(31)}║`);
+    console.log(`║  Scanned:     ${String(scanned).padEnd(31)}║`);
+    console.log(`║  Skipped:     ${String(skipped).padEnd(31)}║`);
+    console.log(`║  Errors:      ${String(errors).padEnd(31)}║`);
+    console.log(`║  Duration:    ${(elapsed + 's').padEnd(31)}║`);
+    console.log('╚' + '═'.repeat(48) + '╝');
+
+    if (CONFIG.exportOnComplete && removedLog.length > 0) {
+      const blob = new Blob([JSON.stringify({ summary: { removed, scanned, skipped, errors, dryRun: CONFIG.dryRun }, reposts: removedLog }, null, 2)], { type: 'application/json' });
+      const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+      a.download = `xactions-reposts-cleared-${new Date().toISOString().slice(0, 10)}.json`;
+      document.body.appendChild(a); a.click(); a.remove();
+      console.log('📥 Log exported.');
+    }
+
+    if (CONFIG.dryRun && removed > 0) {
+      console.log(`\n⚡ Set dryRun = false and re-run to actually remove ${removed} reposts.`);
+    }
+    if (emptyScrolls >= CONFIG.maxEmptyScrolls) {
+      console.log('💡 No more reposts found on the visible timeline. If you have more, scroll down and run again.');
     }
   };
-  
-  processRetweets();
+
+  run();
 })();

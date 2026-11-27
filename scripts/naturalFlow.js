@@ -1,5 +1,14 @@
+// GENERATED FILE: a copy of browser/naturalFlow.js, written by scripts/build-script-manifest.mjs. Edit browser/naturalFlow.js instead, then run: npm run browser:build
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
-// scripts/naturalFlow.js
+/**
+ * @name        naturalFlow.js
+ * @title       Natural Flow
+ * @description Simulate a natural browsing session: scroll, like, reply, repost, follow and check notifications at a human pace.
+ * @category    grow
+ * @page        x.com/home
+ * @writes      true
+ * @aliases     scripts/naturalFlow.js
+ */
 // Simulate a natural browsing session: scroll, like, reply, retweet, follow, and check notifications on a human rhythm
 // Paste in DevTools console on x.com/home
 // by nichxbt
@@ -744,7 +753,7 @@
         a.click();
         a.remove();
         console.log('📥 Session log exported.\n');
-      } catch {}
+      } catch { /* the export is optional; the summary is already printed */ }
     }
 
     removeHUD();

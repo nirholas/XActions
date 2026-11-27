@@ -1,4 +1,14 @@
+// GENERATED FILE: a copy of browser/algorithmTrainer.js, written by scripts/build-script-manifest.mjs. Edit browser/algorithmTrainer.js instead, then run: npm run browser:build
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
+/**
+ * @name        algorithmTrainer.js
+ * @title       Algorithm Trainer
+ * @description Cycle through training phases (search, like, follow, comment) to teach the algorithm your niche.
+ * @category    grow
+ * @page        x.com/home
+ * @writes      true
+ * @aliases     src/automation/algorithmTrainer.js
+ */
 // XActions Automation - Algorithm Trainer
 // https://github.com/nirholas/XActions
 // by nichxbt
@@ -28,9 +38,9 @@
   }
 
   const {
-    log, sleep, randomDelay, scrollBy, scrollToTop, scrollToBottom,
-    clickElement, waitForElement, waitForElements, typeText,
-    storage, rateLimit, SELECTORS, extractTweetInfo,
+    log, sleep, randomDelay, scrollBy, scrollToTop,
+    clickElement, waitForElement,
+    storage, rateLimit, SELECTORS,
   } = window.XActions.Core;
 
   // ============================================
@@ -221,15 +231,6 @@
 
   const pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
 
-  const shuffle = (arr) => {
-    const a = [...arr];
-    for (let i = a.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [a[i], a[j]] = [a[j], a[i]];
-    }
-    return a;
-  };
-
   const humanDelay = () => randomDelay(BEHAVIOR.MIN_ACTION_DELAY, BEHAVIOR.MAX_ACTION_DELAY);
   const scrollPause = () => randomDelay(BEHAVIOR.MIN_SCROLL_PAUSE, BEHAVIOR.MAX_SCROLL_PAUSE);
   const readTime = () => randomDelay(BEHAVIOR.MIN_READ_TIME, BEHAVIOR.MAX_READ_TIME);
@@ -408,22 +409,6 @@
     saveTracked();
     log(`💬 Commented "${comment}" on ${tweetId}`, 'success');
     return true;
-  };
-
-  const doFollow = async (tweet) => {
-    if (!canDo('follows')) return false;
-
-    // Find the user link in the tweet to get username
-    const userLink = tweet.querySelector('a[href^="/"][role="link"]');
-    if (!userLink) return false;
-    const username = userLink.getAttribute('href')?.replace('/', '').toLowerCase();
-    if (!username || tracked.followedUsers.has(username)) return false;
-    if (username === myUsername()) return false;
-
-    // Find a follow button within or near the tweet
-    // We need to visit the profile to follow — too complex in-feed.
-    // Instead, look for follow buttons in user cells on search/people pages.
-    return false; // Handled separately in followFromPeoplePage
   };
 
   const followFromUserCell = async (cell) => {

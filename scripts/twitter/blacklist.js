@@ -1,3 +1,4 @@
+// GENERATED FILE: a copy of browser/blacklist.js, written by scripts/build-script-manifest.mjs. Edit browser/blacklist.js instead, then run: npm run browser:build
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
 /**
  * ============================================================
@@ -5,7 +6,12 @@
  * ============================================================
  * 
  * @name        blacklist.js
- * @description Manage a blacklist of users to ignore/skip
+ * @description Keep a list of users the other automation scripts skip.
+ * @title       Blacklist Manager
+ * @category    automation
+ * @page        x.com/*
+ * @writes      false
+ * @aliases     scripts/twitter/blacklist.js
  * @author      nichxbt (https://x.com/nichxbt)
  * @version     1.0.0
  * @date        2026-01-26
@@ -244,7 +250,7 @@ var CONFIG = {
     
     // Block current user (from profile page)
     blockCurrentUser: () => {
-      const urlMatch = window.location.href.match(/x\.com\/([^\/\?]+)/);
+      const urlMatch = window.location.href.match(/x\.com\/([^/?]+)/);
       if (urlMatch && urlMatch[1]) {
         const username = urlMatch[1];
         if (!['home', 'explore', 'notifications', 'messages', 'i', 'settings'].includes(username)) {

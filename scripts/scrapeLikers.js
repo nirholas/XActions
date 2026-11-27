@@ -1,138 +1,291 @@
+// GENERATED FILE: a copy of browser/scrapeLikers.js, written by scripts/build-script-manifest.mjs. Edit browser/scrapeLikers.js instead, then run: npm run browser:build
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
 /**
- * Likers Scraper
- * Get all users who liked a specific tweet
- * 
- * HOW TO USE:
- * 1. Go to a tweet and click on the likes count to open the likers list
- *    OR go directly to x.com/USERNAME/status/TWEETID/likes
- * 2. Open Developer Console (Ctrl+Shift+J or Cmd+Option+J)
- * 3. Paste this script and press Enter
- * 
- * by nichxbt - https://github.com/nirholas/XActions
+ * ============================================
+ * ❤️ Scrape Likers - XActions
+ * ============================================
+ *
+ * @name        scrapeLikers.js
+ * @title       Scrape Likers
+ * @description Scroll the Likes view of a post and export every user who liked it (handle, name, bio, verified, follows-you) to JSON and CSV.
+ * @category    scrape
+ * @page        x.com/<username>/status/<id>/likes
+ * @writes      false
+ * @aliases     scripts/scrapeLikers.js, scripts/twitter/scrape-likers.js
+ * @author      nichxbt (https://x.com/nichxbt)
+ * @version     1.1.0
+ * @date        2026-11-27
+ * @website     https://xactions.app
+ *
+ * Usage:
+ *   1. Open a post's Likes page: x.com/<user>/status/<id>/likes
+ *      (open the post, then click its likes count to reveal "Liked by")
+ *   2. Open the browser console (F12 or Cmd+Option+I -> Console)
+ *   3. (Optional) edit the CONFIG options at the top of the script
+ *   4. Paste browser/scrapeLikers.js and press Enter
+ *
+ * Example:
+ *   On x.com/nasa/status/1234567890/likes the script scrolls the "Liked by"
+ *   list, prints a running count ("Collected 95 likers..."), then downloads
+ *   tweet_1234567890_likers_<date>.json and reports how many are verified.
+ *   To stop early: window.stopScrapeLikers().
+ *   For CSV only, set autoDownloadCsv: true and downloadJson: false.
+ *
+ * ============================================
  */
 
-(() => {
+(async function scrapeLikers() {
+  'use strict';
+
+  // ============================================
+  // 📝 CONFIGURATION - Customize these options
+  // ============================================
   const CONFIG = {
-    MAX_LIKERS: 5000,
-    SCROLL_DELAY: 1500,
-    FORMAT: 'both', // 'json', 'csv', 'both'
+    // Stop after collecting this many likers (safety cap)
+    maxUsers: 5000,
+
+    // How far to scroll each step (pixels)
+    scrollStep: 1400,
+
+    // Delay between scrolls (ms). Raise to 2500+ on a slow connection so rows load.
+    scrollDelay: 1500,
+
+    // Give up after this many consecutive scrolls with no new likers (end of list)
+    stallLimit: 6,
+
+    // Hard cap on scroll attempts, independent of stalls
+    maxScrollAttempts: 400,
+
+    // Also trigger a browser download of the CSV file
+    autoDownloadCsv: false,
+
+    // Trigger a browser download of the JSON file
+    downloadJson: true
   };
 
-  const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+  // ============================================
+  // 🔧 SELECTORS
+  // ============================================
+  const SELECTORS = {
+    userCell: '[data-testid="UserCell"]',
+    userDescription: '[data-testid="UserDescription"]',
+    followsYou: '[data-testid="userFollowIndicator"]',
+    verified: 'svg[aria-label*="Verified"], [data-testid="icon-verified"]',
+    profileLink: 'a[href^="/"]'
+  };
+
+  // ============================================
+  // 🛠️ HELPERS
+  // ============================================
+  const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+  const randomDelay = () => sleep(CONFIG.scrollDelay + Math.floor(Math.random() * 500));
+
+  const log = {
+    info: (m) => console.log(`ℹ️ ${m}`),
+    success: (m) => console.log(`✅ ${m}`),
+    warning: (m) => console.log(`⚠️ ${m}`),
+    error: (m) => console.log(`❌ ${m}`),
+    count: (n) => console.log(`❤️ Collected ${n} likers...`)
+  };
+
+  const csvCell = (v) => `"${String(v == null ? '' : v).replace(/"/g, '""').replace(/\r?\n/g, ' ')}"`;
 
   const download = (content, filename, type) => {
-    const blob = new Blob([content], { type });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = filename;
-    a.click();
-    URL.revokeObjectURL(url);
+    try {
+      const blob = new Blob([content], { type });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      return true;
+    } catch (e) {
+      log.error(`Download of ${filename} failed: ${e.message}`);
+      return false;
+    }
   };
 
   const extractUser = (cell) => {
-    try {
-      const nameEl = cell.querySelector('[dir="ltr"] > span');
-      const handleEl = cell.querySelector('a[href^="/"]');
-      const bioEl = cell.querySelector('[data-testid="UserDescription"]');
-      const verified = !!cell.querySelector('svg[aria-label*="Verified"]');
-      
-      const href = handleEl?.getAttribute('href') || '';
-      const handle = href.replace('/', '').split('/')[0];
-      
-      return {
-        handle,
-        displayName: nameEl?.textContent || '',
-        bio: bioEl?.textContent || '',
-        verified,
-        profileUrl: `https://x.com/${handle}`,
-      };
-    } catch (e) {
-      return null;
+    const anchors = Array.from(cell.querySelectorAll(SELECTORS.profileLink));
+
+    let handle = '';
+    for (const a of anchors) {
+      const href = a.getAttribute('href') || '';
+      const m = href.match(/^\/([A-Za-z0-9_]{1,15})$/);
+      if (m) { handle = m[1]; break; }
     }
-  };
-
-  const getTweetId = () => {
-    const match = window.location.pathname.match(/status\/(\d+)/);
-    return match ? match[1] : null;
-  };
-
-  const run = async () => {
-    if (!window.location.pathname.includes('/likes')) {
-      console.error('❌ Please go to the likes page of a tweet!');
-      console.log('   Example: x.com/user/status/123456/likes');
-      return;
+    if (!handle) {
+      const at = anchors.find((a) => a.textContent.trim().startsWith('@'));
+      if (at) handle = at.textContent.trim().slice(1).split(/\s/)[0];
     }
+    if (!handle) return null;
 
-    const tweetId = getTweetId();
-    console.log(`❤️ Scraping likers of tweet ${tweetId}...`);
-
-    const likers = new Map();
-    let scrolls = 0;
-    let noNewCount = 0;
-
-    while (likers.size < CONFIG.MAX_LIKERS && noNewCount < 5) {
-      const cells = document.querySelectorAll('[data-testid="UserCell"]');
-      const beforeCount = likers.size;
-
-      cells.forEach(cell => {
-        const user = extractUser(cell);
-        if (user && user.handle && !likers.has(user.handle)) {
-          likers.set(user.handle, user);
-        }
-      });
-
-      const added = likers.size - beforeCount;
-      if (added > 0) {
-        console.log(`❤️ Collected ${likers.size} likers...`);
-        noNewCount = 0;
-      } else {
-        noNewCount++;
-      }
-
-      window.scrollBy(0, 800);
-      await sleep(CONFIG.SCROLL_DELAY);
-      scrolls++;
-
-      if (scrolls > 200) break;
-    }
-
-    const likerList = Array.from(likers.values());
-
-    console.log('\n' + '='.repeat(60));
-    console.log(`❤️ SCRAPED ${likerList.length} LIKERS`);
-    console.log('='.repeat(60) + '\n');
-
-    likerList.slice(0, 5).forEach((l, i) => {
-      console.log(`${i + 1}. @${l.handle}${l.verified ? ' ✓' : ''} - ${l.displayName}`);
+    const nameAnchor = anchors.find((a) => {
+      const t = a.textContent.trim();
+      return t && !t.startsWith('@');
     });
-    if (likerList.length > 5) {
-      console.log(`   ... and ${likerList.length - 5} more\n`);
+    const displayName = (nameAnchor && nameAnchor.textContent.trim()) ||
+      (cell.querySelector('div[dir="ltr"] span')?.textContent.trim()) || '';
+
+    let bio = cell.querySelector(SELECTORS.userDescription)?.textContent?.trim() || '';
+    if (!bio) {
+      const auto = cell.querySelector('[dir="auto"]:not([data-testid])')?.textContent?.trim();
+      if (auto && auto.length >= 10 && !auto.startsWith('@')) bio = auto;
     }
 
-    const verified = likerList.filter(l => l.verified).length;
-    console.log(`📊 Stats: ${verified} verified accounts`);
-
-    if (CONFIG.FORMAT === 'json' || CONFIG.FORMAT === 'both') {
-      download(JSON.stringify({ tweetId, likers: likerList }, null, 2), `tweet_${tweetId}_likers_${Date.now()}.json`, 'application/json');
-      console.log('💾 Downloaded likers.json');
-    }
-
-    if (CONFIG.FORMAT === 'csv' || CONFIG.FORMAT === 'both') {
-      const csv = [
-        'Handle,DisplayName,Bio,Verified,ProfileURL',
-        ...likerList.map(l => 
-          `"@${l.handle}","${l.displayName.replace(/"/g, '""')}","${l.bio.replace(/"/g, '""').replace(/\n/g, ' ')}",${l.verified},"${l.profileUrl}"`
-        )
-      ].join('\n');
-      download(csv, `tweet_${tweetId}_likers_${Date.now()}.csv`, 'text/csv');
-      console.log('💾 Downloaded likers.csv');
-    }
-
-    window.scrapedLikers = { tweetId, likers: likerList };
-    console.log('\n✅ Done! Access data: window.scrapedLikers');
+    return {
+      handle,
+      displayName,
+      bio,
+      verified: !!cell.querySelector(SELECTORS.verified),
+      followsYou: !!cell.querySelector(SELECTORS.followsYou),
+      profileUrl: `https://x.com/${handle}`
+    };
   };
 
-  run();
+  const getTweetId = () => (window.location.pathname.match(/status\/(\d+)/) || [])[1] || null;
+
+  // ============================================
+  // 🛑 STOP SWITCH
+  // ============================================
+  let stopped = false;
+  window.stopScrapeLikers = () => {
+    stopped = true;
+    log.warning('Stop requested. Finishing the current scroll, then exporting what was collected.');
+  };
+
+  // ============================================
+  // 🚦 PAGE GUARD
+  // ============================================
+  console.log(`
+╔══════════════════════════════════════════════════════════╗
+║  ❤️ SCRAPE LIKERS - XActions                             ║
+║  🌐 https://xactions.app                                 ║
+╚══════════════════════════════════════════════════════════╝
+  `);
+
+  const tweetId = getTweetId();
+  if (!/\/likes\/?$/.test(window.location.pathname) || !tweetId) {
+    log.warning('You are not on a post Likes page.');
+    log.info('Open a post, click its likes count, and land on x.com/<user>/status/<id>/likes, then run this again.');
+    return;
+  }
+
+  log.info(`Scraping likers of post ${tweetId}`);
+  log.info(`Max likers: ${CONFIG.maxUsers}. To stop early: window.stopScrapeLikers()`);
+
+  // ============================================
+  // 🎯 MAIN LOOP
+  // ============================================
+  const users = new Map();
+  const stats = { collected: 0, verified: 0, followsYou: 0, scrolls: 0, errors: 0 };
+
+  let scrollAttempts = 0;
+  let stall = 0;
+
+  while (!stopped && users.size < CONFIG.maxUsers && stall < CONFIG.stallLimit && scrollAttempts < CONFIG.maxScrollAttempts) {
+    const before = users.size;
+    const cells = document.querySelectorAll(SELECTORS.userCell);
+
+    cells.forEach((cell) => {
+      try {
+        const u = extractUser(cell);
+        if (u && u.handle && !users.has(u.handle)) users.set(u.handle, u);
+      } catch (e) {
+        stats.errors++;
+      }
+    });
+
+    if (users.size > before) {
+      log.count(users.size);
+      stall = 0;
+    } else {
+      stall++;
+    }
+
+    window.scrollBy(0, CONFIG.scrollStep);
+    await randomDelay();
+    scrollAttempts++;
+    stats.scrolls = scrollAttempts;
+  }
+
+  const list = Array.from(users.values()).slice(0, CONFIG.maxUsers);
+  stats.collected = list.length;
+  stats.verified = list.filter((u) => u.verified).length;
+  stats.followsYou = list.filter((u) => u.followsYou).length;
+
+  // ============================================
+  // 📤 EXPORT
+  // ============================================
+  const result = {
+    tweetId,
+    tweetUrl: `https://x.com${window.location.pathname.replace(/\/likes\/?$/, '')}`,
+    scrapedAt: new Date().toISOString(),
+    total: list.length,
+    likers: list
+  };
+
+  const buildCsv = () => {
+    const header = 'Handle,DisplayName,Bio,Verified,FollowsYou,ProfileURL';
+    const rows = list.map((u) => [
+      csvCell('@' + u.handle),
+      csvCell(u.displayName),
+      csvCell(u.bio),
+      u.verified,
+      u.followsYou,
+      csvCell(u.profileUrl)
+    ].join(','));
+    return [header, ...rows].join('\n');
+  };
+
+  const csv = buildCsv();
+  const dateStr = new Date().toISOString().split('T')[0];
+
+  if (list.length === 0) {
+    log.warning('No likers were collected. The post may have zero likes, or the list is hidden.');
+  } else {
+    if (CONFIG.downloadJson) {
+      download(JSON.stringify(result, null, 2), `tweet_${tweetId}_likers_${dateStr}.json`, 'application/json');
+      log.success(`Downloaded tweet_${tweetId}_likers_${dateStr}.json`);
+    }
+    if (CONFIG.autoDownloadCsv) {
+      download(csv, `tweet_${tweetId}_likers_${dateStr}.csv`, 'text/csv');
+      log.success(`Downloaded tweet_${tweetId}_likers_${dateStr}.csv`);
+    }
+  }
+
+  window.scrapedLikers = result;
+  window.scrapeLikersExportCSV = () => {
+    download(csv, `tweet_${tweetId}_likers_${dateStr}.csv`, 'text/csv');
+    return csv;
+  };
+
+  // ============================================
+  // 📊 SUMMARY
+  // ============================================
+  console.log(`
+╔══════════════════════════════════════════════════════════╗
+║  📊 SCRAPE LIKERS - COMPLETE                             ║
+╠══════════════════════════════════════════════════════════╣
+║  ❤️ Likers collected:    ${String(stats.collected).padEnd(30)}║
+║  ✔️  Verified:            ${String(stats.verified).padEnd(30)}║
+║  🔁 Follow you:          ${String(stats.followsYou).padEnd(30)}║
+║  📜 Scrolls:             ${String(stats.scrolls).padEnd(30)}║
+║  ❌ Row errors:          ${String(stats.errors).padEnd(30)}║
+╚══════════════════════════════════════════════════════════╝
+  `);
+
+  list.slice(0, 5).forEach((u, i) => {
+    console.log(`${i + 1}. @${u.handle}${u.verified ? ' ✓' : ''} - ${u.displayName}`);
+  });
+  if (list.length > 5) console.log(`   ... and ${list.length - 5} more`);
+
+  console.log('\n📋 CSV preview (full string via window.scrapeLikersExportCSV()):');
+  console.log(csv.split('\n').slice(0, 6).join('\n'));
+  console.log('\n💡 window.scrapedLikers = full data. window.scrapeLikersExportCSV() = download + return CSV.');
+
+  return result;
 })();

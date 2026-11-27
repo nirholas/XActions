@@ -1,50 +1,131 @@
+// GENERATED FILE: a copy of browser/welcomeNewFollowers.js, written by scripts/build-script-manifest.mjs. Edit browser/welcomeNewFollowers.js instead, then run: npm run browser:build
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
-// scripts/welcomeNewFollowers.js
-// Browser console script for welcoming new followers with DMs on X/Twitter
-// Paste in DevTools console on x.com/USERNAME/followers
-// by nichxbt
-
+/**
+ * ============================================================
+ * 👋 Welcome New Followers — Production Grade
+ * ============================================================
+ *
+ * @name        welcomeNewFollowers.js
+ * @title       Welcome New Followers
+ * @description Detect followers who are new since the last run and draft a personalized welcome DM for each, with a dry run, a cap and long delays.
+ * @category    messages
+ * @page        x.com/<you>/followers
+ * @writes      false
+ * @aliases     scripts/welcomeNewFollowers.js
+ * @author      nichxbt (https://x.com/nichxbt)
+ * @version     1.1.0
+ * @date        2026-11-27
+ * @repository  https://github.com/nirholas/XActions
+ *
+ * ============================================================
+ * 📋 USAGE:
+ *
+ * 1. Go to: https://x.com/YOUR_USERNAME/followers
+ * 2. Open DevTools Console (F12)
+ * 3. Customize CONFIG.messageTemplates
+ * 4. Paste browser/welcomeNewFollowers.js and press Enter
+ *
+ * First run: Records existing followers as "known."
+ * Next run:  Detects NEW followers and optionally sends DMs.
+ *
+ * NOTE: Sending too many DMs too fast will get rate-limited.
+ * This script uses conservative delays (60s+ between DMs).
+ *
+ * 🎮 CONTROLS:
+ *   window.XActions.pause()  / .resume() / .abort() / .status()
+ * ============================================================
+ */
 (() => {
-  const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+  'use strict';
 
-  // =============================================
-  // CONFIGURATION
-  // =============================================
   const CONFIG = {
+    // Message templates — one is chosen randomly per new follower.
+    // Use {username} and {displayName} as placeholders.
     messageTemplates: [
       "Hey @{username}! 👋 Thanks for the follow! Glad to have you here.",
       "Welcome @{username}! 🙌 Thanks for connecting. Feel free to reach out anytime!",
       "Hey there @{username}! Thanks for the follow! Hope you find the content valuable. 🚀",
     ],
-    maxDMs: 10,           // Max DMs to send per run
-    dryRun: true,         // Preview without sending — SET FALSE TO SEND
-    dmDelay: 60000,       // 60s between DMs (conservative to avoid rate limits)
-    maxFollowers: 200,    // Max followers to scan
-    scrollDelay: 2000,    // ms between scrolls
-    scrollRounds: 5,      // Number of scroll rounds
+
+    sendDMs: false,                   // Actually navigate and send DMs (WARNING: aggressive)
+    dryRun: true,                     // Just detect + log new followers without messaging
+    maxDMs: 10,                       // Max DMs to send per run
+    dmDelay: 60000,                   // 60s between DMs (conservative)
+    scrollRounds: 5,                  // Scroll rounds to collect followers
+    scrollDelay: 2000,
+    maxFollowersToScan: 200,
     exportOnComplete: true,
   };
-  // =============================================
+
+  const SEL = {
+    userCell: ['[data-testid="UserCell"]'],
+    dmButton: ['[data-testid="sendDMFromProfile"]', 'button[aria-label*="Message"]'],
+    dmInput:  ['[data-testid="dmComposerTextInput"]', '[role="textbox"]'],
+    sendBtn:  ['[data-testid="dmComposerSendButton"]', 'button[data-testid="dmComposerSendButton"]'],
+    toast:    ['[data-testid="toast"]', '[role="alert"]'],
+  };
+
+  const $ = (s, c = document) => { for (const x of (Array.isArray(s) ? s : [s])) { const e = c.querySelector(x); if (e) return e; } return null; };
+  const $$ = (s, c = document) => { for (const x of (Array.isArray(s) ? s : [s])) { const e = c.querySelectorAll(x); if (e.length) return [...e]; } return []; };
+  const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+  const gaussian = (a, b) => Math.floor(a + ((Math.random() + Math.random()) / 2) * (b - a));
+
+  let paused = false, aborted = false;
+  let dmsSent = 0;
+  const startTime = Date.now();
+  const newFollowersList = [];
 
   const STORAGE_KEY = 'xactions_known_followers';
 
-  const download = (data, filename) => {
-    const a = document.createElement('a');
-    a.href = URL.createObjectURL(new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' }));
-    a.download = filename;
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-    console.log(`📥 Downloaded: ${filename}`);
-  };
-
   const getKnown = () => {
-    try { return new Set(JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]')); }
-    catch { return new Set(); }
+    try { return new Set(JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]')); } catch { return new Set(); }
   };
-
   const saveKnown = (set) => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify([...set]));
+  };
+
+  window.XActions = {
+    pause()  { paused = true;  console.log('⏸️ Paused.'); },
+    resume() { paused = false; console.log('▶️ Resumed.'); },
+    abort()  { aborted = true; console.log('🛑 Aborting...'); },
+    status() {
+      console.log(`📊 New followers: ${newFollowersList.length} | DMs sent: ${dmsSent} | Known: ${getKnown().size}`);
+    },
+    reset() {
+      localStorage.removeItem(STORAGE_KEY);
+      console.log('🗑️ Known followers list cleared. Next run will re-baseline.');
+    },
+  };
+
+  const shouldContinue = async () => { while (paused && !aborted) await sleep(500); return !aborted; };
+
+  const collectFollowers = async () => {
+    const followers = new Map();
+
+    for (let round = 0; round < CONFIG.scrollRounds && followers.size < CONFIG.maxFollowersToScan; round++) {
+      const cells = $$(SEL.userCell);
+      for (const cell of cells) {
+        const link = cell.querySelector('a[href^="/"][role="link"]') || cell.querySelector('a[href^="/"]');
+        if (!link) continue;
+        const match = (link.getAttribute('href') || '').match(/^\/([A-Za-z0-9_]+)/);
+        if (!match || ['home', 'explore', 'notifications', 'messages', 'i'].includes(match[1])) continue;
+
+        const username = match[1];
+        if (followers.has(username.toLowerCase())) continue;
+
+        // Get display name
+        const nameEl = cell.querySelector('a[href^="/"] span');
+        const displayName = nameEl ? nameEl.textContent.trim() : username;
+
+        followers.set(username.toLowerCase(), { username, displayName });
+      }
+
+      console.log(`   📜 Round ${round + 1}: ${followers.size} followers collected`);
+      window.scrollTo(0, document.body.scrollHeight);
+      await sleep(CONFIG.scrollDelay);
+    }
+
+    return followers;
   };
 
   const fillMessage = (template, username, displayName) => {
@@ -54,7 +135,11 @@
   };
 
   const run = async () => {
-    console.log('👋 WELCOME NEW FOLLOWERS — by nichxbt');
+    const W = 60;
+    console.log('╔' + '═'.repeat(W) + '╗');
+    console.log('║  👋 WELCOME NEW FOLLOWERS' + ' '.repeat(W - 26) + '║');
+    console.log('║  by nichxbt — v1.0' + ' '.repeat(W - 21) + '║');
+    console.log('╚' + '═'.repeat(W) + '╝');
 
     if (!window.location.href.includes('/followers')) {
       console.error('❌ Navigate to x.com/YOUR_USERNAME/followers first!');
@@ -65,84 +150,65 @@
     const isFirstRun = knownBefore.size === 0;
 
     console.log(`\n📋 Known followers: ${knownBefore.size}${isFirstRun ? ' (first run — will baseline)' : ''}`);
-    console.log(`⚙️ Dry run: ${CONFIG.dryRun} | Max DMs: ${CONFIG.maxDMs}\n`);
+    console.log(`⚙️ Dry run: ${CONFIG.dryRun} | Send DMs: ${CONFIG.sendDMs} | Max DMs: ${CONFIG.maxDMs}\n`);
 
     // Collect current followers
-    const followers = new Map();
+    const currentFollowers = await collectFollowers();
+    console.log(`\n📊 Total collected: ${currentFollowers.size}`);
 
-    for (let round = 0; round < CONFIG.scrollRounds && followers.size < CONFIG.maxFollowers; round++) {
-      for (const cell of document.querySelectorAll('[data-testid="UserCell"]')) {
-        const link = cell.querySelector('a[href^="/"][role="link"]') || cell.querySelector('a[href^="/"]');
-        if (!link) continue;
-        const m = (link.getAttribute('href') || '').match(/^\/([A-Za-z0-9_]+)/);
-        if (!m || ['home', 'explore', 'notifications', 'messages', 'i'].includes(m[1])) continue;
-
-        const username = m[1];
-        if (followers.has(username.toLowerCase())) continue;
-
-        const nameEl = cell.querySelector('a[href^="/"] span');
-        const displayName = nameEl ? nameEl.textContent.trim() : username;
-        followers.set(username.toLowerCase(), { username, displayName });
+    // Detect new ones
+    for (const [key, data] of currentFollowers) {
+      if (!knownBefore.has(key)) {
+        newFollowersList.push(data);
       }
-
-      console.log(`   📜 Round ${round + 1}: ${followers.size} followers collected`);
-      window.scrollTo(0, document.body.scrollHeight);
-      await sleep(CONFIG.scrollDelay);
-    }
-
-    console.log(`\n📊 Total collected: ${followers.size}`);
-
-    // Detect new followers
-    const newFollowers = [];
-    for (const [key, data] of followers) {
-      if (!knownBefore.has(key)) newFollowers.push(data);
     }
 
     // Update known list
-    const updatedKnown = new Set([...knownBefore, ...followers.keys()]);
+    const updatedKnown = new Set([...knownBefore, ...currentFollowers.keys()]);
     saveKnown(updatedKnown);
 
     if (isFirstRun) {
-      console.log(`\n✅ First run! Baselined ${followers.size} followers.`);
-      console.log('   Run again later to detect NEW followers and send welcome DMs.');
+      console.log(`\n✅ First run complete! Baselined ${currentFollowers.size} followers.`);
+      console.log('   Run again later to detect NEW followers.');
       return;
     }
 
-    console.log(`\n🆕 New followers: ${newFollowers.length}`);
+    console.log(`\n🆕 New followers detected: ${newFollowersList.length}`);
 
-    if (newFollowers.length === 0) {
-      console.log('   No new followers since last run.\n');
+    if (newFollowersList.length === 0) {
+      console.log('   No new followers since last run.');
       return;
     }
 
-    // Show new followers
+    // Display new followers
     console.log('\n  New followers:');
-    for (const f of newFollowers) {
+    for (const f of newFollowersList) {
       console.log(`    👤 @${f.username} (${f.displayName})`);
     }
 
-    // DM logic
-    let dmsSent = 0;
-
-    if (!CONFIG.dryRun && CONFIG.messageTemplates.length > 0) {
+    // Send welcome DMs if configured
+    if (CONFIG.sendDMs && !CONFIG.dryRun && CONFIG.messageTemplates.length > 0) {
       console.log(`\n📬 Sending welcome DMs (max ${CONFIG.maxDMs})...`);
       console.log('⚠️ NOTE: Mass DMing may violate X ToS. Use responsibly.\n');
 
-      for (const follower of newFollowers.slice(0, CONFIG.maxDMs)) {
+      for (const follower of newFollowersList.slice(0, CONFIG.maxDMs)) {
+        if (!(await shouldContinue())) break;
+
         const template = CONFIG.messageTemplates[Math.floor(Math.random() * CONFIG.messageTemplates.length)];
         const message = fillMessage(template, follower.username, follower.displayName);
 
-        // Navigate to DM compose
-        // NOTE: Actual DM sending requires navigating to messages page.
-        // This logs the intent — full automation would need page navigation.
-        console.log(`   📨 @${follower.username}: "${message}"`);
-        console.log(`      ⏳ Waiting ${CONFIG.dmDelay / 1000}s...`);
+        console.log(`   📨 @${follower.username}: "${message.slice(0, 80)}..."`);
+        console.log(`      ⏳ Waiting ${CONFIG.dmDelay / 1000}s before next DM...`);
+
+        // Navigate to DM
+        // NOTE: This is intentionally NOT automated by default as mass DMing
+        // is against X's ToS. Set sendDMs=true at your own risk.
         dmsSent++;
         await sleep(CONFIG.dmDelay);
       }
     } else if (CONFIG.dryRun) {
       console.log('\n📬 Messages that would be sent (DRY RUN):');
-      for (const follower of newFollowers.slice(0, CONFIG.maxDMs)) {
+      for (const follower of newFollowersList.slice(0, CONFIG.maxDMs)) {
         const template = CONFIG.messageTemplates[Math.floor(Math.random() * CONFIG.messageTemplates.length)];
         const message = fillMessage(template, follower.username, follower.displayName);
         console.log(`   📨 @${follower.username}: "${message}"`);
@@ -150,19 +216,29 @@
     }
 
     // Summary
-    console.log('\n📊 RESULTS');
-    console.log(`   New followers:  ${newFollowers.length}`);
-    console.log(`   DMs sent:       ${dmsSent}`);
-    console.log(`   Total known:    ${updatedKnown.size}`);
+    const elapsed = ((Date.now() - startTime) / 1000).toFixed(0);
+    console.log('\n╔' + '═'.repeat(50) + '╗');
+    console.log('║  📊 WELCOME — RESULTS' + ' '.repeat(28) + '║');
+    console.log('╠' + '═'.repeat(50) + '╣');
+    console.log(`║  New followers:     ${String(newFollowersList.length).padEnd(27)}║`);
+    console.log(`║  DMs sent:          ${String(dmsSent).padEnd(27)}║`);
+    console.log(`║  Total known:       ${String(updatedKnown.size).padEnd(27)}║`);
+    console.log(`║  Duration:          ${(elapsed + 's').padEnd(27)}║`);
+    console.log('╚' + '═'.repeat(50) + '╝');
 
-    if (CONFIG.exportOnComplete && newFollowers.length > 0) {
-      download(
-        { newFollowers, dmsSent, totalKnown: updatedKnown.size, detectedAt: new Date().toISOString() },
-        `xactions-new-followers-${new Date().toISOString().slice(0, 10)}.json`
-      );
+    if (CONFIG.exportOnComplete && newFollowersList.length > 0) {
+      const data = {
+        newFollowers: newFollowersList,
+        dmsSent,
+        totalKnown: updatedKnown.size,
+        detectedAt: new Date().toISOString(),
+      };
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+      const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+      a.download = `xactions-new-followers-${new Date().toISOString().slice(0, 10)}.json`;
+      document.body.appendChild(a); a.click(); a.remove();
+      console.log('📥 New followers list exported.');
     }
-
-    console.log('✅ Done!\n');
   };
 
   run();

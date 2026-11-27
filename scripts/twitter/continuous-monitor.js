@@ -1,184 +1,251 @@
+// GENERATED FILE: a copy of browser/continuousMonitor.js, written by scripts/build-script-manifest.mjs. Edit browser/continuousMonitor.js instead, then run: npm run browser:build
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
 /**
- * ============================================================
- * 🔄 Continuous Monitor
- * ============================================================
- * 
- * @name        continuous-monitor.js
- * @description Auto-refresh monitoring with browser notifications for follower changes
+ * @name        continuousMonitor.js
+ * @title       Continuous Monitor
+ * @description Re-check a followers or following list on a timer and alert you to every follow and unfollow.
+ * @category    monitor
+ * @page        x.com/<username>/followers or x.com/<username>/following
+ * @writes      false
+ * @aliases     scripts/continuousMonitor.js, scripts/twitter/continuous-monitor.js
  * @author      nichxbt (https://x.com/nichxbt)
- * @version     1.0.0
- * @date        2026-01-26
+ * @version     1.1.0
+ * @date        2026-11-26
  * @repository  https://github.com/nirholas/XActions
- * 
- * ============================================================
- * 📋 USAGE INSTRUCTIONS:
- * 
- * 1. Go to any user's Followers page: https://x.com/USER/followers
- * 2. Open Chrome DevTools (F12 or Cmd+Option+I)
- * 3. Paste this script and press Enter
- * 4. KEEP THE TAB OPEN - it will auto-check periodically
- * 5. You'll get browser notifications when changes occur
- * 
- * ⚠️ NOTE: You'll be asked to allow notifications
- * 
- * To stop monitoring: window.stopMonitor()
- * 
- * ============================================================
- * ⚙️ CONFIGURATION
- * ============================================================
+ *
+ * HOW TO USE:
+ * 1. Go to https://x.com/USERNAME/followers (or /following)
+ * 2. Open Developer Console (Ctrl+Shift+J or Cmd+Option+J)
+ * 3. Paste browser/continuousMonitor.js and press Enter
+ * 4. Leave the tab open: it will check periodically and alert you!
+ *
+ * To stop: stopXActionsMonitor() (or window.stopMonitor()). Pasting the
+ * script again replaces the running monitor instead of stacking a second one.
  */
 
-// `var` (not `const`/`let`): DevTools keeps top-level lexical bindings alive
-// across separate console pastes, so a `const` here throws "already been
-// declared" the second time this script is pasted in the same tab -
-// breaking the documented "run again to keep monitoring" workflow.
+// CONFIGURATION (edit these values):
+// `var` (not `const`): DevTools keeps top-level lexical bindings alive across
+// separate console pastes, so a `const` here throws "already been declared"
+// the second time this script is pasted in the same tab.
 var CONFIG = {
-  // How often to check (minutes)
-  checkIntervalMinutes: 5,
-  
-  // Enable browser notifications
-  enableNotifications: true,
-  
-  // Enable sound alert
-  enableSound: true,
-  
-  // Scroll delay when scraping
-  scrollDelay: 1500,
-  
-  // Max scrolls per check
-  maxScrolls: 50,
-  
-  // Max retries when no new users
-  maxRetries: 3
+  CHECK_INTERVAL_MINUTES: 30,    // How often to check (each check scrolls the whole list)
+  ENABLE_NOTIFICATIONS: true,    // Browser notifications (you'll be prompted)
+  ENABLE_SOUND: true,           // Play sound on changes
+  AUTO_SCROLL: true,            // Auto-scroll to load all users
+  SCROLL_DELAY: 1500,           // Wait after each scroll while loading users (ms)
+  MAX_SCROLLS: 0,               // Max scrolls per check (0 = until the list stops growing)
+  MAX_RETRIES: 3,               // Stop scrolling after this many scrolls with no new users
 };
 
-/**
- * ============================================================
- * 🚀 SCRIPT START
- * ============================================================
- */
-
-(async function continuousMonitor() {
+(() => {
+  const STORAGE_PREFIX = 'xactions_continuous_';
   const sleep = (ms) => new Promise(r => setTimeout(r, ms));
 
   // Re-pasting the script must not stack a second timer on top of a still-running
-  // one - that would double (then triple, ...) every check and every notification.
-  if (typeof window.stopMonitor === 'function') {
+  // one: that would double (then triple, ...) every check and every notification.
+  if (typeof window.stopXActionsMonitor === 'function') {
+    try { window.stopXActionsMonitor(); } catch (e) { /* ignore */ }
+  } else if (typeof window.stopMonitor === 'function') {
     try { window.stopMonitor(); } catch (e) { /* ignore */ }
   }
 
-  const $userCell = '[data-testid="UserCell"]';
-  
-  console.log('╔════════════════════════════════════════════════════════════╗');
-  console.log('║  🔄 CONTINUOUS MONITOR                                     ║');
-  console.log('║  by nichxbt - https://github.com/nirholas/XActions         ║');
-  console.log('╚════════════════════════════════════════════════════════════╝');
-  console.log('');
-  
-  // Detect page
-  const url = window.location.href;
-  const pathMatch = url.match(/x\.com\/([^\/]+)\/(followers|following)/);
-  
-  if (!pathMatch) {
-    console.error('❌ ERROR: Must be on a followers or following page!');
+  // Parse page info
+  const path = window.location.pathname;
+  const isFollowersPage = path.includes('/followers');
+  const isFollowingPage = path.includes('/following');
+
+  if (!isFollowersPage && !isFollowingPage) {
+    console.error('❌ Navigate to a followers or following page first!');
     return;
   }
-  
-  const username = pathMatch[1];
-  const pageType = pathMatch[2];
-  const storageKey = `xactions_continuous_${username}_${pageType}`;
-  
-  console.log(`👤 Monitoring: @${username}/${pageType}`);
-  console.log(`⏱️ Check interval: ${CONFIG.checkIntervalMinutes} minutes`);
-  console.log('');
-  
+
+  const pageType = isFollowersPage ? 'followers' : 'following';
+  const rawTargetUser = path.split('/')[1];
+  const targetUser = rawTargetUser.toLowerCase();
+  const storageKey = `${STORAGE_PREFIX}${targetUser}_${pageType}`;
+  // Older versions keyed the snapshot by the handle as typed in the URL.
+  const legacyStorageKey = `${STORAGE_PREFIX}${rawTargetUser}_${pageType}`;
+
   // Request notification permission
-  if (CONFIG.enableNotifications && 'Notification' in window) {
+  if (CONFIG.ENABLE_NOTIFICATIONS && 'Notification' in window) {
     if (Notification.permission === 'default') {
       console.log('🔔 Requesting notification permission...');
-      await Notification.requestPermission();
     }
-    if (Notification.permission === 'granted') {
-      console.log('✅ Notifications enabled');
-    } else {
-      console.log('⚠️ Notifications denied - will only show in console');
-    }
+    Notification.requestPermission().then(permission => {
+      if (permission === 'granted') console.log('✅ Notifications enabled');
+      else console.log('⚠️ Notifications denied: changes will only show in the console');
+    }).catch(() => {});
   }
-  
-  /**
-   * Play notification sound
-   */
-  function playSound() {
-    if (!CONFIG.enableSound) return;
-    try {
-      const audio = new Audio('data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2teleVUYKm2i4LuUZz8WHVmIpbGniFo5S3+FdWVxdZGdnIVcNjtjlbzOtINGGSl5q9rSmFkkBEKY2OmpaC0UQoHPtHtGFRxii8DDoJxZKS9VhKSahpBdM0FYanRoZmNnc3F3d3V1c3ZzdnFyb2xnaGlubnFwbm1xdXh9g4SFgoKAf4B/e3Z1dHR0dHRyc3N0dHV2d3l7fHx8fH1+f4CBgoKCgYGBgYGAf39+fX18fHt7enp5eXl5eXl5');
-      audio.play().catch(() => {});
-    } catch (e) {}
-  }
-  
-  /**
-   * Send notification
-   */
-  function notify(title, body) {
-    if (CONFIG.enableNotifications && Notification.permission === 'granted') {
+
+  const notify = (title, body) => {
+    console.log(`🔔 ${title}: ${body}`);
+    
+    if (CONFIG.ENABLE_NOTIFICATIONS && 'Notification' in window && Notification.permission === 'granted') {
       new Notification(title, { body, icon: 'https://abs.twimg.com/favicons/twitter.3.ico' });
     }
-    playSound();
-  }
-  
-  /**
-   * Get username from cell
-   */
-  function getUsername(cell) {
-    const link = cell.querySelector('a[href^="/"]');
-    return link ? link.getAttribute('href')?.replace('/', '').split('/')[0] : null;
-  }
-  
-  /**
-   * Scrape current users
-   */
-  async function scrapeUsers() {
-    const users = new Set();
-    let lastCount = 0;
-    let retries = 0;
-    let scrolls = 0;
     
-    // Scroll to top first
+    if (CONFIG.ENABLE_SOUND) {
+      // Play a simple beep using Web Audio API
+      try {
+        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.frequency.value = 800;
+        gain.gain.value = 0.1;
+        osc.start();
+        osc.stop(ctx.currentTime + 0.2);
+      } catch (e) {}
+    }
+  };
+
+  const scrapeUsers = async () => {
+    const users = new Set();
+    let previousSize = 0;
+    let retries = 0;
+
+    if (CONFIG.AUTO_SCROLL) {
+      let scrolls = 0;
+      while (retries < CONFIG.MAX_RETRIES && (!CONFIG.MAX_SCROLLS || scrolls < CONFIG.MAX_SCROLLS)) {
+        scrolls++;
+        window.scrollTo(0, document.body.scrollHeight);
+        await sleep(CONFIG.SCROLL_DELAY);
+
+        document.querySelectorAll('[data-testid="UserCell"]').forEach(cell => {
+          const link = cell.querySelector('a[href^="/"]');
+          if (link) {
+            const username = link.getAttribute('href').replace('/', '').split('/')[0].toLowerCase();
+            if (username && username !== targetUser) {
+              users.add(username);
+            }
+          }
+        });
+
+        if (users.size === previousSize) retries++;
+        else { retries = 0; previousSize = users.size; }
+      }
+    } else {
+      // Just scrape visible users
+      document.querySelectorAll('[data-testid="UserCell"]').forEach(cell => {
+        const link = cell.querySelector('a[href^="/"]');
+        if (link) {
+          const username = link.getAttribute('href').replace('/', '').split('/')[0].toLowerCase();
+          if (username && username !== targetUser) {
+            users.add(username);
+          }
+        }
+      });
+    }
+
+    return Array.from(users);
+  };
+
+  const loadPrevious = () => {
+    try {
+      const data = localStorage.getItem(storageKey) || localStorage.getItem(legacyStorageKey);
+      const parsed = data ? JSON.parse(data) : null;
+      if (!parsed || !Array.isArray(parsed.users)) return null;
+      // Snapshots from older versions kept the handle's original case.
+      parsed.users = parsed.users.map(u => String(u).toLowerCase());
+      return parsed;
+    } catch (e) {
+      return null;
+    }
+  };
+
+  const saveData = (users) => {
+    const data = {
+      target: targetUser,
+      type: pageType,
+      users,
+      timestamp: new Date().toISOString(),
+      count: users.length
+    };
+    localStorage.setItem(storageKey, JSON.stringify(data));
+    return data;
+  };
+
+  const compare = (previous, current) => {
+    const prevSet = new Set(previous);
+    const currSet = new Set(current);
+    return {
+      removed: previous.filter(u => !currSet.has(u)),
+      added: current.filter(u => !prevSet.has(u))
+    };
+  };
+
+  // First few handles of a change, for the notification body.
+  const names = (list) => list.slice(0, 3).map(u => '@' + u).join(', ') + (list.length > 3 ? ', ...' : '');
+
+  let checkCount = 0;
+
+  const runCheck = async () => {
+    checkCount++;
+    const time = new Date().toLocaleTimeString();
+    console.log(`\n⏰ [${time}] Check #${checkCount} — Scanning @${targetUser}'s ${pageType}...`);
+
+    // Reload the page content
     window.scrollTo(0, 0);
     await sleep(500);
-    
-    while (scrolls < CONFIG.maxScrolls && retries < CONFIG.maxRetries) {
-      document.querySelectorAll($userCell).forEach(cell => {
-        const u = getUsername(cell);
-        if (u) users.add(u);
-      });
-      
-      if (users.size === lastCount) {
-        retries++;
+
+    const currentUsers = await scrapeUsers();
+    const previous = loadPrevious();
+
+    if (previous) {
+      const { removed, added } = compare(previous.users, currentUsers);
+
+      if (removed.length > 0 || added.length > 0) {
+        console.log('');
+        
+        if (pageType === 'followers') {
+          if (removed.length > 0) {
+            notify('👋 Lost Followers', `${removed.length} accounts unfollowed @${targetUser}: ${names(removed)}`);
+            console.log(`🚨 UNFOLLOWED BY: ${removed.map(u => '@' + u).join(', ')}`);
+          }
+          if (added.length > 0) {
+            notify('🎉 New Followers', `${added.length} new followers for @${targetUser}: ${names(added)}`);
+            console.log(`✨ NEW FOLLOWERS: ${added.map(u => '@' + u).join(', ')}`);
+          }
+        } else {
+          if (removed.length > 0) {
+            notify('👋 Unfollowed', `@${targetUser} unfollowed ${removed.length} accounts: ${names(removed)}`);
+            console.log(`📤 UNFOLLOWED: ${removed.map(u => '@' + u).join(', ')}`);
+          }
+          if (added.length > 0) {
+            notify('➕ New Follow', `@${targetUser} followed ${added.length} accounts: ${names(added)}`);
+            console.log(`📥 FOLLOWED: ${added.map(u => '@' + u).join(', ')}`);
+          }
+        }
       } else {
-        retries = 0;
-        lastCount = users.size;
+        console.log('   No changes detected.');
       }
-      
-      window.scrollTo(0, document.body.scrollHeight);
-      await sleep(CONFIG.scrollDelay);
-      scrolls++;
+    } else {
+      console.log('   📸 First snapshot saved');
     }
-    
-    // Scroll back to top
-    window.scrollTo(0, 0);
-    
-    return users;
-  }
-  
-  /**
-   * Perform a check
-   */
+
+    saveData(currentUsers);
+    console.log(`   Total: ${currentUsers.length} | Next check in ${CONFIG.CHECK_INTERVAL_MINUTES} min`);
+  };
+
+  // Initial run
+  console.log(`
+╔═══════════════════════════════════════════════════════════╗
+║  🔭 XActions Continuous Monitor                          ║
+║                                                           ║
+║  Target: @${targetUser.padEnd(20)}                        ║
+║  Tracking: ${pageType.padEnd(18)}                         ║
+║  Interval: Every ${CONFIG.CHECK_INTERVAL_MINUTES} minutes                          ║
+║                                                           ║
+║  Keep this tab open! Checking automatically...            ║
+║  Press Ctrl+C in console to stop.                         ║
+╚═══════════════════════════════════════════════════════════╝
+  `);
+
+  // A scrape can take longer than a short check interval; never let two
+  // checks scroll the page at the same time.
   let checkRunning = false;
-  async function performCheck() {
-    // A scrape can take longer than a short check interval; never let two
-    // checks scroll the page at the same time
+  const performCheck = async () => {
     if (checkRunning) return;
     checkRunning = true;
     try {
@@ -186,90 +253,20 @@ var CONFIG = {
     } finally {
       checkRunning = false;
     }
-  }
-
-  async function runCheck() {
-    const checkTime = new Date().toLocaleTimeString();
-    console.log(`\n🔄 [${checkTime}] Checking for changes...`);
-    
-    const currentUsers = await scrapeUsers();
-    console.log(`   Scraped ${currentUsers.size} users`);
-    
-    // Load previous
-    let previous = null;
-    try {
-      const saved = localStorage.getItem(storageKey);
-      if (saved) previous = JSON.parse(saved);
-    } catch (e) {}
-    
-    // Save current
-    const snapshot = {
-      savedAt: new Date().toISOString(),
-      users: Array.from(currentUsers)
-    };
-    localStorage.setItem(storageKey, JSON.stringify(snapshot));
-    
-    if (!previous) {
-      console.log('   📸 First snapshot saved');
-      return;
-    }
-    
-    // Compare
-    const prevSet = new Set(previous.users);
-    
-    const removed = [];
-    prevSet.forEach(u => {
-      if (!currentUsers.has(u)) removed.push(u);
-    });
-    
-    const added = [];
-    currentUsers.forEach(u => {
-      if (!prevSet.has(u)) added.push(u);
-    });
-    
-    if (removed.length === 0 && added.length === 0) {
-      console.log('   ✅ No changes');
-      return;
-    }
-    
-    // Changes detected!
-    console.log('');
-    console.log('   ⚡ CHANGES DETECTED!');
-    
-    if (removed.length > 0) {
-      console.log(`   🚫 Removed (${removed.length}): ${removed.join(', ')}`);
-      notify(`🚫 ${removed.length} Unfollowers`, removed.slice(0, 3).map(u => '@' + u).join(', '));
-    }
-    
-    if (added.length > 0) {
-      console.log(`   🆕 Added (${added.length}): ${added.join(', ')}`);
-      notify(`🆕 ${added.length} New Followers`, added.slice(0, 3).map(u => '@' + u).join(', '));
-    }
-  }
-  
-  // Initial check
-  console.log('🚀 Running initial check...');
-  await performCheck();
-  
-  // Schedule periodic checks
-  const intervalMs = CONFIG.checkIntervalMinutes * 60 * 1000;
-  const intervalId = setInterval(performCheck, intervalMs);
-  
-  // Store stop function
-  window.stopMonitor = () => {
-    clearInterval(intervalId);
-    console.log('');
-    console.log('🛑 Monitoring stopped');
-    console.log('');
   };
-  
-  console.log('');
-  console.log('╔════════════════════════════════════════════════════════════╗');
-  console.log('║  ✅ MONITORING ACTIVE                                      ║');
-  console.log('╚════════════════════════════════════════════════════════════╝');
-  console.log(`⏱️ Next check in ${CONFIG.checkIntervalMinutes} minutes`);
-  console.log('');
-  console.log('💡 Keep this tab open!');
-  console.log('💡 To stop: window.stopMonitor()');
-  console.log('');
+
+  performCheck();
+
+  // Set up interval
+  const intervalMs = CONFIG.CHECK_INTERVAL_MINUTES * 60 * 1000;
+  const intervalId = setInterval(performCheck, intervalMs);
+
+  // Provide stop function (stopMonitor is the name older versions used)
+  window.stopXActionsMonitor = () => {
+    clearInterval(intervalId);
+    console.log('\n🛑 Monitoring stopped.');
+  };
+  window.stopMonitor = window.stopXActionsMonitor;
+
+  console.log('💡 Tip: Run stopXActionsMonitor() to stop monitoring.\n');
 })();

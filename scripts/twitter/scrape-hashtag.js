@@ -1,15 +1,21 @@
+// GENERATED FILE: a copy of browser/scrapeHashtag.js, written by scripts/build-script-manifest.mjs. Edit browser/scrapeHashtag.js instead, then run: npm run browser:build
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
 /**
  * ============================================
  * #️⃣ Scrape Hashtag - XActions
  * ============================================
  *
- * @name         scrape-hashtag
- * @description  Scroll a hashtag's live results and export every post (text, author, counts, media) to JSON/CSV.
- * @author       nichxbt
- * @version      1.0.0
- * @date         2026-07-20
- * @website      https://xactions.app
+ * @name        scrapeHashtag.js
+ * @title       Scrape Hashtag
+ * @description Scroll a hashtag's live results and export every post (text, author, counts, media) to JSON and CSV.
+ * @category    scrape
+ * @page        x.com/search?q=%23<query>&f=live or x.com/hashtag/<query>
+ * @writes      false
+ * @aliases     scripts/scrapeHashtag.js, scripts/twitter/scrape-hashtag.js
+ * @author      nichxbt
+ * @version     1.1.0
+ * @date        2026-11-27
+ * @website     https://xactions.app
  *
  * Usage:
  *   1. Go to a hashtag results page, e.g. x.com/search?q=%23solana&f=live
@@ -17,7 +23,7 @@
  *      from any x.com page to jump there automatically.
  *   2. Open the browser console (F12 or Cmd+Option+I -> Console)
  *   3. (Optional) edit the CONFIG options at the top of the script
- *   4. Paste this entire script and press Enter
+ *   4. Paste browser/scrapeHashtag.js and press Enter
  *
  * Example:
  *   Set CONFIG.hashtag = "solana" and CONFIG.maxPosts = 250, then paste. If you are not
@@ -54,8 +60,14 @@
     // Hard cap on scroll attempts so the loop can never run forever
     maxScrollAttempts: 400,
 
-    // Auto-download a CSV file too (JSON always downloads)
-    downloadCsv: true
+    // Auto-download a CSV file too
+    downloadCsv: true,
+
+    // Auto-download the JSON file (false + downloadCsv: true = CSV only)
+    downloadJson: true,
+
+    // Sort the exported posts by likes, most liked first (false = page order)
+    sortByLikes: false
   };
 
   // ============================================
@@ -297,6 +309,7 @@
   }
 
   const list = Array.from(posts.values()).slice(0, CONFIG.maxPosts);
+  if (CONFIG.sortByLikes) list.sort((a, b) => b.likes - a.likes);
 
   // ============================================
   // 📊 SUMMARY + EXPORT
@@ -336,7 +349,7 @@
   const stamp = new Date().toISOString().split('T')[0];
   const result = { hashtag, scrapedAt: new Date().toISOString(), count: list.length, posts: list };
 
-  if (downloadFile(JSON.stringify(result, null, 2), `hashtag_${hashtag}_${stamp}.json`, 'application/json')) {
+  if (CONFIG.downloadJson && downloadFile(JSON.stringify(result, null, 2), `hashtag_${hashtag}_${stamp}.json`, 'application/json')) {
     log.success('JSON downloaded');
   }
   if (CONFIG.downloadCsv && downloadFile(toCSV(list), `hashtag_${hashtag}_${stamp}.csv`, 'text/csv')) {

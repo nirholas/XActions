@@ -1,38 +1,54 @@
+// GENERATED FILE: a copy of browser/keywordMonitor.js, written by scripts/build-script-manifest.mjs. Edit browser/keywordMonitor.js instead, then run: npm run browser:build
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
-// scripts/keywordMonitor.js
-// Browser console script for monitoring timeline keywords and alerting on matches
-// Paste in DevTools console on x.com/search?q=keyword or x.com/home
-// by nichxbt
-
+/**
+ * ============================================================
+ * 🔍 Keyword Monitor & Alerts — Production Grade
+ * ============================================================
+ *
+ * @name        keywordMonitor.js
+ * @title       Keyword Monitor
+ * @description Watch a search for keyword mentions, flag new ones, rank top mentioners and keep a history with optional auto-refresh.
+ * @category    monitor
+ * @page        x.com/search?q=<query>&f=live or x.com/home
+ * @writes      false
+ * @aliases     scripts/keywordMonitor.js
+ * @author      nichxbt (https://x.com/nichxbt)
+ * @version     1.1.0
+ * @date        2026-11-26
+ * @repository  https://github.com/nirholas/XActions
+ *
+ * ============================================================
+ * 📋 USAGE:
+ *
+ * MODE A — Run on existing search page:
+ *   1. Go to x.com/search?q=your+keyword
+ *   2. Paste browser/keywordMonitor.js and run
+ *
+ * MODE B — Use the API:
+ *   XActions.monitor(['keyword1', 'keyword2'])
+ *   XActions.scan()               // Scan the current page now
+ *   XActions.autoRefresh(120000)  // Refresh every 2 min (default CONFIG.checkInterval)
+ *   XActions.stop()
+ *   XActions.stats()
+ *   XActions.history()
+ * ============================================================
+ */
 (() => {
-  const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+  'use strict';
 
-  // =============================================
-  // CONFIGURATION
-  // =============================================
   const CONFIG = {
-    keywords: ['AI', 'startup', 'web3'],  // Keywords to monitor
-    checkInterval: 120000,   // Auto-refresh interval (ms) — 2 min
-    maxAlerts: 50,           // Max alerts to store
-    scrollRounds: 4,         // Scroll rounds per scan
-    scrollDelay: 1500,       // ms between scrolls
-    minLikes: 0,             // Min likes to include
-    sound: true,             // Beep on new mentions
-    exportResults: true,     // Auto-download JSON
+    keywords: [],              // Will be auto-detected from search URL
+    scrollRounds: 4,
+    scrollDelay: 1500,
+    minLikes: 0,               // Min likes to include in results
+    exportResults: true,
+    maxHistory: 500,           // Max mentions to keep in history
+    checkInterval: 120000,     // Default XActions.autoRefresh() interval (ms)
+    sound: false,              // Beep when a scan finds new mentions
   };
-  // =============================================
 
   const STORAGE_KEY = 'xactions_keyword_monitor';
-
-  const download = (data, filename) => {
-    const a = document.createElement('a');
-    a.href = URL.createObjectURL(new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' }));
-    a.download = filename;
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-    console.log(`📥 Downloaded: ${filename}`);
-  };
+  const sleep = (ms) => new Promise(r => setTimeout(r, ms));
 
   const parseNum = (text) => {
     if (!text) return 0;
@@ -42,144 +58,293 @@
     return parseInt(text) || 0;
   };
 
-  const loadData = () => { try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '{"mentions":[],"scans":0}'); } catch { return { mentions: [], scans: 0 }; } };
-  const saveData = (d) => { while (d.mentions.length > CONFIG.maxAlerts) d.mentions.shift(); localStorage.setItem(STORAGE_KEY, JSON.stringify(d)); };
+  const loadData = () => {
+    try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '{"mentions":[],"stats":{}}'); }
+    catch { return { mentions: [], stats: {} }; }
+  };
+
+  const saveData = (data) => {
+    // Trim history
+    while (data.mentions.length > CONFIG.maxHistory) data.mentions.shift();
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  };
 
   const beep = () => {
     if (!CONFIG.sound) return;
-    try { const ctx = new AudioContext(); const o = ctx.createOscillator(); o.connect(ctx.destination); o.frequency.value = 800; o.start(); o.stop(ctx.currentTime + 0.15); } catch {}
+    try { const ctx = new AudioContext(); const o = ctx.createOscillator(); o.connect(ctx.destination); o.frequency.value = 800; o.start(); o.stop(ctx.currentTime + 0.15); } catch { /* audio unavailable */ }
   };
 
-  let autoTimer = null;
+  let autoRefreshTimer = null;
 
+  // ── Detect keywords from URL ───────────────────────────────
   const detectKeywords = () => {
     const url = new URL(window.location.href);
     const q = url.searchParams.get('q');
-    return q ? [q] : CONFIG.keywords;
+    if (q) return [q];
+    return CONFIG.keywords;
   };
 
+  // ── Scrape search results ──────────────────────────────────
   const scrapeMentions = async () => {
     const mentions = [];
     const seen = new Set();
 
     for (let round = 0; round < CONFIG.scrollRounds; round++) {
       const articles = document.querySelectorAll('article[data-testid="tweet"]');
+
       for (const article of articles) {
         const textEl = article.querySelector('[data-testid="tweetText"]');
         const text = textEl ? textEl.textContent.trim() : '';
-        if (!text || seen.has(text.slice(0, 80))) continue;
-        seen.add(text.slice(0, 80));
+        if (!text) continue;
 
+        const fp = text.slice(0, 80);
+        if (seen.has(fp)) continue;
+        seen.add(fp);
+
+        // Time
+        const timeEl = article.querySelector('time');
+        const datetime = timeEl ? timeEl.getAttribute('datetime') : null;
+
+        // Author
         const authorLink = article.querySelector('a[href^="/"][role="link"]');
         const authorMatch = authorLink ? (authorLink.getAttribute('href') || '').match(/^\/([A-Za-z0-9_]+)/) : null;
         const author = authorMatch ? authorMatch[1] : 'unknown';
 
+        // Metrics
         const likeBtn = article.querySelector('[data-testid="like"] span') || article.querySelector('[data-testid="unlike"] span');
+        const rtBtn = article.querySelector('[data-testid="retweet"] span');
+        const replyBtn = article.querySelector('[data-testid="reply"] span');
         const likes = likeBtn ? parseNum(likeBtn.textContent) : 0;
+        const rts = rtBtn ? parseNum(rtBtn.textContent) : 0;
+        const replies = replyBtn ? parseNum(replyBtn.textContent) : 0;
+
         if (likes < CONFIG.minLikes) continue;
 
-        const timeEl = article.querySelector('time');
-        const datetime = timeEl ? timeEl.getAttribute('datetime') : null;
+        // Verified
+        const verified = !!article.querySelector('[data-testid="icon-verified"]') || !!article.querySelector('svg[aria-label="Verified"]');
 
-        mentions.push({ author, text: text.slice(0, 200), datetime, likes, scrapedAt: new Date().toISOString() });
+        // Media
+        const hasMedia = !!(article.querySelector('[data-testid="tweetPhoto"]') || article.querySelector('video'));
+
+        mentions.push({
+          author,
+          text: text.slice(0, 200),
+          datetime,
+          likes, rts, replies,
+          totalEng: likes + rts + replies,
+          verified,
+          hasMedia,
+          scrapedAt: new Date().toISOString(),
+        });
       }
+
       console.log(`   📜 Round ${round + 1}: ${mentions.length} mentions`);
       window.scrollTo(0, document.body.scrollHeight);
       await sleep(CONFIG.scrollDelay);
     }
+
     return mentions;
   };
 
+  // ── Main scan ──────────────────────────────────────────────
   const scan = async () => {
     const keywords = detectKeywords();
 
-    console.log('╔════════════════════════════════════════════════╗');
-    console.log('║  🔍 KEYWORD MONITOR                            ║');
-    console.log('║  by nichxbt — v1.0                            ║');
-    console.log('╚════════════════════════════════════════════════╝');
+    const W = 60;
+    console.log('╔' + '═'.repeat(W) + '╗');
+    console.log('║  🔍 KEYWORD MONITOR' + ' '.repeat(W - 21) + '║');
+    console.log('║  by nichxbt — v1.0' + ' '.repeat(W - 21) + '║');
+    console.log('╚' + '═'.repeat(W) + '╝');
 
     if (keywords.length === 0) {
-      console.log('\n❌ No keywords. Set CONFIG.keywords or navigate to x.com/search?q=keyword');
+      console.log('\n❌ No keywords detected. Either:');
+      console.log('   1. Navigate to x.com/search?q=keyword');
+      console.log('   2. Or use: XActions.monitor(["keyword1", "keyword2"])');
       return;
     }
-    console.log(`\n🔍 Keywords: ${keywords.join(', ')}`);
-    console.log('📊 Scanning...\n');
+
+    console.log(`\n🔍 Monitoring: ${keywords.join(', ')}`);
+    console.log('📊 Scraping mentions...\n');
 
     const mentions = await scrapeMentions();
-    if (mentions.length === 0) { console.log('❌ No mentions found.'); return; }
 
+    if (mentions.length === 0) {
+      console.log('❌ No mentions found. Try different keywords or scroll more.');
+      return;
+    }
+
+    // Load existing data and find new mentions
     const data = loadData();
     const existingFps = new Set(data.mentions.map(m => m.text.slice(0, 80)));
     const newMentions = mentions.filter(m => !existingFps.has(m.text.slice(0, 80)));
+
+    // Add new mentions to history
     data.mentions.push(...newMentions);
-    data.scans++;
-    saveData(data);
 
-    console.log(`━━━ 📊 RESULTS (${mentions.length} total, ${newMentions.length} new) ━━━\n`);
+    // ── Display results ─────────────────────────────────────
+    console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+    console.log(`  📊 SCAN RESULTS (${mentions.length} total, ${newMentions.length} new)`);
+    console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
 
-    // Top by likes
-    const sorted = [...mentions].sort((a, b) => b.likes - a.likes);
-    console.log('🔥 TOP MENTIONS:');
-    sorted.slice(0, 10).forEach(m => console.log(`  @${m.author.padEnd(16)} ${String(m.likes).padStart(5)} ❤️ — "${m.text.slice(0, 50)}..."`));
+    // Top mentions by engagement
+    const sorted = [...mentions].sort((a, b) => b.totalEng - a.totalEng);
+    console.log('\n━━━ 🔥 TOP MENTIONS (by engagement) ━━━');
+    for (const m of sorted.slice(0, 10)) {
+      const badge = m.verified ? '✅' : '  ';
+      console.log(`  ${badge} @${m.author.padEnd(16)} ${String(m.totalEng).padStart(5)} eng — "${m.text.slice(0, 50)}..."`);
+    }
 
-    // New mentions
+    // New mentions alert
     if (newMentions.length > 0) {
-      console.log(`\n🆕 NEW (${newMentions.length}):`);
-      newMentions.slice(0, 8).forEach(m => console.log(`  🔔 @${m.author}: "${m.text.slice(0, 60)}..."`));
+      console.log(`\n━━━ 🆕 NEW MENTIONS (${newMentions.length}) ━━━`);
+      for (const m of newMentions.slice(0, 8)) {
+        console.log(`  🔔 @${m.author}: "${m.text.slice(0, 60)}..." (${m.totalEng} eng)`);
+      }
       beep();
     }
 
-    // Top mentioners
+    // ── Top mentioners ──────────────────────────────────────
+    console.log('\n━━━ 👥 TOP MENTIONERS ━━━');
     const authorCounts = {};
-    mentions.forEach(m => { authorCounts[m.author] = (authorCounts[m.author] || 0) + 1; });
+    for (const m of mentions) {
+      authorCounts[m.author] = (authorCounts[m.author] || 0) + 1;
+    }
     const topAuthors = Object.entries(authorCounts).sort((a, b) => b[1] - a[1]).slice(0, 10);
-    console.log('\n👥 TOP MENTIONERS:');
-    topAuthors.forEach(([author, count]) => console.log(`  @${author.padEnd(16)} ${count} mentions`));
+    for (const [author, count] of topAuthors) {
+      const bar = '█'.repeat(Math.round(count / Math.max(...Object.values(authorCounts)) * 20));
+      console.log(`  @${author.padEnd(16)} ${String(count).padStart(3)} mentions ${bar}`);
+    }
 
-    // Quick sentiment
-    const pos = ['love', 'great', 'amazing', 'awesome', 'best', '🔥', '💯', '❤️'];
-    const neg = ['hate', 'terrible', 'awful', 'worst', 'scam', '👎'];
-    let posC = 0, negC = 0;
-    mentions.forEach(m => {
-      const l = m.text.toLowerCase();
-      if (pos.some(w => l.includes(w))) posC++;
-      if (neg.some(w => l.includes(w))) negC++;
-    });
-    console.log(`\n📊 Sentiment: ✅ ${posC} positive | ❌ ${negC} negative | ⚖️ ${mentions.length - posC - negC} neutral`);
-    console.log('');
+    // ── Sentiment quick scan ────────────────────────────────
+    console.log('\n━━━ 📊 MENTION SENTIMENT (quick scan) ━━━');
+    const positive = ['love', 'great', 'amazing', 'awesome', 'best', 'excellent', 'perfect', 'incredible', 'thank', 'fire', '🔥', '💯', '❤️', '🙌'];
+    const negative = ['hate', 'terrible', 'awful', 'worst', 'bad', 'sucks', 'broken', 'scam', 'fake', 'trash', '👎', '🗑️'];
+
+    let posCount = 0, negCount = 0;
+    for (const m of mentions) {
+      const lower = m.text.toLowerCase();
+      if (positive.some(w => lower.includes(w))) posCount++;
+      if (negative.some(w => lower.includes(w))) negCount++;
+    }
+    const neutral = mentions.length - posCount - negCount;
+
+    console.log(`  ✅ Positive: ${posCount} (${((posCount / mentions.length) * 100).toFixed(0)}%)`);
+    console.log(`  ❌ Negative: ${negCount} (${((negCount / mentions.length) * 100).toFixed(0)}%)`);
+    console.log(`  ⚖️ Neutral:  ${neutral} (${((neutral / mentions.length) * 100).toFixed(0)}%)`);
+
+    // ── Verified mentions ───────────────────────────────────
+    const verifiedMentions = mentions.filter(m => m.verified);
+    if (verifiedMentions.length > 0) {
+      console.log(`\n━━━ ✅ VERIFIED ACCOUNT MENTIONS (${verifiedMentions.length}) ━━━`);
+      for (const m of verifiedMentions.slice(0, 5)) {
+        console.log(`  ✅ @${m.author}: "${m.text.slice(0, 60)}..." (${m.totalEng} eng)`);
+      }
+    }
+
+    // ── Media mentions ──────────────────────────────────────
+    const mediaMentions = mentions.filter(m => m.hasMedia);
+    console.log(`\n  📸 ${mediaMentions.length}/${mentions.length} mentions include media.`);
+
+    // ── Update stats ────────────────────────────────────────
+    const kw = keywords.join(',');
+    if (!data.stats) data.stats = {}; // history saved by the older scripts/keywordMonitor.js has no stats
+    if (!data.stats[kw]) data.stats[kw] = { scans: 0, totalMentions: 0, firstScan: new Date().toISOString() };
+    data.stats[kw].scans++;
+    data.stats[kw].totalMentions += newMentions.length;
+    data.stats[kw].lastScan = new Date().toISOString();
+
+    saveData(data);
+
+    console.log('\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n');
 
     if (CONFIG.exportResults) {
-      download({ keywords, mentions, newMentions: newMentions.length, topAuthors, scanTime: new Date().toISOString() }, `xactions-keyword-${Date.now()}.json`);
+      const exportData = {
+        keywords, mentions, newMentions: newMentions.length,
+        topAuthors: topAuthors.slice(0, 20),
+        sentiment: { positive: posCount, negative: negCount, neutral },
+        scanTime: new Date().toISOString(),
+      };
+      const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
+      const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+      a.download = `xactions-keyword-monitor-${new Date().toISOString().slice(0, 10)}.json`;
+      document.body.appendChild(a); a.click(); a.remove();
+      console.log('📥 Keyword data exported.');
     }
   };
 
+  // ── Controls ───────────────────────────────────────────────
   window.XActions = window.XActions || {};
-  window.XActions.monitor = (kws) => {
-    CONFIG.keywords = kws;
-    const q = encodeURIComponent(kws.join(' OR '));
+
+  window.XActions.monitor = (keywords) => {
+    if (!Array.isArray(keywords) || keywords.length === 0) {
+      console.log('❌ Usage: XActions.monitor(["keyword1", "keyword2"])');
+      return;
+    }
+    CONFIG.keywords = keywords;
+    // Navigate to search
+    const q = encodeURIComponent(keywords.join(' OR '));
     window.location.href = `https://x.com/search?q=${q}&src=typed_query&f=live`;
+    console.log(`🔍 Navigating to search for: ${keywords.join(', ')}`);
+    console.log('⏳ Wait for page to load, then the scan will run automatically.');
     setTimeout(scan, 5000);
   };
-  window.XActions.scan = scan;
-  window.XActions.autoRefresh = (ms) => {
-    if (autoTimer) clearInterval(autoTimer);
-    const interval = ms || CONFIG.checkInterval;
-    console.log(`🔄 Auto-refreshing every ${(interval / 60000).toFixed(1)} min.`);
-    autoTimer = setInterval(() => { console.log('\n🔄 Refreshing...'); window.scrollTo(0, 0); setTimeout(scan, 2000); }, interval);
-  };
-  window.XActions.stop = () => { if (autoTimer) { clearInterval(autoTimer); autoTimer = null; } console.log('⏹️ Stopped.'); };
-  window.XActions.history = () => {
-    const d = loadData();
-    if (d.mentions.length === 0) { console.log('📭 No history.'); return; }
-    d.mentions.slice(-15).forEach(m => console.log(`  @${m.author}: "${m.text.slice(0, 60)}..."`));
-  };
-  window.XActions.reset = () => { localStorage.removeItem(STORAGE_KEY); console.log('🗑️ Cleared.'); };
 
-  if (window.location.href.includes('/search')) scan();
-  else {
-    console.log('╔════════════════════════════════════════════════╗');
-    console.log('║  🔍 KEYWORD MONITOR — Ready                    ║');
-    console.log('╚════════════════════════════════════════════════╝');
-    console.log('\n📋 XActions.monitor(["kw1","kw2"]) or XActions.scan() on a search page');
+  window.XActions.scan = scan;
+
+  window.XActions.autoRefresh = (intervalMs = CONFIG.checkInterval) => {
+    if (autoRefreshTimer) clearInterval(autoRefreshTimer);
+    console.log(`🔄 Auto-refreshing every ${(intervalMs / 60000).toFixed(1)} minutes.`);
+    autoRefreshTimer = setInterval(() => {
+      console.log('\n🔄 Auto-refresh...');
+      window.scrollTo(0, 0);
+      setTimeout(scan, 2000);
+    }, intervalMs);
+  };
+
+  window.XActions.stop = () => {
+    if (autoRefreshTimer) { clearInterval(autoRefreshTimer); autoRefreshTimer = null; }
+    console.log('⏹️ Auto-refresh stopped.');
+  };
+
+  window.XActions.stats = () => {
+    const data = loadData();
+    const kws = Object.keys(data.stats || {});
+    if (kws.length === 0) { console.log('📭 No stats yet.'); return; }
+    console.log(`\n📊 KEYWORD STATS (${kws.length} tracked keywords):\n`);
+    for (const kw of kws) {
+      const s = data.stats[kw];
+      console.log(`  "${kw}" — ${s.scans} scans, ${s.totalMentions} total new mentions`);
+      console.log(`    First: ${s.firstScan} | Last: ${s.lastScan}`);
+    }
+  };
+
+  window.XActions.history = () => {
+    const data = loadData();
+    if (data.mentions.length === 0) { console.log('📭 No mention history.'); return; }
+    console.log(`\n📋 MENTION HISTORY (${data.mentions.length} stored):\n`);
+    for (const m of data.mentions.slice(-15)) {
+      console.log(`  @${m.author} (${m.totalEng} eng): "${m.text.slice(0, 60)}..."`);
+    }
+  };
+
+  window.XActions.reset = () => {
+    localStorage.removeItem(STORAGE_KEY);
+    console.log('🗑️ Keyword history cleared.');
+  };
+
+  // Auto-run if on search page
+  if (window.location.href.includes('/search')) {
+    scan();
+  } else {
+    console.log('╔════════════════════════════════════════════════════╗');
+    console.log('║  🔍 KEYWORD MONITOR — Ready                      ║');
+    console.log('╚════════════════════════════════════════════════════╝');
+    console.log('\n📋 Commands:');
+    console.log('  XActions.monitor(["keyword1", "keyword2"])');
+    console.log('  XActions.scan()             (on a search page or x.com/home)');
+    console.log('  XActions.autoRefresh(120000)');
+    console.log('  XActions.stats()');
+    console.log('  XActions.history()');
+    console.log('  XActions.stop()');
   }
 })();

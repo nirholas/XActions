@@ -1,14 +1,20 @@
+// GENERATED FILE: a copy of browser/growthSuite.js, written by scripts/build-script-manifest.mjs. Edit browser/growthSuite.js instead, then run: npm run browser:build
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
 /**
  * ============================================================
  * 🚀 Growth Automation Suite
  * ============================================================
  * 
- * @name        growth-suite.js
- * @description All-in-one growth automation for X/Twitter
+ * @name        growthSuite.js
+ * @title       Growth Suite
+ * @description All-in-one growth automation: keyword follow, feed likes and unfollowing non-followers after a grace period, with per-session caps.
+ * @category    grow
+ * @page        x.com/home
+ * @writes      true
+ * @aliases     src/automation/growthSuite.js, scripts/twitter/growth-suite.js
  * @author      nichxbt (https://x.com/nichxbt)
- * @version     1.0.0
- * @date        2026-01-26
+ * @version     1.1.0
+ * @date        2026-11-27
  * @repository  https://github.com/nirholas/XActions
  * 
  * ============================================================
@@ -28,7 +34,13 @@
  * 1. Go to X home page: https://x.com/home
  * 2. Open Chrome DevTools (F12 or Cmd+Option+I)
  * 3. Configure your strategy below
- * 4. Paste this script and press Enter
+ * 4. Paste browser/growthSuite.js and press Enter
+ * 5. Run a command (XActions.Growth.help() lists them), or
+ *    XActions.Growth.run() for the full session: keyword follow, timeline
+ *    likes, then unfollowing tracked follows past the grace period.
+ *    Set autoRun: true to start the full session on paste.
+ * 
+ * Stop: window.stopGrowth() or XActions.Growth.stop()
  * 
  * ============================================================
  * ⚙️ CONFIGURATION
@@ -38,6 +50,10 @@
 // `var` (not `const`): a repeated top-level `const` paste in the same
 // DevTools tab throws "already been declared" instead of re-running.
 var CONFIG = {
+  // Start the full session (XActions.Growth.run()) as soon as the script is
+  // pasted. false = load the commands and wait for one to be called.
+  autoRun: false,
+  
   // ============================================
   // TARGETING
   // ============================================
@@ -243,7 +259,12 @@ var CONFIG = {
     unfollowBtn.click();
     await sleep(500);
     
-    const confirmBtn = document.querySelector(SELECTORS.confirmButton);
+    // The confirmation sheet can take a moment to render: wait up to 2s
+    let confirmBtn = document.querySelector(SELECTORS.confirmButton);
+    for (let waited = 0; !confirmBtn && waited < 2000; waited += 100) {
+      await sleep(100);
+      confirmBtn = document.querySelector(SELECTORS.confirmButton);
+    }
     if (confirmBtn) confirmBtn.click();
     
     state.unfollows++;
@@ -254,11 +275,203 @@ var CONFIG = {
     return true;
   };
   
+  // Same-origin navigation through X's router: a full page load
+  // (location.href) would destroy this console script mid-session.
+  const spaNavigate = (url) => {
+    try {
+      const target = new URL(url, window.location.href);
+      if (target.origin === window.location.origin) {
+        window.history.pushState({}, '', target.href);
+        window.dispatchEvent(new PopStateEvent('popstate', { state: {} }));
+        return;
+      }
+    } catch { /* fall through to a full page load below */ }
+    window.location.href = url;
+  };
+  
+  const waitForElement = async (selector, timeout = 10000) => {
+    const startTime = Date.now();
+    while (Date.now() - startTime < timeout) {
+      const element = document.querySelector(selector);
+      if (element) return element;
+      await sleep(100);
+    }
+    return null;
+  };
+  
+  // ============================================
+  // FULL SESSION: three phases, run by XActions.Growth.run()
+  // ============================================
+  
+  // Phase 1: Search each keyword (People tab) and follow
+  const phaseFollow = async () => {
+    if (!CONFIG.actions.follow) return;
+    log('📍 Phase 1: Keyword Follow');
+    
+    for (const keyword of CONFIG.keywords) {
+      if (!state.isRunning || !checkLimits().canFollow) break;
+      
+      log(`Searching: "${keyword}"`);
+      spaNavigate(`https://x.com/search?q=${encodeURIComponent(keyword)}&src=typed_query&f=user`);
+      await sleep(3000);
+      await waitForElement(SELECTORS.userCell, 10000);
+      
+      let scrolls = 0;
+      while (scrolls < 10 && checkLimits().canFollow && state.isRunning) {
+        const cells = document.querySelectorAll(SELECTORS.userCell);
+        
+        for (const cell of cells) {
+          if (!state.isRunning || !checkLimits().canFollow) break;
+          
+          // Check if already following
+          if (cell.querySelector(SELECTORS.unfollowButton)) continue;
+          
+          await doFollow(cell);
+          await randomDelay(CONFIG.timing.delayBetweenActions, CONFIG.timing.delayBetweenActions * 1.5);
+        }
+        
+        window.scrollBy(0, 600);
+        scrolls++;
+        await sleep(2000);
+      }
+    }
+  };
+  
+  // Phase 2: Like the home timeline
+  const phaseLike = async () => {
+    if (!CONFIG.actions.like) return;
+    log('📍 Phase 2: Timeline Engagement');
+    
+    spaNavigate('https://x.com/home');
+    await sleep(3000);
+    
+    let scrolls = 0;
+    while (scrolls < 20 && checkLimits().canLike && state.isRunning) {
+      const tweets = document.querySelectorAll(SELECTORS.tweet);
+      
+      for (const tweet of tweets) {
+        if (!state.isRunning || !checkLimits().canLike) break;
+        if (tweet.querySelector(SELECTORS.unlikeButton)) continue; // Already liked
+        
+        await doLike(tweet);
+        await randomDelay(CONFIG.timing.delayBetweenActions, CONFIG.timing.delayBetweenActions * 1.5);
+      }
+      
+      window.scrollBy(0, 600);
+      scrolls++;
+      await sleep(2000);
+    }
+  };
+  
+  // Phase 3: Unfollow accounts this suite followed more than
+  // unfollowAfterDays ago that do not follow back
+  const phaseUnfollow = async () => {
+    if (!CONFIG.actions.unfollow) return;
+    log('📍 Phase 3: Smart Unfollow');
+    
+    const threshold = CONFIG.timing.unfollowAfterDays * 24 * 60 * 60 * 1000;
+    const expired = [...followed].filter(([, data]) => Date.now() - data.at > threshold).map(([username]) => username);
+    if (expired.length === 0) {
+      log('No expired follows to clean up');
+      return;
+    }
+    
+    log(`Found ${expired.length} users past ${CONFIG.timing.unfollowAfterDays}-day threshold`);
+    
+    // Go to your own following page
+    const username = document.querySelector('[data-testid="SideNav_AccountSwitcher_Button"]')
+      ?.textContent?.match(/@(\w+)/)?.[1];
+    if (!username) {
+      log('Could not find your handle in the sidebar; skipping unfollow phase', 'warning');
+      return;
+    }
+    
+    spaNavigate(`https://x.com/${username}/following`);
+    await sleep(3000);
+    
+    const expiredSet = new Set(expired);
+    let scrolls = 0;
+    
+    while (scrolls < 50 && checkLimits().canUnfollow && state.isRunning) {
+      const cells = document.querySelectorAll(SELECTORS.userCell);
+      
+      for (const cell of cells) {
+        if (!state.isRunning || !checkLimits().canUnfollow) break;
+        
+        const link = cell.querySelector('a[href^="/"]');
+        const cellUser = link?.getAttribute('href')?.replace('/', '').toLowerCase();
+        
+        if (cellUser && expiredSet.has(cellUser)) {
+          await doUnfollow(cell);
+          await randomDelay(CONFIG.timing.delayBetweenActions, CONFIG.timing.delayBetweenActions * 1.5);
+        }
+      }
+      
+      window.scrollBy(0, 600);
+      scrolls++;
+      await sleep(2000);
+    }
+  };
+  
+  const run = async () => {
+    state.isRunning = true;
+    state.startTime = Date.now();
+    console.log(`
+╔═══════════════════════════════════════════════════════════╗
+║  🚀 XActions Growth Automation                           ║
+╠═══════════════════════════════════════════════════════════╣
+║  Keywords: ${CONFIG.keywords.slice(0, 3).join(', ').substring(0, 30).padEnd(30)}  ║
+║  Session: ${CONFIG.timing.sessionDuration} minutes                                 ║
+║                                                           ║
+║  Limits:                                                  ║
+║    Follows:   ${String(CONFIG.limits.follows).padEnd(5)} | Likes:    ${String(CONFIG.limits.likes).padEnd(5)}       ║
+║    Unfollows: ${String(CONFIG.limits.unfollows).padEnd(5)} | After:    ${CONFIG.timing.unfollowAfterDays} days       ║
+║                                                           ║
+║  Run stopGrowth() to stop early.                          ║
+╚═══════════════════════════════════════════════════════════╝
+    `);
+    
+    log(`Tracking ${followed.size} followed users`);
+    
+    await phaseFollow();
+    
+    if (state.isRunning && !isSessionExpired()) {
+      await phaseLike();
+    }
+    
+    if (state.isRunning && !isSessionExpired()) {
+      await phaseUnfollow();
+    }
+    
+    console.log(`
+╔═══════════════════════════════════════════════════════════╗
+║  ✅ SESSION COMPLETE                                      ║
+╠═══════════════════════════════════════════════════════════╣
+║  Follows:   ${String(state.follows).padEnd(5)}                                      ║
+║  Likes:     ${String(state.likes).padEnd(5)}                                      ║
+║  Unfollows: ${String(state.unfollows).padEnd(5)}                                      ║
+║                                                           ║
+║  Total tracked: ${String(followed.size).padEnd(5)} users                        ║
+╚═══════════════════════════════════════════════════════════╝
+    `);
+  };
+  
+  const stop = () => {
+    state.isRunning = false;
+    log('Automation stopped.', 'warning');
+  };
+  window.stopGrowth = stop;
+  
   // Create XActions interface
   window.XActions = window.XActions || {};
   window.XActions.Growth = {
-    state,
+    state: () => state,
+    tracked: () => ({ followed, liked }),
     config: CONFIG,
+    strategy: CONFIG,
+    
+    // Full session: keyword follow, timeline likes, expired-follow unfollow
+    run,
     
     // Run auto-like on current feed
     autoLike: async () => {
@@ -333,10 +546,7 @@ var CONFIG = {
     },
     
     // Stop all automation
-    stop: () => {
-      state.isRunning = false;
-      log('Automation stopped.', 'warning');
-    },
+    stop,
     
     // Get stats
     stats: () => {
@@ -354,15 +564,20 @@ var CONFIG = {
       console.log('');
       console.log('📋 GROWTH SUITE COMMANDS:');
       console.log('');
+      console.log('   XActions.Growth.run()           - Full session: follow, like, unfollow');
       console.log('   XActions.Growth.autoLike()      - Auto-like feed posts');
       console.log('   XActions.Growth.autoFollow()    - Auto-follow users');
       console.log('   XActions.Growth.smartUnfollow() - Unfollow non-followers');
-      console.log('   XActions.Growth.stop()          - Stop automation');
+      console.log('   XActions.Growth.stop()          - Stop automation (or stopGrowth())');
       console.log('   XActions.Growth.stats()         - Show statistics');
+      console.log('   XActions.Growth.state()         - Current counters');
+      console.log('   XActions.Growth.tracked()       - Tracked follows and likes');
       console.log('');
     },
   };
   
   log('Growth Suite loaded! Use XActions.Growth.help() for commands.');
   console.log('');
+  
+  if (CONFIG.autoRun) await run();
 })();

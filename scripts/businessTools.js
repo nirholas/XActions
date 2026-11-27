@@ -1,5 +1,14 @@
+// GENERATED FILE: a copy of browser/businessTools.js, written by scripts/build-script-manifest.mjs. Edit browser/businessTools.js instead, then run: npm run browser:build
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
-// scripts/businessTools.js
+/**
+ * @name        businessTools.js
+ * @title       Business Tools
+ * @description Brand mention monitoring, competitor analysis and audience insights for business accounts.
+ * @category    analytics
+ * @page        x.com/search?q=<query>
+ * @writes      false
+ * @aliases     scripts/businessTools.js
+ */
 // Browser console script for brand mention monitoring and sentiment analysis
 // Paste in DevTools console on x.com/search or any timeline
 // by nichxbt

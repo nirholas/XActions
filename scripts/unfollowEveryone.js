@@ -1,126 +1,295 @@
+// GENERATED FILE: a copy of browser/unfollowEveryone.js, written by scripts/build-script-manifest.mjs. Edit browser/unfollowEveryone.js instead, then run: npm run browser:build
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
-// scripts/unfollowEveryone.js
-// Browser console script for unfollowing everyone on X/Twitter
-// Paste in DevTools console on x.com/USERNAME/following
-// by nichxbt
-
+/**
+ * ============================================================
+ * 🚫 Unfollow Everyone — Production Grade
+ * ============================================================
+ *
+ * @name        unfollowEveryone.js
+ * @title       Unfollow Everyone
+ * @description Unfollow every account you follow, with a whitelist, a cap, a start confirmation and a JSON export.
+ * @category    cleanup
+ * @page        x.com/<you>/following
+ * @writes      true
+ * @aliases     scripts/unfollowEveryone.js, scripts/twitter/unfollow-everyone.js
+ * @author      nichxbt (https://x.com/nichxbt)
+ * @version     3.1.0
+ * @date        2026-11-27
+ * @repository  https://github.com/nirholas/XActions
+ *
+ * ============================================================
+ * 📋 USAGE:
+ *
+ * 1. Go to: https://x.com/YOUR_USERNAME/following
+ * 2. Open DevTools Console (F12)
+ * 3. (Optional) Paste src/utils/core.js first for pause/resume
+ * 4. Paste browser/unfollowEveryone.js and press Enter. A live run asks
+ *    for a browser confirmation first (confirmStart).
+ *
+ * ⚠️ WARNING: This will unfollow EVERYONE you follow (except the whitelist)!
+ *
+ * CONTROLS (while running):
+ *   XActionsUtils.pause()   — pause the script
+ *   XActionsUtils.resume()  — resume the script
+ *   XActionsUtils.abort()   — stop entirely
+ *   window.stopUnfollow()   - stop after the current unfollow
+ *
+ * ============================================================
+ */
 (() => {
-  const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+  'use strict';
 
-  // =============================================
-  // CONFIGURATION
-  // =============================================
+  // ══════════════════════════════════════════════════════════
+  // ⚙️  CONFIGURATION — Edit these before running
+  // ══════════════════════════════════════════════════════════
+
   const CONFIG = {
-    maxUnfollows: Infinity,   // Cap total unfollows (e.g. 50 for testing)
-    whitelist: [],            // Usernames to never unfollow (without @)
-    dryRun: false,            // Preview without acting
-    delay: 2000,              // ms between unfollows
-    scrollDelay: 2000,        // ms to wait after scroll
-    maxEmptyScrolls: 8,       // Give up after N scrolls with no new users
-    exportOnComplete: true,   // Auto-download JSON results
-  };
-  // =============================================
+    maxUnfollows: Infinity,         // Set to e.g. 50 for testing
+    minDelay: 2500,                 // Minimum ms between unfollows
+    maxDelay: 3000,                 // Maximum ms between unfollows
+    scrollDelay: 2000,              // Delay after scrolling for new content
+    confirmDelay: 600,              // Wait after clicking confirm dialog
 
-  const download = (data, filename) => {
-    const a = document.createElement('a');
-    a.href = URL.createObjectURL(new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' }));
-    a.download = filename;
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-    console.log(`📥 Downloaded: ${filename}`);
-  };
+    whitelist: [                    // NEVER unfollow these usernames (lowercase)
+      // 'elonmusk',
+      // 'nichxbt',
+    ],
+    dryRun: false,                  // true = log what WOULD happen, don't act
+    confirmStart: true,             // Live mode: ask for a browser confirm() before starting
 
-  const getUsername = (cell) => {
-    for (const link of cell.querySelectorAll('a[href^="/"]')) {
-      const m = (link.getAttribute('href') || '').match(/^\/([A-Za-z0-9_]+)$/);
-      if (m) return m[1];
-    }
-    return null;
+    maxRetries: 8,                  // Empty scrolls before giving up
+    maxConsecutiveErrors: 5,        // Errors in a row before aborting
+    rateLimitPauseMs: 60000,        // Cooldown when rate-limited (60s)
+
+    trackUnfollowed: true,          // Persist log to localStorage
+    exportOnComplete: true,         // Auto-download JSON when done
+    exportDryRun: false,            // Also download the dry-run preview list as JSON
   };
 
-  const run = async () => {
-    console.log('🚫 UNFOLLOW EVERYONE — by nichxbt');
+  // ══════════════════════════════════════════════════════════
+  // 🔧 Inline Utilities (standalone — no dependencies needed)
+  // ══════════════════════════════════════════════════════════
 
+  const U = window.XActionsUtils || (() => {
+    const sleep = ms => new Promise(r => setTimeout(r, ms + ms * 0.15 * (Math.random() - 0.5)));
+    const randomDelay = (lo, hi) => sleep(lo + Math.random() * (hi - lo));
+
+    const SELS = {
+      unfollow:   ['[data-testid$="-unfollow"]', 'button[aria-label*="Following @"]'],
+      confirmBtn: ['[data-testid="confirmationSheetConfirm"]', '[role="alertdialog"] button:first-child'],
+      userCell:   ['[data-testid="UserCell"]', 'div[role="listitem"]'],
+    };
+
+    const $ = (key, root = document) => {
+      for (const s of (SELS[key] || [key])) { try { const e = root.querySelector(s); if (e) return e; } catch {} } return null;
+    };
+    const $$ = (key, root = document) => {
+      const r = new Set(); for (const s of (SELS[key] || [key])) { try { root.querySelectorAll(s).forEach(e => r.add(e)); } catch {} } return [...r];
+    };
+
+    let _p = false, _a = false;
+    return {
+      sleep, randomDelay, $, $$,
+      pause()  { _p = true; console.log('⏸️  PAUSED — call XActionsUtils.resume()'); },
+      resume() { _p = false; console.log('▶️  RESUMED'); },
+      abort()  { _a = true; _p = false; console.log('🛑 ABORTED'); },
+      async shouldContinue() { if (_a) return false; while (_p) { await sleep(500); if (_a) return false; } return true; },
+      isRateLimited() {
+        for (const sel of ['[data-testid="toast"]', '[role="alert"]']) {
+          const el = document.querySelector(sel);
+          if (el && /rate.limit|try.again|too.many|slow.down|something.went.wrong/i.test(el.textContent)) return true;
+        }
+        return false;
+      },
+      saveState(k, d) { try { localStorage.setItem('xactions_' + k, JSON.stringify({ _ts: Date.now(), data: d })); } catch {} },
+      loadState(k, d) { try { const r = JSON.parse(localStorage.getItem('xactions_' + k)); return r?.data ?? d; } catch { return d; } },
+      download(data, fn) {
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' }));
+        a.download = fn; document.body.appendChild(a); a.click(); a.remove();
+        console.log(`📥 Downloaded: ${fn}`);
+      },
+    };
+  })();
+
+  // ══════════════════════════════════════════════════════════
+  // 🚀 Main Logic
+  // ══════════════════════════════════════════════════════════
+
+  (async () => {
+    const W = 60;
+    console.log('╔' + '═'.repeat(W) + '╗');
+    console.log('║  🚫 UNFOLLOW EVERYONE' + ' '.repeat(W - 23) + '║');
+    console.log('║  ' + (CONFIG.dryRun ? '🔍 DRY RUN' : '⚡ LIVE').padEnd(W - 2) + '║');
+    console.log('║  by nichxbt — v3.0' + ' '.repeat(W - 21) + '║');
+    console.log('╚' + '═'.repeat(W) + '╝');
+
+    // Page check
     if (!window.location.href.includes('/following')) {
-      console.error('❌ Navigate to x.com/YOUR_USERNAME/following first!');
+      console.error('❌ Wrong page! Go to x.com/YOUR_USERNAME/following');
       return;
     }
 
+    if (!CONFIG.dryRun && CONFIG.confirmStart) {
+      const confirmed = window.confirm(
+        '⚠️ WARNING: This will unfollow EVERYONE!\n\n' +
+        'Are you sure you want to continue?\n\n' +
+        'Click OK to start unfollowing.'
+      );
+      if (!confirmed) {
+        console.log('❌ Cancelled by user.');
+        return;
+      }
+    }
+
+    let stopped = false;
+    window.stopUnfollow = () => {
+      stopped = true;
+      U.abort();
+      console.log('🛑 Stopping after the current unfollow...');
+    };
+    console.log('💡 To stop early: window.stopUnfollow()');
+
+    console.log(`\n⚙️  Max: ${CONFIG.maxUnfollows === Infinity ? '∞' : CONFIG.maxUnfollows} | ` +
+      `Delay: ${CONFIG.minDelay}-${CONFIG.maxDelay}ms | Whitelist: ${CONFIG.whitelist.length} | ` +
+      `Dry: ${CONFIG.dryRun}\n`);
+
     const whiteSet = new Set(CONFIG.whitelist.map(u => u.toLowerCase()));
-    const unfollowedList = [];
-    let unfollowed = 0, skipped = 0, emptyScrolls = 0;
+    const log = CONFIG.trackUnfollowed ? U.loadState('unfollow_everyone_log', []) : [];
+    const preview = [];
+    let unfollowed = 0, skipped = 0, errors = 0, consErr = 0, retries = 0;
+    const t0 = Date.now();
 
-    console.log(`⚙️ Max: ${CONFIG.maxUnfollows === Infinity ? '∞' : CONFIG.maxUnfollows} | Whitelist: ${whiteSet.size} | Dry run: ${CONFIG.dryRun}`);
-    if (CONFIG.dryRun) console.log('⚠️ DRY RUN — no accounts will be unfollowed.\n');
+    const getUser = (cell) => {
+      for (const link of cell.querySelectorAll('a[href^="/"]')) {
+        const m = (link.getAttribute('href') || '').match(/^\/([A-Za-z0-9_]+)$/);
+        if (m) return m[1];
+      }
+      return null;
+    };
 
-    while (unfollowed < CONFIG.maxUnfollows && emptyScrolls < CONFIG.maxEmptyScrolls) {
-      const cells = document.querySelectorAll('[data-testid="UserCell"]');
+    while (unfollowed < CONFIG.maxUnfollows) {
+      if (stopped || !(await U.shouldContinue())) { stopped = true; break; }
+
+      if (U.isRateLimited()) {
+        console.warn(`⏳ Rate-limited — cooling down ${CONFIG.rateLimitPauseMs / 1000}s...`);
+        await U.sleep(CONFIG.rateLimitPauseMs);
+        continue;
+      }
+
+      const cells = U.$$('userCell');
       let acted = false;
 
       for (const cell of cells) {
         if (unfollowed >= CONFIG.maxUnfollows) break;
+        if (stopped || !(await U.shouldContinue())) { stopped = true; break; }
 
-        const username = getUsername(cell);
-        if (username && whiteSet.has(username.toLowerCase())) { skipped++; continue; }
+        const user = getUser(cell);
+        if (user && whiteSet.has(user.toLowerCase())) { skipped++; continue; }
 
-        const btn = cell.querySelector('[data-testid$="-unfollow"]');
+        const btn = U.$('unfollow', cell);
         if (!btn) continue;
 
         if (CONFIG.dryRun) {
-          console.log(`🔍 [DRY] Would unfollow @${username || '?'}`);
-          unfollowed++;
-          acted = true;
-          unfollowedList.push({ username: username || '?', timestamp: new Date().toISOString(), dryRun: true });
-          continue;
+          console.log(`🔍 [DRY] Would unfollow @${user || '?'}`);
+          preview.push({ username: user || '?', timestamp: new Date().toISOString(), dryRun: true });
+          unfollowed++; acted = true; continue;
         }
 
         try {
           btn.scrollIntoView({ block: 'center', behavior: 'smooth' });
-          await sleep(200);
+          await U.sleep(200);
           btn.click();
-          await sleep(600);
+          await U.sleep(CONFIG.confirmDelay);
 
-          const confirm = document.querySelector('[data-testid="confirmationSheetConfirm"]');
-          if (confirm) {
-            confirm.click();
-            unfollowed++;
-            acted = true;
-            unfollowedList.push({ username: username || '?', timestamp: new Date().toISOString() });
+          const conf = U.$('confirmBtn');
+          if (conf) {
+            conf.click();
+            unfollowed++; consErr = 0; acted = true;
 
             if (unfollowed <= 3 || unfollowed % 5 === 0) {
-              console.log(`🚫 #${unfollowed} Unfollowed @${username || '?'}`);
+              console.log(`🚫 #${unfollowed} Unfollowed @${user || '?'}`);
             }
-            await sleep(CONFIG.delay);
+            if (unfollowed % 25 === 0) {
+              const s = ((Date.now() - t0) / 1000).toFixed(0);
+              const r = (unfollowed / ((Date.now() - t0) / 60000)).toFixed(1);
+              console.log(`📊 ${unfollowed} done | ${skipped} skipped | ${errors} err | ${s}s | ${r}/min`);
+            }
+
+            if (CONFIG.trackUnfollowed && user) {
+              log.push({ u: user, t: new Date().toISOString() });
+              if (unfollowed % 10 === 0) U.saveState('unfollow_everyone_log', log);
+            }
+
+            await U.randomDelay(CONFIG.minDelay, CONFIG.maxDelay);
           } else {
-            console.warn(`⚠️ No confirm dialog for @${username || '?'}`);
+            console.warn(`⚠️ No confirm for @${user || '?'}`);
+            errors++; consErr++;
+            await U.sleep(1500);
           }
         } catch (e) {
           console.warn(`⚠️ Error: ${e.message}`);
+          errors++; consErr++;
+          await U.sleep(2000);
+        }
+
+        if (consErr >= CONFIG.maxConsecutiveErrors) {
+          console.error(`❌ ${consErr} consecutive errors — aborting.`);
+          break;
         }
       }
 
-      if (!acted) emptyScrolls++;
-      else emptyScrolls = 0;
+      if (consErr >= CONFIG.maxConsecutiveErrors || stopped) break;
+
+      if (!acted) {
+        retries++;
+        if (retries >= CONFIG.maxRetries) {
+          console.log(`\n✅ No more accounts found after ${retries} scrolls.`);
+          break;
+        }
+      } else {
+        retries = 0;
+      }
 
       window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
-      await sleep(CONFIG.scrollDelay);
+      await U.sleep(CONFIG.scrollDelay);
     }
 
-    // Summary
-    console.log('\n📊 RESULTS');
-    console.log(`   Unfollowed: ${unfollowed}`);
-    console.log(`   Skipped:    ${skipped}`);
+    // ── Results ──────────────────────────────────────────────
 
-    if (CONFIG.exportOnComplete && unfollowedList.length > 0) {
-      download(
-        { unfollowed: unfollowedList, stats: { total: unfollowed, skipped }, exportedAt: new Date().toISOString() },
-        `xactions-unfollow-everyone-${new Date().toISOString().slice(0, 10)}.json`
+    const elapsed = ((Date.now() - t0) / 1000).toFixed(1);
+    const rate = unfollowed > 0 ? (unfollowed / ((Date.now() - t0) / 60000)).toFixed(1) : '0';
+
+    console.log('\n╔' + '═'.repeat(W) + '╗');
+    console.log(stopped
+      ? '║  🛑 STOPPED BY USER' + ' '.repeat(W - 20) + '║'
+      : '║  ✅ COMPLETE' + ' '.repeat(W - 13) + '║');
+    console.log('╚' + '═'.repeat(W) + '╝');
+    console.log(`  🚫 Unfollowed: ${unfollowed}`);
+    console.log(`  ⏭️  Skipped:    ${skipped}`);
+    console.log(`  ⚠️  Errors:     ${errors}`);
+    console.log(`  ⏱️  Time:       ${elapsed}s (${rate}/min)`);
+
+    if (CONFIG.trackUnfollowed && log.length > 0) {
+      U.saveState('unfollow_everyone_log', log);
+      console.log(`  💾 Log saved (${log.length} total unfollows)`);
+    }
+
+    if (CONFIG.exportOnComplete && log.length > 0 && !CONFIG.dryRun) {
+      U.download(
+        { unfollowed: log, stats: { total: unfollowed, skipped, errors, elapsed: elapsed + 's' } },
+        `xactions-unfollow-${new Date().toISOString().slice(0, 10)}.json`
       );
     }
 
-    console.log('✅ Done! Reload & re-run if any were missed.\n');
-  };
+    if (CONFIG.exportDryRun && CONFIG.dryRun && preview.length > 0) {
+      U.download(
+        { unfollowed: preview, stats: { total: unfollowed, skipped }, exportedAt: new Date().toISOString() },
+        `xactions-unfollow-everyone-preview-${new Date().toISOString().slice(0, 10)}.json`
+      );
+    }
 
-  run();
+    delete window.stopUnfollow;
+    console.log('\n  💡 Reload & re-run if any were missed.\n');
+  })();
 })();

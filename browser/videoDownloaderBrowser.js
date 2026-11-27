@@ -1,5 +1,17 @@
+// GENERATED FILE: a copy of browser/videoDownloader.js, written by scripts/build-script-manifest.mjs. Edit browser/videoDownloader.js instead, then run: npm run browser:build
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
-// browser/videoDownloaderBrowser.js
+/**
+ * @name        videoDownloader.js
+ * @title       Video Downloader
+ * @description Find every video or GIF URL on a post, pick a quality and download it, with batch and metadata helpers.
+ * @category    scrape
+ * @page        x.com/<username>/status/<id>
+ * @writes      false
+ * @aliases     browser/videoDownloaderBrowser.js, scripts/videoDownloader.js, scripts/twitter/video-downloader.js
+ * @author      nichxbt (https://x.com/nichxbt)
+ * @version     1.1.0
+ * @date        2026-11-27
+ */
 // Download videos from X/Twitter posts in browser
 // by nichxbt
 // https://github.com/nirholas/XActions
@@ -7,7 +19,9 @@
 // HOW TO USE:
 // 1. Go to a tweet with a video on x.com
 // 2. Open Developer Console (F12)
-// 3. Paste and run
+// 3. Paste browser/videoDownloader.js and run
+//    (set CONFIG.autoRunOnLoad = true to download straight away, as the
+//    older one-shot versions did)
 //
 // AVAILABLE FUNCTIONS:
 //   downloadCurrent()              — Download video from current tweet page
@@ -16,9 +30,19 @@
 //   batchDownload([url1, url2...]) — Download videos from multiple tweet URLs
 //   getVideoInfo()                 — Show video metadata without downloading
 //
+// After downloadCurrent(): window.xVideo = { best, all, author, tweetId, tweetUrl }
+// and window.videoUrls = all variants found.
+//
 // Last Updated: 30 March 2026
 (() => {
   'use strict';
+
+  const CONFIG = {
+    quality: 'highest',       // downloadCurrent(): 'highest', 'lowest', or 'all' (every variant)
+    autoDownload: true,       // downloadCurrent() downloads; false = list and copy the URL only
+    showAllQualities: true,   // List every variant found before downloading
+    autoRunOnLoad: false,     // Run downloadCurrent() as soon as the script is pasted on a post
+  };
 
   const sleep = (ms) => new Promise(r => setTimeout(r, ms));
 
@@ -203,7 +227,12 @@
     console.log('🔍 Video network interceptor activated');
   };
 
-  const getInterceptedVideos = () => window.__XACTIONS_VD_CAPTURED || [];
+  // Also read URLs captured by the interceptor of the older scripts/videoDownloader.js
+  // if it was pasted earlier in this tab.
+  const getInterceptedVideos = () => [
+    ...(window.__XACTIONS_VD_CAPTURED || []),
+    ...(window.__XACTIONS_VIDEO_URLS || []).map(v => ({ ...v, source: v.source || 'legacy-intercept' })),
+  ];
 
   // ─── Dedup & Sort ─────────────────────────────────────────
 
@@ -333,27 +362,55 @@
     }
 
     console.log(`\n📹 Found ${videos.length} video(s)\n`);
-    videos.forEach((v, i) => {
-      console.log(`   ${i + 1}. [${v.quality}] ${v.type.toUpperCase()} (${v.source})`);
-      console.log(`      ${v.url.slice(0, 80)}...`);
-    });
+    if (CONFIG.showAllQualities) {
+      videos.forEach((v, i) => {
+        console.log(`   ${i + 1}. [${v.quality}] ${v.type.toUpperCase()} (${v.source})`);
+        console.log(`      ${v.url.slice(0, 80)}...`);
+      });
+    }
 
     const best = videos[0];
     console.log(`\n🏆 Best quality: ${best.quality} (${best.type.toUpperCase()})`);
 
+    let selected = best;
+    if (CONFIG.quality === 'lowest') {
+      selected = videos[videos.length - 1];
+      console.log(`🎯 Selected (lowest): ${selected.quality} (${selected.type.toUpperCase()})`);
+    } else if (CONFIG.quality !== 'highest' && CONFIG.quality !== 'all') {
+      console.warn(`⚠️ Unknown CONFIG.quality "${CONFIG.quality}", defaulting to "highest".`);
+    }
+
     try {
-      await navigator.clipboard.writeText(best.url);
+      await navigator.clipboard.writeText(selected.url);
       console.log('📋 URL copied to clipboard!');
     } catch (e) {
       // Clipboard access may be denied
     }
 
-    const filename = `${author}_${tweetId}.mp4`;
-    await triggerDownload(best.url, filename);
+    window.xVideo = { best: best.url, all: videos, author, tweetId, tweetUrl: window.location.href };
+    window.videoUrls = videos;
 
-    console.log(`\n🔗 Direct URL:\n${best.url}`);
+    if (CONFIG.autoDownload) {
+      if (CONFIG.quality === 'all') {
+        console.log(`🎯 Quality set to "all": downloading all ${videos.length} variant(s)`);
+        for (let i = 0; i < videos.length; i++) {
+          const v = videos[i];
+          const label = String(v.quality).replace(/[^A-Za-z0-9_-]/g, '');
+          console.log(`💾 Downloading ${i + 1}/${videos.length} (${v.quality})...`);
+          await triggerDownload(v.url, `${author}_${tweetId}_${i + 1}_${label}.mp4`);
+          // Small delay so the browser isn't asked to start N simultaneous downloads at once.
+          if (i < videos.length - 1) await sleep(800);
+        }
+      } else {
+        const filename = `${author}_${tweetId}.mp4`;
+        await triggerDownload(selected.url, filename);
+      }
+    }
 
-    return { best, all: videos, author, tweetId };
+    console.log(`\n🔗 Direct URL:\n${selected.url}`);
+    console.log('💾 Access all data: window.xVideo (window.xVideo.best, window.xVideo.all) and window.videoUrls');
+
+    return { best, selected, all: videos, author, tweetId };
   };
 
   // ─── Feature 2: Download Video By Tweet URL ───────────────
@@ -603,17 +660,22 @@
           console.log('🔄 Resuming pending download...');
           sessionStorage.removeItem('xactions_vd_pending');
           setTimeout(() => downloadCurrent(), 2000);
+          return true;
         }
       } catch (e) {
         // Ignore
       }
     }
+    return false;
   };
 
   // ─── Initialize ───────────────────────────────────────────
 
   setupInterceptor();
-  checkPending();
+  const resumed = checkPending();
+  if (CONFIG.autoRunOnLoad && !resumed && isTweetPage()) {
+    setTimeout(() => downloadCurrent(), 0);
+  }
 
   // ─── Expose on window.XActions ────────────────────────────
 

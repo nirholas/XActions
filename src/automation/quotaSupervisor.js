@@ -1,4 +1,14 @@
+// GENERATED FILE: a copy of browser/quotaSupervisor.js, written by scripts/build-script-manifest.mjs. Edit browser/quotaSupervisor.js instead, then run: npm run browser:build
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
+/**
+ * @name        quotaSupervisor.js
+ * @title       Quota Supervisor
+ * @description Watch the action quotas of running automations and pause them before X limits the account.
+ * @category    automation
+ * @page        x.com/*
+ * @writes      false
+ * @aliases     src/automation/quotaSupervisor.js
+ */
 // XActions Automation - Quota Supervisor
 // https://github.com/nirholas/XActions
 //

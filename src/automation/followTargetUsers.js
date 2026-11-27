@@ -1,24 +1,122 @@
+// GENERATED FILE: a copy of browser/followTargetUsers.js, written by scripts/build-script-manifest.mjs. Edit browser/followTargetUsers.js instead, then run: npm run browser:build
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
+/**
+ * @name        followTargetUsers.js
+ * @title       Follow Target Users
+ * @description Follow the followers or following of target accounts, filtered by follower count, bio and account type, with a total cap.
+ * @category    grow
+ * @page        x.com/<username>/followers or x.com/<username>/following or x.com/home
+ * @writes      true
+ * @aliases     src/automation/followTargetUsers.js, scripts/twitter/follow-target-users.js
+ * @author      nichxbt (https://x.com/nichxbt)
+ * @version     1.1.0
+ * @date        2026-11-27
+ */
 // XActions Automation - Follow Followers/Following of Target Users
 // https://github.com/nirholas/XActions
 //
-// REQUIRES: Paste core.js first!
+// Runs on its own. If src/automation/core.js was pasted first, its helpers,
+// selectors and storage are used; otherwise built-in equivalents with the
+// same storage keys are used.
 //
 // Follow the followers or following of any target account
 //
 // HOW TO USE:
-// 1. Open X home page
-// 2. Paste core.js, then paste this script
-// 3. Configure target accounts below
-// 4. Run and let it work!
+// 1. Either open a target's list (https://x.com/TARGET/followers or
+//    https://x.com/TARGET/following) and leave TARGET_ACCOUNTS empty to work
+//    on that page, or open X home and add target accounts below
+// 2. Configure the options below
+// 3. Paste browser/followTargetUsers.js and press Enter
+// 4. Run stopTargetFollow() to stop early
 
 (() => {
-  if (!window.XActions?.Core) {
-    console.error('❌ Core module not loaded! Paste core.js first.');
-    return;
-  }
+  window.XActions = window.XActions || {};
 
-  const { log, sleep, randomDelay, scrollBy, clickElement, waitForElement, storage, SELECTORS, extractUserFromCell } = window.XActions.Core;
+  // ─── Helpers: core.js when present, built-in equivalents otherwise ───
+  const Core = window.XActions.Core || {};
+  const sleep = Core.sleep || ((ms) => new Promise((resolve) => setTimeout(resolve, ms)));
+  const randomDelay = Core.randomDelay || ((min, max) => sleep(Math.floor(Math.random() * (max - min + 1)) + min));
+  const log = Core.log || ((message, type = 'info') => {
+    const prefix = { info: '📘', success: '✅', warning: '⚠️', error: '❌', action: '🔧' }[type] || '📘';
+    console.log(`${prefix} [${new Date().toLocaleTimeString()}] ${message}`);
+  });
+  const scrollBy = Core.scrollBy || ((pixels) => window.scrollBy({ top: pixels, behavior: 'smooth' }));
+  const waitForElement = Core.waitForElement || (async (selector, timeout = 10000) => {
+    const startTime = Date.now();
+    while (Date.now() - startTime < timeout) {
+      const element = document.querySelector(selector);
+      if (element) return element;
+      await sleep(100);
+    }
+    return null;
+  });
+  const clickElement = Core.clickElement || (async (element) => {
+    if (!element) return false;
+    try {
+      element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      await sleep(300);
+      element.click();
+      return true;
+    } catch (e) {
+      log(`Click error: ${e.message}`, 'error');
+      return false;
+    }
+  });
+  const SELECTORS = Core.SELECTORS || {
+    followButton: '[data-testid$="-follow"]',
+    unfollowButton: '[data-testid$="-unfollow"]',
+    likeButton: '[data-testid="like"]',
+    unlikeButton: '[data-testid="unlike"]',
+    tweet: '[data-testid="tweet"]',
+    userCell: '[data-testid="UserCell"]',
+    userFollowIndicator: '[data-testid="userFollowIndicator"]',
+    userDescription: '[data-testid="UserDescription"]',
+  };
+  // Same localStorage prefix as core.js (xactions_), so tracking is shared.
+  const storage = Core.storage || {
+    get: (key) => {
+      try {
+        const data = localStorage.getItem('xactions_' + key);
+        return data ? JSON.parse(data) : null;
+      } catch (e) {
+        log(`Storage get error: ${e.message}`, 'error');
+        return null;
+      }
+    },
+    set: (key, value) => {
+      try {
+        localStorage.setItem('xactions_' + key, JSON.stringify(value));
+        return true;
+      } catch (e) {
+        log(`Storage set error: ${e.message}`, 'error');
+        return false;
+      }
+    },
+  };
+  const extractUserFromCell = Core.extractUserFromCell || ((cell) => {
+    if (!cell) return null;
+    try {
+      const href = cell.querySelector('a[href^="/"]')?.getAttribute('href') || '';
+      const username = (href.match(/^\/([^/]+)$/) || [, ''])[1].toLowerCase();
+      const bio = cell.querySelector(SELECTORS.userDescription)?.textContent.trim() ||
+        [...cell.querySelectorAll('[dir="auto"]:not([data-testid])')]
+          .map((el) => el.textContent.trim())
+          .find((t) => t && !t.startsWith('@') && t.length >= 10) || '';
+      const followerMatch = (cell.textContent || '').match(/(\d[\d,]*\.?\d*[KMB]?)\s*Follower/i);
+      return {
+        username,
+        bio,
+        followers: followerMatch ? parseCount(followerMatch[1]) : 0,
+        isFollowing: !!cell.querySelector(SELECTORS.unfollowButton),
+        followsYou: !!cell.querySelector(SELECTORS.userFollowIndicator),
+        isVerified: !!cell.querySelector('[data-testid="icon-verified"]') || !!cell.querySelector('svg[aria-label*="Verified"]'),
+        isProtected: !!cell.querySelector('[data-testid="icon-lock"]'),
+      };
+    } catch (e) {
+      log(`extractUserFromCell error: ${e.message}`, 'error');
+      return null;
+    }
+  });
 
   // ============================================
   // CONFIGURATION
@@ -38,7 +136,7 @@
     MAX_FOLLOWS_PER_ACCOUNT: 20,
     
     // Total maximum follows across all targets
-    TOTAL_MAX_FOLLOWS: 50,
+    TOTAL_MAX_FOLLOWS: 30,
     
     // -------- FILTERS --------
     FILTERS: {
@@ -56,6 +154,7 @@
       // Bio filters
       MUST_HAVE_BIO: true,
       BIO_KEYWORDS: [],  // Empty = any bio, otherwise must contain one of these
+      BIO_BLACKLIST: [], // Skip bios containing any of these, e.g. ['bot', 'spam', 'promo']
       
       // Skip private/protected accounts
       SKIP_PROTECTED: true,
@@ -89,9 +188,14 @@
     processed: new Set(storage.get('targetfollow_processed') || []),
   };
 
+  // Usernames followed by the older standalone variant of this tool
+  // (localStorage xactions_followed_targets); skipped, and kept up to date.
+  const followedTargets = new Set(storage.get('followed_targets') || []);
+
   const saveTracked = () => {
     storage.set('targetfollow_followed', Object.fromEntries(tracked.followed));
     storage.set('targetfollow_processed', Array.from(tracked.processed));
+    storage.set('followed_targets', Array.from(followedTargets));
   };
 
   // ============================================
@@ -137,6 +241,14 @@
       const bioLower = (userInfo.bio || '').toLowerCase();
       const hasKeyword = FILTERS.BIO_KEYWORDS.some(kw => bioLower.includes(kw.toLowerCase()));
       if (!hasKeyword) {
+        state.skipped.filtered++;
+        return false;
+      }
+    }
+    
+    if (FILTERS.BIO_BLACKLIST.length > 0) {
+      const bioLower = (userInfo.bio || '').toLowerCase();
+      if (FILTERS.BIO_BLACKLIST.some(kw => bioLower.includes(kw.toLowerCase()))) {
         state.skipped.filtered++;
         return false;
       }
@@ -199,13 +311,15 @@
   // ============================================
   // PROCESS TARGET ACCOUNT
   // ============================================
-  const processTargetAccount = async (targetUsername) => {
-    log(`\n📍 Processing @${targetUsername}'s ${CONFIG.LIST_TYPE}...`, 'info');
+  const processTargetAccount = async (targetUsername, listType = CONFIG.LIST_TYPE) => {
+    log(`\n📍 Processing @${targetUsername}'s ${listType}...`, 'info');
     
-    // Navigate to the list
-    const url = `https://x.com/${targetUsername}/${CONFIG.LIST_TYPE}`;
-    window.location.href = url;
-    await sleep(3000);
+    // Navigate to the list (unless this page already is that list)
+    const url = `https://x.com/${targetUsername}/${listType}`;
+    if (window.location.pathname.toLowerCase().replace(/\/$/, '') !== `/${targetUsername}/${listType}`.toLowerCase()) {
+      window.location.href = url;
+      await sleep(3000);
+    }
     
     // Wait for user cells to load
     await waitForElement(SELECTORS.userCell, 10000);
@@ -235,7 +349,7 @@
         processedThisSession.add(userInfo.username);
         
         // Skip if already in our tracked list
-        if (tracked.followed.has(userInfo.username) || tracked.processed.has(userInfo.username)) {
+        if (tracked.followed.has(userInfo.username) || tracked.processed.has(userInfo.username) || followedTargets.has(userInfo.username)) {
           continue;
         }
         
@@ -264,9 +378,10 @@
         
         tracked.followed.set(userInfo.username, {
           at: Date.now(),
-          source: `${targetUsername}/${CONFIG.LIST_TYPE}`,
+          source: `${targetUsername}/${listType}`,
         });
         tracked.processed.add(userInfo.username);
+        followedTargets.add(userInfo.username);
         saveTracked();
         
         log(`✅ Followed @${userInfo.username} [${state.totalFollowed}/${CONFIG.TOTAL_MAX_FOLLOWS}]`, 'success');
@@ -310,8 +425,14 @@
     `);
 
     if (CONFIG.TARGET_ACCOUNTS.length === 0) {
-      log('⚠️ No target accounts configured! Add usernames to CONFIG.TARGET_ACCOUNTS', 'warning');
-      return;
+      // No targets configured: work on the followers/following page this tab is on.
+      const pathMatch = window.location.pathname.match(/^\/([^/]+)\/(followers|following)\/?$/);
+      if (!pathMatch) {
+        log('⚠️ No target accounts configured! Add usernames to CONFIG.TARGET_ACCOUNTS, or open https://x.com/TARGET/followers and run again', 'warning');
+        return;
+      }
+      log(`👤 Target account: @${pathMatch[1]} (this page), list type: ${pathMatch[2]}`, 'info');
+      await processTargetAccount(pathMatch[1], pathMatch[2]);
     }
 
     for (const target of CONFIG.TARGET_ACCOUNTS) {

@@ -1,102 +1,53 @@
+// GENERATED FILE: a copy of browser/updateProfile.js, written by scripts/build-script-manifest.mjs. Edit browser/updateProfile.js instead, then run: npm run browser:build
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
 /**
- * ============================================
- * 📝 Edit Profile - XActions
- * ============================================
- *
- * @name         edit-profile
- * @description  Update your X profile fields (name, bio, location, website, birthdate) in one go.
- * @author       nichxbt
- * @version      1.0.0
- * @date         2026-07-20
- * @website      https://xactions.app
- *
- * Usage:
- *   1. Go to x.com/settings/profile
- *   2. Open the browser console (F12 or Cmd+Option+I -> Console)
- *   3. Edit the CONFIG below. Leave a field as null to leave it untouched.
- *   4. Paste this entire script and press Enter
- *
- * Example:
- *   Set name: "Ada Lovelace", bio: "Building on Solana. gm.", location: "London",
- *   website: "https://xactions.app", birthdate: null. Running it opens the Edit
- *   profile dialog, fills only those four fields, leaves your birthdate alone, and
- *   clicks Save. Only the fields you set are changed.
- *
- * ============================================
+ * @name        updateProfile.js
+ * @title       Update Profile
+ * @description Update your display name, bio, location, website and birthdate in the Edit profile form, dry run by default.
+ * @category    profile
+ * @page        x.com/<you> or x.com/settings/profile
+ * @writes      true
+ * @aliases     scripts/editProfile.js, scripts/updateProfile.js, scripts/twitter/edit-profile.js, scripts/twitter/update-bio.js
+ * @author      nichxbt (https://x.com/nichxbt)
+ * @version     1.1.0
+ * @date        2026-11-27
  */
-
-(async function editProfile() {
-  'use strict';
-
-  // ============================================
-  // 📝 CONFIGURATION - Customize these options
-  // ============================================
+// Update Profile on X - by nichxbt
+// https://github.com/nirholas/xactions
+// Programmatically update your bio, display name, location, website, birthdate
+// 1. Go to your profile page on x.com (or x.com/settings/profile)
+// 2. Open the Developer Console (F12)
+// 3. Edit the CONFIG below
+// 4. Paste browser/updateProfile.js into the Developer Console and run it
+//    It starts as a dry run that only lists the changes: set
+//    CONFIG.dryRun = false to apply them.
+//
+// Last Updated: 27 November 2026
+(() => {
   const CONFIG = {
-    // Display name (max 50 chars). null = leave unchanged.
-    name: null,
-
-    // Bio / description (max 160 chars). null = leave unchanged.
-    bio: null,
-
-    // Location string. null = leave unchanged. '' = clear the field.
-    location: null,
-
-    // Website URL. null = leave unchanged. '' = clear the field.
-    website: null,
-
+    // Set to null to skip updating a field ('' clears it)
+    displayName: null,    // 'Your Name' (max 50 chars)
+    bio: null,            // 'Your bio text' (max 160 chars)
+    location: null,       // 'San Francisco, CA'
+    website: null,        // 'https://yoursite.com'
     // Birthdate as { month: 'March', day: 14, year: 1990 }. null = leave unchanged.
     // month accepts a full month name ('March') or number (3). Any subset of
     // month/day/year you provide will be set; omitted parts are left as-is.
     birthdate: null,
-
-    // Click Save automatically after filling. If false, fields are filled and
-    // you click Save yourself.
     autoSave: true,
-
-    // Delay for UI interactions (ms).
-    actionDelay: 700
+    dryRun: true,         // true = only list the changes. false = fill the form (and save if autoSave)
+    actionDelay: 700,     // Delay for UI interactions (ms)
   };
 
-  // ============================================
-  // 🔧 SELECTORS
-  // ============================================
-  const SELECTORS = {
-    editButton: '[data-testid="editProfileButton"]',
-    // X has shipped several testids/name attrs over time; try each in order.
-    nameInput: [
-      '[data-testid="displayNameInput"]',
-      'input[name="displayName"]',
-      'input[name="name"]'
-    ],
-    bioInput: [
-      '[data-testid="bioTextarea"]',
-      '[data-testid="descriptionInput"]',
-      '[data-testid="ocf-bio-input"]',
-      'textarea[name="description"]'
-    ],
-    locationInput: [
-      '[data-testid="locationInput"]',
-      'input[name="location"]'
-    ],
-    websiteInput: [
-      '[data-testid="urlInput"]',
-      'input[name="url"]'
-    ],
-    saveButton: '[data-testid="Profile_Save_Button"]'
-  };
+  const $editProfileBtn = '[data-testid="editProfileButton"]';
+  // X has shipped several testids/name attrs over time; try each in order.
+  const $nameInput = ['input[name="displayName"]', '[data-testid="displayNameInput"]', 'input[name="name"]'];
+  const $bioTextarea = ['textarea[name="description"]', '[data-testid="bioTextarea"]', '[data-testid="descriptionInput"]', '[data-testid="ocf-bio-input"]'];
+  const $locationInput = ['input[name="location"]', '[data-testid="locationInput"]'];
+  const $websiteInput = ['input[name="url"]', '[data-testid="urlInput"]'];
+  const $saveButton = '[data-testid="Profile_Save_Button"]';
 
-  // ============================================
-  // 🛠️ HELPERS
-  // ============================================
   const sleep = (ms) => new Promise(r => setTimeout(r, ms));
-
-  const log = {
-    info: (msg) => console.log(`ℹ️ ${msg}`),
-    success: (msg) => console.log(`✅ ${msg}`),
-    warning: (msg) => console.log(`⚠️ ${msg}`),
-    error: (msg) => console.log(`❌ ${msg}`)
-  };
 
   // Resolve the first matching element from an array of selectors (or a single string).
   const findFirst = (selectors) => {
@@ -108,13 +59,14 @@
     return null;
   };
 
-  // Set an input/textarea value through the native setter so React's value
-  // tracker registers the change (a plain .value assignment is ignored by
-  // React and the old value would be saved).
+  // Set an input/textarea/select value through the native setter so React's
+  // value tracker registers the change.
   const setNativeValue = (el, value) => {
     const proto = el instanceof HTMLTextAreaElement
       ? HTMLTextAreaElement.prototype
-      : HTMLInputElement.prototype;
+      : el instanceof HTMLSelectElement
+        ? HTMLSelectElement.prototype
+        : HTMLInputElement.prototype;
     const desc = Object.getOwnPropertyDescriptor(proto, 'value');
     if (desc && desc.set) desc.set.call(el, value);
     else el.value = value;
@@ -122,22 +74,41 @@
     el.dispatchEvent(new Event('change', { bubbles: true }));
   };
 
-  // Fill one text field. Returns 'set' | 'notfound'.
-  const fillField = async (label, selectors, value) => {
-    const el = findFirst(selectors);
+  const stats = { set: 0, notFound: 0 };
+
+  const setInputValue = async (selector, value) => {
+    const el = findFirst(selector);
     if (!el) {
-      log.warning(`${label} field not found on the page. Skipped.`);
-      return 'notfound';
+      console.warn(`⚠️ Field not found: ${Array.isArray(selector) ? selector[0] : selector}`);
+      stats.notFound++;
+      return false;
     }
+
     el.focus();
-    await sleep(150);
-    setNativeValue(el, '');
-    await sleep(120);
-    setNativeValue(el, value);
-    await sleep(CONFIG.actionDelay);
-    const preview = value.length > 60 ? value.slice(0, 60) + '…' : value;
-    log.success(`${label} → "${preview}"`);
-    return 'set';
+    el.select?.();
+    await sleep(100);
+
+    // Clear existing value
+    document.execCommand('selectAll');
+    document.execCommand('delete');
+    await sleep(100);
+
+    // Type new value
+    document.execCommand('insertText', false, value);
+    el.dispatchEvent(new Event('input', { bubbles: true }));
+    el.dispatchEvent(new Event('change', { bubbles: true }));
+    await sleep(200);
+
+    // execCommand is ignored in some contexts: fall back to the native setter.
+    if (el.value !== value) {
+      setNativeValue(el, '');
+      await sleep(120);
+      setNativeValue(el, value);
+      await sleep(200);
+    }
+
+    stats.set++;
+    return true;
   };
 
   // Set a native <select> to the option whose text or value matches `wanted`.
@@ -163,9 +134,8 @@
 
   // Locate the three birthdate <select>s by their option content.
   const findBirthdateSelects = () => {
-    const selects = Array.from(document.querySelectorAll('select'));
     const out = { month: null, day: null, year: null };
-    for (const sel of selects) {
+    for (const sel of document.querySelectorAll('select')) {
       const texts = Array.from(sel.options).map(o => o.textContent.trim().toLowerCase());
       const joined = texts.join(' ');
       if (!out.month && (joined.includes('january') || joined.includes('month'))) out.month = sel;
@@ -177,138 +147,127 @@
 
   const setBirthdate = async (bd) => {
     const sel = findBirthdateSelects();
-    let anyField = false;
-    if (bd.month != null && sel.month) {
-      if (setSelectByText(sel.month, bd.month)) { log.success(`Birth month → ${bd.month}`); anyField = true; }
-      else log.warning(`Birth month "${bd.month}" not found in the dropdown.`);
-      await sleep(CONFIG.actionDelay);
-    }
-    if (bd.day != null && sel.day) {
-      if (setSelectByText(sel.day, bd.day)) { log.success(`Birth day → ${bd.day}`); anyField = true; }
-      else log.warning(`Birth day "${bd.day}" not found in the dropdown.`);
-      await sleep(CONFIG.actionDelay);
-    }
-    if (bd.year != null && sel.year) {
-      if (setSelectByText(sel.year, bd.year)) { log.success(`Birth year → ${bd.year}`); anyField = true; }
-      else log.warning(`Birth year "${bd.year}" not found in the dropdown.`);
-      await sleep(CONFIG.actionDelay);
-    }
     if (!sel.month && !sel.day && !sel.year) {
-      log.warning('Birthdate dropdowns not found. If your profile has no birthdate yet, add one manually once, then this tool can update it.');
-      return 'notfound';
+      console.warn('⚠️ Birthdate dropdowns not found. If your profile has no birthdate yet, add one manually once, then this tool can update it.');
+      stats.notFound++;
+      return false;
     }
-    return anyField ? 'set' : 'notfound';
-  };
-
-  // ============================================
-  // 🎯 MAIN LOGIC
-  // ============================================
-  const stats = { set: 0, notFound: 0, errors: 0 };
-
-  console.log(`
-╔══════════════════════════════════════════════════════════╗
-║  📝 EDIT PROFILE - XActions                              ║
-║  👤 Author: nichxbt                                      ║
-║  🌐 https://xactions.app                                 ║
-╚══════════════════════════════════════════════════════════╝
-  `);
-
-  // Page guard: warn, do not hard-redirect (a redirect would kill this script).
-  const onProfileSettings = /\/settings\/profile/.test(window.location.pathname);
-  const onOwnProfile = !!document.querySelector(SELECTORS.editButton);
-  if (!onProfileSettings && !onOwnProfile) {
-    log.warning('Go to x.com/settings/profile (or open your own profile so the "Edit profile" button is visible), then run this again.');
-    return stats;
-  }
-
-  // Validate lengths before touching anything.
-  if (CONFIG.name != null && CONFIG.name.length > 50) {
-    log.error(`Display name is ${CONFIG.name.length} chars (max 50). Shorten it and re-run.`);
-    return stats;
-  }
-  if (CONFIG.bio != null && CONFIG.bio.length > 160) {
-    log.error(`Bio is ${CONFIG.bio.length} chars (max 160). Shorten it and re-run.`);
-    return stats;
-  }
-
-  const requested = [];
-  if (CONFIG.name != null) requested.push('name');
-  if (CONFIG.bio != null) requested.push('bio');
-  if (CONFIG.location != null) requested.push('location');
-  if (CONFIG.website != null) requested.push('website');
-  if (CONFIG.birthdate != null) requested.push('birthdate');
-
-  if (requested.length === 0) {
-    log.warning('Nothing to change. Set at least one field (name, bio, location, website, birthdate) in CONFIG.');
-    return stats;
-  }
-  log.info(`Fields to update: ${requested.join(', ')}`);
-
-  // Open the Edit profile dialog if the form is not already mounted.
-  const formPresent = () => findFirst(SELECTORS.nameInput) || findFirst(SELECTORS.bioInput);
-  if (!formPresent()) {
-    const editBtn = document.querySelector(SELECTORS.editButton);
-    if (editBtn) {
-      log.info('Opening the Edit profile dialog...');
-      editBtn.click();
-    }
-    // The dialog / settings form may still be mounting on first paint.
-    let waited = 0;
-    while (!formPresent() && waited < 6) {
+    let anyField = false;
+    for (const part of ['month', 'day', 'year']) {
+      if (bd[part] == null || !sel[part]) continue;
+      if (setSelectByText(sel[part], bd[part])) {
+        console.log(`✅ Birth ${part} updated (${bd[part]})`);
+        anyField = true;
+      } else {
+        console.warn(`⚠️ Birth ${part} "${bd[part]}" not found in the dropdown.`);
+      }
       await sleep(CONFIG.actionDelay);
-      waited++;
     }
-  }
-  if (!formPresent()) {
-    log.error('Could not find the profile form. Make sure you are on x.com/settings/profile or that the Edit profile dialog opened.');
-    return stats;
-  }
-
-  const tally = (result) => {
-    if (result === 'set') stats.set++;
-    else if (result === 'notfound') stats.notFound++;
+    if (anyField) stats.set++;
+    else stats.notFound++;
+    return anyField;
   };
 
-  try {
-    if (CONFIG.name != null) tally(await fillField('Name', SELECTORS.nameInput, CONFIG.name));
-    if (CONFIG.bio != null) tally(await fillField('Bio', SELECTORS.bioInput, CONFIG.bio));
-    if (CONFIG.location != null) tally(await fillField('Location', SELECTORS.locationInput, CONFIG.location));
-    if (CONFIG.website != null) tally(await fillField('Website', SELECTORS.websiteInput, CONFIG.website));
-    if (CONFIG.birthdate != null) tally(await setBirthdate(CONFIG.birthdate));
-  } catch (error) {
-    log.error(`Error while filling fields: ${error.message}`);
-    stats.errors++;
-  }
+  const run = async () => {
+    console.log('✏️ UPDATE PROFILE - XActions by nichxbt');
 
-  if (stats.set === 0) {
-    log.warning('No fields were actually changed (none of the requested fields were found). Nothing to save.');
-  } else if (CONFIG.autoSave) {
-    const saveBtn = document.querySelector(SELECTORS.saveButton);
-    if (saveBtn) {
-      log.info('Saving profile...');
-      saveBtn.click();
-      await sleep(CONFIG.actionDelay * 2);
-      log.success('Save clicked.');
-    } else {
-      log.warning('Save button not found. Click "Save" in the dialog to apply your changes.');
+    // Validate
+    if (CONFIG.bio && CONFIG.bio.length > 160) {
+      console.error(`❌ Bio too long: ${CONFIG.bio.length}/160 chars`);
+      return;
     }
-  } else {
-    log.info('autoSave is off. Click "Save" in the dialog to apply your changes.');
-  }
+    if (CONFIG.displayName && CONFIG.displayName.length > 50) {
+      console.error(`❌ Name too long: ${CONFIG.displayName.length}/50 chars`);
+      return;
+    }
 
-  // ============================================
-  // 📊 SUMMARY
-  // ============================================
-  console.log(`
-╔══════════════════════════════════════════════════════════╗
-║  📊 EDIT PROFILE - COMPLETE                              ║
-╠══════════════════════════════════════════════════════════╣
-║  ✅ Fields updated:    ${String(stats.set).padEnd(32)}║
-║  ⚠️  Fields not found:  ${String(stats.notFound).padEnd(32)}║
-║  ❌ Errors:            ${String(stats.errors).padEnd(32)}║
-╚══════════════════════════════════════════════════════════╝
-  `);
+    const updates = [];
+    if (CONFIG.displayName !== null) updates.push(`Name: "${CONFIG.displayName}"`);
+    if (CONFIG.bio !== null) updates.push(`Bio: "${CONFIG.bio.substring(0, 40)}..."`);
+    if (CONFIG.location !== null) updates.push(`Location: "${CONFIG.location}"`);
+    if (CONFIG.website !== null) updates.push(`Website: "${CONFIG.website}"`);
+    if (CONFIG.birthdate !== null) updates.push(`Birthdate: ${['month', 'day', 'year'].filter(k => CONFIG.birthdate[k] != null).map(k => `${k} ${CONFIG.birthdate[k]}`).join(', ')}`);
 
-  log.success('Script completed! by nichxbt');
-  return stats;
+    if (updates.length === 0) {
+      console.log('❌ Nothing to update! Set values in CONFIG.');
+      return;
+    }
+
+    console.log('📋 Updates to apply:');
+    updates.forEach(u => console.log(`   • ${u}`));
+    console.log('');
+
+    if (CONFIG.dryRun) {
+      console.log('🔒 DRY RUN: no changes made. Set CONFIG.dryRun = false to execute.');
+      return;
+    }
+
+    // Open edit profile dialog (unless the form is already mounted)
+    const formPresent = () => findFirst($nameInput) || findFirst($bioTextarea);
+    if (!formPresent()) {
+      const editBtn = document.querySelector($editProfileBtn);
+      if (editBtn) {
+        console.log('📍 Opening profile editor...');
+        editBtn.click();
+        await sleep(2000);
+      } else if (!window.location.href.includes('/settings/profile')) {
+        // Try navigating to settings
+        console.error('❌ Cannot find Edit Profile button. Navigate to your profile page or x.com/settings/profile');
+        return;
+      }
+      // The dialog / settings form may still be mounting on first paint.
+      for (let waited = 0; !formPresent() && waited < 6; waited++) {
+        await sleep(CONFIG.actionDelay);
+      }
+      if (!formPresent()) {
+        console.error('❌ Could not find the profile form. Make sure you are on x.com/settings/profile or that the Edit profile dialog opened.');
+        return;
+      }
+    }
+
+    // Apply updates
+    if (CONFIG.displayName !== null) {
+      const ok = await setInputValue($nameInput, CONFIG.displayName);
+      if (ok) console.log(`✅ Display name updated`);
+    }
+
+    if (CONFIG.bio !== null) {
+      const ok = await setInputValue($bioTextarea, CONFIG.bio);
+      if (ok) console.log(`✅ Bio updated (${CONFIG.bio.length}/160 chars)`);
+    }
+
+    if (CONFIG.location !== null) {
+      const ok = await setInputValue($locationInput, CONFIG.location);
+      if (ok) console.log(`✅ Location updated`);
+    }
+
+    if (CONFIG.website !== null) {
+      const ok = await setInputValue($websiteInput, CONFIG.website);
+      if (ok) console.log(`✅ Website updated`);
+    }
+
+    if (CONFIG.birthdate !== null) {
+      await setBirthdate(CONFIG.birthdate);
+    }
+
+    console.log(`\n📊 Fields updated: ${stats.set} | Not found: ${stats.notFound}`);
+
+    // Save
+    if (stats.set === 0) {
+      console.log('\n⚠️ No fields were actually changed (none of the requested fields were found). Nothing to save.');
+    } else if (CONFIG.autoSave) {
+      await sleep(500);
+      const saveBtn = document.querySelector($saveButton);
+      if (saveBtn) {
+        saveBtn.click();
+        console.log('\n💾 Profile saved!');
+      } else {
+        console.log('\n⚠️ Save button not found. Please save manually.');
+      }
+    } else {
+      console.log('\n💡 Auto-save is off. Click "Save" to apply changes.');
+    }
+  };
+
+  run();
 })();

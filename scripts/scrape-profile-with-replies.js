@@ -1,3 +1,4 @@
+// GENERATED FILE: a copy of browser/scrapeProfileWithReplies.js, written by scripts/build-script-manifest.mjs. Edit browser/scrapeProfileWithReplies.js instead, then run: npm run browser:build
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
 /**
  * ============================================================
@@ -11,6 +12,17 @@
  * Perfect for case studies and sentiment analysis.
  *
  * by nichxbt — https://github.com/nirholas/XActions
+ *
+ * @name        scrapeProfileWithReplies.js
+ * @title       Scrape Profile With Replies
+ * @description Scrape a profile's posts from the With replies tab, then open each post and collect the replies other users left, with JSON, CSV, Markdown, text and HTML export.
+ * @category    scrape
+ * @page        x.com/<username>/with_replies or x.com/<username>
+ * @writes      false
+ * @aliases     scripts/scrape-profile-with-replies.js, scripts/twitter/scrape-profile-with-replies.js
+ * @author      nichxbt (https://x.com/nichxbt)
+ * @version     1.1.0
+ * @date        2026-11-27
  *
  * ============================================================
  * 📖 HOW TO USE:
@@ -28,7 +40,8 @@
  *    allow pasting
  *    and press Enter
  *
- * 5. Copy this ENTIRE script and paste it into the console
+ * 5. Copy the ENTIRE browser/scrapeProfileWithReplies.js and paste it
+ *    into the console
  *
  * 6. Press Enter to run
  *
@@ -46,7 +59,9 @@
  * ============================================================
  */
 
-const CONFIG = {
+// `var` (not `const`): a repeated top-level `const` paste in the same
+// DevTools tab throws "already been declared" instead of re-running.
+var CONFIG = {
 
   // ==========================================
   // 📊 SCRAPING SETTINGS
@@ -186,6 +201,24 @@ const CONFIG = {
 
   function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
+  }
+
+  // Navigate within the SPA via history.pushState + a synthetic popstate.
+  // Assigning window.location.href triggers a full page reload, which wipes
+  // this console script's entire state (posts collected so far, panel, etc.)
+  // mid-run. Only fall back to a real navigation if the SPA route never
+  // takes (e.g. React hasn't mounted its popstate listener yet).
+  function spaNavigate(url) {
+    try {
+      const target = new URL(url, window.location.href);
+      if (target.origin === window.location.origin) {
+        window.history.pushState({}, '', target.href);
+        window.dispatchEvent(new PopStateEvent('popstate', { state: {} }));
+        return true;
+      }
+    } catch (e) { /* fall through to hard navigation */ }
+    window.location.href = url;
+    return false;
   }
 
   /** Wait while paused, checking every 200ms. */
@@ -661,7 +694,7 @@ const CONFIG = {
   // ─── Export helpers ─────────────────────────────────────
 
   function buildResult() {
-    const profileMatch = state.originalUrl.match(/x\.com\/([^\/]+)/);
+    const profileMatch = state.originalUrl.match(/x\.com\/([^/]+)/);
     const profileName = profileMatch ? profileMatch[1] : 'unknown';
 
     const totalReplyCount = state.posts.reduce((sum, p) => sum + (p.replies_scraped?.length || 0), 0);
@@ -831,7 +864,7 @@ const CONFIG = {
 </div>
 `;
 
-    result.posts.forEach((p, i) => {
+    result.posts.forEach(p => {
       html += `<div class="post">
   <div class="post-header">
     <span class="handle">@${esc(p.author?.handle)}</span>
@@ -860,8 +893,6 @@ const CONFIG = {
 
   function exportAllFormats() {
     const result = buildResult();
-    const dateStr = new Date().toISOString().split('T')[0];
-    const profileName = result.profile;
 
     console.log('');
     console.log('╔════════════════════════════════════════════════════════════╗');
@@ -934,7 +965,6 @@ const CONFIG = {
     panelLog('Phase 1: Collecting posts from feed');
 
     let noNewCount = 0;
-    let prevCount = 0;
 
     while (
       state.posts.length < CONFIG.targetPostCount &&
@@ -997,8 +1027,6 @@ const CONFIG = {
         }
       }
 
-      prevCount = state.posts.length;
-
       // Scroll
       window.scrollTo(0, document.body.scrollHeight);
       await sleep(CONFIG.scrollDelay);
@@ -1033,8 +1061,11 @@ const CONFIG = {
     if (targetLink) {
       targetLink.click();
     } else {
-      // Fallback: direct navigation
-      window.location.href = postUrl;
+      // Fallback: the post's own article scrolled out of view / was
+      // virtualized away, so there's no link to click. Use SPA navigation
+      // (not a hard window.location.href reload, which would kill this
+      // entire running scraper and lose all progress collected so far).
+      spaNavigate(postUrl);
     }
 
     await sleep(CONFIG.navigationDelay);
@@ -1140,8 +1171,11 @@ const CONFIG = {
         // Check we landed on the right page
         const onTweet = window.location.href.includes('/status/');
         if (!onTweet) {
-          panelLog(`⚠ Navigation failed for post ${i + 1}, retrying direct…`, 'warn');
-          window.location.href = post.url;
+          panelLog(`⚠ Navigation failed for post ${i + 1}, retrying…`, 'warn');
+          // SPA navigation, not window.location.href: a hard reload here
+          // would destroy this running script and lose every post/reply
+          // collected so far.
+          spaNavigate(post.url);
           await sleep(CONFIG.navigationDelay + 1000);
         }
 
@@ -1170,10 +1204,12 @@ const CONFIG = {
         panelLog(`⚠ Error on post ${i + 1}: ${err.message}`, 'err');
         state.errors.push({ postId: post.id, error: err.message });
 
-        // Try to get back to the profile
+        // Try to get back to the profile. SPA navigation, not a hard
+        // reload: this runs mid-loop, so destroying the script here would
+        // silently abandon every remaining post.
         try {
           if (!window.location.href.includes(state.originalUrl.split('x.com/')[1]?.split('/')[0])) {
-            window.location.href = state.originalUrl;
+            spaNavigate(state.originalUrl);
             await sleep(CONFIG.navigationDelay);
           }
         } catch (_) {
@@ -1199,7 +1235,7 @@ const CONFIG = {
     return;
   }
 
-  const profileMatch = window.location.pathname.match(/^\/([^\/]+)/);
+  const profileMatch = window.location.pathname.match(/^\/([^/]+)/);
   const profileName = profileMatch ? profileMatch[1] : 'unknown';
 
   console.log(`🎯 Profile: @${profileName}`);

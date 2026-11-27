@@ -1,5 +1,14 @@
+// GENERATED FILE: a copy of browser/businessAnalytics.js, written by scripts/build-script-manifest.mjs. Edit browser/businessAnalytics.js instead, then run: npm run browser:build
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
-// scripts/businessAnalytics.js
+/**
+ * @name        businessAnalytics.js
+ * @title       Business Analytics
+ * @description Brand monitoring for businesses: mentions, engagement trends and sentiment.
+ * @category    analytics
+ * @page        x.com/*
+ * @writes      false
+ * @aliases     scripts/businessAnalytics.js
+ */
 // Browser console script for X/Twitter business analytics and brand monitoring
 // Paste in DevTools console on x.com or business.x.com
 // by nichxbt
@@ -116,7 +125,7 @@
     try {
       await navigator.clipboard.writeText(JSON.stringify(result, null, 2));
       console.log('\n✅ Copied to clipboard!');
-    } catch (e) {}
+    } catch { /* clipboard needs page focus; the result is already printed above */ }
   };
 
   run();

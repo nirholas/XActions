@@ -1,5 +1,14 @@
+// GENERATED FILE: a copy of browser/autoEngage.js, written by scripts/build-script-manifest.mjs. Edit browser/autoEngage.js instead, then run: npm run browser:build
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
-// scripts/autoEngage.js
+/**
+ * @name        autoEngage.js
+ * @title       Auto Engage
+ * @description Like, reply, bookmark and repost matching posts in one pass over a feed.
+ * @category    engage
+ * @page        x.com/home
+ * @writes      true
+ * @aliases     scripts/autoEngage.js
+ */
 // Browser console script for automated engagement on X/Twitter
 // Auto-like, auto-reply, bookmark management
 // Paste in DevTools console on x.com/home or any feed

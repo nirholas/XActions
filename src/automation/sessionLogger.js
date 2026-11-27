@@ -1,4 +1,14 @@
+// GENERATED FILE: a copy of browser/sessionLogger.js, written by scripts/build-script-manifest.mjs. Edit browser/sessionLogger.js instead, then run: npm run browser:build
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
+/**
+ * @name        sessionLogger.js
+ * @title       Session Logger
+ * @description Log what the automation scripts did in a session and export the analytics.
+ * @category    automation
+ * @page        x.com/*
+ * @writes      false
+ * @aliases     src/automation/sessionLogger.js
+ */
 // XActions Automation - Session Logger & Analytics
 // https://github.com/nirholas/XActions
 //
@@ -217,25 +227,6 @@
     }
     
     return dailyStats;
-  };
-
-  const getMostFollowed = (limit = 10) => {
-    const sessions = [...getSessions(), currentSession];
-    const followCounts = {};
-    
-    for (const session of sessions) {
-      if (!session.actions) continue;
-      
-      for (const action of session.actions) {
-        if (action.action === 'follow' && action.target) {
-          followCounts[action.target] = (followCounts[action.target] || 0) + 1;
-        }
-      }
-    }
-    
-    return Object.entries(followCounts)
-      .sort((a, b) => b[1] - a[1])
-      .slice(0, limit);
   };
 
   // ============================================

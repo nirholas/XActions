@@ -1,11 +1,17 @@
+// GENERATED FILE: a copy of browser/likeUserReplies.js, written by scripts/build-script-manifest.mjs. Edit browser/likeUserReplies.js instead, then run: npm run browser:build
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
 /**
  * ============================================
  * 💬 Like User Replies - XActions
  * ============================================
  * 
- * @name         like-user-replies
- * @description  Automatically like replies/comments on a specific tweet
+ * @name        likeUserReplies.js
+ * @description Like the replies under a specific post.
+ * @title       Like Replies
+ * @category    engage
+ * @page        x.com/<username>/status/<id>
+ * @writes      true
+ * @aliases     scripts/twitter/like-user-replies.js
  * @author       nichxbt
  * @version      1.0.0
  * @date         2026-01-26
@@ -137,7 +143,7 @@
   }
 
   // Extract tweet info from URL
-  const urlMatch = currentUrl.match(/\/([^\/]+)\/status\/(\d+)/);
+  const urlMatch = currentUrl.match(/\/([^/]+)\/status\/(\d+)/);
   const tweetAuthor = urlMatch ? urlMatch[1] : 'Unknown';
   const tweetId = urlMatch ? urlMatch[2] : 'Unknown';
 

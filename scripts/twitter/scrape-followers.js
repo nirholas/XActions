@@ -1,21 +1,27 @@
+// GENERATED FILE: a copy of browser/scrapeFollowers.js, written by scripts/build-script-manifest.mjs. Edit browser/scrapeFollowers.js instead, then run: npm run browser:build
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
 /**
  * ============================================
  * 👥 Scrape Followers - XActions
  * ============================================
  *
- * @name         scrape-followers
- * @description  Scroll the followers list of any profile and export every follower (handle, name, bio, verified, follows-you) to JSON and CSV.
- * @author       nichxbt
- * @version      1.0.0
- * @date         2026-07-20
- * @website      https://xactions.app
+ * @name        scrapeFollowers.js
+ * @title       Scrape Followers
+ * @description Scroll the followers list of any profile and export every follower (handle, name, bio, verified, follows-you) to JSON and CSV.
+ * @category    scrape
+ * @page        x.com/<username>/followers
+ * @writes      false
+ * @aliases     scripts/scrapeFollowers.js, scripts/twitter/scrape-followers.js
+ * @author      nichxbt (https://x.com/nichxbt)
+ * @version     1.1.0
+ * @date        2026-11-27
+ * @website     https://xactions.app
  *
  * Usage:
  *   1. Go to x.com/<user>/followers (for your own list: x.com/<you>/followers)
  *   2. Open the browser console (F12 or Cmd+Option+I -> Console)
  *   3. (Optional) edit the CONFIG options at the top of the script
- *   4. Paste this entire script and press Enter
+ *   4. Paste browser/scrapeFollowers.js and press Enter
  *
  * Example:
  *   On x.com/nasa/followers with the default maxUsers of 5000, the script
@@ -36,8 +42,9 @@
     // Stop after collecting this many followers (safety cap)
     maxUsers: 5000,
 
-    // How far to scroll each step (pixels)
-    scrollStep: 1400,
+    // How far to scroll each step (pixels). 0 = one screen (80% of the window
+    // height): X virtualizes the list, so a bigger fixed jump can skip rows.
+    scrollStep: 0,
 
     // Delay between scrolls (ms). Raise to 2500+ on a slow connection so rows load.
     scrollDelay: 1500,
@@ -76,6 +83,18 @@
     error: (m) => console.log(`❌ ${m}`),
     count: (n) => console.log(`👥 Collected ${n} followers...`)
   };
+
+  // When X throttles a long list it stops loading and shows a Retry button.
+  // Clicking it resumes the list; without this a throttled list looked done.
+  const clickRetryIfPresent = () => {
+    const btn = Array.from(document.querySelectorAll('[role="button"]'))
+      .find(b => /^(retry|try again)$/i.test((b.innerText || '').trim()));
+    if (btn) { btn.click(); return true; }
+    return false;
+  };
+
+  // A spinner means the next page is still on its way, not that the list ended.
+  const isLoading = () => !!document.querySelector('[role="progressbar"]');
 
   const csvCell = (v) => `"${String(v == null ? '' : v).replace(/"/g, '""').replace(/\r?\n/g, ' ')}"`;
 
@@ -116,12 +135,11 @@
     if (!handle) return null;
 
     // Display name: profile-link text that is not the @handle line
-    let displayName = '';
     const nameAnchor = anchors.find((a) => {
       const t = a.textContent.trim();
       return t && !t.startsWith('@');
     });
-    displayName = (nameAnchor && nameAnchor.textContent.trim()) ||
+    const displayName = (nameAnchor && nameAnchor.textContent.trim()) ||
       (cell.querySelector('div[dir="ltr"] span')?.textContent.trim()) || '';
 
     let bio = cell.querySelector(SELECTORS.userDescription)?.textContent?.trim() || '';
@@ -194,14 +212,21 @@
     if (users.size > before) {
       log.count(users.size);
       stall = 0;
-    } else {
+    } else if (clickRetryIfPresent()) {
+      log.info('X paused the list with a Retry button, clicked it...');
+      await sleep(CONFIG.scrollDelay * 2);
+    } else if (!isLoading()) {
       stall++;
     }
 
-    window.scrollBy(0, CONFIG.scrollStep);
+    window.scrollBy(0, CONFIG.scrollStep > 0 ? CONFIG.scrollStep : window.innerHeight * 0.8);
     await randomDelay();
     scrollAttempts++;
     stats.scrolls = scrollAttempts;
+  }
+
+  if (!stopped && stall >= CONFIG.stallLimit && users.size > 0 && users.size < CONFIG.maxUsers) {
+    log.warning(`X stopped serving new rows after ${users.size}. If this is not the end of the list, wait a few minutes and run again to continue past a rate limit.`);
   }
 
   const list = Array.from(users.values()).slice(0, CONFIG.maxUsers);

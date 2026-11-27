@@ -1,3 +1,4 @@
+// GENERATED FILE: a copy of browser/scrapeProfileWithReplies.js, written by scripts/build-script-manifest.mjs. Edit browser/scrapeProfileWithReplies.js instead, then run: npm run browser:build
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
 /**
  * ============================================================
@@ -11,6 +12,17 @@
  * Perfect for case studies and sentiment analysis.
  *
  * by nichxbt — https://github.com/nirholas/XActions
+ *
+ * @name        scrapeProfileWithReplies.js
+ * @title       Scrape Profile With Replies
+ * @description Scrape a profile's posts from the With replies tab, then open each post and collect the replies other users left, with JSON, CSV, Markdown, text and HTML export.
+ * @category    scrape
+ * @page        x.com/<username>/with_replies or x.com/<username>
+ * @writes      false
+ * @aliases     scripts/scrape-profile-with-replies.js, scripts/twitter/scrape-profile-with-replies.js
+ * @author      nichxbt (https://x.com/nichxbt)
+ * @version     1.1.0
+ * @date        2026-11-27
  *
  * ============================================================
  * 📖 HOW TO USE:
@@ -28,7 +40,8 @@
  *    allow pasting
  *    and press Enter
  *
- * 5. Copy this ENTIRE script and paste it into the console
+ * 5. Copy the ENTIRE browser/scrapeProfileWithReplies.js and paste it
+ *    into the console
  *
  * 6. Press Enter to run
  *
@@ -681,7 +694,7 @@ var CONFIG = {
   // ─── Export helpers ─────────────────────────────────────
 
   function buildResult() {
-    const profileMatch = state.originalUrl.match(/x\.com\/([^\/]+)/);
+    const profileMatch = state.originalUrl.match(/x\.com\/([^/]+)/);
     const profileName = profileMatch ? profileMatch[1] : 'unknown';
 
     const totalReplyCount = state.posts.reduce((sum, p) => sum + (p.replies_scraped?.length || 0), 0);
@@ -851,7 +864,7 @@ var CONFIG = {
 </div>
 `;
 
-    result.posts.forEach((p, i) => {
+    result.posts.forEach(p => {
       html += `<div class="post">
   <div class="post-header">
     <span class="handle">@${esc(p.author?.handle)}</span>
@@ -880,8 +893,6 @@ var CONFIG = {
 
   function exportAllFormats() {
     const result = buildResult();
-    const dateStr = new Date().toISOString().split('T')[0];
-    const profileName = result.profile;
 
     console.log('');
     console.log('╔════════════════════════════════════════════════════════════╗');
@@ -954,7 +965,6 @@ var CONFIG = {
     panelLog('Phase 1: Collecting posts from feed');
 
     let noNewCount = 0;
-    let prevCount = 0;
 
     while (
       state.posts.length < CONFIG.targetPostCount &&
@@ -1016,8 +1026,6 @@ var CONFIG = {
           break;
         }
       }
-
-      prevCount = state.posts.length;
 
       // Scroll
       window.scrollTo(0, document.body.scrollHeight);
@@ -1227,7 +1235,7 @@ var CONFIG = {
     return;
   }
 
-  const profileMatch = window.location.pathname.match(/^\/([^\/]+)/);
+  const profileMatch = window.location.pathname.match(/^\/([^/]+)/);
   const profileName = profileMatch ? profileMatch[1] : 'unknown';
 
   console.log(`🎯 Profile: @${profileName}`);

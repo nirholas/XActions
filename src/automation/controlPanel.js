@@ -1,4 +1,14 @@
+// GENERATED FILE: a copy of browser/controlPanel.js, written by scripts/build-script-manifest.mjs. Edit browser/controlPanel.js instead, then run: npm run browser:build
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
+/**
+ * @name        controlPanel.js
+ * @title       Automation Control Panel
+ * @description Floating control panel that starts, stops and monitors the automation scripts.
+ * @category    automation
+ * @page        x.com/*
+ * @writes      true
+ * @aliases     src/automation/controlPanel.js
+ */
 // XActions Control Panel — Floating UI for Browser Automations
 // https://github.com/nirholas/XActions
 //
@@ -26,7 +36,7 @@
     return;
   }
 
-  const { log, sleep, randomDelay, scrollBy, clickElement, waitForElement, SELECTORS, storage, rateLimit } = window.XActions.Core;
+  const { log, sleep, randomDelay, scrollBy, clickElement, waitForElement, SELECTORS, rateLimit } = window.XActions.Core;
 
   // ========================================================================
   // PANEL STATE

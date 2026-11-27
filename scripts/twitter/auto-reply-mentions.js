@@ -1,11 +1,17 @@
+// GENERATED FILE: a copy of browser/autoReplyMentions.js, written by scripts/build-script-manifest.mjs. Edit browser/autoReplyMentions.js instead, then run: npm run browser:build
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
 /**
  * ============================================
  * 💬 Auto Reply Mentions - XActions
  * ============================================
  *
- * @name         auto-reply-mentions
- * @description  Reply to your recent mentions with rotating templates so no @ goes unanswered.
+ * @name        autoReplyMentions.js
+ * @description Reply to your recent mentions with rotating templates so no mention goes unanswered.
+ * @title       Auto-Reply Mentions
+ * @category    engage
+ * @page        x.com/notifications/mentions
+ * @writes      true
+ * @aliases     scripts/twitter/auto-reply-mentions.js
  * @author       nichxbt
  * @version      1.0.0
  * @date         2026-07-20

@@ -1,11 +1,17 @@
+// GENERATED FILE: a copy of browser/quoteTweet.js, written by scripts/build-script-manifest.mjs. Edit browser/quoteTweet.js instead, then run: npm run browser:build
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
 /**
  * ============================================
  * 🔁 Quote Tweet - XActions
  * ============================================
  *
- * @name         quote-tweet
- * @description  Quote-tweet the post you are currently viewing with your own text.
+ * @name        quoteTweet.js
+ * @description Quote the post you are viewing with your own text.
+ * @title       Quote Post
+ * @category    post
+ * @page        x.com/<username>/status/<id>
+ * @writes      true
+ * @aliases     scripts/twitter/quote-tweet.js
  * @author       nichxbt
  * @version      1.0.0
  * @date         2026-07-20

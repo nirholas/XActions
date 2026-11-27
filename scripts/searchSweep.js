@@ -1,5 +1,5 @@
+// GENERATED FILE: a copy of browser/searchSweep.js, written by scripts/build-script-manifest.mjs. Edit browser/searchSweep.js instead, then run: npm run browser:build
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
-// scripts/searchSweep.js
 // Delete, like, repost, or reply to every post an X search returns, e.g. from:you @someone
 // Paste in DevTools console on x.com/search?q=...
 // by nichxbt
@@ -36,7 +36,12 @@
  * ============================================================
  *
  * @name        searchSweep.js
- * @description Delete, like, repost, or reply to every post an X search returns. Built for "remove every reply I ever sent this account".
+ * @description Delete, like, repost or reply to every post an X search returns.
+ * @title       Search Sweep
+ * @category    cleanup
+ * @page        x.com/search?q=<query>
+ * @writes      true
+ * @aliases     scripts/searchSweep.js
  * @author      nichxbt (https://x.com/nichxbt)
  * @version     1.0.0
  * @date        2026-08-27
@@ -549,7 +554,7 @@
     t = t.replace(/^```[a-z]*\n?/i, '').replace(/\n?```$/, '').trim();
     const unquote = (s) => { const m = s.match(/^["“'‘](.*)["”'’]$/s); return m ? m[1].trim() : s; };
     t = unquote(t);
-    t = t.replace(/^(reply|comment|response|answer)\s*[:\-]\s*/i, '').trim();
+    t = t.replace(/^(reply|comment|response|answer)\s*[:-]\s*/i, '').trim();
     t = unquote(t);
     if (!CONFIG.reply.allowHashtags) t = t.replace(/(^|\s)#[\w]+/g, '$1');
     t = t.replace(/[ \t]+/g, ' ').replace(/\n{3,}/g, '\n\n').trim();

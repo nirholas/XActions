@@ -1,11 +1,17 @@
+// GENERATED FILE: a copy of browser/interactByHashtag.js, written by scripts/build-script-manifest.mjs. Edit browser/interactByHashtag.js instead, then run: npm run browser:build
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
 /**
  * ============================================================
  * #️⃣ Interact By Hashtag
  * ============================================================
  * 
- * @name        interact-by-hashtag.js
- * @description Interact with posts containing specific hashtags
+ * @name        interactByHashtag.js
+ * @description Like, follow and reply on posts that contain specific hashtags.
+ * @title       Interact by Hashtag
+ * @category    engage
+ * @page        x.com/search?q=<query>&f=live
+ * @writes      true
+ * @aliases     scripts/twitter/interact-by-hashtag.js
  * @author      nichxbt (https://x.com/nichxbt)
  * @version     1.0.0
  * @date        2026-01-26

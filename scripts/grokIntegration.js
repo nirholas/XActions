@@ -1,5 +1,14 @@
+// GENERATED FILE: a copy of browser/grokIntegration.js, written by scripts/build-script-manifest.mjs. Edit browser/grokIntegration.js instead, then run: npm run browser:build
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
-// scripts/grokIntegration.js
+/**
+ * @name        grokIntegration.js
+ * @title       Grok Integration
+ * @description Send prompts to Grok and collect its responses.
+ * @category    ai
+ * @page        x.com/i/grok
+ * @writes      false
+ * @aliases     scripts/grokIntegration.js
+ */
 // Browser console script for interacting with Grok AI on X
 // Paste in DevTools console on x.com/i/grok
 // by nichxbt
@@ -168,7 +177,7 @@
         try {
           await navigator.clipboard.writeText(response);
           console.log('📋 Response copied to clipboard!');
-        } catch (e) {}
+        } catch { /* clipboard needs page focus; the response is already printed above */ }
       } else {
         console.log('❌ No response received within timeout.');
         console.log(`   Try increasing CONFIG.maxWaitMs (currently ${CONFIG.maxWaitMs}ms).`);

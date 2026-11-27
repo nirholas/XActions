@@ -1,23 +1,96 @@
+// GENERATED FILE: a copy of browser/followEngagers.js, written by scripts/build-script-manifest.mjs. Edit browser/followEngagers.js instead, then run: npm run browser:build
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
-// XActions Automation - Follow Likers & Commenters
-// https://github.com/nirholas/XActions
-//
-// REQUIRES: Paste core.js first!
-//
-// Find users who engage with specific posts and follow them
-//
-// HOW TO USE:
-// 1. Open any X post you want to analyze
-// 2. Paste core.js, then paste this script
-// 3. Configure and run
+/**
+ * ============================================================
+ * 💬 Follow Likers & Engagers
+ * ============================================================
+ *
+ * @name        followEngagers.js
+ * @title       Follow Engagers
+ * @description Follow the people who liked, reposted or quoted a post, or the recent posts on a profile, with filters and a cap.
+ * @category    grow
+ * @page        x.com/<username>/status/<id> or x.com/<username>
+ * @writes      true
+ * @aliases     src/automation/followEngagers.js, scripts/twitter/follow-engagers.js
+ * @author      nichxbt (https://x.com/nichxbt)
+ * @version     1.1.0
+ * @date        2026-11-27
+ * @repository  https://github.com/nirholas/XActions
+ *
+ * ============================================================
+ * 📋 USAGE:
+ *
+ * Find users who engage with specific posts and follow them.
+ *
+ * 1. Open any X post you want to analyze (or a profile, to use its
+ *    most recent posts)
+ * 2. Configure CONFIG below
+ * 3. Paste browser/followEngagers.js into the DevTools console and press Enter
+ *    (src/automation/core.js is optional: when it is pasted first its
+ *    logger, storage and selectors are used)
+ * 4. Run stopEngager() to stop early
+ * ============================================================
+ */
 
 (() => {
-  if (!window.XActions?.Core) {
-    console.error('❌ Core module not loaded! Paste core.js first.');
-    return;
-  }
+  // ============================================
+  // CORE (optional): use core.js when present, built-ins otherwise
+  // ============================================
+  const Core = window.XActions?.Core;
 
-  const { log, sleep, randomDelay, scrollBy, clickElement, waitForElement, storage, SELECTORS } = window.XActions.Core;
+  const sleep = Core?.sleep || ((ms) => new Promise(resolve => setTimeout(resolve, ms)));
+  const randomDelay = Core?.randomDelay || ((min, max) => sleep(Math.floor(Math.random() * (max - min + 1)) + min));
+  const log = Core?.log || ((message, type = 'info') => {
+    const prefix = { info: '📘', success: '✅', warning: '⚠️', error: '❌', action: '🔧' }[type] || '📘';
+    console.log(`${prefix} [${new Date().toLocaleTimeString()}] ${message}`);
+  });
+  const scrollBy = Core?.scrollBy || ((pixels) => window.scrollBy({ top: pixels, behavior: 'smooth' }));
+  const clickElement = Core?.clickElement || (async (element) => {
+    if (!element) return false;
+    try {
+      element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      await sleep(300);
+      element.click();
+      return true;
+    } catch (e) {
+      log(`Click error: ${e.message}`, 'error');
+      return false;
+    }
+  });
+  const waitForElement = Core?.waitForElement || (async (selector, timeout = 10000) => {
+    const startTime = Date.now();
+    while (Date.now() - startTime < timeout) {
+      const element = document.querySelector(selector);
+      if (element) return element;
+      await sleep(100);
+    }
+    return null;
+  });
+  // Same key layout as core.js storage (xactions_ prefix, JSON values)
+  const storage = Core?.storage || {
+    get: (key) => {
+      try {
+        const data = localStorage.getItem('xactions_' + key);
+        return data ? JSON.parse(data) : null;
+      } catch {
+        return null;
+      }
+    },
+    set: (key, value) => {
+      try {
+        localStorage.setItem('xactions_' + key, JSON.stringify(value));
+        return true;
+      } catch {
+        return false;
+      }
+    },
+  };
+  const SELECTORS = Core?.SELECTORS || {
+    followButton: '[data-testid$="-follow"]',
+    unfollowButton: '[data-testid$="-unfollow"]',
+    tweet: '[data-testid="tweet"]',
+    userCell: '[data-testid="UserCell"]',
+  };
 
   // ============================================
   // CONFIGURATION
@@ -37,7 +110,7 @@
     MAX_FOLLOWS_PER_POST: 15,
     
     // Total maximum follows
-    TOTAL_MAX_FOLLOWS: 30,
+    TOTAL_MAX_FOLLOWS: 20,
     
     // -------- FILTERS --------
     FILTERS: {
@@ -67,19 +140,55 @@
     isRunning: true,
   };
 
+  // Flat list of followed usernames written by the scripts/twitter variant
+  const LEGACY_STORAGE_KEY = 'xactions_followed_engagers';
+  const loadLegacyFollowed = () => {
+    try {
+      const saved = localStorage.getItem(LEGACY_STORAGE_KEY);
+      return saved ? JSON.parse(saved) : [];
+    } catch {
+      return [];
+    }
+  };
+  const legacyFollowed = new Set(loadLegacyFollowed());
+
   const tracked = {
     followed: new Map(Object.entries(storage.get('engager_followed') || {})),
-    processed: new Set(storage.get('engager_processed') || []),
+    processed: new Set([
+      ...(storage.get('engager_processed') || []),
+      ...Array.from(legacyFollowed, u => String(u).toLowerCase()),
+    ]),
   };
 
   const saveTracked = () => {
     storage.set('engager_followed', Object.fromEntries(tracked.followed));
     storage.set('engager_processed', Array.from(tracked.processed));
+    try {
+      localStorage.setItem(LEGACY_STORAGE_KEY, JSON.stringify([...legacyFollowed]));
+    } catch {
+      // storage full or blocked: engager_followed above still has it
+    }
   };
 
   // ============================================
   // HELPERS
   // ============================================
+  // Navigate within the SPA. Assigning window.location.href triggers a full
+  // page load, which destroys this console script before it can continue.
+  const spaNavigate = (url) => {
+    try {
+      const target = new URL(url, window.location.href);
+      if (target.origin === window.location.origin) {
+        if (target.href !== window.location.href) {
+          window.history.pushState({}, '', target.href);
+          window.dispatchEvent(new PopStateEvent('popstate', { state: {} }));
+        }
+        return;
+      }
+    } catch { /* fall through to a full page load below */ }
+    window.location.href = url;
+  };
+
   const extractPostId = (url) => {
     const match = url.match(/status\/(\d+)/);
     return match ? match[1] : null;
@@ -94,7 +203,7 @@
     
     const link = cell.querySelector('a[href^="/"]');
     if (link) {
-      info.username = link.getAttribute('href').replace('/', '').toLowerCase();
+      info.username = link.getAttribute('href').replace('/', '').split('/')[0].toLowerCase();
     }
     
     info.isProtected = !!cell.querySelector('[data-testid="icon-lock"]');
@@ -130,7 +239,7 @@
     }
     
     // Navigate to the post first
-    window.location.href = postUrl;
+    spaNavigate(postUrl);
     await sleep(3000);
     
     // Find and click the appropriate button based on type
@@ -146,7 +255,7 @@
       }
       
       // Alternative: navigate directly
-      window.location.href = `${postUrl}/likes`;
+      spaNavigate(`${postUrl}/likes`);
       await sleep(3000);
       return true;
     } else if (type === 'retweeters') {
@@ -159,11 +268,11 @@
         }
       }
       
-      window.location.href = `${postUrl}/retweets`;
+      spaNavigate(`${postUrl}/retweets`);
       await sleep(3000);
       return true;
     } else if (type === 'quoters') {
-      window.location.href = `${postUrl}/retweets/with_comments`;
+      spaNavigate(`${postUrl}/retweets/with_comments`);
       await sleep(3000);
       return true;
     }
@@ -222,6 +331,7 @@
         }
         
         if (!meetsFilters(userInfo)) {
+          log(`⏭️ Skipping @${userInfo.username} (filtered)`, 'info');
           tracked.processed.add(userInfo.username);
           continue;
         }
@@ -239,6 +349,7 @@
           postUrl: postUrl,
         });
         tracked.processed.add(userInfo.username);
+        legacyFollowed.add(userInfo.username);
         saveTracked();
         
         log(`✅ Followed @${userInfo.username} [${state.totalFollowed}/${CONFIG.TOTAL_MAX_FOLLOWS}]`, 'success');
@@ -293,7 +404,7 @@
     let posts = CONFIG.TARGET_POSTS;
     
     if (posts.length === 0) {
-      const currentUrl = window.location.href;
+      const currentUrl = window.location.href.split('?')[0];
       if (currentUrl.includes('/status/')) {
         posts = [currentUrl];
         log('Using current post', 'info');
@@ -352,6 +463,7 @@
     log('Stopping engager follow...', 'warning');
   };
 
+  window.XActions = window.XActions || {};
   window.XActions.Engager = {
     state: () => state,
     tracked: () => tracked,

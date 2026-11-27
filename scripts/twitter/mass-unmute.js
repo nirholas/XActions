@@ -1,244 +1,232 @@
+// GENERATED FILE: a copy of browser/massUnmute.js, written by scripts/build-script-manifest.mjs. Edit browser/massUnmute.js instead, then run: npm run browser:build
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
 /**
  * ============================================================
- * 🔊 Mass Unmute
+ * 🔊 Mass Unmute Users — Production Grade
  * ============================================================
- * 
- * @name        mass-unmute.js
- * @description Unmute multiple users
+ *
+ * @name        massUnmute.js
+ * @title       Mass Unmute
+ * @description Unmute every account on your muted list, or only the ones you name, with a keep-muted list, a cap and a dry run by default.
+ * @category    cleanup
+ * @page        x.com/settings/muted/all
+ * @writes      true
+ * @aliases     scripts/massUnmute.js, scripts/twitter/mass-unmute.js
  * @author      nichxbt (https://x.com/nichxbt)
- * @version     1.0.0
- * @date        2026-01-26
+ * @version     2.1.0
+ * @date        2026-11-27
  * @repository  https://github.com/nirholas/XActions
- * 
+ *
  * ============================================================
- * 📋 USAGE INSTRUCTIONS:
- * 
- * 1. Go to muted accounts: https://x.com/settings/muted/all
- * 2. Open Chrome DevTools (F12 or Cmd+Option+I)
- * 3. Paste this script and press Enter
- * 4. Unmutes all or selected accounts
- * 
- * ============================================================
- * ⚙️ CONFIGURATION
- * ============================================================
- */
-
-// `var` (not `const`): a repeated top-level `const` paste in the same
-// DevTools tab throws "already been declared" instead of re-running.
-var CONFIG = {
-  // Unmute all muted accounts
-  unmuteAll: true,
-  
-  // If unmuteAll is false, specify usernames to unmute
-  usersToUnmute: [
-    // 'username1',
-    // 'username2',
-  ],
-  
-  // Delay between unmutes (ms)
-  unmuteDelay: 1000,
-  
-  // Max accounts to unmute per run
-  maxUnmutes: 200,
-  
-  // Scroll settings
-  scrollDelay: 1500,
-  maxScrolls: 30,
-  
-  // Dry run mode
-  dryRun: true
-};
-
-/**
- * ============================================================
- * 🚀 SCRIPT START
+ * 📋 USAGE:
+ *
+ * 1. Go to: https://x.com/settings/muted/all
+ * 2. Open DevTools Console (F12)
+ * 3. dryRun is ON by default and only lists who would be unmuted: set
+ *    dryRun = false to unmute for real. maxUnmutes (50 by default) caps a run.
+ * 4. Paste browser/massUnmute.js and run
+ *
+ * 🎮 CONTROLS:
+ *   window.XActions.pause()  / .resume() / .abort() / .status()
+ *   window.stopMassUnmute()  - stop after the current account
  * ============================================================
  */
+(() => {
+  'use strict';
 
-(async function massUnmute() {
+  const CONFIG = {
+    maxUnmutes: 50,                   // Stop after this many unmutes (raise once the dry run looks right)
+    keepMuted: [],                    // Keep these users muted (without @)
+    onlyUnmute: [],                   // Unmute only these users (without @); empty = everyone not in keepMuted
+    dryRun: true,                     // true = preview only. false = unmute for real.
+    minDelay: 1500,
+    maxDelay: 2200,
+    scrollDelay: 2000,
+    maxEmptyScrolls: 6,
+    maxScrolls: 0,                    // Stop after this many scrolls in total (0 = no limit)
+    maxConsecutiveErrors: 10,
+    rateLimitCooldown: 60000,
+    exportOnComplete: true,
+    saveToLocalStorage: false,        // Append each run's unmuted accounts to localStorage "xactions_unmute_log" (last 50 runs)
+  };
+
+  const SEL = {
+    unmuteBtn: ['[data-testid$="-unmute"]', 'button[aria-label*="Unmute"]', 'button[aria-label*="Muted"]'],
+    userCell:  ['[data-testid="UserCell"]'],
+    toast:     ['[data-testid="toast"]', '[role="alert"]'],
+  };
+
+  const $ = (s, c = document) => { for (const x of (Array.isArray(s) ? s : [s])) { const e = c.querySelector(x); if (e) return e; } return null; };
+  const $$ = (s, c = document) => { for (const x of (Array.isArray(s) ? s : [s])) { const e = c.querySelectorAll(x); if (e.length) return [...e]; } return []; };
   const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+  const gaussian = (a, b) => Math.floor(a + ((Math.random() + Math.random()) / 2) * (b - a));
+  const isRateLimited = () => { const t = $(SEL.toast); return t && /rate limit|try again|too many|slow down/i.test(t.textContent); };
 
-  // Stop switch: run window.stopMassUnmute() from the console to abort
-  // after the account currently being processed.
-  let stopped = false;
+  let paused = false, aborted = false;
+  let unmuted = 0, skipped = 0, errors = 0, consecutiveErrors = 0;
+  const startTime = Date.now();
+  const unmutedLog = [];
+  const processedUsers = new Set();
+  const keepSet = new Set(CONFIG.keepMuted.map(u => u.toLowerCase().replace(/^@/, '')));
+  const onlySet = new Set(CONFIG.onlyUnmute.map(u => u.toLowerCase().replace(/^@/, '')));
+
+  window.XActions = {
+    pause()  { paused = true;  console.log('⏸️ Paused.'); },
+    resume() { paused = false; console.log('▶️ Resumed.'); },
+    abort()  { aborted = true; console.log('🛑 Aborting...'); },
+    status() {
+      const el = ((Date.now() - startTime) / 1000).toFixed(0);
+      console.log(`📊 Unmuted: ${unmuted} | Skipped: ${skipped} | Errors: ${errors} | ${el}s`);
+    },
+  };
+
+  // Stop switch: window.stopMassUnmute() aborts after the account currently being processed
   window.stopMassUnmute = () => {
-    stopped = true;
+    aborted = true;
     console.log('🛑 Stop requested. Finishing the current account, then exiting.');
   };
 
-  console.log(`
-╔══════════════════════════════════════════════════════════════╗
-║  🔊 XActions — Mass Unmute                                   ║
-║  Unmute multiple users                                       ║
-${CONFIG.dryRun ? '║  ⚠️  DRY RUN MODE - No accounts will be unmuted             ║' : '║  🔴 LIVE MODE - Accounts WILL be unmuted                    ║'}
-╚══════════════════════════════════════════════════════════════╝
-  `);
-  console.log('💡 To stop early: window.stopMassUnmute()\n');
+  const shouldContinue = async () => { while (paused && !aborted) await sleep(500); return !aborted; };
 
-  // Check if on muted accounts page
-  if (!window.location.href.includes('/settings/muted')) {
-    console.error('❌ Please navigate to your muted accounts page first!');
-    console.log('👉 Go to: https://x.com/settings/muted/all');
-    return;
-  }
-
-  const $userCell = '[data-testid="UserCell"]';
-
-  console.log('🔍 Scanning muted accounts...\n');
-
-  const mutedUsers = new Map();
-  let scrollCount = 0;
-  let retries = 0;
-
-  while (scrollCount < CONFIG.maxScrolls && retries < 3) {
-    const prevSize = mutedUsers.size;
-
-    document.querySelectorAll($userCell).forEach(cell => {
-      const link = cell.querySelector('a[href^="/"]');
-      const username = link?.getAttribute('href')?.replace('/', '')?.split('/')[0];
-      if (!username || mutedUsers.has(username)) return;
-
-      mutedUsers.set(username, { element: cell });
-    });
-
-    if (mutedUsers.size === prevSize) retries++;
-    else retries = 0;
-
-    console.log(`   Found ${mutedUsers.size} muted accounts...`);
-
-    window.scrollTo(0, document.body.scrollHeight);
-    await sleep(CONFIG.scrollDelay);
-    scrollCount++;
-  }
-
-  console.log(`\n✅ Found ${mutedUsers.size} muted accounts\n`);
-
-  if (mutedUsers.size === 0) {
-    console.log('🎉 No muted accounts found!');
-    return;
-  }
-
-  // Determine which users to unmute
-  let toUnmute = [];
-  
-  if (CONFIG.unmuteAll) {
-    toUnmute = Array.from(mutedUsers.entries()).slice(0, CONFIG.maxUnmutes);
-    console.log(`📋 Will unmute ${toUnmute.length} accounts (all)`);
-  } else {
-    toUnmute = CONFIG.usersToUnmute
-      .filter(u => mutedUsers.has(u))
-      .map(u => [u, mutedUsers.get(u)]);
-    console.log(`📋 Will unmute ${toUnmute.length} specified accounts`);
-  }
-
-  if (toUnmute.length === 0) {
-    console.log('❌ No accounts to unmute!');
-    return;
-  }
-
-  toUnmute.slice(0, 20).forEach(([username], i) => {
-    console.log(`   ${i + 1}. @${username}`);
-  });
-  if (toUnmute.length > 20) {
-    console.log(`   ... and ${toUnmute.length - 20} more`);
-  }
-
-  if (CONFIG.dryRun) {
-    console.log('\n' + '═'.repeat(60));
-    console.log('⚠️  DRY RUN MODE - No unmutes performed');
-    console.log('Set CONFIG.dryRun = false to actually unmute');
-    console.log('═'.repeat(60));
-    return;
-  }
-
-  console.log('\n' + '═'.repeat(60));
-  console.log('🔊 UNMUTING ACCOUNTS');
-  console.log('═'.repeat(60));
-
-  let unmuted = 0;
-  const unmutedUsers = [];
-
-  // Unmuting a row on this page removes it from the (virtualized) muted
-  // list, so a cell reference captured during the initial scan can go stale
-  // after the first successful unmute. Re-resolve the live cell for the
-  // username before interacting with it, falling back to the cached one.
-  const findUserCell = (username) => {
-    for (const cell of document.querySelectorAll($userCell)) {
-      const link = cell.querySelector('a[href^="/"]');
-      const cellUsername = link?.getAttribute('href')?.replace('/', '')?.split('/')[0];
-      if (cellUsername === username) return cell;
+  const getUsername = (cell) => {
+    const link = cell.querySelector('a[href^="/"]');
+    if (link) {
+      const match = (link.getAttribute('href') || '').match(/^\/([A-Za-z0-9_]+)/);
+      if (match) return match[1];
     }
+    const spans = cell.querySelectorAll('span');
+    for (const s of spans) { const m = s.textContent.match(/^@([A-Za-z0-9_]+)$/); if (m) return m[1]; }
     return null;
   };
 
-  for (const [username, data] of toUnmute) {
-    if (stopped) {
-      console.log('🛑 Stopped by user.');
-      break;
+  const run = async () => {
+    const W = 60;
+    console.log('╔' + '═'.repeat(W) + '╗');
+    console.log('║  🔊 MASS UNMUTE USERS' + ' '.repeat(W - 23) + '║');
+    console.log('║  by nichxbt — v2.0' + ' '.repeat(W - 21) + '║');
+    console.log('╚' + '═'.repeat(W) + '╝');
+
+    if (!window.location.href.includes('/muted')) {
+      console.error('❌ Navigate to x.com/settings/muted/all first!');
+      return;
     }
 
-    try {
-      const element = findUserCell(username) || data.element;
+    console.log(`⚙️ Max: ${CONFIG.maxUnmutes === Infinity ? '∞' : CONFIG.maxUnmutes} | Dry run: ${CONFIG.dryRun} | Keep muted: ${keepSet.size}${onlySet.size ? ` | Only: ${onlySet.size}` : ''}`);
+    console.log(CONFIG.dryRun
+      ? '⚠️  DRY RUN MODE - No accounts will be unmuted. Set CONFIG.dryRun = false to unmute.'
+      : '🔴 LIVE MODE - Accounts WILL be unmuted');
+    console.log('💡 To stop early: window.stopMassUnmute()');
 
-      if (!document.body.contains(element)) {
-        console.log(`❌ @${username} is no longer in the list (already unmuted or off-screen). Skipping.`);
-        continue;
-      }
+    let emptyScrolls = 0;
+    let scrolls = 0;
 
-      element.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      await sleep(300);
+    while (unmuted < CONFIG.maxUnmutes && emptyScrolls < CONFIG.maxEmptyScrolls && (!CONFIG.maxScrolls || scrolls < CONFIG.maxScrolls)) {
+      if (!(await shouldContinue())) break;
+      if (isRateLimited()) { console.warn('🚨 Rate limit!'); await sleep(CONFIG.rateLimitCooldown); continue; }
 
-      // Find unmute button in the cell
-      const unmuteBtn = element.querySelector('[data-testid$="-unmute"], button[aria-label*="Unmute"]');
+      const cells = $$(SEL.userCell);
+      let foundNew = false;
 
-      if (unmuteBtn) {
-        unmuteBtn.click();
-        await sleep(300);
-        unmuted++;
-        unmutedUsers.push(username);
-        console.log(`✅ Unmuted @${username}`);
-      } else {
-        // Try via the more menu
-        const moreBtn = element.querySelector('[data-testid="userActions"]');
-        if (moreBtn) {
-          moreBtn.click();
-          await sleep(300);
-          
-          const unmuteOption = document.querySelector('[data-testid="unmute"]');
-          if (unmuteOption) {
+      for (const cell of cells) {
+        if (!(await shouldContinue())) break;
+        if (unmuted >= CONFIG.maxUnmutes) break;
+
+        const username = getUsername(cell);
+        if (!username || processedUsers.has(username.toLowerCase())) continue;
+        processedUsers.add(username.toLowerCase());
+        foundNew = true;
+
+        if (keepSet.has(username.toLowerCase())) {
+          skipped++;
+          console.log(`🛡️ Keeping muted: @${username}`);
+          continue;
+        }
+        if (onlySet.size && !onlySet.has(username.toLowerCase())) {
+          skipped++;
+          continue;
+        }
+
+        const btn = cell.querySelector('[data-testid$="-unmute"]') || cell.querySelector('button[aria-label*="Muted"]')
+          || cell.querySelector('button[aria-label*="Unmute"]');
+        // Fallback: unmute through the cell's more menu when there is no inline button
+        const moreBtn = btn ? null : cell.querySelector('[data-testid="userActions"]');
+        if (!btn && !moreBtn) { errors++; consecutiveErrors++; continue; }
+
+        if (CONFIG.dryRun) {
+          console.log(`   🔍 Would unmute: @${username}`);
+          unmutedLog.push({ username, timestamp: new Date().toISOString(), dryRun: true });
+          unmuted++;
+          continue;
+        }
+
+        try {
+          if (btn) {
+            btn.click();
+          } else {
+            moreBtn.click();
+            await sleep(300);
+            const unmuteOption = document.querySelector('[data-testid="unmute"]');
+            if (!unmuteOption) {
+              document.body.click(); // Close menu
+              errors++; consecutiveErrors++;
+              continue;
+            }
             unmuteOption.click();
-            unmuted++;
-            unmutedUsers.push(username);
-            console.log(`✅ Unmuted @${username}`);
           }
-          
-          document.body.click(); // Close menu
+          unmuted++;
+          consecutiveErrors = 0;
+          unmutedLog.push({ username, timestamp: new Date().toISOString() });
+
+          if (unmuted % 10 === 0) {
+            const rate = (unmuted / ((Date.now() - startTime) / 60000)).toFixed(1);
+            console.log(`🔊 Unmuted ${unmuted} users | ${rate}/min`);
+          }
+          await sleep(gaussian(CONFIG.minDelay, CONFIG.maxDelay));
+        } catch (e) {
+          errors++;
+          consecutiveErrors++;
+          if (consecutiveErrors >= CONFIG.maxConsecutiveErrors) { console.error('❌ Too many errors.'); break; }
         }
       }
 
-      await sleep(CONFIG.unmuteDelay);
-    } catch (e) {
-      console.log(`❌ Failed to unmute @${username}`);
+      if (consecutiveErrors >= CONFIG.maxConsecutiveErrors) break;
+      if (!foundNew) emptyScrolls++; else emptyScrolls = 0;
+      scrolls++;
+      window.scrollTo(0, document.body.scrollHeight);
+      await sleep(gaussian(CONFIG.scrollDelay, CONFIG.scrollDelay + 800));
     }
-  }
 
-  console.log('\n' + '═'.repeat(60));
-  console.log(`✅ Unmuted ${unmuted}/${toUnmute.length} accounts`);
-  console.log('═'.repeat(60));
+    const elapsed = ((Date.now() - startTime) / 1000).toFixed(0);
+    console.log('\n╔' + '═'.repeat(48) + '╗');
+    console.log('║  📊 MASS UNMUTE — RESULTS' + ' '.repeat(22) + '║');
+    console.log('╠' + '═'.repeat(48) + '╣');
+    console.log(`║  Unmuted:     ${String(unmuted).padEnd(31)}║`);
+    console.log(`║  Skipped:     ${String(skipped).padEnd(31)}║`);
+    console.log(`║  Errors:      ${String(errors).padEnd(31)}║`);
+    console.log(`║  Duration:    ${(elapsed + 's').padEnd(31)}║`);
+    console.log('╚' + '═'.repeat(48) + '╝');
+    if (CONFIG.dryRun) console.log('⚠️  DRY RUN MODE - No unmutes performed. Set CONFIG.dryRun = false to actually unmute.');
 
-  // Save log
-  const storageKey = 'xactions_unmute_log';
-  const log = {
-    timestamp: new Date().toISOString(),
-    // Record the accounts actually unmuted; slicing the candidate list
-    // logs the wrong names whenever an unmute in the middle failed
-    unmuted: unmutedUsers
+    if (CONFIG.saveToLocalStorage && !CONFIG.dryRun) {
+      const storageKey = 'xactions_unmute_log';
+      try {
+        const existing = JSON.parse(localStorage.getItem(storageKey) || '[]');
+        existing.push({ timestamp: new Date().toISOString(), unmuted: unmutedLog.map(u => u.username) });
+        localStorage.setItem(storageKey, JSON.stringify(existing.slice(-50)));
+        console.log(`💾 Results saved to localStorage "${storageKey}"`);
+      } catch (e) {
+        console.warn(`⚠️ Could not save to localStorage: ${e.message}`);
+      }
+    }
+
+    if (CONFIG.exportOnComplete && unmutedLog.length > 0) {
+      const blob = new Blob([JSON.stringify({ summary: { unmuted, skipped, errors }, accounts: unmutedLog }, null, 2)], { type: 'application/json' });
+      const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+      a.download = `xactions-unmuted-${new Date().toISOString().slice(0, 10)}.json`;
+      document.body.appendChild(a); a.click(); a.remove();
+      console.log('📥 Results exported.');
+    }
   };
-  const existing = JSON.parse(localStorage.getItem(storageKey) || '[]');
-  existing.push(log);
-  localStorage.setItem(storageKey, JSON.stringify(existing.slice(-50)));
 
-  console.log('\n💾 Results saved to localStorage');
-
+  run();
 })();

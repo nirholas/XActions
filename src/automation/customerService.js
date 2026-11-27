@@ -1,4 +1,14 @@
+// GENERATED FILE: a copy of browser/customerService.js, written by scripts/build-script-manifest.mjs. Edit browser/customerService.js instead, then run: npm run browser:build
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
+/**
+ * @name        customerService.js
+ * @title       Customer Service Bot
+ * @description Watch mentions and reply to customer questions from keyword rules.
+ * @category    engage
+ * @page        x.com/notifications
+ * @writes      true
+ * @aliases     src/automation/customerService.js
+ */
 // XActions Automation - Customer Service Bot
 // https://github.com/nirholas/XActions
 //
@@ -19,7 +29,7 @@
     return;
   }
 
-  const { log, sleep, randomDelay, scrollBy, clickElement, waitForElement, storage, SELECTORS } = window.XActions.Core;
+  const { log, sleep, randomDelay, clickElement, waitForElement, storage } = window.XActions.Core;
 
   // ============================================
   // ACCOUNT CONFIGURATION

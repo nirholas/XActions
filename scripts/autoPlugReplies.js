@@ -1,35 +1,56 @@
+// GENERATED FILE: a copy of browser/autoPlugReplies.js, written by scripts/build-script-manifest.mjs. Edit browser/autoPlugReplies.js instead, then run: npm run browser:build
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
-// scripts/autoPlugReplies.js
-// Browser console script for auto-replying to your viral tweets with a plug
-// Paste in DevTools console on x.com/YOUR_USERNAME
-// by nichxbt
-
+/**
+ * ============================================================
+ * 🔌 Auto-Plug Replies — Production Grade
+ * ============================================================
+ *
+ * @name        autoPlugReplies.js
+ * @title       Auto-Plug Replies
+ * @description Reply to your own tweets that pass a like threshold with a plug message (link, CTA, product pitch).
+ * @category    grow
+ * @page        x.com/<you>
+ * @writes      true
+ * @aliases     scripts/autoPlugReplies.js
+ * @author      nichxbt (https://x.com/nichxbt)
+ * @version     1.1.0
+ * @date        2026-11-26
+ * @repository  https://github.com/nirholas/XActions
+ *
+ * ============================================================
+ * 📋 USAGE:
+ *
+ * 1. Go to your profile: x.com/YOUR_USERNAME
+ * 2. Open DevTools Console (F12)
+ * 3. Configure your plug message and threshold
+ * 4. Paste browser/autoPlugReplies.js and run
+ *
+ * Controls:
+ *   XActions.setPlug("Check out my new project → link")
+ *   XActions.setThreshold(100)   // Min likes to trigger
+ *   XActions.scan()              // Manual scan
+ *   XActions.autoScan(600000)    // Auto-scan every 10min
+ *   XActions.stop()              // Stop auto-scanning
+ *   XActions.history()           // View plug history
+ *   XActions.exportHistory()     // Download the full plug history as JSON
+ * ============================================================
+ */
 (() => {
-  const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+  'use strict';
 
-  // =============================================
-  // CONFIGURATION
-  // =============================================
   const CONFIG = {
-    plugText: '🔌 If you liked this, check out my project → [your link]',
-    minLikes: 50,            // Min likes to consider "viral"
-    maxPlugs: 3,             // Max plugs per session
-    scrollRounds: 5,         // Scroll rounds to find tweets
-    scrollDelay: 2000,       // ms between scrolls
-    replyDelay: 3000,        // ms before posting reply
-    dryRun: true,            // SET FALSE TO EXECUTE
+    dryRun: true,            // Set false to actually reply
+    plugMessage: '🔌 If you liked this, you\'ll love my newsletter → [your link here]',
+    viralThreshold: 50,      // Minimum likes to consider "viral enough" to plug
+    maxPlugsPerSession: 3,   // Don't over-plug
+    replyDelay: 3000,        // Delay before posting reply (ms)
+    scrollRounds: 5,
+    scrollDelay: 2000,
+    autoDownloadHistory: false, // Download this scan's plugs as JSON when a scan ends
   };
-  // =============================================
 
-  const download = (data, filename) => {
-    const a = document.createElement('a');
-    a.href = URL.createObjectURL(new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' }));
-    a.download = filename;
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-    console.log(`📥 Downloaded: ${filename}`);
-  };
+  const STORAGE_KEY = 'xactions_plug_history';
+  const sleep = (ms) => new Promise(r => setTimeout(r, ms));
 
   const parseNum = (text) => {
     if (!text) return 0;
@@ -39,112 +60,253 @@
     return parseInt(text) || 0;
   };
 
-  let plugCount = 0;
-  const plugHistory = [];
+  const SEL = {
+    tweet: 'article[data-testid="tweet"]',
+    tweetText: '[data-testid="tweetText"]',
+    likeBtn: '[data-testid="like"] span',
+    unlikeBtn: '[data-testid="unlike"] span',
+    replyBtn: '[data-testid="reply"]',
+    tweetBox: '[data-testid="tweetTextarea_0"]',
+    tweetButton: '[data-testid="tweetButton"]',
+  };
 
-  const scanViral = async () => {
-    const viral = [];
+  const $ = (sel, ctx = document) => ctx.querySelector(sel);
+
+  const loadHistory = () => {
+    try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'); }
+    catch { return []; }
+  };
+
+  const saveHistory = (history) => {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(history));
+  };
+
+  let autoScanTimer = null;
+  let plugsThisSession = 0;
+
+  // ── Scan for viral tweets ──────────────────────────────────
+  const scanForViral = async () => {
+    const viralTweets = [];
     const seen = new Set();
+    const history = loadHistory();
+    const pluggedUrls = new Set(history.map(h => h.tweetUrl));
 
     for (let round = 0; round < CONFIG.scrollRounds; round++) {
-      const articles = document.querySelectorAll('article[data-testid="tweet"]');
+      const articles = document.querySelectorAll(SEL.tweet);
+
       for (const article of articles) {
+        const timeEl = article.querySelector('time');
+        if (!timeEl) continue;
+
         const tweetLink = article.querySelector('a[href*="/status/"] time')?.closest('a');
         const href = tweetLink ? tweetLink.getAttribute('href') : null;
         if (!href || seen.has(href)) continue;
         seen.add(href);
 
-        const likeEl = article.querySelector('[data-testid="like"] span') || article.querySelector('[data-testid="unlike"] span');
-        const likes = likeEl ? parseNum(likeEl.textContent) : 0;
-        if (likes < CONFIG.minLikes) continue;
+        // Skip already plugged tweets
+        const fullUrl = 'https://x.com' + href;
+        if (pluggedUrls.has(fullUrl)) continue;
 
-        const textEl = article.querySelector('[data-testid="tweetText"]');
+        // Get like count
+        const likeEl = $(SEL.likeBtn, article) || $(SEL.unlikeBtn, article);
+        const likes = likeEl ? parseNum(likeEl.textContent) : 0;
+
+        if (likes < CONFIG.viralThreshold) continue;
+
+        // Get tweet text
+        const textEl = $(SEL.tweetText, article);
         const text = textEl ? textEl.textContent.trim().slice(0, 100) : '';
 
-        viral.push({ href, text, likes, article });
+        // Check if it already has a self-reply (basic check: look for reply chain)
+        const replyBtn = $(SEL.replyBtn, article);
+        const replyCount = replyBtn ? parseNum(replyBtn.querySelector('span')?.textContent || '0') : 0;
+
+        viralTweets.push({
+          href,
+          fullUrl,
+          text,
+          likes,
+          replyCount,
+          article,
+        });
       }
+
       window.scrollTo(0, document.body.scrollHeight);
       await sleep(CONFIG.scrollDelay);
     }
-    return viral.sort((a, b) => b.likes - a.likes);
+
+    return viralTweets.sort((a, b) => b.likes - a.likes);
   };
 
+  // ── Post plug reply ────────────────────────────────────────
   const postPlug = async (tweet) => {
-    console.log(`\n  🔌 Plugging: "${tweet.text.slice(0, 50)}..." (${tweet.likes} likes)`);
+    console.log(`\n  🔌 Plugging on: "${tweet.text.slice(0, 50)}..." (${tweet.likes} likes)`);
 
     if (CONFIG.dryRun) {
-      console.log(`  🏃 [DRY RUN] Would reply: "${CONFIG.plugText.slice(0, 60)}..."`);
+      console.log(`  🏃 [DRY RUN] Would reply: "${CONFIG.plugMessage.slice(0, 60)}..."`);
       return true;
     }
 
+    // Navigate to the tweet
     tweet.article.scrollIntoView({ behavior: 'smooth', block: 'center' });
     await sleep(1000);
 
-    const replyBtn = tweet.article.querySelector('[data-testid="reply"]');
-    if (!replyBtn) { console.log('  ⚠️ Reply button not found.'); return false; }
+    // Click reply button
+    const replyBtn = $(SEL.replyBtn, tweet.article);
+    if (!replyBtn) {
+      console.log('  ⚠️ Reply button not found.');
+      return false;
+    }
+
     replyBtn.click();
     await sleep(2000);
 
-    const tweetBox = document.querySelector('[data-testid="tweetTextarea_0"]');
-    if (!tweetBox) { console.log('  ⚠️ Reply box not found.'); return false; }
+    // Type in the reply box
+    const tweetBox = $(SEL.tweetBox);
+    if (!tweetBox) {
+      console.log('  ⚠️ Reply box not found.');
+      return false;
+    }
+
     tweetBox.focus();
     await sleep(300);
-    document.execCommand('insertText', false, CONFIG.plugText);
+    document.execCommand('insertText', false, CONFIG.plugMessage);
     await sleep(CONFIG.replyDelay);
 
-    const sendBtn = document.querySelector('[data-testid="tweetButton"]');
-    if (!sendBtn) { console.log('  ⚠️ Post button not found.'); return false; }
+    // Post
+    const sendBtn = $(SEL.tweetButton);
+    if (!sendBtn) {
+      console.log('  ⚠️ Post button not found.');
+      return false;
+    }
+
     sendBtn.click();
     await sleep(3000);
     return true;
   };
 
-  const run = async () => {
-    console.log('╔════════════════════════════════════════════════╗');
-    console.log('║  🔌 AUTO-PLUG REPLIES                          ║');
-    console.log('║  by nichxbt — v1.0                            ║');
-    console.log('╚════════════════════════════════════════════════╝');
-    if (CONFIG.dryRun) console.log('\n🏃 DRY RUN — no replies will be posted.');
-    console.log(`📊 Threshold: ${CONFIG.minLikes} likes | Max plugs: ${CONFIG.maxPlugs}`);
-    console.log(`🔌 Plug: "${CONFIG.plugText.slice(0, 50)}..."\n`);
-    console.log('🔍 Scanning for viral tweets...\n');
+  // ── Main scan ──────────────────────────────────────────────
+  const scan = async () => {
+    const W = 58;
+    console.log('╔' + '═'.repeat(W) + '╗');
+    console.log('║  🔌 AUTO-PLUG REPLIES' + ' '.repeat(W - 22) + '║');
+    console.log('║  by nichxbt — v1.0' + ' '.repeat(W - 21) + '║');
+    console.log('╚' + '═'.repeat(W) + '╝');
 
-    const viral = await scanViral();
+    if (CONFIG.dryRun) console.log('\n🏃 DRY RUN mode — no replies will be posted.');
+    console.log(`📊 Threshold: ${CONFIG.viralThreshold} likes | Plug: "${CONFIG.plugMessage.slice(0, 50)}..."`);
+    console.log('\n🔍 Scanning for viral tweets...\n');
+
+    const viral = await scanForViral();
 
     if (viral.length === 0) {
-      console.log('❌ No tweets above threshold. Lower minLikes or scroll more.');
+      console.log('❌ No tweets above threshold found. Lower viralThreshold or wait.');
       return;
     }
 
-    console.log(`📊 Found ${viral.length} viral tweet(s):\n`);
+    console.log(`\n📊 Found ${viral.length} viral tweet(s):\n`);
+
     for (const t of viral) {
       console.log(`  🔥 ${t.likes} likes — "${t.text.slice(0, 60)}..."`);
     }
 
-    const toPlug = viral.slice(0, CONFIG.maxPlugs - plugCount);
+    // Plug the top ones
+    const toPlug = viral.slice(0, CONFIG.maxPlugsPerSession - plugsThisSession);
+    if (toPlug.length === 0) {
+      console.log(`\n⚠️ Already plugged ${plugsThisSession} tweets this session. Max: ${CONFIG.maxPlugsPerSession}`);
+      return;
+    }
+
     console.log(`\n🔌 Plugging ${toPlug.length} tweet(s)...\n`);
+
+    const history = loadHistory();
+    const scanPlugs = [];
 
     for (const tweet of toPlug) {
       const ok = await postPlug(tweet);
       if (ok) {
-        plugCount++;
-        plugHistory.push({ url: 'https://x.com' + tweet.href, text: tweet.text, likes: tweet.likes, pluggedAt: new Date().toISOString(), dryRun: CONFIG.dryRun });
+        plugsThisSession++;
+        const entry = {
+          tweetUrl: tweet.fullUrl,
+          tweetText: tweet.text,
+          likes: tweet.likes,
+          plugMessage: CONFIG.plugMessage,
+          pluggedAt: new Date().toISOString(),
+          dryRun: CONFIG.dryRun,
+        };
+        history.push(entry);
+        scanPlugs.push(entry);
         console.log('  ✅ Plugged!');
       } else {
-        console.log('  ❌ Failed.');
+        console.log('  ❌ Failed to plug.');
       }
-      await sleep(3000);
+
+      await sleep(5000);
     }
 
-    console.log('\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-    console.log(`  ✅ Plugged: ${plugCount}/${CONFIG.maxPlugs}`);
-    if (CONFIG.dryRun) console.log('  🏃 (Dry run — nothing posted)');
-    console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n');
+    saveHistory(history);
 
-    if (plugHistory.length > 0) {
-      download(plugHistory, `xactions-plug-history-${Date.now()}.json`);
+    console.log('\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+    console.log(`  ✅ Plugged: ${toPlug.length} | Session total: ${plugsThisSession}/${CONFIG.maxPlugsPerSession}`);
+    if (CONFIG.dryRun) console.log('  🏃 (Dry run — nothing was posted)');
+    console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n');
+
+    if (CONFIG.autoDownloadHistory && scanPlugs.length > 0) {
+      const blob = new Blob([JSON.stringify(scanPlugs, null, 2)], { type: 'application/json' });
+      const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+      a.download = `xactions-plug-history-${Date.now()}.json`;
+      document.body.appendChild(a); a.click(); a.remove();
+      console.log(`📥 Downloaded: ${a.download}`);
     }
   };
 
-  run();
+  // ── Controls ───────────────────────────────────────────────
+  window.XActions = window.XActions || {};
+
+  window.XActions.setPlug = (msg) => {
+    if (!msg) { console.log('❌ Usage: XActions.setPlug("your plug message")'); return; }
+    CONFIG.plugMessage = msg;
+    console.log(`✅ Plug set: "${msg.slice(0, 60)}..."`);
+  };
+
+  window.XActions.setThreshold = (n) => {
+    if (typeof n !== 'number' || n < 1) { console.log('❌ Threshold must be a positive number.'); return; }
+    CONFIG.viralThreshold = n;
+    console.log(`✅ Viral threshold set to ${n} likes.`);
+  };
+
+  window.XActions.scan = scan;
+
+  window.XActions.autoScan = (intervalMs = 600000) => {
+    if (autoScanTimer) clearInterval(autoScanTimer);
+    console.log(`🔄 Auto-scanning every ${(intervalMs / 60000).toFixed(1)} minutes.`);
+    autoScanTimer = setInterval(scan, intervalMs);
+  };
+
+  window.XActions.stop = () => {
+    if (autoScanTimer) { clearInterval(autoScanTimer); autoScanTimer = null; }
+    console.log('⏹️ Auto-scan stopped.');
+  };
+
+  window.XActions.history = () => {
+    const history = loadHistory();
+    if (history.length === 0) { console.log('📭 No plug history.'); return; }
+    console.log(`\n🔌 PLUG HISTORY (${history.length}):\n`);
+    for (const h of history.slice(-10)) {
+      console.log(`  ${new Date(h.pluggedAt).toLocaleString()} — ${h.likes} likes${h.dryRun ? ' [dry]' : ''}`);
+      console.log(`    Tweet: "${h.tweetText.slice(0, 50)}..."`);
+    }
+  };
+
+  window.XActions.exportHistory = () => {
+    const history = loadHistory();
+    const blob = new Blob([JSON.stringify(history, null, 2)], { type: 'application/json' });
+    const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+    a.download = `xactions-plug-history-${new Date().toISOString().slice(0, 10)}.json`;
+    document.body.appendChild(a); a.click(); a.remove();
+    console.log('📥 Plug history exported.');
+  };
+
+  // Run initial scan
+  scan();
 })();

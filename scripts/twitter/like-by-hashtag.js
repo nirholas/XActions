@@ -1,11 +1,17 @@
+// GENERATED FILE: a copy of browser/likeByHashtag.js, written by scripts/build-script-manifest.mjs. Edit browser/likeByHashtag.js instead, then run: npm run browser:build
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
 /**
  * ============================================
  * 🏷️ Like By Hashtag - XActions
  * ============================================
  * 
- * @name         like-by-hashtag
- * @description  Automatically like tweets containing specific hashtags
+ * @name        likeByHashtag.js
+ * @description Like posts containing specific hashtags.
+ * @title       Like by Hashtag
+ * @category    engage
+ * @page        x.com/search?q=<query>&f=live
+ * @writes      true
+ * @aliases     scripts/twitter/like-by-hashtag.js
  * @author       nichxbt
  * @version      1.0.0
  * @date         2026-01-26
@@ -89,7 +95,7 @@
         window.dispatchEvent(new PopStateEvent('popstate', { state: {} }));
         return;
       }
-    } catch (e) {}
+    } catch { /* fall through to a full page load below */ }
     window.location.href = url;
   };
 

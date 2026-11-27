@@ -1,11 +1,17 @@
+// GENERATED FILE: a copy of browser/likeByUser.js, written by scripts/build-script-manifest.mjs. Edit browser/likeByUser.js instead, then run: npm run browser:build
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
 /**
  * ============================================
  * 👤 Like By User - XActions
  * ============================================
  * 
- * @name         like-by-user
- * @description  Automatically like all tweets from a specific user's profile
+ * @name        likeByUser.js
+ * @description Like the posts on one user profile.
+ * @title       Like a User
+ * @category    engage
+ * @page        x.com/<username>
+ * @writes      true
+ * @aliases     scripts/twitter/like-by-user.js
  * @author       nichxbt
  * @version      1.0.0
  * @date         2026-01-26
@@ -146,7 +152,7 @@
 
   // Get current username from URL
   const currentUrl = window.location.href;
-  const usernameMatch = currentUrl.match(/x\.com\/([^\/\?]+)|twitter\.com\/([^\/\?]+)/);
+  const usernameMatch = currentUrl.match(/x\.com\/([^/?]+)|twitter\.com\/([^/?]+)/);
   const username = usernameMatch ? (usernameMatch[1] || usernameMatch[2]) : 'Unknown';
 
   // Verify we're on a profile page

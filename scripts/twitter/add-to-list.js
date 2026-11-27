@@ -1,11 +1,17 @@
+// GENERATED FILE: a copy of browser/addToList.js, written by scripts/build-script-manifest.mjs. Edit browser/addToList.js instead, then run: npm run browser:build
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
 /**
  * ============================================
  * ➕ Add To List - XActions
  * ============================================
  *
- * @name         add-to-list
- * @description  Add a batch of users to one of your Twitter Lists via the list's "Manage members" search, rate-limited.
+ * @name        addToList.js
+ * @description Add a batch of users to one of your Lists through its Manage members search, rate-limited.
+ * @title       Add Users to List
+ * @category    lists
+ * @page        x.com/i/lists/<id>
+ * @writes      true
+ * @aliases     scripts/twitter/add-to-list.js
  * @author       nichxbt
  * @version      1.0.0
  * @date         2026-07-20
@@ -259,7 +265,7 @@
 
   // 4) Save / close the manage-members dialog if a save control is present
   const saveBtn = findButtonByText(['done', 'save']);
-  if (saveBtn) { try { saveBtn.click(); } catch (e) {} }
+  if (saveBtn) { try { saveBtn.click(); } catch { /* the dialog saves on close as well, so a failed click loses nothing */ } }
 
   // ============================================
   // 📊 SUMMARY

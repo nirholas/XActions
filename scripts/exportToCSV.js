@@ -1,3 +1,4 @@
+// GENERATED FILE: a copy of browser/exportToCSV.js, written by scripts/build-script-manifest.mjs. Edit browser/exportToCSV.js instead, then run: npm run browser:build
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
 /**
  * Export to CSV Utility
@@ -15,6 +16,14 @@
  *   exportToCSV(window.scrapedSearch.tweets, 'search_results.csv')
  * 
  * by nichxbt - https://github.com/nirholas/XActions
+ *
+ * @name        exportToCSV.js
+ * @title       Export to CSV
+ * @description Turn any scraped data array into a downloadable CSV file.
+ * @category    scrape
+ * @page        x.com/*
+ * @writes      false
+ * @aliases     scripts/exportToCSV.js
  */
 
 (() => {

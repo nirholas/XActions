@@ -1,14 +1,20 @@
+// GENERATED FILE: a copy of browser/viralTweetsScraper.js, written by scripts/build-script-manifest.mjs. Edit browser/viralTweetsScraper.js instead, then run: npm run browser:build
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
 /**
  * ============================================================
  * 🔥 Viral Tweets Scraper
  * ============================================================
  * 
- * @name        viral-tweets-scraper.js
- * @description Find top-performing viral tweets from search or any account
+ * @name        viralTweetsScraper.js
+ * @title       Viral Tweets Scraper
+ * @description Find the top-performing posts on a search or profile by like, repost and reply thresholds, sorted and exported to JSON and CSV.
+ * @category    scrape
+ * @page        x.com/search?q=<query> or x.com/<username>
+ * @writes      false
+ * @aliases     scripts/viralTweetsScraper.js, scripts/twitter/viral-tweets-scraper.js
  * @author      nichxbt (https://x.com/nichxbt)
- * @version     1.0.0
- * @date        2026-01-26
+ * @version     1.1.0
+ * @date        2026-11-27
  * @repository  https://github.com/nirholas/XActions
  * 
  * ============================================================
@@ -19,7 +25,7 @@
  *    - OR search results: https://x.com/search?q=keyword
  * 
  * 2. Open Chrome DevTools (F12 or Cmd+Option+I)
- * 3. Paste this script and press Enter
+ * 3. Paste browser/viralTweetsScraper.js and press Enter
  * 4. Top viral tweets will be extracted and sorted
  * 
  * ============================================================
@@ -36,6 +42,10 @@ var CONFIG = {
   minLikes: 50,
   minRetweets: 5,
   minReplies: 0,
+
+  // true = a tweet qualifies when it meets ANY threshold above that is set
+  // (> 0); false = it must meet all of them
+  matchAny: false,
   
   // ---- LIMITS ----
   
@@ -43,7 +53,7 @@ var CONFIG = {
   maxScrolls: 50,
   
   // ---- SORTING ----
-  // Options: 'likes', 'retweets', 'replies', 'engagement' (sum of all)
+  // Options: 'likes', 'retweets', 'replies', 'views', 'engagement' (likes + retweets + replies)
   sortBy: 'likes',
   
   // ---- TIMING ----
@@ -54,7 +64,10 @@ var CONFIG = {
   // ---- EXPORT ----
   
   exportJSON: true,
-  exportCSV: true
+  exportCSV: true,
+
+  // Also copy the CSV to the clipboard
+  copyToClipboard: false
 };
 
 /**
@@ -75,7 +88,7 @@ var CONFIG = {
   console.log('╚════════════════════════════════════════════════════════════╝');
   console.log('');
   
-  console.log(`🎯 Min thresholds: ${CONFIG.minLikes} likes, ${CONFIG.minRetweets} RTs`);
+  console.log(`🎯 Min thresholds: ${CONFIG.minLikes} likes, ${CONFIG.minRetweets} RTs${CONFIG.matchAny ? ' (any one)' : ''}`);
   console.log(`📊 Sort by: ${CONFIG.sortBy}`);
   console.log(`📋 Max tweets: ${CONFIG.maxTweets}`);
   console.log('');
@@ -142,14 +155,22 @@ var CONFIG = {
       const retweetsStr = getMetric('retweet');
       const repliesStr = getMetric('reply');
       
+      // Views live on the analytics link, not a data-testid button
+      const viewsEl = tweetEl.querySelector('a[href*="/analytics"]');
+      const viewsLabel = viewsEl ? (viewsEl.getAttribute('aria-label') || viewsEl.innerText || '') : '';
+      const viewsStr = (viewsLabel.match(/[\d.,]+\s*[KMB]?/i) || ['0'])[0].replace(/\s/g, '');
+      
       const likes = parseNumber(likesStr);
       const retweets = parseNumber(retweetsStr);
       const replies = parseNumber(repliesStr);
+      const views = parseNumber(viewsStr);
       
       // Check thresholds
-      if (likes < CONFIG.minLikes) return null;
-      if (retweets < CONFIG.minRetweets) return null;
-      if (replies < CONFIG.minReplies) return null;
+      const checks = [[likes, CONFIG.minLikes], [retweets, CONFIG.minRetweets], [replies, CONFIG.minReplies]];
+      const qualifies = CONFIG.matchAny
+        ? checks.every(([, min]) => min <= 0) || checks.some(([value, min]) => min > 0 && value >= min)
+        : checks.every(([value, min]) => value >= min);
+      if (!qualifies) return null;
       
       // Check for media
       const hasImage = tweetEl.querySelector('[data-testid="tweetPhoto"]') !== null;
@@ -166,10 +187,12 @@ var CONFIG = {
           likes,
           retweets,
           replies,
+          views,
           engagement: likes + retweets + replies,
           likesDisplay: likesStr,
           retweetsDisplay: retweetsStr,
-          repliesDisplay: repliesStr
+          repliesDisplay: repliesStr,
+          viewsDisplay: viewsStr
         },
         hasImage,
         hasVideo
@@ -253,24 +276,25 @@ var CONFIG = {
     console.log('💾 JSON downloaded!');
   }
   
+  const headers = ['Rank', 'Author', 'Likes', 'Retweets', 'Replies', 'Engagement', 'Text', 'Date', 'Has Image', 'Has Video', 'URL', 'Views'];
+  const rows = tweets.map((t, i) => [
+    i + 1,
+    t.author,
+    t.metrics.likes,
+    t.metrics.retweets,
+    t.metrics.replies,
+    t.metrics.engagement,
+    `"${t.text.substring(0, 200).replace(/"/g, '""').replace(/\n/g, ' ')}"`,
+    `"${(t.displayTime || '').replace(/"/g, '""')}"`,
+    t.hasImage,
+    t.hasVideo,
+    t.url,
+    t.metrics.views
+  ].join(','));
+  const csv = [headers.join(','), ...rows].join('\n');
+  
   // Download CSV
   if (CONFIG.exportCSV) {
-    const headers = ['Rank', 'Author', 'Likes', 'Retweets', 'Replies', 'Engagement', 'Text', 'Date', 'Has Image', 'Has Video', 'URL'];
-    const rows = tweets.map((t, i) => [
-      i + 1,
-      t.author,
-      t.metrics.likes,
-      t.metrics.retweets,
-      t.metrics.replies,
-      t.metrics.engagement,
-      `"${t.text.substring(0, 200).replace(/"/g, '""').replace(/\n/g, ' ')}"`,
-      `"${(t.displayTime || '').replace(/"/g, '""')}"`,
-      t.hasImage,
-      t.hasVideo,
-      t.url
-    ].join(','));
-    
-    const csv = [headers.join(','), ...rows].join('\n');
     const blob = new Blob([csv], { type: 'text/csv' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
@@ -281,6 +305,16 @@ var CONFIG = {
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
     console.log('💾 CSV downloaded!');
+  }
+  
+  // Copy CSV to clipboard
+  if (CONFIG.copyToClipboard) {
+    try {
+      await navigator.clipboard.writeText(csv);
+      console.log('📋 Results copied to clipboard as CSV!');
+    } catch (e) {
+      console.log('📋 Clipboard copy failed. Copy manually from window.viralTweets');
+    }
   }
   
   console.log('');

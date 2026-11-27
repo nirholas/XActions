@@ -1,11 +1,17 @@
+// GENERATED FILE: a copy of browser/voteInPolls.js, written by scripts/build-script-manifest.mjs. Edit browser/voteInPolls.js instead, then run: npm run browser:build
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
 /**
  * ============================================
  * 🗳️ Vote In Polls - XActions
  * ============================================
  *
- * @name         vote-in-polls
- * @description  Vote in polls found in a timeline or search as you scroll, using a fixed or random option strategy.
+ * @name        voteInPolls.js
+ * @description Vote in the polls in a timeline or search as it scrolls, with a fixed or random option.
+ * @title       Vote in Polls
+ * @category    engage
+ * @page        x.com/search?q=<query>&f=live
+ * @writes      true
+ * @aliases     scripts/twitter/vote-in-polls.js
  * @author       nichxbt
  * @version      1.0.0
  * @date         2026-07-20

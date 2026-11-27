@@ -1,28 +1,39 @@
+// GENERATED FILE: a copy of browser/scrapeDMs.js, written by scripts/build-script-manifest.mjs. Edit browser/scrapeDMs.js instead, then run: npm run browser:build
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
 /**
  * ============================================
  * 💬 Scrape DMs - XActions
  * ============================================
  *
- * @name         scrape-dms
- * @description  Export the currently-open DM conversation: each message with sender, text, timestamp, and direction (in/out).
- * @author       nichxbt
- * @version      1.0.0
- * @date         2026-07-20
- * @website      https://xactions.app
+ * @name        scrapeDMs.js
+ * @title       Scrape DMs
+ * @description Export the open DM conversation (sender, text, timestamp, direction) as JSON, CSV or text, or list your inbox conversations.
+ * @category    messages
+ * @page        x.com/messages/<id> or x.com/messages
+ * @writes      false
+ * @aliases     scripts/dmExporter.js, scripts/scrapeDMs.js, scripts/twitter/scrape-dms.js
+ * @author      nichxbt (https://x.com/nichxbt)
+ * @version     1.1.0
+ * @date        2026-11-27
+ * @website     https://xactions.app
  *
  * Usage:
  *   1. Go to https://x.com/messages and open ONE conversation
  *      (the URL becomes x.com/messages/<conversation-id>)
  *   2. Open the browser console (F12 or Cmd+Option+I -> Console)
  *   3. (Optional) edit the CONFIG options at the top of the script
- *   4. Paste this entire script and press Enter
+ *   4. Paste browser/scrapeDMs.js and press Enter
  *
  * Example:
  *   Open a chat, paste, and the script scrolls the message pane upward to load
  *   history, dedupes each bubble, tags it out (you) or in (them) by its position,
  *   then downloads dm_<name>_<date>.json and .csv in chronological order.
  *   To stop early, run window.stopScrapeDMs() in the console.
+ *
+ *   Paste it on x.com/messages with no conversation open and it lists the
+ *   inbox conversations (name, last message, time, unread) instead
+ *   (listConversations). Set openFirstConversation = true to open the first
+ *   conversation and export its messages.
  *
  * Privacy note: DM content is private. Be mindful of where you store or share exports.
  *
@@ -50,7 +61,17 @@
 
     // Auto-download the results as files when finished
     downloadJSON: true,
-    downloadCSV: true
+    downloadCSV: true,
+    downloadTXT: false,         // Also download a plain-text transcript ([You] / [Them] lines)
+
+    // Copy the result JSON to the clipboard when finished
+    copyToClipboard: false,
+
+    // Inbox (x.com/messages with no conversation open)
+    listConversations: true,      // List inbox conversations instead of stopping
+    maxConversations: 20,         // Max conversations to list
+    openFirstConversation: false, // Open the first conversation and export its messages
+    includeConversationList: false // Add the visible inbox list to a conversation export (result.conversations)
   };
 
   // ============================================
@@ -62,7 +83,9 @@
     // Scroller that holds the conversation history
     scroller: '[data-testid="DmScrollerContainer"]',
     // Conversation heading (used to name the export file)
-    heading: 'h2[role="heading"], [data-testid="DMConversationHeader"]'
+    heading: 'h2[role="heading"], [data-testid="DMConversationHeader"]',
+    // Inbox conversation row
+    conversation: '[data-testid="conversation"]'
   };
 
   // ============================================
@@ -93,6 +116,37 @@
       log.error(`Failed to download ${filename}: ${e.message}`);
       return false;
     }
+  };
+
+  const copyToClipboard = async (data) => {
+    try {
+      await navigator.clipboard.writeText(JSON.stringify(data, null, 2));
+      log.success('Copied to clipboard');
+    } catch (e) {
+      log.warning('Could not copy to clipboard (click the page first, then copy(window.scrapedDMs)).');
+    }
+  };
+
+  // Visible inbox rows: name, last message preview, time, unread badge
+  const getConversationList = () => {
+    const conversations = [];
+    document.querySelectorAll(SELECTORS.conversation).forEach((conv, i) => {
+      if (i >= CONFIG.maxConversations) return;
+      const name = conv.querySelector('[dir="ltr"]')?.textContent || '';
+      const spans = conv.querySelectorAll('span');
+      const lastMsg = conv.querySelector('[data-testid="lastMessage"]')?.textContent ||
+                      spans[spans.length - 1]?.textContent || '';
+      const time = conv.querySelector('time')?.getAttribute('datetime') || '';
+      const unread = !!conv.querySelector('[data-testid="unread"]');
+      conversations.push({
+        index: i + 1,
+        name: name.trim(),
+        lastMessage: lastMsg.trim().substring(0, 100),
+        time,
+        unread
+      });
+    });
+    return conversations;
   };
 
   const getConversationName = () => {
@@ -156,9 +210,47 @@
 
   // Page guard: must be inside an open conversation (messages/<id>)
   if (!/\/messages\/[^/]+/.test(window.location.pathname)) {
-    log.warning('You do not have a single DM conversation open.');
-    log.info('Go to https://x.com/messages, click a conversation, then paste this script again.');
-    return;
+    const onInbox = window.location.pathname.includes('/messages');
+
+    if (onInbox && CONFIG.openFirstConversation) {
+      const firstConv = document.querySelector(SELECTORS.conversation);
+      if (firstConv) {
+        log.info('Opening the first conversation...');
+        firstConv.click();
+        await sleep(2000);
+      }
+    }
+
+    if (!/\/messages\/[^/]+/.test(window.location.pathname)) {
+      if (!onInbox || !CONFIG.listConversations) {
+        log.warning('You do not have a single DM conversation open.');
+        log.info('Go to https://x.com/messages, click a conversation, then paste this script again.');
+        return;
+      }
+
+      // Inbox mode: list the visible conversations
+      const conversations = getConversationList();
+      if (conversations.length === 0) {
+        log.warning('No conversations found on this page. Wait for the inbox to load and try again.');
+        return { conversations: [] };
+      }
+      console.log(`📬 Found ${conversations.length} conversations:`);
+      conversations.forEach(c => {
+        const badge = c.unread ? '🔴' : '⚪';
+        console.log(`  ${badge} ${c.index}. ${c.name} - ${c.lastMessage.substring(0, 40)}...`);
+      });
+      const inbox = { conversations, scrapedAt: new Date().toISOString() };
+      if (CONFIG.downloadJSON) {
+        if (download(JSON.stringify(inbox, null, 2), `dm_conversations_${new Date().toISOString().split('T')[0]}.json`, 'application/json')) {
+          log.success('JSON downloaded');
+        }
+      }
+      if (CONFIG.copyToClipboard) await copyToClipboard(inbox);
+      window.scrapedDMs = inbox;
+      console.log('\n💡 Access your data: window.scrapedDMs');
+      log.info('Open a conversation and paste again to export its messages.');
+      return inbox;
+    }
   }
 
   const conversationName = getConversationName();
@@ -259,6 +351,7 @@
     messageCount: messages.length,
     messages
   };
+  if (CONFIG.includeConversationList) result.conversations = getConversationList();
 
   console.log('');
   if (CONFIG.downloadJSON) {
@@ -277,6 +370,18 @@
       log.success('CSV downloaded');
     }
   }
+
+  if (CONFIG.downloadTXT) {
+    const txt = messages.map(m => {
+      const prefix = m.direction === 'out' ? '[You]' : (m.direction === 'in' ? '[Them]' : '[?]');
+      return `${prefix}${m.timestamp ? ` (${m.timestamp})` : ''} ${m.text}`;
+    }).join('\n\n');
+    if (download(txt, `dm_${conversationName}_${dateStr}.txt`, 'text/plain')) {
+      log.success('TXT downloaded');
+    }
+  }
+
+  if (CONFIG.copyToClipboard) await copyToClipboard(result);
 
   window.scrapedDMs = result;
   console.log('\n💡 Access your data: window.scrapedDMs');

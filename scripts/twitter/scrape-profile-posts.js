@@ -1,11 +1,17 @@
+// GENERATED FILE: a copy of browser/scrapeProfilePosts.js, written by scripts/build-script-manifest.mjs. Edit browser/scrapeProfilePosts.js instead, then run: npm run browser:build
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
 /**
  * ============================================================
  * 🐦 Twitter/X Profile Posts Scraper (Advanced)
  * ============================================================
  * 
- * @name        scrape-profile-posts.js
- * @description Scrapes posts from any Twitter/X profile with filtering,
+ * @name        scrapeProfilePosts.js
+ * @description Scrape every post from a profile with filters, analytics and JSON, CSV and Markdown exports.
+ * @title       Scrape Profile Posts
+ * @category    scrape
+ * @page        x.com/<username>
+ * @writes      false
+ * @aliases     scripts/twitter/scrape-profile-posts.js
  *              multiple export formats, and analytics
  * @author      nichxbt (https://x.com/nichxbt)
  * @version     2.2.0
@@ -219,7 +225,7 @@ var CONFIG = {
   const startTime = Date.now();
   
   // Get profile name from URL
-  const profileMatch = window.location.pathname.match(/^\/([^\/]+)/);
+  const profileMatch = window.location.pathname.match(/^\/([^/]+)/);
   const profileName = profileMatch ? profileMatch[1] : 'unknown';
   
   console.log('╔════════════════════════════════════════════════════════════╗');

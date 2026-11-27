@@ -1,22 +1,28 @@
+// GENERATED FILE: a copy of browser/scrapeSearch.js, written by scripts/build-script-manifest.mjs. Edit browser/scrapeSearch.js instead, then run: npm run browser:build
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
 /**
  * ============================================
  * 🔍 Scrape Search - XActions
  * ============================================
  *
- * @name         scrape-search
- * @description  Scroll the current X search results and export every post (text, author, counts, media) to JSON/CSV.
- * @author       nichxbt
- * @version      1.1.0
- * @date         2026-11-26
- * @website      https://xactions.app
+ * @name        scrapeSearch.js
+ * @title       Scrape Search
+ * @description Scroll the current X search results and export every post (text, author, counts, media) to JSON and CSV.
+ * @category    scrape
+ * @page        x.com/search?q=<query>&f=live or x.com/search?q=<query>
+ * @writes      false
+ * @aliases     scripts/scrapeSearch.js, scripts/twitter/scrape-search.js
+ * @author      nichxbt (https://x.com/nichxbt)
+ * @version     1.2.0
+ * @date        2026-11-27
+ * @website     https://xactions.app
  *
  * Usage:
  *   1. Go to a search results page, e.g. x.com/search?q=solana&f=live
  *      (the &f=live tab surfaces the newest posts; the Top tab works too)
  *   2. Open the browser console (F12 or Cmd+Option+I -> Console)
  *   3. (Optional) edit the CONFIG options at the top of the script
- *   4. Paste this entire script and press Enter
+ *   4. Paste the entire browser/scrapeSearch.js and press Enter
  *
  * Example:
  *   Search x.com/search?q=%22gm%22%20three.ws&f=live, set CONFIG.maxPosts = 200 and
@@ -40,6 +46,13 @@
     // Include reply posts in the results (false = original posts only)
     includeReplies: true,
 
+    // Skip posts with fewer likes than this (0 = no filter)
+    minLikes: 0,
+
+    // Sort the export and the top-5 preview by engagement (likes + reposts +
+    // replies), highest first. false keeps the order the posts appeared in.
+    sortByEngagement: false,
+
     // Delay between scrolls (ms). Raise if posts load slowly.
     scrollDelay: 1800,
 
@@ -53,7 +66,10 @@
     // posts. Click it up to this many times in a row before giving up.
     maxRetryClicks: 5,
 
-    // Auto-download a CSV file too (JSON always downloads)
+    // Auto-download a JSON file
+    downloadJson: true,
+
+    // Auto-download a CSV file too
     downloadCsv: true
   };
 
@@ -249,6 +265,7 @@
 
   log.info(`Search query: "${query}"`);
   log.info(`Max posts: ${CONFIG.maxPosts} | Include replies: ${CONFIG.includeReplies}`);
+  if (CONFIG.minLikes > 0) log.info(`Min likes: ${CONFIG.minLikes}`);
   log.info('To stop early: window.stopScrapeSearch()');
 
   let scrollAttempts = 0;
@@ -265,6 +282,7 @@
         const post = extractPost(article);
         if (!post || posts.has(post.id)) return;
         if (!CONFIG.includeReplies && post.isReply) return;
+        if (post.likes < CONFIG.minLikes) return;
         posts.set(post.id, post);
       } catch (e) {
         log.error(`Skipped a post: ${e.message}`);
@@ -305,6 +323,10 @@
   }
 
   const list = Array.from(posts.values()).slice(0, CONFIG.maxPosts);
+  if (CONFIG.sortByEngagement) {
+    const engagement = (p) => p.likes + p.reposts + p.replies;
+    list.sort((a, b) => engagement(b) - engagement(a));
+  }
 
   // ============================================
   // 📊 SUMMARY + EXPORT
@@ -342,7 +364,7 @@
   }
   const result = { query, scrapedAt: new Date().toISOString(), endReason, count: list.length, posts: list };
 
-  if (downloadFile(JSON.stringify(result, null, 2), `search_${safeQuery}_${stamp}.json`, 'application/json')) {
+  if (CONFIG.downloadJson && downloadFile(JSON.stringify(result, null, 2), `search_${safeQuery}_${stamp}.json`, 'application/json')) {
     log.success('JSON downloaded');
   }
   if (CONFIG.downloadCsv && downloadFile(toCSV(list), `search_${safeQuery}_${stamp}.csv`, 'text/csv')) {

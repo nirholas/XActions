@@ -1,226 +1,340 @@
+// GENERATED FILE: a copy of browser/unfollowback.js, written by scripts/build-script-manifest.mjs. Edit browser/unfollowback.js instead, then run: npm run browser:build
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
 /**
  * ============================================================
- * 🔄 Unfollow Non-Followers
+ * 🔙 Unfollow Non-Followers — Production Grade
  * ============================================================
- * 
- * @name        unfollow-non-followers.js
- * @description Unfollow accounts that DON'T follow you back
+ *
+ * @name        unfollowback.js
+ * @title       Unfollow Non-Followers
+ * @description Unfollow accounts that do not follow you back, with a whitelist, a dry run, rate-limit cooldowns and a JSON export.
+ * @category    cleanup
+ * @page        x.com/<you>/following
+ * @writes      true
+ * @aliases     scripts/unfollowback.js, scripts/twitter/unfollow-non-followers.js
  * @author      nichxbt (https://x.com/nichxbt)
- * @version     1.0.0
- * @date        2026-01-26
+ * @version     2.1.0
+ * @date        2026-11-27
  * @repository  https://github.com/nirholas/XActions
- * 
+ *
  * ============================================================
- * 📋 USAGE INSTRUCTIONS:
- * 
- * 1. Go to your Following page: https://x.com/YOUR_USERNAME/following
- * 2. Open Chrome DevTools (F12 or Cmd+Option+I)
- * 3. Go to Console tab
- * 4. Paste this ENTIRE script and press Enter
- * 5. Watch the console for progress
- * 
- * This script will ONLY unfollow users who don't have the
- * "Follows you" badge, keeping your mutual follows intact.
- * 
- * ============================================================
- * ⚙️ CONFIGURATION
- * ============================================================
- */
-
-// `var` (not `const`): a repeated top-level `const` paste in the same
-// DevTools tab throws "already been declared" instead of re-running.
-var CONFIG = {
-  // Maximum retry attempts when no buttons found
-  maxRetries: 5,
-  
-  // Delay between unfollows (milliseconds)
-  // 💡 Increase to 3000-5000 if getting rate limited
-  unfollowDelay: 1500,
-  
-  // Delay after clicking confirm button
-  confirmDelay: 1000,
-  
-  // Delay for scrolling to load more
-  scrollDelay: 2000,
-  
-  // Stop after unfollowing this many (0 = unlimited)
-  // 💡 Set to 50-100 for testing first
-  maxUnfollows: 0,
-  
-  // Show confirmation prompt before starting
-  confirmStart: true,
-  
-  // Log kept users (mutual followers)
-  logKept: true
-};
-
-/**
- * ============================================================
- * 🚀 SCRIPT START
+ * 📋 USAGE:
+ *
+ * 1. Go to: https://x.com/YOUR_USERNAME/following
+ * 2. Open DevTools Console (F12)
+ * 3. Edit CONFIG below (whitelist, dryRun, etc.)
+ * 4. Paste browser/unfollowback.js and run
+ *
+ * Only accounts without the "Follows you" badge are unfollowed.
+ * Starts as a DRY RUN that lists who would be unfollowed. Set
+ * dryRun: false to unfollow for real; live mode asks for a browser
+ * confirmation first (confirmStart).
+ *
+ * 🎮 CONTROLS:
+ *   window.XActions.pause()   — Pause after current action
+ *   window.XActions.resume()  — Resume
+ *   window.XActions.abort()   — Stop permanently
+ *   window.XActions.status()  — Show progress
+ *   window.stopUnfollow()     - Stop after the current action
  * ============================================================
  */
+(() => {
+  'use strict';
 
-(async function unfollowNonFollowers() {
-  const sleep = (ms) => new Promise(r => setTimeout(r, ms));
-  
-  // DOM Selectors
-  const $unfollowBtn = '[data-testid$="-unfollow"]';
-  const $confirmBtn = '[data-testid="confirmationSheetConfirm"]';
-  const $followsYou = '[data-testid="userFollowIndicator"]'; // "Follows you" badge
-  const $userCell = '[data-testid="UserCell"]';
-  
-  console.log('╔════════════════════════════════════════════════════════════╗');
-  console.log('║  🔄 UNFOLLOW NON-FOLLOWERS                                 ║');
-  console.log('║  by nichxbt - https://github.com/nirholas/XActions         ║');
-  console.log('╚════════════════════════════════════════════════════════════╝');
-  console.log('');
-  
-  // Verify we're on the right page
-  if (!window.location.href.includes('/following')) {
-    console.error('❌ ERROR: You must be on your Following page!');
-    console.log('📍 Go to: https://x.com/YOUR_USERNAME/following');
-    return;
-  }
-  
-  // Confirmation prompt
-  if (CONFIG.confirmStart) {
-    const confirmed = confirm(
-      '🔄 UNFOLLOW NON-FOLLOWERS\n\n' +
-      'This will unfollow accounts that don\'t follow you back.\n' +
-      'Mutual followers will be kept.\n\n' +
-      'Click OK to start.'
-    );
-    if (!confirmed) {
-      console.log('❌ Cancelled by user.');
-      return;
-    }
-  }
-  
-  console.log('🚀 Starting to unfollow non-followers...');
-  console.log('💡 Accounts with "Follows you" badge will be kept.');
-  console.log('💡 To stop early: window.stopUnfollow()');
-  console.log('');
-
-  let totalUnfollowed = 0;
-  let totalKept = 0;
-  let retries = 0;
-  let stopped = false;
-  const seenUsers = new Set();
-  window.stopUnfollow = () => {
-    stopped = true;
-    console.log('🛑 Stopping after the current unfollow...');
+  // ── Configuration ──────────────────────────────────────────
+  const CONFIG = {
+    maxUnfollows: Infinity,           // Cap total unfollows
+    whitelist: [],                    // Usernames to never unfollow (without @)
+    dryRun: true,                     // Preview without unfollowing — SET FALSE TO RUN
+    confirmStart: true,               // Live mode: ask for a browser confirm() before the first unfollow
+    logKept: false,                   // Log each mutual follower that is kept
+    minDelay: 2500,                   // Minimum ms between actions
+    maxDelay: 3500,                   // Maximum ms between actions
+    scrollDelay: 2000,                // Wait after scroll for DOM to load
+    maxConsecutiveErrors: 8,          // Abort after N errors in a row
+    maxEmptyScrolls: 6,              // Give up after N scrolls with no new users
+    rateLimitCooldown: 60000,         // 60s cooldown on rate limit
+    exportOnComplete: true,           // Auto-download JSON results
   };
 
-  while (retries < CONFIG.maxRetries && !stopped) {
-    // Scroll to bottom to load more users
-    window.scrollTo(0, document.body.scrollHeight);
-    await sleep(CONFIG.scrollDelay);
-    
-    // Find all unfollow buttons
-    const buttons = document.querySelectorAll($unfollowBtn);
-    
-    if (buttons.length === 0) {
-      retries++;
-      console.log(`⏳ No buttons found. Retry ${retries}/${CONFIG.maxRetries}...`);
-      await sleep(CONFIG.scrollDelay);
-      continue;
+  // ── Selector Fallback Chains ────────────────────────────────
+  const SEL = {
+    unfollowBtn: ['[data-testid$="-unfollow"]', 'button[aria-label*="Following @"]'],
+    confirmBtn:  ['[data-testid="confirmationSheetConfirm"]', '[role="button"][data-testid="confirmationSheetConfirm"]'],
+    userCell:    ['[data-testid="UserCell"]', '[data-testid="cellInnerDiv"]'],
+    followsYou:  ['[data-testid="userFollowIndicator"]', 'span[data-testid="userFollowIndicator"]'],
+    toast:       ['[data-testid="toast"]', '[role="alert"]'],
+  };
+
+  const $ = (sel, ctx = document) => {
+    const arr = Array.isArray(sel) ? sel : [sel];
+    for (const s of arr) { const el = ctx.querySelector(s); if (el) return el; }
+    return null;
+  };
+  const $$ = (sel, ctx = document) => {
+    const arr = Array.isArray(sel) ? sel : [sel];
+    for (const s of arr) { const els = ctx.querySelectorAll(s); if (els.length) return [...els]; }
+    return [];
+  };
+
+  // ── Utilities ──────────────────────────────────────────────
+  const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+  const gaussian = (min, max) => {
+    const u = (Math.random() + Math.random()) / 2;
+    return Math.floor(min + u * (max - min));
+  };
+
+  const isRateLimited = () => {
+    const toast = $(SEL.toast);
+    if (!toast) return false;
+    const t = toast.textContent.toLowerCase();
+    return /rate limit|try again|too many|slow down|limit/.test(t);
+  };
+
+  // ── State ──────────────────────────────────────────────────
+  let paused = false, aborted = false;
+  let unfollowed = 0, scanned = 0, skippedFollowsBack = 0, skippedWhitelist = 0, errors = 0, consecutiveErrors = 0;
+  const startTime = Date.now();
+  const unfollowedList = [];
+  const processedUsers = new Set();
+  const whitelistSet = new Set(CONFIG.whitelist.map(u => u.toLowerCase().replace(/^@/, '')));
+
+  // Load previously processed from localStorage
+  const STORAGE_KEY = 'xactions_unfollowback';
+  try {
+    const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+    if (saved.processed) saved.processed.forEach(u => processedUsers.add(u));
+  } catch {}
+
+  // Dry runs never write the processed list: a later live run must not skip
+  // the accounts a preview only looked at.
+  const persist = () => {
+    if (CONFIG.dryRun) return;
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify({
+        processed: [...processedUsers],
+        unfollowed: unfollowedList,
+        lastRun: new Date().toISOString(),
+      }));
+    } catch {}
+  };
+
+  // ── Controls ──────────────────────────────────────────────
+  window.XActions = {
+    pause()  { paused = true;  console.log('⏸️ Paused. Call XActions.resume() to continue.'); },
+    resume() { paused = false; console.log('▶️ Resumed.'); },
+    abort()  { aborted = true; console.log('🛑 Aborting after current action...'); },
+    status() {
+      const elapsed = ((Date.now() - startTime) / 1000).toFixed(0);
+      const rate = unfollowed > 0 ? (unfollowed / (elapsed / 60)).toFixed(1) : '0';
+      console.log(`📊 Unfollowed: ${unfollowed} | Scanned: ${scanned} | Follows back: ${skippedFollowsBack} | Whitelisted: ${skippedWhitelist} | Errors: ${errors} | Rate: ${rate}/min | Elapsed: ${elapsed}s`);
+    },
+  };
+
+  window.stopUnfollow = () => window.XActions.abort();
+
+  const shouldContinue = async () => {
+    while (paused && !aborted) await sleep(500);
+    return !aborted;
+  };
+
+  // ── Extract Username from Cell ────────────────────────────
+  const getUsername = (cell) => {
+    // Try multiple approaches
+    const link = cell.querySelector('a[href^="/"][role="link"]') || cell.querySelector('a[href^="/"]');
+    if (link) {
+      const href = link.getAttribute('href') || '';
+      const match = href.match(/^\/([A-Za-z0-9_]+)/);
+      if (match && !['home', 'explore', 'notifications', 'messages', 'i'].includes(match[1])) {
+        return match[1];
+      }
     }
-    
-    let progressThisPass = 0;
+    // Fallback: find @username text
+    const spans = cell.querySelectorAll('span');
+    for (const span of spans) {
+      const m = span.textContent.match(/^@([A-Za-z0-9_]+)$/);
+      if (m) return m[1];
+    }
+    return null;
+  };
 
-    for (const btn of buttons) {
-      if (stopped) break;
+  // ── Main Logic ─────────────────────────────────────────────
+  const run = async () => {
+    const W = 60;
+    console.log('╔' + '═'.repeat(W) + '╗');
+    console.log('║  🔙 UNFOLLOW NON-FOLLOWERS' + ' '.repeat(W - 28) + '║');
+    console.log('║  by nichxbt — v2.0' + ' '.repeat(W - 21) + '║');
+    console.log('╚' + '═'.repeat(W) + '╝');
 
-      // Check max unfollows limit
-      if (CONFIG.maxUnfollows > 0 && totalUnfollowed >= CONFIG.maxUnfollows) {
-        console.log(`\n✅ Reached limit of ${CONFIG.maxUnfollows} unfollows!`);
-        delete window.stopUnfollow;
-        logSummary();
+    if (!window.location.href.includes('/following')) {
+      console.error('❌ Navigate to x.com/YOUR_USERNAME/following first!');
+      return;
+    }
+
+    console.log(`\n⚙️ Config:`);
+    console.log(`   Max unfollows:  ${CONFIG.maxUnfollows === Infinity ? 'unlimited' : CONFIG.maxUnfollows}`);
+    console.log(`   Whitelist:      ${whitelistSet.size > 0 ? [...whitelistSet].join(', ') : 'none'}`);
+    console.log(`   Dry run:        ${CONFIG.dryRun ? 'YES (preview only)' : 'NO — LIVE MODE'}`);
+
+    if (CONFIG.dryRun) {
+      console.log('\n⚠️  DRY RUN — no accounts will be unfollowed.');
+      console.log('   Set CONFIG.dryRun = false to execute.\n');
+    } else if (CONFIG.confirmStart) {
+      const confirmed = window.confirm(
+        '🔙 UNFOLLOW NON-FOLLOWERS\n\n' +
+        'This will unfollow accounts that don\'t follow you back.\n' +
+        'Mutual followers will be kept.\n\n' +
+        'Click OK to start.'
+      );
+      if (!confirmed) {
+        console.log('❌ Cancelled by user.');
         return;
       }
-      
-      try {
-        // Find the parent UserCell to check for "Follows you" badge
-        const userCell = btn.closest($userCell);
+    }
+    console.log('💡 To stop early: window.stopUnfollow() or XActions.abort()\n');
 
-        // Track accounts by handle so re-rendered cells aren't recounted and
-        // so a tail of mutual followers can't keep this loop alive forever
-        const userLink = userCell?.querySelector('a[href^="/"]');
-        const username = userLink ? userLink.getAttribute('href').replace('/', '').split('/')[0] : null;
-        const isNewUser = username && !seenUsers.has(username);
-        if (isNewUser) {
-          seenUsers.add(username);
-          progressThisPass++;
+    let emptyScrolls = 0;
+
+    while (unfollowed < CONFIG.maxUnfollows && emptyScrolls < CONFIG.maxEmptyScrolls) {
+      if (!(await shouldContinue())) break;
+
+      // Rate limit check
+      if (isRateLimited()) {
+        console.warn(`🚨 Rate limit detected! Cooling down ${CONFIG.rateLimitCooldown / 1000}s...`);
+        await sleep(CONFIG.rateLimitCooldown);
+        continue;
+      }
+
+      const cells = $$(SEL.userCell);
+      let foundNew = false;
+
+      for (const cell of cells) {
+        if (!(await shouldContinue())) break;
+        if (unfollowed >= CONFIG.maxUnfollows) break;
+
+        const username = getUsername(cell);
+        if (!username || processedUsers.has(username.toLowerCase())) continue;
+
+        processedUsers.add(username.toLowerCase());
+        foundNew = true;
+        scanned++;
+
+        // Check if follows you back
+        const followsYou = $(SEL.followsYou, cell);
+        if (followsYou) {
+          skippedFollowsBack++;
+          if (CONFIG.logKept) console.log(`   💚 Keeping: @${username} (follows you)`);
+          continue;
         }
 
-        if (userCell) {
-          // Check if this user follows you back
-          const followsYou = userCell.querySelector($followsYou);
+        // Check whitelist
+        if (whitelistSet.has(username.toLowerCase())) {
+          skippedWhitelist++;
+          console.log(`   🛡️ Whitelisted: @${username}`);
+          continue;
+        }
 
-          if (followsYou) {
-            // This user follows you - KEEP them (count each account once)
-            if (isNewUser || !username) {
-              totalKept++;
-              if (CONFIG.logKept) {
-                const nameEl = userCell.querySelector('[dir="ltr"] span');
-                const name = nameEl ? nameEl.textContent : 'Unknown';
-                console.log(`💚 Keeping: ${name} (follows you)`);
-              }
-            }
-            continue;
+        // This user doesn't follow back and isn't whitelisted
+        if (CONFIG.dryRun) {
+          console.log(`   🔍 Would unfollow: @${username}`);
+          unfollowedList.push({ username, timestamp: new Date().toISOString(), dryRun: true });
+          unfollowed++;
+          continue;
+        }
+
+        // Click unfollow button
+        const unfollowBtn = $(SEL.unfollowBtn, cell);
+        if (!unfollowBtn) {
+          errors++;
+          consecutiveErrors++;
+          if (consecutiveErrors >= CONFIG.maxConsecutiveErrors) {
+            console.error(`❌ ${CONFIG.maxConsecutiveErrors} consecutive errors — aborting for safety.`);
+            break;
+          }
+          continue;
+        }
+
+        try {
+          unfollowBtn.click();
+          await sleep(gaussian(400, 800));
+
+          const confirmBtn = $(SEL.confirmBtn);
+          if (confirmBtn) {
+            confirmBtn.click();
+            await sleep(gaussian(300, 600));
+          }
+
+          unfollowed++;
+          consecutiveErrors = 0;
+          unfollowedList.push({ username, timestamp: new Date().toISOString() });
+
+          if (unfollowed % 5 === 0 || unfollowed <= 3) {
+            const elapsed = ((Date.now() - startTime) / 1000).toFixed(0);
+            const rate = (unfollowed / (elapsed / 60)).toFixed(1);
+            console.log(`   🔙 Unfollowed: @${username}  [${unfollowed} total | ${rate}/min | scanned: ${scanned}]`);
+          }
+
+          persist();
+          await sleep(gaussian(CONFIG.minDelay, CONFIG.maxDelay));
+        } catch (e) {
+          errors++;
+          consecutiveErrors++;
+          console.warn(`   ⚠️ Error unfollowing @${username}: ${e.message}`);
+          if (consecutiveErrors >= CONFIG.maxConsecutiveErrors) {
+            console.error(`❌ ${CONFIG.maxConsecutiveErrors} consecutive errors — aborting.`);
+            break;
           }
         }
-        
-        // User doesn't follow back - unfollow them
-        btn.click();
-        await sleep(500);
-        
-        // Click confirmation
-        const confirmBtn = document.querySelector($confirmBtn);
-        if (confirmBtn) {
-          confirmBtn.click();
-          totalUnfollowed++;
-          progressThisPass++;
-
-          // Try to get username
-          const nameEl = userCell?.querySelector('[dir="ltr"] span');
-          const name = nameEl ? nameEl.textContent : `User #${totalUnfollowed}`;
-          console.log(`🚫 Unfollowed: ${name}`);
-
-          await sleep(CONFIG.confirmDelay);
-        }
-
-        await sleep(CONFIG.unfollowDelay);
-
-      } catch (e) {
-        console.warn('⚠️ Error:', e.message);
       }
+
+      if (consecutiveErrors >= CONFIG.maxConsecutiveErrors) break;
+
+      if (!foundNew) {
+        emptyScrolls++;
+        if (emptyScrolls >= CONFIG.maxEmptyScrolls) break;
+      } else {
+        emptyScrolls = 0;
+      }
+
+      // Scroll for more
+      window.scrollTo(0, document.body.scrollHeight);
+      await sleep(gaussian(CONFIG.scrollDelay, CONFIG.scrollDelay + 1000));
     }
 
-    // Only reset retries on real progress (new accounts seen or unfollows
-    // done); visible mutual cells alone must not keep the loop spinning
-    if (progressThisPass > 0) {
-      retries = 0;
-    } else {
-      retries++;
-      console.log(`⏳ No new accounts this pass. Retry ${retries}/${CONFIG.maxRetries}...`);
+    // ── Summary ─────────────────────────────────────────────
+    const elapsed = ((Date.now() - startTime) / 1000).toFixed(0);
+    console.log('\n╔' + '═'.repeat(50) + '╗');
+    console.log(aborted
+      ? '║  🛑 STOPPED BY USER' + ' '.repeat(30) + '║'
+      : '║  📊 RESULTS' + ' '.repeat(38) + '║');
+    console.log('╠' + '═'.repeat(50) + '╣');
+    console.log(`║  Scanned:          ${String(scanned).padEnd(29)}║`);
+    console.log(`║  Unfollowed:       ${String(unfollowed).padEnd(29)}║`);
+    console.log(`║  Follows back:     ${String(skippedFollowsBack).padEnd(29)}║`);
+    console.log(`║  Whitelisted:      ${String(skippedWhitelist).padEnd(29)}║`);
+    console.log(`║  Errors:           ${String(errors).padEnd(29)}║`);
+    console.log(`║  Duration:         ${(elapsed + 's').padEnd(29)}║`);
+    console.log('╚' + '═'.repeat(50) + '╝');
+
+    persist();
+
+    if (CONFIG.exportOnComplete && unfollowedList.length > 0) {
+      const data = {
+        summary: { scanned, unfollowed, skippedFollowsBack, skippedWhitelist, errors, dryRun: CONFIG.dryRun },
+        accounts: unfollowedList,
+        exportedAt: new Date().toISOString(),
+      };
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = `xactions-unfollowback-${CONFIG.dryRun ? 'preview' : 'results'}-${new Date().toISOString().slice(0, 10)}.json`;
+      document.body.appendChild(a); a.click(); a.remove();
+      console.log('📥 Results exported as JSON.');
     }
-  }
 
-  delete window.stopUnfollow;
+    console.log('✅ Done! Reload & re-run if any were missed.\n');
+    return { scanned, unfollowed, skippedFollowsBack, skippedWhitelist, errors, dryRun: CONFIG.dryRun };
+  };
 
-  function logSummary() {
-    console.log('');
-    console.log('╔════════════════════════════════════════════════════════════╗');
-    console.log(stopped ? '║  🛑 STOPPED BY USER                                        ║' : '║  ✅ COMPLETE!                                              ║');
-    console.log('╚════════════════════════════════════════════════════════════╝');
-    console.log(`🚫 Unfollowed (non-followers): ${totalUnfollowed}`);
-    console.log(`💚 Kept (mutual followers): ${totalKept}`);
-    console.log('');
-  }
-  
-  logSummary();
-  
-  return { unfollowed: totalUnfollowed, kept: totalKept };
+  run();
 })();

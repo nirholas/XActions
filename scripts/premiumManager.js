@@ -1,17 +1,32 @@
+// GENERATED FILE: a copy of browser/premiumManager.js, written by scripts/build-script-manifest.mjs. Edit browser/premiumManager.js instead, then run: npm run browser:build
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
-// scripts/premiumManager.js
-// Browser console script for detecting Premium tier and features on X/Twitter
-// Paste in DevTools console on x.com
-// by nichxbt
+/**
+ * @name        premiumManager.js
+ * @title       Premium Manager
+ * @description Detect your X Premium tier from on-page signals, list its features and what the next tier adds, and export the result.
+ * @category    premium
+ * @page        x.com/*
+ * @writes      false
+ * @aliases     scripts/premiumFeatures.js, scripts/premiumManager.js
+ * @author      nichxbt (https://x.com/nichxbt)
+ * @version     1.1.0
+ * @date        2026-11-26
+ *
+ * Usage:
+ *   1. Open x.com (your own profile or a timeline with your posts gives the most signals)
+ *   2. Open DevTools Console (F12)
+ *   3. (Optional) edit CONFIG in browser/premiumManager.js
+ *   4. Paste this script and press Enter
+ */
 
 (() => {
-  const sleep = (ms) => new Promise(r => setTimeout(r, ms));
-
   // =============================================
   // CONFIGURATION
   // =============================================
   const CONFIG = {
     exportResults: true,
+    showTierComparison: false, // Print a side-by-side table of every tier and the pricing list
+    logJson: false,            // Print the result object as JSON in the console
   };
   // =============================================
 
@@ -28,19 +43,19 @@
   const TIER_FEATURES = {
     free: {
       tier: 'Free', price: '$0/mo',
-      features: { postLength: 280, videoLength: '140s', adReduction: 'None', verification: false, editPost: false, scheduling: false, bookmarkFolders: false, revenueShare: false, grokLevel: 'Basic (~10 queries/day)', replyBoost: 'None' },
+      features: { postLength: 280, videoLength: '140s', adReduction: 'None', verification: false, editPost: false, scheduling: false, bookmarkFolders: false, revenueShare: false, grokLevel: 'Basic (~10 queries/day)', replyBoost: 'None', articles: false },
     },
     basic: {
       tier: 'Basic', price: '$3/mo',
-      features: { postLength: 280, videoLength: '140s', adReduction: '50% fewer', verification: false, editPost: false, scheduling: false, bookmarkFolders: false, revenueShare: false, grokLevel: 'More queries', replyBoost: 'Small' },
+      features: { postLength: 280, videoLength: '140s', adReduction: '50% fewer', verification: false, editPost: false, scheduling: false, bookmarkFolders: false, revenueShare: false, grokLevel: 'More queries', replyBoost: 'Small', articles: false },
     },
     premium: {
       tier: 'Premium', price: '$8/mo',
-      features: { postLength: 25000, videoLength: '60min', adReduction: '50% fewer', verification: true, editPost: true, scheduling: true, bookmarkFolders: true, revenueShare: true, grokLevel: 'Higher (~100 queries/day)', replyBoost: 'Medium' },
+      features: { postLength: 25000, videoLength: '60min', adReduction: '50% fewer', verification: true, editPost: true, scheduling: true, bookmarkFolders: true, revenueShare: true, grokLevel: 'Higher (~100 queries/day)', replyBoost: 'Medium', articles: false },
     },
     'premium+': {
       tier: 'Premium+', price: '$16/mo',
-      features: { postLength: 25000, videoLength: '3hr', adReduction: 'No ads', verification: true, editPost: true, scheduling: true, bookmarkFolders: true, revenueShare: true, grokLevel: 'Highest (unlimited)', replyBoost: 'Largest' },
+      features: { postLength: 25000, videoLength: '3hr', adReduction: 'No ads', verification: true, editPost: true, scheduling: true, bookmarkFolders: true, revenueShare: true, grokLevel: 'Highest (unlimited)', replyBoost: 'Largest', articles: true },
     },
   };
 
@@ -52,6 +67,8 @@
       canEditPosts: false,
       hasBookmarkFolders: false,
       hasLongPostOption: false,
+      hasScheduleOption: false,
+      hasPremiumBadge: false,
     };
 
     // Check for verification badge on own profile
@@ -77,11 +94,18 @@
     const editBtn = document.querySelector('[data-testid="editTweet"]');
     signals.canEditPosts = !!editBtn;
 
+    // Check for the post scheduling option and a Premium badge
+    signals.hasScheduleOption = !!document.querySelector('[data-testid="scheduleOption"]');
+    signals.hasPremiumBadge = !!document.querySelector('[data-testid="premiumBadge"]');
+
     // Infer tier
     let tier = 'free';
     if (signals.hasVerificationBadge && signals.canEditPosts) {
       tier = 'premium';
     } else if (signals.hasVerificationBadge) {
+      tier = 'premium';
+    } else if (signals.canEditPosts || signals.hasScheduleOption) {
+      // Editing and scheduling posts are Premium features
       tier = 'premium';
     } else if (!signals.hasPremiumNav) {
       // If premium nav is absent, user might be subscribed
@@ -131,6 +155,33 @@
           console.log(`   🆕 ${key}: ${currentVal ?? 'N/A'} → ${val}`);
         }
       });
+    }
+
+    if (CONFIG.showTierComparison) {
+      console.log('\n📋 Tier comparison:');
+      console.log('┌────────────────┬──────┬───────┬─────────┬──────────┐');
+      console.log('│ Feature        │ Free │ Basic │ Premium │ Premium+ │');
+      console.log('├────────────────┼──────┼───────┼─────────┼──────────┤');
+      console.log('│ Post length    │  280 │   280 │  25,000 │   25,000 │');
+      console.log('│ Video          │ 140s │  140s │   60min │      3hr │');
+      console.log('│ Verification   │   ❌ │    ❌ │      ✅ │       ✅ │');
+      console.log('│ Edit posts     │   ❌ │    ❌ │      ✅ │       ✅ │');
+      console.log('│ Scheduling     │   ❌ │    ❌ │      ✅ │       ✅ │');
+      console.log('│ BM folders     │   ❌ │    ❌ │      ✅ │       ✅ │');
+      console.log('│ Articles       │   ❌ │    ❌ │      ❌ │       ✅ │');
+      console.log('│ Ad reduction   │ None │  50%  │    50%  │   No ads │');
+      console.log('└────────────────┴──────┴───────┴─────────┴──────────┘');
+
+      console.log('\n💰 Pricing:');
+      console.log('  Basic:    $3/mo');
+      console.log('  Premium:  $8/mo');
+      console.log('  Premium+: $16/mo');
+      console.log('  SuperGrok: $60/mo (separate xAI subscription)');
+    }
+
+    if (CONFIG.logJson) {
+      console.log('\n📦 JSON:');
+      console.log(JSON.stringify({ detectedTier: tier, tierInfo, signals, allTiers: TIER_FEATURES, checkedAt: new Date().toISOString() }, null, 2));
     }
 
     if (CONFIG.exportResults) {
