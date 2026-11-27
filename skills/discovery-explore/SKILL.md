@@ -5,6 +5,7 @@ license: Apache-2.0
 metadata:
   author: nichxbt
   version: "4.0"
+  arguments: topic
 ---
 
 # Discovery & Explore

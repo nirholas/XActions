@@ -2,8 +2,12 @@
 // XActions - `xactions doctor` line renderers. Offline: pure functions over status objects.
 
 import { describe, it, expect } from 'vitest';
+import { spawnSync } from 'node:child_process';
+import { mkdtempSync, mkdirSync, rmSync, writeFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
 
-import { describeAccounts, describeQueryIds, describeRefreshFailure, formatCacheAge } from '../../src/cli/commands/doctor.js';
+import { describeAccounts, describeQueryIds, describeRefreshFailure, formatCacheAge, runDoctorChecks } from '../../src/cli/commands/doctor.js';
 
 const NOW = Date.parse('2026-08-27T12:00:00.000Z');
 const CACHE = '/tmp/xactions-home/query-ids.json';
@@ -97,5 +101,62 @@ describe('doctor', () => {
       expect(result.status).toBe('fail');
       expect(result.detail).toBe('2 accounts, 0 available, 2 locked');
     });
+  });
+
+  describe('runDoctorChecks', () => {
+    /** A sandbox HOME with a saved session whose values must never be printed. */
+    function sandbox() {
+      const home = mkdtempSync(join(tmpdir(), 'xactions-doctor-'));
+      const xhome = join(home, '.xactions');
+      mkdirSync(xhome, { recursive: true });
+      writeFileSync(join(xhome, 'cookies.json'), JSON.stringify([
+        { name: 'auth_token', value: 'doctor-secret-auth' },
+        { name: 'ct0', value: 'doctor-secret-ct0' },
+      ]));
+      return { home, xhome };
+    }
+
+    it('offline, runs only the local checks and reports them as data', async () => {
+      const { home, xhome } = sandbox();
+      const prev = { HOME: process.env.HOME, XACTIONS_HOME: process.env.XACTIONS_HOME };
+      process.env.HOME = home;
+      process.env.XACTIONS_HOME = xhome;
+      try {
+        const report = await runDoctorChecks({ offline: true });
+        expect(report.offline).toBe(true);
+        expect(report.sections.map((s) => s.name)).toEqual(['Environment', 'Session tier']);
+        const names = report.sections.flatMap((s) => s.checks.map((c) => c.name));
+        expect(names).toEqual(['Node', 'Browser', 'MCP server', 'Skills', 'GraphQL query IDs', 'Session saved', 'Accounts']);
+        expect(report.sections[1].checks[0]).toMatchObject({ name: 'Session saved', status: 'ok' });
+        expect(JSON.stringify(report)).not.toMatch(/doctor-secret/);
+        const all = report.sections.flatMap((s) => s.checks);
+        expect(report.summary).toEqual({
+          ok: all.filter((c) => c.status === 'ok').length,
+          warn: all.filter((c) => c.status === 'warn').length,
+          fail: all.filter((c) => c.status === 'fail').length,
+        });
+      } finally {
+        for (const [k, v] of Object.entries(prev)) { if (v === undefined) delete process.env[k]; else process.env[k] = v; }
+        rmSync(home, { recursive: true, force: true });
+      }
+    });
+
+    it('`xactions doctor --offline --json` prints the report and nothing else', () => {
+      const { home, xhome } = sandbox();
+      try {
+        const cli = new URL('../../src/cli/index.js', import.meta.url).pathname;
+        const run = spawnSync(process.execPath, [cli, 'doctor', '--offline', '--json'], {
+          env: { ...process.env, HOME: home, XACTIONS_HOME: xhome, FORCE_COLOR: '0', PUPPETEER_EXECUTABLE_PATH: '/nonexistent/xactions-test-chrome' },
+          encoding: 'utf8',
+          timeout: 60000,
+        });
+        const report = JSON.parse(run.stdout);
+        expect(report.offline).toBe(true);
+        expect(run.stdout).not.toMatch(/doctor-secret/);
+        expect(run.status).toBe(report.summary.fail > 0 ? 1 : 0);
+      } finally {
+        rmSync(home, { recursive: true, force: true });
+      }
+    }, 60000);
   });
 });

@@ -5,6 +5,7 @@ license: Apache-2.0
 metadata:
   author: nichxbt
   version: "1.0"
+  arguments: topic
 ---
 
 # Saved Searches

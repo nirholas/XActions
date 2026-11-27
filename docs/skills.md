@@ -93,6 +93,15 @@ skill to decide which one applies to your request:
 claude "Read skills/follower-monitoring/SKILL.md and find who unfollowed me this week"
 ```
 
+### Through the MCP server
+
+Every skill is also an MCP prompt on the XActions MCP server, so any MCP client
+can use it with no files installed. In Claude Code each one is a slash command,
+`/mcp__xactions__<skill-id>`; skills that work on a target take an optional
+`account` or `topic` argument. The skill files themselves are served as
+resources at `xactions://skills/<id>/...`. See
+[MCP setup](mcp-setup.md#prompts-and-resources).
+
 ### With any assistant
 
 Skills are plain markdown. Paste the contents of a `SKILL.md` into any chat and
@@ -164,7 +173,7 @@ description because nothing tells the user it happened.
 | `description` | Required. 1 to 1024 characters. What it does and when to use it |
 | `license` | Optional. `Apache-2.0` here |
 | `compatibility` | Optional, up to 500 characters. Only when the skill needs something specific from the environment |
-| `metadata` | Optional. String keys to string values. We use `author` and `version`, and `version` must be quoted so YAML keeps `"4.0"` a string |
+| `metadata` | Optional. String keys to string values. We use `author` and `version`, and `version` must be quoted so YAML keeps `"4.0"` a string. A skill that works on a target adds `arguments: account`, `arguments: topic` or `arguments: account topic`, which become optional arguments of its MCP prompt |
 | `allowed-tools` | Optional, experimental. A space-separated list of pre-approved tools |
 
 One YAML trap worth naming, because it costs a skill its whole entry: an

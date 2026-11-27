@@ -31,6 +31,10 @@ import { hostHeaderValidation, localhostHostValidation } from '@modelcontextprot
 import {
   CallToolRequestSchema,
   ListToolsRequestSchema,
+  ListPromptsRequestSchema,
+  GetPromptRequestSchema,
+  ListResourcesRequestSchema,
+  ReadResourceRequestSchema,
 } from '@modelcontextprotocol/sdk/types.js';
 import { randomUUID, timingSafeEqual } from 'node:crypto';
 import { realpathSync } from 'node:fs';
@@ -57,6 +61,16 @@ import {
 } from './tool-groups.js';
 import * as drafts from './drafts.js';
 import * as actionCaps from './action-caps.js';
+import { PRESETS, PRESET_NAMES, getPreset, chosenValue, composeSelection, resolveApproval, measurePreset } from './presets.js';
+import {
+  DEFAULT_SKILLS_DIR,
+  DEFAULT_SCRIPT_MANIFEST,
+  getSkillCatalog,
+  listPrompts,
+  getPrompt,
+  listResources,
+  readResource,
+} from './catalog.js';
 import { gotoAndRender } from '../utils/navigation.js';
 import { typeIntoComposer, clickPostButton, confirmPosted } from './composer.js';
 import { freeChat, freeAsk, llmEnabled } from '../ai/freeLLM.js';
@@ -4820,32 +4834,93 @@ async function enforceActionCap(name, args, options) {
  * (not import time) so tests and the CLI can change the environment before
  * building a server.
  *
+ * An environment value that is empty, or an MCPB `${user_config.*}`
+ * placeholder the user left unfilled, counts as unset.
+ *
  * @param {object} [overrides]
- * @param {string | string[]} [overrides.tools] allowlist tokens (tool or group names)
- * @param {string | string[]} [overrides.exclude] denylist tokens
- * @param {boolean} [overrides.requireApproval] hold write tools as drafts
+ * @param {string} [overrides.preset] preset name (src/mcp/presets.js)
+ * @param {string | string[]} [overrides.tools] allowlist tokens (tool or group names); with a preset, added to it
+ * @param {string | string[]} [overrides.exclude] denylist tokens; always wins
+ * @param {boolean} [overrides.requireApproval] hold write tools as drafts; unset lets the preset decide
  * @param {string} [overrides.account] ledger account for daily action caps
- * @returns {{ tools: string | string[] | undefined, exclude: string | string[] | undefined, requireApproval: boolean, account: string | undefined }}
+ * @param {string} [overrides.skillsDir] where the skills served as prompts and resources live
+ * @param {string} [overrides.scriptManifestPath] the browser script manifest served as a resource when present
+ * @returns {{ preset: Readonly<import('./presets.js').Preset> | null, tools: string | string[] | undefined, exclude: string | string[] | undefined, requireApproval: boolean, account: string | undefined, skillsDir: string, scriptManifestPath: string }}
+ * @throws {import('./presets.js').UnknownPresetError} for a preset that does not exist
  */
 function resolveServerOptions(overrides = {}) {
-  const truthy = (v) => v !== undefined && v !== '' && !['0', 'false', 'no', 'off'].includes(String(v).toLowerCase());
+  const preset = getPreset(overrides.preset ?? process.env.XACTIONS_MCP_PRESET);
   return {
-    tools: overrides.tools ?? process.env.XACTIONS_MCP_TOOLS,
-    exclude: overrides.exclude ?? process.env.XACTIONS_MCP_EXCLUDE,
-    requireApproval: overrides.requireApproval ?? truthy(process.env.XACTIONS_MCP_REQUIRE_APPROVAL),
+    preset,
+    tools: overrides.tools ?? chosenValue(process.env.XACTIONS_MCP_TOOLS),
+    exclude: overrides.exclude ?? chosenValue(process.env.XACTIONS_MCP_EXCLUDE),
+    requireApproval: resolveApproval({
+      flag: overrides.requireApproval,
+      env: process.env.XACTIONS_MCP_REQUIRE_APPROVAL,
+      preset,
+      tools: TOOLS,
+    }),
     account: overrides.account ?? process.env.XACTIONS_ACCOUNT,
+    skillsDir: overrides.skillsDir ?? DEFAULT_SKILLS_DIR,
+    scriptManifestPath: overrides.scriptManifestPath ?? DEFAULT_SCRIPT_MANIFEST,
   };
 }
 
 /**
  * Build the filter over the core tools plus whatever plugins registered.
  * Plugin tools are only known after initializePlugins(), so the filter is
- * rebuilt per request rather than cached at construction.
+ * rebuilt per request rather than cached at construction. A preset is
+ * resolved into concrete names first, then --tools adds and --exclude
+ * removes (see src/mcp/presets.js).
  */
 function buildToolFilter(options) {
   const pluginToolDefs = getPluginTools().map(({ _plugin, handler, ...def }) => def);
   const all = [...TOOLS, ...pluginToolDefs];
-  return { all, filter: createToolFilter({ include: options.tools, exclude: options.exclude, tools: all }) };
+  const { include, exclude } = composeSelection(options, all);
+  return { all, filter: createToolFilter({ include, exclude, tools: all }) };
+}
+
+/**
+ * The tools a client is offered: everything the filter allows, minus
+ * x_approve_draft in approval mode, where a person approves drafts and the
+ * agent must not approve its own held writes.
+ */
+function listedTools(options) {
+  const { all, filter } = buildToolFilter(options);
+  const tools = filter.filter(all);
+  return options.requireApproval ? tools.filter((t) => t.name !== 'x_approve_draft') : tools;
+}
+
+/** The skills catalogue, read once per skills directory. */
+function skillCatalogFor(options) {
+  const { all } = buildToolFilter(options);
+  return getSkillCatalog(options.skillsDir, all.map((t) => t.name));
+}
+
+/**
+ * The session status resource: `xactions doctor` as JSON plus what this
+ * server is running with. Offline unless `live`. Says whether a session
+ * cookie is configured, never what it is.
+ */
+async function statusReport(options, { live }) {
+  const { runDoctorChecks } = await import('../cli/commands/doctor.js');
+  const report = await runDoctorChecks({ offline: !live });
+  return {
+    version: report.version,
+    generatedAt: report.generatedAt,
+    offline: report.offline,
+    server: {
+      name: 'xactions-mcp',
+      mode: MODE,
+      preset: options.preset?.name ?? null,
+      tools: listedTools(options).length,
+      requireApproval: options.requireApproval,
+      sessionCookieConfigured: Boolean(SESSION_COOKIE),
+      draftsPath: drafts.getDraftsPath(),
+    },
+    sections: report.sections,
+    summary: report.summary,
+  };
 }
 
 /** Wrap a plain object as an MCP text result. */
@@ -4889,6 +4964,20 @@ function textResult(payload, isError = false) {
 function createMcpServer(overrides = {}) {
   const options = resolveServerOptions(overrides);
 
+  // Skills become prompts and, with their files and the session status,
+  // resources. A capability is declared only when its list has something in
+  // it, and the SDK refuses a handler for an undeclared capability, so the
+  // handlers below are registered under the same conditions.
+  const catalog = skillCatalogFor(options);
+  const isAllowed = (name) => buildToolFilter(options).filter.isAllowed(name);
+  const resourceSources = {
+    catalog,
+    scriptManifestPath: options.scriptManifestPath,
+    status: (/** @type {{live: boolean}} */ { live }) => statusReport(options, { live }),
+  };
+  const offersPrompts = listPrompts(catalog, isAllowed).length > 0;
+  const offersResources = listResources(resourceSources).length > 0;
+
   const srv = new Server(
     {
       name: 'xactions-mcp',
@@ -4897,18 +4986,25 @@ function createMcpServer(overrides = {}) {
     {
       capabilities: {
         tools: {},
+        ...(offersPrompts ? { prompts: {} } : {}),
+        ...(offersResources ? { resources: {} } : {}),
       },
     }
   );
 
   // List available tools (core + plugins), minus anything filtered out
-  srv.setRequestHandler(ListToolsRequestSchema, async () => {
-    const { all, filter } = buildToolFilter(options);
-    const tools = filter.filter(all);
-    // In approval mode a person approves drafts, so the agent is not offered
-    // the tool that would let it approve its own held writes.
-    return { tools: options.requireApproval ? tools.filter((t) => t.name !== 'x_approve_draft') : tools };
-  });
+  srv.setRequestHandler(ListToolsRequestSchema, async () => ({ tools: listedTools(options) }));
+
+  if (offersPrompts) {
+    srv.setRequestHandler(ListPromptsRequestSchema, async () => ({ prompts: listPrompts(catalog, isAllowed) }));
+    srv.setRequestHandler(GetPromptRequestSchema, async (request) =>
+      getPrompt(catalog, isAllowed, request.params.name, request.params.arguments || {}));
+  }
+
+  if (offersResources) {
+    srv.setRequestHandler(ListResourcesRequestSchema, async () => ({ resources: listResources(resourceSources) }));
+    srv.setRequestHandler(ReadResourceRequestSchema, async (request) => readResource(request.params.uri, resourceSources));
+  }
 
   // Execute tools
   srv.setRequestHandler(CallToolRequestSchema, async (request) => {
@@ -5147,14 +5243,21 @@ Transport
   --port <n>             HTTP port (default: PORT env or 8787)
   --host <addr>          HTTP bind address (default: XACTIONS_MCP_HOST env or 127.0.0.1)
 
+Presets (start for a job by name)
+  --preset <name>        ${PRESET_NAMES.join(', ')} (XACTIONS_MCP_PRESET)
+  --list-presets         Print every preset with its tool count and schema size, and exit
+
 Tool filtering (tool names, group names, or prefix* patterns; comma separated)
-  --tools <list>         Only expose these tools/groups (XACTIONS_MCP_TOOLS)
-  --exclude <list>       Hide these tools/groups (XACTIONS_MCP_EXCLUDE);
+  --tools <list>         Only expose these tools/groups (XACTIONS_MCP_TOOLS);
+                         with --preset, adds them to the preset
+  --exclude <list>       Hide these tools/groups (XACTIONS_MCP_EXCLUDE), applied last;
                          \`writes\` hides every tool with a side effect
   --list-groups          Print every group with its tools and exit
 
 Safety
   --require-approval     Hold write tools as drafts for x_approve_draft (XACTIONS_MCP_REQUIRE_APPROVAL=1)
+  --no-require-approval  Run writes directly, even under a preset that holds them
+                         (a preset that includes writes turns approval on unless you choose)
 
   -h, --help             Show this help
 
@@ -5168,13 +5271,13 @@ Bearer auth for --http: set XACTIONS_MCP_TOKEN and send "Authorization: Bearer <
  *
  * @param {string[]} argv
  * @returns {{
- *   http: boolean, port?: number, host?: string,
+ *   http: boolean, port?: number, host?: string, preset?: string,
  *   tools: string[], exclude: string[], requireApproval?: boolean,
- *   listGroups: boolean, help: boolean,
+ *   listGroups: boolean, listPresets: boolean, help: boolean,
  * }}
  */
 function parseCliArgs(argv) {
-  const out = { http: false, tools: [], exclude: [], listGroups: false, help: false };
+  const out = { http: false, tools: [], exclude: [], listGroups: false, listPresets: false, help: false };
   const takeValue = (i) => {
     const eq = argv[i].indexOf('=');
     if (eq !== -1) return [argv[i].slice(eq + 1), i];
@@ -5190,9 +5293,11 @@ function parseCliArgs(argv) {
       case '--host': { const [v, j] = takeValue(i); out.host = v; i = j; break; }
       case '--tools': { const [v, j] = takeValue(i); if (v) out.tools.push(v); i = j; break; }
       case '--exclude': { const [v, j] = takeValue(i); if (v) out.exclude.push(v); i = j; break; }
+      case '--preset': { const [v, j] = takeValue(i); if (v) out.preset = v; i = j; break; }
       case '--require-approval': out.requireApproval = true; break;
       case '--no-require-approval': out.requireApproval = false; break;
       case '--list-groups': out.listGroups = true; break;
+      case '--list-presets': out.listPresets = true; break;
       case '-h':
       case '--help': out.help = true; break;
       default: break;
@@ -5207,6 +5312,7 @@ function parseCliArgs(argv) {
 /** Turn parsed flags into createMcpServer() overrides (undefined means "use env"). */
 function serverOptionsFromCli(cli) {
   return {
+    preset: cli.preset,
     tools: cli.tools.length ? cli.tools : undefined,
     exclude: cli.exclude.length ? cli.exclude : undefined,
     requireApproval: cli.requireApproval,
@@ -5217,6 +5323,9 @@ function serverOptionsFromCli(cli) {
 function printFilterStatus(serverOverrides) {
   const options = resolveServerOptions(serverOverrides);
   const { all, filter } = buildToolFilter(options);
+  if (options.preset) {
+    console.error(`🧰 Preset: ${options.preset.name} (${options.preset.summary})`);
+  }
   if (filter.active) {
     const visible = filter.filter(all).length;
     console.error(`🔎 Tool filter active: ${visible}/${all.length} tools exposed`);
@@ -5231,7 +5340,7 @@ function printFilterStatus(serverOverrides) {
     console.error('🛡️  Approval mode: write tools are held as drafts in ' + drafts.getDraftsPath());
     console.error('   Approve with `xactions drafts approve <id>` in a terminal; agents can inspect with x_list_drafts / x_draft_status.');
   }
-  if (filter.active || options.requireApproval) console.error('');
+  if (options.preset || filter.active || options.requireApproval) console.error('');
 }
 
 // ============================================================================
@@ -5436,6 +5545,13 @@ async function main(argv = process.argv.slice(2)) {
       if (groups[g]) process.stdout.write(`${g} (${groups[g].length})\n  ${groups[g].join(', ')}\n`);
     }
     process.stdout.write(`always available: ${ALWAYS_AVAILABLE_TOOLS.join(', ')}\n`);
+    return;
+  }
+  if (cli.listPresets) {
+    for (const preset of PRESETS) {
+      const size = measurePreset(preset, TOOLS);
+      process.stdout.write(`${preset.name.padEnd(18)} ${String(size.tools).padStart(3)} tools  ${String(Math.round(size.bytes / 1024)).padStart(3)} KB  approval ${size.requireApproval ? 'on ' : 'off'}  ${preset.summary}\n`);
+    }
     return;
   }
 

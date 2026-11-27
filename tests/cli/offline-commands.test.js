@@ -227,6 +227,34 @@ describe('mcp-config', () => {
     expect(written.mcpServers.other).toEqual({ command: 'other-server' });
   });
 
+  it('--preset writes the preset into the server arguments', async () => {
+    const result = await cli(['mcp-config', '--preset', 'research']);
+    expect(result.code).toBe(0);
+    const config = printedConfig(result.stdout.split('Tip:')[0]);
+    expect(config.mcpServers.xactions.args).toEqual(['-y', 'xactions-mcp', '--preset', 'research']);
+  });
+
+  it('--preset --write lands in the client config', async () => {
+    const target = path.join(home, '.cursor', 'mcp.json');
+    fs.rmSync(target, { force: true });
+    const result = await cli(['mcp-config', '--client', 'cursor', '--preset', 'community-manager', '--write']);
+    expect(result.code).toBe(0);
+    const written = JSON.parse(fs.readFileSync(target, 'utf-8'));
+    expect(written.mcpServers.xactions.args).toEqual(['-y', 'xactions-mcp', '--preset', 'community-manager']);
+  });
+
+  it('exits 1 for an unknown --preset and names the presets', async () => {
+    const result = await cli(['mcp-config', '--preset', 'everything']);
+    expect(result.code).toBe(1);
+    expect(result.stderr).toMatch(/Unknown MCP preset "everything"/);
+    expect(result.stderr).toContain('research, monitor, community-manager, growth, data, read-only, full');
+  });
+
+  it('asks nothing when stdin is not a terminal, so scripts keep today\'s config', async () => {
+    const result = await cli(['mcp-config']);
+    expect(printedConfig(result.stdout.split('Tip:')[0]).mcpServers.xactions.args).toEqual(['-y', 'xactions-mcp']);
+  });
+
   it('exits 1 for an unknown --client instead of printing another client\'s config', async () => {
     const result = await cli(['mcp-config', '--client', 'emacs', '--write']);
     expect(result.code).toBe(1);

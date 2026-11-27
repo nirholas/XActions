@@ -2289,12 +2289,20 @@ xactions mcp-config [options]
 |--------|-------------|---------|
 | `-w, --write` | Write to config file | `false` |
 | `-c, --client <client>` | claude, cursor, windsurf, vscode | `claude` |
+| `-p, --preset <name>` | Start the server for a job: research, monitor, community-manager, growth, data, read-only, full ([sizes](mcp-setup.md#presets-start-for-a-job)) | asks on a terminal; none when piped |
+
+On an interactive terminal with no `--preset`, the command asks which preset to
+use and shows each one's tool count and schema size. Piped or in a script it
+asks nothing and prints the config with no preset, as before.
 
 **Example:**
 
 ```bash
 # Generate config for Claude Desktop
 xactions mcp-config -c claude
+
+# Start the server for research only (read and analytics tools)
+xactions mcp-config -c claude --preset research --write
 
 # Write directly to Claude config file
 xactions mcp-config -c claude --write
@@ -2744,6 +2752,12 @@ xactions archive migrate twitter-2026-01-01-abc123.zip --to mastodon --execute -
 A spinner tracks the scan (`Scanning 4/12 data/tweets.js`, `Parsed tweets (18,204 records) from data/tweets.js`). Under `--json` with stdout piped, the spinner is silent and only the document is printed, so `xactions archive summary me.zip --json | jq .counts` works as expected.
 
 ## Doctor: query IDs and account pool
+
+`xactions doctor --json` prints the same checks as JSON (sections, each check's
+status, detail and fix, and a summary), with the same exit code. Cookie values
+are never included. `--offline` skips the checks that call x.com (the guest
+reads, whether the saved session still signs in, and `--refresh-ids`), so it is
+instant; the MCP server's `xactions://status` resource is this report.
 
 `xactions doctor` has two extra lines beyond the environment and session checks:
 

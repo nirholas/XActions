@@ -25,9 +25,10 @@ import { BROWSER_INSTALL, isMissingPackage } from '../../utils/optionalDeps.js';
 import { VERSION } from '../../version.js';
 import { countInstalledSkills } from './skills.js';
 
-const CONFIG_DIR = xactionsHome();
-const COOKIE_FILE = path.join(CONFIG_DIR, 'cookies.json');
-const CONFIG_FILE = path.join(CONFIG_DIR, 'config.json');
+// Resolved per call, not at import: the MCP server imports this module and a
+// test or host may point XACTIONS_HOME somewhere else after that.
+const cookieFile = () => path.join(xactionsHome(), 'cookies.json');
+const configFile = () => path.join(xactionsHome(), 'config.json');
 
 /** Minimum Node the client's syntax and APIs require. */
 const MIN_NODE_MAJOR = 20;
@@ -136,6 +137,8 @@ async function checkTimeline() {
  * @returns {Promise<CheckResult & {cookies?: Record<string, string>}>}
  */
 async function checkSessionStored() {
+  const COOKIE_FILE = cookieFile();
+  const CONFIG_FILE = configFile();
   try {
     const jar = JSON.parse(await fs.readFile(COOKIE_FILE, 'utf-8'));
     const cookies = Object.fromEntries(jar.map((c) => [c.name, c.value]));
@@ -184,6 +187,8 @@ async function checkSessionLive(stored) {
   if (stored.status === 'warn') {
     return { status: 'warn', detail: 'Skipped, no session saved' };
   }
+  const COOKIE_FILE = cookieFile();
+  const CONFIG_FILE = configFile();
   try {
     const { Scraper } = await import('../../client/index.js');
     const scraper = new Scraper();
@@ -437,15 +442,36 @@ function printCheck(name, result) {
 }
 
 /**
- * Run every check and summarise.
- * @param {{refreshIds?: boolean}} [options]
- * @returns {Promise<void>}
+ * @typedef {object} DoctorReport
+ * @property {string} version
+ * @property {string} generatedAt - ISO time the checks finished
+ * @property {boolean} offline - true when the checks that call x.com were skipped
+ * @property {Array<{name: string, note?: string, checks: Array<{name: string} & CheckResult>}>} sections
+ * @property {{ok: number, warn: number, fail: number}} summary
  */
-export async function doctorCommand(options = {}) {
-  console.log(chalk.cyan(`\n⚡ XActions doctor  ${chalk.gray(`v${VERSION}`)}\n`));
 
-  const results = [];
+/**
+ * Run every check and return the results as data, for `--json` and for the
+ * MCP server's status resource. Cookie values never leave this function.
+ *
+ * `offline` skips the checks that call x.com (the guest reads and whether the
+ * saved session still signs in), so the report is instant and side-effect free.
+ *
+ * @param {{refreshIds?: boolean, offline?: boolean, onCheck?: (section: string, name: string, result: CheckResult) => void, onSection?: (name: string, note?: string) => void}} [options]
+ * @returns {Promise<DoctorReport>}
+ */
+export async function runDoctorChecks(options = {}) {
+  const offline = Boolean(options.offline);
+  /** @type {DoctorReport['sections']} */
+  const sections = [];
+  let section = null;
 
+  /** @param {string} name @param {string} [note] */
+  const begin = (name, note) => {
+    section = { name, ...(note ? { note } : {}), checks: [] };
+    sections.push(section);
+    options.onSection?.(name, note);
+  };
   /**
    * @param {string} name
    * @param {CheckResult|Promise<CheckResult>} check
@@ -453,33 +479,73 @@ export async function doctorCommand(options = {}) {
    */
   const run = async (name, check) => {
     const result = await check;
-    printCheck(name, result);
-    results.push(result);
+    // checkSessionStored hands its cookies to checkSessionLive; they are not output.
+    const { status, detail, fix } = result;
+    const clean = { status, detail, ...(fix ? { fix } : {}) };
+    section.checks.push({ name, ...clean });
+    options.onCheck?.(section.name, name, clean);
     return result;
   };
 
-  console.log(chalk.bold('  Environment'));
+  begin('Environment');
   await run('Node', checkNode());
-  await run('Browser', await checkBrowser());
-  await run('MCP server', await checkMcp());
-  await run('Skills', await checkSkills());
-  await run('GraphQL query IDs', await checkQueryIds({ refresh: Boolean(options.refreshIds) }));
+  await run('Browser', checkBrowser());
+  await run('MCP server', checkMcp());
+  await run('Skills', checkSkills());
+  await run('GraphQL query IDs', checkQueryIds({ refresh: !offline && Boolean(options.refreshIds) }));
 
-  console.log('');
-  console.log(chalk.bold('  Guest tier'), chalk.gray('(works with no account)'));
-  await run('Profile read', await checkGuestTier());
-  await run('Timeline read', await checkTimeline());
+  if (!offline) {
+    begin('Guest tier', '(works with no account)');
+    await run('Profile read', checkGuestTier());
+    await run('Timeline read', checkTimeline());
+  }
 
-  console.log('');
-  console.log(chalk.bold('  Session tier'), chalk.gray('(search, followers, DMs)'));
-  const stored = await checkSessionStored();
-  printCheck('Session saved', stored);
-  results.push(stored);
-  await run('Session valid', await checkSessionLive(stored));
-  await run('Accounts', await checkAccounts());
+  begin('Session tier', '(search, followers, DMs)');
+  const stored = await run('Session saved', checkSessionStored());
+  if (!offline) await run('Session valid', checkSessionLive(stored));
+  await run('Accounts', checkAccounts());
 
-  const failed = results.filter((r) => r.status === 'fail').length;
-  const warned = results.filter((r) => r.status === 'warn').length;
+  const all = sections.flatMap((s) => s.checks);
+  return {
+    version: VERSION,
+    generatedAt: new Date().toISOString(),
+    offline,
+    sections,
+    summary: {
+      ok: all.filter((c) => c.status === 'ok').length,
+      warn: all.filter((c) => c.status === 'warn').length,
+      fail: all.filter((c) => c.status === 'fail').length,
+    },
+  };
+}
+
+/**
+ * Run every check and summarise.
+ * @param {{refreshIds?: boolean, offline?: boolean, json?: boolean}} [options]
+ * @returns {Promise<void>}
+ */
+export async function doctorCommand(options = {}) {
+  if (options.json) {
+    const report = await runDoctorChecks(options);
+    process.stdout.write(`${JSON.stringify(report, null, 2)}\n`);
+    if (report.summary.fail > 0) process.exitCode = 1;
+    return;
+  }
+
+  console.log(chalk.cyan(`\n⚡ XActions doctor  ${chalk.gray(`v${VERSION}`)}\n`));
+
+  let first = true;
+  const report = await runDoctorChecks({
+    ...options,
+    onSection: (name, note) => {
+      if (!first) console.log('');
+      first = false;
+      console.log(note ? `${chalk.bold(`  ${name}`)} ${chalk.gray(note)}` : chalk.bold(`  ${name}`));
+    },
+    onCheck: (_section, name, result) => printCheck(name, result),
+  });
+
+  const { fail: failed, warn: warned } = report.summary;
 
   console.log('');
   if (failed === 0 && warned === 0) {
@@ -502,5 +568,7 @@ export function registerDoctorCommand(program) {
     .command('doctor')
     .description('Check the install, the guest tier, the saved session, the query-ID cache and the MCP server')
     .option('--refresh-ids', 'Discover the current GraphQL query IDs from x.com before checking them')
+    .option('--offline', 'Skip the checks that call x.com (guest reads, session sign-in, --refresh-ids)')
+    .option('--json', 'Print the report as JSON (cookie values are never included)')
     .action((options) => doctorCommand(options));
 }

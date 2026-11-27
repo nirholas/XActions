@@ -16,6 +16,7 @@
  *   package.json       the one npm publishes, so the entry point resolves, with
  *                      the browser stack promoted to dependencies (see below)
  *   src/, types/       the server and everything it imports
+ *   skills/            the skills the server serves as MCP prompts and resources
  *   api/config/x402-config.js   the one api/ file package.json ships
  *   node_modules/      production dependencies only, install scripts skipped
  *   README.md, LICENSE
@@ -75,6 +76,8 @@ const PAYLOAD = [
   'package-lock.json',
   'src',
   'types',
+  // Served as MCP prompts and resources (src/mcp/catalog.js reads them at start-up).
+  'skills',
   'api/config/x402-config.js',
   // package.json overrides deepmerge with this patched copy, and the lockfile
   // installs it as a link to vendor/deepmerge. Without it the link dangles and
@@ -100,11 +103,7 @@ function run(cmd, cmdArgs, options = {}) {
  * Read the live tool list from the MCP server so the manifest can never drift
  * from what the server actually advertises.
  *
- * Only the first sentence of each description is kept: the host shows this
- * list in its extension detail view, and the full schemas are already sent
- * over the wire on `tools/list`.
- *
- * @returns {Promise<{name: string, description: string}[]>}
+ * @returns {Promise<Array<{name: string, description: string}>>}
  */
 async function readTools() {
   const mod = await import(join(root, 'src/mcp/server.js'));
@@ -112,10 +111,29 @@ async function readTools() {
   if (!Array.isArray(tools) || tools.length === 0) {
     throw new Error('src/mcp/server.js exported no TOOLS array, so the manifest would ship an empty tool list');
   }
-  return tools.map((tool) => ({
-    name: tool.name,
-    description: String(tool.description || '').split(/(?<=\.)\s/)[0].trim() || tool.name,
-  }));
+  return tools;
+}
+
+/**
+ * The preset choice shown at install time, sized from the live tool list so
+ * the counts in the prompt are the ones the server will serve.
+ *
+ * @param {object[]} tools - the full TOOLS array
+ * @returns {Promise<string>}
+ */
+async function describePresets(tools) {
+  const { PRESETS, measurePreset } = await import(join(root, 'src/mcp/presets.js'));
+  const lines = PRESETS.map((preset) => {
+    const size = measurePreset(preset, tools);
+    return `${preset.name} (${size.tools} tools${size.requireApproval ? ', writes held for approval' : ''})`;
+  });
+  return `Start the server for a job by name: ${lines.join('; ')}. Leave empty to use the tool groups below instead.`;
+}
+
+/** The group names the tool-group fields accept. */
+async function groupNames() {
+  const { GROUP_NAMES } = await import(join(root, 'src/mcp/tool-groups.js'));
+  return GROUP_NAMES;
 }
 
 /**
@@ -127,9 +145,10 @@ async function readTools() {
  * stored in the OS keychain) instead of being pasted into a config file.
  *
  * @param {{name: string, description: string}[]} tools
+ * @param {{ presets: string, groups: readonly string[] }} choices
  * @returns {object}
  */
-function buildManifest(tools) {
+function buildManifest(tools, { presets, groups }) {
   return {
     manifest_version: MANIFEST_VERSION,
     name: 'xactions',
@@ -163,6 +182,7 @@ function buildManifest(tools) {
         env: {
           XACTIONS_MODE: 'local',
           XACTIONS_SESSION_COOKIE: '${user_config.session_cookie}',
+          XACTIONS_MCP_PRESET: '${user_config.preset}',
           XACTIONS_MCP_TOOLS: '${user_config.tool_groups}',
           XACTIONS_MCP_EXCLUDE: '${user_config.exclude_groups}',
           XACTIONS_MCP_REQUIRE_APPROVAL: '${user_config.require_approval}',
@@ -181,19 +201,26 @@ function buildManifest(tools) {
         sensitive: true,
         required: false,
       },
+      preset: {
+        type: 'string',
+        title: 'Preset',
+        description: presets,
+        required: false,
+        default: '',
+      },
       tool_groups: {
         type: 'string',
         title: 'Tool groups to expose',
         description:
-          'Comma-separated allowlist, for example "read,analytics". Leave empty for all ' +
-          `${tools.length} tools. Groups: read, write, dm, lists, spaces, analytics, ai, grok, automation, monitoring, workflows, persona, graph, data, x402, drafts, auth.`,
+          'Comma-separated allowlist, for example "read,analytics". With a preset, these are added to it. Leave empty for all ' +
+          `${tools.length} tools, or for just the preset. Groups: ${groups.join(', ')}.`,
         required: false,
         default: '',
       },
       exclude_groups: {
         type: 'string',
         title: 'Tool groups to hide',
-        description: 'Comma-separated denylist applied after the allowlist, for example "write,dm". Leave empty to hide nothing.',
+        description: 'Comma-separated denylist applied last, after the preset and the allowlist, for example "write,dm", or "writes" for every tool with a side effect. Leave empty to hide nothing.',
         required: false,
         default: '',
       },
@@ -202,9 +229,9 @@ function buildManifest(tools) {
         title: 'Hold writes for approval',
         description:
           'When on, every tool that posts, deletes, follows, mutes or sends is saved as a draft instead of running. ' +
-          'Review them with x_list_drafts and release one with x_approve_draft.',
+          'Review them with x_list_drafts and release one with `xactions drafts approve <id>`. ' +
+          'Left untouched, a preset that includes writes turns this on and anything else leaves it off; set it either way to choose yourself.',
         required: false,
-        default: false,
       },
     },
     compatibility: {
@@ -287,7 +314,11 @@ function verifyServerIn(dir, label) {
     "const m = await import('./src/mcp/server.js');",
     'const tools = m.TOOLS || m.default?.TOOLS;',
     "if (!Array.isArray(tools) || tools.length === 0) { console.error('no tools'); process.exit(1); }",
-    `console.log(\`${label} loads \${tools.length} tools\`);`,
+    // The skills are served as prompts: a bundle without them would start and offer none.
+    "const { loadSkillCatalog } = await import('./src/mcp/catalog.js');",
+    'const skills = loadSkillCatalog(undefined, tools.map((t) => t.name)).skills.length;',
+    "if (skills === 0) { console.error('no skills: the bundle would serve no MCP prompts'); process.exit(1); }",
+    `console.log(\`${label} loads \${tools.length} tools and \${skills} skills\`);`,
   ].join(' ');
   run(process.execPath, ['--input-type=module', '-e', script], { cwd: dir });
 }
@@ -314,8 +345,15 @@ function sizeMb(file) {
   return (statSync(file).size / (1024 * 1024)).toFixed(1);
 }
 
-const tools = await readTools();
-const manifest = buildManifest(tools);
+const allTools = await readTools();
+// Only the first sentence of each description is kept: the host shows this
+// list in its extension detail view, and the full schemas are already sent
+// over the wire on `tools/list`.
+const tools = allTools.map((tool) => ({
+  name: tool.name,
+  description: String(tool.description || '').split(/(?<=\.)\s/)[0].trim() || tool.name,
+}));
+const manifest = buildManifest(tools, { presets: await describePresets(allTools), groups: await groupNames() });
 
 if (manifestOnly) {
   mkdirSync(stageDir, { recursive: true });

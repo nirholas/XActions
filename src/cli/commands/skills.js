@@ -62,37 +62,54 @@ const AGENTS_END = '<!-- xactions-skills:end -->';
  * read without a YAML dependency, and the parser refuses to guess: a line it
  * does not understand is skipped rather than misread.
  *
+ * A nested map (`metadata:`) stays an empty string in `data`, so a caller that
+ * wants scalars only never sees it, and its one level of `key: value` pairs is
+ * returned in `maps` under the map's own name.
+ *
  * @param {string} markdown
- * @returns {{data: Record<string, string>, body: string}}
+ * @returns {{data: Record<string, string>, body: string, maps: Record<string, Record<string, string>>}}
  */
 export function parseFrontmatter(markdown) {
   const match = /^---\r?\n([\s\S]*?)\r?\n---\r?\n?/.exec(markdown);
-  if (!match) return { data: {}, body: markdown };
+  if (!match) return { data: {}, body: markdown, maps: {} };
 
   const data = {};
+  /** @type {Record<string, Record<string, string>>} */
+  const maps = {};
   let current = null;
+  let currentMap = null;
   for (const rawLine of match[1].split(/\r?\n/)) {
     if (!rawLine.trim() || rawLine.trimStart().startsWith('#')) continue;
     const indented = /^\s/.test(rawLine);
     if (indented) {
-      if (current) data[current] = `${data[current]} ${rawLine.trim()}`.trim();
+      if (current) {
+        data[current] = `${data[current]} ${rawLine.trim()}`.trim();
+      } else if (currentMap) {
+        const entry = /^\s+([A-Za-z0-9_-]+):\s*(.*)$/.exec(rawLine);
+        if (entry) maps[currentMap][entry[1]] = entry[2].replace(/^["']|["']$/g, '');
+      }
       continue;
     }
     const pair = /^([A-Za-z0-9_-]+):\s*(.*)$/.exec(rawLine);
     if (!pair) continue;
     const [, key, value] = pair;
+    currentMap = null;
     if (value === '' || value === '|' || value === '>') {
       // A nested map (`metadata:`) or a block scalar. Nested map keys are
       // indented and would otherwise be folded into this key, so a bare map
-      // key gets no accumulation.
+      // key gets no accumulation; its entries go to `maps` instead.
       current = value === '' ? null : key;
+      if (value === '') {
+        currentMap = key;
+        maps[key] = {};
+      }
       data[key] = '';
       continue;
     }
     current = key;
     data[key] = value.replace(/^["']|["']$/g, '');
   }
-  return { data, body: markdown.slice(match[0].length) };
+  return { data, body: markdown.slice(match[0].length), maps };
 }
 
 /**

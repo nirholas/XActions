@@ -65,6 +65,11 @@ describe('skills', () => {
       expect(data.metadata).toBe('');
     });
 
+    it('returns nested maps such as metadata separately', () => {
+      const { maps } = parseFrontmatter('---\ndescription: Top\nmetadata:\n  author: nichxbt\n  version: "1.0"\n  arguments: account topic\n---\n');
+      expect(maps.metadata).toEqual({ author: 'nichxbt', version: '1.0', arguments: 'account topic' });
+    });
+
     it('returns the whole document when there is no frontmatter', () => {
       const { data, body } = parseFrontmatter('# Plain\n');
       expect(data).toEqual({});

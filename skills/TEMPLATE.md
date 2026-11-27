@@ -5,6 +5,9 @@ license: Apache-2.0
 metadata:
   author: nichxbt
   version: "1.0"
+  # Optional: when the skill works on a target, `account`, `topic` or `account topic`.
+  # They become optional arguments of the skill's MCP prompt.
+  arguments: account
 ---
 
 # Skill Name
