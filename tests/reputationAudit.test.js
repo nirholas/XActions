@@ -2,7 +2,7 @@
 /**
  * reputationAudit Test Suite
  *
- * scripts/reputationAudit.js is a paste-in console script: eval the real
+ * browser/reputationAudit.js is a paste-in console script: eval the real
  * source inside a jsdom window pointed at a real x.com profile URL, then
  * drive the risk-parsing helpers and panel it exposes on window.
  *
@@ -40,7 +40,7 @@ const POSTS = [
 let win;
 
 function loadScript() {
-  const source = readFileSync(resolve(ROOT, 'scripts', 'reputationAudit.js'), 'utf8');
+  const source = readFileSync(resolve(ROOT, 'browser', 'reputationAudit.js'), 'utf8');
   const dom = new JSDOM(
     `<!DOCTYPE html><html><head></head><body>
        <nav><a data-testid="AppTabBar_Profile_Link" href="/cryptopumps">Profile</a></nav>
@@ -70,7 +70,7 @@ describe('reputationAudit: loading', () => {
        </body></html>`,
       { url: 'https://x.com/nichxbt', pretendToBeVisual: true, runScripts: 'outside-only' },
     );
-    const source = readFileSync(resolve(ROOT, 'scripts', 'reputationAudit.js'), 'utf8');
+    const source = readFileSync(resolve(ROOT, 'browser', 'reputationAudit.js'), 'utf8');
     dom.window.eval(source);
     expect(dom.window.document.getElementById('xra-panel')).toBeFalsy();
   });
@@ -128,7 +128,7 @@ describe('reputationAudit: reading and eligibility', () => {
        </body></html>`,
       { url: PROFILE_URL, pretendToBeVisual: true, runScripts: 'outside-only' },
     );
-    const source = readFileSync(resolve(ROOT, 'scripts', 'reputationAudit.js'), 'utf8');
+    const source = readFileSync(resolve(ROOT, 'browser', 'reputationAudit.js'), 'utf8');
     dom.window.eval(source);
     const rows = dom.window.XReputationAudit.preview();
     expect(rows[0].eligible).toBe(false);

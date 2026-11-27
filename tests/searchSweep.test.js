@@ -2,7 +2,7 @@
 /**
  * searchSweep Test Suite
  *
- * scripts/searchSweep.js is a paste-in console script, so the only way to run the real
+ * browser/searchSweep.js is a paste-in console script, so the only way to run the real
  * implementation is the way core.js is covered in extractUserFromCell.test.js: boot a
  * jsdom window pointed at a real x.com search URL, eval the source inside it, and drive
  * the API it exposes on window.
@@ -50,7 +50,7 @@ const RESULTS = [
 let win;
 
 beforeAll(() => {
-  const source = readFileSync(resolve(ROOT, 'scripts', 'searchSweep.js'), 'utf8');
+  const source = readFileSync(resolve(ROOT, 'browser', 'searchSweep.js'), 'utf8');
   const dom = new JSDOM(
     `<!DOCTYPE html><html><head></head><body>
        <nav><a data-testid="AppTabBar_Profile_Link" href="/cryptopumps">Profile</a></nav>

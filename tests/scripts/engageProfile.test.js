@@ -1,6 +1,6 @@
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
 /**
- * scripts/engageProfile.js — boot, feed detection, and post parsing.
+ * browser/engageProfile.js — boot, feed detection, and post parsing.
  *
  * A console script has no import surface to test, so this loads the real file
  * into a jsdom window the way a paste into DevTools would, then asserts on the
@@ -18,7 +18,7 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const here = dirname(fileURLToPath(import.meta.url));
-const SOURCE = readFileSync(join(here, '../../scripts/engageProfile.js'), 'utf8');
+const SOURCE = readFileSync(join(here, '../../browser/engageProfile.js'), 'utf8');
 
 /** Paste the script into the current jsdom window. */
 function paste() {

@@ -1,6 +1,6 @@
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
 /**
- * scripts/twitter/scraper-toolbox.js: reply, parent and quote context.
+ * browser/scraperToolbox.js: reply, parent and quote context.
  *
  * Pastes the real script into a jsdom window the way DevTools would, feeds
  * its fetch interceptor GraphQL bodies shaped like X's, and checks what the
@@ -19,7 +19,7 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const here = dirname(fileURLToPath(import.meta.url));
-const SOURCE = readFileSync(join(here, '../../scripts/twitter/scraper-toolbox.js'), 'utf8');
+const SOURCE = readFileSync(join(here, '../../browser/scraperToolbox.js'), 'utf8');
 
 const SEARCH = 'https://x.com/i/api/graphql/abc123/SearchTimeline?variables=%7B%7D';
 const REPLIES = 'https://x.com/i/api/graphql/def456/UserTweetsAndReplies?variables=%7B%7D';

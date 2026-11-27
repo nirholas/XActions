@@ -21,9 +21,18 @@ const here = dirname(fileURLToPath(import.meta.url));
 const SOURCE = readFileSync(join(here, '../../browser/clearAllBookmarks.js'), 'utf8');
 const REFUSAL = '❌ Navigate to x.com/i/bookmarks first!';
 
+/**
+ * The script as a user would run it for real: a live, uncapped run with no
+ * start prompt, which is the path that tries X's bulk-clear button first.
+ */
+const LIVE_SOURCE = SOURCE
+  .replace(/dryRun: true,/, 'dryRun: false,')
+  .replace(/maxRemovals: 100,/, 'maxRemovals: Infinity,')
+  .replace(/confirmStart: true,/, 'confirmStart: false,');
+
 /** Paste the script into the current jsdom window. */
-function paste() {
-  new Function(SOURCE)();
+function paste(source = LIVE_SOURCE) {
+  new Function(source)();
 }
 
 /** Point jsdom at a URL without reloading the document. */
@@ -69,6 +78,18 @@ describe('bookmarks route guard', () => {
 
     expect(console.error).not.toHaveBeenCalledWith(REFUSAL);
     expect(clicks).toEqual({ clearAll: 1, confirm: 1 });
+  });
+
+  it('defaults to a dry run that clicks nothing', async () => {
+    vi.useFakeTimers();
+    visit('/i/bookmarks');
+    const clicks = addBulkClearButtons();
+
+    paste(SOURCE);
+    await vi.runAllTimersAsync();
+
+    expect(console.error).not.toHaveBeenCalledWith(REFUSAL);
+    expect(clicks).toEqual({ clearAll: 0, confirm: 0 });
   });
 
   it.each(['/settings', '/search?q=/bookmarks', '/nasa/status/1/history'])('refuses %s', (url) => {
