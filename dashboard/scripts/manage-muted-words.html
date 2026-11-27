@@ -4,14 +4,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Manage Muted Words — Free X/Twitter Script | XActions</title>
-  <meta name="description" content="Bulk-add or manage muted words for filtering your timeline. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
-  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, manage, muted, words, safety &amp; privacy">
+  <meta name="description" content="Add, remove, or list your muted words and phrases on X in bulk, with a dry run for add and remove.">
+  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, manage, muted, words, safety">
   <meta name="author" content="nich (@nichxbt)">
   <meta name="robots" content="index, follow">
 
   <meta property="og:type" content="article">
   <meta property="og:title" content="Manage Muted Words — XActions">
-  <meta property="og:description" content="Bulk-add or manage muted words for filtering your timeline. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
+  <meta property="og:description" content="Add, remove, or list your muted words and phrases on X in bulk, with a dry run for add and remove.">
   <meta property="og:url" content="https://xactions.app/scripts/manage-muted-words">
   <meta property="og:site_name" content="XActions">
   <meta property="og:image" content="https://xactions.app/og-run.png">
@@ -19,7 +19,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@nichxbt">
   <meta name="twitter:title" content="Manage Muted Words — XActions">
-  <meta name="twitter:description" content="Bulk-add or manage muted words for filtering your timeline. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
+  <meta name="twitter:description" content="Add, remove, or list your muted words and phrases on X in bulk, with a dry run for add and remove.">
   <meta name="twitter:image" content="https://xactions.app/og-run.png">
 
   <link rel="canonical" href="https://xactions.app/scripts/manage-muted-words">
@@ -30,14 +30,14 @@
     "@context": "https://schema.org",
     "@type": "TechArticle",
     "headline": "Manage Muted Words — Free X/Twitter Script | XActions",
-    "description": "Bulk-add or manage muted words for filtering your timeline. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.",
+    "description": "Add, remove, or list your muted words and phrases on X in bulk, with a dry run for add and remove.",
     "url": "https://xactions.app/scripts/manage-muted-words",
     "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
     "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
     "datePublished": "2026-03-30",
     "dateModified": "2026-03-30",
-    "articleSection": "Safety & Privacy",
-    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, manage, muted, words, safety & privacy"
+    "articleSection": "Safety",
+    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, manage, muted, words, safety"
   }
   </script>
   <script type="application/ld+json">
@@ -47,7 +47,7 @@
     "itemListElement": [
       { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
       { "@type": "ListItem", "position": 2, "name": "Scripts", "item": "https://xactions.app/scripts" },
-      { "@type": "ListItem", "position": 3, "name": "Safety & Privacy", "item": "https://xactions.app/scripts#safety-privacy" },
+      { "@type": "ListItem", "position": 3, "name": "Safety", "item": "https://xactions.app/scripts#safety" },
       { "@type": "ListItem", "position": 4, "name": "Manage Muted Words", "item": "https://xactions.app/scripts/manage-muted-words" }
     ]
   }
@@ -116,34 +116,32 @@
 
     <main class="main-content" id="main-content">
       <header class="main-header">
-        <h1>🔇 Manage Muted Words</h1>
+        <h1>🛡️ Manage Muted Words</h1>
         <div class="breadcrumb">
-          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#safety-privacy">Safety &amp; Privacy</a> › Manage Muted Words
+          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#safety">Safety</a> › Manage Muted Words
         </div>
       </header>
 
       <article class="article">
-        <span class="cat-badge">Safety &amp; Privacy</span>
-        <span class="source-badge">browser</span>
+        <span class="cat-badge">Safety</span>
+        <span class="source-badge">browser/manageMutedWords.js</span>
 
         <div class="meta-row">
-          
-          
-          <span>121 lines</span>
+          <span>v1.1.0</span>
+          <span>Updated: 2026-11-26</span>
+          <span>366 lines</span>
           <span>by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></span>
         </div>
 
-        <p>Bulk-add or manage muted words for filtering your timeline</p>
+        <p>Add, remove, or list your muted words and phrases on X in bulk, with a dry run for add and remove.</p>
 
         
 
         <h2>How to Use</h2>
-        <ol class="usage-steps">
-        <li>Navigate to <a href="https://x.com" rel="noopener">x.com</a> and log in</li>
-        <li>Open DevTools Console (F12 or Cmd+Option+I)</li>
-        
-        <li>Paste the script below and press Enter</li>
-      </ol>
+        <ol class="usage-steps"><li>Go to x.com/settings/muted_keywords</li>
+<li>Open the browser console (F12 or Cmd+Option+I -&gt; Console)</li>
+<li>Set CONFIG.action to 'add', 'remove', or 'list', and fill CONFIG.words.</li>
+<li>Paste this entire script and press Enter</li></ol>
         
 
         
@@ -153,19 +151,39 @@
         <div class="code-block">
           <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.querySelector('code').textContent).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy',2000)})">Copy</button>
           <pre><code>const CONFIG = {
-    // Words/phrases to mute
-    wordsToMute: [
-      // 'crypto scam',
-      // 'follow for follow',
-      // 'giveaway',
-      // 'dm me',
+    // 'add'    -&gt; mute every phrase in `words`
+    // 'remove' -&gt; unmute every phrase in `words`
+    // 'list'   -&gt; scrape the words you already mute (console + JSON download)
+    action: 'list',
+
+    // The words/phrases to add or remove. Ignored for 'list'.
+    words: [
+      'giveaway',
+      'airdrop scam'
     ],
-    // Duration: 'forever', '24h', '7d', '30d'
-    duration: 'forever',
-    // Mute from: 'everyone' or 'people_you_dont_follow'
-    muteFrom: 'everyone',
-    actionDelay: 2000,
+
+    // Preview only: for 'add' and 'remove', print the words and the options,
+    // then stop without touching your account. Set false to really do it.
     dryRun: true,
+
+    // Options applied to each word when adding (X's mute settings).
+    muteOptions: {
+      // 'anyone' (from anyone) or 'follow' (from people you don't follow).
+      // 'everyone' and 'people_you_dont_follow' are accepted too.
+      from: 'anyone',
+      // Mute in the Home timeline.
+      home: true,
+      // Mute in Notifications.
+      notifications: true,
+      // 'forever', '24h', '7d', or '30d'.
+      duration: 'forever'
+    },
+
+    // Minimum delay between actions (ms).
+    minDelay: 2000,
+
+    // Maximum delay between actions (ms).
+    maxDelay: 4000
   };</code></pre>
         </div>
       </section>
@@ -176,124 +194,369 @@
           <div class="code-block">
             <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.querySelector('code').textContent).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy Script',2000)})">Copy Script</button>
             <pre><code>// Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
-// Manage Muted Words on X - by nichxbt
-// https://github.com/nirholas/xactions
-// Bulk-add or manage muted words for filtering your timeline
-// 1. Go to https://x.com/settings/muted_keywords
-// 2. Open the Developer Console (F12)
-// 3. Edit the CONFIG below
-// 4. Paste this into the Developer Console and run it
-//
-// Last Updated: 24 February 2026
-(() =&gt; {
+/**
+ * ============================================
+ * 🔇 Manage Muted Words - XActions
+ * ============================================
+ *
+ * @name        manageMutedWords.js
+ * @title       Manage Muted Words
+ * @description Add, remove, or list your muted words and phrases on X in bulk, with a dry run for add and remove.
+ * @category    safety
+ * @page        x.com/settings/muted_keywords
+ * @writes      false
+ * @aliases     scripts/manageMutedWords.js, scripts/twitter/manage-muted-words.js
+ * @author      nichxbt (https://x.com/nichxbt)
+ * @version     1.1.0
+ * @date        2026-11-26
+ * @website     https://xactions.app
+ *
+ * Usage (browser/manageMutedWords.js):
+ *   1. Go to x.com/settings/muted_keywords
+ *   2. Open the browser console (F12 or Cmd+Option+I -&gt; Console)
+ *   3. Set CONFIG.action to 'add', 'remove', or 'list', and fill CONFIG.words.
+ *   4. Paste this entire script and press Enter
+ *
+ * Example:
+ *   action: 'add', words: ['giveaway', 'airdrop scam', 'free nft']. The first
+ *   run is a DRY RUN that only prints what would be muted; set dryRun: false to
+ *   really do it. A live run opens the Add flow for each phrase, applies your
+ *   mute options, saves, and waits a randomized delay between adds so you are
+ *   not rate-limited. Use action: 'list' first to see what is already muted, or
+ *   action: 'remove' with the same words to unmute them. Call
+ *   window.stopManageMutedWords() to abort.
+ *
+ * ============================================
+ */
+
+(async function manageMutedWords() {
+  'use strict';
+
+  // ============================================
+  // 📝 CONFIGURATION - Customize these options
+  // ============================================
   const CONFIG = {
-    // Words/phrases to mute
-    wordsToMute: [
-      // 'crypto scam',
-      // 'follow for follow',
-      // 'giveaway',
-      // 'dm me',
+    // 'add'    -&gt; mute every phrase in `words`
+    // 'remove' -&gt; unmute every phrase in `words`
+    // 'list'   -&gt; scrape the words you already mute (console + JSON download)
+    action: 'list',
+
+    // The words/phrases to add or remove. Ignored for 'list'.
+    words: [
+      'giveaway',
+      'airdrop scam'
     ],
-    // Duration: 'forever', '24h', '7d', '30d'
-    duration: 'forever',
-    // Mute from: 'everyone' or 'people_you_dont_follow'
-    muteFrom: 'everyone',
-    actionDelay: 2000,
+
+    // Preview only: for 'add' and 'remove', print the words and the options,
+    // then stop without touching your account. Set false to really do it.
     dryRun: true,
+
+    // Options applied to each word when adding (X's mute settings).
+    muteOptions: {
+      // 'anyone' (from anyone) or 'follow' (from people you don't follow).
+      // 'everyone' and 'people_you_dont_follow' are accepted too.
+      from: 'anyone',
+      // Mute in the Home timeline.
+      home: true,
+      // Mute in Notifications.
+      notifications: true,
+      // 'forever', '24h', '7d', or '30d'.
+      duration: 'forever'
+    },
+
+    // Minimum delay between actions (ms).
+    minDelay: 2000,
+
+    // Maximum delay between actions (ms).
+    maxDelay: 4000
   };
 
-  const $addMutedWord = '[data-testid=&quot;addMutedWord&quot;]';
-  const $mutedWordInput = 'input[name=&quot;keyword&quot;]';
-  const $saveButton = '[data-testid=&quot;settingsSave&quot;]';
+  // ============================================
+  // 🔧 SELECTORS
+  // ============================================
+  const SELECTORS = {
+    // Entry points into the &quot;Add muted word&quot; flow.
+    addLink: 'a[href*=&quot;add_muted_keyword&quot;], [data-testid=&quot;addMutedWord&quot;]',
+    keywordInput: 'input[name=&quot;keyword&quot;], [data-testid=&quot;mutedKeywordTextInput&quot;]',
+    saveButton: '[data-testid=&quot;settingsDetailSave&quot;], [data-testid=&quot;settingsSave&quot;], [data-testid=&quot;Profile_Save_Button&quot;]',
+    unmuteButton: '[data-testid=&quot;unmuteKeyword&quot;], [data-testid=&quot;deleteMutedKeyword&quot;]',
+    confirm: '[data-testid=&quot;confirmationSheetConfirm&quot;]',
+    // Each muted word renders in a settings row.
+    row: '[data-testid=&quot;cellInnerDiv&quot;], [data-testid=&quot;MutedKeyword&quot;]'
+  };
 
+  // ============================================
+  // 🛠️ HELPERS
+  // ============================================
   const sleep = (ms) =&gt; new Promise(r =&gt; setTimeout(r, ms));
+  const randomDelay = () =&gt; sleep(
+    Math.floor(Math.random() * (CONFIG.maxDelay - CONFIG.minDelay + 1)) + CONFIG.minDelay
+  );
 
-  const results = { muted: [], failed: [] };
+  const log = {
+    info: (msg) =&gt; console.log(`ℹ️ ${msg}`),
+    success: (msg) =&gt; console.log(`✅ ${msg}`),
+    warning: (msg) =&gt; console.log(`⚠️ ${msg}`),
+    error: (msg) =&gt; console.log(`❌ ${msg}`)
+  };
 
-  const run = async () =&gt; {
-    console.log('🔇 MANAGE MUTED WORDS - XActions by nichxbt');
-
-    if (CONFIG.wordsToMute.length === 0) {
-      console.error('❌ No words to mute! Edit CONFIG.wordsToMute array.');
-      return;
+  // Poll for an element to appear (returns element or null).
+  const waitFor = async (selector, tries = 8, gap = 500) =&gt; {
+    for (let i = 0; i &lt; tries; i++) {
+      const el = document.querySelector(selector);
+      if (el) return el;
+      await sleep(gap);
     }
+    return null;
+  };
 
-    console.log(`📋 Words to mute: ${CONFIG.wordsToMute.length}`);
-    CONFIG.wordsToMute.forEach((w, i) =&gt; console.log(`   ${i + 1}. &quot;${w}&quot;`));
-    console.log(`   ⏱️ Duration: ${CONFIG.duration}`);
-    console.log(`   👤 From: ${CONFIG.muteFrom}`);
+  // Set an input value through React's native setter so the change registers.
+  const setNativeValue = (el, value) =&gt; {
+    const desc = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value');
+    if (desc &amp;&amp; desc.set) desc.set.call(el, value);
+    else el.value = value;
+    el.dispatchEvent(new Event('input', { bubbles: true }));
+    el.dispatchEvent(new Event('change', { bubbles: true }));
+  };
 
-    if (CONFIG.dryRun) {
-      console.log('\n⚠️ DRY RUN MODE - Set CONFIG.dryRun = false to actually mute');
-      return;
-    }
-
-    if (!window.location.href.includes('/muted_keywords') &amp;&amp; !window.location.href.includes('/muted')) {
-      console.error('❌ Navigate to x.com/settings/muted_keywords first!');
-      return;
-    }
-
-    for (const word of CONFIG.wordsToMute) {
-      try {
-        // Click &quot;+&quot; or &quot;Add&quot; button
-        const addBtn = document.querySelector($addMutedWord);
-        if (addBtn) {
-          addBtn.click();
-          await sleep(1000);
-        }
-
-        // Type the word
-        const input = document.querySelector($mutedWordInput);
-        if (!input) {
-          console.error('❌ Muted word input not found');
-          results.failed.push(word);
-          continue;
-        }
-
-        input.focus();
-        input.value = '';
-        document.execCommand('insertText', false, word);
-        await sleep(500);
-
-        // Set duration (click appropriate radio/option)
-        const durationOptions = document.querySelectorAll('[role=&quot;radio&quot;], [role=&quot;option&quot;]');
-        for (const opt of durationOptions) {
-          const text = opt.textContent.toLowerCase();
-          if (
-            (CONFIG.duration === 'forever' &amp;&amp; text.includes('forever')) ||
-            (CONFIG.duration === '24h' &amp;&amp; text.includes('24')) ||
-            (CONFIG.duration === '7d' &amp;&amp; text.includes('7')) ||
-            (CONFIG.duration === '30d' &amp;&amp; text.includes('30'))
-          ) {
-            opt.click();
-            break;
-          }
-        }
-        await sleep(300);
-
-        // Save
-        const saveBtn = document.querySelector($saveButton);
-        if (saveBtn) {
-          saveBtn.click();
-          results.muted.push(word);
-          console.log(`🔇 Muted: &quot;${word}&quot;`);
-        } else {
-          results.failed.push(word);
-        }
-
-        await sleep(CONFIG.actionDelay);
-      } catch (e) {
-        results.failed.push(word);
-        console.warn(`⚠️ Failed to mute: &quot;${word}&quot;`);
+  // Click a radio/checkbox/switch whose visible label matches any of `needles`.
+  const clickOptionByText = (needles) =&gt; {
+    const wants = needles.map(n =&gt; n.toLowerCase());
+    const controls = document.querySelectorAll('[role=&quot;radio&quot;], [role=&quot;checkbox&quot;], [role=&quot;switch&quot;], label');
+    for (const ctrl of controls) {
+      const txt = (ctrl.textContent || '').trim().toLowerCase();
+      if (txt &amp;&amp; wants.some(w =&gt; txt.includes(w))) {
+        ctrl.click();
+        return true;
       }
     }
-
-    console.log('\n📊 RESULTS:');
-    console.log(`   🔇 Muted: ${results.muted.length}`);
-    console.log(`   ❌ Failed: ${results.failed.length}`);
+    return false;
   };
 
-  run();
+  // Set a checkbox/switch whose visible label matches any of `needles` to `want`.
+  // Only clicks when the current state can be read and differs from `want`.
+  const setToggleByText = (needles, want) =&gt; {
+    const wants = needles.map(n =&gt; n.toLowerCase());
+    const controls = document.querySelectorAll('[role=&quot;checkbox&quot;], [role=&quot;switch&quot;], label');
+    for (const ctrl of controls) {
+      const txt = (ctrl.textContent || '').trim().toLowerCase();
+      if (!txt || !wants.some(w =&gt; txt.includes(w))) continue;
+      const input = ctrl.querySelector('input[type=&quot;checkbox&quot;]');
+      const aria = ctrl.getAttribute('aria-checked');
+      const state = input ? input.checked : aria === 'true' ? true : aria === 'false' ? false : null;
+      if (state === null) return false;
+      if (state !== want) ctrl.click();
+      return true;
+    }
+    return false;
+  };
+
+  const download = (data, filename) =&gt; {
+    try {
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' }));
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      log.success(`Downloaded ${filename}`);
+    } catch (e) {
+      log.warning(`Could not trigger download: ${e.message}`);
+    }
+  };
+
+  // Read the muted words currently rendered in the list.
+  const scrapeMutedWords = () =&gt; {
+    const words = new Set();
+    // Muted words each link to their own edit page: /settings/muted_keywords/&lt;id&gt;.
+    document.querySelectorAll('a[href*=&quot;/settings/muted_keywords/&quot;]').forEach(a =&gt; {
+      const text = (a.textContent || '').trim();
+      if (text) words.add(text);
+    });
+    // Fallback: settings rows on the muted keywords page.
+    if (words.size === 0) {
+      document.querySelectorAll(SELECTORS.row).forEach(row =&gt; {
+        const span = row.querySelector('span');
+        const text = (span?.textContent || '').trim();
+        if (text &amp;&amp; text.length &lt;= 100) words.add(text);
+      });
+    }
+    return Array.from(words);
+  };
+
+  // ============================================
+  // 🎯 MAIN LOGIC
+  // ============================================
+  const stats = { added: 0, removed: 0, listed: 0, skipped: 0, errors: 0 };
+
+  // Stop switch: run window.stopManageMutedWords() to abort after the current word.
+  let stopped = false;
+  window.stopManageMutedWords = () =&gt; {
+    stopped = true;
+    log.warning('Stop requested. Finishing the current word, then exiting.');
+  };
+
+  console.log(`
+╔══════════════════════════════════════════════════════════╗
+║  🔇 MANAGE MUTED WORDS - XActions                        ║
+║  👤 Author: nichxbt                                      ║
+║  🌐 https://xactions.app                                 ║
+╚══════════════════════════════════════════════════════════╝
+  `);
+
+  // Page guard: warn, do not hard-redirect.
+  if (!/muted_keywords/.test(window.location.pathname)) {
+    log.warning('Go to x.com/settings/muted_keywords, then run this again.');
+    return stats;
+  }
+
+  const action = String(CONFIG.action || '').toLowerCase();
+
+  // ---- LIST ----
+  if (action === 'list') {
+    const words = scrapeMutedWords();
+    stats.listed = words.length;
+    if (words.length === 0) {
+      log.info('No muted words found on this page. If you have some, scroll the list once so they render, then re-run.');
+    } else {
+      log.success(`You currently mute ${words.length} word(s)/phrase(s):`);
+      words.forEach((w, i) =&gt; console.log(`   ${i + 1}. &quot;${w}&quot;`));
+      download(
+        { scrapedAt: new Date().toISOString(), count: words.length, mutedWords: words },
+        `xactions-muted-words-${new Date().toISOString().slice(0, 10)}.json`
+      );
+    }
+    console.log(`\n✅ Listed ${stats.listed} muted word(s). by nichxbt`);
+    return stats;
+  }
+
+  // ---- ADD / REMOVE guardrails ----
+  if (action !== 'add' &amp;&amp; action !== 'remove') {
+    log.error(`Unknown action &quot;${CONFIG.action}&quot;. Use 'add', 'remove', or 'list'.`);
+    return stats;
+  }
+  const words = Array.isArray(CONFIG.words) ? CONFIG.words.map(w =&gt; String(w).trim()).filter(Boolean) : [];
+  if (words.length === 0) {
+    log.warning('CONFIG.words is empty. Add the phrases you want to ' + action + '.');
+    return stats;
+  }
+  log.info(`Action: ${action} | ${words.length} word(s)`);
+  words.forEach((w, i) =&gt; console.log(`   ${i + 1}. &quot;${w}&quot;`));
+  if (action === 'add') {
+    const o = CONFIG.muteOptions || {};
+    console.log(`   ⏱️ Duration: ${o.duration || 'forever'}`);
+    console.log(`   👤 From: ${o.from || 'anyone'}`);
+    console.log(`   🏠 Home timeline: ${o.home !== false} | 🔔 Notifications: ${o.notifications !== false}`);
+  }
+
+  if (CONFIG.dryRun) {
+    log.warning(`DRY RUN MODE - nothing was changed. Set CONFIG.dryRun = false to actually ${action === 'add' ? 'mute' : 'unmute'} these words.`);
+    return stats;
+  }
+
+  log.info('To stop early: window.stopManageMutedWords()');
+
+  // ---- ADD ----
+  const addWord = async (word) =&gt; {
+    const addLink = await waitFor(SELECTORS.addLink, 6, 400);
+    if (!addLink) throw new Error('Add control not found');
+    addLink.click();
+
+    const input = await waitFor(SELECTORS.keywordInput, 10, 400);
+    if (!input) throw new Error('Keyword input did not appear');
+    input.focus();
+    setNativeValue(input, word);
+    await sleep(400);
+
+    // Apply mute options (best-effort; X wording varies by build).
+    const o = CONFIG.muteOptions || {};
+    if (o.home === false) setToggleByText(['home timeline', 'home'], false);
+    if (o.notifications === false) setToggleByText(['notifications'], false);
+    if (o.from === 'follow' || o.from === 'people_you_dont_follow') clickOptionByText([&quot;people you don't follow&quot;, 'you don’t follow', &quot;don't follow&quot;]);
+    else clickOptionByText(['from anyone', 'anyone']);
+    const duration = String(o.duration || 'forever').toLowerCase();
+    if (duration !== 'forever') {
+      const map = { '24h': ['24 hours', '24'], '7d': ['7 days', '7'], '30d': ['30 days', '30'] };
+      clickOptionByText(map[duration] || ['forever']);
+    }
+    await sleep(300);
+
+    const saveBtn = await waitFor(SELECTORS.saveButton, 6, 400);
+    if (!saveBtn) throw new Error('Save button not found');
+    saveBtn.click();
+    await sleep(1200);
+  };
+
+  // ---- REMOVE ----
+  const removeWord = async (word) =&gt; {
+    const target = word.toLowerCase();
+    // Find the row/link for this exact word.
+    const links = Array.from(document.querySelectorAll('a[href*=&quot;/settings/muted_keywords/&quot;]'));
+    let entry = links.find(a =&gt; (a.textContent || '').trim().toLowerCase() === target);
+    if (!entry) {
+      // Fallback to a settings row containing the text.
+      entry = Array.from(document.querySelectorAll(SELECTORS.row))
+        .find(r =&gt; (r.textContent || '').trim().toLowerCase().includes(target));
+    }
+    if (!entry) return false;
+
+    entry.click();
+    const unmute = await waitFor(SELECTORS.unmuteButton, 8, 400);
+    if (!unmute) {
+      // Some builds show unmute as a button labelled &quot;Unmute word&quot;.
+      const byText = Array.from(document.querySelectorAll('[role=&quot;button&quot;], button'))
+        .find(b =&gt; (b.textContent || '').trim().toLowerCase().includes('unmute'));
+      if (!byText) throw new Error('Unmute control not found');
+      byText.click();
+    } else {
+      unmute.click();
+    }
+    const confirm = await waitFor(SELECTORS.confirm, 4, 400);
+    if (confirm) confirm.click();
+    await sleep(1000);
+    return true;
+  };
+
+  for (const word of words) {
+    if (stopped) break;
+    try {
+      if (action === 'add') {
+        await addWord(word);
+        stats.added++;
+        log.success(`Muted: &quot;${word}&quot; (${stats.added}/${words.length})`);
+      } else {
+        const ok = await removeWord(word);
+        if (ok) {
+          stats.removed++;
+          log.success(`Unmuted: &quot;${word}&quot; (${stats.removed} removed)`);
+        } else {
+          stats.skipped++;
+          log.warning(`Not in your muted list: &quot;${word}&quot;. Skipped.`);
+        }
+      }
+    } catch (error) {
+      stats.errors++;
+      log.error(`Failed to ${action} &quot;${word}&quot;: ${error.message}`);
+    }
+    if (!stopped) await randomDelay();
+  }
+
+  // ============================================
+  // 📊 SUMMARY
+  // ============================================
+  console.log(`
+╔══════════════════════════════════════════════════════════╗
+║  📊 MANAGE MUTED WORDS - COMPLETE                        ║
+╠══════════════════════════════════════════════════════════╣
+║  ✅ Added:             ${String(stats.added).padEnd(32)}║
+║  🗑️  Removed:           ${String(stats.removed).padEnd(32)}║
+║  ⏭️  Skipped:           ${String(stats.skipped).padEnd(32)}║
+║  ❌ Errors:            ${String(stats.errors).padEnd(32)}║
+╚══════════════════════════════════════════════════════════╝
+  `);
+
+  log.success('Script completed! by nichxbt');
+  return stats;
 })();
 </code></pre>
           </div>
@@ -309,17 +572,16 @@
 
     <aside class="sidebar-right">
       <div class="sidebar-card">
-        <h3>🔇 Safety &amp; Privacy</h3>
-        <a href="/scripts/blacklist">🚫 Blacklist Manager</a>
-<a href="/scripts/block-bots">🤖 Block Bot Accounts</a>
-<a href="/scripts/block-by-keywords">🚫 Block By Keywords</a>
-<a href="/scripts/block-by-ratio">🚫 Block By Ratio</a>
-<a href="/scripts/block-list-transfer">🧱 Block List Transfer</a>
-<a href="/scripts/filter-manager">🔍 Filter Manager</a>
-<a href="/scripts/id-verification">🪪 ID Verification management</a>
-<a href="/scripts/manage-settings">⚙️ Manage Settings</a>
-<a href="/scripts/mass-block">🚫 Mass Block Users</a>
-<a href="/scripts/mass-unblock">🔓 Mass Unblock Users</a>
+        <h3>🛡️ Safety</h3>
+        <a href="/scripts/block-bots">🛡️ Block Bots</a>
+<a href="/scripts/block-by-keywords">🛡️ Block by Keywords</a>
+<a href="/scripts/block-by-ratio">🛡️ Block by Ratio</a>
+<a href="/scripts/block-list-transfer">🛡️ Block List Import and Export</a>
+<a href="/scripts/block-list-manager">🛡️ Block List Manager</a>
+<a href="/scripts/mass-block">🛡️ Mass Block</a>
+<a href="/scripts/mute-by-keywords">🛡️ Mute by Keywords</a>
+<a href="/scripts/report-spam">🛡️ Report Spam</a>
+<a href="/scripts/shadowban-checker">🛡️ Shadowban Checker</a>
       </div>
       <div class="sidebar-card">
         <h3>🔗 Quick Links</h3>

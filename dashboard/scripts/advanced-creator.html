@@ -3,23 +3,23 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Advanced creator monetization — Free X/Twitter Script | XActions</title>
-  <meta name="description" content="Advanced creator monetization: creator subscriptions setup, subscription content management, ticketed Spaces, payout management, tax information, affiliate…">
-  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, advanced, creator, other tools">
+  <title>Advanced Creator Tools — Free X/Twitter Script | XActions</title>
+  <meta name="description" content="Creator monetization tools: subscriptions, revenue sharing and Media Studio helpers. Free X/Twitter browser script, no API key needed.">
+  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, advanced, creator, premium and business">
   <meta name="author" content="nich (@nichxbt)">
   <meta name="robots" content="index, follow">
 
   <meta property="og:type" content="article">
-  <meta property="og:title" content="Advanced creator monetization — XActions">
-  <meta property="og:description" content="Advanced creator monetization: creator subscriptions setup, subscription content management, ticketed Spaces, payout management, tax information, affiliate…">
+  <meta property="og:title" content="Advanced Creator Tools — XActions">
+  <meta property="og:description" content="Creator monetization tools: subscriptions, revenue sharing and Media Studio helpers. Free X/Twitter browser script, no API key needed.">
   <meta property="og:url" content="https://xactions.app/scripts/advanced-creator">
   <meta property="og:site_name" content="XActions">
   <meta property="og:image" content="https://xactions.app/og-run.png">
 
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@nichxbt">
-  <meta name="twitter:title" content="Advanced creator monetization — XActions">
-  <meta name="twitter:description" content="Advanced creator monetization: creator subscriptions setup, subscription content management, ticketed Spaces, payout management, tax information, affiliate…">
+  <meta name="twitter:title" content="Advanced Creator Tools — XActions">
+  <meta name="twitter:description" content="Creator monetization tools: subscriptions, revenue sharing and Media Studio helpers. Free X/Twitter browser script, no API key needed.">
   <meta name="twitter:image" content="https://xactions.app/og-run.png">
 
   <link rel="canonical" href="https://xactions.app/scripts/advanced-creator">
@@ -29,15 +29,15 @@
   {
     "@context": "https://schema.org",
     "@type": "TechArticle",
-    "headline": "Advanced creator monetization — Free X/Twitter Script | XActions",
-    "description": "Advanced creator monetization: creator subscriptions setup, subscription content management, ticketed Spaces, payout management, tax information, affiliate…",
+    "headline": "Advanced Creator Tools — Free X/Twitter Script | XActions",
+    "description": "Creator monetization tools: subscriptions, revenue sharing and Media Studio helpers. Free X/Twitter browser script, no API key needed.",
     "url": "https://xactions.app/scripts/advanced-creator",
     "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
     "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
     "datePublished": "2026-03-30",
     "dateModified": "2026-03-30",
-    "articleSection": "Other Tools",
-    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, advanced, creator, other tools"
+    "articleSection": "Premium and Business",
+    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, advanced, creator, premium and business"
   }
   </script>
   <script type="application/ld+json">
@@ -47,8 +47,8 @@
     "itemListElement": [
       { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
       { "@type": "ListItem", "position": 2, "name": "Scripts", "item": "https://xactions.app/scripts" },
-      { "@type": "ListItem", "position": 3, "name": "Other Tools", "item": "https://xactions.app/scripts#other-tools" },
-      { "@type": "ListItem", "position": 4, "name": "Advanced creator monetization", "item": "https://xactions.app/scripts/advanced-creator" }
+      { "@type": "ListItem", "position": 3, "name": "Premium and Business", "item": "https://xactions.app/scripts#premium-and-business" },
+      { "@type": "ListItem", "position": 4, "name": "Advanced Creator Tools", "item": "https://xactions.app/scripts/advanced-creator" }
     ]
   }
   </script>
@@ -116,24 +116,24 @@
 
     <main class="main-content" id="main-content">
       <header class="main-header">
-        <h1>⚡ Advanced creator monetization</h1>
+        <h1>💎 Advanced Creator Tools</h1>
         <div class="breadcrumb">
-          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#other-tools">Other Tools</a> › Advanced creator monetization
+          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#premium-and-business">Premium and Business</a> › Advanced Creator Tools
         </div>
       </header>
 
       <article class="article">
-        <span class="cat-badge">Other Tools</span>
-        <span class="source-badge">browser</span>
+        <span class="cat-badge">Premium and Business</span>
+        <span class="source-badge">browser/advancedCreator.js</span>
 
         <div class="meta-row">
           
           
-          <span>920 lines</span>
+          <span>928 lines</span>
           <span>by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></span>
         </div>
 
-        <p>Advanced creator monetization: creator subscriptions setup, subscription content management, ticketed Spaces, payout management, tax information, affiliate program.</p>
+        <p>Creator monetization tools: subscriptions, revenue sharing and Media Studio helpers.</p>
 
         
 
@@ -156,6 +156,14 @@
           <div class="code-block">
             <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.querySelector('code').textContent).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy Script',2000)})">Copy Script</button>
             <pre><code>// Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
+/**
+ * @name        advancedCreator.js
+ * @title       Advanced Creator Tools
+ * @description Creator monetization tools: subscriptions, revenue sharing and Media Studio helpers.
+ * @category    premium
+ * @page        x.com/*
+ * @writes      true
+ */
 // browser/advancedCreator.js
 // Advanced creator monetization for X/Twitter
 // by nichxbt
@@ -1088,17 +1096,16 @@
 
     <aside class="sidebar-right">
       <div class="sidebar-card">
-        <h3>⚡ Other Tools</h3>
-        <a href="/scripts/ad-campaign-manager">⚡ Ad campaign management</a>
-<a href="/scripts/advanced-dm">⚡ Advanced Direct Message features</a>
-<a href="/scripts/advanced-grok">⚡ Advanced Grok AI features</a>
-<a href="/scripts/advanced-notifications">⚡ Advanced notification management</a>
-<a href="/scripts/advanced-premium">⚡ Advanced Premium features</a>
-<a href="/scripts/advanced-profile">⚡ Advanced profile management</a>
-<a href="/scripts/advanced-settings">⚡ Advanced settings and privacy management</a>
-<a href="/scripts/advanced-spaces">⚡ Advanced Spaces features</a>
-<a href="/scripts/community-manager">⚡ Community management</a>
-<a href="/scripts/community-notes">⚡ Community Notes</a>
+        <h3>💎 Premium and Business</h3>
+        <a href="/scripts/ad-campaign-manager">💎 Ad Campaign Manager</a>
+<a href="/scripts/ads-manager">💎 Ads and Campaigns</a>
+<a href="/scripts/advanced-premium">💎 Advanced Premium Tools</a>
+<a href="/scripts/creator-subscriptions">💎 Creator Subscriptions</a>
+<a href="/scripts/premium-gifting">💎 Premium Gifting</a>
+<a href="/scripts/premium-manager">💎 Premium Manager</a>
+<a href="/scripts/subscribe-premium">💎 Subscribe to Premium</a>
+<a href="/scripts/x-pro">💎 X Pro</a>
+<a href="/scripts/x-pro-manager">💎 X Pro Manager</a>
       </div>
       <div class="sidebar-card">
         <h3>🔗 Quick Links</h3>

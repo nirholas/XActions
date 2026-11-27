@@ -2,7 +2,9 @@
 /**
  * Browser Script Download Routes
  *
- * Serves XActions browser scripts (browser/ and src/automation/) behind x402 micropayments.
+ * Serves XActions browser scripts behind x402 micropayments. Every public id
+ * resolves through browser/index.json to the canonical browser/<id>.js file
+ * (api/services/scriptManifest.js), so a download is the script a user would paste.
  * Payment is verified by the x402 middleware before these handlers run.
  *
  * Routes:
@@ -10,39 +12,19 @@
  *   GET /api/scripts/src/:name       — download a top-level browser script
  *   GET /api/scripts/automation/:name — download an automation script
  *
- * The `src/` collection name is part of the public URL and of the SCRIPT_PRICES
- * keys, so it stays even though the files moved out of src/ into browser/.
+ * The `src/` and `automation/` collection names are part of the public URL and
+ * of the SCRIPT_PRICES keys, so they stay even though the files moved to browser/.
  *
  * @author nichxbt
  */
 
 import { Router } from 'express';
 import { readFile } from 'fs/promises';
-import { existsSync } from 'fs';
-import path from 'path';
-import { fileURLToPath } from 'url';
 import crypto from 'crypto';
 import { SCRIPT_PRICES } from '../config/x402-config.js';
+import { describeScript, resolveScriptFile } from '../services/scriptManifest.js';
 
 const router = Router();
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-const SRC_ROOT = path.resolve(__dirname, '../../src');
-const BROWSER_ROOT = path.resolve(__dirname, '../../browser');
-
-/**
- * Where a `src/<name>` script lives. The console scripts are in browser/; a few
- * SCRIPT_PRICES entries still name Node modules that remain in src/, so those
- * resolve there as before. Returns null if the name escapes either root.
- */
-function resolveTopLevelScript(name) {
-  for (const root of [BROWSER_ROOT, SRC_ROOT]) {
-    const filePath = path.resolve(root, `${name}.js`);
-    if (!filePath.startsWith(root + path.sep)) return null;
-    if (existsSync(filePath)) return filePath;
-  }
-  return path.resolve(BROWSER_ROOT, `${name}.js`);
-}
 
 // Only allow safe camelCase / known filename characters
 const SAFE_NAME = /^[a-zA-Z0-9_-]+$/;
@@ -60,6 +42,7 @@ router.get('/', (req, res) => {
       collection,
       endpoint: `/api/scripts/${scriptPath}`,
       price,
+      ...describeScript(scriptPath),
     };
   });
 
@@ -73,7 +56,7 @@ router.get('/', (req, res) => {
 
 /**
  * GET /api/scripts/src/:name
- * Serve a top-level browser script (browser/<name>.js) — requires x402 payment.
+ * Serve a top-level browser script (its canonical browser/ file). Requires x402 payment.
  */
 router.get('/src/:name', async (req, res) => {
   const { name } = req.params;
@@ -87,8 +70,8 @@ router.get('/src/:name', async (req, res) => {
     return res.status(404).json({ error: 'Script not found' });
   }
 
-  // Guard against path traversal (resolve must stay within browser/ or src/)
-  const filePath = resolveTopLevelScript(name);
+  // Guard against path traversal (resolve must stay within its tree)
+  const filePath = resolveScriptFile(scriptPath);
   if (!filePath) {
     return res.status(403).json({ error: 'Access denied' });
   }
@@ -106,7 +89,7 @@ router.get('/src/:name', async (req, res) => {
 
 /**
  * GET /api/scripts/automation/:name
- * Serve a browser automation script from src/automation/ — requires x402 payment.
+ * Serve a browser automation script (its canonical browser/ file). Requires x402 payment.
  */
 router.get('/automation/:name', async (req, res) => {
   const { name } = req.params;
@@ -120,9 +103,8 @@ router.get('/automation/:name', async (req, res) => {
     return res.status(404).json({ error: 'Script not found' });
   }
 
-  const filePath = path.resolve(SRC_ROOT, 'automation', `${name}.js`);
-  const automationRoot = path.resolve(SRC_ROOT, 'automation');
-  if (!filePath.startsWith(automationRoot + path.sep) && filePath !== automationRoot) {
+  const filePath = resolveScriptFile(scriptPath);
+  if (!filePath) {
     return res.status(403).json({ error: 'Access denied' });
   }
 

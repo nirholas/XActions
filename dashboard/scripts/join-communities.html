@@ -4,14 +4,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Join Communities — Free X/Twitter Script | XActions</title>
-  <meta name="description" content="Discover and join X communities based on keywords. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
-  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, join, communities, lists &amp; communities">
+  <meta name="description" content="Join X communities found by keyword on the suggested page, or from a list of community IDs, dry run by default.">
+  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, join, communities, communities">
   <meta name="author" content="nich (@nichxbt)">
   <meta name="robots" content="index, follow">
 
   <meta property="og:type" content="article">
   <meta property="og:title" content="Join Communities — XActions">
-  <meta property="og:description" content="Discover and join X communities based on keywords. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
+  <meta property="og:description" content="Join X communities found by keyword on the suggested page, or from a list of community IDs, dry run by default.">
   <meta property="og:url" content="https://xactions.app/scripts/join-communities">
   <meta property="og:site_name" content="XActions">
   <meta property="og:image" content="https://xactions.app/og-run.png">
@@ -19,7 +19,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@nichxbt">
   <meta name="twitter:title" content="Join Communities — XActions">
-  <meta name="twitter:description" content="Discover and join X communities based on keywords. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
+  <meta name="twitter:description" content="Join X communities found by keyword on the suggested page, or from a list of community IDs, dry run by default.">
   <meta name="twitter:image" content="https://xactions.app/og-run.png">
 
   <link rel="canonical" href="https://xactions.app/scripts/join-communities">
@@ -30,14 +30,14 @@
     "@context": "https://schema.org",
     "@type": "TechArticle",
     "headline": "Join Communities — Free X/Twitter Script | XActions",
-    "description": "Discover and join X communities based on keywords. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.",
+    "description": "Join X communities found by keyword on the suggested page, or from a list of community IDs, dry run by default.",
     "url": "https://xactions.app/scripts/join-communities",
     "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
     "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
     "datePublished": "2026-03-30",
     "dateModified": "2026-03-30",
-    "articleSection": "Lists & Communities",
-    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, join, communities, lists & communities"
+    "articleSection": "Communities",
+    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, join, communities, communities"
   }
   </script>
   <script type="application/ld+json">
@@ -47,7 +47,7 @@
     "itemListElement": [
       { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
       { "@type": "ListItem", "position": 2, "name": "Scripts", "item": "https://xactions.app/scripts" },
-      { "@type": "ListItem", "position": 3, "name": "Lists & Communities", "item": "https://xactions.app/scripts#lists-communities" },
+      { "@type": "ListItem", "position": 3, "name": "Communities", "item": "https://xactions.app/scripts#communities" },
       { "@type": "ListItem", "position": 4, "name": "Join Communities", "item": "https://xactions.app/scripts/join-communities" }
     ]
   }
@@ -116,24 +116,24 @@
 
     <main class="main-content" id="main-content">
       <header class="main-header">
-        <h1>🏘️ Join Communities</h1>
+        <h1>👥 Join Communities</h1>
         <div class="breadcrumb">
-          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#lists-communities">Lists &amp; Communities</a> › Join Communities
+          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#communities">Communities</a> › Join Communities
         </div>
       </header>
 
       <article class="article">
-        <span class="cat-badge">Lists &amp; Communities</span>
-        <span class="source-badge">browser</span>
+        <span class="cat-badge">Communities</span>
+        <span class="source-badge">browser/joinCommunities.js</span>
 
         <div class="meta-row">
-          
-          
-          <span>115 lines</span>
+          <span>v1.1.0</span>
+          <span>Updated: 2026-11-26</span>
+          <span>267 lines</span>
           <span>by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></span>
         </div>
 
-        <p>Discover and join X communities based on keywords</p>
+        <p>Join X communities found by keyword on the suggested page, or from a list of community IDs, dry run by default.</p>
 
         
 
@@ -152,7 +152,9 @@
         <table>
           <thead><tr><th>Option</th><th>Default</th><th>Description</th></tr></thead>
           <tbody>
-            <tr><td><code>dryRun</code></td><td><code>true</code></td><td>Set to false to actually join</td></tr>
+            <tr><td><code>skipAlreadyJoined</code></td><td><code>true</code></td><td>List mode: skip communities you are already in</td></tr>
+<tr><td><code>navigationDelay</code></td><td><code>3000</code></td><td>List mode: wait for the community page to load</td></tr>
+<tr><td><code>dryRun</code></td><td><code>true</code></td><td>Set to false to actually join</td></tr>
           </tbody>
         </table>
       </section>
@@ -167,7 +169,12 @@
       // 'AI',
       // 'javascript',
     ],
-    maxJoins: 20,
+    // Community IDs to join instead of the keyword scan (list mode)
+    // e.g. '1234567890123456789' from x.com/i/communities/1234567890123456789
+    communities: [],
+    skipAlreadyJoined: true,  // List mode: skip communities you are already in
+    navigationDelay: 3000,    // List mode: wait for the community page to load
+    maxJoins: 5,
     actionDelay: 3000,
     scrollDelay: 2000,
     maxScrollAttempts: 15,
@@ -182,14 +189,32 @@
           <div class="code-block">
             <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.querySelector('code').textContent).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy Script',2000)})">Copy Script</button>
             <pre><code>// Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
-// Join Communities on X - by nichxbt
-// https://github.com/nirholas/xactions
-// Discover and join X communities based on keywords
-// 1. Go to https://x.com/i/communities/suggested
-// 2. Open the Developer Console (F12)
-// 3. Paste this into the Developer Console and run it
-//
-// Last Updated: 24 February 2026
+/**
+ * Join Communities on X - by nichxbt
+ * https://github.com/nirholas/xactions
+ *
+ * @name        joinCommunities.js
+ * @title       Join Communities
+ * @description Join X communities found by keyword on the suggested page, or from a list of community IDs, dry run by default.
+ * @category    communities
+ * @page        x.com/i/communities/suggested or x.com/i/communities/&lt;id&gt;
+ * @writes      true
+ * @aliases     scripts/joinCommunities.js, scripts/twitter/join-communities.js
+ * @author      nichxbt (https://x.com/nichxbt)
+ * @version     1.1.0
+ * @date        2026-11-26
+ *
+ * Discover and join X communities based on keywords
+ * 1. Go to https://x.com/i/communities/suggested
+ * 2. Open the Developer Console (F12)
+ * 3. Paste browser/joinCommunities.js into the Developer Console and run it
+ *
+ * List mode: put community IDs (from x.com/i/communities/&lt;id&gt;) in
+ * CONFIG.communities. The script opens each community in turn; re-paste it after
+ * each page load to continue (progress is kept in sessionStorage).
+ *
+ * Last Updated: 26 November 2026
+ */
 (() =&gt; {
   const CONFIG = {
     // Keywords to filter communities (leave empty to join all visible)
@@ -198,7 +223,12 @@
       // 'AI',
       // 'javascript',
     ],
-    maxJoins: 20,
+    // Community IDs to join instead of the keyword scan (list mode)
+    // e.g. '1234567890123456789' from x.com/i/communities/1234567890123456789
+    communities: [],
+    skipAlreadyJoined: true,  // List mode: skip communities you are already in
+    navigationDelay: 3000,    // List mode: wait for the community page to load
+    maxJoins: 5,
     actionDelay: 3000,
     scrollDelay: 2000,
     maxScrollAttempts: 15,
@@ -273,9 +303,10 @@
                 console.log(`✅ Joined: ${name}`);
                 joined++;
                 await sleep(1000);
-                window.history.back();
-                await sleep(1500);
               }
+              // Return to the list even when no Join button was found
+              window.history.back();
+              await sleep(1500);
             }
           }
         } catch (e) {
@@ -290,10 +321,138 @@
       await sleep(CONFIG.scrollDelay);
     }
 
-    console.log(`\n✅ Done! Joined ${joined} communities.`);
+    console.log(`\n✅ Done! ${CONFIG.dryRun ? 'Would join' : 'Joined'} ${joined} communities.`);
   };
 
-  run();
+  // ── List mode: join communities by ID, resuming across page loads ──
+  const $listJoinButton = 'button[aria-label^=&quot;Join&quot;]:not([aria-label^=&quot;Joined&quot;]), button[data-testid=&quot;join&quot;]';
+  const $listJoinedButton = 'button[aria-label^=&quot;Joined&quot;]';
+  const $listPendingButton = 'button[aria-label^=&quot;Pending&quot;]';
+  const STATE_KEY = 'xactions_joined_communities';
+  const INDEX_KEY = 'xactions_join_index';
+
+  const getJoinedCommunities = () =&gt; {
+    try {
+      return JSON.parse(sessionStorage.getItem(STATE_KEY) || '[]');
+    } catch { return []; }
+  };
+
+  const markAsJoined = (id, status) =&gt; {
+    const list = getJoinedCommunities();
+    if (!list.find(c =&gt; c.id === id)) {
+      list.push({ id, status, timestamp: Date.now() });
+      try { sessionStorage.setItem(STATE_KEY, JSON.stringify(list)); } catch { /* sessionStorage unavailable */ }
+    }
+  };
+
+  const getCurrentIndex = () =&gt; {
+    try { return parseInt(sessionStorage.getItem(INDEX_KEY) || '0', 10); } catch { return 0; }
+  };
+
+  const setCurrentIndex = (idx) =&gt; {
+    try { sessionStorage.setItem(INDEX_KEY, idx.toString()); } catch { /* sessionStorage unavailable */ }
+  };
+
+  const runFromList = async () =&gt; {
+    console.log('🏘️ JOIN COMMUNITIES FROM LIST - XActions by nichxbt');
+    const ids = CONFIG.communities.map(String);
+
+    if (CONFIG.dryRun) {
+      console.log('⚠️ DRY RUN MODE - Set CONFIG.dryRun = false to actually join');
+      ids.slice(0, CONFIG.maxJoins).forEach((id, i) =&gt; console.log(`   🏘️ Would join ${i + 1}/${ids.length}: x.com/i/communities/${id}`));
+      if (ids.length &gt; CONFIG.maxJoins) console.log(`   (capped at maxJoins = ${CONFIG.maxJoins})`);
+      return;
+    }
+
+    console.log(`📋 Communities to join: ${ids.length}`);
+    console.log(`✅ Already processed: ${getJoinedCommunities().length}`);
+
+    const processCurrentCommunity = async () =&gt; {
+      const index = getCurrentIndex();
+
+      // Check if we're done
+      if (index &gt;= ids.length) {
+        const list = getJoinedCommunities();
+        console.log(`\n🎉 COMPLETE! Processed ${list.length} communities`);
+        console.log(`   ✅ Joined: ${list.filter(c =&gt; c.status === 'joined').length}`);
+        console.log(`   ⏳ Pending approval: ${list.filter(c =&gt; c.status === 'pending').length}`);
+        console.log(`   ⏭️ Already joined: ${list.filter(c =&gt; c.status === 'already_joined').length}`);
+        console.log(`   ❌ Failed: ${list.filter(c =&gt; c.status === 'failed').length}`);
+        try {
+          sessionStorage.removeItem(STATE_KEY);
+          sessionStorage.removeItem(INDEX_KEY);
+        } catch { /* sessionStorage unavailable */ }
+        return;
+      }
+
+      // Check limits
+      const successCount = getJoinedCommunities().filter(c =&gt; c.status === 'joined' || c.status === 'pending').length;
+      if (CONFIG.maxJoins &gt; 0 &amp;&amp; successCount &gt;= CONFIG.maxJoins) {
+        console.log(`🛑 Reached limit of ${CONFIG.maxJoins} communities. Stopping.`);
+        return;
+      }
+
+      const communityId = ids[index];
+      const currentId = window.location.href.match(/\/i\/communities\/(\d+)/)?.[1] || null;
+
+      // Navigate to community if not there
+      if (currentId !== communityId) {
+        console.log(`📍 Navigating to community ${index + 1}/${ids.length}: ${communityId}`);
+        console.log('💡 Re-paste this script after the page loads to continue (progress is saved).');
+        window.location.href = `https://x.com/i/communities/${communityId}`;
+        return;
+      }
+
+      console.log(`🔍 Processing community ${index + 1}/${ids.length}: ${communityId}`);
+      await sleep(CONFIG.navigationDelay);
+
+      if (document.querySelector($listJoinedButton) &amp;&amp; CONFIG.skipAlreadyJoined) {
+        console.log('⏭️ Already a member, skipping...');
+        markAsJoined(communityId, 'already_joined');
+        setCurrentIndex(index + 1);
+        await sleep(1000);
+        return processCurrentCommunity();
+      }
+
+      if (document.querySelector($listPendingButton)) {
+        console.log('⏳ Request pending, skipping...');
+        markAsJoined(communityId, 'pending');
+        setCurrentIndex(index + 1);
+        await sleep(1000);
+        return processCurrentCommunity();
+      }
+
+      const joinBtn = document.querySelector($listJoinButton);
+      if (joinBtn) {
+        console.log('👆 Clicking Join button...');
+        joinBtn.click();
+        await sleep(CONFIG.actionDelay);
+        if (document.querySelector($listJoinedButton)) {
+          console.log(`✅ Successfully joined community: ${communityId}`);
+          markAsJoined(communityId, 'joined');
+        } else if (document.querySelector($listPendingButton)) {
+          console.log(`⏳ Request sent (awaiting approval): ${communityId}`);
+          markAsJoined(communityId, 'pending');
+        } else {
+          console.log(`❓ Join status unknown for: ${communityId}`);
+          markAsJoined(communityId, 'unknown');
+        }
+      } else {
+        console.log(`❌ Join button not found for: ${communityId}`);
+        markAsJoined(communityId, 'failed');
+      }
+
+      // Move to next
+      setCurrentIndex(index + 1);
+      await sleep(CONFIG.actionDelay);
+      return processCurrentCommunity();
+    };
+
+    await processCurrentCommunity();
+  };
+
+  if (Array.isArray(CONFIG.communities) &amp;&amp; CONFIG.communities.length &gt; 0) runFromList();
+  else run();
 })();
 </code></pre>
           </div>
@@ -309,17 +468,12 @@
 
     <aside class="sidebar-right">
       <div class="sidebar-card">
-        <h3>🏘️ Lists &amp; Communities</h3>
-        <a href="/scripts/add-to-list">➕ Add To List</a>
-<a href="/scripts/advanced-lists">📝 Advanced list management</a>
-<a href="/scripts/block-list-manager">📝 Block list import/export/sharing</a>
-<a href="/scripts/manage-lists">📝 Browser console script to manage X/Twitter Lists</a>
-<a href="/scripts/create-community">🏘️ Create Communities</a>
-<a href="/scripts/follow-list-members">👣 Follow List Members</a>
-<a href="/scripts/leave-all-communities">🚪 Leave All Communities</a>
-<a href="/scripts/leave-community">🚪 Leave Specific Community</a>
-<a href="/scripts/manage-community">🏘️ Manage Communities</a>
-<a href="/scripts/list-manager">📝 Manage Lists</a>
+        <h3>👥 Communities</h3>
+        <a href="/scripts/community-manager">👥 Community Manager</a>
+<a href="/scripts/create-community">👥 Create Community</a>
+<a href="/scripts/leave-community">👥 Leave a Community</a>
+<a href="/scripts/leave-all-communities">👥 Leave All Communities</a>
+<a href="/scripts/manage-community">👥 Manage Community</a>
       </div>
       <div class="sidebar-card">
         <h3>🔗 Quick Links</h3>

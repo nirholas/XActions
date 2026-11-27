@@ -3,23 +3,23 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Backup Account Data — Free X/Twitter Script | XActions</title>
-  <meta name="description" content="Scrape and download your profile, tweets, likes, bookmarks, following/followers. Free X/Twitter browser script, no API key needed.">
-  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, backup, account, account management">
+  <title>Backup Account — Free X/Twitter Script | XActions</title>
+  <meta name="description" content="Back up your visible profile, tweets, likes, bookmarks, following and followers as a JSON download.">
+  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, backup, account, scrape and export">
   <meta name="author" content="nich (@nichxbt)">
   <meta name="robots" content="index, follow">
 
   <meta property="og:type" content="article">
-  <meta property="og:title" content="Backup Account Data — XActions">
-  <meta property="og:description" content="Scrape and download your profile, tweets, likes, bookmarks, following/followers. Free X/Twitter browser script, no API key needed.">
+  <meta property="og:title" content="Backup Account — XActions">
+  <meta property="og:description" content="Back up your visible profile, tweets, likes, bookmarks, following and followers as a JSON download.">
   <meta property="og:url" content="https://xactions.app/scripts/backup-account">
   <meta property="og:site_name" content="XActions">
   <meta property="og:image" content="https://xactions.app/og-run.png">
 
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@nichxbt">
-  <meta name="twitter:title" content="Backup Account Data — XActions">
-  <meta name="twitter:description" content="Scrape and download your profile, tweets, likes, bookmarks, following/followers. Free X/Twitter browser script, no API key needed.">
+  <meta name="twitter:title" content="Backup Account — XActions">
+  <meta name="twitter:description" content="Back up your visible profile, tweets, likes, bookmarks, following and followers as a JSON download.">
   <meta name="twitter:image" content="https://xactions.app/og-run.png">
 
   <link rel="canonical" href="https://xactions.app/scripts/backup-account">
@@ -29,15 +29,15 @@
   {
     "@context": "https://schema.org",
     "@type": "TechArticle",
-    "headline": "Backup Account Data — Free X/Twitter Script | XActions",
-    "description": "Scrape and download your profile, tweets, likes, bookmarks, following/followers. Free X/Twitter browser script, no API key needed.",
+    "headline": "Backup Account — Free X/Twitter Script | XActions",
+    "description": "Back up your visible profile, tweets, likes, bookmarks, following and followers as a JSON download.",
     "url": "https://xactions.app/scripts/backup-account",
     "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
     "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
     "datePublished": "2026-03-30",
     "dateModified": "2026-03-30",
-    "articleSection": "Account Management",
-    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, backup, account, account management"
+    "articleSection": "Scrape and Export",
+    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, backup, account, scrape and export"
   }
   </script>
   <script type="application/ld+json">
@@ -47,8 +47,8 @@
     "itemListElement": [
       { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
       { "@type": "ListItem", "position": 2, "name": "Scripts", "item": "https://xactions.app/scripts" },
-      { "@type": "ListItem", "position": 3, "name": "Account Management", "item": "https://xactions.app/scripts#account-management" },
-      { "@type": "ListItem", "position": 4, "name": "Backup Account Data", "item": "https://xactions.app/scripts/backup-account" }
+      { "@type": "ListItem", "position": 3, "name": "Scrape and Export", "item": "https://xactions.app/scripts#scrape-and-export" },
+      { "@type": "ListItem", "position": 4, "name": "Backup Account", "item": "https://xactions.app/scripts/backup-account" }
     ]
   }
   </script>
@@ -116,24 +116,24 @@
 
     <main class="main-content" id="main-content">
       <header class="main-header">
-        <h1>💾 Backup Account Data</h1>
+        <h1>📥 Backup Account</h1>
         <div class="breadcrumb">
-          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#account-management">Account Management</a> › Backup Account Data
+          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#scrape-and-export">Scrape and Export</a> › Backup Account
         </div>
       </header>
 
       <article class="article">
-        <span class="cat-badge">Account Management</span>
-        <span class="source-badge">browser</span>
+        <span class="cat-badge">Scrape and Export</span>
+        <span class="source-badge">browser/backupAccount.js</span>
 
         <div class="meta-row">
-          
-          
-          <span>182 lines</span>
+          <span>v2.1.0</span>
+          <span>Updated: 2026-11-26</span>
+          <span>343 lines</span>
           <span>by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></span>
         </div>
 
-        <p>Scrape and download your profile, tweets, likes, bookmarks, following/followers</p>
+        <p>Back up your visible profile, tweets, likes, bookmarks, following and followers as a JSON download.</p>
 
         
 
@@ -179,14 +179,38 @@
           <div class="code-block">
             <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.querySelector('code').textContent).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy Script',2000)})">Copy Script</button>
             <pre><code>// Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
-// Backup Account Data on X - by nichxbt
-// https://github.com/nirholas/xactions
-// Scrape and download your profile, tweets, likes, bookmarks, following/followers
-// 1. Go to https://x.com/YOUR_USERNAME
-// 2. Open the Developer Console (F12)
-// 3. Paste this into the Developer Console and run it
-//
-// Last Updated: 24 February 2026
+/**
+ * Backup Account Data on X - by nichxbt
+ * https://github.com/nirholas/xactions
+ *
+ * @name        backupAccount.js
+ * @title       Backup Account
+ * @description Back up your visible profile, tweets, likes, bookmarks, following and followers as a JSON download.
+ * @category    scrape
+ * @page        x.com/&lt;you&gt; or x.com/&lt;you&gt;/likes or x.com/i/bookmarks or x.com/&lt;you&gt;/following or x.com/&lt;you&gt;/followers
+ * @writes      false
+ * @aliases     scripts/backupAccount.js, scripts/twitter/backup-account.js
+ * @author      nichxbt (https://x.com/nichxbt)
+ * @version     2.1.0
+ * @date        2026-11-26
+ *
+ * Scrape and download your profile, tweets, likes, bookmarks, following/followers
+ * 1. Go to https://x.com/YOUR_USERNAME
+ * 2. Open the Developer Console (F12)
+ * 3. Paste browser/backupAccount.js into the Developer Console and run it
+ *
+ * The run backs up the profile and tweets on the profile page and downloads them.
+ * For the other sections, navigate and use the console commands:
+ *   XActions.Backup.likes()      on x.com/YOUR_USERNAME/likes
+ *   XActions.Backup.bookmarks()  on x.com/i/bookmarks
+ *   XActions.Backup.following()  on x.com/YOUR_USERNAME/following
+ *   XActions.Backup.followers()  on x.com/YOUR_USERNAME/followers
+ *   XActions.Backup.download()   download everything collected so far
+ *   XActions.Backup.help()       list every command
+ * The last backup object is also kept on window.__xactions_backup.
+ *
+ * Last Updated: 26 November 2026
+ */
 (() =&gt; {
   const CONFIG = {
     maxTweets: 100,
@@ -214,13 +238,16 @@
 
   const sleep = (ms) =&gt; new Promise(r =&gt; setTimeout(r, ms));
 
+  const RESERVED_PATHS = ['home', 'explore', 'notifications', 'messages', 'i', 'settings', 'search'];
+
   const backupData = {
     meta: {
       createdAt: new Date().toISOString(),
       source: 'XActions Backup Tool',
-      version: '2.0.0',
+      version: '2.1.0',
       url: window.location.href,
     },
+    username: null,
     profile: null,
     tweets: [],
     likes: [],
@@ -229,15 +256,37 @@
     followers: [],
   };
 
+  const parseCount = (text) =&gt; {
+    if (!text) return 0;
+    const clean = text.replace(/,/g, '').trim();
+    const num = parseFloat(clean);
+    if (clean.includes('K')) return Math.round(num * 1000);
+    if (clean.includes('M')) return Math.round(num * 1000000);
+    return isNaN(num) ? 0 : num;
+  };
+
   const extractTweet = (el) =&gt; {
     const textEl = el.querySelector($tweetText);
-    const linkEl = el.querySelector('a[href*=&quot;/status/&quot;]');
     const timeEl = el.querySelector('time');
+    // The timestamp's enclosing anchor is the tweet's own permalink; the first
+    // /status/ link in the article can belong to a quoted tweet
+    const linkEl = (timeEl &amp;&amp; timeEl.closest('a[href*=&quot;/status/&quot;]')) ||
+                   el.querySelector('a[href*=&quot;/status/&quot;]');
+    const userLink = el.querySelector('[data-testid=&quot;User-Name&quot;] a[href^=&quot;/&quot;]');
+    const images = [...el.querySelectorAll('[data-testid=&quot;tweetPhoto&quot;] img')].map(img =&gt; img.src);
     return {
       text: textEl?.textContent || '',
       url: linkEl?.href || '',
       tweetId: linkEl?.href?.match(/status\/(\d+)/)?.[1] || '',
       timestamp: timeEl?.dateTime || '',
+      username: userLink?.getAttribute('href')?.replace('/', '')?.split('/')[0] || '',
+      likes: el.querySelector('[data-testid=&quot;like&quot;] span, [data-testid=&quot;unlike&quot;] span')?.textContent || '0',
+      reposts: el.querySelector('[data-testid=&quot;retweet&quot;] span, [data-testid=&quot;unretweet&quot;] span')?.textContent || '0',
+      replies: el.querySelector('[data-testid=&quot;reply&quot;] span')?.textContent || '0',
+      media: {
+        images,
+        hasVideo: !!el.querySelector('video'),
+      },
     };
   };
 
@@ -249,6 +298,7 @@
       name: nameEl?.textContent?.split('@')[0]?.trim() || '',
       username: linkEl?.href?.replace(/^.*x\.com\//, '').split('/')[0] || '',
       bio: bioEl?.textContent || '',
+      url: linkEl?.href || '',
     };
   };
 
@@ -273,6 +323,10 @@
       if (items.size === prevSize) noNewItems++;
       else noNewItems = 0;
 
+      if (items.size &gt; prevSize &amp;&amp; Math.floor(items.size / 20) &gt; Math.floor(prevSize / 20)) {
+        console.log(`   📊 ${items.size} ${label} collected...`);
+      }
+
       window.scrollTo(0, document.body.scrollHeight);
       await sleep(CONFIG.scrollDelay);
     }
@@ -282,37 +336,150 @@
   };
 
   const scrapeProfile = () =&gt; {
+    const getText = (sel) =&gt; document.querySelector(sel)?.textContent?.trim() || '';
     const displayName = document.querySelector('[data-testid=&quot;UserName&quot;]')?.textContent || '';
     const bioEl = document.querySelector('[data-testid=&quot;UserDescription&quot;]');
     const headerImg = document.querySelector('a[href$=&quot;/header_photo&quot;] img')?.src || '';
     const avatarImg = document.querySelector('[data-testid=&quot;UserAvatar-Container&quot;] img')?.src || '';
 
-    // Extract follower/following counts
-    const links = document.querySelectorAll('a[href*=&quot;/follow&quot;]');
+    // Extract follower/following counts (handles 1.2K / 3.4M)
     let followers = 0, following = 0;
-    links.forEach(link =&gt; {
-      const text = link.textContent;
-      const count = parseInt(text.replace(/[^\d]/g, '')) || 0;
-      if (link.href.includes('/followers')) followers = count;
-      if (link.href.includes('/following')) following = count;
-    });
+    const followersLink = document.querySelector('a[href$=&quot;/followers&quot;], a[href$=&quot;/verified_followers&quot;]');
+    const followingLink = document.querySelector('a[href$=&quot;/following&quot;]');
+    if (followersLink) followers = parseCount(followersLink.querySelector('span')?.textContent || followersLink.textContent);
+    if (followingLink) following = parseCount(followingLink.querySelector('span')?.textContent || followingLink.textContent);
 
     return {
       displayName,
       bio: bioEl?.textContent || '',
+      location: getText('[data-testid=&quot;UserLocation&quot;]'),
+      website: getText('[data-testid=&quot;UserUrl&quot;]'),
+      joinDate: getText('[data-testid=&quot;UserJoinDate&quot;]'),
+      isVerified: !!document.querySelector('[data-testid=&quot;UserName&quot;] [data-testid=&quot;icon-verified&quot;]'),
       headerImage: headerImg,
       avatarImage: avatarImg,
       followers,
       following,
       url: window.location.href,
+      capturedAt: new Date().toISOString(),
     };
+  };
+
+  const currentUsername = () =&gt; {
+    const m = window.location.pathname.match(/^\/([A-Za-z0-9_]+)/);
+    const name = m ? m[1] : null;
+    return name &amp;&amp; !RESERVED_PATHS.includes(name) ? name : null;
+  };
+
+  const downloadBackup = () =&gt; {
+    backupData.meta.downloadedAt = new Date().toISOString();
+    backupData.stats = {
+      tweetCount: backupData.tweets.length,
+      likeCount: backupData.likes.length,
+      bookmarkCount: backupData.bookmarks.length,
+      followingCount: backupData.following.length,
+      followerCount: backupData.followers.length,
+      hasProfile: !!backupData.profile?.displayName,
+    };
+    const blob = new Blob([JSON.stringify(backupData, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `xactions-backup-${backupData.username || 'account'}-${new Date().toISOString().slice(0, 10)}.json`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(() =&gt; URL.revokeObjectURL(url), 1000);
+    window.__xactions_backup = backupData;
+    console.log('\n📥 Backup downloaded as JSON');
+  };
+
+  const summary = () =&gt; {
+    console.log(`   📊 Profile: ${backupData.profile ? 'Yes' : 'No'}`);
+    console.log(`   📊 Tweets: ${backupData.tweets.length}`);
+    console.log(`   📊 Likes: ${backupData.likes.length}`);
+    console.log(`   📊 Bookmarks: ${backupData.bookmarks.length}`);
+    console.log(`   📊 Following: ${backupData.following.length}`);
+    console.log(`   📊 Followers: ${backupData.followers.length}`);
+  };
+
+  const collectSection = async (key, selector, extractor, max, hint) =&gt; {
+    console.log(`📍 ${hint}`);
+    await sleep(1000);
+    backupData[key] = await scrollAndCollect(selector, extractor, max, key);
+    if (!backupData.username) backupData.username = currentUsername();
+    window.__xactions_backup = backupData;
+    return backupData[key];
+  };
+
+  const help = () =&gt; {
+    console.log('');
+    console.log('📋 BACKUP COMMANDS:');
+    console.log('');
+    console.log('   XActions.Backup.full()      - Start guided backup');
+    console.log('   XActions.Backup.tweets()    - Backup tweets');
+    console.log('   XActions.Backup.likes()     - Backup likes');
+    console.log('   XActions.Backup.bookmarks() - Backup bookmarks');
+    console.log('   XActions.Backup.following() - Backup following');
+    console.log('   XActions.Backup.followers() - Backup followers');
+    console.log('   XActions.Backup.profile()   - Capture profile info');
+    console.log('   XActions.Backup.summary()   - Show backup summary');
+    console.log('   XActions.Backup.download()  - Download backup file');
+    console.log('');
+  };
+
+  // Console API for the sections that need page navigation
+  window.XActions = window.XActions || {};
+  window.XActions.Backup = {
+    data: backupData,
+    tweets: () =&gt; collectSection('tweets', $tweet, extractTweet, CONFIG.maxTweets, 'Make sure you are on your profile page (Posts tab)'),
+    likes: () =&gt; collectSection('likes', $tweet, extractTweet, CONFIG.maxLikes, 'Navigate to your Likes tab first: https://x.com/YOUR_USERNAME/likes'),
+    bookmarks: () =&gt; collectSection('bookmarks', $tweet, extractTweet, CONFIG.maxBookmarks, 'Navigate to Bookmarks: https://x.com/i/bookmarks'),
+    following: () =&gt; collectSection('following', $userCell, extractUser, CONFIG.maxFollowing, 'Navigate to Following: https://x.com/YOUR_USERNAME/following'),
+    followers: () =&gt; collectSection('followers', $userCell, extractUser, CONFIG.maxFollowers, 'Navigate to Followers: https://x.com/YOUR_USERNAME/followers'),
+    profile: () =&gt; {
+      backupData.profile = scrapeProfile();
+      if (!backupData.username) backupData.username = currentUsername();
+      console.log('📋 Profile info captured:', backupData.profile);
+      return backupData.profile;
+    },
+    download: downloadBackup,
+    summary: () =&gt; {
+      console.log('');
+      console.log('📊 BACKUP SUMMARY:');
+      summary();
+      console.log('');
+    },
+    full: async () =&gt; {
+      console.log('🚀 Starting full backup...');
+      console.log('⚠️ This is a guided process. Follow the instructions.');
+      window.XActions.Backup.profile();
+      console.log('');
+      console.log('📋 NEXT STEPS (run each command after navigating):');
+      console.log('');
+      console.log('1. Stay on profile: XActions.Backup.tweets()');
+      console.log('2. Go to Likes tab: XActions.Backup.likes()');
+      console.log('3. Go to Bookmarks: XActions.Backup.bookmarks()');
+      console.log('4. Go to Following: XActions.Backup.following()');
+      console.log('5. Go to Followers: XActions.Backup.followers()');
+      console.log('6. When done: XActions.Backup.download()');
+      console.log('');
+    },
+    help,
   };
 
   const run = async () =&gt; {
     console.log('💾 BACKUP ACCOUNT - XActions by nichxbt');
     console.log('ℹ️ This backs up visible data from the browser.\n');
 
-    const username = window.location.pathname.replace('/', '').split('/')[0];
+    const username = currentUsername();
+    if (!username) {
+      console.error('❌ Navigate to a profile page first! (x.com/USERNAME)');
+      console.log('💡 On other pages use the console commands instead:');
+      help();
+      return;
+    }
+    backupData.username = username;
 
     if (CONFIG.sections.profile) {
       console.log('📋 Backing up profile...');
@@ -326,35 +493,29 @@
 
     // For other sections, we need to navigate
     const backupSections = [];
-    if (CONFIG.sections.likes) backupSections.push({ path: `/${username}/likes`, key: 'likes', selector: $tweet, extractor: extractTweet, max: CONFIG.maxLikes });
-    if (CONFIG.sections.following) backupSections.push({ path: `/${username}/following`, key: 'following', selector: $userCell, extractor: extractUser, max: CONFIG.maxFollowing });
-    if (CONFIG.sections.followers) backupSections.push({ path: `/${username}/followers`, key: 'followers', selector: $userCell, extractor: extractUser, max: CONFIG.maxFollowers });
+    if (CONFIG.sections.likes) backupSections.push({ path: `/${username}/likes`, key: 'likes', cmd: 'XActions.Backup.likes()' });
+    if (CONFIG.sections.bookmarks) backupSections.push({ path: '/i/bookmarks', key: 'bookmarks', cmd: 'XActions.Backup.bookmarks()' });
+    if (CONFIG.sections.following) backupSections.push({ path: `/${username}/following`, key: 'following', cmd: 'XActions.Backup.following()' });
+    if (CONFIG.sections.followers) backupSections.push({ path: `/${username}/followers`, key: 'followers', cmd: 'XActions.Backup.followers()' });
 
     if (backupSections.length &gt; 0) {
       console.log('\n⚠️ Remaining sections require page navigation.');
-      console.log('💡 To backup likes/following/followers, run this script on each page:');
+      console.log('💡 Click through to each page in this tab (a reload clears this script) and run its command, then XActions.Backup.download():');
       backupSections.forEach(s =&gt; {
-        console.log(`   📍 ${s.key}: x.com${s.path}`);
+        console.log(`   📍 ${s.key}: x.com${s.path}  -&gt;  ${s.cmd}`);
       });
     }
 
+    window.__xactions_backup = backupData;
+
     // Download what we have
     if (CONFIG.autoDownload) {
-      const blob = new Blob([JSON.stringify(backupData, null, 2)], { type: 'application/json' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `xactions-backup-${username}-${new Date().toISOString().slice(0, 10)}.json`;
-      a.click();
-      console.log('\n📥 Backup downloaded as JSON');
+      downloadBackup();
     }
 
     console.log('\n✅ Backup complete!');
-    console.log(`   📊 Profile: ${backupData.profile ? 'Yes' : 'No'}`);
-    console.log(`   📊 Tweets: ${backupData.tweets.length}`);
-    console.log(`   📊 Likes: ${backupData.likes.length}`);
-    console.log(`   📊 Following: ${backupData.following.length}`);
-    console.log(`   📊 Followers: ${backupData.followers.length}`);
+    summary();
+    console.log('💡 Access data: window.__xactions_backup');
   };
 
   run();
@@ -373,17 +534,17 @@
 
     <aside class="sidebar-right">
       <div class="sidebar-card">
-        <h3>💾 Account Management</h3>
-        <a href="/scripts/account-settings">⚙️ Account Settings</a>
-<a href="/scripts/edit-profile">✏️ Browser console script to update X/Twitter profile fields</a>
-<a href="/scripts/delegate-access">🔑 Delegate Access</a>
-<a href="/scripts/download-account-data">📥 Download Account Data from X</a>
-<a href="/scripts/multi-account">👥 Multi-Account Manager</a>
-<a href="/scripts/profile-manager">👤 Profile Manager</a>
-<a href="/scripts/qr-code-sharing">📱 QR Code Profile Sharing</a>
-<a href="/scripts/subscribe-premium">⭐ Subscribe to X Premium</a>
-<a href="/scripts/update-banner">🖼️ Update Banner Image</a>
-<a href="/scripts/update-profile">✏️ Update Profile</a>
+        <h3>📥 Scrape and Export</h3>
+        <a href="/scripts/bookmark-exporter">📥 Bookmark Exporter</a>
+<a href="/scripts/bookmark-organizer">📥 Bookmark Organizer</a>
+<a href="/scripts/export-to-csv">📥 Export to CSV</a>
+<a href="/scripts/link-scraper">📥 Link Scraper</a>
+<a href="/scripts/manage-bookmarks">📥 Manage Bookmarks</a>
+<a href="/scripts/scrape-cashtag-search">📥 Scrape Cashtag Search</a>
+<a href="/scripts/scrape-explore">📥 Scrape Explore</a>
+<a href="/scripts/scrape-followers">📥 Scrape Followers</a>
+<a href="/scripts/scrape-following">📥 Scrape Following</a>
+<a href="/scripts/scrape-hashtag">📥 Scrape Hashtag</a>
       </div>
       <div class="sidebar-card">
         <h3>🔗 Quick Links</h3>

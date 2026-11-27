@@ -3,23 +3,23 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Timeline scraping tools — Free X/Twitter Script | XActions</title>
-  <meta name="description" content="Timeline scraping tools. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
-  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, timeline, scraper, other tools">
+  <title>Timeline Scraper — Free X/Twitter Script | XActions</title>
+  <meta name="description" content="Scrape posts from the home timeline and other feeds. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
+  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, timeline, scraper, scrape and export">
   <meta name="author" content="nich (@nichxbt)">
   <meta name="robots" content="index, follow">
 
   <meta property="og:type" content="article">
-  <meta property="og:title" content="Timeline scraping tools — XActions">
-  <meta property="og:description" content="Timeline scraping tools. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
+  <meta property="og:title" content="Timeline Scraper — XActions">
+  <meta property="og:description" content="Scrape posts from the home timeline and other feeds. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
   <meta property="og:url" content="https://xactions.app/scripts/timeline-scraper">
   <meta property="og:site_name" content="XActions">
   <meta property="og:image" content="https://xactions.app/og-run.png">
 
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@nichxbt">
-  <meta name="twitter:title" content="Timeline scraping tools — XActions">
-  <meta name="twitter:description" content="Timeline scraping tools. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
+  <meta name="twitter:title" content="Timeline Scraper — XActions">
+  <meta name="twitter:description" content="Scrape posts from the home timeline and other feeds. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
   <meta name="twitter:image" content="https://xactions.app/og-run.png">
 
   <link rel="canonical" href="https://xactions.app/scripts/timeline-scraper">
@@ -29,15 +29,15 @@
   {
     "@context": "https://schema.org",
     "@type": "TechArticle",
-    "headline": "Timeline scraping tools — Free X/Twitter Script | XActions",
-    "description": "Timeline scraping tools. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.",
+    "headline": "Timeline Scraper — Free X/Twitter Script | XActions",
+    "description": "Scrape posts from the home timeline and other feeds. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.",
     "url": "https://xactions.app/scripts/timeline-scraper",
     "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
     "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
     "datePublished": "2026-03-30",
     "dateModified": "2026-03-30",
-    "articleSection": "Other Tools",
-    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, timeline, scraper, other tools"
+    "articleSection": "Scrape and Export",
+    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, timeline, scraper, scrape and export"
   }
   </script>
   <script type="application/ld+json">
@@ -47,8 +47,8 @@
     "itemListElement": [
       { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
       { "@type": "ListItem", "position": 2, "name": "Scripts", "item": "https://xactions.app/scripts" },
-      { "@type": "ListItem", "position": 3, "name": "Other Tools", "item": "https://xactions.app/scripts#other-tools" },
-      { "@type": "ListItem", "position": 4, "name": "Timeline scraping tools", "item": "https://xactions.app/scripts/timeline-scraper" }
+      { "@type": "ListItem", "position": 3, "name": "Scrape and Export", "item": "https://xactions.app/scripts#scrape-and-export" },
+      { "@type": "ListItem", "position": 4, "name": "Timeline Scraper", "item": "https://xactions.app/scripts/timeline-scraper" }
     ]
   }
   </script>
@@ -116,24 +116,24 @@
 
     <main class="main-content" id="main-content">
       <header class="main-header">
-        <h1>⚡ Timeline scraping tools</h1>
+        <h1>📥 Timeline Scraper</h1>
         <div class="breadcrumb">
-          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#other-tools">Other Tools</a> › Timeline scraping tools
+          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#scrape-and-export">Scrape and Export</a> › Timeline Scraper
         </div>
       </header>
 
       <article class="article">
-        <span class="cat-badge">Other Tools</span>
-        <span class="source-badge">browser</span>
+        <span class="cat-badge">Scrape and Export</span>
+        <span class="source-badge">browser/timelineScraper.js</span>
 
         <div class="meta-row">
           
           
-          <span>581 lines</span>
+          <span>589 lines</span>
           <span>by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></span>
         </div>
 
-        <p>Timeline scraping tools — a free, open-source browser console script for X/Twitter automation. No API keys or fees required.</p>
+        <p>Scrape posts from the home timeline and other feeds.</p>
 
         
 
@@ -167,6 +167,14 @@
           <div class="code-block">
             <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.querySelector('code').textContent).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy Script',2000)})">Copy Script</button>
             <pre><code>// Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
+/**
+ * @name        timelineScraper.js
+ * @title       Timeline Scraper
+ * @description Scrape posts from the home timeline and other feeds.
+ * @category    scrape
+ * @page        x.com/home
+ * @writes      false
+ */
 // browser/timelineScraper.js
 // Timeline scraping tools for X/Twitter
 // by nichxbt
@@ -760,17 +768,17 @@
 
     <aside class="sidebar-right">
       <div class="sidebar-card">
-        <h3>⚡ Other Tools</h3>
-        <a href="/scripts/ad-campaign-manager">⚡ Ad campaign management</a>
-<a href="/scripts/advanced-creator">⚡ Advanced creator monetization</a>
-<a href="/scripts/advanced-dm">⚡ Advanced Direct Message features</a>
-<a href="/scripts/advanced-grok">⚡ Advanced Grok AI features</a>
-<a href="/scripts/advanced-notifications">⚡ Advanced notification management</a>
-<a href="/scripts/advanced-premium">⚡ Advanced Premium features</a>
-<a href="/scripts/advanced-profile">⚡ Advanced profile management</a>
-<a href="/scripts/advanced-settings">⚡ Advanced settings and privacy management</a>
-<a href="/scripts/advanced-spaces">⚡ Advanced Spaces features</a>
-<a href="/scripts/community-manager">⚡ Community management</a>
+        <h3>📥 Scrape and Export</h3>
+        <a href="/scripts/backup-account">📥 Backup Account</a>
+<a href="/scripts/bookmark-exporter">📥 Bookmark Exporter</a>
+<a href="/scripts/bookmark-organizer">📥 Bookmark Organizer</a>
+<a href="/scripts/export-to-csv">📥 Export to CSV</a>
+<a href="/scripts/link-scraper">📥 Link Scraper</a>
+<a href="/scripts/manage-bookmarks">📥 Manage Bookmarks</a>
+<a href="/scripts/scrape-cashtag-search">📥 Scrape Cashtag Search</a>
+<a href="/scripts/scrape-explore">📥 Scrape Explore</a>
+<a href="/scripts/scrape-followers">📥 Scrape Followers</a>
+<a href="/scripts/scrape-following">📥 Scrape Following</a>
       </div>
       <div class="sidebar-card">
         <h3>🔗 Quick Links</h3>

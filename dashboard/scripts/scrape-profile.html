@@ -3,23 +3,23 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Profile Scraper — Free X/Twitter Script | XActions</title>
-  <meta name="description" content="Get detailed profile data for a user. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
-  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, scrape, profile, scrapers">
+  <title>Scrape Profile — Free X/Twitter Script | XActions</title>
+  <meta name="description" content="Read a profile's name, bio, location, website, join date, counts, verified badge and images, and download them as JSON.">
+  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, scrape, profile, scrape and export">
   <meta name="author" content="nich (@nichxbt)">
   <meta name="robots" content="index, follow">
 
   <meta property="og:type" content="article">
-  <meta property="og:title" content="Profile Scraper — XActions">
-  <meta property="og:description" content="Get detailed profile data for a user. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
+  <meta property="og:title" content="Scrape Profile — XActions">
+  <meta property="og:description" content="Read a profile's name, bio, location, website, join date, counts, verified badge and images, and download them as JSON.">
   <meta property="og:url" content="https://xactions.app/scripts/scrape-profile">
   <meta property="og:site_name" content="XActions">
   <meta property="og:image" content="https://xactions.app/og-run.png">
 
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@nichxbt">
-  <meta name="twitter:title" content="Profile Scraper — XActions">
-  <meta name="twitter:description" content="Get detailed profile data for a user. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
+  <meta name="twitter:title" content="Scrape Profile — XActions">
+  <meta name="twitter:description" content="Read a profile's name, bio, location, website, join date, counts, verified badge and images, and download them as JSON.">
   <meta name="twitter:image" content="https://xactions.app/og-run.png">
 
   <link rel="canonical" href="https://xactions.app/scripts/scrape-profile">
@@ -29,15 +29,15 @@
   {
     "@context": "https://schema.org",
     "@type": "TechArticle",
-    "headline": "Profile Scraper — Free X/Twitter Script | XActions",
-    "description": "Get detailed profile data for a user. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.",
+    "headline": "Scrape Profile — Free X/Twitter Script | XActions",
+    "description": "Read a profile's name, bio, location, website, join date, counts, verified badge and images, and download them as JSON.",
     "url": "https://xactions.app/scripts/scrape-profile",
     "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
     "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
     "datePublished": "2026-03-30",
     "dateModified": "2026-03-30",
-    "articleSection": "Scrapers",
-    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, scrape, profile, scrapers"
+    "articleSection": "Scrape and Export",
+    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, scrape, profile, scrape and export"
   }
   </script>
   <script type="application/ld+json">
@@ -47,8 +47,8 @@
     "itemListElement": [
       { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
       { "@type": "ListItem", "position": 2, "name": "Scripts", "item": "https://xactions.app/scripts" },
-      { "@type": "ListItem", "position": 3, "name": "Scrapers", "item": "https://xactions.app/scripts#scrapers" },
-      { "@type": "ListItem", "position": 4, "name": "Profile Scraper", "item": "https://xactions.app/scripts/scrape-profile" }
+      { "@type": "ListItem", "position": 3, "name": "Scrape and Export", "item": "https://xactions.app/scripts#scrape-and-export" },
+      { "@type": "ListItem", "position": 4, "name": "Scrape Profile", "item": "https://xactions.app/scripts/scrape-profile" }
     ]
   }
   </script>
@@ -116,24 +116,24 @@
 
     <main class="main-content" id="main-content">
       <header class="main-header">
-        <h1>👤 Profile Scraper</h1>
+        <h1>📥 Scrape Profile</h1>
         <div class="breadcrumb">
-          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#scrapers">Scrapers</a> › Profile Scraper
+          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#scrape-and-export">Scrape and Export</a> › Scrape Profile
         </div>
       </header>
 
       <article class="article">
-        <span class="cat-badge">Scrapers</span>
-        <span class="source-badge">scripts</span>
+        <span class="cat-badge">Scrape and Export</span>
+        <span class="source-badge">browser/scrapeProfile.js</span>
 
         <div class="meta-row">
-          
-          
-          <span>134 lines</span>
+          <span>v1.1.0</span>
+          <span>Updated: 2026-11-27</span>
+          <span>165 lines</span>
           <span>by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></span>
         </div>
 
-        <p>Get detailed profile data for a user</p>
+        <p>Read a profile's name, bio, location, website, join date, counts, verified badge and images, and download them as JSON.</p>
 
         
 
@@ -147,8 +147,24 @@
         
 
         
-        
-        
+        <section class="config-section">
+        <h2>Configuration Options</h2>
+        <table>
+          <thead><tr><th>Option</th><th>Default</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td><code>exportResults</code></td><td><code>true</code></td><td>Download profile data as JSON</td></tr>
+          </tbody>
+        </table>
+      </section>
+        <section class="config-code">
+        <h2>Default Configuration</h2>
+        <div class="code-block">
+          <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.querySelector('code').textContent).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy',2000)})">Copy</button>
+          <pre><code>const CONFIG = {
+    exportResults: true,      // Download profile data as JSON
+  };</code></pre>
+        </div>
+      </section>
 
         <section class="full-code">
           <h2>Full Script</h2>
@@ -159,16 +175,33 @@
 /**
  * Profile Scraper
  * Get detailed profile data for a user
- * 
+ *
+ * @name        scrapeProfile.js
+ * @title       Scrape Profile
+ * @description Read a profile's name, bio, location, website, join date, counts, verified badge and images, and download them as JSON.
+ * @category    scrape
+ * @page        x.com/&lt;username&gt;
+ * @writes      false
+ * @aliases     scripts/profileManager.js, scripts/scrapeProfile.js
+ * @author      nichxbt (https://x.com/nichxbt)
+ * @version     1.1.0
+ * @date        2026-11-27
+ *
  * HOW TO USE:
  * 1. Go to any user's profile: x.com/USERNAME
  * 2. Open Developer Console (Ctrl+Shift+J or Cmd+Option+J)
- * 3. Paste this script and press Enter
- * 
+ * 3. Paste browser/scrapeProfile.js and press Enter
+ *
  * by nichxbt - https://github.com/nirholas/XActions
  */
 
 (() =&gt; {
+  const CONFIG = {
+    exportResults: true,      // Download profile data as JSON
+  };
+
+  const sleep = (ms) =&gt; new Promise(r =&gt; setTimeout(r, ms));
+
   const download = (content, filename, type) =&gt; {
     const blob = new Blob([content], { type });
     const url = URL.createObjectURL(blob);
@@ -183,20 +216,22 @@
     if (!str) return 0;
     const clean = str.replace(/,/g, '').trim();
     const num = parseFloat(clean);
-    if (str.includes('K')) return num * 1000;
-    if (str.includes('M')) return num * 1000000;
+    if (isNaN(num)) return 0;
+    if (str.includes('K')) return Math.round(num * 1000);
+    if (str.includes('M')) return Math.round(num * 1000000);
     return num;
   };
 
   const run = async () =&gt; {
     const username = window.location.pathname.split('/')[1];
-    
-    if (!username || username.startsWith('i/') || ['home', 'explore', 'notifications', 'messages'].includes(username)) {
+
+    if (!username || ['home', 'explore', 'notifications', 'messages', 'i', 'settings', 'search'].includes(username)) {
       console.error('❌ Please go to a user profile first!');
       return;
     }
 
     console.log(`👤 Scraping profile of @${username}...`);
+    await sleep(1000);
 
     // Extract profile data from the page
     const profile = {
@@ -208,11 +243,14 @@
       joinDate: '',
       followersCount: 0,
       followingCount: 0,
+      followersRaw: '',
+      followingRaw: '',
       tweetsCount: 0,
       verified: false,
       profileImageUrl: '',
       bannerImageUrl: '',
       scrapedAt: new Date().toISOString(),
+      url: window.location.href,
     };
 
     // Display name
@@ -235,22 +273,27 @@
     const joinDateEl = document.querySelector('[data-testid=&quot;UserJoinDate&quot;]');
     profile.joinDate = joinDateEl?.textContent || '';
 
-    // Followers/Following counts
+    // Followers/Following counts (raw text kept as shown, e.g. &quot;1.2K&quot;)
     const followLinks = document.querySelectorAll('a[href*=&quot;/followers&quot;], a[href*=&quot;/following&quot;]');
     followLinks.forEach(link =&gt; {
       const text = link.textContent || '';
+      const raw = link.querySelector('span')?.textContent?.trim() || '';
       if (link.href.includes('/followers')) {
         profile.followersCount = parseNumber(text);
+        profile.followersRaw = raw;
       } else if (link.href.includes('/following')) {
         profile.followingCount = parseNumber(text);
+        profile.followingRaw = raw;
       }
     });
 
     // Verified badge
-    profile.verified = !!document.querySelector('[data-testid=&quot;UserName&quot;] svg[aria-label*=&quot;Verified&quot;]');
+    profile.verified = !!document.querySelector('[data-testid=&quot;UserName&quot;] svg[aria-label*=&quot;Verified&quot;]') ||
+                       !!document.querySelector('[data-testid=&quot;icon-verified&quot;]');
 
     // Profile image
-    const profileImg = document.querySelector('a[href*=&quot;/photo&quot;] img');
+    const profileImg = document.querySelector('a[href*=&quot;/photo&quot;] img') ||
+                       document.querySelector('[data-testid=&quot;UserAvatar-Container&quot;] img');
     if (profileImg) {
       profile.profileImageUrl = profileImg.src.replace('_normal', '_400x400');
     }
@@ -279,11 +322,15 @@
     console.log(`${profile.verified ? '✅ Verified' : ''}`);
     console.log('='.repeat(60) + '\n');
 
-    download(JSON.stringify(profile, null, 2), `profile_${username}_${Date.now()}.json`, 'application/json');
-    console.log('💾 Downloaded profile.json');
+    if (CONFIG.exportResults) {
+      download(JSON.stringify(profile, null, 2), `profile_${username}_${Date.now()}.json`, 'application/json');
+      console.log('💾 Downloaded profile.json');
+    }
 
     window.scrapedProfile = profile;
+    window.__xactions_profile = profile;
     console.log('\n✅ Done! Access data: window.scrapedProfile');
+    return profile;
   };
 
   run();
@@ -302,17 +349,17 @@
 
     <aside class="sidebar-right">
       <div class="sidebar-card">
-        <h3>👤 Scrapers</h3>
-        <a href="/scripts/scrape-bookmarks">🔖 Bookmarks Scraper</a>
-<a href="/scripts/scrape-analytics">📊 Browser console script to scrape X/Twitter analytics data</a>
-<a href="/scripts/scrape-dms">✉️ DM Scraper</a>
-<a href="/scripts/export-to-csv">📄 Export to CSV Utility</a>
-<a href="/scripts/scrape-followers">👥 Followers Scraper</a>
-<a href="/scripts/scrape-following">👥 Following Scraper</a>
-<a href="/scripts/scrape-hashtag">#️⃣ Hashtag Scraper</a>
-<a href="/scripts/scrape-likers">❤️ Likers Scraper</a>
-<a href="/scripts/scrape-likes">❤️ Likes Scraper</a>
-<a href="/scripts/link-scraper">🔗 Link Scraper</a>
+        <h3>📥 Scrape and Export</h3>
+        <a href="/scripts/backup-account">📥 Backup Account</a>
+<a href="/scripts/bookmark-exporter">📥 Bookmark Exporter</a>
+<a href="/scripts/bookmark-organizer">📥 Bookmark Organizer</a>
+<a href="/scripts/export-to-csv">📥 Export to CSV</a>
+<a href="/scripts/link-scraper">📥 Link Scraper</a>
+<a href="/scripts/manage-bookmarks">📥 Manage Bookmarks</a>
+<a href="/scripts/scrape-cashtag-search">📥 Scrape Cashtag Search</a>
+<a href="/scripts/scrape-explore">📥 Scrape Explore</a>
+<a href="/scripts/scrape-followers">📥 Scrape Followers</a>
+<a href="/scripts/scrape-following">📥 Scrape Following</a>
       </div>
       <div class="sidebar-card">
         <h3>🔗 Quick Links</h3>

@@ -3,23 +3,23 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Follow &amp; Manage Lists — Free X/Twitter Script | XActions</title>
-  <meta name="description" content="Follow/unfollow X Lists, pin lists to your timeline, and browse list feeds. Free X/Twitter browser script, no API key needed.">
-  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, follow, list, growth">
+  <title>Follow Lists — Free X/Twitter Script | XActions</title>
+  <meta name="description" content="Follow or unfollow Lists and pin them to your timeline. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
+  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, follow, list, lists">
   <meta name="author" content="nich (@nichxbt)">
   <meta name="robots" content="index, follow">
 
   <meta property="og:type" content="article">
-  <meta property="og:title" content="Follow &amp; Manage Lists — XActions">
-  <meta property="og:description" content="Follow/unfollow X Lists, pin lists to your timeline, and browse list feeds. Free X/Twitter browser script, no API key needed.">
+  <meta property="og:title" content="Follow Lists — XActions">
+  <meta property="og:description" content="Follow or unfollow Lists and pin them to your timeline. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
   <meta property="og:url" content="https://xactions.app/scripts/follow-list">
   <meta property="og:site_name" content="XActions">
   <meta property="og:image" content="https://xactions.app/og-run.png">
 
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@nichxbt">
-  <meta name="twitter:title" content="Follow &amp; Manage Lists — XActions">
-  <meta name="twitter:description" content="Follow/unfollow X Lists, pin lists to your timeline, and browse list feeds. Free X/Twitter browser script, no API key needed.">
+  <meta name="twitter:title" content="Follow Lists — XActions">
+  <meta name="twitter:description" content="Follow or unfollow Lists and pin them to your timeline. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
   <meta name="twitter:image" content="https://xactions.app/og-run.png">
 
   <link rel="canonical" href="https://xactions.app/scripts/follow-list">
@@ -29,15 +29,15 @@
   {
     "@context": "https://schema.org",
     "@type": "TechArticle",
-    "headline": "Follow & Manage Lists — Free X/Twitter Script | XActions",
-    "description": "Follow/unfollow X Lists, pin lists to your timeline, and browse list feeds. Free X/Twitter browser script, no API key needed.",
+    "headline": "Follow Lists — Free X/Twitter Script | XActions",
+    "description": "Follow or unfollow Lists and pin them to your timeline. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.",
     "url": "https://xactions.app/scripts/follow-list",
     "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
     "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
     "datePublished": "2026-03-30",
     "dateModified": "2026-03-30",
-    "articleSection": "Growth",
-    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, follow, list, growth"
+    "articleSection": "Lists",
+    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, follow, list, lists"
   }
   </script>
   <script type="application/ld+json">
@@ -47,8 +47,8 @@
     "itemListElement": [
       { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
       { "@type": "ListItem", "position": 2, "name": "Scripts", "item": "https://xactions.app/scripts" },
-      { "@type": "ListItem", "position": 3, "name": "Growth", "item": "https://xactions.app/scripts#growth" },
-      { "@type": "ListItem", "position": 4, "name": "Follow & Manage Lists", "item": "https://xactions.app/scripts/follow-list" }
+      { "@type": "ListItem", "position": 3, "name": "Lists", "item": "https://xactions.app/scripts#lists" },
+      { "@type": "ListItem", "position": 4, "name": "Follow Lists", "item": "https://xactions.app/scripts/follow-list" }
     ]
   }
   </script>
@@ -116,24 +116,24 @@
 
     <main class="main-content" id="main-content">
       <header class="main-header">
-        <h1>📋 Follow &amp; Manage Lists</h1>
+        <h1>🗂️ Follow Lists</h1>
         <div class="breadcrumb">
-          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#growth">Growth</a> › Follow &amp; Manage Lists
+          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#lists">Lists</a> › Follow Lists
         </div>
       </header>
 
       <article class="article">
-        <span class="cat-badge">Growth</span>
-        <span class="source-badge">browser</span>
+        <span class="cat-badge">Lists</span>
+        <span class="source-badge">browser/followList.js</span>
 
         <div class="meta-row">
           <span>v1.0.0</span>
           <span>Updated: 2026-03-30</span>
-          <span>336 lines</span>
+          <span>340 lines</span>
           <span>by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></span>
         </div>
 
-        <p>Follow/unfollow X Lists, pin lists to your timeline, and browse list feeds.</p>
+        <p>Follow or unfollow Lists and pin them to your timeline.</p>
 
         
 
@@ -205,7 +205,11 @@
  * ============================================================
  *
  * @name        followList.js
- * @description Follow/unfollow X Lists, pin lists to your
+ * @description Follow or unfollow Lists and pin them to your timeline.
+ * @title       Follow Lists
+ * @category    lists
+ * @page        x.com/i/lists
+ * @writes      true
  *              timeline, and browse list feeds.
  * @author      nichxbt (https://x.com/nichxbt)
  * @version     1.0.0
@@ -547,17 +551,12 @@
 
     <aside class="sidebar-right">
       <div class="sidebar-card">
-        <h3>📋 Growth</h3>
-        <a href="/scripts/algorithm-builder">🧠 Algorithm Builder</a>
-<a href="/scripts/algorithm-trainer">🧠 Algorithm Trainer</a>
-<a href="/scripts/follow-account">➕ Follow Accounts</a>
-<a href="/scripts/follow-back">🔗 Follow Back</a>
-<a href="/scripts/follow-target-users">🎯 Follow Followers/Following of Target Users</a>
-<a href="/scripts/follow-engagers">🎯 Follow Likers &amp; Commenters</a>
-<a href="/scripts/growth-suite">🚀 Growth Automation Suite</a>
-<a href="/scripts/keyword-follow">🔑 Keyword Search &amp; Follow</a>
-<a href="/scripts/natural-flow">🌊 Natural Flow</a>
-<a href="/scripts/persona-engine">🎭 Persona Engine</a>
+        <h3>🗂️ Lists</h3>
+        <a href="/scripts/add-to-list">🗂️ Add Users to List</a>
+<a href="/scripts/advanced-lists">🗂️ Advanced List Tools</a>
+<a href="/scripts/follow-list-members">🗂️ Follow List Members</a>
+<a href="/scripts/list-manager">🗂️ List Manager</a>
+<a href="/scripts/scrape-list">🗂️ Scrape List</a>
       </div>
       <div class="sidebar-card">
         <h3>🔗 Quick Links</h3>

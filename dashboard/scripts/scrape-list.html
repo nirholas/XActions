@@ -3,23 +3,23 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>List Members Scraper — Free X/Twitter Script | XActions</title>
-  <meta name="description" content="Get all members of a Twitter list. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
-  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, scrape, list, scrapers">
+  <title>Scrape List — Free X/Twitter Script | XActions</title>
+  <meta name="description" content="Export an X List's timeline posts, or its members, to JSON and CSV. Free X/Twitter browser script, no API key needed.">
+  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, scrape, list, lists">
   <meta name="author" content="nich (@nichxbt)">
   <meta name="robots" content="index, follow">
 
   <meta property="og:type" content="article">
-  <meta property="og:title" content="List Members Scraper — XActions">
-  <meta property="og:description" content="Get all members of a Twitter list. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
+  <meta property="og:title" content="Scrape List — XActions">
+  <meta property="og:description" content="Export an X List's timeline posts, or its members, to JSON and CSV. Free X/Twitter browser script, no API key needed.">
   <meta property="og:url" content="https://xactions.app/scripts/scrape-list">
   <meta property="og:site_name" content="XActions">
   <meta property="og:image" content="https://xactions.app/og-run.png">
 
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@nichxbt">
-  <meta name="twitter:title" content="List Members Scraper — XActions">
-  <meta name="twitter:description" content="Get all members of a Twitter list. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
+  <meta name="twitter:title" content="Scrape List — XActions">
+  <meta name="twitter:description" content="Export an X List's timeline posts, or its members, to JSON and CSV. Free X/Twitter browser script, no API key needed.">
   <meta name="twitter:image" content="https://xactions.app/og-run.png">
 
   <link rel="canonical" href="https://xactions.app/scripts/scrape-list">
@@ -29,15 +29,15 @@
   {
     "@context": "https://schema.org",
     "@type": "TechArticle",
-    "headline": "List Members Scraper — Free X/Twitter Script | XActions",
-    "description": "Get all members of a Twitter list. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.",
+    "headline": "Scrape List — Free X/Twitter Script | XActions",
+    "description": "Export an X List's timeline posts, or its members, to JSON and CSV. Free X/Twitter browser script, no API key needed.",
     "url": "https://xactions.app/scripts/scrape-list",
     "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
     "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
     "datePublished": "2026-03-30",
     "dateModified": "2026-03-30",
-    "articleSection": "Scrapers",
-    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, scrape, list, scrapers"
+    "articleSection": "Lists",
+    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, scrape, list, lists"
   }
   </script>
   <script type="application/ld+json">
@@ -47,8 +47,8 @@
     "itemListElement": [
       { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
       { "@type": "ListItem", "position": 2, "name": "Scripts", "item": "https://xactions.app/scripts" },
-      { "@type": "ListItem", "position": 3, "name": "Scrapers", "item": "https://xactions.app/scripts#scrapers" },
-      { "@type": "ListItem", "position": 4, "name": "List Members Scraper", "item": "https://xactions.app/scripts/scrape-list" }
+      { "@type": "ListItem", "position": 3, "name": "Lists", "item": "https://xactions.app/scripts#lists" },
+      { "@type": "ListItem", "position": 4, "name": "Scrape List", "item": "https://xactions.app/scripts/scrape-list" }
     ]
   }
   </script>
@@ -116,54 +116,66 @@
 
     <main class="main-content" id="main-content">
       <header class="main-header">
-        <h1>📝 List Members Scraper</h1>
+        <h1>🗂️ Scrape List</h1>
         <div class="breadcrumb">
-          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#scrapers">Scrapers</a> › List Members Scraper
+          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#lists">Lists</a> › Scrape List
         </div>
       </header>
 
       <article class="article">
-        <span class="cat-badge">Scrapers</span>
-        <span class="source-badge">scripts</span>
+        <span class="cat-badge">Lists</span>
+        <span class="source-badge">browser/scrapeList.js</span>
 
         <div class="meta-row">
-          
-          
-          <span>147 lines</span>
+          <span>v1.1.0</span>
+          <span>Updated: 2026-11-27</span>
+          <span>397 lines</span>
           <span>by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></span>
         </div>
 
-        <p>Get all members of a Twitter list</p>
+        <p>Export an X List's timeline posts, or its members, to JSON and CSV.</p>
 
         
 
         <h2>How to Use</h2>
-        <ol class="usage-steps">
-        <li>Navigate to <a href="https://x.com" rel="noopener">x.com</a> and log in</li>
-        <li>Open DevTools Console (F12 or Cmd+Option+I)</li>
-        
-        <li>Paste the script below and press Enter</li>
-      </ol>
+        <ol class="usage-steps"><li>Go to a List page:</li>
+<li>Open the browser console (F12 or Cmd+Option+I -&gt; Console)</li>
+<li>(Optional) set CONFIG.mode to 'timeline' or 'members' to match the page</li>
+<li>Paste browser/scrapeList.js and press Enter</li></ol>
         
 
         
-        <section class="config-section">
-        <h2>Configuration Options</h2>
-        <table>
-          <thead><tr><th>Option</th><th>Default</th><th>Description</th></tr></thead>
-          <tbody>
-            <tr><td><code>FORMAT</code></td><td><code>'both'</code></td><td>'json', 'csv', 'both'</td></tr>
-          </tbody>
-        </table>
-      </section>
+        
         <section class="config-code">
         <h2>Default Configuration</h2>
         <div class="code-block">
           <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.querySelector('code').textContent).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy',2000)})">Copy</button>
           <pre><code>const CONFIG = {
-    MAX_MEMBERS: 5000,
-    SCROLL_DELAY: 1500,
-    FORMAT: 'both', // 'json', 'csv', 'both'
+    // What to scrape: 'timeline' (the List's posts) or 'members' (the accounts
+    // on the List). Match this to the page you are on. Leave 'auto' to detect
+    // from the URL (a /members path selects members, otherwise timeline).
+    mode: 'auto',
+
+    // Maximum posts (timeline) or members to collect before stopping
+    maxItems: 500,
+
+    // Include reply posts in timeline mode (false = original posts only)
+    includeReplies: true,
+
+    // Delay between scrolls (ms). Raise if content loads slowly.
+    scrollDelay: 1800,
+
+    // Give up after this many scrolls that add nothing new
+    noNewItemsThreshold: 6,
+
+    // Hard cap on scroll attempts so the loop can never run forever
+    maxScrollAttempts: 500,
+
+    // Auto-download a CSV file too
+    downloadCsv: true,
+
+    // Auto-download the JSON file
+    downloadJson: true
   };</code></pre>
         </div>
       </section>
@@ -175,56 +187,241 @@
             <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.querySelector('code').textContent).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy Script',2000)})">Copy Script</button>
             <pre><code>// Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
 /**
- * List Members Scraper
- * Get all members of a Twitter list
- * 
- * HOW TO USE:
- * 1. Go to a Twitter list: x.com/i/lists/LISTID/members
- * 2. Open Developer Console (Ctrl+Shift+J or Cmd+Option+J)
- * 3. Paste this script and press Enter
- * 
- * by nichxbt - https://github.com/nirholas/XActions
+ * ============================================
+ * 📋 Scrape List - XActions
+ * ============================================
+ *
+ * @name        scrapeList.js
+ * @title       Scrape List
+ * @description Export an X List's timeline posts, or its members, to JSON and CSV.
+ * @category    lists
+ * @page        x.com/i/lists/&lt;id&gt;/members or x.com/i/lists/&lt;id&gt;
+ * @writes      false
+ * @aliases     scripts/scrapeList.js, scripts/twitter/scrape-list.js
+ * @author      nichxbt (https://x.com/nichxbt)
+ * @version     1.1.0
+ * @date        2026-11-27
+ * @website     https://xactions.app
+ *
+ * Usage:
+ *   1. Go to a List page:
+ *      - timeline mode: x.com/i/lists/1699807431709041070
+ *      - members mode:  x.com/i/lists/1699807431709041070/members
+ *   2. Open the browser console (F12 or Cmd+Option+I -&gt; Console)
+ *   3. (Optional) set CONFIG.mode to 'timeline' or 'members' to match the page
+ *   4. Paste browser/scrapeList.js and press Enter
+ *
+ * Example:
+ *   On x.com/i/lists/1699807431709041070 with CONFIG.mode = 'timeline', the script scrolls
+ *   the List timeline, collects up to CONFIG.maxItems posts (text, author, counts, media),
+ *   and downloads JSON + CSV. Switch to the /members tab and set CONFIG.mode = 'members' to
+ *   export each member's handle, name, bio, and verified flag instead. Stop early with
+ *   window.stopScrapeList(). For CSV only, set downloadJson: false.
+ *
+ * ============================================
  */
 
-(() =&gt; {
+(async function scrapeList() {
+  'use strict';
+
+  // ============================================
+  // 📝 CONFIGURATION - Customize these options
+  // ============================================
   const CONFIG = {
-    MAX_MEMBERS: 5000,
-    SCROLL_DELAY: 1500,
-    FORMAT: 'both', // 'json', 'csv', 'both'
+    // What to scrape: 'timeline' (the List's posts) or 'members' (the accounts
+    // on the List). Match this to the page you are on. Leave 'auto' to detect
+    // from the URL (a /members path selects members, otherwise timeline).
+    mode: 'auto',
+
+    // Maximum posts (timeline) or members to collect before stopping
+    maxItems: 500,
+
+    // Include reply posts in timeline mode (false = original posts only)
+    includeReplies: true,
+
+    // Delay between scrolls (ms). Raise if content loads slowly.
+    scrollDelay: 1800,
+
+    // Give up after this many scrolls that add nothing new
+    noNewItemsThreshold: 6,
+
+    // Hard cap on scroll attempts so the loop can never run forever
+    maxScrollAttempts: 500,
+
+    // Auto-download a CSV file too
+    downloadCsv: true,
+
+    // Auto-download the JSON file
+    downloadJson: true
   };
 
-  const sleep = (ms) =&gt; new Promise(r =&gt; setTimeout(r, ms));
-
-  const download = (content, filename, type) =&gt; {
-    const blob = new Blob([content], { type });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = filename;
-    a.click();
-    URL.revokeObjectURL(url);
+  // ============================================
+  // 🔧 SELECTORS
+  // ============================================
+  const SELECTORS = {
+    tweet: 'article[data-testid=&quot;tweet&quot;]',
+    tweetText: '[data-testid=&quot;tweetText&quot;]',
+    userName: '[data-testid=&quot;User-Name&quot;]',
+    actionGroup: '[role=&quot;group&quot;]',
+    photo: '[data-testid=&quot;tweetPhoto&quot;] img',
+    video: 'video',
+    userCell: '[data-testid=&quot;UserCell&quot;]',
+    userDescription: '[data-testid=&quot;UserDescription&quot;]',
+    heading: 'h2[role=&quot;heading&quot;], [data-testid=&quot;primaryColumn&quot;] h1'
   };
 
-  const extractUser = (cell) =&gt; {
+  // ============================================
+  // 🛠️ HELPERS
+  // ============================================
+  const sleep = (ms) =&gt; new Promise((r) =&gt; setTimeout(r, ms));
+
+  const log = {
+    info: (msg) =&gt; console.log(`ℹ️ ${msg}`),
+    success: (msg) =&gt; console.log(`✅ ${msg}`),
+    warning: (msg) =&gt; console.log(`⚠️ ${msg}`),
+    error: (msg) =&gt; console.log(`❌ ${msg}`),
+    progress: (n, total, noun) =&gt; console.log(`📊 Collected ${n}/${total} ${noun}...`)
+  };
+
+  const countFromLabel = (label) =&gt; {
+    if (!label) return 0;
+    const raw = (label.match(/[\d.,]+\s*[KMB]?/i) || ['0'])[0].trim().toUpperCase();
+    const num = parseFloat(raw.replace(/,/g, '')) || 0;
+    if (raw.includes('K')) return Math.round(num * 1e3);
+    if (raw.includes('M')) return Math.round(num * 1e6);
+    if (raw.includes('B')) return Math.round(num * 1e9);
+    return Math.round(num);
+  };
+
+  const getCounts = (article) =&gt; {
+    const counts = { replies: 0, reposts: 0, likes: 0, views: 0 };
+    const group = article.querySelector(SELECTORS.actionGroup);
+    const nodes = group ? group.querySelectorAll('[aria-label]') : [];
+    nodes.forEach((node) =&gt; {
+      const label = (node.getAttribute('aria-label') || '').toLowerCase();
+      const value = countFromLabel(label);
+      if (label.includes('repl')) counts.replies = value;
+      else if (label.includes('repost') || label.includes('retweet')) counts.reposts = value;
+      else if (label.includes('like')) counts.likes = value;
+      else if (label.includes('view')) counts.views = value;
+    });
+    return counts;
+  };
+
+  const toOriginalImage = (url) =&gt; {
+    if (!url) return url;
+    return url.replace(/&amp;name=[^&amp;]*/i, '&amp;name=orig').replace(/\?name=[^&amp;]*/i, '?name=orig');
+  };
+
+  const getMediaUrls = (article) =&gt; {
+    const urls = new Set();
+    article.querySelectorAll(SELECTORS.photo).forEach((img) =&gt; {
+      if (img.src) urls.add(toOriginalImage(img.src));
+    });
+    article.querySelectorAll(SELECTORS.video).forEach((v) =&gt; {
+      if (v.src) urls.add(v.src);
+      else if (v.poster) urls.add(v.poster);
+    });
+    return Array.from(urls);
+  };
+
+  const isReply = (article) =&gt; {
+    if (article.querySelector('[data-testid=&quot;in-reply-to&quot;]') !== null) return true;
+    return Array.from(article.querySelectorAll('div[dir]')).some((el) =&gt;
+      (el.textContent || '').startsWith('Replying to'));
+  };
+
+  const extractPost = (article) =&gt; {
+    const timeEl = article.querySelector('time');
+    const permalink = timeEl ? timeEl.closest('a[href*=&quot;/status/&quot;]') : null;
+    const anchor = permalink || article.querySelector('a[href*=&quot;/status/&quot;]');
+    const url = anchor ? anchor.href : '';
+    const id = url ? (url.split('/status/')[1] || '').split(/[?/]/)[0] : '';
+    if (!id) return null;
+
+    const nameBlock = article.querySelector(SELECTORS.userName);
+    const nameText = nameBlock ? nameBlock.textContent : '';
+    const handle = (nameText.match(/@(\w+)/) || [, ''])[1];
+    const name = nameText.split('@')[0].trim();
+
+    const textEl = article.querySelector(SELECTORS.tweetText);
+    const text = textEl ? textEl.textContent : '';
+
+    const counts = getCounts(article);
+
+    return {
+      id,
+      url,
+      author: { handle, name },
+      text,
+      likes: counts.likes,
+      reposts: counts.reposts,
+      replies: counts.replies,
+      views: counts.views,
+      timestamp: timeEl ? timeEl.getAttribute('datetime') : null,
+      mediaUrls: getMediaUrls(article),
+      isReply: isReply(article),
+      scrapedAt: new Date().toISOString()
+    };
+  };
+
+  const extractMember = (cell) =&gt; {
+    const handleAnchor = cell.querySelector('a[href^=&quot;/&quot;]');
+    const href = handleAnchor ? handleAnchor.getAttribute('href') : '';
+    const handle = (href || '').replace(/^\//, '').split('/')[0];
+    if (!handle) return null;
+
+    const nameBlock = cell.querySelector(SELECTORS.userName) || cell.querySelector('a[href^=&quot;/&quot;]');
+    const nameText = nameBlock ? nameBlock.textContent : '';
+    const name = nameText.split('@')[0].trim();
+    const bioEl = cell.querySelector(SELECTORS.userDescription);
+    const verified = !!cell.querySelector('svg[aria-label*=&quot;Verified&quot;]');
+
+    return {
+      handle,
+      name,
+      bio: bioEl ? bioEl.textContent : '',
+      verified,
+      profileUrl: `https://x.com/${handle}`,
+      scrapedAt: new Date().toISOString()
+    };
+  };
+
+  const downloadFile = (content, filename, mime) =&gt; {
     try {
-      const nameEl = cell.querySelector('[dir=&quot;ltr&quot;] &gt; span');
-      const handleEl = cell.querySelector('a[href^=&quot;/&quot;]');
-      const bioEl = cell.querySelector('[data-testid=&quot;UserDescription&quot;]');
-      const verified = !!cell.querySelector('svg[aria-label*=&quot;Verified&quot;]');
-      
-      const href = handleEl?.getAttribute('href') || '';
-      const handle = href.replace('/', '').split('/')[0];
-      
-      return {
-        handle,
-        displayName: nameEl?.textContent || '',
-        bio: bioEl?.textContent || '',
-        verified,
-        profileUrl: `https://x.com/${handle}`,
-      };
+      const blob = new Blob([content], { type: mime });
+      const href = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = href;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(href);
+      return true;
     } catch (e) {
-      return null;
+      log.error(`Failed to download ${filename}: ${e.message}`);
+      return false;
     }
+  };
+
+  const csvCell = (value) =&gt; `&quot;${String(value == null ? '' : value).replace(/&quot;/g, '&quot;&quot;').replace(/\r?\n/g, ' ')}&quot;`;
+
+  const postsToCSV = (posts) =&gt; {
+    const headers = ['id', 'handle', 'name', 'text', 'likes', 'reposts', 'replies', 'views', 'timestamp', 'mediaUrls', 'url'];
+    const rows = posts.map((p) =&gt; [
+      p.id, '@' + p.author.handle, p.author.name, p.text, p.likes, p.reposts,
+      p.replies, p.views, p.timestamp || '', p.mediaUrls.join(' '), p.url
+    ].map(csvCell).join(','));
+    return [headers.join(','), ...rows].join('\n');
+  };
+
+  const membersToCSV = (members) =&gt; {
+    const headers = ['handle', 'name', 'bio', 'verified', 'profileUrl'];
+    const rows = members.map((m) =&gt; [
+      '@' + m.handle, m.name, m.bio, m.verified, m.profileUrl
+    ].map(csvCell).join(','));
+    return [headers.join(','), ...rows].join('\n');
   };
 
   const getListId = () =&gt; {
@@ -233,91 +430,156 @@
   };
 
   const getListName = () =&gt; {
-    const header = document.querySelector('h2[role=&quot;heading&quot;]');
-    return header?.textContent || 'unknown_list';
+    const header = document.querySelector(SELECTORS.heading);
+    return header ? header.textContent.trim() : 'list';
   };
 
-  const run = async () =&gt; {
-    if (!window.location.pathname.includes('/lists/')) {
-      console.error('❌ Please go to a Twitter list first!');
-      console.log('   Example: x.com/i/lists/123456/members');
-      return;
-    }
+  // ============================================
+  // 🎯 MAIN
+  // ============================================
+  console.log(`
+╔══════════════════════════════════════════════════════════╗
+║  📋 SCRAPE LIST - XActions                              ║
+║  👤 Author: nichxbt                                      ║
+║  🌐 https://xactions.app                                 ║
+╚══════════════════════════════════════════════════════════╝
+  `);
 
-    const listId = getListId();
-    const listName = getListName();
-    console.log(`📋 Scraping list: ${listName} (ID: ${listId})...`);
+  // Page guard: warn and return, never hard-redirect.
+  if (!/\/lists\/\d+/.test(window.location.pathname)) {
+    log.warning('You are not on an X List page.');
+    log.info('Go to x.com/i/lists/&lt;listId&gt; (timeline) or x.com/i/lists/&lt;listId&gt;/members, then run again.');
+    return;
+  }
 
-    const members = new Map();
-    let scrolls = 0;
-    let noNewCount = 0;
+  const mode = CONFIG.mode === 'auto'
+    ? (/\/members\b/.test(window.location.pathname) ? 'members' : 'timeline')
+    : CONFIG.mode;
+  if (mode !== 'timeline' &amp;&amp; mode !== 'members') {
+    log.error(`Invalid CONFIG.mode &quot;${CONFIG.mode}&quot;. Use 'timeline', 'members', or 'auto'.`);
+    return;
+  }
 
-    while (members.size &lt; CONFIG.MAX_MEMBERS &amp;&amp; noNewCount &lt; 5) {
-      const cells = document.querySelectorAll('[data-testid=&quot;UserCell&quot;]');
-      const beforeCount = members.size;
+  const listId = getListId();
+  const listName = getListName();
 
-      cells.forEach(cell =&gt; {
-        const user = extractUser(cell);
-        if (user &amp;&amp; user.handle &amp;&amp; !members.has(user.handle)) {
-          members.set(user.handle, user);
+  const items = new Map();
+
+  // Stop switch: run window.stopScrapeList() to end the scroll loop.
+  let stopped = false;
+  window.stopScrapeList = () =&gt; {
+    stopped = true;
+    log.warning('Stop requested. Finishing the current pass, then exporting.');
+  };
+
+  const noun = mode === 'members' ? 'members' : 'posts';
+  log.info(`List: &quot;${listName}&quot; (id ${listId})`);
+  log.info(`Mode: ${mode} | Max ${noun}: ${CONFIG.maxItems}`);
+  if (mode === 'timeline') log.info(`Include replies: ${CONFIG.includeReplies}`);
+  log.info('To stop early: window.stopScrapeList()');
+
+  let scrollAttempts = 0;
+  let noNewCount = 0;
+
+  while (!stopped &amp;&amp; items.size &lt; CONFIG.maxItems &amp;&amp; scrollAttempts &lt; CONFIG.maxScrollAttempts) {
+    const before = items.size;
+
+    if (mode === 'members') {
+      document.querySelectorAll(SELECTORS.userCell).forEach((cell) =&gt; {
+        try {
+          const member = extractMember(cell);
+          if (member &amp;&amp; !items.has(member.handle)) items.set(member.handle, member);
+        } catch (e) {
+          log.error(`Skipped a member: ${e.message}`);
         }
       });
+    } else {
+      document.querySelectorAll(SELECTORS.tweet).forEach((article) =&gt; {
+        try {
+          const post = extractPost(article);
+          if (!post || items.has(post.id)) return;
+          if (!CONFIG.includeReplies &amp;&amp; post.isReply) return;
+          items.set(post.id, post);
+        } catch (e) {
+          log.error(`Skipped a post: ${e.message}`);
+        }
+      });
+    }
 
-      const added = members.size - beforeCount;
-      if (added &gt; 0) {
-        console.log(`📋 Collected ${members.size} members...`);
-        noNewCount = 0;
-      } else {
-        noNewCount++;
+    if (items.size &gt; before) {
+      log.progress(items.size, CONFIG.maxItems, noun);
+      noNewCount = 0;
+    } else {
+      noNewCount++;
+      if (noNewCount &gt;= CONFIG.noNewItemsThreshold) {
+        log.warning(`No new ${noun} after several scrolls. Reached the end.`);
+        break;
       }
-
-      window.scrollBy(0, 800);
-      await sleep(CONFIG.SCROLL_DELAY);
-      scrolls++;
-
-      if (scrolls &gt; 200) break;
     }
 
-    const memberList = Array.from(members.values());
+    if (items.size &gt;= CONFIG.maxItems) break;
 
-    console.log('\n' + '='.repeat(60));
-    console.log(`📋 SCRAPED ${memberList.length} MEMBERS FROM &quot;${listName}&quot;`);
-    console.log('='.repeat(60) + '\n');
+    window.scrollTo(0, document.body.scrollHeight);
+    await sleep(CONFIG.scrollDelay);
+    scrollAttempts++;
+  }
 
-    const verified = memberList.filter(m =&gt; m.verified).length;
-    console.log(`📊 Stats: ${verified} verified accounts`);
+  const list = Array.from(items.values()).slice(0, CONFIG.maxItems);
 
-    memberList.slice(0, 5).forEach((m, i) =&gt; {
-      console.log(`${i + 1}. @${m.handle}${m.verified ? ' ✓' : ''} - ${m.displayName}`);
-    });
-    if (memberList.length &gt; 5) {
-      console.log(`   ... and ${memberList.length - 5} more\n`);
-    }
+  // ============================================
+  // 📊 SUMMARY + EXPORT
+  // ============================================
+  if (list.length === 0) {
+    log.warning(`No ${noun} were found. The List may be empty, or the page had not loaded yet.`);
+    return;
+  }
 
-    const safeListName = listName.replace(/[^a-z0-9]/gi, '_').slice(0, 30);
+  const safeName = listName.replace(/[^a-z0-9]/gi, '_').slice(0, 30) || 'list';
+  const stamp = new Date().toISOString().split('T')[0];
 
-    if (CONFIG.FORMAT === 'json' || CONFIG.FORMAT === 'both') {
-      const data = { listId, listName, members: memberList };
-      download(JSON.stringify(data, null, 2), `list_${safeListName}_${Date.now()}.json`, 'application/json');
-      console.log('💾 Downloaded list_members.json');
-    }
+  if (mode === 'members') {
+    const verified = list.filter((m) =&gt; m.verified).length;
+    console.log(`
+╔══════════════════════════════════════════════════════════╗
+║  📊 SCRAPE LIST (MEMBERS) - COMPLETE                    ║
+╠══════════════════════════════════════════════════════════╣
+║  📋 List:         ${String(listName).slice(0, 36).padEnd(37)}║
+║  👥 Members:      ${String(list.length).padEnd(37)}║
+║  ✓  Verified:     ${String(verified).padEnd(37)}║
+╚══════════════════════════════════════════════════════════╝
+    `);
+    list.slice(0, 5).forEach((m, i) =&gt; console.log(`${i + 1}. @${m.handle}${m.verified ? ' ✓' : ''} - ${m.name}`));
 
-    if (CONFIG.FORMAT === 'csv' || CONFIG.FORMAT === 'both') {
-      const csv = [
-        'Handle,DisplayName,Bio,Verified,ProfileURL',
-        ...memberList.map(m =&gt; 
-          `&quot;@${m.handle}&quot;,&quot;${m.displayName.replace(/&quot;/g, '&quot;&quot;')}&quot;,&quot;${m.bio.replace(/&quot;/g, '&quot;&quot;').replace(/\n/g, ' ')}&quot;,${m.verified},&quot;${m.profileUrl}&quot;`
-        )
-      ].join('\n');
-      download(csv, `list_${safeListName}_${Date.now()}.csv`, 'text/csv');
-      console.log('💾 Downloaded list_members.csv');
-    }
+    const result = { listId, listName, mode, scrapedAt: new Date().toISOString(), count: list.length, members: list };
+    if (CONFIG.downloadJson &amp;&amp; downloadFile(JSON.stringify(result, null, 2), `list_${safeName}_members_${stamp}.json`, 'application/json')) log.success('JSON downloaded');
+    if (CONFIG.downloadCsv &amp;&amp; downloadFile(membersToCSV(list), `list_${safeName}_members_${stamp}.csv`, 'text/csv')) log.success('CSV downloaded');
+    window.scrapedList = result;
+    window.exportCSV = () =&gt; membersToCSV(list);
+  } else {
+    const totalLikes = list.reduce((s, p) =&gt; s + p.likes, 0);
+    console.log(`
+╔══════════════════════════════════════════════════════════╗
+║  📊 SCRAPE LIST (TIMELINE) - COMPLETE                   ║
+╠══════════════════════════════════════════════════════════╣
+║  📋 List:         ${String(listName).slice(0, 36).padEnd(37)}║
+║  📝 Posts:        ${String(list.length).padEnd(37)}║
+║  ❤️  Total likes:  ${String(totalLikes.toLocaleString()).padEnd(37)}║
+╚══════════════════════════════════════════════════════════╝
+    `);
+    list.slice(0, 5).forEach((p, i) =&gt; console.log(`${i + 1}. @${p.author.handle} (${p.likes} ❤️): &quot;${p.text.slice(0, 60)}&quot;`));
 
-    window.scrapedList = { listId, listName, members: memberList };
-    console.log('\n✅ Done! Access data: window.scrapedList');
-  };
+    const result = { listId, listName, mode, scrapedAt: new Date().toISOString(), count: list.length, posts: list };
+    if (CONFIG.downloadJson &amp;&amp; downloadFile(JSON.stringify(result, null, 2), `list_${safeName}_timeline_${stamp}.json`, 'application/json')) log.success('JSON downloaded');
+    if (CONFIG.downloadCsv &amp;&amp; downloadFile(postsToCSV(list), `list_${safeName}_timeline_${stamp}.csv`, 'text/csv')) log.success('CSV downloaded');
+    window.scrapedList = result;
+    window.exportCSV = () =&gt; postsToCSV(list);
+  }
 
-  run();
+  console.log('');
+  log.info('window.scrapedList holds the full data. window.exportCSV() returns the CSV string.');
+  log.success('Done! by nichxbt');
+
+  return window.scrapedList;
 })();
 </code></pre>
           </div>
@@ -333,17 +595,12 @@
 
     <aside class="sidebar-right">
       <div class="sidebar-card">
-        <h3>📝 Scrapers</h3>
-        <a href="/scripts/scrape-bookmarks">🔖 Bookmarks Scraper</a>
-<a href="/scripts/scrape-analytics">📊 Browser console script to scrape X/Twitter analytics data</a>
-<a href="/scripts/scrape-dms">✉️ DM Scraper</a>
-<a href="/scripts/export-to-csv">📄 Export to CSV Utility</a>
-<a href="/scripts/scrape-followers">👥 Followers Scraper</a>
-<a href="/scripts/scrape-following">👥 Following Scraper</a>
-<a href="/scripts/scrape-hashtag">#️⃣ Hashtag Scraper</a>
-<a href="/scripts/scrape-likers">❤️ Likers Scraper</a>
-<a href="/scripts/scrape-likes">❤️ Likes Scraper</a>
-<a href="/scripts/link-scraper">🔗 Link Scraper</a>
+        <h3>🗂️ Lists</h3>
+        <a href="/scripts/add-to-list">🗂️ Add Users to List</a>
+<a href="/scripts/advanced-lists">🗂️ Advanced List Tools</a>
+<a href="/scripts/follow-list-members">🗂️ Follow List Members</a>
+<a href="/scripts/follow-list">🗂️ Follow Lists</a>
+<a href="/scripts/list-manager">🗂️ List Manager</a>
       </div>
       <div class="sidebar-card">
         <h3>🔗 Quick Links</h3>

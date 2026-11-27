@@ -4,14 +4,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Auto-Plug Replies — Free X/Twitter Script | XActions</title>
-  <meta name="description" content="Automatically reply to your own tweets that go viral with a &quot;plug&quot; (link, CTA, product pitch).">
-  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, auto, plug, replies, engagement">
+  <meta name="description" content="Reply to your own tweets that pass a like threshold with a plug message (link, CTA, product pitch).">
+  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, auto, plug, replies, grow">
   <meta name="author" content="nich (@nichxbt)">
   <meta name="robots" content="index, follow">
 
   <meta property="og:type" content="article">
   <meta property="og:title" content="Auto-Plug Replies — XActions">
-  <meta property="og:description" content="Automatically reply to your own tweets that go viral with a &quot;plug&quot; (link, CTA, product pitch).">
+  <meta property="og:description" content="Reply to your own tweets that pass a like threshold with a plug message (link, CTA, product pitch).">
   <meta property="og:url" content="https://xactions.app/scripts/auto-plug-replies">
   <meta property="og:site_name" content="XActions">
   <meta property="og:image" content="https://xactions.app/og-run.png">
@@ -19,7 +19,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@nichxbt">
   <meta name="twitter:title" content="Auto-Plug Replies — XActions">
-  <meta name="twitter:description" content="Automatically reply to your own tweets that go viral with a &quot;plug&quot; (link, CTA, product pitch).">
+  <meta name="twitter:description" content="Reply to your own tweets that pass a like threshold with a plug message (link, CTA, product pitch).">
   <meta name="twitter:image" content="https://xactions.app/og-run.png">
 
   <link rel="canonical" href="https://xactions.app/scripts/auto-plug-replies">
@@ -30,14 +30,14 @@
     "@context": "https://schema.org",
     "@type": "TechArticle",
     "headline": "Auto-Plug Replies — Free X/Twitter Script | XActions",
-    "description": "Automatically reply to your own tweets that go viral with a \"plug\" (link, CTA, product pitch).",
+    "description": "Reply to your own tweets that pass a like threshold with a plug message (link, CTA, product pitch).",
     "url": "https://xactions.app/scripts/auto-plug-replies",
     "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
     "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
     "datePublished": "2026-03-30",
     "dateModified": "2026-03-30",
-    "articleSection": "Engagement",
-    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, auto, plug, replies, engagement"
+    "articleSection": "Grow",
+    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, auto, plug, replies, grow"
   }
   </script>
   <script type="application/ld+json">
@@ -47,7 +47,7 @@
     "itemListElement": [
       { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
       { "@type": "ListItem", "position": 2, "name": "Scripts", "item": "https://xactions.app/scripts" },
-      { "@type": "ListItem", "position": 3, "name": "Engagement", "item": "https://xactions.app/scripts#engagement" },
+      { "@type": "ListItem", "position": 3, "name": "Grow", "item": "https://xactions.app/scripts#grow" },
       { "@type": "ListItem", "position": 4, "name": "Auto-Plug Replies", "item": "https://xactions.app/scripts/auto-plug-replies" }
     ]
   }
@@ -116,24 +116,24 @@
 
     <main class="main-content" id="main-content">
       <header class="main-header">
-        <h1>🔌 Auto-Plug Replies</h1>
+        <h1>🌱 Auto-Plug Replies</h1>
         <div class="breadcrumb">
-          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#engagement">Engagement</a> › Auto-Plug Replies
+          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#grow">Grow</a> › Auto-Plug Replies
         </div>
       </header>
 
       <article class="article">
-        <span class="cat-badge">Engagement</span>
-        <span class="source-badge">browser</span>
+        <span class="cat-badge">Grow</span>
+        <span class="source-badge">browser/autoPlugReplies.js</span>
 
         <div class="meta-row">
-          <span>v1.0.0</span>
-          <span>Updated: 2026-02-24</span>
-          <span>298 lines</span>
+          <span>v1.1.0</span>
+          <span>Updated: 2026-11-26</span>
+          <span>312 lines</span>
           <span>by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></span>
         </div>
 
-        <p>Automatically reply to your own tweets that go viral with a &quot;plug&quot; (link, CTA, product pitch). Monitors your recent tweets for engagement spikes, and when a tweet exceeds a threshold, posts a follow-up reply to capitalize on the visibility.</p>
+        <p>Reply to your own tweets that pass a like threshold with a plug message (link, CTA, product pitch).</p>
 
         
 
@@ -141,7 +141,7 @@
         <ol class="usage-steps"><li>Go to your profile: x.com/YOUR_USERNAME</li>
 <li>Open DevTools Console (F12)</li>
 <li>Configure your plug message and threshold</li>
-<li>Paste and run</li></ol>
+<li>Paste browser/autoPlugReplies.js and run</li></ol>
         
 
         <div class="controls-box">
@@ -151,7 +151,8 @@ XActions.setThreshold(100)   // Min likes to trigger
 XActions.scan()              // Manual scan
 XActions.autoScan(600000)    // Auto-scan every 10min
 XActions.stop()              // Stop auto-scanning
-XActions.history()           // View plug history</code></pre>
+XActions.history()           // View plug history
+XActions.exportHistory()     // Download the full plug history as JSON</code></pre>
       </div>
         <section class="config-section">
         <h2>Configuration Options</h2>
@@ -162,6 +163,7 @@ XActions.history()           // View plug history</code></pre>
 <tr><td><code>viralThreshold</code></td><td><code>50</code></td><td>Minimum likes to consider &quot;viral enough&quot; to plug</td></tr>
 <tr><td><code>maxPlugsPerSession</code></td><td><code>3</code></td><td>Don't over-plug</td></tr>
 <tr><td><code>replyDelay</code></td><td><code>3000</code></td><td>Delay before posting reply (ms)</td></tr>
+<tr><td><code>autoDownloadHistory</code></td><td><code>false</code></td><td>Download this scan's plugs as JSON when a scan ends</td></tr>
           </tbody>
         </table>
       </section>
@@ -177,6 +179,7 @@ XActions.history()           // View plug history</code></pre>
     replyDelay: 3000,        // Delay before posting reply (ms)
     scrollRounds: 5,
     scrollDelay: 2000,
+    autoDownloadHistory: false, // Download this scan's plugs as JSON when a scan ends
   };</code></pre>
         </div>
       </section>
@@ -193,14 +196,15 @@ XActions.history()           // View plug history</code></pre>
  * ============================================================
  *
  * @name        autoPlugReplies.js
- * @description Automatically reply to your own tweets that go
- *              viral with a &quot;plug&quot; (link, CTA, product pitch).
- *              Monitors your recent tweets for engagement spikes,
- *              and when a tweet exceeds a threshold, posts a
- *              follow-up reply to capitalize on the visibility.
+ * @title       Auto-Plug Replies
+ * @description Reply to your own tweets that pass a like threshold with a plug message (link, CTA, product pitch).
+ * @category    grow
+ * @page        x.com/&lt;you&gt;
+ * @writes      true
+ * @aliases     scripts/autoPlugReplies.js
  * @author      nichxbt (https://x.com/nichxbt)
- * @version     1.0.0
- * @date        2026-02-24
+ * @version     1.1.0
+ * @date        2026-11-26
  * @repository  https://github.com/nirholas/XActions
  *
  * ============================================================
@@ -209,7 +213,7 @@ XActions.history()           // View plug history</code></pre>
  * 1. Go to your profile: x.com/YOUR_USERNAME
  * 2. Open DevTools Console (F12)
  * 3. Configure your plug message and threshold
- * 4. Paste and run
+ * 4. Paste browser/autoPlugReplies.js and run
  *
  * Controls:
  *   XActions.setPlug(&quot;Check out my new project → link&quot;)
@@ -218,6 +222,7 @@ XActions.history()           // View plug history</code></pre>
  *   XActions.autoScan(600000)    // Auto-scan every 10min
  *   XActions.stop()              // Stop auto-scanning
  *   XActions.history()           // View plug history
+ *   XActions.exportHistory()     // Download the full plug history as JSON
  * ============================================================
  */
 (() =&gt; {
@@ -231,6 +236,7 @@ XActions.history()           // View plug history</code></pre>
     replyDelay: 3000,        // Delay before posting reply (ms)
     scrollRounds: 5,
     scrollDelay: 2000,
+    autoDownloadHistory: false, // Download this scan's plugs as JSON when a scan ends
   };
 
   const STORAGE_KEY = 'xactions_plug_history';
@@ -404,19 +410,22 @@ XActions.history()           // View plug history</code></pre>
     console.log(`\n🔌 Plugging ${toPlug.length} tweet(s)...\n`);
 
     const history = loadHistory();
+    const scanPlugs = [];
 
     for (const tweet of toPlug) {
       const ok = await postPlug(tweet);
       if (ok) {
         plugsThisSession++;
-        history.push({
+        const entry = {
           tweetUrl: tweet.fullUrl,
           tweetText: tweet.text,
           likes: tweet.likes,
           plugMessage: CONFIG.plugMessage,
           pluggedAt: new Date().toISOString(),
           dryRun: CONFIG.dryRun,
-        });
+        };
+        history.push(entry);
+        scanPlugs.push(entry);
         console.log('  ✅ Plugged!');
       } else {
         console.log('  ❌ Failed to plug.');
@@ -431,6 +440,14 @@ XActions.history()           // View plug history</code></pre>
     console.log(`  ✅ Plugged: ${toPlug.length} | Session total: ${plugsThisSession}/${CONFIG.maxPlugsPerSession}`);
     if (CONFIG.dryRun) console.log('  🏃 (Dry run — nothing was posted)');
     console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n');
+
+    if (CONFIG.autoDownloadHistory &amp;&amp; scanPlugs.length &gt; 0) {
+      const blob = new Blob([JSON.stringify(scanPlugs, null, 2)], { type: 'application/json' });
+      const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+      a.download = `xactions-plug-history-${Date.now()}.json`;
+      document.body.appendChild(a); a.click(); a.remove();
+      console.log(`📥 Downloaded: ${a.download}`);
+    }
   };
 
   // ── Controls ───────────────────────────────────────────────
@@ -497,17 +514,17 @@ XActions.history()           // View plug history</code></pre>
 
     <aside class="sidebar-right">
       <div class="sidebar-card">
-        <h3>🔌 Engagement</h3>
-        <a href="/scripts/auto-commenter">💬 Auto Commenter</a>
-<a href="/scripts/auto-reply-mentions">📨 Auto Reply Mentions</a>
-<a href="/scripts/auto-repost">🔁 Auto Repost (Retweet)</a>
-<a href="/scripts/auto-reply">💬 Auto-Reply / Auto-Respond</a>
-<a href="/scripts/auto-engage">⚡ Browser console script for automated engagement</a>
-<a href="/scripts/comment-by-hashtag">💬 Comment By Hashtag</a>
-<a href="/scripts/comment-by-location">💬 Comment By Location</a>
-<a href="/scripts/engagement-booster">🚀 Engagement Booster v2</a>
-<a href="/scripts/engagement-leaderboard">🏆 Engagement Leaderboard</a>
-<a href="/scripts/engagement-manager">⚡ Engagement Manager</a>
+        <h3>🌱 Grow</h3>
+        <a href="/scripts/algorithm-builder">🌱 Algorithm Builder</a>
+<a href="/scripts/algorithm-trainer">🌱 Algorithm Trainer</a>
+<a href="/scripts/follow-account">🌱 Follow Accounts</a>
+<a href="/scripts/follow-back">🌱 Follow Back</a>
+<a href="/scripts/follow-engagers">🌱 Follow Engagers</a>
+<a href="/scripts/follow-target-users">🌱 Follow Target Users</a>
+<a href="/scripts/follower-tools">🌱 Follower Tools</a>
+<a href="/scripts/growth-suite">🌱 Growth Suite</a>
+<a href="/scripts/keyword-follow">🌱 Keyword Follow</a>
+<a href="/scripts/natural-flow">🌱 Natural Flow</a>
       </div>
       <div class="sidebar-card">
         <h3>🔗 Quick Links</h3>

@@ -3,23 +3,23 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Mass Unblock Users — Free X/Twitter Script | XActions</title>
-  <meta name="description" content="Unblock all or selected users from your blocked list. Supports whitelist (keep-blocked), rate-limit detection, pause/resume, progress tracking, export.">
-  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, mass, unblock, safety &amp; privacy">
+  <title>Mass Unblock — Free X/Twitter Script | XActions</title>
+  <meta name="description" content="Unblock all or selected accounts on your blocked list, with a keep-blocked list, a cap and a dry run by default.">
+  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, mass, unblock, clean up">
   <meta name="author" content="nich (@nichxbt)">
   <meta name="robots" content="index, follow">
 
   <meta property="og:type" content="article">
-  <meta property="og:title" content="Mass Unblock Users — XActions">
-  <meta property="og:description" content="Unblock all or selected users from your blocked list. Supports whitelist (keep-blocked), rate-limit detection, pause/resume, progress tracking, export.">
+  <meta property="og:title" content="Mass Unblock — XActions">
+  <meta property="og:description" content="Unblock all or selected accounts on your blocked list, with a keep-blocked list, a cap and a dry run by default.">
   <meta property="og:url" content="https://xactions.app/scripts/mass-unblock">
   <meta property="og:site_name" content="XActions">
   <meta property="og:image" content="https://xactions.app/og-run.png">
 
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@nichxbt">
-  <meta name="twitter:title" content="Mass Unblock Users — XActions">
-  <meta name="twitter:description" content="Unblock all or selected users from your blocked list. Supports whitelist (keep-blocked), rate-limit detection, pause/resume, progress tracking, export.">
+  <meta name="twitter:title" content="Mass Unblock — XActions">
+  <meta name="twitter:description" content="Unblock all or selected accounts on your blocked list, with a keep-blocked list, a cap and a dry run by default.">
   <meta name="twitter:image" content="https://xactions.app/og-run.png">
 
   <link rel="canonical" href="https://xactions.app/scripts/mass-unblock">
@@ -29,15 +29,15 @@
   {
     "@context": "https://schema.org",
     "@type": "TechArticle",
-    "headline": "Mass Unblock Users — Free X/Twitter Script | XActions",
-    "description": "Unblock all or selected users from your blocked list. Supports whitelist (keep-blocked), rate-limit detection, pause/resume, progress tracking, export.",
+    "headline": "Mass Unblock — Free X/Twitter Script | XActions",
+    "description": "Unblock all or selected accounts on your blocked list, with a keep-blocked list, a cap and a dry run by default.",
     "url": "https://xactions.app/scripts/mass-unblock",
     "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
     "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
     "datePublished": "2026-03-30",
     "dateModified": "2026-03-30",
-    "articleSection": "Safety & Privacy",
-    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, mass, unblock, safety & privacy"
+    "articleSection": "Clean Up",
+    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, mass, unblock, clean up"
   }
   </script>
   <script type="application/ld+json">
@@ -47,8 +47,8 @@
     "itemListElement": [
       { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
       { "@type": "ListItem", "position": 2, "name": "Scripts", "item": "https://xactions.app/scripts" },
-      { "@type": "ListItem", "position": 3, "name": "Safety & Privacy", "item": "https://xactions.app/scripts#safety-privacy" },
-      { "@type": "ListItem", "position": 4, "name": "Mass Unblock Users", "item": "https://xactions.app/scripts/mass-unblock" }
+      { "@type": "ListItem", "position": 3, "name": "Clean Up", "item": "https://xactions.app/scripts#clean-up" },
+      { "@type": "ListItem", "position": 4, "name": "Mass Unblock", "item": "https://xactions.app/scripts/mass-unblock" }
     ]
   }
   </script>
@@ -116,43 +116,50 @@
 
     <main class="main-content" id="main-content">
       <header class="main-header">
-        <h1>🔓 Mass Unblock Users</h1>
+        <h1>🧹 Mass Unblock</h1>
         <div class="breadcrumb">
-          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#safety-privacy">Safety &amp; Privacy</a> › Mass Unblock Users
+          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#clean-up">Clean Up</a> › Mass Unblock
         </div>
       </header>
 
       <article class="article">
-        <span class="cat-badge">Safety &amp; Privacy</span>
-        <span class="source-badge">browser</span>
+        <span class="cat-badge">Clean Up</span>
+        <span class="source-badge">browser/massUnblock.js</span>
 
         <div class="meta-row">
-          <span>v2.0.0</span>
-          <span>Updated: 2026-02-24</span>
-          <span>183 lines</span>
+          <span>v2.1.0</span>
+          <span>Updated: 2026-11-27</span>
+          <span>241 lines</span>
           <span>by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></span>
         </div>
 
-        <p>Unblock all or selected users from your blocked list. Supports whitelist (keep-blocked), rate-limit detection, pause/resume, progress tracking, export.</p>
+        <p>Unblock all or selected accounts on your blocked list, with a keep-blocked list, a cap and a dry run by default.</p>
 
         
 
         <h2>How to Use</h2>
         <ol class="usage-steps"><li>Go to: https://x.com/settings/blocked/all</li>
 <li>Open DevTools Console (F12)</li>
-<li>Paste and run</li></ol>
+<li>Edit CONFIG. It starts as a dry run (dryRun: true) that only lists</li>
+<li>Paste browser/massUnblock.js and press Enter</li></ol>
         
 
         <div class="controls-box">
         <h3>Runtime Controls</h3>
-        <pre><code>window.XActions.pause()  / .resume() / .abort() / .status()</code></pre>
+        <pre><code>window.XActions.pause()  / .resume() / .abort() / .status()
+window.stopMassUnblock() - stop after the current account</code></pre>
       </div>
         <section class="config-section">
         <h2>Configuration Options</h2>
         <table>
           <thead><tr><th>Option</th><th>Default</th><th>Description</th></tr></thead>
           <tbody>
-            <tr><td><code>keepBlocked</code></td><td><code>[]</code></td><td>Keep these users blocked (without @)</td></tr>
+            <tr><td><code>maxUnblocks</code></td><td><code>50</code></td><td>Max accounts to unblock (or list, in dry run) per run</td></tr>
+<tr><td><code>keepBlocked</code></td><td><code>[]</code></td><td>Keep these users blocked (without @)</td></tr>
+<tr><td><code>usersToUnblock</code></td><td><code>[]</code></td><td>Only unblock these users (without @); empty = everyone not in keepBlocked</td></tr>
+<tr><td><code>dryRun</code></td><td><code>true</code></td><td>SET FALSE TO EXECUTE</td></tr>
+<tr><td><code>maxScrolls</code></td><td><code>0</code></td><td>Hard cap on total scrolls, 0 = no cap</td></tr>
+<tr><td><code>saveToStorage</code></td><td><code>false</code></td><td>Append each run's unblocked usernames to localStorage &quot;xactions_unblock_log&quot; (last 50 runs)</td></tr>
           </tbody>
         </table>
       </section>
@@ -161,16 +168,19 @@
         <div class="code-block">
           <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.querySelector('code').textContent).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy',2000)})">Copy</button>
           <pre><code>const CONFIG = {
-    maxUnblocks: Infinity,
+    maxUnblocks: 50,                  // Max accounts to unblock (or list, in dry run) per run
     keepBlocked: [],                  // Keep these users blocked (without @)
-    dryRun: false,
-    minDelay: 1000,
+    usersToUnblock: [],               // Only unblock these users (without @); empty = everyone not in keepBlocked
+    dryRun: true,                     // SET FALSE TO EXECUTE
+    minDelay: 1500,
     maxDelay: 2800,
     scrollDelay: 2000,
     maxEmptyScrolls: 6,
+    maxScrolls: 0,                    // Hard cap on total scrolls, 0 = no cap
     maxConsecutiveErrors: 10,
     rateLimitCooldown: 60000,
     exportOnComplete: true,
+    saveToStorage: false,             // Append each run's unblocked usernames to localStorage &quot;xactions_unblock_log&quot; (last 50 runs)
   };</code></pre>
         </div>
       </section>
@@ -187,12 +197,15 @@
  * ============================================================
  *
  * @name        massUnblock.js
- * @description Unblock all or selected users from your blocked
- *              list. Supports whitelist (keep-blocked), rate-limit
- *              detection, pause/resume, progress tracking, export.
+ * @title       Mass Unblock
+ * @description Unblock all or selected accounts on your blocked list, with a keep-blocked list, a cap and a dry run by default.
+ * @category    cleanup
+ * @page        x.com/settings/blocked/all
+ * @writes      true
+ * @aliases     scripts/massUnblock.js, scripts/twitter/mass-unblock.js
  * @author      nichxbt (https://x.com/nichxbt)
- * @version     2.0.0
- * @date        2026-02-24
+ * @version     2.1.0
+ * @date        2026-11-27
  * @repository  https://github.com/nirholas/XActions
  *
  * ============================================================
@@ -200,27 +213,37 @@
  *
  * 1. Go to: https://x.com/settings/blocked/all
  * 2. Open DevTools Console (F12)
- * 3. Paste and run
+ * 3. Edit CONFIG. It starts as a dry run (dryRun: true) that only lists
+ *    who would be unblocked; set dryRun = false to unblock for real.
+ *    maxUnblocks (50 by default) caps one run. Put usernames in
+ *    usersToUnblock to unblock only those accounts.
+ * 4. Paste browser/massUnblock.js and press Enter
  *
  * 🎮 CONTROLS:
  *   window.XActions.pause()  / .resume() / .abort() / .status()
+ *   window.stopMassUnblock() - stop after the current account
  * ============================================================
  */
 (() =&gt; {
   'use strict';
 
   const CONFIG = {
-    maxUnblocks: Infinity,
+    maxUnblocks: 50,                  // Max accounts to unblock (or list, in dry run) per run
     keepBlocked: [],                  // Keep these users blocked (without @)
-    dryRun: false,
-    minDelay: 1000,
+    usersToUnblock: [],               // Only unblock these users (without @); empty = everyone not in keepBlocked
+    dryRun: true,                     // SET FALSE TO EXECUTE
+    minDelay: 1500,
     maxDelay: 2800,
     scrollDelay: 2000,
     maxEmptyScrolls: 6,
+    maxScrolls: 0,                    // Hard cap on total scrolls, 0 = no cap
     maxConsecutiveErrors: 10,
     rateLimitCooldown: 60000,
     exportOnComplete: true,
+    saveToStorage: false,             // Append each run's unblocked usernames to localStorage &quot;xactions_unblock_log&quot; (last 50 runs)
   };
+
+  const STORAGE_KEY = 'xactions_unblock_log';
 
   const SEL = {
     unblockBtn:  ['[data-testid$=&quot;-unblock&quot;]', 'button[aria-label*=&quot;Unblock&quot;]', 'button[aria-label*=&quot;Blocked&quot;]'],
@@ -241,6 +264,7 @@
   const unblockedLog = [];
   const processedUsers = new Set();
   const keepSet = new Set(CONFIG.keepBlocked.map(u =&gt; u.toLowerCase().replace(/^@/, '')));
+  const onlySet = new Set(CONFIG.usersToUnblock.map(u =&gt; u.toLowerCase().replace(/^@/, '')));
 
   window.XActions = {
     pause()  { paused = true;  console.log('⏸️ Paused.'); },
@@ -250,6 +274,12 @@
       const el = ((Date.now() - startTime) / 1000).toFixed(0);
       console.log(`📊 Unblocked: ${unblocked} | Skipped: ${skipped} | Errors: ${errors} | ${el}s`);
     },
+  };
+
+  // Stop switch kept from the scripts/twitter variant (also used by the command center Stop button).
+  window.stopMassUnblock = () =&gt; {
+    aborted = true;
+    console.log('🛑 Stop requested. Finishing the current account, then exiting.');
   };
 
   const shouldContinue = async () =&gt; { while (paused &amp;&amp; !aborted) await sleep(500); return !aborted; };
@@ -269,19 +299,27 @@
     const W = 60;
     console.log('╔' + '═'.repeat(W) + '╗');
     console.log('║  🔓 MASS UNBLOCK USERS' + ' '.repeat(W - 24) + '║');
-    console.log('║  by nichxbt — v2.0' + ' '.repeat(W - 21) + '║');
+    console.log('║  by nichxbt — v2.1' + ' '.repeat(W - 21) + '║');
     console.log('╚' + '═'.repeat(W) + '╝');
+    console.log(CONFIG.dryRun
+      ? '⚠️  DRY RUN MODE - No accounts will be unblocked. Set CONFIG.dryRun = false to unblock.'
+      : '🔴 LIVE MODE - Accounts WILL be unblocked');
+    console.log('💡 To stop early: window.stopMassUnblock()');
 
     if (!window.location.href.includes('/blocked')) {
       console.error('❌ Navigate to x.com/settings/blocked/all first!');
       return;
     }
 
-    console.log(`⚙️ Max: ${CONFIG.maxUnblocks === Infinity ? '∞' : CONFIG.maxUnblocks} | Dry run: ${CONFIG.dryRun} | Keep blocked: ${keepSet.size}`);
+    console.log(`⚙️ Max: ${CONFIG.maxUnblocks} | Dry run: ${CONFIG.dryRun} | Keep blocked: ${keepSet.size} | Only: ${onlySet.size ? onlySet.size + ' listed' : 'all'}`);
 
     let emptyScrolls = 0;
+    let scrolls = 0;
+    const seenOnly = new Set();
 
     while (unblocked &lt; CONFIG.maxUnblocks &amp;&amp; emptyScrolls &lt; CONFIG.maxEmptyScrolls) {
+      if (CONFIG.maxScrolls &gt; 0 &amp;&amp; scrolls &gt;= CONFIG.maxScrolls) break;
+      if (onlySet.size &gt; 0 &amp;&amp; seenOnly.size &gt;= onlySet.size) break;
       if (!(await shouldContinue())) break;
       if (isRateLimited()) { console.warn('🚨 Rate limit!'); await sleep(CONFIG.rateLimitCooldown); continue; }
 
@@ -291,6 +329,7 @@
       for (const cell of cells) {
         if (!(await shouldContinue())) break;
         if (unblocked &gt;= CONFIG.maxUnblocks) break;
+        if (!cell.isConnected) continue;
 
         const username = getUsername(cell);
         if (!username || processedUsers.has(username.toLowerCase())) continue;
@@ -301,6 +340,11 @@
           skipped++;
           console.log(`   🛡️ Keeping blocked: @${username}`);
           continue;
+        }
+
+        if (onlySet.size &gt; 0) {
+          if (!onlySet.has(username.toLowerCase())) continue;
+          seenOnly.add(username.toLowerCase());
         }
 
         const btn = cell.querySelector('[data-testid$=&quot;-unblock&quot;]') || cell.querySelector('button[aria-label*=&quot;Blocked&quot;]');
@@ -314,6 +358,8 @@
         }
 
         try {
+          cell.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          await sleep(300);
           btn.click();
           await sleep(gaussian(400, 700));
           const confirm = $(SEL.confirmBtn);
@@ -331,6 +377,7 @@
         } catch (e) {
           errors++;
           consecutiveErrors++;
+          console.log(`   ❌ Failed to unblock @${username}`);
           if (consecutiveErrors &gt;= CONFIG.maxConsecutiveErrors) { console.error('❌ Too many errors.'); break; }
         }
       }
@@ -338,8 +385,11 @@
       if (consecutiveErrors &gt;= CONFIG.maxConsecutiveErrors) break;
       if (!foundNew) emptyScrolls++; else emptyScrolls = 0;
       window.scrollTo(0, document.body.scrollHeight);
+      scrolls++;
       await sleep(gaussian(CONFIG.scrollDelay, CONFIG.scrollDelay + 800));
     }
+
+    if (aborted) console.log('🛑 Stopped by user.');
 
     const elapsed = ((Date.now() - startTime) / 1000).toFixed(0);
     console.log('\n╔' + '═'.repeat(48) + '╗');
@@ -351,8 +401,26 @@
     console.log(`║  Duration:    ${(elapsed + 's').padEnd(31)}║`);
     console.log('╚' + '═'.repeat(48) + '╝');
 
+    if (onlySet.size &gt; 0) {
+      const notFound = [...onlySet].filter(u =&gt; !seenOnly.has(u));
+      if (notFound.length &gt; 0) console.log(`⚠️  Not found in blocked list: ${notFound.join(', ')}`);
+    }
+
+    if (CONFIG.dryRun) console.log('⚠️  DRY RUN - No unblocks performed. Set CONFIG.dryRun = false to actually unblock.');
+
+    if (CONFIG.saveToStorage &amp;&amp; !CONFIG.dryRun) {
+      try {
+        const existing = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+        existing.push({ timestamp: new Date().toISOString(), unblocked: unblockedLog.map(e =&gt; e.username) });
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(existing.slice(-50)));
+        console.log(`💾 Results saved to localStorage &quot;${STORAGE_KEY}&quot;`);
+      } catch (e) {
+        console.warn('⚠️ Could not save to localStorage:', e.message);
+      }
+    }
+
     if (CONFIG.exportOnComplete &amp;&amp; unblockedLog.length &gt; 0) {
-      const blob = new Blob([JSON.stringify({ summary: { unblocked, skipped, errors }, accounts: unblockedLog }, null, 2)], { type: 'application/json' });
+      const blob = new Blob([JSON.stringify({ summary: { unblocked, skipped, errors, dryRun: CONFIG.dryRun }, accounts: unblockedLog }, null, 2)], { type: 'application/json' });
       const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
       a.download = `xactions-unblocked-${new Date().toISOString().slice(0, 10)}.json`;
       document.body.appendChild(a); a.click(); a.remove();
@@ -376,17 +444,17 @@
 
     <aside class="sidebar-right">
       <div class="sidebar-card">
-        <h3>🔓 Safety &amp; Privacy</h3>
-        <a href="/scripts/blacklist">🚫 Blacklist Manager</a>
-<a href="/scripts/block-bots">🤖 Block Bot Accounts</a>
-<a href="/scripts/block-by-keywords">🚫 Block By Keywords</a>
-<a href="/scripts/block-by-ratio">🚫 Block By Ratio</a>
-<a href="/scripts/block-list-transfer">🧱 Block List Transfer</a>
-<a href="/scripts/filter-manager">🔍 Filter Manager</a>
-<a href="/scripts/id-verification">🪪 ID Verification management</a>
-<a href="/scripts/manage-muted-words">🔇 Manage Muted Words</a>
-<a href="/scripts/manage-settings">⚙️ Manage Settings</a>
-<a href="/scripts/mass-block">🚫 Mass Block Users</a>
+        <h3>🧹 Clean Up</h3>
+        <a href="/scripts/bulk-delete-tweets">🧹 Bulk Delete Tweets</a>
+<a href="/scripts/clear-all-bookmarks">🧹 Clear All Bookmarks</a>
+<a href="/scripts/clear-all-reposts">🧹 Clear All Reposts</a>
+<a href="/scripts/mass-unmute">🧹 Mass Unmute</a>
+<a href="/scripts/protect-active-users">🧹 Protect Active Users</a>
+<a href="/scripts/remove-followers">🧹 Remove Followers</a>
+<a href="/scripts/search-sweep">🧹 Search Sweep</a>
+<a href="/scripts/smart-unfollow">🧹 Smart Unfollow</a>
+<a href="/scripts/unfollow-everyone">🧹 Unfollow Everyone</a>
+<a href="/scripts/unfollowback">🧹 Unfollow Non-Followers</a>
       </div>
       <div class="sidebar-card">
         <h3>🔗 Quick Links</h3>

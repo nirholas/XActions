@@ -3,23 +3,23 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Block list import/export/sharing — Free X/Twitter Script | XActions</title>
-  <meta name="description" content="Block list import/export/sharing: export block list, import block list, share block list, view muted conversations, unmute specific conversation.">
-  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, block, list, manager, lists &amp; communities">
+  <title>Block List Manager — Free X/Twitter Script | XActions</title>
+  <meta name="description" content="Import, export and share block lists. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
+  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, block, list, manager, safety">
   <meta name="author" content="nich (@nichxbt)">
   <meta name="robots" content="index, follow">
 
   <meta property="og:type" content="article">
-  <meta property="og:title" content="Block list import/export/sharing — XActions">
-  <meta property="og:description" content="Block list import/export/sharing: export block list, import block list, share block list, view muted conversations, unmute specific conversation.">
+  <meta property="og:title" content="Block List Manager — XActions">
+  <meta property="og:description" content="Import, export and share block lists. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
   <meta property="og:url" content="https://xactions.app/scripts/block-list-manager">
   <meta property="og:site_name" content="XActions">
   <meta property="og:image" content="https://xactions.app/og-run.png">
 
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@nichxbt">
-  <meta name="twitter:title" content="Block list import/export/sharing — XActions">
-  <meta name="twitter:description" content="Block list import/export/sharing: export block list, import block list, share block list, view muted conversations, unmute specific conversation.">
+  <meta name="twitter:title" content="Block List Manager — XActions">
+  <meta name="twitter:description" content="Import, export and share block lists. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
   <meta name="twitter:image" content="https://xactions.app/og-run.png">
 
   <link rel="canonical" href="https://xactions.app/scripts/block-list-manager">
@@ -29,15 +29,15 @@
   {
     "@context": "https://schema.org",
     "@type": "TechArticle",
-    "headline": "Block list import/export/sharing — Free X/Twitter Script | XActions",
-    "description": "Block list import/export/sharing: export block list, import block list, share block list, view muted conversations, unmute specific conversation.",
+    "headline": "Block List Manager — Free X/Twitter Script | XActions",
+    "description": "Import, export and share block lists. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.",
     "url": "https://xactions.app/scripts/block-list-manager",
     "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
     "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
     "datePublished": "2026-03-30",
     "dateModified": "2026-03-30",
-    "articleSection": "Lists & Communities",
-    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, block, list, manager, lists & communities"
+    "articleSection": "Safety",
+    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, block, list, manager, safety"
   }
   </script>
   <script type="application/ld+json">
@@ -47,8 +47,8 @@
     "itemListElement": [
       { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
       { "@type": "ListItem", "position": 2, "name": "Scripts", "item": "https://xactions.app/scripts" },
-      { "@type": "ListItem", "position": 3, "name": "Lists & Communities", "item": "https://xactions.app/scripts#lists-communities" },
-      { "@type": "ListItem", "position": 4, "name": "Block list import/export/sharing", "item": "https://xactions.app/scripts/block-list-manager" }
+      { "@type": "ListItem", "position": 3, "name": "Safety", "item": "https://xactions.app/scripts#safety" },
+      { "@type": "ListItem", "position": 4, "name": "Block List Manager", "item": "https://xactions.app/scripts/block-list-manager" }
     ]
   }
   </script>
@@ -116,24 +116,24 @@
 
     <main class="main-content" id="main-content">
       <header class="main-header">
-        <h1>📝 Block list import/export/sharing</h1>
+        <h1>🛡️ Block List Manager</h1>
         <div class="breadcrumb">
-          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#lists-communities">Lists &amp; Communities</a> › Block list import/export/sharing
+          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#safety">Safety</a> › Block List Manager
         </div>
       </header>
 
       <article class="article">
-        <span class="cat-badge">Lists &amp; Communities</span>
-        <span class="source-badge">browser</span>
+        <span class="cat-badge">Safety</span>
+        <span class="source-badge">browser/blockListManager.js</span>
 
         <div class="meta-row">
           
           
-          <span>504 lines</span>
+          <span>512 lines</span>
           <span>by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></span>
         </div>
 
-        <p>Block list import/export/sharing: export block list, import block list, share block list, view muted conversations, unmute specific conversation.</p>
+        <p>Import, export and share block lists.</p>
 
         
 
@@ -156,6 +156,14 @@
           <div class="code-block">
             <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.querySelector('code').textContent).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy Script',2000)})">Copy Script</button>
             <pre><code>// Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
+/**
+ * @name        blockListManager.js
+ * @title       Block List Manager
+ * @description Import, export and share block lists.
+ * @category    safety
+ * @page        x.com/settings/blocked/all
+ * @writes      true
+ */
 // browser/blockListManager.js
 // Block list import/export/sharing for X/Twitter
 // by nichxbt
@@ -672,17 +680,16 @@
 
     <aside class="sidebar-right">
       <div class="sidebar-card">
-        <h3>📝 Lists &amp; Communities</h3>
-        <a href="/scripts/add-to-list">➕ Add To List</a>
-<a href="/scripts/advanced-lists">📝 Advanced list management</a>
-<a href="/scripts/manage-lists">📝 Browser console script to manage X/Twitter Lists</a>
-<a href="/scripts/create-community">🏘️ Create Communities</a>
-<a href="/scripts/follow-list-members">👣 Follow List Members</a>
-<a href="/scripts/join-communities">🏘️ Join Communities</a>
-<a href="/scripts/leave-all-communities">🚪 Leave All Communities</a>
-<a href="/scripts/leave-community">🚪 Leave Specific Community</a>
-<a href="/scripts/manage-community">🏘️ Manage Communities</a>
-<a href="/scripts/list-manager">📝 Manage Lists</a>
+        <h3>🛡️ Safety</h3>
+        <a href="/scripts/block-bots">🛡️ Block Bots</a>
+<a href="/scripts/block-by-keywords">🛡️ Block by Keywords</a>
+<a href="/scripts/block-by-ratio">🛡️ Block by Ratio</a>
+<a href="/scripts/block-list-transfer">🛡️ Block List Import and Export</a>
+<a href="/scripts/manage-muted-words">🛡️ Manage Muted Words</a>
+<a href="/scripts/mass-block">🛡️ Mass Block</a>
+<a href="/scripts/mute-by-keywords">🛡️ Mute by Keywords</a>
+<a href="/scripts/report-spam">🛡️ Report Spam</a>
+<a href="/scripts/shadowban-checker">🛡️ Shadowban Checker</a>
       </div>
       <div class="sidebar-card">
         <h3>🔗 Quick Links</h3>

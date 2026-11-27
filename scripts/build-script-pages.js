@@ -2,15 +2,18 @@
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
 /**
  * Build Individual HTML Pages for Every Browser Console Script
- * Scans: browser/*.js, src/automation/*.js, scripts/*.js, scripts/twitter/*.js
+ * Reads: browser/index.json (built by scripts/build-script-manifest.mjs), one
+ *        page per canonical browser/<id>.js, plus the command center bundle.
  * Outputs to: dashboard/scripts/<slug>.html + dashboard/scripts/index.html
+ * Legacy file names (the @aliases of each script) get a redirect page, so a
+ * link to /scripts/delete-tweets still lands on /scripts/bulk-delete-tweets.
  * by nichxbt
  */
 
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import { isNodeProgram } from './lib/is-node-program.mjs';
+import { loadScriptManifest } from './lib/script-manifest.mjs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -18,277 +21,17 @@ const ROOT = path.join(__dirname, '..');
 const OUT_DIR = path.join(ROOT, 'dashboard', 'scripts');
 const SITE_URL = 'https://xactions.app';
 
-// ─── Category Mappings ─────────────────────────────────────────────
-const CATEGORIES = {
-  // Featured: the one-script launcher for everything below.
-  'xactions-command-center': { cat: 'Command Center', icon: '⚡', priority: 1.0 },
-  // Create & Post
-  'post-tweet': { cat: 'Posting', icon: '✍️', priority: 0.8 },
-  'schedule-post': { cat: 'Posting', icon: '🗓️', priority: 0.7 },
-  'quote-tweet': { cat: 'Posting', icon: '💬', priority: 0.7 },
-  'pin-tweet': { cat: 'Posting', icon: '📌', priority: 0.7 },
-  'auto-reply-mentions': { cat: 'Engagement', icon: '📨', priority: 0.7 },
-  'vote-in-polls': { cat: 'Engagement', icon: '🗳️', priority: 0.6 },
-  'delete-tweets': { cat: 'Content Tools', icon: '🗑️', priority: 0.8 },
-  // New scrapers
-  'scrape-retweeters': { cat: 'Scrapers', icon: '🔁', priority: 0.7 },
-  'scrape-user-likes': { cat: 'Scrapers', icon: '💗', priority: 0.7 },
-  // Lists
-  'add-to-list': { cat: 'Lists & Communities', icon: '➕', priority: 0.7 },
-  'follow-list-members': { cat: 'Lists & Communities', icon: '👣', priority: 0.7 },
-  // Messaging / profile / moderation / growth / analytics additions
-  'bulk-dm': { cat: 'Messaging', icon: '📤', priority: 0.7 },
-  'auto-reply-dms': { cat: 'Messaging', icon: '💌', priority: 0.7 },
-  'account-settings': { cat: 'Account Management', icon: '⚙️', priority: 0.7 },
-  'remove-follower': { cat: 'Safety & Privacy', icon: '🚪', priority: 0.7 },
-  'block-list-transfer': { cat: 'Safety & Privacy', icon: '🧱', priority: 0.7 },
-  'follow-back': { cat: 'Growth', icon: '🔗', priority: 0.7 },
-  'trending-monitor': { cat: 'Analytics', icon: '📈', priority: 0.7 },
-  // Unfollow
-  'unfollow-everyone': { cat: 'Unfollow Tools', icon: '👋', priority: 0.8 },
-  'unfollowback': { cat: 'Unfollow Tools', icon: '🧹', priority: 0.8 },
-  'unfollow-non-followers': { cat: 'Unfollow Tools', icon: '🧹', priority: 0.8 },
-  'unfollow-wdfb-log': { cat: 'Unfollow Tools', icon: '📋', priority: 0.7 },
-  'unfollow-with-log': { cat: 'Unfollow Tools', icon: '📋', priority: 0.7 },
-  'smart-unfollow': { cat: 'Unfollow Tools', icon: '🧠', priority: 0.8 },
-  'follow-ratio-manager': { cat: 'Unfollow Tools', icon: '⚖️', priority: 0.7 },
-  // Follower Monitoring
-  'detect-unfollowers': { cat: 'Follower Monitoring', icon: '🔍', priority: 0.8 },
-  'new-followers-alert': { cat: 'Follower Monitoring', icon: '🔔', priority: 0.7 },
-  'audit-followers': { cat: 'Follower Monitoring', icon: '📊', priority: 0.7 },
-  'remove-followers': { cat: 'Follower Monitoring', icon: '🚫', priority: 0.7 },
-  'continuous-monitor': { cat: 'Follower Monitoring', icon: '🔄', priority: 0.7 },
-  'monitor-account': { cat: 'Follower Monitoring', icon: '📊', priority: 0.7 },
-  'follower-growth-tracker': { cat: 'Follower Monitoring', icon: '📈', priority: 0.7 },
-  'follower-tools': { cat: 'Follower Monitoring', icon: '👥', priority: 0.7 },
-  'followers-growth-tracker': { cat: 'Follower Monitoring', icon: '📈', priority: 0.7 },
-  'find-fake-followers': { cat: 'Follower Monitoring', icon: '🤖', priority: 0.7 },
-  'welcome-new-followers': { cat: 'Follower Monitoring', icon: '👋', priority: 0.7 },
-  // Engagement
-  'auto-liker': { cat: 'Engagement', icon: '❤️', priority: 0.7 },
-  'auto-commenter': { cat: 'Engagement', icon: '💬', priority: 0.7 },
-  'auto-repost': { cat: 'Engagement', icon: '🔁', priority: 0.7 },
-  'auto-reply': { cat: 'Engagement', icon: '💬', priority: 0.7 },
-  'auto-plug-replies': { cat: 'Engagement', icon: '🔌', priority: 0.7 },
-  'auto-engage': { cat: 'Engagement', icon: '⚡', priority: 0.7 },
-  'engagement-booster': { cat: 'Engagement', icon: '🚀', priority: 0.7 },
-  'engagement-manager': { cat: 'Engagement', icon: '⚡', priority: 0.7 },
-  'engagement-leaderboard': { cat: 'Engagement', icon: '🏆', priority: 0.7 },
-  'quote-tweet-automation': { cat: 'Engagement', icon: '🔁', priority: 0.7 },
-  'keyword-liker': { cat: 'Engagement', icon: '❤️', priority: 0.7 },
-  'multi-account-timeline-liker': { cat: 'Engagement', icon: '❤️', priority: 0.6 },
-  'like-post': { cat: 'Engagement', icon: '❤️', priority: 0.6 },
-  'repost-post': { cat: 'Engagement', icon: '🔁', priority: 0.6 },
-  'post-interactions': { cat: 'Engagement', icon: '💬', priority: 0.6 },
-  'like-by-feed': { cat: 'Engagement', icon: '❤️', priority: 0.6 },
-  'like-by-hashtag': { cat: 'Engagement', icon: '❤️', priority: 0.6 },
-  'like-by-location': { cat: 'Engagement', icon: '❤️', priority: 0.6 },
-  'like-by-user': { cat: 'Engagement', icon: '❤️', priority: 0.6 },
-  'like-user-replies': { cat: 'Engagement', icon: '❤️', priority: 0.6 },
-  'interact-by-hashtag': { cat: 'Engagement', icon: '💬', priority: 0.6 },
-  'interact-by-place': { cat: 'Engagement', icon: '💬', priority: 0.6 },
-  'interact-by-users': { cat: 'Engagement', icon: '💬', priority: 0.6 },
-  'interact-with-likers': { cat: 'Engagement', icon: '💬', priority: 0.6 },
-  'comment-by-hashtag': { cat: 'Engagement', icon: '💬', priority: 0.6 },
-  'comment-by-location': { cat: 'Engagement', icon: '💬', priority: 0.6 },
-  'mention-users': { cat: 'Engagement', icon: '💬', priority: 0.6 },
-  // Growth
-  'follow-engagers': { cat: 'Growth', icon: '🎯', priority: 0.7 },
-  'follow-target-users': { cat: 'Growth', icon: '🎯', priority: 0.7 },
-  'keyword-follow': { cat: 'Growth', icon: '🔑', priority: 0.7 },
-  'growth-suite': { cat: 'Growth', icon: '🚀', priority: 0.8 },
-  'natural-flow': { cat: 'Growth', icon: '🌊', priority: 0.7 },
-  'algorithm-builder': { cat: 'Growth', icon: '🧠', priority: 0.8 },
-  'algorithm-trainer': { cat: 'Growth', icon: '🧠', priority: 0.8 },
-  'persona-engine': { cat: 'Growth', icon: '🎭', priority: 0.7 },
-  'thought-leader-cultivator': { cat: 'Growth', icon: '🧠', priority: 0.7 },
-  'follow-account': { cat: 'Growth', icon: '➕', priority: 0.6 },
-  'follow-list': { cat: 'Growth', icon: '📋', priority: 0.6 },
-  // Scrapers
-  'scrape-followers': { cat: 'Scrapers', icon: '👥', priority: 0.7 },
-  'scrape-following': { cat: 'Scrapers', icon: '👥', priority: 0.7 },
-  'scrape-likes': { cat: 'Scrapers', icon: '❤️', priority: 0.7 },
-  'scrape-likers': { cat: 'Scrapers', icon: '❤️', priority: 0.7 },
-  'scrape-profile': { cat: 'Scrapers', icon: '👤', priority: 0.7 },
-  'scrape-profile-posts': { cat: 'Scrapers', icon: '👤', priority: 0.7 },
-  'scrape-profile-with-replies': { cat: 'Scrapers', icon: '👤', priority: 0.7 },
-  'scrape-hashtag': { cat: 'Scrapers', icon: '#️⃣', priority: 0.7 },
-  'scrape-search': { cat: 'Scrapers', icon: '🔍', priority: 0.7 },
-  'scrape-media': { cat: 'Scrapers', icon: '🖼️', priority: 0.7 },
-  'scrape-list': { cat: 'Scrapers', icon: '📝', priority: 0.7 },
-  'scrape-bookmarks': { cat: 'Scrapers', icon: '🔖', priority: 0.7 },
-  'scrape-dms': { cat: 'Scrapers', icon: '✉️', priority: 0.7 },
-  'scrape-explore': { cat: 'Scrapers', icon: '🔍', priority: 0.7 },
-  'scrape-notifications': { cat: 'Scrapers', icon: '🔔', priority: 0.7 },
-  'scrape-quote-retweets': { cat: 'Scrapers', icon: '🔁', priority: 0.7 },
-  'scrape-replies': { cat: 'Scrapers', icon: '💬', priority: 0.7 },
-  'scrape-spaces': { cat: 'Scrapers', icon: '🎙️', priority: 0.7 },
-  'scrape-analytics': { cat: 'Scrapers', icon: '📊', priority: 0.7 },
-  'scrape-cashtag-search': { cat: 'Scrapers', icon: '💲', priority: 0.7 },
-  'link-scraper': { cat: 'Scrapers', icon: '🔗', priority: 0.7 },
-  'viral-tweets-scraper': { cat: 'Scrapers', icon: '🔥', priority: 0.7 },
-  'export-to-csv': { cat: 'Scrapers', icon: '📄', priority: 0.6 },
-  // Content Tools
-  'video-downloader': { cat: 'Content Tools', icon: '🎬', priority: 0.8 },
-  'thread-unroller': { cat: 'Content Tools', icon: '🧵', priority: 0.7 },
-  'bookmark-exporter': { cat: 'Content Tools', icon: '📚', priority: 0.7 },
-  'bookmark-organizer': { cat: 'Content Tools', icon: '📂', priority: 0.7 },
-  'bookmark-manager': { cat: 'Content Tools', icon: '📚', priority: 0.7 },
-  'manage-bookmarks': { cat: 'Content Tools', icon: '📑', priority: 0.6 },
-  'clear-all-bookmarks': { cat: 'Content Tools', icon: '🗑️', priority: 0.6 },
-  'clear-all-reposts': { cat: 'Content Tools', icon: '🗑️', priority: 0.6 },
-  'clear-all-retweets': { cat: 'Content Tools', icon: '🗑️', priority: 0.6 },
-  'clear-all-likes': { cat: 'Content Tools', icon: '🗑️', priority: 0.6 },
-  'unlike-all-posts': { cat: 'Content Tools', icon: '💔', priority: 0.6 },
-  'unlike-all': { cat: 'Content Tools', icon: '💔', priority: 0.6 },
-  'unlike-old': { cat: 'Content Tools', icon: '💔', priority: 0.6 },
-  'bulk-delete-tweets': { cat: 'Content Tools', icon: '🗑️', priority: 0.7 },
-  'content-repurposer': { cat: 'Content Tools', icon: '♻️', priority: 0.7 },
-  'text-formatting': { cat: 'Content Tools', icon: '✏️', priority: 0.5 },
-  'share-embed': { cat: 'Content Tools', icon: '🔗', priority: 0.5 },
-  'video-captions': { cat: 'Content Tools', icon: '📝', priority: 0.6 },
-  // Posting
-  'post-thread': { cat: 'Posting', icon: '🧵', priority: 0.7 },
-  'post-composer': { cat: 'Posting', icon: '✏️', priority: 0.7 },
-  'post-advanced': { cat: 'Posting', icon: '✏️', priority: 0.7 },
-  'schedule-posts': { cat: 'Posting', icon: '⏰', priority: 0.7 },
-  'create-poll': { cat: 'Posting', icon: '📊', priority: 0.6 },
-  'poll-creator': { cat: 'Posting', icon: '📊', priority: 0.6 },
-  'thread-composer': { cat: 'Posting', icon: '🧵', priority: 0.7 },
-  'content-calendar': { cat: 'Posting', icon: '📅', priority: 0.7 },
-  'pin-tweet-manager': { cat: 'Posting', icon: '📌', priority: 0.6 },
-  'publish-article': { cat: 'Posting', icon: '📰', priority: 0.5 },
-  'article-publisher': { cat: 'Posting', icon: '📰', priority: 0.6 },
-  'edit-post': { cat: 'Posting', icon: '✏️', priority: 0.6 },
-  'tweet-ab-tester': { cat: 'Posting', icon: '🧪', priority: 0.7 },
-  'evergeen-recycler': { cat: 'Posting', icon: '♻️', priority: 0.6 },
-  // Messaging
-  'send-direct-message': { cat: 'Messaging', icon: '📬', priority: 0.6 },
-  'dm-manager': { cat: 'Messaging', icon: '✉️', priority: 0.7 },
-  'dm-exporter': { cat: 'Messaging', icon: '📤', priority: 0.6 },
-  'dm-calls': { cat: 'Messaging', icon: '📞', priority: 0.6 },
-  'group-dm': { cat: 'Messaging', icon: '👥', priority: 0.6 },
-  'encrypted-dm': { cat: 'Messaging', icon: '🔒', priority: 0.6 },
-  // Analytics
-  'engagement-analytics': { cat: 'Analytics', icon: '📈', priority: 0.7 },
-  'hashtag-analytics': { cat: 'Analytics', icon: '#️⃣', priority: 0.7 },
-  'best-time-to-post': { cat: 'Analytics', icon: '⏰', priority: 0.7 },
-  'competitor-analysis': { cat: 'Analytics', icon: '🔍', priority: 0.7 },
-  'account-health-monitor': { cat: 'Analytics', icon: '🏥', priority: 0.7 },
-  'audience-demographics': { cat: 'Analytics', icon: '📊', priority: 0.7 },
-  'audience-overlap': { cat: 'Analytics', icon: '🔗', priority: 0.7 },
-  'sentiment-analyzer': { cat: 'Analytics', icon: '🧠', priority: 0.7 },
-  'shadowban-checker': { cat: 'Analytics', icon: '👻', priority: 0.7 },
-  'trending-topic-monitor': { cat: 'Analytics', icon: '📈', priority: 0.7 },
-  'tweet-performance': { cat: 'Analytics', icon: '📊', priority: 0.7 },
-  'tweet-schedule-optimizer': { cat: 'Analytics', icon: '⏰', priority: 0.7 },
-  'viral-tweet-detector': { cat: 'Analytics', icon: '🔥', priority: 0.7 },
-  'keyword-monitor': { cat: 'Analytics', icon: '🔑', priority: 0.7 },
-  'notification-manager': { cat: 'Analytics', icon: '🔔', priority: 0.6 },
-  'manage-notifications': { cat: 'Analytics', icon: '🔔', priority: 0.6 },
-  'view-analytics': { cat: 'Analytics', icon: '📊', priority: 0.7 },
-  'tweet-price-correlation': { cat: 'Analytics', icon: '💹', priority: 0.6 },
-  'profile-stats': { cat: 'Analytics', icon: '📊', priority: 0.6 },
-  'timeline-viewer': { cat: 'Analytics', icon: '📊', priority: 0.6 },
-  // Safety & Privacy
-  'block-bots': { cat: 'Safety & Privacy', icon: '🤖', priority: 0.7 },
-  'mass-block': { cat: 'Safety & Privacy', icon: '🚫', priority: 0.7 },
-  'mass-unblock': { cat: 'Safety & Privacy', icon: '🔓', priority: 0.6 },
-  'mass-unmute': { cat: 'Safety & Privacy', icon: '🔊', priority: 0.6 },
-  'mute-by-keywords': { cat: 'Safety & Privacy', icon: '🔕', priority: 0.6 },
-  'manage-muted-words': { cat: 'Safety & Privacy', icon: '🔇', priority: 0.6 },
-  'report-spam': { cat: 'Safety & Privacy', icon: '⚠️', priority: 0.6 },
-  'settings-manager': { cat: 'Safety & Privacy', icon: '⚙️', priority: 0.6 },
-  'manage-settings': { cat: 'Safety & Privacy', icon: '⚙️', priority: 0.6 },
-  'block-by-keywords': { cat: 'Safety & Privacy', icon: '🚫', priority: 0.6 },
-  'block-by-ratio': { cat: 'Safety & Privacy', icon: '🚫', priority: 0.6 },
-  'blacklist': { cat: 'Safety & Privacy', icon: '🚫', priority: 0.6 },
-  'whitelist': { cat: 'Safety & Privacy', icon: '✅', priority: 0.6 },
-  'filter-manager': { cat: 'Safety & Privacy', icon: '🔍', priority: 0.6 },
-  'verified-only': { cat: 'Safety & Privacy', icon: '✅', priority: 0.5 },
-  'id-verification': { cat: 'Safety & Privacy', icon: '🪪', priority: 0.5 },
-  // Account Management
-  'backup-account': { cat: 'Account Management', icon: '💾', priority: 0.7 },
-  'download-account-data': { cat: 'Account Management', icon: '📥', priority: 0.7 },
-  'profile-manager': { cat: 'Account Management', icon: '👤', priority: 0.6 },
-  'update-profile': { cat: 'Account Management', icon: '✏️', priority: 0.6 },
-  'edit-profile': { cat: 'Account Management', icon: '✏️', priority: 0.6 },
-  'multi-account': { cat: 'Account Management', icon: '👥', priority: 0.6 },
-  'qr-code-sharing': { cat: 'Account Management', icon: '📱', priority: 0.5 },
-  'delegate-access': { cat: 'Account Management', icon: '🔑', priority: 0.6 },
-  'upload-contacts': { cat: 'Account Management', icon: '📇', priority: 0.5 },
-  'update-banner': { cat: 'Account Management', icon: '🖼️', priority: 0.5 },
-  'update-bio': { cat: 'Account Management', icon: '✏️', priority: 0.5 },
-  'update-profile-picture': { cat: 'Account Management', icon: '🖼️', priority: 0.5 },
-  'subscribe-premium': { cat: 'Account Management', icon: '⭐', priority: 0.5 },
-  // Lists & Communities
-  'list-manager': { cat: 'Lists & Communities', icon: '📝', priority: 0.6 },
-  'advanced-lists': { cat: 'Lists & Communities', icon: '📝', priority: 0.6 },
-  'manage-lists': { cat: 'Lists & Communities', icon: '📝', priority: 0.6 },
-  'join-communities': { cat: 'Lists & Communities', icon: '🏘️', priority: 0.6 },
-  'leave-all-communities': { cat: 'Lists & Communities', icon: '🚪', priority: 0.6 },
-  'leave-community': { cat: 'Lists & Communities', icon: '🚪', priority: 0.6 },
-  'create-community': { cat: 'Lists & Communities', icon: '🏘️', priority: 0.6 },
-  'manage-community': { cat: 'Lists & Communities', icon: '🏘️', priority: 0.6 },
-  // AI & Developer
-  'grok-integration': { cat: 'AI & Developer', icon: '🧠', priority: 0.7 },
-  // Spaces & Live
-  'spaces-manager': { cat: 'Spaces & Live', icon: '🎙️', priority: 0.6 },
-  'host-space': { cat: 'Spaces & Live', icon: '🎙️', priority: 0.6 },
-  'join-space': { cat: 'Spaces & Live', icon: '🎙️', priority: 0.6 },
-  // Premium
-  'premium-manager': { cat: 'Premium', icon: '⭐', priority: 0.5 },
-  'premium-features': { cat: 'Premium', icon: '⭐', priority: 0.5 },
-  'premium-gifting': { cat: 'Premium', icon: '🎁', priority: 0.5 },
-  'creator-subscriptions': { cat: 'Premium', icon: '💰', priority: 0.5 },
-  // Business
-  'business-tools': { cat: 'Business', icon: '💼', priority: 0.6 },
-  'business-analytics': { cat: 'Business', icon: '💼', priority: 0.6 },
-  'creator-studio': { cat: 'Business', icon: '🎨', priority: 0.6 },
-  'ads-manager': { cat: 'Business', icon: '📢', priority: 0.6 },
-  'media-studio': { cat: 'Business', icon: '🖼️', priority: 0.6 },
-  // Discovery
-  'discovery-explore': { cat: 'Discovery', icon: '🔍', priority: 0.5 },
-  'topic-manager': { cat: 'Discovery', icon: '🏷️', priority: 0.5 },
-  'save-search': { cat: 'Discovery', icon: '🔍', priority: 0.5 },
-  'x-pro': { cat: 'Discovery', icon: '⚡', priority: 0.5 },
-  // Automation
-  'control-panel': { cat: 'Automation', icon: '🎛️', priority: 0.7 },
-  'actions': { cat: 'Automation', icon: '⚡', priority: 0.7 },
-  'core': { cat: 'Automation', icon: '⚙️', priority: 0.8 },
-  'session-logger': { cat: 'Automation', icon: '📋', priority: 0.6 },
-  'quota-supervisor': { cat: 'Automation', icon: '⚠️', priority: 0.6 },
-  'protect-active-users': { cat: 'Automation', icon: '🛡️', priority: 0.6 },
-  'rate-limiter': { cat: 'Automation', icon: '⏱️', priority: 0.6 },
-  'customer-service': { cat: 'Automation', icon: '🤝', priority: 0.6 },
-  'rss-monitor': { cat: 'Automation', icon: '📡', priority: 0.6 },
-};
-
 // ─── Script Sources ────────────────────────────────────────────────
-const SCRIPT_DIRS = [
-  { dir: 'browser', label: 'Browser Scripts', context: 'browser' },
-  { dir: 'src/automation', label: 'Automation Suite', context: 'browser', requiresCore: true },
-  { dir: 'scripts', label: 'Standalone Scripts', context: 'browser' },
-  { dir: 'scripts/twitter', label: 'Twitter Scripts', context: 'browser' },
-];
+const MANIFEST = loadScriptManifest(ROOT);
+const CATEGORY_INFO = Object.fromEntries(MANIFEST.categories.map((c) => [c.id, c]));
 
-// Files to skip (not user-facing scripts)
-const SKIP_FILES = new Set([
-  'index.js', 'build-docs-pages.js', 'build-all-docs.js', 'build-script-pages.js',
-  'generate-license.js', 'generate-missing-docs.js', 'test-x402-payment.js',
-  'verify-x402.js', 'script-template.js',
-  // Command Center build inputs: the shell is a source template, not a
-  // runnable script, and build-toolkit.mjs is a Node build tool.
-  '_command-center-shell.js', 'build-toolkit.mjs',
-  // Node build/utility scripts (not browser console scripts).
-  'build-sitemap.js', 'fix-doc-links.js', 'gen3.js', 'version.js',
-  'generate-seo-articles.js', 'generate-seo-articles-2.js', 'submit-to-glama.js',
-]);
-
-const SKIP_DIRS_IN_SRC = new Set([
-  'cli', 'mcp', 'scrapers', 'client', 'agents', 'analytics', 'streaming',
-  'plugins', 'ai', 'a2a', 'workflows', 'utils', 'automation',
-]);
+/** The one-script launcher for everything else; not a manifest entry, since it is generated. */
+const COMMAND_CENTER = {
+  path: 'scripts/twitter/xactions-command-center.js',
+  category: 'Command Center',
+  icon: '⚡',
+  priority: 1.0,
+};
 
 // ─── Helpers ────────────────────────────────────────────────────────
 
@@ -312,15 +55,6 @@ function slugToTitle(slug) {
     .split('-')
     .map(w => acronyms.has(w) ? w.toUpperCase() : w.charAt(0).toUpperCase() + w.slice(1))
     .join(' ');
-}
-
-function getCategoryInfo(slug) {
-  if (CATEGORIES[slug]) return CATEGORIES[slug];
-  // Try partial matching
-  for (const [key, val] of Object.entries(CATEGORIES)) {
-    if (slug.includes(key) || key.includes(slug)) return val;
-  }
-  return { cat: 'Other Tools', icon: '⚡', priority: 0.5 };
 }
 
 // ─── JS File Parser ─────────────────────────────────────────────────
@@ -559,7 +293,7 @@ function generateScriptPage({ slug, title, description, category, icon, sourceDi
     : `<ol class="usage-steps">
         <li>Navigate to <a href="https://x.com" rel="noopener">x.com</a> and log in</li>
         <li>Open DevTools Console (F12 or Cmd+Option+I)</li>
-        ${requiresCore ? '<li>Paste <code>src/automation/core.js</code> first</li>' : ''}
+        ${requiresCore ? '<li>Paste <code>browser/core.js</code> first</li>' : ''}
         <li>Paste the script below and press Enter</li>
       </ol>`;
 
@@ -743,7 +477,7 @@ function generateScriptPage({ slug, title, description, category, icon, sourceDi
 
         <h2>How to Use</h2>
         ${usageHtml}
-        ${requiresCore ? '<p><strong>Note:</strong> This script requires pasting <code>src/automation/core.js</code> first for shared utilities.</p>' : ''}
+        ${requiresCore ? '<p><strong>Note:</strong> This script requires pasting <code>browser/core.js</code> first for shared utilities.</p>' : ''}
 
         ${controlsHtml}
         ${configHtml}
@@ -989,6 +723,26 @@ function generateIndexPage(allPages) {
 </html>`;
 }
 
+/** A page at an old script URL that forwards to the script's current page. */
+function generateRedirectPage(slug, target, title) {
+  const url = `${SITE_URL}/scripts/${target}`;
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>${escapeHtml(title)} | XActions</title>
+  <link rel="canonical" href="${url}">
+  <meta name="robots" content="noindex, follow">
+  <meta http-equiv="refresh" content="0; url=/scripts/${target}">
+</head>
+<body>
+  <p>${escapeHtml(slug)} is now <a href="/scripts/${target}">${escapeHtml(title)}</a>.</p>
+</body>
+</html>
+`;
+}
+
 // ─── Main Build ─────────────────────────────────────────────────────
 
 function build() {
@@ -997,52 +751,35 @@ function build() {
   if (!fs.existsSync(OUT_DIR)) fs.mkdirSync(OUT_DIR, { recursive: true });
 
   const allPages = [];
-  const seen = new Set(); // Deduplicate by slug
 
-  for (const source of SCRIPT_DIRS) {
-    const dir = path.join(ROOT, source.dir);
-    if (!fs.existsSync(dir)) continue;
+  const sources = [
+    ...MANIFEST.scripts.map((script) => ({
+      file: script.path,
+      slug: slugify(`${script.id}.js`),
+      title: script.title,
+      description: script.description,
+      category: CATEGORY_INFO[script.category].label,
+      icon: CATEGORY_INFO[script.category].emoji,
+      priority: 0.7,
+      requiresCore: script.needsCore,
+    })),
+    { ...COMMAND_CENTER, file: COMMAND_CENTER.path, slug: slugify(path.basename(COMMAND_CENTER.path)), requiresCore: false },
+  ];
+  console.log(`📂 browser/index.json: ${MANIFEST.scripts.length} scripts, plus the command center`);
 
-    const files = fs.readdirSync(dir).filter(f => {
-      if (!f.endsWith('.js')) return false;
-      if (SKIP_FILES.has(f)) return false;
-      // For browser/, skip subdirectories' files
-      if (source.dir === 'browser') {
-        const stat = fs.statSync(path.join(dir, f));
-        if (!stat.isFile()) return false;
-      }
-      // A page here tells people to paste the file into the DevTools console,
-      // so a Node program (fs imports, process.argv, a node shebang) must not
-      // get one: rssMonitor.js and evergreenRecycler.js were published that way.
-      if (isNodeProgram(fs.readFileSync(path.join(dir, f), 'utf-8'))) return false;
-      return true;
+  for (const source of sources) {
+    const parsed = parseScriptFile(path.join(ROOT, source.file));
+    allPages.push({
+      slug: source.slug,
+      title: source.title || parsed.name || slugToTitle(source.slug),
+      description: source.description || parsed.description,
+      category: source.category,
+      icon: source.icon,
+      priority: source.priority,
+      sourceDir: source.file,
+      requiresCore: source.requiresCore,
+      parsed,
     });
-
-    console.log(`📂 ${source.label} (${source.dir}/) — ${files.length} files`);
-
-    for (const file of files) {
-      const slug = slugify(file);
-      if (seen.has(slug)) continue; // Skip duplicates (prefer first source = browser/)
-      seen.add(slug);
-
-      const filePath = path.join(dir, file);
-      const parsed = parseScriptFile(filePath);
-      const catInfo = getCategoryInfo(slug);
-
-      const title = parsed.name || slugToTitle(slug);
-
-      allPages.push({
-        slug,
-        title,
-        description: parsed.description,
-        category: catInfo.cat,
-        icon: catInfo.icon,
-        priority: catInfo.priority,
-        sourceDir: source.dir,
-        requiresCore: source.requiresCore || false,
-        parsed,
-      });
-    }
   }
 
   // Sort within categories
@@ -1071,6 +808,22 @@ function build() {
   const indexHtml = generateIndexPage(allPages);
   fs.writeFileSync(path.join(OUT_DIR, 'index.html'), indexHtml);
   count++;
+
+  // Old file names keep their URL: each legacy alias whose slug differs from
+  // its script's gets a page that sends the reader (and search engines) on.
+  const taken = new Set(allPages.map((p) => p.slug));
+  let redirects = 0;
+  for (const script of MANIFEST.scripts) {
+    const target = slugify(`${script.id}.js`);
+    for (const alias of script.aliases) {
+      const slug = slugify(path.basename(alias));
+      if (taken.has(slug)) continue;
+      taken.add(slug);
+      fs.writeFileSync(path.join(OUT_DIR, `${slug}.html`), generateRedirectPage(slug, target, script.title));
+      redirects++;
+    }
+  }
+  console.log(`↪️  ${redirects} redirect pages for legacy file names`);
 
   // Generate sitemap entries
   const sitemapXml = allPages.map(p => `  <url>

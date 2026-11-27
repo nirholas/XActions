@@ -3,23 +3,23 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Export to CSV Utility — Free X/Twitter Script | XActions</title>
-  <meta name="description" content="Convert any scraped data to CSV format. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
-  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, export, csv, scrapers">
+  <title>Export to CSV — Free X/Twitter Script | XActions</title>
+  <meta name="description" content="Turn any scraped data array into a downloadable CSV file. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
+  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, export, csv, scrape and export">
   <meta name="author" content="nich (@nichxbt)">
   <meta name="robots" content="index, follow">
 
   <meta property="og:type" content="article">
-  <meta property="og:title" content="Export to CSV Utility — XActions">
-  <meta property="og:description" content="Convert any scraped data to CSV format. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
+  <meta property="og:title" content="Export to CSV — XActions">
+  <meta property="og:description" content="Turn any scraped data array into a downloadable CSV file. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
   <meta property="og:url" content="https://xactions.app/scripts/export-to-csv">
   <meta property="og:site_name" content="XActions">
   <meta property="og:image" content="https://xactions.app/og-run.png">
 
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@nichxbt">
-  <meta name="twitter:title" content="Export to CSV Utility — XActions">
-  <meta name="twitter:description" content="Convert any scraped data to CSV format. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
+  <meta name="twitter:title" content="Export to CSV — XActions">
+  <meta name="twitter:description" content="Turn any scraped data array into a downloadable CSV file. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
   <meta name="twitter:image" content="https://xactions.app/og-run.png">
 
   <link rel="canonical" href="https://xactions.app/scripts/export-to-csv">
@@ -29,15 +29,15 @@
   {
     "@context": "https://schema.org",
     "@type": "TechArticle",
-    "headline": "Export to CSV Utility — Free X/Twitter Script | XActions",
-    "description": "Convert any scraped data to CSV format. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.",
+    "headline": "Export to CSV — Free X/Twitter Script | XActions",
+    "description": "Turn any scraped data array into a downloadable CSV file. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.",
     "url": "https://xactions.app/scripts/export-to-csv",
     "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
     "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
     "datePublished": "2026-03-30",
     "dateModified": "2026-03-30",
-    "articleSection": "Scrapers",
-    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, export, csv, scrapers"
+    "articleSection": "Scrape and Export",
+    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, export, csv, scrape and export"
   }
   </script>
   <script type="application/ld+json">
@@ -47,8 +47,8 @@
     "itemListElement": [
       { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
       { "@type": "ListItem", "position": 2, "name": "Scripts", "item": "https://xactions.app/scripts" },
-      { "@type": "ListItem", "position": 3, "name": "Scrapers", "item": "https://xactions.app/scripts#scrapers" },
-      { "@type": "ListItem", "position": 4, "name": "Export to CSV Utility", "item": "https://xactions.app/scripts/export-to-csv" }
+      { "@type": "ListItem", "position": 3, "name": "Scrape and Export", "item": "https://xactions.app/scripts#scrape-and-export" },
+      { "@type": "ListItem", "position": 4, "name": "Export to CSV", "item": "https://xactions.app/scripts/export-to-csv" }
     ]
   }
   </script>
@@ -116,24 +116,24 @@
 
     <main class="main-content" id="main-content">
       <header class="main-header">
-        <h1>📄 Export to CSV Utility</h1>
+        <h1>📥 Export to CSV</h1>
         <div class="breadcrumb">
-          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#scrapers">Scrapers</a> › Export to CSV Utility
+          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#scrape-and-export">Scrape and Export</a> › Export to CSV
         </div>
       </header>
 
       <article class="article">
-        <span class="cat-badge">Scrapers</span>
-        <span class="source-badge">scripts</span>
+        <span class="cat-badge">Scrape and Export</span>
+        <span class="source-badge">browser/exportToCSV.js</span>
 
         <div class="meta-row">
           
           
-          <span>211 lines</span>
+          <span>219 lines</span>
           <span>by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></span>
         </div>
 
-        <p>Convert any scraped data to CSV format</p>
+        <p>Turn any scraped data array into a downloadable CSV file.</p>
 
         
 
@@ -172,6 +172,14 @@
  *   exportToCSV(window.scrapedSearch.tweets, 'search_results.csv')
  * 
  * by nichxbt - https://github.com/nirholas/XActions
+ *
+ * @name        exportToCSV.js
+ * @title       Export to CSV
+ * @description Turn any scraped data array into a downloadable CSV file.
+ * @category    scrape
+ * @page        x.com/*
+ * @writes      false
+ * @aliases     scripts/exportToCSV.js
  */
 
 (() =&gt; {
@@ -379,17 +387,17 @@
 
     <aside class="sidebar-right">
       <div class="sidebar-card">
-        <h3>📄 Scrapers</h3>
-        <a href="/scripts/scrape-bookmarks">🔖 Bookmarks Scraper</a>
-<a href="/scripts/scrape-analytics">📊 Browser console script to scrape X/Twitter analytics data</a>
-<a href="/scripts/scrape-dms">✉️ DM Scraper</a>
-<a href="/scripts/scrape-followers">👥 Followers Scraper</a>
-<a href="/scripts/scrape-following">👥 Following Scraper</a>
-<a href="/scripts/scrape-hashtag">#️⃣ Hashtag Scraper</a>
-<a href="/scripts/scrape-likers">❤️ Likers Scraper</a>
-<a href="/scripts/scrape-likes">❤️ Likes Scraper</a>
-<a href="/scripts/link-scraper">🔗 Link Scraper</a>
-<a href="/scripts/scrape-list">📝 List Members Scraper</a>
+        <h3>📥 Scrape and Export</h3>
+        <a href="/scripts/backup-account">📥 Backup Account</a>
+<a href="/scripts/bookmark-exporter">📥 Bookmark Exporter</a>
+<a href="/scripts/bookmark-organizer">📥 Bookmark Organizer</a>
+<a href="/scripts/link-scraper">📥 Link Scraper</a>
+<a href="/scripts/manage-bookmarks">📥 Manage Bookmarks</a>
+<a href="/scripts/scrape-cashtag-search">📥 Scrape Cashtag Search</a>
+<a href="/scripts/scrape-explore">📥 Scrape Explore</a>
+<a href="/scripts/scrape-followers">📥 Scrape Followers</a>
+<a href="/scripts/scrape-following">📥 Scrape Following</a>
+<a href="/scripts/scrape-hashtag">📥 Scrape Hashtag</a>
       </div>
       <div class="sidebar-card">
         <h3>🔗 Quick Links</h3>

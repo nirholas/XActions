@@ -4,14 +4,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Send Direct Messages — Free X/Twitter Script | XActions</title>
-  <meta name="description" content="Send personalized DMs to a list of users. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
-  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, send, direct, message, messaging">
+  <meta name="description" content="Send a personalized DM to each user in a list, with a per-session cap, long delays, sent-history skipping and a dry run by default.">
+  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, send, direct, message, messages">
   <meta name="author" content="nich (@nichxbt)">
   <meta name="robots" content="index, follow">
 
   <meta property="og:type" content="article">
   <meta property="og:title" content="Send Direct Messages — XActions">
-  <meta property="og:description" content="Send personalized DMs to a list of users. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
+  <meta property="og:description" content="Send a personalized DM to each user in a list, with a per-session cap, long delays, sent-history skipping and a dry run by default.">
   <meta property="og:url" content="https://xactions.app/scripts/send-direct-message">
   <meta property="og:site_name" content="XActions">
   <meta property="og:image" content="https://xactions.app/og-run.png">
@@ -19,7 +19,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@nichxbt">
   <meta name="twitter:title" content="Send Direct Messages — XActions">
-  <meta name="twitter:description" content="Send personalized DMs to a list of users. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
+  <meta name="twitter:description" content="Send a personalized DM to each user in a list, with a per-session cap, long delays, sent-history skipping and a dry run by default.">
   <meta name="twitter:image" content="https://xactions.app/og-run.png">
 
   <link rel="canonical" href="https://xactions.app/scripts/send-direct-message">
@@ -30,14 +30,14 @@
     "@context": "https://schema.org",
     "@type": "TechArticle",
     "headline": "Send Direct Messages — Free X/Twitter Script | XActions",
-    "description": "Send personalized DMs to a list of users. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.",
+    "description": "Send a personalized DM to each user in a list, with a per-session cap, long delays, sent-history skipping and a dry run by default.",
     "url": "https://xactions.app/scripts/send-direct-message",
     "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
     "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
     "datePublished": "2026-03-30",
     "dateModified": "2026-03-30",
-    "articleSection": "Messaging",
-    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, send, direct, message, messaging"
+    "articleSection": "Messages",
+    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, send, direct, message, messages"
   }
   </script>
   <script type="application/ld+json">
@@ -47,7 +47,7 @@
     "itemListElement": [
       { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
       { "@type": "ListItem", "position": 2, "name": "Scripts", "item": "https://xactions.app/scripts" },
-      { "@type": "ListItem", "position": 3, "name": "Messaging", "item": "https://xactions.app/scripts#messaging" },
+      { "@type": "ListItem", "position": 3, "name": "Messages", "item": "https://xactions.app/scripts#messages" },
       { "@type": "ListItem", "position": 4, "name": "Send Direct Messages", "item": "https://xactions.app/scripts/send-direct-message" }
     ]
   }
@@ -116,24 +116,24 @@
 
     <main class="main-content" id="main-content">
       <header class="main-header">
-        <h1>📬 Send Direct Messages</h1>
+        <h1>✉️ Send Direct Messages</h1>
         <div class="breadcrumb">
-          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#messaging">Messaging</a> › Send Direct Messages
+          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#messages">Messages</a> › Send Direct Messages
         </div>
       </header>
 
       <article class="article">
-        <span class="cat-badge">Messaging</span>
-        <span class="source-badge">browser</span>
+        <span class="cat-badge">Messages</span>
+        <span class="source-badge">browser/sendDirectMessage.js</span>
 
         <div class="meta-row">
-          
-          
-          <span>178 lines</span>
+          <span>v1.1.0</span>
+          <span>Updated: 2026-11-27</span>
+          <span>300 lines</span>
           <span>by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></span>
         </div>
 
-        <p>Send personalized DMs to a list of users</p>
+        <p>Send a personalized DM to each user in a list, with a per-session cap, long delays, sent-history skipping and a dry run by default.</p>
 
         
 
@@ -153,6 +153,7 @@
           <thead><tr><th>Option</th><th>Default</th><th>Description</th></tr></thead>
           <tbody>
             <tr><td><code>delayBetweenMessages</code></td><td><code>30000</code></td><td>30 seconds</td></tr>
+<tr><td><code>randomizeDelay</code></td><td><code>true</code></td><td>Add 0-50% extra random wait to each delay</td></tr>
           </tbody>
         </table>
       </section>
@@ -165,12 +166,13 @@
       // 'username1',
       // 'username2',
     ],
-    // Use {username} as placeholder for recipient's name
+    // Use {username} (or {user}) as placeholder for recipient's name
     messageTemplate: `Hey {username}! 👋 Just wanted to connect.`,
     limits: {
-      messagesPerSession: 10,
+      messagesPerSession: 5,
       delayBetweenMessages: 30000, // 30 seconds
     },
+    randomizeDelay: true,          // Add 0-50% extra random wait to each delay
     skipIfAlreadyMessaged: true,
     dryRun: true,
   };</code></pre>
@@ -183,28 +185,47 @@
           <div class="code-block">
             <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.querySelector('code').textContent).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy Script',2000)})">Copy Script</button>
             <pre><code>// Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
+/**
+ * @name        sendDirectMessage.js
+ * @title       Send Direct Messages
+ * @description Send a personalized DM to each user in a list, with a per-session cap, long delays, sent-history skipping and a dry run by default.
+ * @category    messages
+ * @page        x.com/messages
+ * @writes      true
+ * @aliases     scripts/sendDirectMessage.js, scripts/twitter/send-direct-message.js
+ * @author      nichxbt (https://x.com/nichxbt)
+ * @version     1.1.0
+ * @date        2026-11-27
+ */
 // Send Direct Messages on X - by nichxbt
 // https://github.com/nirholas/xactions
 // Send personalized DMs to a list of users
 // 1. Go to https://x.com/messages
 // 2. Open the Developer Console (F12)
-// 3. Edit the CONFIG below
-// 4. Paste this into the Developer Console and run it
+// 3. Edit the CONFIG below. dryRun: true only logs what would be sent; set
+//    dryRun = false to send. {username} (or {user}) is replaced by the recipient.
+// 4. Paste browser/sendDirectMessage.js into the Developer Console and run it
+//
+// Console helpers (also honor dryRun): XActions.DM.help(), .addUser(&quot;name&quot;),
+// .setMessage(&quot;text {username}&quot;), .sendTo(&quot;name&quot;), .sendToAll(), .stop(),
+// .stats(), .log(), .clearHistory()
 //
 // ⚠️ Mass DMing can get your account restricted. Use responsibly!
-// Last Updated: 24 February 2026
+// Only message users who have open DMs or follow you. Don't spam.
+// Last Updated: 27 November 2026
 (() =&gt; {
   const CONFIG = {
     targetUsers: [
       // 'username1',
       // 'username2',
     ],
-    // Use {username} as placeholder for recipient's name
+    // Use {username} (or {user}) as placeholder for recipient's name
     messageTemplate: `Hey {username}! 👋 Just wanted to connect.`,
     limits: {
-      messagesPerSession: 10,
+      messagesPerSession: 5,
       delayBetweenMessages: 30000, // 30 seconds
     },
+    randomizeDelay: true,          // Add 0-50% extra random wait to each delay
     skipIfAlreadyMessaged: true,
     dryRun: true,
   };
@@ -217,34 +238,50 @@
   const $backButton = '[data-testid=&quot;app-bar-back&quot;]';
 
   const sleep = (ms) =&gt; new Promise(r =&gt; setTimeout(r, ms));
+  const waitBetween = (base) =&gt; sleep(CONFIG.randomizeDelay ? base + Math.random() * base * 0.5 : base);
+
+  // Set an input's value through the native setter so React's value tracker
+  // registers the change (direct .value assignment gets ignored by React).
+  const setNativeValue = (el, value) =&gt; {
+    const desc = Object.getOwnPropertyDescriptor(Object.getPrototypeOf(el), 'value');
+    if (desc &amp;&amp; desc.set) desc.set.call(el, value);
+    else el.value = value;
+  };
+
+  const cleanName = (username) =&gt; String(username).trim().replace(/^@/, '');
+  const fillMessage = (username) =&gt; CONFIG.messageTemplate.split('{username}').join(username).split('{user}').join(username);
 
   const getSentHistory = () =&gt; {
     try { return JSON.parse(localStorage.getItem('xactions_dm_sent') || '[]'); }
     catch { return []; }
   };
+  const wasSent = (username) =&gt; getSentHistory().some(u =&gt; String(u).toLowerCase() === username.toLowerCase());
   const markAsSent = (username) =&gt; {
     const history = getSentHistory();
-    if (!history.includes(username)) {
-      history.push(username);
+    if (!wasSent(username)) {
+      history.push(username.toLowerCase());
       localStorage.setItem('xactions_dm_sent', JSON.stringify(history));
     }
   };
 
   const results = { sent: [], failed: [], skipped: [] };
+  const messageLog = [];
+  let isRunning = false;
 
-  const sendDM = async (username) =&gt; {
-    const message = CONFIG.messageTemplate.replace(/{username}/g, username);
+  const sendDM = async (rawUsername, customMessage = null) =&gt; {
+    const username = cleanName(rawUsername);
+    const message = customMessage || fillMessage(username);
 
-    if (CONFIG.skipIfAlreadyMessaged &amp;&amp; getSentHistory().includes(username)) {
+    if (CONFIG.skipIfAlreadyMessaged &amp;&amp; wasSent(username)) {
       console.log(`⏭️ Already messaged @${username}, skipping`);
       results.skipped.push(username);
-      return;
+      return false;
     }
 
     if (CONFIG.dryRun) {
       console.log(`📝 Would send to @${username}: &quot;${message.substring(0, 50)}...&quot;`);
       results.sent.push(username);
-      return;
+      return true;
     }
 
     try {
@@ -260,18 +297,25 @@
       if (!searchInput) {
         console.error('❌ Search input not found. Are you on the Messages page?');
         results.failed.push(username);
-        return;
+        return false;
       }
 
       searchInput.focus();
       document.execCommand('insertText', false, username);
+      if (!searchInput.value) {
+        // Fallback: React ignores plain .value writes, use the native setter
+        setNativeValue(searchInput, username);
+        searchInput.dispatchEvent(new Event('input', { bubbles: true }));
+      }
       await sleep(2000);
 
-      // Click on matching user
+      // Click on matching user: match the exact @handle so a prefix like
+      // &quot;john&quot; can't select &quot;johnny&quot; (wrong DM recipient)
+      const handleRe = new RegExp('@' + username.replace(/[.*+?^${}()|[\]\\]/g, '\\$&amp;') + '(?![a-zA-Z0-9_])', 'i');
       const cells = document.querySelectorAll($userCell);
       let found = false;
       for (const cell of cells) {
-        if (cell.textContent.toLowerCase().includes(username.toLowerCase())) {
+        if (handleRe.test(cell.textContent)) {
           cell.click();
           found = true;
           await sleep(1000);
@@ -284,7 +328,7 @@
         results.failed.push(username);
         // Press Escape to close
         document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
-        return;
+        return false;
       }
 
       // Click Next/Start conversation button
@@ -295,6 +339,7 @@
       }
 
       // Type message
+      let ok = false;
       const msgInput = document.querySelector($messageInput);
       if (msgInput) {
         msgInput.focus();
@@ -303,12 +348,20 @@
 
         // Send
         const sendBtn = document.querySelector($sendButton);
-        if (sendBtn) {
+        if (sendBtn &amp;&amp; !sendBtn.disabled) {
           sendBtn.click();
           markAsSent(username);
           results.sent.push(username);
+          messageLog.push({ to: username, message, timestamp: new Date().toISOString() });
           console.log(`✅ Sent DM to @${username}`);
+          ok = true;
+        } else {
+          console.error('❌ Send button not available.');
+          results.failed.push(username);
         }
+      } else {
+        console.error('❌ Message input not found.');
+        results.failed.push(username);
       }
 
       await sleep(1000);
@@ -317,19 +370,26 @@
       const backBtn = document.querySelector($backButton);
       if (backBtn) backBtn.click();
       await sleep(1000);
+      return ok;
 
     } catch (e) {
       console.error(`❌ Error messaging @${username}:`, e.message);
       results.failed.push(username);
+      return false;
     }
   };
 
-  const run = async () =&gt; {
-    console.log('💬 SEND DIRECT MESSAGES - XActions by nichxbt');
-    console.log('⚠️ Use responsibly! Mass DMing can get you restricted.\n');
+  const printStats = () =&gt; {
+    console.log('\n📊 RESULTS:');
+    console.log(`   ✅ Sent: ${results.sent.length}`);
+    console.log(`   ❌ Failed: ${results.failed.length}`);
+    console.log(`   ⏭️ Skipped: ${results.skipped.length}`);
+    console.log(`   📜 Total messaged (all time): ${getSentHistory().length}`);
+  };
 
+  const sendToAll = async () =&gt; {
     if (CONFIG.targetUsers.length === 0) {
-      console.error('❌ No users specified! Edit CONFIG.targetUsers.');
+      console.error('❌ No users specified! Edit CONFIG.targetUsers or use XActions.DM.addUser(&quot;username&quot;).');
       return;
     }
 
@@ -337,24 +397,88 @@
       console.log('⚠️ DRY RUN MODE - Set CONFIG.dryRun = false to actually send');
     }
 
+    const usersToMessage = CONFIG.targetUsers.slice(0, CONFIG.limits.messagesPerSession);
+    console.log(`📋 Messages to send: ${usersToMessage.length}`);
+    console.log(`⏱️ Delay between messages: ${CONFIG.limits.delayBetweenMessages / 1000}s${CONFIG.randomizeDelay ? ' (+0-50% random)' : ''}`);
+
+    isRunning = true;
+    for (const username of usersToMessage) {
+      if (!isRunning) { console.log('🛑 Stopped.'); break; }
+      console.log(`\n⏳ Processing @${cleanName(username)}...`);
+      await sendDM(username);
+      if (!isRunning) { console.log('🛑 Stopped.'); break; }
+      await waitBetween(CONFIG.limits.delayBetweenMessages);
+    }
+    isRunning = false;
+
+    printStats();
+  };
+
+  // Console helpers, kept from scripts/twitter/send-direct-message.js
+  window.XActions = window.XActions || {};
+  window.XActions.DM = {
+    config: CONFIG,
+    results,
+    sendTo: (username, customMessage = null) =&gt; sendDM(username, customMessage),
+    sendToAll,
+    addUser: (username) =&gt; {
+      const clean = cleanName(username).toLowerCase();
+      if (!CONFIG.targetUsers.some(u =&gt; cleanName(u).toLowerCase() === clean)) {
+        CONFIG.targetUsers.push(clean);
+        console.log(`✅ Added @${clean} to DM list`);
+      }
+    },
+    setMessage: (template) =&gt; {
+      CONFIG.messageTemplate = template;
+      console.log('✅ Message template updated.');
+      console.log('Preview:', fillMessage('example'));
+    },
+    stop: () =&gt; {
+      isRunning = false;
+      console.log('🛑 Stop requested.');
+    },
+    stats: printStats,
+    log: () =&gt; {
+      console.log('\n📜 MESSAGE LOG:');
+      messageLog.forEach(m =&gt; console.log(`   → @${m.to} at ${m.timestamp}`));
+    },
+    clearHistory: () =&gt; {
+      if (confirm('⚠️ Clear all sent message history?')) {
+        localStorage.setItem('xactions_dm_sent', JSON.stringify([]));
+        console.log('✅ History cleared.');
+      }
+    },
+    help: () =&gt; {
+      console.log('\n📋 DM COMMANDS:\n');
+      console.log('   XActions.DM.addUser(&quot;username&quot;)');
+      console.log('   XActions.DM.setMessage(&quot;Your message {username}&quot;)');
+      console.log('   XActions.DM.sendTo(&quot;username&quot;)');
+      console.log('   XActions.DM.sendToAll()');
+      console.log('   XActions.DM.stop()');
+      console.log('   XActions.DM.stats()');
+      console.log('   XActions.DM.log()');
+      console.log('   XActions.DM.clearHistory()');
+      console.log(`\n💡 Use {username} in message template as placeholder. dryRun is ${CONFIG.dryRun}.`);
+      console.log('⚠️ Always be respectful and don\'t spam!');
+    },
+  };
+
+  const run = async () =&gt; {
+    console.log('💬 SEND DIRECT MESSAGES - XActions by nichxbt');
+    console.log('⚠️ Use responsibly! Mass DMing can get you restricted.\n');
+
     if (!window.location.href.includes('/messages')) {
       console.error('❌ Navigate to x.com/messages first!');
       return;
     }
 
-    const usersToMessage = CONFIG.targetUsers.slice(0, CONFIG.limits.messagesPerSession);
-    console.log(`📋 Messages to send: ${usersToMessage.length}`);
-
-    for (const username of usersToMessage) {
-      console.log(`\n⏳ Processing @${username}...`);
-      await sendDM(username);
-      await sleep(CONFIG.limits.delayBetweenMessages);
+    if (CONFIG.targetUsers.length === 0) {
+      console.error('❌ No users specified! Edit CONFIG.targetUsers.');
+      console.log('💡 Or add them from the console: XActions.DM.addUser(&quot;username&quot;), then XActions.DM.sendToAll(). XActions.DM.help() lists every command.');
+      return;
     }
 
-    console.log('\n📊 RESULTS:');
-    console.log(`   ✅ Sent: ${results.sent.length}`);
-    console.log(`   ❌ Failed: ${results.failed.length}`);
-    console.log(`   ⏭️ Skipped: ${results.skipped.length}`);
+    await sendToAll();
   };
 
   run();
@@ -373,14 +497,16 @@
 
     <aside class="sidebar-right">
       <div class="sidebar-card">
-        <h3>📬 Messaging</h3>
-        <a href="/scripts/auto-reply-dms">💌 Auto Reply DMs</a>
-<a href="/scripts/dm-exporter">📤 Browser console script to export X/Twitter DM conversations</a>
-<a href="/scripts/bulk-dm">📤 Bulk DM</a>
-<a href="/scripts/dm-calls">📞 DM Audio &amp; Video Calls</a>
+        <h3>✉️ Messages</h3>
+        <a href="/scripts/advanced-dm">✉️ Advanced DM Tools</a>
+<a href="/scripts/auto-reply-dms">✉️ Auto-Reply DMs</a>
+<a href="/scripts/bulk-dm">✉️ Bulk DM</a>
+<a href="/scripts/dm-calls">✉️ DM Calls</a>
 <a href="/scripts/dm-manager">✉️ DM Manager</a>
-<a href="/scripts/encrypted-dm">🔒 Encrypted Direct Messages</a>
-<a href="/scripts/group-dm">👥 Group Direct Messages</a>
+<a href="/scripts/encrypted-dm">✉️ Encrypted DMs</a>
+<a href="/scripts/group-dm">✉️ Group DM</a>
+<a href="/scripts/scrape-dms">✉️ Scrape DMs</a>
+<a href="/scripts/welcome-new-followers">✉️ Welcome New Followers</a>
       </div>
       <div class="sidebar-card">
         <h3>🔗 Quick Links</h3>

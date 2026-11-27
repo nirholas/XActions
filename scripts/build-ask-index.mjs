@@ -9,7 +9,7 @@
  *   docs/**\/*.md, skills/*\/SKILL.md, tutorials/**\/*.md   -> the live docs page
  *                                                           (via dashboard/docs/_pages-manifest.json)
  *   README.md, CHANGELOG.md, AGENTS.md                      -> GitHub blob URL
- *   browser/*.js and scripts/*.js browser scripts (header docs) -> /scripts/<slug> when a page exists
+ *   browser scripts from browser/index.json (header docs) -> /scripts/<slug> when a page exists
  *   dashboard/*.html marketing pages (FAQ, pricing, ...)    -> the page URL
  *
  * Output: dashboard/data/ask-index.json (served as /data/ask-index.json), plus a
@@ -26,7 +26,8 @@
  * @license Apache-2.0
  */
 
-import { readFileSync, writeFileSync, readdirSync, existsSync, statSync, mkdirSync } from 'node:fs';
+import { readFileSync, writeFileSync, readdirSync, existsSync, mkdirSync } from 'node:fs';
+import { loadScriptManifest } from './lib/script-manifest.mjs';
 import { join, dirname, relative, basename } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { createHash } from 'node:crypto';
@@ -188,29 +189,24 @@ for (const name of ['README.md', 'CHANGELOG.md', 'AGENTS.md', 'SECURITY.md', 'CO
   add('repo', name, `${BLOB}${name}`, chunkMarkdown(md, titleOf(md, name)));
 }
 
-// 3. Browser scripts: the header block documents what the script does and where to paste it.
+// 3. Browser scripts: one per entry in browser/index.json. The header block
+// documents what the script does and where to paste it; the legacy paths are
+// added so a question that quotes an old file name finds the script.
 const kebab = (s) => s.replace(/([a-z0-9])([A-Z])/g, '$1-$2').toLowerCase();
-for (const dir of ['browser', 'scripts']) {
-  for (const entry of readdirSync(join(ROOT, dir))) {
-    if (!entry.endsWith('.js') || entry.endsWith('.mjs')) continue;
-    const file = join(ROOT, dir, entry);
-    if (!statSync(file).isFile()) continue;
-    const source = readFileSync(file, 'utf8');
-    const headerLines = [];
-    for (const line of source.split('\n').slice(0, 80)) {
-      const trimmed = line.trim();
-      if (trimmed.startsWith('//') || trimmed.startsWith('/*') || trimmed.startsWith('*')) {
-        headerLines.push(trimmed.replace(/^\/\*+|^\*+\/?|^\/\/+/g, '').replace(/^@(\w+)\s+/, '$1: ').trim());
-      } else if (trimmed && headerLines.length) break;
-    }
-    const header = headerLines.filter((l) => l && !/^=+$/.test(l) && !/Copyright/.test(l)).join('\n');
-    if (header.length < 80) continue;
-    const slug = kebab(basename(entry, '.js'));
-    const path = `${dir}/${entry}`;
-    const url = scriptPages.has(slug) ? `https://xactions.app/scripts/${slug}` : `${BLOB}${path}`;
-    const title = (header.match(/(?:name|description):\s*(.+)/)?.[1] || basename(entry, '.js')).replace(/\.js$/, '');
-    add('script', path, url, chunkMarkdown(`# ${basename(entry, '.js')} (${path})\n\n${header}`, `${title} (${path})`));
+for (const script of loadScriptManifest(ROOT).scripts) {
+  const source = readFileSync(join(ROOT, script.path), 'utf8');
+  const headerLines = [];
+  for (const line of source.split('\n').slice(0, 80)) {
+    const trimmed = line.trim();
+    if (trimmed.startsWith('//') || trimmed.startsWith('/*') || trimmed.startsWith('*')) {
+      headerLines.push(trimmed.replace(/^\/\*+|^\*+\/?|^\/\/+/g, '').replace(/^@(\w+)\s+/, '$1: ').trim());
+    } else if (trimmed && headerLines.length) break;
   }
+  const header = headerLines.filter((l) => l && !/^=+$/.test(l) && !/Copyright/.test(l)).join('\n');
+  const slug = kebab(script.id);
+  const url = scriptPages.has(slug) ? `https://xactions.app/scripts/${slug}` : `${BLOB}${script.path}`;
+  const also = script.aliases.length ? `\nAlso at: ${script.aliases.join(', ')}` : '';
+  add('script', script.path, url, chunkMarkdown(`# ${script.id} (${script.path})\n\n${header}${also}`, `${script.title} (${script.path})`));
 }
 
 // 4. Dashboard marketing pages: FAQ, pricing, features, security, extension, MCP, ...

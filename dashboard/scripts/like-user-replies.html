@@ -3,23 +3,23 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Like User Replies — Free X/Twitter Script | XActions</title>
-  <meta name="description" content="Automatically like replies/comments on a specific tweet. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
-  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, like, user, replies, engagement">
+  <title>Like Replies — Free X/Twitter Script | XActions</title>
+  <meta name="description" content="Like the replies under a specific post. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
+  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, like, user, replies, engage">
   <meta name="author" content="nich (@nichxbt)">
   <meta name="robots" content="index, follow">
 
   <meta property="og:type" content="article">
-  <meta property="og:title" content="Like User Replies — XActions">
-  <meta property="og:description" content="Automatically like replies/comments on a specific tweet. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
+  <meta property="og:title" content="Like Replies — XActions">
+  <meta property="og:description" content="Like the replies under a specific post. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
   <meta property="og:url" content="https://xactions.app/scripts/like-user-replies">
   <meta property="og:site_name" content="XActions">
   <meta property="og:image" content="https://xactions.app/og-run.png">
 
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@nichxbt">
-  <meta name="twitter:title" content="Like User Replies — XActions">
-  <meta name="twitter:description" content="Automatically like replies/comments on a specific tweet. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
+  <meta name="twitter:title" content="Like Replies — XActions">
+  <meta name="twitter:description" content="Like the replies under a specific post. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
   <meta name="twitter:image" content="https://xactions.app/og-run.png">
 
   <link rel="canonical" href="https://xactions.app/scripts/like-user-replies">
@@ -29,15 +29,15 @@
   {
     "@context": "https://schema.org",
     "@type": "TechArticle",
-    "headline": "Like User Replies — Free X/Twitter Script | XActions",
-    "description": "Automatically like replies/comments on a specific tweet. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.",
+    "headline": "Like Replies — Free X/Twitter Script | XActions",
+    "description": "Like the replies under a specific post. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.",
     "url": "https://xactions.app/scripts/like-user-replies",
     "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
     "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
     "datePublished": "2026-03-30",
     "dateModified": "2026-03-30",
-    "articleSection": "Engagement",
-    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, like, user, replies, engagement"
+    "articleSection": "Engage",
+    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, like, user, replies, engage"
   }
   </script>
   <script type="application/ld+json">
@@ -47,8 +47,8 @@
     "itemListElement": [
       { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
       { "@type": "ListItem", "position": 2, "name": "Scripts", "item": "https://xactions.app/scripts" },
-      { "@type": "ListItem", "position": 3, "name": "Engagement", "item": "https://xactions.app/scripts#engagement" },
-      { "@type": "ListItem", "position": 4, "name": "Like User Replies", "item": "https://xactions.app/scripts/like-user-replies" }
+      { "@type": "ListItem", "position": 3, "name": "Engage", "item": "https://xactions.app/scripts#engage" },
+      { "@type": "ListItem", "position": 4, "name": "Like Replies", "item": "https://xactions.app/scripts/like-user-replies" }
     ]
   }
   </script>
@@ -116,24 +116,24 @@
 
     <main class="main-content" id="main-content">
       <header class="main-header">
-        <h1>❤️ Like User Replies</h1>
+        <h1>💬 Like Replies</h1>
         <div class="breadcrumb">
-          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#engagement">Engagement</a> › Like User Replies
+          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#engage">Engage</a> › Like Replies
         </div>
       </header>
 
       <article class="article">
-        <span class="cat-badge">Engagement</span>
-        <span class="source-badge">scripts/twitter</span>
+        <span class="cat-badge">Engage</span>
+        <span class="source-badge">browser/likeUserReplies.js</span>
 
         <div class="meta-row">
           <span>v1.0.0</span>
           <span>Updated: 2026-01-26</span>
-          <span>376 lines</span>
+          <span>381 lines</span>
           <span>by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></span>
         </div>
 
-        <p>Automatically like replies/comments on a specific tweet</p>
+        <p>Like the replies under a specific post.</p>
 
         
 
@@ -195,8 +195,13 @@
  * 💬 Like User Replies - XActions
  * ============================================
  * 
- * @name         like-user-replies
- * @description  Automatically like replies/comments on a specific tweet
+ * @name        likeUserReplies.js
+ * @description Like the replies under a specific post.
+ * @title       Like Replies
+ * @category    engage
+ * @page        x.com/&lt;username&gt;/status/&lt;id&gt;
+ * @writes      true
+ * @aliases     scripts/twitter/like-user-replies.js
  * @author       nichxbt
  * @version      1.0.0
  * @date         2026-01-26
@@ -328,7 +333,7 @@
   }
 
   // Extract tweet info from URL
-  const urlMatch = currentUrl.match(/\/([^\/]+)\/status\/(\d+)/);
+  const urlMatch = currentUrl.match(/\/([^/]+)\/status\/(\d+)/);
   const tweetAuthor = urlMatch ? urlMatch[1] : 'Unknown';
   const tweetId = urlMatch ? urlMatch[2] : 'Unknown';
 
@@ -578,17 +583,17 @@
 
     <aside class="sidebar-right">
       <div class="sidebar-card">
-        <h3>❤️ Engagement</h3>
+        <h3>💬 Engage</h3>
         <a href="/scripts/auto-commenter">💬 Auto Commenter</a>
-<a href="/scripts/auto-reply-mentions">📨 Auto Reply Mentions</a>
-<a href="/scripts/auto-repost">🔁 Auto Repost (Retweet)</a>
-<a href="/scripts/auto-plug-replies">🔌 Auto-Plug Replies</a>
-<a href="/scripts/auto-reply">💬 Auto-Reply / Auto-Respond</a>
-<a href="/scripts/auto-engage">⚡ Browser console script for automated engagement</a>
-<a href="/scripts/comment-by-hashtag">💬 Comment By Hashtag</a>
-<a href="/scripts/comment-by-location">💬 Comment By Location</a>
-<a href="/scripts/engagement-booster">🚀 Engagement Booster v2</a>
-<a href="/scripts/engagement-leaderboard">🏆 Engagement Leaderboard</a>
+<a href="/scripts/auto-engage">💬 Auto Engage</a>
+<a href="/scripts/auto-liker">💬 Auto Liker</a>
+<a href="/scripts/auto-reply">💬 Auto Reply</a>
+<a href="/scripts/auto-repost">💬 Auto Repost</a>
+<a href="/scripts/auto-reply-mentions">💬 Auto-Reply Mentions</a>
+<a href="/scripts/comment-by-hashtag">💬 Comment by Hashtag</a>
+<a href="/scripts/comment-by-location">💬 Comment by Location</a>
+<a href="/scripts/community-notes">💬 Community Notes</a>
+<a href="/scripts/customer-service">💬 Customer Service Bot</a>
       </div>
       <div class="sidebar-card">
         <h3>🔗 Quick Links</h3>

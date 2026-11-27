@@ -3,23 +3,23 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Smart Unfollow (Time-Based) — Free X/Twitter Script | XActions</title>
-  <meta name="description" content="Unfollows users who didn't follow you back within X days. Works with the keywordFollow.js tracking data.">
-  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, smart, unfollow, unfollow tools">
+  <title>Smart Unfollow — Free X/Twitter Script | XActions</title>
+  <meta name="description" content="Unfollow accounts that did not follow you back within a grace period, with a whitelist, a dry run and a cap.">
+  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, smart, unfollow, clean up">
   <meta name="author" content="nich (@nichxbt)">
   <meta name="robots" content="index, follow">
 
   <meta property="og:type" content="article">
-  <meta property="og:title" content="Smart Unfollow (Time-Based) — XActions">
-  <meta property="og:description" content="Unfollows users who didn't follow you back within X days. Works with the keywordFollow.js tracking data.">
+  <meta property="og:title" content="Smart Unfollow — XActions">
+  <meta property="og:description" content="Unfollow accounts that did not follow you back within a grace period, with a whitelist, a dry run and a cap.">
   <meta property="og:url" content="https://xactions.app/scripts/smart-unfollow">
   <meta property="og:site_name" content="XActions">
   <meta property="og:image" content="https://xactions.app/og-run.png">
 
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@nichxbt">
-  <meta name="twitter:title" content="Smart Unfollow (Time-Based) — XActions">
-  <meta name="twitter:description" content="Unfollows users who didn't follow you back within X days. Works with the keywordFollow.js tracking data.">
+  <meta name="twitter:title" content="Smart Unfollow — XActions">
+  <meta name="twitter:description" content="Unfollow accounts that did not follow you back within a grace period, with a whitelist, a dry run and a cap.">
   <meta name="twitter:image" content="https://xactions.app/og-run.png">
 
   <link rel="canonical" href="https://xactions.app/scripts/smart-unfollow">
@@ -29,15 +29,15 @@
   {
     "@context": "https://schema.org",
     "@type": "TechArticle",
-    "headline": "Smart Unfollow (Time-Based) — Free X/Twitter Script | XActions",
-    "description": "Unfollows users who didn't follow you back within X days. Works with the keywordFollow.js tracking data.",
+    "headline": "Smart Unfollow — Free X/Twitter Script | XActions",
+    "description": "Unfollow accounts that did not follow you back within a grace period, with a whitelist, a dry run and a cap.",
     "url": "https://xactions.app/scripts/smart-unfollow",
     "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
     "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
     "datePublished": "2026-03-30",
     "dateModified": "2026-03-30",
-    "articleSection": "Unfollow Tools",
-    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, smart, unfollow, unfollow tools"
+    "articleSection": "Clean Up",
+    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, smart, unfollow, clean up"
   }
   </script>
   <script type="application/ld+json">
@@ -47,8 +47,8 @@
     "itemListElement": [
       { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
       { "@type": "ListItem", "position": 2, "name": "Scripts", "item": "https://xactions.app/scripts" },
-      { "@type": "ListItem", "position": 3, "name": "Unfollow Tools", "item": "https://xactions.app/scripts#unfollow-tools" },
-      { "@type": "ListItem", "position": 4, "name": "Smart Unfollow (Time-Based)", "item": "https://xactions.app/scripts/smart-unfollow" }
+      { "@type": "ListItem", "position": 3, "name": "Clean Up", "item": "https://xactions.app/scripts#clean-up" },
+      { "@type": "ListItem", "position": 4, "name": "Smart Unfollow", "item": "https://xactions.app/scripts/smart-unfollow" }
     ]
   }
   </script>
@@ -116,72 +116,34 @@
 
     <main class="main-content" id="main-content">
       <header class="main-header">
-        <h1>🧠 Smart Unfollow (Time-Based)</h1>
+        <h1>🧹 Smart Unfollow</h1>
         <div class="breadcrumb">
-          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#unfollow-tools">Unfollow Tools</a> › Smart Unfollow (Time-Based)
+          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#clean-up">Clean Up</a> › Smart Unfollow
         </div>
       </header>
 
       <article class="article">
-        <span class="cat-badge">Unfollow Tools</span>
-        <span class="source-badge">src/automation</span>
+        <span class="cat-badge">Clean Up</span>
+        <span class="source-badge">browser/smartUnfollow.js</span>
 
         <div class="meta-row">
-          
-          
-          <span>270 lines</span>
+          <span>v1.1.0</span>
+          <span>Updated: 2026-11-27</span>
+          <span>422 lines</span>
           <span>by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></span>
         </div>
 
-        <p>Unfollows users who didn't follow you back within X days. Works with the keywordFollow.js tracking data.</p>
+        <p>Unfollow accounts that did not follow you back within a grace period, with a whitelist, a dry run and a cap.</p>
 
         
 
         <h2>How to Use</h2>
-        <ol class="usage-steps"><li>Go to x.com/YOUR_USERNAME/following</li>
-<li>Paste core.js, then paste this script</li>
-<li>Configure options below and run!</li></ol>
-        <p><strong>Note:</strong> This script requires pasting <code>src/automation/core.js</code> first for shared utilities.</p>
+        <ol class="usage-steps"></ol>
+        
 
         
-        <section class="config-section">
-        <h2>Configuration Options</h2>
-        <table>
-          <thead><tr><th>Option</th><th>Default</th><th>Description</th></tr></thead>
-          <tbody>
-            <tr><td><code>DAYS_TO_WAIT</code></td><td><code>3</code></td><td>Unfollow if not followed back within X days</td></tr>
-<tr><td><code>MAX_UNFOLLOWS</code></td><td><code>50</code></td><td>Max unfollows per session</td></tr>
-<tr><td><code>DRY_RUN</code></td><td><code>false</code></td><td>Set to true to preview without actually unfollowing</td></tr>
-<tr><td><code>ONLY_TRACKED</code></td><td><code>true</code></td><td>Only unfollow users we previously tracked from keywordFollow</td></tr>
-          </tbody>
-        </table>
-      </section>
-        <section class="config-code">
-        <h2>Default Configuration</h2>
-        <div class="code-block">
-          <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.querySelector('code').textContent).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy',2000)})">Copy</button>
-          <pre><code>const OPTIONS = {
-    // Time settings
-    DAYS_TO_WAIT: 3,              // Unfollow if not followed back within X days
-    
-    // Limits
-    MAX_UNFOLLOWS: 50,            // Max unfollows per session
-    
-    // Whitelist (never unfollow these)
-    WHITELIST: [
-      // 'username1',
-      // 'username2',
-    ],
-    
-    // Behavior
-    DRY_RUN: false,               // Set to true to preview without actually unfollowing
-    ONLY_TRACKED: true,           // Only unfollow users we previously tracked from keywordFollow
-    
-    // Timing
-    DELAY_BETWEEN_UNFOLLOWS: 2000,
-  };</code></pre>
-        </div>
-      </section>
+        
+        
 
         <section class="full-code">
           <h2>Full Script</h2>
@@ -189,273 +151,425 @@
           <div class="code-block">
             <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.querySelector('code').textContent).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy Script',2000)})">Copy Script</button>
             <pre><code>// Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
-// XActions Automation - Smart Unfollow (Time-Based)
-// https://github.com/nirholas/XActions
-//
-// REQUIRES: Paste core.js first!
-//
-// Unfollows users who didn't follow you back within X days.
-// Works with the keywordFollow.js tracking data.
-//
-// HOW TO USE:
-// 1. Go to x.com/YOUR_USERNAME/following
-// 2. Paste core.js, then paste this script
-// 3. Configure options below and run!
+/**
+ * ============================================================
+ * 🧠 Smart Unfollow
+ * ============================================================
+ * 
+ * @name        smartUnfollow.js
+ * @title       Smart Unfollow
+ * @description Unfollow accounts that did not follow you back within a grace period, with a whitelist, a dry run and a cap.
+ * @category    cleanup
+ * @page        x.com/&lt;you&gt;/following or x.com/&lt;you&gt;/followers
+ * @writes      true
+ * @aliases     src/automation/smartUnfollow.js, scripts/twitter/smart-unfollow.js
+ * @author      nichxbt (https://x.com/nichxbt)
+ * @version     1.1.0
+ * @date        2026-11-27
+ * @repository  https://github.com/nirholas/XActions
+ * 
+ * ============================================================
+ * 📋 USAGE INSTRUCTIONS:
+ * 
+ * This script works best with browser/keywordFollow.js, which tracks
+ * when you followed each user (xactions_follow_tracking and
+ * xactions_followed_users are both read).
+ * 
+ * STEP 1: Run on YOUR FOLLOWERS page first
+ *    Go to: https://x.com/YOUR_USERNAME/followers
+ *    Paste browser/smartUnfollow.js to scan who follows you
+ * 
+ * STEP 2: Run on YOUR FOLLOWING page
+ *    Go to: https://x.com/YOUR_USERNAME/following
+ *    Paste it again to unfollow non-followers past grace period
+ * 
+ * Stop early: window.stopSmartUnfollow()
+ * 
+ * ============================================================
+ * ⚙️ CONFIGURATION
+ * ============================================================
+ */
 
-(() =&gt; {
-  if (!window.XActions?.Core) {
-    console.error('❌ Core module not loaded! Paste core.js first.');
+// `var` (not `const`): a repeated top-level `const` paste in the same
+// DevTools tab throws &quot;already been declared&quot; instead of re-running.
+var CONFIG = {
+  // ---- TIMING ----
+  
+  // Days to wait before unfollowing non-followers
+  // 💡 Give users time to follow back!
+  daysToWait: 3,
+  
+  // ---- LIMITS ----
+  
+  // Maximum unfollows per session
+  maxUnfollows: 30,
+  
+  // ---- PROTECTION ----
+  
+  // Usernames to NEVER unfollow
+  // 💡 Add important accounts here
+  whitelist: [
+    // 'elonmusk',
+    // 'naval',
+  ],
+  
+  // Only unfollow users tracked by keyword-follow
+  // 💡 Set to false to unfollow any non-follower past grace period
+  onlyTracked: true,
+  
+  // Dry run mode - just show who would be unfollowed
+  dryRun: false,
+  
+  // ---- TIMING ----
+  
+  unfollowDelay: 1500,
+  confirmDelay: 1000,
+  scrollDelay: 2000,
+  maxScrolls: 100,
+  maxRetries: 5
+};
+
+/**
+ * ============================================================
+ * 🚀 SCRIPT START
+ * ============================================================
+ */
+
+(async function smartUnfollow() {
+  const sleep = (ms) =&gt; new Promise(r =&gt; setTimeout(r, ms));
+  
+  // Stop switch: window.stopSmartUnfollow() halts after the current account.
+  let stopped = false;
+  window.stopSmartUnfollow = () =&gt; {
+    stopped = true;
+    console.log('🛑 Stopping...');
+  };
+  
+  const $userCell = '[data-testid=&quot;UserCell&quot;]';
+  const $unfollowBtn = '[data-testid$=&quot;-unfollow&quot;]';
+  const $confirmBtn = '[data-testid=&quot;confirmationSheetConfirm&quot;]';
+  const $followsYou = '[data-testid=&quot;userFollowIndicator&quot;]';
+  
+  const TRACKING_KEY = 'xactions_follow_tracking';
+  const FOLLOWERS_KEY = 'xactions_my_current_followers';
+  // Shared with protect-active-users.js and whitelist.js so a user marked
+  // protected/whitelisted by either script is never touched here.
+  const PROTECTED_KEY = 'xactions_protected_users';
+  const WHITELIST_KEY = 'xactions_whitelist';
+  // Written by the core.js-based variant of this tool and by keywordFollow:
+  // { username: { followedAt: &lt;ms&gt;, followedBack, checkedAt } }, and a plain
+  // follower list (or a detectUnfollowers snapshot { followers: [...] }).
+  const CORE_TRACKING_KEY = 'xactions_followed_users';
+  const CORE_FOLLOWERS_KEY = 'xactions_my_followers';
+  const UNFOLLOW_COUNT_KEY = 'xactions_ratelimit_unfollow_day';
+  const whitelistLower = new Set(CONFIG.whitelist.map(u =&gt; String(u).replace(/^@/, '').toLowerCase()));
+  
+  console.log('╔════════════════════════════════════════════════════════════╗');
+  console.log('║  🧠 SMART UNFOLLOW                                         ║');
+  console.log('║  by nichxbt - https://github.com/nirholas/XActions         ║');
+  console.log('╚════════════════════════════════════════════════════════════╝');
+  console.log('');
+  
+  // Detect page type
+  const url = window.location.href;
+  const isFollowersPage = url.includes('/followers');
+  const isFollowingPage = url.includes('/following');
+  
+  if (!isFollowersPage &amp;&amp; !isFollowingPage) {
+    console.error('❌ ERROR: Must be on your followers or following page!');
+    console.log('📍 Step 1: https://x.com/YOUR_USERNAME/followers');
+    console.log('📍 Step 2: https://x.com/YOUR_USERNAME/following');
+    return;
+  }
+  
+  /**
+   * Get username from cell
+   */
+  function getUsername(cell) {
+    const link = cell.querySelector('a[href^=&quot;/&quot;]');
+    return link ? link.getAttribute('href').replace('/', '').split('/')[0] : null;
+  }
+  
+  // ==========================================
+  // PHASE 1: Scan followers
+  // ==========================================
+  
+  if (isFollowersPage) {
+    console.log('📋 PHASE 1: Scanning your followers...');
+    console.log('');
+    
+    const followers = new Set();
+    let lastCount = 0;
+    let retries = 0;
+    let scrolls = 0;
+    
+    while (scrolls &lt; CONFIG.maxScrolls &amp;&amp; retries &lt; CONFIG.maxRetries &amp;&amp; !stopped) {
+      document.querySelectorAll($userCell).forEach(cell =&gt; {
+        const username = getUsername(cell);
+        if (username) followers.add(username);
+      });
+      
+      if (followers.size === lastCount) {
+        retries++;
+      } else {
+        retries = 0;
+        lastCount = followers.size;
+      }
+      
+      console.log(`📊 Found ${followers.size} followers...`);
+      
+      window.scrollTo(0, document.body.scrollHeight);
+      await sleep(CONFIG.scrollDelay);
+      scrolls++;
+    }
+    
+    // Save followers
+    localStorage.setItem(FOLLOWERS_KEY, JSON.stringify({
+      savedAt: new Date().toISOString(),
+      followers: [...followers]
+    }));
+    
+    console.log('');
+    console.log('╔════════════════════════════════════════════════════════════╗');
+    console.log('║  ✅ PHASE 1 COMPLETE!                                      ║');
+    console.log('╚════════════════════════════════════════════════════════════╝');
+    console.log(`📊 Saved ${followers.size} followers`);
+    console.log('');
+    console.log('👉 Now go to your FOLLOWING page and run this script again!');
+    console.log('   https://x.com/YOUR_USERNAME/following');
+    console.log('');
+    
+    return { phase: 1, followers: followers.size };
+  }
+  
+  // ==========================================
+  // PHASE 2: Unfollow non-followers
+  // ==========================================
+  
+  console.log('📋 PHASE 2: Unfollowing non-followers...');
+  console.log(`⏱️ Grace period: ${CONFIG.daysToWait} days`);
+  console.log(`📊 Max unfollows: ${CONFIG.maxUnfollows}`);
+  if (CONFIG.dryRun) console.log('🔍 DRY RUN MODE - no actual unfollows');
+  console.log('');
+  
+  // Load followers
+  let myFollowers = new Set();
+  try {
+    const saved = localStorage.getItem(FOLLOWERS_KEY);
+    if (saved) {
+      const data = JSON.parse(saved);
+      data.followers.forEach(u =&gt; myFollowers.add(u));
+      console.log(`📚 Loaded ${myFollowers.size} followers from Phase 1`);
+    }
+  } catch (e) { /* unreadable saved data: start without it */ }
+  // Fall back to the follower list the core.js variant saved
+  if (myFollowers.size === 0) {
+    try {
+      const saved = JSON.parse(localStorage.getItem(CORE_FOLLOWERS_KEY) || 'null');
+      const list = Array.isArray(saved) ? saved : (saved &amp;&amp; Array.isArray(saved.followers) ? saved.followers : []);
+      list.forEach(u =&gt; typeof u === 'string' &amp;&amp; myFollowers.add(u));
+      if (myFollowers.size &gt; 0) console.log(`📚 Loaded ${myFollowers.size} followers from ${CORE_FOLLOWERS_KEY}`);
+    } catch (e) { /* unreadable saved data: start without it */ }
+  }
+  const myFollowersLower = new Set(Array.from(myFollowers, u =&gt; u.toLowerCase()));
+  
+  if (myFollowers.size === 0) {
+    console.warn('⚠️ No followers data found!');
+    console.log('👉 Run this script on your FOLLOWERS page first!');
+    return;
+  }
+  
+  // Load tracking data
+  let trackingData = {};
+  try {
+    const saved = localStorage.getItem(TRACKING_KEY);
+    if (saved) trackingData = JSON.parse(saved);
+    console.log(`📚 Loaded ${Object.keys(trackingData).length} tracked follows`);
+  } catch (e) { /* unreadable saved data: start without it */ }
+  
+  // Tracking kept by the core.js variant (keys are lowercase usernames)
+  let coreTracking = {};
+  try {
+    const saved = localStorage.getItem(CORE_TRACKING_KEY);
+    if (saved) coreTracking = JSON.parse(saved) || {};
+    if (Object.keys(coreTracking).length &gt; 0) {
+      console.log(`📚 Loaded ${Object.keys(coreTracking).length} tracked follows from ${CORE_TRACKING_KEY}`);
+    }
+  } catch (e) { /* unreadable saved data: start without it */ }
+  const saveCoreTracking = () =&gt; {
+    try {
+      localStorage.setItem(CORE_TRACKING_KEY, JSON.stringify(coreTracking));
+    } catch (e) {
+      console.warn('⚠️ Could not save tracking:', e.message);
+    }
+  };
+  
+  if (CONFIG.onlyTracked &amp;&amp; Object.keys(trackingData).length === 0 &amp;&amp; Object.keys(coreTracking).length === 0) {
+    console.warn('⚠️ No tracked users found. Run browser/keywordFollow.js first to track who you follow.');
+    console.log('💡 Or set onlyTracked: false to unfollow any non-follower.');
     return;
   }
 
-  const { log, sleep, randomDelay, scrollBy, clickElement, waitForElement, storage, rateLimit, SELECTORS } = window.XActions.Core;
-
-  // ============================================
-  // CONFIGURATION
-  // ============================================
-  const OPTIONS = {
-    // Time settings
-    DAYS_TO_WAIT: 3,              // Unfollow if not followed back within X days
-    
-    // Limits
-    MAX_UNFOLLOWS: 50,            // Max unfollows per session
-    
-    // Whitelist (never unfollow these)
-    WHITELIST: [
-      // 'username1',
-      // 'username2',
-    ],
-    
-    // Behavior
-    DRY_RUN: false,               // Set to true to preview without actually unfollowing
-    ONLY_TRACKED: true,           // Only unfollow users we previously tracked from keywordFollow
-    
-    // Timing
-    DELAY_BETWEEN_UNFOLLOWS: 2000,
-  };
-
-  // ============================================
-  // STATE
-  // ============================================
-  let unfollowCount = 0;
-  const followedUsers = new Map(Object.entries(storage.get('followed_users') || {}));
-  const unfollowedLog = [];
-
-  // ============================================
-  // HELPERS
-  // ============================================
-  const isExpired = (followedAt) =&gt; {
-    const daysAgo = (Date.now() - followedAt) / (1000 * 60 * 60 * 24);
-    return daysAgo &gt;= OPTIONS.DAYS_TO_WAIT;
-  };
-
-  const isWhitelisted = (username) =&gt; {
-    return OPTIONS.WHITELIST.some(w =&gt; w.toLowerCase() === username.toLowerCase());
-  };
-
-  const updateUserRecord = (username, updates) =&gt; {
-    const user = followedUsers.get(username.toLowerCase()) || {};
-    Object.assign(user, updates);
-    followedUsers.set(username.toLowerCase(), user);
-    storage.set('followed_users', Object.fromEntries(followedUsers));
-  };
-
-  // ============================================
-  // SCRAPE CURRENT FOLLOWERS
-  // ============================================
-  const scrapeFollowers = async () =&gt; {
-    log('Scraping your current followers to check who follows back...', 'action');
-    
-    // Navigate to followers if not there
-    const username = window.location.pathname.split('/')[1];
-    const followersUrl = `https://x.com/${username}/followers`;
-    
-    if (!window.location.href.includes('/followers')) {
-      window.open(followersUrl, '_blank');
-      log('Opened followers page in new tab. Run the scraper there, then come back.', 'warning');
-      return new Set();
+  // Load protected users (from protect-active-users.js: engaged likers/
+  // repliers/retweeters) and the shared whitelist (from whitelist.js) so
+  // both lists are respected here too, not just CONFIG.whitelist.
+  const protectedUsers = new Set();
+  try {
+    const saved = localStorage.getItem(PROTECTED_KEY);
+    if (saved) {
+      const data = JSON.parse(saved);
+      (data.users || []).forEach(u =&gt; u.username &amp;&amp; protectedUsers.add(u.username.toLowerCase()));
     }
+  } catch (e) { /* unreadable saved data: start without it */ }
+  try {
+    const saved = localStorage.getItem(WHITELIST_KEY);
+    if (saved) {
+      const list = JSON.parse(saved);
+      (Array.isArray(list) ? list : []).forEach(u =&gt; u.username &amp;&amp; protectedUsers.add(u.username.toLowerCase()));
+    }
+  } catch (e) { /* unreadable saved data: start without it */ }
+  if (protectedUsers.size &gt; 0) {
+    console.log(`🛡️ Loaded ${protectedUsers.size} protected/whitelisted users (never unfollowed)`);
+  }
 
-    const followers = new Set();
-    let prevSize = 0;
-    let retries = 0;
+  const cutoffDate = new Date();
+  cutoffDate.setDate(cutoffDate.getDate() - CONFIG.daysToWait);
+  
+  let totalUnfollowed = 0;
+  let scrolls = 0;
+  let retries = 0;
+  const seenUsers = new Set();
 
-    while (retries &lt; 5) {
-      window.scrollTo(0, document.body.scrollHeight);
-      await sleep(1500);
+  console.log('');
+  console.log('🚀 Scanning following list...');
+  console.log('');
 
-      document.querySelectorAll(SELECTORS.userCell).forEach(cell =&gt; {
-        const link = cell.querySelector('a[href^=&quot;/&quot;]');
-        if (link) {
-          const user = link.getAttribute('href').replace('/', '').toLowerCase();
-          if (user) followers.add(user);
+  while (totalUnfollowed &lt; CONFIG.maxUnfollows &amp;&amp; scrolls &lt; CONFIG.maxScrolls &amp;&amp; retries &lt; CONFIG.maxRetries &amp;&amp; !stopped) {
+    const cells = document.querySelectorAll($userCell);
+    let newUsersThisPass = 0;
+
+    for (const cell of cells) {
+      if (totalUnfollowed &gt;= CONFIG.maxUnfollows || stopped) break;
+
+      const username = getUsername(cell);
+      if (!username) continue;
+
+      // Progress = new accounts appearing in the list, not just unfollow
+      // candidates. A run of mutuals must not end the session early.
+      if (!seenUsers.has(username)) {
+        seenUsers.add(username);
+        newUsersThisPass++;
+      }
+
+      // Skip whitelist (inline CONFIG list + shared whitelist.js / protect-active-users.js lists)
+      if (whitelistLower.has(username.toLowerCase())) continue;
+      if (protectedUsers.has(username.toLowerCase())) continue;
+
+      const coreRecord = coreTracking[username.toLowerCase()];
+
+      // Check if follows you
+      if (myFollowers.has(username) || myFollowersLower.has(username.toLowerCase()) || cell.querySelector($followsYou)) {
+        if (coreRecord &amp;&amp; !coreRecord.followedBack) {
+          coreRecord.followedBack = true;
+          coreRecord.checkedAt = Date.now();
+          saveCoreTracking();
         }
-      });
-
-      if (followers.size === prevSize) retries++;
-      else { retries = 0; prevSize = followers.size; }
-    }
-
-    log(`Found ${followers.size} followers`, 'success');
-    return followers;
-  };
-
-  // ============================================
-  // FIND NON-FOLLOWERS
-  // ============================================
-  const findNonFollowers = (currentFollowers) =&gt; {
-    const nonFollowers = [];
-
-    for (const [username, data] of followedUsers) {
-      // Skip if whitelisted
-      if (isWhitelisted(username)) {
-        log(`Skipping whitelisted: @${username}`, 'info');
-        continue;
+        continue; // Mutual - keep
       }
-
-      // Skip if not expired yet
-      if (!isExpired(data.followedAt)) {
-        const daysLeft = OPTIONS.DAYS_TO_WAIT - ((Date.now() - data.followedAt) / (1000 * 60 * 60 * 24));
-        log(`@${username} - ${daysLeft.toFixed(1)} days left to follow back`, 'info');
-        continue;
-      }
-
-      // Check if they followed back
-      if (currentFollowers.has(username)) {
-        updateUserRecord(username, { followedBack: true, checkedAt: Date.now() });
-        log(`@${username} followed back! ✅`, 'success');
-        continue;
-      }
-
-      // They didn't follow back in time
-      nonFollowers.push(username);
-    }
-
-    return nonFollowers;
-  };
-
-  // ============================================
-  // UNFOLLOW ON FOLLOWING PAGE
-  // ============================================
-  const unfollowFromPage = async (targetUsers) =&gt; {
-    log(`Looking for ${targetUsers.length} users to unfollow...`, 'action');
-    
-    const targetSet = new Set(targetUsers.map(u =&gt; u.toLowerCase()));
-    let scrolls = 0;
-    const maxScrolls = 100;
-
-    while (unfollowCount &lt; OPTIONS.MAX_UNFOLLOWS &amp;&amp; 
-           unfollowCount &lt; targetUsers.length &amp;&amp;
-           scrolls &lt; maxScrolls) {
+      if (coreRecord &amp;&amp; coreRecord.followedBack) continue; // Followed back earlier
       
-      const userCells = document.querySelectorAll(SELECTORS.userCell);
+      // Check tracking (either store)
+      const tracking = trackingData[username];
       
-      for (const cell of userCells) {
-        if (unfollowCount &gt;= OPTIONS.MAX_UNFOLLOWS) break;
+      if (CONFIG.onlyTracked &amp;&amp; !tracking &amp;&amp; !coreRecord) {
+        continue; // Not tracked, skip
+      }
+      
+      // Check grace period
+      if (tracking || coreRecord) {
+        const followedDate = new Date((tracking || coreRecord).followedAt);
+        if (followedDate &gt; cutoffDate) {
+          continue; // Still in grace period
+        }
+      }
+      
+      // This user should be unfollowed
+      const unfollowBtn = cell.querySelector($unfollowBtn);
+      if (!unfollowBtn) continue;
 
-        const link = cell.querySelector('a[href^=&quot;/&quot;]');
-        if (!link) continue;
+      if (CONFIG.dryRun) {
+        console.log(`🔍 Would unfollow: @${username}`);
+        totalUnfollowed++;
+        continue;
+      }
+      
+      try {
+        unfollowBtn.click();
+        await sleep(500);
         
-        const username = link.getAttribute('href').replace('/', '').toLowerCase();
-        if (!targetSet.has(username)) continue;
-        if (unfollowedLog.includes(username)) continue;
-
-        const unfollowBtn = cell.querySelector(SELECTORS.unfollowButton);
-        if (!unfollowBtn) continue;
-
-        log(`Unfollowing @${username} (didn't follow back in ${OPTIONS.DAYS_TO_WAIT} days)`, 'action');
-
-        if (!OPTIONS.DRY_RUN) {
-          await clickElement(unfollowBtn);
-          await sleep(500);
+        // The confirmation sheet can take a moment to render: wait up to 3s
+        let confirmBtn = document.querySelector($confirmBtn);
+        for (let waited = 0; !confirmBtn &amp;&amp; waited &lt; 3000; waited += 100) {
+          await sleep(100);
+          confirmBtn = document.querySelector($confirmBtn);
+        }
+        if (confirmBtn) {
+          confirmBtn.click();
+          totalUnfollowed++;
           
-          const confirmBtn = await waitForElement(SELECTORS.confirmButton, 3000);
-          if (confirmBtn) {
-            await clickElement(confirmBtn);
+          console.log(`🚫 Unfollowed #${totalUnfollowed}: @${username}`);
+          
+          // Remove from tracking
+          if (tracking) {
+            delete trackingData[username];
+            localStorage.setItem(TRACKING_KEY, JSON.stringify(trackingData));
+          }
+          if (coreRecord) {
+            delete coreTracking[username.toLowerCase()];
+            saveCoreTracking();
           }
           
-          // Remove from tracked
-          followedUsers.delete(username);
-          storage.set('followed_users', Object.fromEntries(followedUsers));
+          // Daily unfollow counter shared with core.js (rateLimit 'unfollow', 'day')
+          try {
+            const count = JSON.parse(localStorage.getItem(UNFOLLOW_COUNT_KEY) || 'null');
+            const fresh = !count || Date.now() - count.timestamp &gt; 86400000;
+            localStorage.setItem(UNFOLLOW_COUNT_KEY, JSON.stringify(fresh
+              ? { count: 1, timestamp: Date.now() }
+              : { count: count.count + 1, timestamp: count.timestamp }));
+          } catch (e) {
+            console.warn('⚠️ Could not update the daily unfollow count:', e.message);
+          }
+          
+          await sleep(CONFIG.confirmDelay);
         }
-
-        unfollowCount++;
-        unfollowedLog.push(username);
-        rateLimit.increment('unfollow', 'day');
         
-        await randomDelay(OPTIONS.DELAY_BETWEEN_UNFOLLOWS, OPTIONS.DELAY_BETWEEN_UNFOLLOWS * 1.5);
+        await sleep(CONFIG.unfollowDelay);
+        
+      } catch (e) {
+        console.warn('⚠️ Error:', e.message);
       }
-
-      scrollBy(600);
-      scrolls++;
-      await sleep(1500);
-    }
-  };
-
-  // ============================================
-  // MAIN RUN
-  // ============================================
-  const run = async () =&gt; {
-    log('🧹 Starting Smart Unfollow...', 'info');
-    log(`Wait period: ${OPTIONS.DAYS_TO_WAIT} days`, 'info');
-    log(`Tracking ${followedUsers.size} previously followed users`, 'info');
-    log(`Dry run: ${OPTIONS.DRY_RUN}`, 'info');
-
-    if (followedUsers.size === 0 &amp;&amp; OPTIONS.ONLY_TRACKED) {
-      log('No tracked users found. Run keywordFollow.js first to track who you follow.', 'warning');
-      log('Or set ONLY_TRACKED: false to unfollow any non-follower.', 'info');
-      return;
-    }
-
-    // First, get current followers to see who followed back
-    const path = window.location.pathname;
-    
-    if (path.includes('/followers')) {
-      // We're on followers page - scrape and store
-      const followers = await scrapeFollowers();
-      storage.set('my_followers', Array.from(followers));
-      log('Followers scraped and saved! Now go to your /following page and run again.', 'success');
-      return;
     }
     
-    if (path.includes('/following')) {
-      // We're on following page - do the unfollowing
-      const savedFollowers = new Set(storage.get('my_followers') || []);
-      
-      if (savedFollowers.size === 0) {
-        log('No followers data. Go to your /followers page first and run this script to scrape.', 'warning');
-        return;
-      }
-
-      log(`Loaded ${savedFollowers.size} followers from previous scrape`, 'info');
-      
-      const nonFollowers = findNonFollowers(savedFollowers);
-      log(`Found ${nonFollowers.length} non-followers past the ${OPTIONS.DAYS_TO_WAIT}-day threshold`, 'info');
-
-      if (nonFollowers.length === 0) {
-        log('No one to unfollow! Everyone either followed back or is still in grace period.', 'success');
-        return;
-      }
-
-      await unfollowFromPage(nonFollowers);
-      
-      log(`\n✅ Done! Unfollowed ${unfollowCount} users.`, 'success');
-      if (OPTIONS.DRY_RUN) {
-        log('(Dry run - no actual unfollows performed)', 'warning');
-      }
+    if (newUsersThisPass === 0) {
+      retries++;
     } else {
-      log('Please navigate to either:', 'warning');
-      log('  1. /followers - to scrape who follows you', 'info');
-      log('  2. /following - to unfollow non-followers', 'info');
+      retries = 0;
     }
-  };
 
-  run();
-
-  window.stopSmartUnfollow = () =&gt; {
-    OPTIONS.MAX_UNFOLLOWS = 0;
-    log('Stopping...', 'warning');
-  };
+    window.scrollTo(0, document.body.scrollHeight);
+    await sleep(CONFIG.scrollDelay);
+    scrolls++;
+  }
+  
+  console.log('');
+  console.log('╔════════════════════════════════════════════════════════════╗');
+  console.log('║  ✅ SMART UNFOLLOW COMPLETE!                               ║');
+  console.log('╚════════════════════════════════════════════════════════════╝');
+  console.log(`🚫 Total unfollowed: ${totalUnfollowed}`);
+  if (CONFIG.dryRun) console.log('🔍 (Dry run - no actual unfollows performed)');
+  console.log('');
+  
+  return { phase: 2, unfollowed: totalUnfollowed };
 })();
 </code></pre>
           </div>
@@ -471,12 +585,17 @@
 
     <aside class="sidebar-right">
       <div class="sidebar-card">
-        <h3>🧠 Unfollow Tools</h3>
-        <a href="/scripts/follow-ratio-manager">⚖️ Follow Ratio Manager</a>
-<a href="/scripts/unfollow-everyone">👋 Unfollow Everyone</a>
+        <h3>🧹 Clean Up</h3>
+        <a href="/scripts/bulk-delete-tweets">🧹 Bulk Delete Tweets</a>
+<a href="/scripts/clear-all-bookmarks">🧹 Clear All Bookmarks</a>
+<a href="/scripts/clear-all-reposts">🧹 Clear All Reposts</a>
+<a href="/scripts/mass-unblock">🧹 Mass Unblock</a>
+<a href="/scripts/mass-unmute">🧹 Mass Unmute</a>
+<a href="/scripts/protect-active-users">🧹 Protect Active Users</a>
+<a href="/scripts/remove-followers">🧹 Remove Followers</a>
+<a href="/scripts/search-sweep">🧹 Search Sweep</a>
+<a href="/scripts/unfollow-everyone">🧹 Unfollow Everyone</a>
 <a href="/scripts/unfollowback">🧹 Unfollow Non-Followers</a>
-<a href="/scripts/unfollow-non-followers">🧹 Unfollow Non-Followers</a>
-<a href="/scripts/unfollow-with-log">📋 Unfollow Non-Followers With Log</a>
       </div>
       <div class="sidebar-card">
         <h3>🔗 Quick Links</h3>

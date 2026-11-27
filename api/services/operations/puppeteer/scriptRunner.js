@@ -16,18 +16,11 @@
  */
 
 import { readFile } from 'fs/promises';
-import { existsSync } from 'fs';
-import path from 'path';
-import { fileURLToPath } from 'url';
 import puppeteer from 'puppeteer-extra';
 import StealthPlugin from 'puppeteer-extra-plugin-stealth';
+import { resolveScriptFile } from '../../scriptManifest.js';
 
 puppeteer.use(StealthPlugin());
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-const SRC_ROOT = path.resolve(__dirname, '../../../../src');
-const BROWSER_ROOT = path.resolve(__dirname, '../../../../browser');
 
 /** Maximum wall-clock time before the script is force-aborted. */
 const SCRIPT_TIMEOUT_MS = 5 * 60 * 1000; // 5 minutes
@@ -63,32 +56,14 @@ function patchConfig(scriptCode, params) {
 }
 
 /**
- * Resolve a validated script path to an absolute file path.
- * Throws if the resolved path escapes its tree (path-traversal guard).
- *
- * `src/<name>` is the public script id; the console scripts it names live in
- * browser/. A few ids still name Node modules left in src/, which resolve there.
+ * Resolve a validated script path to an absolute file path, through
+ * browser/index.json, so the runner executes the canonical script a user would
+ * paste. Throws if the id is malformed or escapes its tree.
  */
 function resolveScriptPath(scriptPath) {
-  if (scriptPath.startsWith('automation/')) {
-    const name = scriptPath.slice('automation/'.length);
-    const automationRoot = path.join(SRC_ROOT, 'automation');
-    const filePath = path.resolve(automationRoot, `${name}.js`);
-    if (!filePath.startsWith(automationRoot + path.sep)) {
-      throw new Error('Invalid script path');
-    }
-    return filePath;
-  }
-
-  const name = scriptPath.startsWith('src/') ? scriptPath.slice(4) : scriptPath;
-  for (const root of [BROWSER_ROOT, SRC_ROOT]) {
-    const filePath = path.resolve(root, `${name}.js`);
-    if (!filePath.startsWith(root + path.sep)) {
-      throw new Error('Invalid script path');
-    }
-    if (existsSync(filePath)) return filePath;
-  }
-  return path.resolve(BROWSER_ROOT, `${name}.js`);
+  const filePath = resolveScriptFile(scriptPath);
+  if (!filePath) throw new Error('Invalid script path');
+  return filePath;
 }
 
 /**

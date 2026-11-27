@@ -4,14 +4,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Follow List Members — Free X/Twitter Script | XActions</title>
-  <meta name="description" content="Follow every member of a Twitter List, skipping accounts you already follow, rate-limited.">
-  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, follow, list, members, lists &amp; communities">
+  <meta name="description" content="Follow every member of a List, skipping accounts you already follow, rate-limited. Free X/Twitter browser script, no API key needed.">
+  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, follow, list, members, lists">
   <meta name="author" content="nich (@nichxbt)">
   <meta name="robots" content="index, follow">
 
   <meta property="og:type" content="article">
   <meta property="og:title" content="Follow List Members — XActions">
-  <meta property="og:description" content="Follow every member of a Twitter List, skipping accounts you already follow, rate-limited.">
+  <meta property="og:description" content="Follow every member of a List, skipping accounts you already follow, rate-limited. Free X/Twitter browser script, no API key needed.">
   <meta property="og:url" content="https://xactions.app/scripts/follow-list-members">
   <meta property="og:site_name" content="XActions">
   <meta property="og:image" content="https://xactions.app/og-run.png">
@@ -19,7 +19,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@nichxbt">
   <meta name="twitter:title" content="Follow List Members — XActions">
-  <meta name="twitter:description" content="Follow every member of a Twitter List, skipping accounts you already follow, rate-limited.">
+  <meta name="twitter:description" content="Follow every member of a List, skipping accounts you already follow, rate-limited. Free X/Twitter browser script, no API key needed.">
   <meta name="twitter:image" content="https://xactions.app/og-run.png">
 
   <link rel="canonical" href="https://xactions.app/scripts/follow-list-members">
@@ -30,14 +30,14 @@
     "@context": "https://schema.org",
     "@type": "TechArticle",
     "headline": "Follow List Members — Free X/Twitter Script | XActions",
-    "description": "Follow every member of a Twitter List, skipping accounts you already follow, rate-limited.",
+    "description": "Follow every member of a List, skipping accounts you already follow, rate-limited. Free X/Twitter browser script, no API key needed.",
     "url": "https://xactions.app/scripts/follow-list-members",
     "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
     "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
     "datePublished": "2026-03-30",
     "dateModified": "2026-03-30",
-    "articleSection": "Lists & Communities",
-    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, follow, list, members, lists & communities"
+    "articleSection": "Lists",
+    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, follow, list, members, lists"
   }
   </script>
   <script type="application/ld+json">
@@ -47,7 +47,7 @@
     "itemListElement": [
       { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
       { "@type": "ListItem", "position": 2, "name": "Scripts", "item": "https://xactions.app/scripts" },
-      { "@type": "ListItem", "position": 3, "name": "Lists & Communities", "item": "https://xactions.app/scripts#lists-communities" },
+      { "@type": "ListItem", "position": 3, "name": "Lists", "item": "https://xactions.app/scripts#lists" },
       { "@type": "ListItem", "position": 4, "name": "Follow List Members", "item": "https://xactions.app/scripts/follow-list-members" }
     ]
   }
@@ -116,24 +116,24 @@
 
     <main class="main-content" id="main-content">
       <header class="main-header">
-        <h1>👣 Follow List Members</h1>
+        <h1>🗂️ Follow List Members</h1>
         <div class="breadcrumb">
-          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#lists-communities">Lists &amp; Communities</a> › Follow List Members
+          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#lists">Lists</a> › Follow List Members
         </div>
       </header>
 
       <article class="article">
-        <span class="cat-badge">Lists &amp; Communities</span>
-        <span class="source-badge">scripts/twitter</span>
+        <span class="cat-badge">Lists</span>
+        <span class="source-badge">browser/followListMembers.js</span>
 
         <div class="meta-row">
           <span>v1.0.0</span>
           <span>Updated: 2026-07-20</span>
-          <span>217 lines</span>
+          <span>222 lines</span>
           <span>by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></span>
         </div>
 
-        <p>Follow every member of a Twitter List, skipping accounts you already follow, rate-limited.</p>
+        <p>Follow every member of a List, skipping accounts you already follow, rate-limited.</p>
 
         
 
@@ -187,8 +187,13 @@
  * 👥 Follow List Members - XActions
  * ============================================
  *
- * @name         follow-list-members
- * @description  Follow every member of a Twitter List, skipping accounts you already follow, rate-limited.
+ * @name        followListMembers.js
+ * @description Follow every member of a List, skipping accounts you already follow, rate-limited.
+ * @title       Follow List Members
+ * @category    lists
+ * @page        x.com/i/lists/&lt;id&gt;/members
+ * @writes      true
+ * @aliases     scripts/twitter/follow-list-members.js
  * @author       nichxbt
  * @version      1.0.0
  * @date         2026-07-20
@@ -411,17 +416,12 @@
 
     <aside class="sidebar-right">
       <div class="sidebar-card">
-        <h3>👣 Lists &amp; Communities</h3>
-        <a href="/scripts/add-to-list">➕ Add To List</a>
-<a href="/scripts/advanced-lists">📝 Advanced list management</a>
-<a href="/scripts/block-list-manager">📝 Block list import/export/sharing</a>
-<a href="/scripts/manage-lists">📝 Browser console script to manage X/Twitter Lists</a>
-<a href="/scripts/create-community">🏘️ Create Communities</a>
-<a href="/scripts/join-communities">🏘️ Join Communities</a>
-<a href="/scripts/leave-all-communities">🚪 Leave All Communities</a>
-<a href="/scripts/leave-community">🚪 Leave Specific Community</a>
-<a href="/scripts/manage-community">🏘️ Manage Communities</a>
-<a href="/scripts/list-manager">📝 Manage Lists</a>
+        <h3>🗂️ Lists</h3>
+        <a href="/scripts/add-to-list">🗂️ Add Users to List</a>
+<a href="/scripts/advanced-lists">🗂️ Advanced List Tools</a>
+<a href="/scripts/follow-list">🗂️ Follow Lists</a>
+<a href="/scripts/list-manager">🗂️ List Manager</a>
+<a href="/scripts/scrape-list">🗂️ Scrape List</a>
       </div>
       <div class="sidebar-card">
         <h3>🔗 Quick Links</h3>

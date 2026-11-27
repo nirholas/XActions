@@ -4,14 +4,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Account Health Monitor — Free X/Twitter Script | XActions</title>
-  <meta name="description" content="Comprehensive health check for your X/Twitter account. Generates a composite health score (0–100) across engagement, growth, content quality, and risk factors.">
+  <meta name="description" content="Score your account from 0 to 100 across engagement, profile, content, growth and risk, with recommendations.">
   <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, account, health, monitor, analytics">
   <meta name="author" content="nich (@nichxbt)">
   <meta name="robots" content="index, follow">
 
   <meta property="og:type" content="article">
   <meta property="og:title" content="Account Health Monitor — XActions">
-  <meta property="og:description" content="Comprehensive health check for your X/Twitter account. Generates a composite health score (0–100) across engagement, growth, content quality, and risk factors.">
+  <meta property="og:description" content="Score your account from 0 to 100 across engagement, profile, content, growth and risk, with recommendations.">
   <meta property="og:url" content="https://xactions.app/scripts/account-health-monitor">
   <meta property="og:site_name" content="XActions">
   <meta property="og:image" content="https://xactions.app/og-run.png">
@@ -19,7 +19,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@nichxbt">
   <meta name="twitter:title" content="Account Health Monitor — XActions">
-  <meta name="twitter:description" content="Comprehensive health check for your X/Twitter account. Generates a composite health score (0–100) across engagement, growth, content quality, and risk factors.">
+  <meta name="twitter:description" content="Score your account from 0 to 100 across engagement, profile, content, growth and risk, with recommendations.">
   <meta name="twitter:image" content="https://xactions.app/og-run.png">
 
   <link rel="canonical" href="https://xactions.app/scripts/account-health-monitor">
@@ -30,7 +30,7 @@
     "@context": "https://schema.org",
     "@type": "TechArticle",
     "headline": "Account Health Monitor — Free X/Twitter Script | XActions",
-    "description": "Comprehensive health check for your X/Twitter account. Generates a composite health score (0–100) across engagement, growth, content quality, and risk factors.",
+    "description": "Score your account from 0 to 100 across engagement, profile, content, growth and risk, with recommendations.",
     "url": "https://xactions.app/scripts/account-health-monitor",
     "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
     "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
@@ -116,7 +116,7 @@
 
     <main class="main-content" id="main-content">
       <header class="main-header">
-        <h1>🏥 Account Health Monitor</h1>
+        <h1>📊 Account Health Monitor</h1>
         <div class="breadcrumb">
           <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#analytics">Analytics</a> › Account Health Monitor
         </div>
@@ -124,16 +124,16 @@
 
       <article class="article">
         <span class="cat-badge">Analytics</span>
-        <span class="source-badge">browser</span>
+        <span class="source-badge">browser/accountHealthMonitor.js</span>
 
         <div class="meta-row">
           <span>v1.0.0</span>
-          <span>Updated: 2026-02-24</span>
-          <span>368 lines</span>
+          <span>Updated: 2026-11-26</span>
+          <span>371 lines</span>
           <span>by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></span>
         </div>
 
-        <p>Comprehensive health check for your X/Twitter account. Generates a composite health score (0–100) across engagement, growth, content quality, and risk factors.</p>
+        <p>Score your account from 0 to 100 across engagement, profile, content, growth and risk, with recommendations.</p>
 
         
 
@@ -170,12 +170,15 @@
  * ============================================================
  *
  * @name        accountHealthMonitor.js
- * @description Comprehensive health check for your X/Twitter account.
- *              Generates a composite health score (0–100) across
- *              engagement, growth, content quality, and risk factors.
+ * @title       Account Health Monitor
+ * @description Score your account from 0 to 100 across engagement, profile, content, growth and risk, with recommendations.
+ * @category    analytics
+ * @page        x.com/&lt;you&gt;
+ * @writes      false
+ * @aliases     scripts/accountHealthMonitor.js
  * @author      nichxbt (https://x.com/nichxbt)
  * @version     1.0.0
- * @date        2026-02-24
+ * @date        2026-11-26
  * @repository  https://github.com/nirholas/XActions
  *
  * ============================================================
@@ -544,17 +547,17 @@
 
     <aside class="sidebar-right">
       <div class="sidebar-card">
-        <h3>🏥 Analytics</h3>
-        <a href="/scripts/audience-demographics">📊 Audience Demographics Analyzer</a>
-<a href="/scripts/audience-overlap">🔗 Audience Overlap Analyzer</a>
-<a href="/scripts/best-time-to-post">⏰ Best Time to Post</a>
-<a href="/scripts/competitor-analysis">🔍 Competitor Analysis</a>
-<a href="/scripts/engagement-analytics">📈 Engagement Analytics</a>
-<a href="/scripts/hashtag-analytics">#️⃣ Hashtag Analytics</a>
-<a href="/scripts/keyword-monitor">🔑 Keyword Monitor &amp; Alerts</a>
-<a href="/scripts/manage-notifications">🔔 Manage Notifications</a>
-<a href="/scripts/notification-manager">🔔 Notification Manager</a>
-<a href="/scripts/profile-stats">📊 Profile Stats</a>
+        <h3>📊 Analytics</h3>
+        <a href="/scripts/audience-demographics">📊 Audience Demographics</a>
+<a href="/scripts/audience-overlap">📊 Audience Overlap</a>
+<a href="/scripts/audit-followers">📊 Audit Followers</a>
+<a href="/scripts/best-time-to-post">📊 Best Time to Post</a>
+<a href="/scripts/business-analytics">📊 Business Analytics</a>
+<a href="/scripts/business-tools">📊 Business Tools</a>
+<a href="/scripts/competitor-analysis">📊 Competitor Analysis</a>
+<a href="/scripts/content-calendar">📊 Content Calendar</a>
+<a href="/scripts/creator-studio">📊 Creator Studio</a>
+<a href="/scripts/engagement-analytics">📊 Engagement Analytics</a>
       </div>
       <div class="sidebar-card">
         <h3>🔗 Quick Links</h3>

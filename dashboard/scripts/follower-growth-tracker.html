@@ -4,14 +4,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Follower Growth Tracker — Free X/Twitter Script | XActions</title>
-  <meta name="description" content="Track follower count over time, detect growth/loss trends, and calculate velocity. Stores snapshots in localStorage for long-term historical analysis.">
-  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, follower, growth, tracker, follower monitoring">
+  <meta name="description" content="Snapshot a profile's follower count on each run and report growth, velocity, projections and a trendline from the saved history.">
+  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, follower, growth, tracker, analytics">
   <meta name="author" content="nich (@nichxbt)">
   <meta name="robots" content="index, follow">
 
   <meta property="og:type" content="article">
   <meta property="og:title" content="Follower Growth Tracker — XActions">
-  <meta property="og:description" content="Track follower count over time, detect growth/loss trends, and calculate velocity. Stores snapshots in localStorage for long-term historical analysis.">
+  <meta property="og:description" content="Snapshot a profile's follower count on each run and report growth, velocity, projections and a trendline from the saved history.">
   <meta property="og:url" content="https://xactions.app/scripts/follower-growth-tracker">
   <meta property="og:site_name" content="XActions">
   <meta property="og:image" content="https://xactions.app/og-run.png">
@@ -19,7 +19,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@nichxbt">
   <meta name="twitter:title" content="Follower Growth Tracker — XActions">
-  <meta name="twitter:description" content="Track follower count over time, detect growth/loss trends, and calculate velocity. Stores snapshots in localStorage for long-term historical analysis.">
+  <meta name="twitter:description" content="Snapshot a profile's follower count on each run and report growth, velocity, projections and a trendline from the saved history.">
   <meta name="twitter:image" content="https://xactions.app/og-run.png">
 
   <link rel="canonical" href="https://xactions.app/scripts/follower-growth-tracker">
@@ -30,14 +30,14 @@
     "@context": "https://schema.org",
     "@type": "TechArticle",
     "headline": "Follower Growth Tracker — Free X/Twitter Script | XActions",
-    "description": "Track follower count over time, detect growth/loss trends, and calculate velocity. Stores snapshots in localStorage for long-term historical analysis.",
+    "description": "Snapshot a profile's follower count on each run and report growth, velocity, projections and a trendline from the saved history.",
     "url": "https://xactions.app/scripts/follower-growth-tracker",
     "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
     "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
     "datePublished": "2026-03-30",
     "dateModified": "2026-03-30",
-    "articleSection": "Follower Monitoring",
-    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, follower, growth, tracker, follower monitoring"
+    "articleSection": "Analytics",
+    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, follower, growth, tracker, analytics"
   }
   </script>
   <script type="application/ld+json">
@@ -47,7 +47,7 @@
     "itemListElement": [
       { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
       { "@type": "ListItem", "position": 2, "name": "Scripts", "item": "https://xactions.app/scripts" },
-      { "@type": "ListItem", "position": 3, "name": "Follower Monitoring", "item": "https://xactions.app/scripts#follower-monitoring" },
+      { "@type": "ListItem", "position": 3, "name": "Analytics", "item": "https://xactions.app/scripts#analytics" },
       { "@type": "ListItem", "position": 4, "name": "Follower Growth Tracker", "item": "https://xactions.app/scripts/follower-growth-tracker" }
     ]
   }
@@ -116,31 +116,31 @@
 
     <main class="main-content" id="main-content">
       <header class="main-header">
-        <h1>📈 Follower Growth Tracker</h1>
+        <h1>📊 Follower Growth Tracker</h1>
         <div class="breadcrumb">
-          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#follower-monitoring">Follower Monitoring</a> › Follower Growth Tracker
+          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#analytics">Analytics</a> › Follower Growth Tracker
         </div>
       </header>
 
       <article class="article">
-        <span class="cat-badge">Follower Monitoring</span>
-        <span class="source-badge">browser</span>
+        <span class="cat-badge">Analytics</span>
+        <span class="source-badge">browser/followerGrowthTracker.js</span>
 
         <div class="meta-row">
-          <span>v1.0.0</span>
-          <span>Updated: 2026-02-24</span>
-          <span>243 lines</span>
+          <span>v1.1.0</span>
+          <span>Updated: 2026-11-27</span>
+          <span>302 lines</span>
           <span>by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></span>
         </div>
 
-        <p>Track follower count over time, detect growth/loss trends, and calculate velocity. Stores snapshots in localStorage for long-term historical analysis.</p>
+        <p>Snapshot a profile's follower count on each run and report growth, velocity, projections and a trendline from the saved history.</p>
 
         
 
         <h2>How to Use</h2>
         <ol class="usage-steps"><li>Go to: https://x.com/YOUR_USERNAME (or any profile)</li>
 <li>Open DevTools Console (F12)</li>
-<li>Paste and run</li>
+<li>Paste browser/followerGrowthTracker.js and press Enter</li>
 <li>Run again daily/weekly to build trendline</li></ol>
         
 
@@ -153,6 +153,10 @@
             <tr><td><code>autoSchedule</code></td><td><code>false</code></td><td>If true, auto-runs every intervalMs (keep tab open)</td></tr>
 <tr><td><code>intervalMs</code></td><td><code>3600000</code></td><td>1 hour between auto-snapshots</td></tr>
 <tr><td><code>exportHistory</code></td><td><code>true</code></td><td>Download full history as JSON</td></tr>
+<tr><td><code>showChart</code></td><td><code>true</code></td><td>Print the ASCII trendline (needs 3+ snapshots)</td></tr>
+<tr><td><code>maxHistory</code></td><td><code>0</code></td><td>Keep only the last N snapshots (0 = keep all)</td></tr>
+<tr><td><code>onePerDay</code></td><td><code>false</code></td><td>true = replace today's snapshot instead of adding another</td></tr>
+<tr><td><code>legacyStorageKey</code></td><td><code>'xactions_growth_tracker'</code></td><td>Import history saved by the old followers-growth-tracker script ('' = skip)</td></tr>
           </tbody>
         </table>
       </section>
@@ -164,6 +168,10 @@
     autoSchedule: false,            // If true, auto-runs every intervalMs (keep tab open)
     intervalMs: 3600000,            // 1 hour between auto-snapshots
     exportHistory: true,            // Download full history as JSON
+    showChart: true,                // Print the ASCII trendline (needs 3+ snapshots)
+    maxHistory: 0,                  // Keep only the last N snapshots (0 = keep all)
+    onePerDay: false,               // true = replace today's snapshot instead of adding another
+    legacyStorageKey: 'xactions_growth_tracker', // Import history saved by the old followers-growth-tracker script ('' = skip)
   };</code></pre>
         </div>
       </section>
@@ -180,12 +188,15 @@
  * ============================================================
  *
  * @name        followerGrowthTracker.js
- * @description Track follower count over time, detect growth/loss
- *              trends, and calculate velocity. Stores snapshots
- *              in localStorage for long-term historical analysis.
+ * @title       Follower Growth Tracker
+ * @description Snapshot a profile's follower count on each run and report growth, velocity, projections and a trendline from the saved history.
+ * @category    analytics
+ * @page        x.com/&lt;username&gt;
+ * @writes      false
+ * @aliases     scripts/followerGrowthTracker.js, scripts/twitter/followers-growth-tracker.js
  * @author      nichxbt (https://x.com/nichxbt)
- * @version     1.0.0
- * @date        2026-02-24
+ * @version     1.1.0
+ * @date        2026-11-27
  * @repository  https://github.com/nirholas/XActions
  *
  * ============================================================
@@ -193,7 +204,7 @@
  *
  * 1. Go to: https://x.com/YOUR_USERNAME (or any profile)
  * 2. Open DevTools Console (F12)
- * 3. Paste and run
+ * 3. Paste browser/followerGrowthTracker.js and press Enter
  * 4. Run again daily/weekly to build trendline
  *
  * Each run takes a snapshot. Over time, you'll see:
@@ -210,6 +221,10 @@
     autoSchedule: false,            // If true, auto-runs every intervalMs (keep tab open)
     intervalMs: 3600000,            // 1 hour between auto-snapshots
     exportHistory: true,            // Download full history as JSON
+    showChart: true,                // Print the ASCII trendline (needs 3+ snapshots)
+    maxHistory: 0,                  // Keep only the last N snapshots (0 = keep all)
+    onePerDay: false,               // true = replace today's snapshot instead of adding another
+    legacyStorageKey: 'xactions_growth_tracker', // Import history saved by the old followers-growth-tracker script ('' = skip)
   };
 
   const parseCount = (str) =&gt; {
@@ -228,17 +243,22 @@
 
   const takeSnapshot = () =&gt; {
     const pathMatch = window.location.pathname.match(/^\/([A-Za-z0-9_]+)/);
-    if (!pathMatch || ['home', 'explore', 'notifications', 'messages', 'i'].includes(pathMatch[1])) return null;
+    if (!pathMatch || ['home', 'explore', 'notifications', 'messages', 'i', 'settings', 'search'].includes(pathMatch[1])) return null;
     const username = pathMatch[1];
 
     let followers = 0, following = 0;
+    let verifiedFollowers = 0, foundFollowers = false;
     const links = document.querySelectorAll('a[href*=&quot;/followers&quot;], a[href*=&quot;/following&quot;]');
     for (const link of links) {
       const href = link.getAttribute('href') || '';
       const count = parseCount(link.textContent);
       if (href.includes('/following')) following = count;
-      else if (href.includes('/followers') &amp;&amp; !href.includes('/verified')) followers = count;
+      else if (href.includes('/followers') &amp;&amp; !href.includes('/verified')) { followers = count; foundFollowers = true; }
+      else if (href.endsWith('/verified_followers')) verifiedFollowers = count;
     }
+    // Some profiles only link the follower count through /verified_followers
+    if (!foundFollowers &amp;&amp; verifiedFollowers &gt; 0) { followers = verifiedFollowers; foundFollowers = true; }
+    if (!foundFollowers) return { username, missing: true };
 
     return {
       username,
@@ -262,6 +282,11 @@
       console.error('❌ Navigate to a profile page first!');
       return;
     }
+    if (snapshot.missing) {
+      console.warn('⚠️ Could not detect the follower count. Make sure you\'re on a profile page.');
+      console.log('   Try scrolling up so the profile header is visible. Nothing was saved.');
+      return;
+    }
 
     console.log(`\n👤 @${snapshot.username}`);
     console.log(`📊 Current: ${fmt(snapshot.followers)} followers | ${fmt(snapshot.following)} following | ratio: ${snapshot.ratio}`);
@@ -273,13 +298,53 @@
       history = JSON.parse(localStorage.getItem(storageKey) || '[]');
     } catch { history = []; }
 
+    // Import history saved by the old followers-growth-tracker script
+    // (key `${legacyStorageKey}_&lt;lowercase username&gt;`, entries { date, followers, following })
+    if (CONFIG.legacyStorageKey) {
+      let legacy = [];
+      try {
+        legacy = JSON.parse(localStorage.getItem(`${CONFIG.legacyStorageKey}_${snapshot.username.toLowerCase()}`) || '[]');
+      } catch { legacy = []; }
+      const known = new Set(history.map(h =&gt; h.epoch));
+      let imported = 0;
+      for (const h of Array.isArray(legacy) ? legacy : []) {
+        const epoch = new Date(h.date).getTime();
+        if (!h.date || Number.isNaN(epoch) || known.has(epoch)) continue;
+        history.push({
+          username: snapshot.username,
+          followers: h.followers || 0,
+          following: h.following || 0,
+          ratio: h.following &gt; 0 ? (h.followers / h.following).toFixed(3) : '∞',
+          timestamp: new Date(epoch).toISOString(),
+          epoch,
+        });
+        known.add(epoch);
+        imported++;
+      }
+      if (imported &gt; 0) {
+        history.sort((a, b) =&gt; a.epoch - b.epoch);
+        localStorage.setItem(storageKey, JSON.stringify(history));
+        console.log(`\n📦 Imported ${imported} snapshot(s) from ${CONFIG.legacyStorageKey}_${snapshot.username.toLowerCase()}.`);
+      }
+    }
+
+    const saveHistory = () =&gt; {
+      if (CONFIG.maxHistory &gt; 0 &amp;&amp; history.length &gt; CONFIG.maxHistory) history = history.slice(-CONFIG.maxHistory);
+      localStorage.setItem(storageKey, JSON.stringify(history));
+    };
+
     // Deduplicate (don't save if last snapshot was &lt; 10 min ago)
     const lastSnap = history[history.length - 1];
-    if (lastSnap &amp;&amp; (snapshot.epoch - lastSnap.epoch) &lt; 600000) {
+    const today = snapshot.timestamp.slice(0, 10);
+    if (CONFIG.onePerDay &amp;&amp; lastSnap &amp;&amp; lastSnap.timestamp.slice(0, 10) === today) {
+      history[history.length - 1] = snapshot;
+      saveHistory();
+      console.log('\n📝 Updated today\'s snapshot.');
+    } else if (lastSnap &amp;&amp; (snapshot.epoch - lastSnap.epoch) &lt; 600000) {
       console.log('\nℹ️ Snapshot already taken within last 10 minutes. Showing existing data.\n');
     } else {
       history.push(snapshot);
-      localStorage.setItem(storageKey, JSON.stringify(history));
+      saveHistory();
       console.log(`\n💾 Snapshot #${history.length} saved.`);
     }
 
@@ -310,6 +375,8 @@
     const allTimeGrowth = curr.followers - first.followers;
     const totalDays = (curr.epoch - first.epoch) / 86400000;
     console.log(`\n📈 All-time (${totalDays.toFixed(1)} days, ${history.length} snapshots):`);
+    console.log(`   From: ${new Date(first.timestamp).toLocaleDateString()} (${fmt(first.followers)} followers)`);
+    console.log(`   To:   ${new Date(curr.timestamp).toLocaleDateString()} (${fmt(curr.followers)} followers)`);
     console.log(`   Total growth: ${sign(allTimeGrowth)}`);
 
     if (totalDays &gt; 0) {
@@ -339,7 +406,7 @@
 
     // ── Trend Chart (ASCII) ─────────────────────────────────
 
-    if (history.length &gt;= 3) {
+    if (CONFIG.showChart &amp;&amp; history.length &gt;= 3) {
       console.log('\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
       console.log('  📉 GROWTH TRENDLINE');
       console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
@@ -429,17 +496,17 @@
 
     <aside class="sidebar-right">
       <div class="sidebar-card">
-        <h3>📈 Follower Monitoring</h3>
-        <a href="/scripts/follower-tools">👥 Advanced follower tools</a>
+        <h3>📊 Analytics</h3>
+        <a href="/scripts/account-health-monitor">📊 Account Health Monitor</a>
+<a href="/scripts/audience-demographics">📊 Audience Demographics</a>
+<a href="/scripts/audience-overlap">📊 Audience Overlap</a>
 <a href="/scripts/audit-followers">📊 Audit Followers</a>
-<a href="/scripts/continuous-monitor">🔄 Continuous Monitor</a>
-<a href="/scripts/detect-unfollowers">🔍 Detect Unfollowers</a>
-<a href="/scripts/find-fake-followers">🤖 Find Fake Followers</a>
-<a href="/scripts/followers-growth-tracker">📈 Followers Growth Tracker</a>
-<a href="/scripts/monitor-account">📊 Monitor Account</a>
-<a href="/scripts/new-followers-alert">🔔 New Followers Alert</a>
-<a href="/scripts/remove-followers">🚫 Remove Followers</a>
-<a href="/scripts/welcome-new-followers">👋 Welcome New Followers</a>
+<a href="/scripts/best-time-to-post">📊 Best Time to Post</a>
+<a href="/scripts/business-analytics">📊 Business Analytics</a>
+<a href="/scripts/business-tools">📊 Business Tools</a>
+<a href="/scripts/competitor-analysis">📊 Competitor Analysis</a>
+<a href="/scripts/content-calendar">📊 Content Calendar</a>
+<a href="/scripts/creator-studio">📊 Creator Studio</a>
       </div>
       <div class="sidebar-card">
         <h3>🔗 Quick Links</h3>

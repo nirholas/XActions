@@ -3,23 +3,23 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Mass Block Users — Free X/Twitter Script | XActions</title>
-  <meta name="description" content="Block multiple accounts by username list. Also supports &quot;block from timeline&quot; mode: blocks every visible user on the current page (great for blocking spam…">
-  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, mass, block, safety &amp; privacy">
+  <title>Mass Block — Free X/Twitter Script | XActions</title>
+  <meta name="description" content="Block a list of usernames, or every user cell visible on the page, with a whitelist, a cap and a dry run that is on by default.">
+  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, mass, block, safety">
   <meta name="author" content="nich (@nichxbt)">
   <meta name="robots" content="index, follow">
 
   <meta property="og:type" content="article">
-  <meta property="og:title" content="Mass Block Users — XActions">
-  <meta property="og:description" content="Block multiple accounts by username list. Also supports &quot;block from timeline&quot; mode: blocks every visible user on the current page (great for blocking spam…">
+  <meta property="og:title" content="Mass Block — XActions">
+  <meta property="og:description" content="Block a list of usernames, or every user cell visible on the page, with a whitelist, a cap and a dry run that is on by default.">
   <meta property="og:url" content="https://xactions.app/scripts/mass-block">
   <meta property="og:site_name" content="XActions">
   <meta property="og:image" content="https://xactions.app/og-run.png">
 
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@nichxbt">
-  <meta name="twitter:title" content="Mass Block Users — XActions">
-  <meta name="twitter:description" content="Block multiple accounts by username list. Also supports &quot;block from timeline&quot; mode: blocks every visible user on the current page (great for blocking spam…">
+  <meta name="twitter:title" content="Mass Block — XActions">
+  <meta name="twitter:description" content="Block a list of usernames, or every user cell visible on the page, with a whitelist, a cap and a dry run that is on by default.">
   <meta name="twitter:image" content="https://xactions.app/og-run.png">
 
   <link rel="canonical" href="https://xactions.app/scripts/mass-block">
@@ -29,15 +29,15 @@
   {
     "@context": "https://schema.org",
     "@type": "TechArticle",
-    "headline": "Mass Block Users — Free X/Twitter Script | XActions",
-    "description": "Block multiple accounts by username list. Also supports \"block from timeline\" mode: blocks every visible user on the current page (great for blocking spam…",
+    "headline": "Mass Block — Free X/Twitter Script | XActions",
+    "description": "Block a list of usernames, or every user cell visible on the page, with a whitelist, a cap and a dry run that is on by default.",
     "url": "https://xactions.app/scripts/mass-block",
     "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
     "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
     "datePublished": "2026-03-30",
     "dateModified": "2026-03-30",
-    "articleSection": "Safety & Privacy",
-    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, mass, block, safety & privacy"
+    "articleSection": "Safety",
+    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, mass, block, safety"
   }
   </script>
   <script type="application/ld+json">
@@ -47,8 +47,8 @@
     "itemListElement": [
       { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
       { "@type": "ListItem", "position": 2, "name": "Scripts", "item": "https://xactions.app/scripts" },
-      { "@type": "ListItem", "position": 3, "name": "Safety & Privacy", "item": "https://xactions.app/scripts#safety-privacy" },
-      { "@type": "ListItem", "position": 4, "name": "Mass Block Users", "item": "https://xactions.app/scripts/mass-block" }
+      { "@type": "ListItem", "position": 3, "name": "Safety", "item": "https://xactions.app/scripts#safety" },
+      { "@type": "ListItem", "position": 4, "name": "Mass Block", "item": "https://xactions.app/scripts/mass-block" }
     ]
   }
   </script>
@@ -116,24 +116,24 @@
 
     <main class="main-content" id="main-content">
       <header class="main-header">
-        <h1>🚫 Mass Block Users</h1>
+        <h1>🛡️ Mass Block</h1>
         <div class="breadcrumb">
-          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#safety-privacy">Safety &amp; Privacy</a> › Mass Block Users
+          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#safety">Safety</a> › Mass Block
         </div>
       </header>
 
       <article class="article">
-        <span class="cat-badge">Safety &amp; Privacy</span>
-        <span class="source-badge">browser</span>
+        <span class="cat-badge">Safety</span>
+        <span class="source-badge">browser/massBlock.js</span>
 
         <div class="meta-row">
-          <span>v2.0.0</span>
-          <span>Updated: 2026-02-24</span>
-          <span>264 lines</span>
+          <span>v2.1.0</span>
+          <span>Updated: 2026-11-27</span>
+          <span>334 lines</span>
           <span>by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></span>
         </div>
 
-        <p>Block multiple accounts by username list. Also supports &quot;block from timeline&quot; mode: blocks every visible user on the current page (great for blocking spam replies). Dry-run, rate-limit detection, full result log with export.</p>
+        <p>Block a list of usernames, or every user cell visible on the page, with a whitelist, a cap and a dry run that is on by default.</p>
 
         
 
@@ -141,15 +141,16 @@
         <ol class="usage-steps"><li>Go to any x.com page</li>
 <li>Add usernames to CONFIG.usersToBlock</li>
 <li>Set CONFIG.mode = 'list'</li>
-<li>Paste and run</li>
+<li>Paste browser/massBlock.js and run</li>
 <li>Go to a tweet/page with spam replies</li>
 <li>Set CONFIG.mode = 'visible'</li>
-<li>Paste and run</li></ol>
+<li>Paste browser/massBlock.js and run</li></ol>
         
 
         <div class="controls-box">
         <h3>Runtime Controls</h3>
-        <pre><code>window.XActions.pause()  / .resume() / .abort() / .status()</code></pre>
+        <pre><code>window.XActions.pause()  / .resume() / .abort() / .status()
+window.stopMassBlock()   - stop after the current account</code></pre>
       </div>
         <section class="config-section">
         <h2>Configuration Options</h2>
@@ -159,8 +160,12 @@
             <tr><td><code>mode</code></td><td><code>'list'</code></td><td>'list' | 'visible'</td></tr>
 <tr><td><code>whitelist</code></td><td><code>[]</code></td><td>Never block these (without @)</td></tr>
 <tr><td><code>dryRun</code></td><td><code>true</code></td><td>SET FALSE TO EXECUTE</td></tr>
+<tr><td><code>maxBlocks</code></td><td><code>20</code></td><td>Cap per run, both modes (dry-run previews count too)</td></tr>
 <tr><td><code>maxVisibleBlocks</code></td><td><code>100</code></td><td>Cap for 'visible' mode</td></tr>
 <tr><td><code>scrollInVisibleMode</code></td><td><code>true</code></td><td>Scroll for more users in visible mode</td></tr>
+<tr><td><code>scrollDelay</code></td><td><code>2000</code></td><td>ms to wait after each scroll in visible mode</td></tr>
+<tr><td><code>maxEmptyScrolls</code></td><td><code>5</code></td><td>Visible mode: give up after N scrolls with no new users</td></tr>
+<tr><td><code>saveLog</code></td><td><code>false</code></td><td>Append each run's results to localStorage (last 50 runs)</td></tr>
           </tbody>
         </table>
       </section>
@@ -180,9 +185,14 @@
     navigationDelay: 3500,
     maxConsecutiveErrors: 5,
     rateLimitCooldown: 60000,
+    maxBlocks: 20,                    // Cap per run, both modes (dry-run previews count too)
     maxVisibleBlocks: 100,            // Cap for 'visible' mode
     scrollInVisibleMode: true,        // Scroll for more users in visible mode
+    scrollDelay: 2000,                // ms to wait after each scroll in visible mode
+    maxEmptyScrolls: 5,               // Visible mode: give up after N scrolls with no new users
     exportOnComplete: true,
+    saveLog: false,                   // Append each run's results to localStorage (last 50 runs)
+    logStorageKey: 'xactions_mass_block_log',
   };</code></pre>
         </div>
       </section>
@@ -199,14 +209,15 @@
  * ============================================================
  *
  * @name        massBlock.js
- * @description Block multiple accounts by username list. Also
- *              supports &quot;block from timeline&quot; mode: blocks every
- *              visible user on the current page (great for
- *              blocking spam replies). Dry-run, rate-limit
- *              detection, full result log with export.
+ * @title       Mass Block
+ * @description Block a list of usernames, or every user cell visible on the page, with a whitelist, a cap and a dry run that is on by default.
+ * @category    safety
+ * @page        x.com/* or x.com/&lt;username&gt;/followers
+ * @writes      true
+ * @aliases     scripts/massBlock.js, scripts/twitter/mass-block.js
  * @author      nichxbt (https://x.com/nichxbt)
- * @version     2.0.0
- * @date        2026-02-24
+ * @version     2.1.0
+ * @date        2026-11-27
  * @repository  https://github.com/nirholas/XActions
  *
  * ============================================================
@@ -216,15 +227,19 @@
  *   1. Go to any x.com page
  *   2. Add usernames to CONFIG.usersToBlock
  *   3. Set CONFIG.mode = 'list'
- *   4. Paste and run
+ *   4. Paste browser/massBlock.js and run
  *
  * MODE B — Block visible users on page (e.g. reply spam):
  *   1. Go to a tweet/page with spam replies
  *   2. Set CONFIG.mode = 'visible'
- *   3. Paste and run
+ *   3. Paste browser/massBlock.js and run
+ *
+ * dryRun is true by default: set it to false to block for real.
+ * maxBlocks (20 by default) caps how many accounts one run blocks.
  *
  * 🎮 CONTROLS:
  *   window.XActions.pause()  / .resume() / .abort() / .status()
+ *   window.stopMassBlock()   - stop after the current account
  * ============================================================
  */
 (() =&gt; {
@@ -242,9 +257,14 @@
     navigationDelay: 3500,
     maxConsecutiveErrors: 5,
     rateLimitCooldown: 60000,
+    maxBlocks: 20,                    // Cap per run, both modes (dry-run previews count too)
     maxVisibleBlocks: 100,            // Cap for 'visible' mode
     scrollInVisibleMode: true,        // Scroll for more users in visible mode
+    scrollDelay: 2000,                // ms to wait after each scroll in visible mode
+    maxEmptyScrolls: 5,               // Visible mode: give up after N scrolls with no new users
     exportOnComplete: true,
+    saveLog: false,                   // Append each run's results to localStorage (last 50 runs)
+    logStorageKey: 'xactions_mass_block_log',
   };
 
   const SEL = {
@@ -261,10 +281,35 @@
   const gaussian = (a, b) =&gt; Math.floor(a + ((Math.random() + Math.random()) / 2) * (b - a));
   const isRateLimited = () =&gt; { const t = $(SEL.toast); return t &amp;&amp; /rate limit|try again|too many|slow down/i.test(t.textContent); };
 
+  // The Block menu item, by test id first, then by its text (&quot;Block @user&quot;).
+  const findBlockBtn = () =&gt; {
+    const byTestId = $(SEL.blockBtn);
+    if (byTestId) return byTestId;
+    for (const item of document.querySelectorAll('[role=&quot;menuitem&quot;]')) {
+      if (/\bblock\b/i.test(item.textContent)) return item;
+    }
+    return null;
+  };
+
+  // Navigate within the SPA. Assigning window.location.href triggers a full
+  // page load, which destroys this console script after the first user.
+  const spaNavigate = (url) =&gt; {
+    try {
+      const target = new URL(url, window.location.href);
+      if (target.origin === window.location.origin) {
+        window.history.pushState({}, '', target.href);
+        window.dispatchEvent(new PopStateEvent('popstate', { state: {} }));
+        return;
+      }
+    } catch { /* fall through to a full navigation */ }
+    window.location.href = url;
+  };
+
   let paused = false, aborted = false;
   let blocked = 0, errors = 0, consecutiveErrors = 0;
   const startTime = Date.now();
-  const results = { blocked: [], failed: [], skipped: [] };
+  const results = { blocked: [], failed: [], skipped: [], notFound: [] };
+  const capReached = () =&gt; blocked &gt;= CONFIG.maxBlocks;
   const whitelistSet = new Set(CONFIG.whitelist.map(u =&gt; u.toLowerCase().replace(/^@/, '')));
 
   window.XActions = {
@@ -272,8 +317,15 @@
     resume() { paused = false; console.log('▶️ Resumed.'); },
     abort()  { aborted = true; console.log('🛑 Aborting...'); },
     status() {
-      console.log(`📊 Blocked: ${blocked} | Failed: ${results.failed.length} | Skipped: ${results.skipped.length}`);
+      console.log(`📊 Blocked: ${blocked} | Failed: ${results.failed.length} | Skipped: ${results.skipped.length} | Not found: ${results.notFound.length}`);
     },
+  };
+
+  // Stop switch: run window.stopMassBlock() from the console to abort after
+  // the account currently being processed.
+  window.stopMassBlock = () =&gt; {
+    aborted = true;
+    console.log('🛑 Stop requested. Finishing the current account, then exiting.');
   };
 
   const shouldContinue = async () =&gt; { while (paused &amp;&amp; !aborted) await sleep(500); return !aborted; };
@@ -292,8 +344,7 @@
       return;
     }
 
-    const returnUrl = window.location.href;
-    window.location.href = `https://x.com/${username}`;
+    spaNavigate(`https://x.com/${username}`);
     await sleep(CONFIG.navigationDelay);
 
     // Wait for page to load
@@ -306,7 +357,7 @@
     const moreBtn = $(SEL.userActions);
     if (!moreBtn) {
       console.warn(`   ⚠️ @${username}: Profile not found or menu missing`);
-      results.failed.push(username);
+      results.notFound.push(username);
       errors++;
       consecutiveErrors++;
       return;
@@ -316,7 +367,7 @@
     await sleep(gaussian(800, 1200));
 
     // Find block in dropdown
-    const blockBtn = $(SEL.blockBtn);
+    const blockBtn = findBlockBtn();
     if (!blockBtn) {
       // Close menu
       document.body.click();
@@ -348,7 +399,7 @@
     const processedUsers = new Set();
     let emptyScrolls = 0;
 
-    while (blocked &lt; CONFIG.maxVisibleBlocks &amp;&amp; emptyScrolls &lt; 5) {
+    while (blocked &lt; CONFIG.maxVisibleBlocks &amp;&amp; !capReached() &amp;&amp; emptyScrolls &lt; CONFIG.maxEmptyScrolls) {
       if (!(await shouldContinue())) break;
       if (isRateLimited()) { console.warn('🚨 Rate limit!'); await sleep(CONFIG.rateLimitCooldown); continue; }
 
@@ -357,7 +408,7 @@
 
       for (const cell of cells) {
         if (!(await shouldContinue())) break;
-        if (blocked &gt;= CONFIG.maxVisibleBlocks) break;
+        if (blocked &gt;= CONFIG.maxVisibleBlocks || capReached()) break;
 
         const link = cell.querySelector('a[href^=&quot;/&quot;]');
         if (!link) continue;
@@ -368,6 +419,7 @@
 
         if (whitelistSet.has(username.toLowerCase())) {
           results.skipped.push(username);
+          console.log(`   🛡️ Whitelisted: @${username}`);
           continue;
         }
 
@@ -383,7 +435,7 @@
 
         moreBtn.click();
         await sleep(gaussian(600, 1000));
-        const blockBtn = $(SEL.blockBtn);
+        const blockBtn = findBlockBtn();
         if (!blockBtn) { document.body.click(); await sleep(300); continue; }
         blockBtn.click();
         await sleep(gaussian(500, 900));
@@ -392,7 +444,7 @@
           confirm.click();
           blocked++;
           results.blocked.push({ username, timestamp: new Date().toISOString() });
-          console.log(`   🚫 Blocked @${username} [${blocked}/${CONFIG.maxVisibleBlocks}]`);
+          console.log(`   🚫 Blocked @${username} [${blocked}/${Math.min(CONFIG.maxVisibleBlocks, CONFIG.maxBlocks)}]`);
         }
         await sleep(gaussian(CONFIG.actionDelay * 0.5, CONFIG.actionDelay));
       }
@@ -400,7 +452,7 @@
       if (!foundNew) emptyScrolls++; else emptyScrolls = 0;
       if (CONFIG.scrollInVisibleMode) {
         window.scrollTo(0, document.body.scrollHeight);
-        await sleep(2000);
+        await sleep(CONFIG.scrollDelay);
       } else break;
     }
   };
@@ -412,20 +464,34 @@
     console.log('║  by nichxbt — v2.0' + ' '.repeat(W - 21) + '║');
     console.log('╚' + '═'.repeat(W) + '╝');
 
-    console.log(`⚙️ Mode: ${CONFIG.mode} | Dry run: ${CONFIG.dryRun} | Whitelist: ${whitelistSet.size}`);
+    console.log(`⚙️ Mode: ${CONFIG.mode} | Dry run: ${CONFIG.dryRun} | Max: ${CONFIG.maxBlocks} | Whitelist: ${whitelistSet.size}`);
+    console.log(CONFIG.dryRun
+      ? '⚠️ DRY RUN MODE - No accounts will be blocked. Set CONFIG.dryRun = false to block.'
+      : '🔴 LIVE MODE - Accounts WILL be blocked');
+    console.log('💡 To stop early: window.stopMassBlock()');
 
     if (CONFIG.mode === 'list') {
       if (CONFIG.usersToBlock.length === 0) {
         console.error('❌ No users to block! Add usernames to CONFIG.usersToBlock.');
         return;
       }
-      console.log(`📋 ${CONFIG.usersToBlock.length} users to block\n`);
+      console.log(`📋 ${CONFIG.usersToBlock.length} users to block`);
+      CONFIG.usersToBlock.forEach((u, i) =&gt; console.log(`   ${i + 1}. @${u}`));
+      console.log('');
 
       for (const username of CONFIG.usersToBlock) {
         if (!(await shouldContinue())) break;
+        if (capReached()) { console.log(`🛑 Reached maxBlocks (${CONFIG.maxBlocks}).`); break; }
         if (isRateLimited()) { console.warn('🚨 Rate limit!'); await sleep(CONFIG.rateLimitCooldown); }
         if (consecutiveErrors &gt;= CONFIG.maxConsecutiveErrors) { console.error('❌ Too many errors.'); break; }
-        await blockByNavigation(username);
+        try {
+          await blockByNavigation(username);
+        } catch (error) {
+          console.warn(`   ❌ Error blocking @${username}: ${error.message}`);
+          results.failed.push(username);
+          errors++;
+          consecutiveErrors++;
+        }
         await sleep(gaussian(CONFIG.actionDelay * 0.8, CONFIG.actionDelay * 1.2));
       }
     } else {
@@ -441,8 +507,22 @@
     console.log(`║  Blocked:     ${String(blocked).padEnd(31)}║`);
     console.log(`║  Failed:      ${String(results.failed.length).padEnd(31)}║`);
     console.log(`║  Skipped:     ${String(results.skipped.length).padEnd(31)}║`);
+    console.log(`║  Not found:   ${String(results.notFound.length).padEnd(31)}║`);
     console.log(`║  Duration:    ${(elapsed + 's').padEnd(31)}║`);
     console.log('╚' + '═'.repeat(48) + '╝');
+    if (results.failed.length &gt; 0) console.log(`❌ Failed: ${results.failed.map(u =&gt; '@' + u).join(', ')}`);
+    if (results.notFound.length &gt; 0) console.log(`❓ Not found: ${results.notFound.map(u =&gt; '@' + u).join(', ')}`);
+
+    if (CONFIG.saveLog) {
+      try {
+        const existing = JSON.parse(localStorage.getItem(CONFIG.logStorageKey) || '[]');
+        existing.push({ timestamp: new Date().toISOString(), dryRun: CONFIG.dryRun, ...results });
+        localStorage.setItem(CONFIG.logStorageKey, JSON.stringify(existing.slice(-50)));
+        console.log('💾 Results saved to localStorage');
+      } catch (e) {
+        console.warn(`⚠️ Could not save the log: ${e.message}`);
+      }
+    }
 
     if (CONFIG.exportOnComplete &amp;&amp; results.blocked.length &gt; 0) {
       const blob = new Blob([JSON.stringify(results, null, 2)], { type: 'application/json' });
@@ -469,17 +549,16 @@
 
     <aside class="sidebar-right">
       <div class="sidebar-card">
-        <h3>🚫 Safety &amp; Privacy</h3>
-        <a href="/scripts/blacklist">🚫 Blacklist Manager</a>
-<a href="/scripts/block-bots">🤖 Block Bot Accounts</a>
-<a href="/scripts/block-by-keywords">🚫 Block By Keywords</a>
-<a href="/scripts/block-by-ratio">🚫 Block By Ratio</a>
-<a href="/scripts/block-list-transfer">🧱 Block List Transfer</a>
-<a href="/scripts/filter-manager">🔍 Filter Manager</a>
-<a href="/scripts/id-verification">🪪 ID Verification management</a>
-<a href="/scripts/manage-muted-words">🔇 Manage Muted Words</a>
-<a href="/scripts/manage-settings">⚙️ Manage Settings</a>
-<a href="/scripts/mass-unblock">🔓 Mass Unblock Users</a>
+        <h3>🛡️ Safety</h3>
+        <a href="/scripts/block-bots">🛡️ Block Bots</a>
+<a href="/scripts/block-by-keywords">🛡️ Block by Keywords</a>
+<a href="/scripts/block-by-ratio">🛡️ Block by Ratio</a>
+<a href="/scripts/block-list-transfer">🛡️ Block List Import and Export</a>
+<a href="/scripts/block-list-manager">🛡️ Block List Manager</a>
+<a href="/scripts/manage-muted-words">🛡️ Manage Muted Words</a>
+<a href="/scripts/mute-by-keywords">🛡️ Mute by Keywords</a>
+<a href="/scripts/report-spam">🛡️ Report Spam</a>
+<a href="/scripts/shadowban-checker">🛡️ Shadowban Checker</a>
       </div>
       <div class="sidebar-card">
         <h3>🔗 Quick Links</h3>

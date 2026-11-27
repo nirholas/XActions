@@ -4,14 +4,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Blacklist Manager — Free X/Twitter Script | XActions</title>
-  <meta name="description" content="Manage a blacklist of users to ignore/skip. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
-  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, blacklist, safety &amp; privacy">
+  <meta name="description" content="Keep a list of users the other automation scripts skip. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
+  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, blacklist, automation suite">
   <meta name="author" content="nich (@nichxbt)">
   <meta name="robots" content="index, follow">
 
   <meta property="og:type" content="article">
   <meta property="og:title" content="Blacklist Manager — XActions">
-  <meta property="og:description" content="Manage a blacklist of users to ignore/skip. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
+  <meta property="og:description" content="Keep a list of users the other automation scripts skip. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
   <meta property="og:url" content="https://xactions.app/scripts/blacklist">
   <meta property="og:site_name" content="XActions">
   <meta property="og:image" content="https://xactions.app/og-run.png">
@@ -19,7 +19,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@nichxbt">
   <meta name="twitter:title" content="Blacklist Manager — XActions">
-  <meta name="twitter:description" content="Manage a blacklist of users to ignore/skip. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
+  <meta name="twitter:description" content="Keep a list of users the other automation scripts skip. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
   <meta name="twitter:image" content="https://xactions.app/og-run.png">
 
   <link rel="canonical" href="https://xactions.app/scripts/blacklist">
@@ -30,14 +30,14 @@
     "@context": "https://schema.org",
     "@type": "TechArticle",
     "headline": "Blacklist Manager — Free X/Twitter Script | XActions",
-    "description": "Manage a blacklist of users to ignore/skip. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.",
+    "description": "Keep a list of users the other automation scripts skip. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.",
     "url": "https://xactions.app/scripts/blacklist",
     "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
     "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
     "datePublished": "2026-03-30",
     "dateModified": "2026-03-30",
-    "articleSection": "Safety & Privacy",
-    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, blacklist, safety & privacy"
+    "articleSection": "Automation Suite",
+    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, blacklist, automation suite"
   }
   </script>
   <script type="application/ld+json">
@@ -47,7 +47,7 @@
     "itemListElement": [
       { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
       { "@type": "ListItem", "position": 2, "name": "Scripts", "item": "https://xactions.app/scripts" },
-      { "@type": "ListItem", "position": 3, "name": "Safety & Privacy", "item": "https://xactions.app/scripts#safety-privacy" },
+      { "@type": "ListItem", "position": 3, "name": "Automation Suite", "item": "https://xactions.app/scripts#automation-suite" },
       { "@type": "ListItem", "position": 4, "name": "Blacklist Manager", "item": "https://xactions.app/scripts/blacklist" }
     ]
   }
@@ -116,24 +116,24 @@
 
     <main class="main-content" id="main-content">
       <header class="main-header">
-        <h1>🚫 Blacklist Manager</h1>
+        <h1>⚙️ Blacklist Manager</h1>
         <div class="breadcrumb">
-          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#safety-privacy">Safety &amp; Privacy</a> › Blacklist Manager
+          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#automation-suite">Automation Suite</a> › Blacklist Manager
         </div>
       </header>
 
       <article class="article">
-        <span class="cat-badge">Safety &amp; Privacy</span>
-        <span class="source-badge">scripts/twitter</span>
+        <span class="cat-badge">Automation Suite</span>
+        <span class="source-badge">browser/blacklist.js</span>
 
         <div class="meta-row">
           <span>v1.0.0</span>
           <span>Updated: 2026-01-26</span>
-          <span>299 lines</span>
+          <span>304 lines</span>
           <span>by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></span>
         </div>
 
-        <p>Manage a blacklist of users to ignore/skip</p>
+        <p>Keep a list of users the other automation scripts skip.</p>
 
         
 
@@ -160,7 +160,12 @@
  * ============================================================
  * 
  * @name        blacklist.js
- * @description Manage a blacklist of users to ignore/skip
+ * @description Keep a list of users the other automation scripts skip.
+ * @title       Blacklist Manager
+ * @category    automation
+ * @page        x.com/*
+ * @writes      false
+ * @aliases     scripts/twitter/blacklist.js
  * @author      nichxbt (https://x.com/nichxbt)
  * @version     1.0.0
  * @date        2026-01-26
@@ -399,7 +404,7 @@ var CONFIG = {
     
     // Block current user (from profile page)
     blockCurrentUser: () =&gt; {
-      const urlMatch = window.location.href.match(/x\.com\/([^\/\?]+)/);
+      const urlMatch = window.location.href.match(/x\.com\/([^/?]+)/);
       if (urlMatch &amp;&amp; urlMatch[1]) {
         const username = urlMatch[1];
         if (!['home', 'explore', 'notifications', 'messages', 'i', 'settings'].includes(username)) {
@@ -465,17 +470,15 @@ var CONFIG = {
 
     <aside class="sidebar-right">
       <div class="sidebar-card">
-        <h3>🚫 Safety &amp; Privacy</h3>
-        <a href="/scripts/block-bots">🤖 Block Bot Accounts</a>
-<a href="/scripts/block-by-keywords">🚫 Block By Keywords</a>
-<a href="/scripts/block-by-ratio">🚫 Block By Ratio</a>
-<a href="/scripts/block-list-transfer">🧱 Block List Transfer</a>
-<a href="/scripts/filter-manager">🔍 Filter Manager</a>
-<a href="/scripts/id-verification">🪪 ID Verification management</a>
-<a href="/scripts/manage-muted-words">🔇 Manage Muted Words</a>
-<a href="/scripts/manage-settings">⚙️ Manage Settings</a>
-<a href="/scripts/mass-block">🚫 Mass Block Users</a>
-<a href="/scripts/mass-unblock">🔓 Mass Unblock Users</a>
+        <h3>⚙️ Automation Suite</h3>
+        <a href="/scripts/actions">⚙️ Actions Library</a>
+<a href="/scripts/control-panel">⚙️ Automation Control Panel</a>
+<a href="/scripts/core">⚙️ Automation Core</a>
+<a href="/scripts/filter-manager">⚙️ Filter Manager</a>
+<a href="/scripts/quota-supervisor">⚙️ Quota Supervisor</a>
+<a href="/scripts/rate-limiter">⚙️ Rate Limiter</a>
+<a href="/scripts/session-logger">⚙️ Session Logger</a>
+<a href="/scripts/whitelist">⚙️ Whitelist Manager</a>
       </div>
       <div class="sidebar-card">
         <h3>🔗 Quick Links</h3>

@@ -4,14 +4,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Leave All Communities — Free X/Twitter Script | XActions</title>
-  <meta name="description" content="Leave all X Communities you've joined. Navigates into each community, clicks &quot;Leave&quot;, and returns.">
-  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, leave, all, communities, lists &amp; communities">
+  <meta name="description" content="Leave every X Community you have joined, with a whitelist, a cap, a dry run and progress that survives reloads.">
+  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, leave, all, communities, communities">
   <meta name="author" content="nich (@nichxbt)">
   <meta name="robots" content="index, follow">
 
   <meta property="og:type" content="article">
   <meta property="og:title" content="Leave All Communities — XActions">
-  <meta property="og:description" content="Leave all X Communities you've joined. Navigates into each community, clicks &quot;Leave&quot;, and returns.">
+  <meta property="og:description" content="Leave every X Community you have joined, with a whitelist, a cap, a dry run and progress that survives reloads.">
   <meta property="og:url" content="https://xactions.app/scripts/leave-all-communities">
   <meta property="og:site_name" content="XActions">
   <meta property="og:image" content="https://xactions.app/og-run.png">
@@ -19,7 +19,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@nichxbt">
   <meta name="twitter:title" content="Leave All Communities — XActions">
-  <meta name="twitter:description" content="Leave all X Communities you've joined. Navigates into each community, clicks &quot;Leave&quot;, and returns.">
+  <meta name="twitter:description" content="Leave every X Community you have joined, with a whitelist, a cap, a dry run and progress that survives reloads.">
   <meta name="twitter:image" content="https://xactions.app/og-run.png">
 
   <link rel="canonical" href="https://xactions.app/scripts/leave-all-communities">
@@ -30,14 +30,14 @@
     "@context": "https://schema.org",
     "@type": "TechArticle",
     "headline": "Leave All Communities — Free X/Twitter Script | XActions",
-    "description": "Leave all X Communities you've joined. Navigates into each community, clicks \"Leave\", and returns.",
+    "description": "Leave every X Community you have joined, with a whitelist, a cap, a dry run and progress that survives reloads.",
     "url": "https://xactions.app/scripts/leave-all-communities",
     "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
     "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
     "datePublished": "2026-03-30",
     "dateModified": "2026-03-30",
-    "articleSection": "Lists & Communities",
-    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, leave, all, communities, lists & communities"
+    "articleSection": "Communities",
+    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, leave, all, communities, communities"
   }
   </script>
   <script type="application/ld+json">
@@ -47,7 +47,7 @@
     "itemListElement": [
       { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
       { "@type": "ListItem", "position": 2, "name": "Scripts", "item": "https://xactions.app/scripts" },
-      { "@type": "ListItem", "position": 3, "name": "Lists & Communities", "item": "https://xactions.app/scripts#lists-communities" },
+      { "@type": "ListItem", "position": 3, "name": "Communities", "item": "https://xactions.app/scripts#communities" },
       { "@type": "ListItem", "position": 4, "name": "Leave All Communities", "item": "https://xactions.app/scripts/leave-all-communities" }
     ]
   }
@@ -116,36 +116,37 @@
 
     <main class="main-content" id="main-content">
       <header class="main-header">
-        <h1>🚪 Leave All Communities</h1>
+        <h1>👥 Leave All Communities</h1>
         <div class="breadcrumb">
-          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#lists-communities">Lists &amp; Communities</a> › Leave All Communities
+          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#communities">Communities</a> › Leave All Communities
         </div>
       </header>
 
       <article class="article">
-        <span class="cat-badge">Lists &amp; Communities</span>
-        <span class="source-badge">browser</span>
+        <span class="cat-badge">Communities</span>
+        <span class="source-badge">browser/leaveAllCommunities.js</span>
 
         <div class="meta-row">
-          <span>v2.0.0</span>
-          <span>Updated: 2026-02-24</span>
-          <span>272 lines</span>
+          <span>v2.1.0</span>
+          <span>Updated: 2026-11-26</span>
+          <span>299 lines</span>
           <span>by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></span>
         </div>
 
-        <p>Leave all X Communities you've joined. Navigates into each community, clicks &quot;Leave&quot;, and returns. Supports whitelist, rate-limit detection, pause/resume, and persistence across page reloads.</p>
+        <p>Leave every X Community you have joined, with a whitelist, a cap, a dry run and progress that survives reloads.</p>
 
         
 
         <h2>How to Use</h2>
         <ol class="usage-steps"><li>Go to: https://x.com/YOUR_USERNAME/communities</li>
 <li>Open DevTools Console (F12)</li>
-<li>Paste and run</li></ol>
+<li>Paste browser/leaveAllCommunities.js and run</li></ol>
         
 
         <div class="controls-box">
         <h3>Runtime Controls</h3>
-        <pre><code>window.XActions.pause()  / .resume() / .abort() / .status()</code></pre>
+        <pre><code>window.XActions.pause()  / .resume() / .abort() / .status() / .reset()
+window.stopLeaveCommunities()   (same as abort)</code></pre>
       </div>
         <section class="config-section">
         <h2>Configuration Options</h2>
@@ -153,6 +154,10 @@
           <thead><tr><th>Option</th><th>Default</th><th>Description</th></tr></thead>
           <tbody>
             <tr><td><code>whitelist</code></td><td><code>[]</code></td><td>Community IDs to keep (from URL)</td></tr>
+<tr><td><code>dryRun</code></td><td><code>true</code></td><td>Preview without leaving; set false to leave</td></tr>
+<tr><td><code>maxLeaves</code></td><td><code>50</code></td><td>Cap per run (Infinity = no cap)</td></tr>
+<tr><td><code>leaveDelay</code></td><td><code>1500</code></td><td>Wait after opening the Joined menu (ms)</td></tr>
+<tr><td><code>confirmDelay</code></td><td><code>2000</code></td><td>Wait after confirming a leave (ms)</td></tr>
           </tbody>
         </table>
       </section>
@@ -162,10 +167,12 @@
           <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.querySelector('code').textContent).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy',2000)})">Copy</button>
           <pre><code>const CONFIG = {
     whitelist: [],                    // Community IDs to keep (from URL)
-    dryRun: false,
-    maxLeaves: Infinity,
+    dryRun: true,                     // Preview without leaving; set false to leave
+    maxLeaves: 50,                    // Cap per run (Infinity = no cap)
     navigationDelay: 3000,
     actionDelay: 2000,
+    leaveDelay: 1500,                 // Wait after opening the Joined menu (ms)
+    confirmDelay: 2000,               // Wait after confirming a leave (ms)
     maxConsecutiveErrors: 5,
     rateLimitCooldown: 60000,
     exportOnComplete: true,
@@ -185,13 +192,15 @@
  * ============================================================
  *
  * @name        leaveAllCommunities.js
- * @description Leave all X Communities you've joined. Navigates
- *              into each community, clicks &quot;Leave&quot;, and returns.
- *              Supports whitelist, rate-limit detection,
- *              pause/resume, and persistence across page reloads.
+ * @title       Leave All Communities
+ * @description Leave every X Community you have joined, with a whitelist, a cap, a dry run and progress that survives reloads.
+ * @category    communities
+ * @page        x.com/&lt;you&gt;/communities
+ * @writes      true
+ * @aliases     scripts/leaveAllCommunities.js, scripts/twitter/leave-all-communities.js
  * @author      nichxbt (https://x.com/nichxbt)
- * @version     2.0.0
- * @date        2026-02-24
+ * @version     2.1.0
+ * @date        2026-11-26
  * @repository  https://github.com/nirholas/XActions
  *
  * ============================================================
@@ -199,14 +208,18 @@
  *
  * 1. Go to: https://x.com/YOUR_USERNAME/communities
  * 2. Open DevTools Console (F12)
- * 3. Paste and run
+ * 3. Paste browser/leaveAllCommunities.js and run
+ *
+ * Starts as a DRY RUN capped at 50. Set dryRun: false to leave
+ * communities for real. A dry run does not record progress.
  *
  * NOTE: This script persists progress in localStorage so if
  * the page reloads mid-process, you can re-run it and it will
  * skip already-left communities.
  *
  * 🎮 CONTROLS:
- *   window.XActions.pause()  / .resume() / .abort() / .status()
+ *   window.XActions.pause()  / .resume() / .abort() / .status() / .reset()
+ *   window.stopLeaveCommunities()   (same as abort)
  * ============================================================
  */
 (() =&gt; {
@@ -214,10 +227,12 @@
 
   const CONFIG = {
     whitelist: [],                    // Community IDs to keep (from URL)
-    dryRun: false,
-    maxLeaves: Infinity,
+    dryRun: true,                     // Preview without leaving; set false to leave
+    maxLeaves: 50,                    // Cap per run (Infinity = no cap)
     navigationDelay: 3000,
     actionDelay: 2000,
+    leaveDelay: 1500,                 // Wait after opening the Joined menu (ms)
+    confirmDelay: 2000,               // Wait after confirming a leave (ms)
     maxConsecutiveErrors: 5,
     rateLimitCooldown: 60000,
     exportOnComplete: true,
@@ -255,6 +270,7 @@
   };
   const leftIds = getLeftIds();
   const whitelistSet = new Set(CONFIG.whitelist.map(String));
+  const skippedIds = new Set();       // This run only: dry-run previews and communities that could not be left
 
   window.XActions = {
     pause()  { paused = true;  console.log('⏸️ Paused.'); },
@@ -269,6 +285,11 @@
     },
   };
 
+  window.stopLeaveCommunities = () =&gt; {
+    aborted = true;
+    console.log('🛑 [Leave Communities] Stop requested. Finishing the current step, then exiting.');
+  };
+
   const shouldContinue = async () =&gt; { while (paused &amp;&amp; !aborted) await sleep(500); return !aborted; };
 
   const findNextCommunity = () =&gt; {
@@ -277,15 +298,16 @@
       const match = (link.href || '').match(/\/i\/communities\/(\d+)/);
       if (match) {
         const id = match[1];
-        if (!leftIds.has(id) &amp;&amp; !whitelistSet.has(id)) {
-          return { id, element: link, href: link.href };
+        if (!leftIds.has(id) &amp;&amp; !whitelistSet.has(id) &amp;&amp; !skippedIds.has(id)) {
+          const name = link.textContent?.trim()?.substring(0, 60) || `Community ${id}`;
+          return { id, name, element: link, href: link.href };
         }
       }
     }
     return null;
   };
 
-  const leaveCurrent = async () =&gt; {
+  const leaveCurrent = async (name) =&gt; {
     const urlMatch = window.location.href.match(/\/i\/communities\/(\d+)/);
     const communityId = urlMatch ? urlMatch[1] : null;
 
@@ -294,7 +316,7 @@
     if (!joinedBtn) return false;
 
     joinedBtn.click();
-    await sleep(gaussian(800, 1200));
+    await sleep(gaussian(CONFIG.leaveDelay, CONFIG.leaveDelay + 400));
 
     // Look for &quot;Leave&quot; in dropdown menu
     const menuItems = document.querySelectorAll('[role=&quot;menuitem&quot;]');
@@ -312,13 +334,13 @@
     const confirm = $(SEL.confirmBtn);
     if (confirm) {
       confirm.click();
-      await sleep(gaussian(800, 1200));
+      await sleep(gaussian(CONFIG.confirmDelay, CONFIG.confirmDelay + 400));
     }
 
     if (communityId) {
       markAsLeft(communityId);
       leftIds.add(communityId);
-      leftLog.push({ id: communityId, timestamp: new Date().toISOString() });
+      leftLog.push({ id: communityId, ...(name ? { name } : {}), timestamp: new Date().toISOString() });
     }
 
     return true;
@@ -332,6 +354,8 @@
     console.log('╚' + '═'.repeat(W) + '╝');
 
     console.log(`📋 Previously left: ${leftIds.size} | Whitelist: ${whitelistSet.size} | Dry run: ${CONFIG.dryRun}`);
+    if (CONFIG.dryRun) console.log('   ⚠️ DRY RUN: set CONFIG.dryRun = false to actually leave');
+    console.log('   💡 To stop early: window.stopLeaveCommunities()');
     if (leftIds.size &gt; 0) console.log('   ℹ️ Resuming — will skip already-left communities');
     console.log('   💡 Call XActions.reset() to clear progress.\n');
 
@@ -348,12 +372,17 @@
         console.log(`   🛡️ Whitelisted: community ${id}`);
       } else if (CONFIG.dryRun) {
         console.log(`   🔍 Would leave: community ${id}`);
-        if (id) { markAsLeft(id); leftIds.add(id); left++; }
+        if (id) { skippedIds.add(id); leftLog.push({ id, timestamp: new Date().toISOString(), dryRun: true }); left++; }
       } else {
         console.log(`   📍 Inside community ${id}, leaving...`);
-        await leaveCurrent();
-        left++;
-        console.log(`   ✅ Left community ${id}`);
+        if (await leaveCurrent()) {
+          left++;
+          console.log(`   ✅ Left community ${id}`);
+        } else {
+          errors++;
+          if (id) skippedIds.add(id);
+          console.warn(`   ⚠️ &quot;Joined&quot; button not found (admin or load issue). Skipping community ${id}.`);
+        }
       }
 
       // Navigate back to communities list
@@ -377,7 +406,7 @@
 
       // Scroll to load more
       window.scrollTo(0, document.body.scrollHeight);
-      await sleep(gaussian(1500, 2500));
+      await sleep(gaussian(2000, 2500));
 
       const community = findNextCommunity();
       if (!community) {
@@ -390,27 +419,27 @@
       emptyAttempts = 0;
 
       if (CONFIG.dryRun) {
-        console.log(`   🔍 Would leave: community ${community.id}`);
-        markAsLeft(community.id);
-        leftIds.add(community.id);
-        leftLog.push({ id: community.id, timestamp: new Date().toISOString(), dryRun: true });
+        console.log(`   🔍 Would leave: ${community.name} (${community.id})`);
+        skippedIds.add(community.id);
+        leftLog.push({ id: community.id, name: community.name, timestamp: new Date().toISOString(), dryRun: true });
         left++;
         continue;
       }
 
-      console.log(`   🏠 Entering community ${community.id}...`);
+      console.log(`   🏠 Entering ${community.name} (${community.id})...`);
       community.element.click();
       await sleep(CONFIG.navigationDelay);
 
-      const success = await leaveCurrent();
+      const success = await leaveCurrent(community.name);
       if (success) {
         left++;
         consecutiveErrors = 0;
-        console.log(`   ✅ Left community ${community.id} [${left} total]`);
+        console.log(`   ✅ Left ${community.name} (${community.id}) [${left} total]`);
       } else {
         errors++;
         consecutiveErrors++;
-        console.warn(`   ⚠️ Failed to leave community ${community.id}`);
+        skippedIds.add(community.id);
+        console.warn(`   ⚠️ Failed to leave ${community.name} (${community.id}): &quot;Joined&quot; button not found (admin or load issue). Skipping it.`);
       }
 
       await sleep(gaussian(CONFIG.actionDelay * 0.8, CONFIG.actionDelay * 1.2));
@@ -433,15 +462,20 @@
     console.log(`║  Left this run:    ${String(left).padEnd(28)}║`);
     console.log(`║  Total left:       ${String(leftIds.size).padEnd(28)}║`);
     console.log(`║  Errors:           ${String(errors).padEnd(28)}║`);
+    console.log(`║  Whitelisted:      ${String(whitelistSet.size).padEnd(28)}║`);
     console.log(`║  Duration:         ${(elapsed + 's').padEnd(28)}║`);
     console.log('╚' + '═'.repeat(50) + '╝');
 
     if (CONFIG.exportOnComplete &amp;&amp; leftLog.length &gt; 0) {
-      const blob = new Blob([JSON.stringify({ summary: { leftThisRun: left, totalLeft: leftIds.size, errors }, communities: leftLog }, null, 2)], { type: 'application/json' });
+      const blob = new Blob([JSON.stringify({ summary: { leftThisRun: left, totalLeft: leftIds.size, errors, whitelisted: whitelistSet.size, dryRun: CONFIG.dryRun }, communities: leftLog }, null, 2)], { type: 'application/json' });
       const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
       a.download = `xactions-communities-left-${new Date().toISOString().slice(0, 10)}.json`;
       document.body.appendChild(a); a.click(); a.remove();
       console.log('📥 Results exported.');
+    }
+
+    if (CONFIG.dryRun &amp;&amp; left &gt; 0) {
+      console.log(`\n⚡ Set dryRun = false and re-run to actually leave ${left} communities.`);
     }
 
     console.log('🐬 So long, and thanks for all the communities!');
@@ -463,17 +497,12 @@
 
     <aside class="sidebar-right">
       <div class="sidebar-card">
-        <h3>🚪 Lists &amp; Communities</h3>
-        <a href="/scripts/add-to-list">➕ Add To List</a>
-<a href="/scripts/advanced-lists">📝 Advanced list management</a>
-<a href="/scripts/block-list-manager">📝 Block list import/export/sharing</a>
-<a href="/scripts/manage-lists">📝 Browser console script to manage X/Twitter Lists</a>
-<a href="/scripts/create-community">🏘️ Create Communities</a>
-<a href="/scripts/follow-list-members">👣 Follow List Members</a>
-<a href="/scripts/join-communities">🏘️ Join Communities</a>
-<a href="/scripts/leave-community">🚪 Leave Specific Community</a>
-<a href="/scripts/manage-community">🏘️ Manage Communities</a>
-<a href="/scripts/list-manager">📝 Manage Lists</a>
+        <h3>👥 Communities</h3>
+        <a href="/scripts/community-manager">👥 Community Manager</a>
+<a href="/scripts/create-community">👥 Create Community</a>
+<a href="/scripts/join-communities">👥 Join Communities</a>
+<a href="/scripts/leave-community">👥 Leave a Community</a>
+<a href="/scripts/manage-community">👥 Manage Community</a>
       </div>
       <div class="sidebar-card">
         <h3>🔗 Quick Links</h3>

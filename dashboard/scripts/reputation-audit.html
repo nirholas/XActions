@@ -4,14 +4,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Reputation Audit — Free X/Twitter Script | XActions</title>
-  <meta name="description" content="AI-scores your own posts across professional, hostile, legal, and spam risk, then renders a shareable score card and offers one-click cleanup of what it flags.">
-  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, reputation, audit, other tools">
+  <meta name="description" content="AI-score your own posts for professional, hostile, legal and spam risk, then optionally delete what was flagged.">
+  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, reputation, audit, analytics">
   <meta name="author" content="nich (@nichxbt)">
   <meta name="robots" content="index, follow">
 
   <meta property="og:type" content="article">
   <meta property="og:title" content="Reputation Audit — XActions">
-  <meta property="og:description" content="AI-scores your own posts across professional, hostile, legal, and spam risk, then renders a shareable score card and offers one-click cleanup of what it flags.">
+  <meta property="og:description" content="AI-score your own posts for professional, hostile, legal and spam risk, then optionally delete what was flagged.">
   <meta property="og:url" content="https://xactions.app/scripts/reputation-audit">
   <meta property="og:site_name" content="XActions">
   <meta property="og:image" content="https://xactions.app/og-run.png">
@@ -19,7 +19,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@nichxbt">
   <meta name="twitter:title" content="Reputation Audit — XActions">
-  <meta name="twitter:description" content="AI-scores your own posts across professional, hostile, legal, and spam risk, then renders a shareable score card and offers one-click cleanup of what it flags.">
+  <meta name="twitter:description" content="AI-score your own posts for professional, hostile, legal and spam risk, then optionally delete what was flagged.">
   <meta name="twitter:image" content="https://xactions.app/og-run.png">
 
   <link rel="canonical" href="https://xactions.app/scripts/reputation-audit">
@@ -30,14 +30,14 @@
     "@context": "https://schema.org",
     "@type": "TechArticle",
     "headline": "Reputation Audit — Free X/Twitter Script | XActions",
-    "description": "AI-scores your own posts across professional, hostile, legal, and spam risk, then renders a shareable score card and offers one-click cleanup of what it flags.",
+    "description": "AI-score your own posts for professional, hostile, legal and spam risk, then optionally delete what was flagged.",
     "url": "https://xactions.app/scripts/reputation-audit",
     "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
     "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
     "datePublished": "2026-03-30",
     "dateModified": "2026-03-30",
-    "articleSection": "Other Tools",
-    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, reputation, audit, other tools"
+    "articleSection": "Analytics",
+    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, reputation, audit, analytics"
   }
   </script>
   <script type="application/ld+json">
@@ -47,7 +47,7 @@
     "itemListElement": [
       { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
       { "@type": "ListItem", "position": 2, "name": "Scripts", "item": "https://xactions.app/scripts" },
-      { "@type": "ListItem", "position": 3, "name": "Other Tools", "item": "https://xactions.app/scripts#other-tools" },
+      { "@type": "ListItem", "position": 3, "name": "Analytics", "item": "https://xactions.app/scripts#analytics" },
       { "@type": "ListItem", "position": 4, "name": "Reputation Audit", "item": "https://xactions.app/scripts/reputation-audit" }
     ]
   }
@@ -116,24 +116,24 @@
 
     <main class="main-content" id="main-content">
       <header class="main-header">
-        <h1>⚡ Reputation Audit</h1>
+        <h1>📊 Reputation Audit</h1>
         <div class="breadcrumb">
-          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#other-tools">Other Tools</a> › Reputation Audit
+          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#analytics">Analytics</a> › Reputation Audit
         </div>
       </header>
 
       <article class="article">
-        <span class="cat-badge">Other Tools</span>
-        <span class="source-badge">scripts</span>
+        <span class="cat-badge">Analytics</span>
+        <span class="source-badge">browser/reputationAudit.js</span>
 
         <div class="meta-row">
           <span>v1.0.0</span>
           <span>Updated: 2026-08-28</span>
-          <span>1204 lines</span>
+          <span>1208 lines</span>
           <span>by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></span>
         </div>
 
-        <p>AI-scores your own posts across professional, hostile, legal, and spam risk, then renders a shareable score card and offers one-click cleanup of what it flags.</p>
+        <p>AI-score your own posts for professional, hostile, legal and spam risk, then optionally delete what was flagged.</p>
 
         
 
@@ -215,7 +215,6 @@
           <div class="code-block">
             <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.querySelector('code').textContent).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy Script',2000)})">Copy Script</button>
             <pre><code>// Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
-// scripts/reputationAudit.js
 // AI-score your own timeline for professional, hostile, legal, and spam risk, get a shareable score card, and clean up what it flags
 // Paste in DevTools console on x.com/USERNAME (your own profile, or /with_replies)
 // by nichxbt
@@ -247,7 +246,12 @@
  * ============================================================
  *
  * @name        reputationAudit.js
- * @description AI-scores your own posts across professional, hostile, legal, and spam risk, then renders a shareable score card and offers one-click cleanup of what it flags.
+ * @description AI-score your own posts for professional, hostile, legal and spam risk, then optionally delete what was flagged.
+ * @title       Reputation Audit
+ * @category    analytics
+ * @page        x.com/&lt;you&gt;
+ * @writes      true
+ * @aliases     scripts/reputationAudit.js
  * @author      nichxbt (https://x.com/nichxbt)
  * @version     1.0.0
  * @date        2026-08-28
@@ -1431,17 +1435,17 @@
 
     <aside class="sidebar-right">
       <div class="sidebar-card">
-        <h3>⚡ Other Tools</h3>
-        <a href="/scripts/ad-campaign-manager">⚡ Ad campaign management</a>
-<a href="/scripts/advanced-creator">⚡ Advanced creator monetization</a>
-<a href="/scripts/advanced-dm">⚡ Advanced Direct Message features</a>
-<a href="/scripts/advanced-grok">⚡ Advanced Grok AI features</a>
-<a href="/scripts/advanced-notifications">⚡ Advanced notification management</a>
-<a href="/scripts/advanced-premium">⚡ Advanced Premium features</a>
-<a href="/scripts/advanced-profile">⚡ Advanced profile management</a>
-<a href="/scripts/advanced-settings">⚡ Advanced settings and privacy management</a>
-<a href="/scripts/advanced-spaces">⚡ Advanced Spaces features</a>
-<a href="/scripts/community-manager">⚡ Community management</a>
+        <h3>📊 Analytics</h3>
+        <a href="/scripts/account-health-monitor">📊 Account Health Monitor</a>
+<a href="/scripts/audience-demographics">📊 Audience Demographics</a>
+<a href="/scripts/audience-overlap">📊 Audience Overlap</a>
+<a href="/scripts/audit-followers">📊 Audit Followers</a>
+<a href="/scripts/best-time-to-post">📊 Best Time to Post</a>
+<a href="/scripts/business-analytics">📊 Business Analytics</a>
+<a href="/scripts/business-tools">📊 Business Tools</a>
+<a href="/scripts/competitor-analysis">📊 Competitor Analysis</a>
+<a href="/scripts/content-calendar">📊 Content Calendar</a>
+<a href="/scripts/creator-studio">📊 Creator Studio</a>
       </div>
       <div class="sidebar-card">
         <h3>🔗 Quick Links</h3>

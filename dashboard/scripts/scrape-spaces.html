@@ -3,23 +3,23 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Scrape Spaces (Audio/Video Broadcasts) | XActions</title>
-  <meta name="description" content="Find and collect metadata about X Spaces. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
-  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, scrape, spaces, scrapers">
+  <title>Scrape Spaces — Free X/Twitter Script | XActions</title>
+  <meta name="description" content="List the Spaces on a profile, search or timeline (live, scheduled, ended), or capture the open Space's title, host, listeners and speakers.">
+  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, scrape, spaces, spaces">
   <meta name="author" content="nich (@nichxbt)">
   <meta name="robots" content="index, follow">
 
   <meta property="og:type" content="article">
-  <meta property="og:title" content="Scrape Spaces (Audio/Video Broadcasts) — XActions">
-  <meta property="og:description" content="Find and collect metadata about X Spaces. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
+  <meta property="og:title" content="Scrape Spaces — XActions">
+  <meta property="og:description" content="List the Spaces on a profile, search or timeline (live, scheduled, ended), or capture the open Space's title, host, listeners and speakers.">
   <meta property="og:url" content="https://xactions.app/scripts/scrape-spaces">
   <meta property="og:site_name" content="XActions">
   <meta property="og:image" content="https://xactions.app/og-run.png">
 
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@nichxbt">
-  <meta name="twitter:title" content="Scrape Spaces (Audio/Video Broadcasts) — XActions">
-  <meta name="twitter:description" content="Find and collect metadata about X Spaces. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
+  <meta name="twitter:title" content="Scrape Spaces — XActions">
+  <meta name="twitter:description" content="List the Spaces on a profile, search or timeline (live, scheduled, ended), or capture the open Space's title, host, listeners and speakers.">
   <meta name="twitter:image" content="https://xactions.app/og-run.png">
 
   <link rel="canonical" href="https://xactions.app/scripts/scrape-spaces">
@@ -29,15 +29,15 @@
   {
     "@context": "https://schema.org",
     "@type": "TechArticle",
-    "headline": "Scrape Spaces (Audio/Video Broadcasts) | XActions",
-    "description": "Find and collect metadata about X Spaces. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.",
+    "headline": "Scrape Spaces — Free X/Twitter Script | XActions",
+    "description": "List the Spaces on a profile, search or timeline (live, scheduled, ended), or capture the open Space's title, host, listeners and speakers.",
     "url": "https://xactions.app/scripts/scrape-spaces",
     "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
     "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
     "datePublished": "2026-03-30",
     "dateModified": "2026-03-30",
-    "articleSection": "Scrapers",
-    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, scrape, spaces, scrapers"
+    "articleSection": "Spaces",
+    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, scrape, spaces, spaces"
   }
   </script>
   <script type="application/ld+json">
@@ -47,8 +47,8 @@
     "itemListElement": [
       { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
       { "@type": "ListItem", "position": 2, "name": "Scripts", "item": "https://xactions.app/scripts" },
-      { "@type": "ListItem", "position": 3, "name": "Scrapers", "item": "https://xactions.app/scripts#scrapers" },
-      { "@type": "ListItem", "position": 4, "name": "Scrape Spaces (Audio/Video Broadcasts)", "item": "https://xactions.app/scripts/scrape-spaces" }
+      { "@type": "ListItem", "position": 3, "name": "Spaces", "item": "https://xactions.app/scripts#spaces" },
+      { "@type": "ListItem", "position": 4, "name": "Scrape Spaces", "item": "https://xactions.app/scripts/scrape-spaces" }
     ]
   }
   </script>
@@ -116,34 +116,32 @@
 
     <main class="main-content" id="main-content">
       <header class="main-header">
-        <h1>🎙️ Scrape Spaces (Audio/Video Broadcasts)</h1>
+        <h1>🎙️ Scrape Spaces</h1>
         <div class="breadcrumb">
-          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#scrapers">Scrapers</a> › Scrape Spaces (Audio/Video Broadcasts)
+          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#spaces">Spaces</a> › Scrape Spaces
         </div>
       </header>
 
       <article class="article">
-        <span class="cat-badge">Scrapers</span>
-        <span class="source-badge">browser</span>
+        <span class="cat-badge">Spaces</span>
+        <span class="source-badge">browser/scrapeSpaces.js</span>
 
         <div class="meta-row">
-          
-          
-          <span>115 lines</span>
+          <span>v1.1.0</span>
+          <span>Updated: 2026-11-27</span>
+          <span>405 lines</span>
           <span>by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></span>
         </div>
 
-        <p>Find and collect metadata about X Spaces</p>
+        <p>List the Spaces on a profile, search or timeline (live, scheduled, ended), or capture the open Space's title, host, listeners and speakers.</p>
 
         
 
         <h2>How to Use</h2>
-        <ol class="usage-steps">
-        <li>Navigate to <a href="https://x.com" rel="noopener">x.com</a> and log in</li>
-        <li>Open DevTools Console (F12 or Cmd+Option+I)</li>
-        
-        <li>Paste the script below and press Enter</li>
-      </ol>
+        <ol class="usage-steps"><li>Go to a profile that hosts Spaces (e.g. https://x.com/&lt;handle&gt;), a search</li>
+<li>Open the browser console (F12 or Cmd+Option+I -&gt; Console)</li>
+<li>(Optional) edit the CONFIG options at the top of the script</li>
+<li>Paste browser/scrapeSpaces.js and press Enter</li></ol>
         
 
         
@@ -153,10 +151,27 @@
         <div class="code-block">
           <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.querySelector('code').textContent).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy',2000)})">Copy</button>
           <pre><code>const CONFIG = {
+    // Maximum number of Space cards to collect when listing
     maxSpaces: 50,
+
+    // Maximum scroll attempts when listing Spaces on a profile
+    maxScrollAttempts: 60,
+
+    // Stop after this many scrolls with no new Spaces
+    noNewThreshold: 4,
+
+    // Delay between scrolls (ms)
     scrollDelay: 2000,
-    maxScrollAttempts: 20,
-    exportResults: true,
+
+    // Auto-download the results as files when finished
+    downloadJSON: true,
+    downloadCSV: true,
+
+    // Also print the full JSON result to the console
+    logJSON: false,
+
+    // Also copy the JSON result to the clipboard
+    copyToClipboard: false
   };</code></pre>
         </div>
       </section>
@@ -167,118 +182,408 @@
           <div class="code-block">
             <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.querySelector('code').textContent).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy Script',2000)})">Copy Script</button>
             <pre><code>// Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
-// Scrape Spaces (Audio/Video Broadcasts) on X - by nichxbt
-// https://github.com/nirholas/xactions
-// Find and collect metadata about X Spaces
-// 1. Go to x.com/search?q=your-topic&amp;f=live or any timeline
-// 2. Open the Developer Console (F12)
-// 3. Paste this into the Developer Console and run it
-//
-// Last Updated: 24 February 2026
-(() =&gt; {
+/**
+ * ============================================
+ * 🎙️ Scrape Spaces - XActions
+ * ============================================
+ *
+ * @name        scrapeSpaces.js
+ * @title       Scrape Spaces
+ * @description List the Spaces on a profile, search or timeline (live, scheduled, ended), or capture the open Space's title, host, listeners and speakers.
+ * @category    spaces
+ * @page        x.com/&lt;username&gt; or x.com/search?q=&lt;query&gt;&amp;f=live or x.com/i/spaces/&lt;id&gt;
+ * @writes      false
+ * @aliases     scripts/scrapeSpaces.js, scripts/spacesManager.js, scripts/twitter/scrape-spaces.js
+ * @author      nichxbt (https://x.com/nichxbt)
+ * @version     1.1.0
+ * @date        2026-11-27
+ * @website     https://xactions.app
+ *
+ * Usage:
+ *   1. Go to a profile that hosts Spaces (e.g. https://x.com/&lt;handle&gt;), a search
+ *      (x.com/search?q=your-topic&amp;f=live) or any timeline with Space cards, OR
+ *      open a Space page / listening view directly.
+ *   2. Open the browser console (F12 or Cmd+Option+I -&gt; Console)
+ *   3. (Optional) edit the CONFIG options at the top of the script
+ *   4. Paste browser/scrapeSpaces.js and press Enter
+ *
+ * Example:
+ *   On a profile, paste and the script auto-scrolls, collects every Space card it
+ *   can see (title, host, listeners, live/scheduled, link) and downloads
+ *   spaces_&lt;date&gt;.json and .csv. Inside a live Space it captures the current
+ *   title, host, listener count, and the speaker handles instead.
+ *   To stop early, run window.stopScrapeSpaces() in the console.
+ *
+ * ============================================
+ */
+
+(async function scrapeSpaces() {
+  'use strict';
+
+  // ============================================
+  // 📝 CONFIGURATION - Customize these options
+  // ============================================
   const CONFIG = {
+    // Maximum number of Space cards to collect when listing
     maxSpaces: 50,
+
+    // Maximum scroll attempts when listing Spaces on a profile
+    maxScrollAttempts: 60,
+
+    // Stop after this many scrolls with no new Spaces
+    noNewThreshold: 4,
+
+    // Delay between scrolls (ms)
     scrollDelay: 2000,
-    maxScrollAttempts: 20,
-    exportResults: true,
+
+    // Auto-download the results as files when finished
+    downloadJSON: true,
+    downloadCSV: true,
+
+    // Also print the full JSON result to the console
+    logJSON: false,
+
+    // Also copy the JSON result to the clipboard
+    copyToClipboard: false
   };
 
-  const $spaceCard = '[data-testid=&quot;card.layoutLarge.media&quot;], a[href*=&quot;/i/spaces/&quot;]';
-  const $tweet = 'article[data-testid=&quot;tweet&quot;]';
+  // ============================================
+  // 🔧 SELECTORS
+  // ============================================
+  const SELECTORS = {
+    // Markers that we are INSIDE a Space (listening/hosting)
+    inSpace: '[data-testid=&quot;spaceSpeakers&quot;], [data-testid=&quot;audioSpaceInlineTitle&quot;], [aria-label=&quot;Space&quot;]',
+    // Space title inside an open Space
+    spaceTitle: '[data-testid=&quot;audioSpaceInlineTitle&quot;], [data-testid=&quot;spaceTitle&quot;]',
+    // Fallback title inside an open Space
+    spaceHeading: 'h1, [role=&quot;heading&quot;]',
+    spaceTopic: '[data-testid=&quot;spaceTopic&quot;]',
+    spaceListeners: '[data-testid=&quot;spaceListeners&quot;]',
+    spaceHost: '[data-testid=&quot;spaceHost&quot;]',
+    spaceSpeakersText: '[data-testid=&quot;spaceSpeakers&quot;]',
+    // Speaker/participant cells
+    userCell: '[data-testid=&quot;UserCell&quot;], [data-testid=&quot;spaceSpeaker&quot;]',
+    // A Space card / link anywhere in the timeline
+    spaceCard: 'a[href*=&quot;/i/spaces/&quot;], [data-testid=&quot;placementTracking&quot;] a[href*=&quot;/spaces/&quot;], [data-testid=&quot;SpaceCard&quot;], [data-testid=&quot;space&quot;]'
+  };
 
+  // ============================================
+  // 🛠️ HELPERS
+  // ============================================
   const sleep = (ms) =&gt; new Promise(r =&gt; setTimeout(r, ms));
 
-  const run = async () =&gt; {
-    console.log('🎙️ SCRAPE SPACES - XActions by nichxbt');
-    console.log('📊 Scanning for X Spaces...\n');
+  const log = {
+    info: (msg) =&gt; console.log(`ℹ️ ${msg}`),
+    success: (msg) =&gt; console.log(`✅ ${msg}`),
+    warning: (msg) =&gt; console.log(`⚠️ ${msg}`),
+    error: (msg) =&gt; console.log(`❌ ${msg}`)
+  };
 
-    const spaces = new Map();
-    let scrollAttempts = 0;
-
-    while (spaces.size &lt; CONFIG.maxSpaces &amp;&amp; scrollAttempts &lt; CONFIG.maxScrollAttempts) {
-      const prevSize = spaces.size;
-
-      // Find space links
-      const spaceLinks = document.querySelectorAll('a[href*=&quot;/i/spaces/&quot;]');
-      spaceLinks.forEach(link =&gt; {
-        const spaceId = link.href.match(/spaces\/([^?\/]+)/)?.[1] || '';
-        if (!spaceId || spaces.has(spaceId)) return;
-
-        // Try to extract metadata from surrounding context
-        const card = link.closest('[data-testid]') || link.closest('div');
-        const title = card?.querySelector('[dir=&quot;auto&quot;]')?.textContent || 'Untitled Space';
-        const host = card?.querySelector('a[href^=&quot;/&quot;]')?.href?.match(/x\.com\/([^\/]+)/)?.[1] || '';
-
-        // Check if it's live or scheduled
-        const text = card?.textContent?.toLowerCase() || '';
-        const isLive = text.includes('live') || text.includes('listening');
-        const isScheduled = text.includes('scheduled') || text.includes('upcoming');
-
-        spaces.set(spaceId, {
-          spaceId,
-          url: `https://x.com/i/spaces/${spaceId}`,
-          title: title.substring(0, 200),
-          host,
-          status: isLive ? 'live' : isScheduled ? 'scheduled' : 'ended',
-          foundAt: new Date().toISOString(),
-        });
-      });
-
-      // Also check tweets that might embed spaces
-      document.querySelectorAll($tweet).forEach(tweet =&gt; {
-        const spaceLink = tweet.querySelector('a[href*=&quot;/i/spaces/&quot;]');
-        if (!spaceLink) return;
-        // Already handled above
-      });
-
-      if (spaces.size === prevSize) scrollAttempts++;
-      else scrollAttempts = 0;
-
-      window.scrollTo(0, document.body.scrollHeight);
-      await sleep(CONFIG.scrollDelay);
-    }
-
-    const all = [...spaces.values()];
-    const live = all.filter(s =&gt; s.status === 'live');
-    const scheduled = all.filter(s =&gt; s.status === 'scheduled');
-    const ended = all.filter(s =&gt; s.status === 'ended');
-
-    console.log('╔════════════════════════════════════════════════════════════╗');
-    console.log('║  🎙️ X SPACES REPORT                                        ║');
-    console.log('╚════════════════════════════════════════════════════════════╝');
-    console.log(`\n📊 Found ${all.length} spaces`);
-    console.log(`   🔴 Live: ${live.length}`);
-    console.log(`   📅 Scheduled: ${scheduled.length}`);
-    console.log(`   ⏹️ Ended: ${ended.length}`);
-
-    if (live.length &gt; 0) {
-      console.log('\n🔴 LIVE NOW:');
-      live.forEach((s, i) =&gt; {
-        console.log(`   ${i + 1}. &quot;${s.title}&quot; by @${s.host}`);
-        console.log(`      ${s.url}`);
-      });
-    }
-
-    if (scheduled.length &gt; 0) {
-      console.log('\n📅 UPCOMING:');
-      scheduled.forEach((s, i) =&gt; {
-        console.log(`   ${i + 1}. &quot;${s.title}&quot; by @${s.host}`);
-        console.log(`      ${s.url}`);
-      });
-    }
-
-    if (CONFIG.exportResults) {
-      const blob = new Blob([JSON.stringify(all, null, 2)], { type: 'application/json' });
+  const download = (content, filename, type) =&gt; {
+    try {
+      const blob = new Blob([content], { type });
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `xactions-spaces-${new Date().toISOString().slice(0, 10)}.json`;
+      a.download = filename;
+      document.body.appendChild(a);
       a.click();
-      console.log('\n📥 Spaces data exported as JSON');
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      return true;
+    } catch (e) {
+      log.error(`Failed to download ${filename}: ${e.message}`);
+      return false;
     }
   };
 
-  run();
+  const textOf = (root, selector) =&gt; {
+    const el = root.querySelector(selector);
+    return el ? (el.textContent || '').trim() : '';
+  };
+
+  const shareJSON = async (result) =&gt; {
+    const json = JSON.stringify(result, null, 2);
+    if (CONFIG.logJSON) {
+      console.log('\n📦 Full JSON:');
+      console.log(json);
+    }
+    if (CONFIG.copyToClipboard) {
+      try {
+        await navigator.clipboard.writeText(json);
+        log.success('Copied to clipboard!');
+      } catch (e) {
+        log.warning('Could not copy to clipboard.');
+      }
+    }
+  };
+
+  const handleFromLink = (link) =&gt; {
+    if (!link) return '';
+    const href = link.getAttribute('href') || '';
+    const m = href.match(/^\/([A-Za-z0-9_]{1,15})$/);
+    return m ? m[1] : '';
+  };
+
+  // ============================================
+  // 🎯 MAIN
+  // ============================================
+  let stopped = false;
+  window.stopScrapeSpaces = () =&gt; {
+    stopped = true;
+    log.warning('Stop requested. Finishing the current pass, then exporting.');
+  };
+
+  console.log(`
+╔══════════════════════════════════════════════════════════╗
+║  🎙️ SCRAPE SPACES - XActions                             ║
+║  👤 Author: nichxbt                                      ║
+║  🌐 https://xactions.app                                 ║
+╚══════════════════════════════════════════════════════════╝
+  `);
+
+  const insideSpace = document.querySelector(SELECTORS.inSpace) !== null;
+
+  // ------------------------------------------------------------------
+  // MODE A: inside a live/open Space -&gt; capture its metadata + speakers
+  // ------------------------------------------------------------------
+  if (insideSpace) {
+    log.info('Detected an open Space. Capturing metadata and speakers...');
+
+    const title = textOf(document, SELECTORS.spaceTitle) || textOf(document, SELECTORS.spaceHeading);
+    const topic = textOf(document, SELECTORS.spaceTopic);
+
+    // Listener count: X renders it as text like &quot;1,234 listening&quot;. Prefer the
+    // spaceListeners testid, else find the nearest element whose text mentions
+    // listening/tuned in.
+    let listeners = textOf(document, SELECTORS.spaceListeners);
+    if (!listeners) {
+      const candidates = document.querySelectorAll('span, div');
+      for (const el of candidates) {
+        const t = el.textContent.trim();
+        if (/^[\d,\.KMB]+\s+(listening|listeners|tuned in)/i.test(t)) { listeners = t; break; }
+      }
+    }
+
+    const speakers = [];
+    document.querySelectorAll(SELECTORS.userCell).forEach(cell =&gt; {
+      try {
+        const handle = handleFromLink(cell.querySelector('a[href^=&quot;/&quot;]'));
+        const nameEl = cell.querySelector('[dir=&quot;ltr&quot;] span, [dir=&quot;ltr&quot;]');
+        const name = nameEl ? nameEl.textContent.trim() : '';
+        if (!handle) return;
+        if (!speakers.find(s =&gt; s.handle === handle)) {
+          speakers.push({ handle, name });
+        }
+      } catch (e) {
+        // Skip malformed cell
+      }
+    });
+
+    const result = {
+      mode: 'space',
+      url: window.location.href,
+      title,
+      topic,
+      listeners,
+      host: speakers.length &gt; 0 ? speakers[0].handle : '',
+      speakers,
+      scrapedAt: new Date().toISOString()
+    };
+
+    console.log('');
+    console.log(`📋 Title: ${title || '(not found)'}`);
+    if (topic) console.log(`🏷️ Topic: ${topic}`);
+    console.log(`👥 Listeners: ${listeners || '(not found)'}`);
+    console.log(`🎤 Speakers captured: ${speakers.length}`);
+    if (speakers.length &gt; 0) {
+      speakers.slice(0, 10).forEach((s, i) =&gt; console.log(`   ${i + 1}. @${s.handle}${s.name ? ` (${s.name})` : ''}`));
+    }
+
+    const dateStr = new Date().toISOString().split('T')[0];
+    console.log('');
+    if (CONFIG.downloadJSON) {
+      if (download(JSON.stringify(result, null, 2), `space_${dateStr}.json`, 'application/json')) {
+        log.success('JSON downloaded');
+      }
+    }
+    if (CONFIG.downloadCSV) {
+      const esc = (v) =&gt; `&quot;${String(v).replace(/&quot;/g, '&quot;&quot;').replace(/\n/g, ' ')}&quot;`;
+      const csv = [
+        ['Handle', 'Name'].join(','),
+        ...speakers.map(s =&gt; [esc(s.handle), esc(s.name)].join(','))
+      ].join('\n');
+      if (download(csv, `space_speakers_${dateStr}.csv`, 'text/csv')) {
+        log.success('CSV (speakers) downloaded');
+      }
+    }
+
+    await shareJSON(result);
+
+    window.scrapedSpace = result;
+    console.log('\n💡 Access your data: window.scrapedSpace');
+    console.log('✅ Script completed! by nichxbt');
+    return result;
+  }
+
+  // ------------------------------------------------------------------
+  // MODE B: on a profile / timeline -&gt; list Space cards
+  // ------------------------------------------------------------------
+  log.info('No open Space detected. Listing Space cards from the page...');
+  log.info(`Max Spaces: ${CONFIG.maxSpaces}`);
+  log.info('To stop early: window.stopScrapeSpaces()');
+  console.log('');
+
+  const spaces = new Map();
+  let scrollAttempts = 0;
+  let noNewCount = 0;
+
+  const collectCards = () =&gt; {
+    document.querySelectorAll(SELECTORS.spaceCard).forEach(card =&gt; {
+      try {
+        const link = card.href || (card.querySelector('a[href*=&quot;/spaces/&quot;]') || {}).href || '';
+        if (!link) return;
+        const idMatch = link.match(/\/spaces\/([A-Za-z0-9]+)/);
+        const id = idMatch ? idMatch[1] : link;
+        if (spaces.has(id)) return;
+
+        const container = card.closest('article, [data-testid=&quot;cellInnerDiv&quot;]') || card;
+        const text = (container.textContent || '').trim();
+        const lower = text.toLowerCase();
+        const isLive = lower.includes('live') &amp;&amp; !lower.includes('recorded');
+        const scheduledFor = container.querySelector('time')?.getAttribute('datetime') || null;
+        const isScheduled = !isLive &amp;&amp; (lower.includes('scheduled') || lower.includes('upcoming'));
+        const status = isLive ? 'live' : isScheduled ? 'scheduled' : 'ended';
+
+        // Listener/participant count: spaceListeners testid, else the card text
+        const listenersMatch = text.match(/([\d,\.KMB]+)\s+(listening|listeners|tuned in|played)/i);
+        const listeners = textOf(container, SELECTORS.spaceListeners) || (listenersMatch ? listenersMatch[0] : '');
+
+        // Host handle: first bare profile link in the card container, else the spaceHost label
+        let host = '';
+        for (const a of container.querySelectorAll('a[href^=&quot;/&quot;]')) {
+          const h = handleFromLink(a);
+          if (h) { host = h; break; }
+        }
+        if (!host) host = textOf(container, SELECTORS.spaceHost);
+
+        spaces.set(id, {
+          id,
+          title: (textOf(container, SELECTORS.spaceTitle) || text).slice(0, 140),
+          host,
+          listeners,
+          speakers: textOf(container, SELECTORS.spaceSpeakersText),
+          topic: textOf(container, SELECTORS.spaceTopic),
+          isLive,
+          status,
+          scheduledFor: isScheduled ? scheduledFor : null,
+          link: link.startsWith('http') ? link : `https://x.com${link}`,
+          foundAt: new Date().toISOString()
+        });
+      } catch (e) {
+        // Skip malformed card
+      }
+    });
+  };
+
+  while (!stopped &amp;&amp; spaces.size &lt; CONFIG.maxSpaces &amp;&amp; scrollAttempts &lt; CONFIG.maxScrollAttempts) {
+    const before = spaces.size;
+    collectCards();
+
+    const added = spaces.size - before;
+    if (added &gt; 0) {
+      log.info(`Collected ${spaces.size} Spaces (+${added})`);
+      noNewCount = 0;
+    } else {
+      noNewCount++;
+      if (noNewCount &gt;= CONFIG.noNewThreshold) {
+        break;
+      }
+    }
+
+    window.scrollTo(0, document.body.scrollHeight);
+    await sleep(CONFIG.scrollDelay);
+    scrollAttempts++;
+  }
+  collectCards();
+
+  const list = Array.from(spaces.values());
+
+  console.log('');
+  console.log('╔══════════════════════════════════════════════════════════╗');
+  console.log('║  📊 SCRAPE SPACES - COMPLETE                             ║');
+  console.log('╚══════════════════════════════════════════════════════════╝');
+  console.log(`🎙️ Total Spaces: ${list.length}`);
+  console.log(`📜 Scroll attempts: ${scrollAttempts}`);
+
+  if (list.length === 0) {
+    log.warning('No Space cards found on this page.');
+    log.info('Open a profile that hosts Spaces (scroll to a Space card), or open a Space directly, then rerun.');
+    return { spaces: [] };
+  }
+
+  const live = list.filter(s =&gt; s.status === 'live');
+  const scheduled = list.filter(s =&gt; s.status === 'scheduled');
+  const ended = list.filter(s =&gt; s.status === 'ended');
+  console.log(`   🔴 Live: ${live.length}`);
+  console.log(`   📅 Scheduled: ${scheduled.length}`);
+  console.log(`   ⏹️ Ended: ${ended.length}`);
+
+  list.forEach((s, i) =&gt; {
+    console.log(`   ${s.isLive ? '🔴' : '⏳'} ${i + 1}. ${s.title.slice(0, 70)}${s.listeners ? ` (${s.listeners})` : ''}`);
+  });
+
+  if (live.length &gt; 0) {
+    console.log('\n🔴 LIVE NOW:');
+    live.forEach((s, i) =&gt; {
+      console.log(`   ${i + 1}. &quot;${s.title.slice(0, 70)}&quot; by @${s.host}`);
+      console.log(`      ${s.link}`);
+    });
+  }
+
+  if (scheduled.length &gt; 0) {
+    console.log('\n📅 UPCOMING:');
+    scheduled.forEach((s, i) =&gt; {
+      console.log(`   ${i + 1}. &quot;${s.title.slice(0, 70)}&quot; by @${s.host}${s.scheduledFor ? ` (${s.scheduledFor})` : ''}`);
+      console.log(`      ${s.link}`);
+    });
+  }
+
+  const dateStr = new Date().toISOString().split('T')[0];
+  const result = {
+    mode: 'listing',
+    count: list.length,
+    live: live.length,
+    scheduled: scheduled.length,
+    ended: ended.length,
+    spaces: list,
+    scrapedAt: new Date().toISOString()
+  };
+
+  console.log('');
+  if (CONFIG.downloadJSON) {
+    if (download(JSON.stringify(result, null, 2), `spaces_${dateStr}.json`, 'application/json')) {
+      log.success('JSON downloaded');
+    }
+  }
+  if (CONFIG.downloadCSV) {
+    const esc = (v) =&gt; `&quot;${String(v).replace(/&quot;/g, '&quot;&quot;').replace(/\n/g, ' ')}&quot;`;
+    const csv = [
+      ['Title', 'Host', 'Listeners', 'IsLive', 'Status', 'ScheduledFor', 'Link'].join(','),
+      ...list.map(s =&gt; [esc(s.title), esc(s.host), esc(s.listeners), s.isLive, s.status, esc(s.scheduledFor || ''), esc(s.link)].join(','))
+    ].join('\n');
+    if (download(csv, `spaces_${dateStr}.csv`, 'text/csv')) {
+      log.success('CSV downloaded');
+    }
+  }
+
+  await shareJSON(result);
+
+  window.scrapedSpaces = result;
+  console.log('\n💡 Access your data: window.scrapedSpaces');
+  console.log('✅ Script completed! by nichxbt');
+
+  return result;
 })();
 </code></pre>
           </div>
@@ -294,17 +599,10 @@
 
     <aside class="sidebar-right">
       <div class="sidebar-card">
-        <h3>🎙️ Scrapers</h3>
-        <a href="/scripts/scrape-bookmarks">🔖 Bookmarks Scraper</a>
-<a href="/scripts/scrape-analytics">📊 Browser console script to scrape X/Twitter analytics data</a>
-<a href="/scripts/scrape-dms">✉️ DM Scraper</a>
-<a href="/scripts/export-to-csv">📄 Export to CSV Utility</a>
-<a href="/scripts/scrape-followers">👥 Followers Scraper</a>
-<a href="/scripts/scrape-following">👥 Following Scraper</a>
-<a href="/scripts/scrape-hashtag">#️⃣ Hashtag Scraper</a>
-<a href="/scripts/scrape-likers">❤️ Likers Scraper</a>
-<a href="/scripts/scrape-likes">❤️ Likes Scraper</a>
-<a href="/scripts/link-scraper">🔗 Link Scraper</a>
+        <h3>🎙️ Spaces</h3>
+        <a href="/scripts/advanced-spaces">🎙️ Advanced Spaces Tools</a>
+<a href="/scripts/host-space">🎙️ Host a Space</a>
+<a href="/scripts/join-space">🎙️ Join a Space</a>
       </div>
       <div class="sidebar-card">
         <h3>🔗 Quick Links</h3>

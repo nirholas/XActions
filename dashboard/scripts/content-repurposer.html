@@ -4,14 +4,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Content Repurposer — Free X/Twitter Script | XActions</title>
-  <meta name="description" content="Transform existing tweets into new content formats. Convert single tweets → threads, threads → single tweets, long tweets → tweet storms, tweets → blog…">
-  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, content, repurposer, content tools">
+  <meta name="description" content="Turn your existing posts into thread, summary, tweet storm, blog outline and quote-post drafts, exported as JSON.">
+  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, content, repurposer, post">
   <meta name="author" content="nich (@nichxbt)">
   <meta name="robots" content="index, follow">
 
   <meta property="og:type" content="article">
   <meta property="og:title" content="Content Repurposer — XActions">
-  <meta property="og:description" content="Transform existing tweets into new content formats. Convert single tweets → threads, threads → single tweets, long tweets → tweet storms, tweets → blog…">
+  <meta property="og:description" content="Turn your existing posts into thread, summary, tweet storm, blog outline and quote-post drafts, exported as JSON.">
   <meta property="og:url" content="https://xactions.app/scripts/content-repurposer">
   <meta property="og:site_name" content="XActions">
   <meta property="og:image" content="https://xactions.app/og-run.png">
@@ -19,7 +19,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@nichxbt">
   <meta name="twitter:title" content="Content Repurposer — XActions">
-  <meta name="twitter:description" content="Transform existing tweets into new content formats. Convert single tweets → threads, threads → single tweets, long tweets → tweet storms, tweets → blog…">
+  <meta name="twitter:description" content="Turn your existing posts into thread, summary, tweet storm, blog outline and quote-post drafts, exported as JSON.">
   <meta name="twitter:image" content="https://xactions.app/og-run.png">
 
   <link rel="canonical" href="https://xactions.app/scripts/content-repurposer">
@@ -30,14 +30,14 @@
     "@context": "https://schema.org",
     "@type": "TechArticle",
     "headline": "Content Repurposer — Free X/Twitter Script | XActions",
-    "description": "Transform existing tweets into new content formats. Convert single tweets → threads, threads → single tweets, long tweets → tweet storms, tweets → blog…",
+    "description": "Turn your existing posts into thread, summary, tweet storm, blog outline and quote-post drafts, exported as JSON.",
     "url": "https://xactions.app/scripts/content-repurposer",
     "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
     "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
     "datePublished": "2026-03-30",
     "dateModified": "2026-03-30",
-    "articleSection": "Content Tools",
-    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, content, repurposer, content tools"
+    "articleSection": "Post",
+    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, content, repurposer, post"
   }
   </script>
   <script type="application/ld+json">
@@ -47,7 +47,7 @@
     "itemListElement": [
       { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
       { "@type": "ListItem", "position": 2, "name": "Scripts", "item": "https://xactions.app/scripts" },
-      { "@type": "ListItem", "position": 3, "name": "Content Tools", "item": "https://xactions.app/scripts#content-tools" },
+      { "@type": "ListItem", "position": 3, "name": "Post", "item": "https://xactions.app/scripts#post" },
       { "@type": "ListItem", "position": 4, "name": "Content Repurposer", "item": "https://xactions.app/scripts/content-repurposer" }
     ]
   }
@@ -116,24 +116,24 @@
 
     <main class="main-content" id="main-content">
       <header class="main-header">
-        <h1>♻️ Content Repurposer</h1>
+        <h1>✍️ Content Repurposer</h1>
         <div class="breadcrumb">
-          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#content-tools">Content Tools</a> › Content Repurposer
+          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#post">Post</a> › Content Repurposer
         </div>
       </header>
 
       <article class="article">
-        <span class="cat-badge">Content Tools</span>
-        <span class="source-badge">browser</span>
+        <span class="cat-badge">Post</span>
+        <span class="source-badge">browser/contentRepurposer.js</span>
 
         <div class="meta-row">
           <span>v1.0.0</span>
-          <span>Updated: 2026-02-24</span>
-          <span>440 lines</span>
+          <span>Updated: 2026-11-26</span>
+          <span>445 lines</span>
           <span>by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></span>
         </div>
 
-        <p>Transform existing tweets into new content formats. Convert single tweets → threads, threads → single tweets, long tweets → tweet storms, tweets → blog outlines, tweets → quote-tweet templates. Maximize content ROI by repurposing your top-performing posts.</p>
+        <p>Turn your existing posts into thread, summary, tweet storm, blog outline and quote-post drafts, exported as JSON.</p>
 
         
 
@@ -179,14 +179,19 @@
  * ============================================================
  *
  * @name        contentRepurposer.js
- * @description Transform existing tweets into new content formats.
- *              Convert single tweets → threads, threads → single
- *              tweets, long tweets → tweet storms, tweets → blog
- *              outlines, tweets → quote-tweet templates. Maximize
- *              content ROI by repurposing your top-performing posts.
+ * @title       Content Repurposer
+ * @description Turn your existing posts into thread, summary, tweet storm, blog outline and quote-post drafts, exported as JSON.
+ * @category    post
+ * @page        x.com/&lt;you&gt;
+ * @writes      false
+ * @aliases     scripts/contentRepurposer.js
  * @author      nichxbt (https://x.com/nichxbt)
  * @version     1.0.0
- * @date        2026-02-24
+ * @date        2026-11-26
+ *
+ * Converts single tweets to threads, threads to single tweets, long
+ * tweets to tweet storms, tweets to blog outlines, and tweets to
+ * quote-tweet templates. Nothing is posted: the drafts are printed and exported.
  * @repository  https://github.com/nirholas/XActions
  *
  * ============================================================
@@ -625,17 +630,17 @@
 
     <aside class="sidebar-right">
       <div class="sidebar-card">
-        <h3>♻️ Content Tools</h3>
-        <a href="/scripts/bookmark-exporter">📚 Bookmark Exporter</a>
-<a href="/scripts/bookmark-manager">📚 Bookmark Manager</a>
-<a href="/scripts/bookmark-organizer">📂 Bookmark Organizer</a>
-<a href="/scripts/bulk-delete-tweets">🗑️ Bulk Delete Tweets</a>
-<a href="/scripts/clear-all-bookmarks">🗑️ Clear All Bookmarks</a>
-<a href="/scripts/clear-all-likes">🗑️ Clear All Likes</a>
-<a href="/scripts/clear-all-reposts">🗑️ Clear All Reposts</a>
-<a href="/scripts/clear-all-retweets">🗑️ Clear All Retweets</a>
-<a href="/scripts/delete-tweets">🗑️ Delete Tweets</a>
-<a href="/scripts/video-downloader-browser">🎬 Download videos from X/Twitter posts in browser</a>
+        <h3>✍️ Post</h3>
+        <a href="/scripts/post-advanced">✍️ Advanced Posting</a>
+<a href="/scripts/article-publisher">✍️ Article Publisher</a>
+<a href="/scripts/create-poll">✍️ Create Poll</a>
+<a href="/scripts/edit-post">✍️ Edit Post</a>
+<a href="/scripts/media-studio">✍️ Media Studio</a>
+<a href="/scripts/mention-users">✍️ Mention Users</a>
+<a href="/scripts/post-composer">✍️ Post Composer</a>
+<a href="/scripts/post-thread">✍️ Post Thread</a>
+<a href="/scripts/quote-tweet">✍️ Quote Post</a>
+<a href="/scripts/schedule-posts">✍️ Schedule Posts</a>
       </div>
       <div class="sidebar-card">
         <h3>🔗 Quick Links</h3>

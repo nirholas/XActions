@@ -4,14 +4,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Thread Unroller — Free X/Twitter Script | XActions</title>
-  <meta name="description" content="Save any Twitter/X thread as clean text or markdown. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
-  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, thread, unroller, content tools">
+  <meta name="description" content="Collect every post the author wrote in a thread and save it as markdown, plain text or JSON.">
+  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, thread, unroller, scrape and export">
   <meta name="author" content="nich (@nichxbt)">
   <meta name="robots" content="index, follow">
 
   <meta property="og:type" content="article">
   <meta property="og:title" content="Thread Unroller — XActions">
-  <meta property="og:description" content="Save any Twitter/X thread as clean text or markdown. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
+  <meta property="og:description" content="Collect every post the author wrote in a thread and save it as markdown, plain text or JSON.">
   <meta property="og:url" content="https://xactions.app/scripts/thread-unroller">
   <meta property="og:site_name" content="XActions">
   <meta property="og:image" content="https://xactions.app/og-run.png">
@@ -19,7 +19,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@nichxbt">
   <meta name="twitter:title" content="Thread Unroller — XActions">
-  <meta name="twitter:description" content="Save any Twitter/X thread as clean text or markdown. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
+  <meta name="twitter:description" content="Collect every post the author wrote in a thread and save it as markdown, plain text or JSON.">
   <meta name="twitter:image" content="https://xactions.app/og-run.png">
 
   <link rel="canonical" href="https://xactions.app/scripts/thread-unroller">
@@ -30,14 +30,14 @@
     "@context": "https://schema.org",
     "@type": "TechArticle",
     "headline": "Thread Unroller — Free X/Twitter Script | XActions",
-    "description": "Save any Twitter/X thread as clean text or markdown. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.",
+    "description": "Collect every post the author wrote in a thread and save it as markdown, plain text or JSON.",
     "url": "https://xactions.app/scripts/thread-unroller",
     "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
     "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
     "datePublished": "2026-03-30",
     "dateModified": "2026-03-30",
-    "articleSection": "Content Tools",
-    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, thread, unroller, content tools"
+    "articleSection": "Scrape and Export",
+    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, thread, unroller, scrape and export"
   }
   </script>
   <script type="application/ld+json">
@@ -47,7 +47,7 @@
     "itemListElement": [
       { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
       { "@type": "ListItem", "position": 2, "name": "Scripts", "item": "https://xactions.app/scripts" },
-      { "@type": "ListItem", "position": 3, "name": "Content Tools", "item": "https://xactions.app/scripts#content-tools" },
+      { "@type": "ListItem", "position": 3, "name": "Scrape and Export", "item": "https://xactions.app/scripts#scrape-and-export" },
       { "@type": "ListItem", "position": 4, "name": "Thread Unroller", "item": "https://xactions.app/scripts/thread-unroller" }
     ]
   }
@@ -116,62 +116,37 @@
 
     <main class="main-content" id="main-content">
       <header class="main-header">
-        <h1>🧵 Thread Unroller</h1>
+        <h1>📥 Thread Unroller</h1>
         <div class="breadcrumb">
-          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#content-tools">Content Tools</a> › Thread Unroller
+          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#scrape-and-export">Scrape and Export</a> › Thread Unroller
         </div>
       </header>
 
       <article class="article">
-        <span class="cat-badge">Content Tools</span>
-        <span class="source-badge">scripts</span>
+        <span class="cat-badge">Scrape and Export</span>
+        <span class="source-badge">browser/threadUnroller.js</span>
 
         <div class="meta-row">
-          
-          
-          <span>172 lines</span>
+          <span>v1.1.0</span>
+          <span>Updated: 2026-11-27</span>
+          <span>336 lines</span>
           <span>by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></span>
         </div>
 
-        <p>Save any Twitter/X thread as clean text or markdown</p>
+        <p>Collect every post the author wrote in a thread and save it as markdown, plain text or JSON.</p>
 
         
 
         <h2>How to Use</h2>
-        <ol class="usage-steps">
-        <li>Navigate to <a href="https://x.com" rel="noopener">x.com</a> and log in</li>
-        <li>Open DevTools Console (F12 or Cmd+Option+I)</li>
-        
-        <li>Paste the script below and press Enter</li>
-      </ol>
+        <ol class="usage-steps"><li>Go to any tweet in a thread:</li>
+<li>Open Chrome DevTools (F12 or Cmd+Option+I)</li>
+<li>Paste browser/threadUnroller.js and press Enter</li>
+<li>Thread will be extracted and downloaded</li></ol>
         
 
         
-        <section class="config-section">
-        <h2>Configuration Options</h2>
-        <table>
-          <thead><tr><th>Option</th><th>Default</th><th>Description</th></tr></thead>
-          <tbody>
-            <tr><td><code>FORMAT</code></td><td><code>'markdown'</code></td><td>'text', 'markdown', 'json'</td></tr>
-<tr><td><code>INCLUDE_MEDIA</code></td><td><code>true</code></td><td>Include image/video URLs</td></tr>
-<tr><td><code>INCLUDE_STATS</code></td><td><code>true</code></td><td>Include engagement stats</td></tr>
-<tr><td><code>MAX_TWEETS</code></td><td><code>50</code></td><td>Max tweets in thread</td></tr>
-          </tbody>
-        </table>
-      </section>
-        <section class="config-code">
-        <h2>Default Configuration</h2>
-        <div class="code-block">
-          <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.querySelector('code').textContent).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy',2000)})">Copy</button>
-          <pre><code>const CONFIG = {
-    FORMAT: 'markdown',     // 'text', 'markdown', 'json'
-    INCLUDE_MEDIA: true,    // Include image/video URLs
-    INCLUDE_STATS: true,    // Include engagement stats
-    MAX_TWEETS: 50,         // Max tweets in thread
-    SCROLL_DELAY: 1000,
-  };</code></pre>
-        </div>
-      </section>
+        
+        
 
         <section class="full-code">
           <h2>Full Script</h2>
@@ -180,174 +155,338 @@
             <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.querySelector('code').textContent).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy Script',2000)})">Copy Script</button>
             <pre><code>// Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
 /**
- * Thread Unroller
- * Save any Twitter/X thread as clean text or markdown
+ * ============================================================
+ * 📜 Thread Unroller
+ * ============================================================
  * 
- * HOW TO USE:
- * 1. Go to ANY tweet in a thread: x.com/user/status/123456
- * 2. Open Developer Console (Ctrl+Shift+J or Cmd+Option+J)
- * 3. Paste this script and press Enter
+ * @name        threadUnroller.js
+ * @title       Thread Unroller
+ * @description Collect every post the author wrote in a thread and save it as markdown, plain text or JSON.
+ * @category    scrape
+ * @page        x.com/&lt;username&gt;/status/&lt;id&gt;
+ * @writes      false
+ * @aliases     scripts/threadUnroller.js, scripts/twitter/thread-unroller.js
+ * @author      nichxbt (https://x.com/nichxbt)
+ * @version     1.1.0
+ * @date        2026-11-27
+ * @repository  https://github.com/nirholas/XActions
  * 
- * by nichxbt - https://github.com/nirholas/XActions
+ * ============================================================
+ * 📋 USAGE INSTRUCTIONS:
+ * 
+ * 1. Go to any tweet in a thread:
+ *    https://x.com/user/status/TWEET_ID
+ * 
+ * 2. Open Chrome DevTools (F12 or Cmd+Option+I)
+ * 3. Paste browser/threadUnroller.js and press Enter
+ * 4. Thread will be extracted and downloaded
+ * 
+ * ============================================================
+ * ⚙️ CONFIGURATION
+ * ============================================================
  */
 
-(() =&gt; {
-  const CONFIG = {
-    FORMAT: 'markdown',     // 'text', 'markdown', 'json'
-    INCLUDE_MEDIA: true,    // Include image/video URLs
-    INCLUDE_STATS: true,    // Include engagement stats
-    MAX_TWEETS: 50,         // Max tweets in thread
-    SCROLL_DELAY: 1000,
-  };
+// `var` (not `const`): a repeated top-level `const` paste in the same
+// DevTools tab throws &quot;already been declared&quot; instead of re-running.
+var CONFIG = {
+  // Output format: 'markdown', 'text', 'json'
+  format: 'markdown',
+  
+  // Include media URLs
+  includeMedia: true,
+  
+  // Include engagement stats
+  includeStats: true,
+  
+  // Maximum tweets to extract
+  maxTweets: 50,
+  
+  // Scroll delay
+  scrollDelay: 1500,
+  
+  // Auto-download
+  autoDownload: true,
+  
+  // Copy to clipboard
+  copyToClipboard: true,
 
+  // Print the full formatted thread to the console
+  printOutput: false
+};
+
+/**
+ * ============================================================
+ * 🚀 SCRIPT START
+ * ============================================================
+ */
+
+(async function threadUnroller() {
   const sleep = (ms) =&gt; new Promise(r =&gt; setTimeout(r, ms));
-
+  
+  const $tweet = 'article[data-testid=&quot;tweet&quot;]';
+  const $tweetText = '[data-testid=&quot;tweetText&quot;]';
+  
+  console.log('╔════════════════════════════════════════════════════════════╗');
+  console.log('║  📜 THREAD UNROLLER                                        ║');
+  console.log('║  by nichxbt - https://github.com/nirholas/XActions         ║');
+  console.log('╚════════════════════════════════════════════════════════════╝');
+  console.log('');
+  
+  // Verify page
+  if (!window.location.href.includes('/status/')) {
+    console.error('❌ ERROR: Must be on a tweet page!');
+    console.log('📍 Go to any tweet in a thread');
+    return;
+  }
+  
   // Get thread author from URL
-  const getAuthor = () =&gt; {
-    const match = window.location.pathname.match(/\/(\w+)\/status/);
-    return match ? match[1] : null;
-  };
-
-  // Extract tweet content
-  const extractTweet = (article) =&gt; {
+  const pathMatch = window.location.pathname.match(/^\/([^/]+)\/status/);
+  const threadAuthor = pathMatch ? pathMatch[1].toLowerCase() : null;
+  
+  if (!threadAuthor) {
+    console.error('❌ Could not determine thread author');
+    return;
+  }
+  
+  console.log(`👤 Thread author: @${threadAuthor}`);
+  console.log(`📋 Format: ${CONFIG.format}`);
+  console.log('');
+  console.log('🚀 Unrolling thread...');
+  console.log('');
+  
+  const tweets = [];
+  const seenIds = new Set();
+  let scrolls = 0;
+  const maxScrolls = 30;
+  
+  /**
+   * Extract tweet data
+   */
+  function extractTweet(tweetEl) {
     try {
-      const text = article.querySelector('[data-testid=&quot;tweetText&quot;]')?.textContent || '';
-      const time = article.querySelector('time')?.getAttribute('datetime') || '';
-      const timeLink = article.querySelector('time')?.closest('a');
-      const url = timeLink?.href || '';
-      
-      // Get media
-      const images = Array.from(article.querySelectorAll('img[src*=&quot;media&quot;]'))
-        .map(img =&gt; img.src)
-        .filter(src =&gt; !src.includes('profile'));
-      
-      const videos = Array.from(article.querySelectorAll('video'))
-        .map(v =&gt; v.src || v.poster);
+      // Get tweet ID from the timestamp's permalink anchor; the first
+      // /status/ link in the article can belong to a quoted tweet
+      const timeAnchor = tweetEl.querySelector('time')?.closest('a[href*=&quot;/status/&quot;]');
+      const link = timeAnchor || tweetEl.querySelector('a[href*=&quot;/status/&quot;]');
+      if (!link) return null;
 
-      // Get handle
-      const userName = article.querySelector('[data-testid=&quot;User-Name&quot;]')?.textContent || '';
-      const handle = userName.match(/@(\w+)/)?.[1] || '';
+      const match = link.href.match(/\/status\/(\d+)/);
+      if (!match) return null;
 
-      return { text, time, url, images, videos, handle };
+      const tweetId = match[1];
+      if (seenIds.has(tweetId)) return null;
+
+      // Check if from thread author
+      const authorLink = tweetEl.querySelector('div[data-testid=&quot;User-Name&quot;] a[href^=&quot;/&quot;]') ||
+                         tweetEl.querySelector('a[href^=&quot;/&quot;][role=&quot;link&quot;]');
+      const tweetAuthor = authorLink ? authorLink.getAttribute('href').replace('/', '').split('/')[0].toLowerCase() : null;
+      
+      if (tweetAuthor !== threadAuthor) return null;
+      
+      seenIds.add(tweetId);
+      
+      // Get text
+      const textEl = tweetEl.querySelector($tweetText);
+      const text = textEl ? textEl.innerText : '';
+      
+      // Get timestamp
+      const timeEl = tweetEl.querySelector('time');
+      const timestamp = timeEl ? timeEl.getAttribute('datetime') : null;
+      const displayTime = timeEl ? timeEl.innerText : '';
+      
+      // Get engagement
+      const getMetric = (testId) =&gt; {
+        const el = tweetEl.querySelector(`[data-testid=&quot;${testId}&quot;]`);
+        const span = el?.querySelector('span span');
+        return span ? span.innerText : '0';
+      };
+      
+      // Get images
+      const images = [];
+      tweetEl.querySelectorAll('[data-testid=&quot;tweetPhoto&quot;] img').forEach(img =&gt; {
+        if (img.src &amp;&amp; img.src.includes('pbs.twimg.com')) {
+          images.push(img.src);
+        }
+      });
+      
+      // Get videos (source URL, or the poster image for streamed video)
+      const videos = Array.from(tweetEl.querySelectorAll('video'))
+        .map(v =&gt; v.src || v.poster)
+        .filter(Boolean);
+
+      return {
+        id: tweetId,
+        url: `https://x.com/${threadAuthor}/status/${tweetId}`,
+        text,
+        timestamp,
+        displayTime,
+        metrics: {
+          replies: getMetric('reply'),
+          retweets: getMetric('retweet'),
+          likes: getMetric('like')
+        },
+        images,
+        videos
+      };
+      
     } catch (e) {
       return null;
     }
-  };
+  }
+  
+  // Scroll and extract
+  let lastCount = 0;
+  let noNewCount = 0;
+  while (tweets.length &lt; CONFIG.maxTweets &amp;&amp; scrolls &lt; maxScrolls) {
+    document.querySelectorAll($tweet).forEach(el =&gt; {
+      const tweet = extractTweet(el);
+      if (tweet) tweets.push(tweet);
+    });
 
-  // Main function
-  const run = async () =&gt; {
-    const author = getAuthor();
-    if (!author) {
-      console.error('❌ Please navigate to a tweet first!');
-      return;
-    }
+    console.log(`📊 Extracted ${tweets.length} tweets from thread...`);
 
-    console.log(`🧵 Unrolling thread by @${author}...`);
-
-    const tweets = [];
-    let lastCount = 0;
-    let attempts = 0;
-
-    // Scroll to load full thread
-    while (attempts &lt; 10) {
-      const articles = document.querySelectorAll('article[data-testid=&quot;tweet&quot;]');
-      
-      articles.forEach(article =&gt; {
-        const tweet = extractTweet(article);
-        // Only get tweets from the thread author
-        if (tweet &amp;&amp; tweet.handle.toLowerCase() === author.toLowerCase()) {
-          const exists = tweets.find(t =&gt; t.url === tweet.url);
-          if (!exists &amp;&amp; tweet.text) {
-            tweets.push(tweet);
-            console.log(`📝 Tweet ${tweets.length}: &quot;${tweet.text.slice(0, 50)}...&quot;`);
-          }
-        }
-      });
-
-      if (tweets.length === lastCount) {
-        attempts++;
-      } else {
-        attempts = 0;
+    // Stop early once scrolling stops producing new tweets
+    if (tweets.length === lastCount) {
+      noNewCount++;
+      if (noNewCount &gt;= 5) {
+        console.log('📭 No new tweets after 5 scrolls. End of thread.');
+        break;
       }
-      lastCount = tweets.length;
-
-      if (tweets.length &gt;= CONFIG.MAX_TWEETS) break;
-
-      window.scrollBy(0, 500);
-      await sleep(CONFIG.SCROLL_DELAY);
-    }
-
-    // Sort by time (oldest first for reading order)
-    tweets.sort((a, b) =&gt; new Date(a.time) - new Date(b.time));
-
-    // Format output
-    let output = '';
-    
-    if (CONFIG.FORMAT === 'markdown') {
-      output = `# Thread by @${author}\n\n`;
-      output += `&gt; ${tweets.length} tweets | ${new Date(tweets[0]?.time).toLocaleDateString()}\n\n`;
-      output += `---\n\n`;
-      
-      tweets.forEach((t, i) =&gt; {
-        output += `**${i + 1}/${tweets.length}**\n\n`;
-        output += `${t.text}\n\n`;
-        
-        if (CONFIG.INCLUDE_MEDIA) {
-          t.images.forEach(img =&gt; {
-            output += `![Image](${img})\n\n`;
-          });
-        }
-        
-        output += `---\n\n`;
-      });
-      
-      output += `\n[Original Thread](${tweets[0]?.url})\n`;
-      
-    } else if (CONFIG.FORMAT === 'json') {
-      output = JSON.stringify({ author, tweets }, null, 2);
-      
     } else {
-      // Plain text
-      output = `Thread by @${author}\n`;
-      output += `${'='.repeat(40)}\n\n`;
+      noNewCount = 0;
+      lastCount = tweets.length;
+    }
+
+    window.scrollTo(0, document.body.scrollHeight);
+    await sleep(CONFIG.scrollDelay);
+    scrolls++;
+  }
+  
+  // Sort chronologically (oldest first)
+  tweets.sort((a, b) =&gt; new Date(a.timestamp) - new Date(b.timestamp));
+  
+  console.log('');
+  console.log(`✅ Extracted ${tweets.length} tweets from @${threadAuthor}'s thread`);
+  console.log('');
+  
+  // Format output
+  let output;
+  let filename;
+  let mimeType;
+  
+  if (CONFIG.format === 'markdown') {
+    let md = `# Thread by @${threadAuthor}\n\n`;
+    md += `&gt; Unrolled on ${new Date().toISOString()}\n`;
+    md += `&gt; ${tweets.length} tweets\n\n`;
+    md += `---\n\n`;
+    
+    tweets.forEach((t, i) =&gt; {
+      md += `## ${i + 1}/${tweets.length}\n\n`;
+      md += `${t.text}\n\n`;
       
-      tweets.forEach((t, i) =&gt; {
-        output += `[${i + 1}/${tweets.length}]\n`;
-        output += `${t.text}\n\n`;
-      });
-    }
-
-    // Display
-    console.log('\n' + '='.repeat(60));
-    console.log(`🧵 THREAD UNROLLED: ${tweets.length} tweets`);
-    console.log('='.repeat(60) + '\n');
-    console.log(output);
-
-    // Copy to clipboard
-    try {
-      await navigator.clipboard.writeText(output);
-      console.log('📋 Thread copied to clipboard!');
-    } catch (e) {
-      console.log('📋 Copy manually from window.unrolledThread');
-    }
-
-    // Store globally
-    window.unrolledThread = { author, tweets, formatted: output };
-
-    // Download
-    const ext = CONFIG.FORMAT === 'json' ? 'json' : CONFIG.FORMAT === 'markdown' ? 'md' : 'txt';
-    const blob = new Blob([output], { type: 'text/plain' });
+      if (CONFIG.includeMedia &amp;&amp; t.images.length &gt; 0) {
+        t.images.forEach(img =&gt; {
+          md += `![Image](${img})\n`;
+        });
+        md += '\n';
+      }
+      
+      if (CONFIG.includeStats) {
+        md += `*${t.displayTime} • ❤️ ${t.metrics.likes} • 🔄 ${t.metrics.retweets} • 💬 ${t.metrics.replies}*\n\n`;
+      }
+      
+      md += `[View tweet](${t.url})\n\n`;
+      md += `---\n\n`;
+    });
+    
+    output = md;
+    filename = `thread_${threadAuthor}_${Date.now()}.md`;
+    mimeType = 'text/markdown';
+    
+  } else if (CONFIG.format === 'text') {
+    let txt = `THREAD BY @${threadAuthor.toUpperCase()}\n`;
+    txt += `${'='.repeat(50)}\n`;
+    txt += `Unrolled: ${new Date().toISOString()}\n`;
+    txt += `Total tweets: ${tweets.length}\n`;
+    txt += `${'='.repeat(50)}\n\n`;
+    
+    tweets.forEach((t, i) =&gt; {
+      txt += `[${i + 1}/${tweets.length}]\n`;
+      txt += `${'-'.repeat(30)}\n`;
+      txt += `${t.text}\n\n`;
+      
+      if (CONFIG.includeStats) {
+        txt += `${t.displayTime}\n`;
+        txt += `Likes: ${t.metrics.likes} | RTs: ${t.metrics.retweets} | Replies: ${t.metrics.replies}\n`;
+      }
+      
+      txt += `${t.url}\n`;
+      txt += `\n${'='.repeat(50)}\n\n`;
+    });
+    
+    output = txt;
+    filename = `thread_${threadAuthor}_${Date.now()}.txt`;
+    mimeType = 'text/plain';
+    
+  } else {
+    output = JSON.stringify({
+      author: threadAuthor,
+      unrolledAt: new Date().toISOString(),
+      tweetCount: tweets.length,
+      tweets
+    }, null, 2);
+    filename = `thread_${threadAuthor}_${Date.now()}.json`;
+    mimeType = 'application/json';
+  }
+  
+  // Download
+  if (CONFIG.autoDownload) {
+    const blob = new Blob([output], { type: mimeType });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `thread_${author}_${Date.now()}.${ext}`;
+    a.download = filename;
+    document.body.appendChild(a);
     a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    console.log(`💾 Downloaded: ${filename}`);
+  }
+  
+  // Copy to clipboard
+  if (CONFIG.copyToClipboard) {
+    try {
+      await navigator.clipboard.writeText(output);
+      console.log('📋 Copied to clipboard!');
+    } catch {
+      console.log('📋 Could not copy (click the page first). Copy manually from window.unrolledThread.formatted');
+    }
+  }
+  
+  if (CONFIG.printOutput) {
+    console.log('');
+    console.log(output);
+  }
 
-    console.log(`💾 Downloaded as ${ext.toUpperCase()}!`);
-    console.log('\n✅ Done! Access data: window.unrolledThread');
-  };
-
-  run();
+  // Display preview
+  console.log('');
+  console.log('📖 Thread preview:');
+  tweets.slice(0, 3).forEach((t, i) =&gt; {
+    console.log(`   ${i + 1}. ${t.text.substring(0, 80)}...`);
+  });
+  if (tweets.length &gt; 3) {
+    console.log(`   ... and ${tweets.length - 3} more tweets`);
+  }
+  
+  console.log('');
+  console.log('╔════════════════════════════════════════════════════════════╗');
+  console.log('║  ✅ THREAD UNROLLED!                                       ║');
+  console.log('╚════════════════════════════════════════════════════════════╝');
+  
+  window.unrolledThread = { author: threadAuthor, tweets, formatted: output };
+  console.log('💡 Access via: window.unrolledThread');
+  
+  return { author: threadAuthor, tweets };
 })();
 </code></pre>
           </div>
@@ -363,17 +502,17 @@
 
     <aside class="sidebar-right">
       <div class="sidebar-card">
-        <h3>🧵 Content Tools</h3>
-        <a href="/scripts/bookmark-exporter">📚 Bookmark Exporter</a>
-<a href="/scripts/bookmark-manager">📚 Bookmark Manager</a>
-<a href="/scripts/bookmark-organizer">📂 Bookmark Organizer</a>
-<a href="/scripts/bulk-delete-tweets">🗑️ Bulk Delete Tweets</a>
-<a href="/scripts/clear-all-bookmarks">🗑️ Clear All Bookmarks</a>
-<a href="/scripts/clear-all-likes">🗑️ Clear All Likes</a>
-<a href="/scripts/clear-all-reposts">🗑️ Clear All Reposts</a>
-<a href="/scripts/clear-all-retweets">🗑️ Clear All Retweets</a>
-<a href="/scripts/content-repurposer">♻️ Content Repurposer</a>
-<a href="/scripts/delete-tweets">🗑️ Delete Tweets</a>
+        <h3>📥 Scrape and Export</h3>
+        <a href="/scripts/backup-account">📥 Backup Account</a>
+<a href="/scripts/bookmark-exporter">📥 Bookmark Exporter</a>
+<a href="/scripts/bookmark-organizer">📥 Bookmark Organizer</a>
+<a href="/scripts/export-to-csv">📥 Export to CSV</a>
+<a href="/scripts/link-scraper">📥 Link Scraper</a>
+<a href="/scripts/manage-bookmarks">📥 Manage Bookmarks</a>
+<a href="/scripts/scrape-cashtag-search">📥 Scrape Cashtag Search</a>
+<a href="/scripts/scrape-explore">📥 Scrape Explore</a>
+<a href="/scripts/scrape-followers">📥 Scrape Followers</a>
+<a href="/scripts/scrape-following">📥 Scrape Following</a>
       </div>
       <div class="sidebar-card">
         <h3>🔗 Quick Links</h3>

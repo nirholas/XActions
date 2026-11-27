@@ -3,23 +3,23 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Content Calendar &amp; Tweet Scheduler — Free X/Twitter Script | XActions</title>
-  <meta name="description" content="Plan and visualize your posting schedule. Tracks tweet frequency by day/hour, identifies posting gaps, suggests optimal posting times based on historical…">
-  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, content, calendar, posting">
+  <title>Content Calendar — Free X/Twitter Script | XActions</title>
+  <meta name="description" content="Analyze your posting pattern by day and hour, find gaps and the best times to post, and keep a local queue of planned tweets.">
+  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, content, calendar, analytics">
   <meta name="author" content="nich (@nichxbt)">
   <meta name="robots" content="index, follow">
 
   <meta property="og:type" content="article">
-  <meta property="og:title" content="Content Calendar &amp; Tweet Scheduler — XActions">
-  <meta property="og:description" content="Plan and visualize your posting schedule. Tracks tweet frequency by day/hour, identifies posting gaps, suggests optimal posting times based on historical…">
+  <meta property="og:title" content="Content Calendar — XActions">
+  <meta property="og:description" content="Analyze your posting pattern by day and hour, find gaps and the best times to post, and keep a local queue of planned tweets.">
   <meta property="og:url" content="https://xactions.app/scripts/content-calendar">
   <meta property="og:site_name" content="XActions">
   <meta property="og:image" content="https://xactions.app/og-run.png">
 
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@nichxbt">
-  <meta name="twitter:title" content="Content Calendar &amp; Tweet Scheduler — XActions">
-  <meta name="twitter:description" content="Plan and visualize your posting schedule. Tracks tweet frequency by day/hour, identifies posting gaps, suggests optimal posting times based on historical…">
+  <meta name="twitter:title" content="Content Calendar — XActions">
+  <meta name="twitter:description" content="Analyze your posting pattern by day and hour, find gaps and the best times to post, and keep a local queue of planned tweets.">
   <meta name="twitter:image" content="https://xactions.app/og-run.png">
 
   <link rel="canonical" href="https://xactions.app/scripts/content-calendar">
@@ -29,15 +29,15 @@
   {
     "@context": "https://schema.org",
     "@type": "TechArticle",
-    "headline": "Content Calendar & Tweet Scheduler — Free X/Twitter Script | XActions",
-    "description": "Plan and visualize your posting schedule. Tracks tweet frequency by day/hour, identifies posting gaps, suggests optimal posting times based on historical…",
+    "headline": "Content Calendar — Free X/Twitter Script | XActions",
+    "description": "Analyze your posting pattern by day and hour, find gaps and the best times to post, and keep a local queue of planned tweets.",
     "url": "https://xactions.app/scripts/content-calendar",
     "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
     "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
     "datePublished": "2026-03-30",
     "dateModified": "2026-03-30",
-    "articleSection": "Posting",
-    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, content, calendar, posting"
+    "articleSection": "Analytics",
+    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, content, calendar, analytics"
   }
   </script>
   <script type="application/ld+json">
@@ -47,8 +47,8 @@
     "itemListElement": [
       { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
       { "@type": "ListItem", "position": 2, "name": "Scripts", "item": "https://xactions.app/scripts" },
-      { "@type": "ListItem", "position": 3, "name": "Posting", "item": "https://xactions.app/scripts#posting" },
-      { "@type": "ListItem", "position": 4, "name": "Content Calendar & Tweet Scheduler", "item": "https://xactions.app/scripts/content-calendar" }
+      { "@type": "ListItem", "position": 3, "name": "Analytics", "item": "https://xactions.app/scripts#analytics" },
+      { "@type": "ListItem", "position": 4, "name": "Content Calendar", "item": "https://xactions.app/scripts/content-calendar" }
     ]
   }
   </script>
@@ -116,30 +116,30 @@
 
     <main class="main-content" id="main-content">
       <header class="main-header">
-        <h1>📅 Content Calendar &amp; Tweet Scheduler</h1>
+        <h1>📊 Content Calendar</h1>
         <div class="breadcrumb">
-          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#posting">Posting</a> › Content Calendar &amp; Tweet Scheduler
+          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#analytics">Analytics</a> › Content Calendar
         </div>
       </header>
 
       <article class="article">
-        <span class="cat-badge">Posting</span>
-        <span class="source-badge">browser</span>
+        <span class="cat-badge">Analytics</span>
+        <span class="source-badge">browser/contentCalendar.js</span>
 
         <div class="meta-row">
-          <span>v1.0.0</span>
-          <span>Updated: 2026-02-24</span>
-          <span>413 lines</span>
+          <span>v1.1.0</span>
+          <span>Updated: 2026-11-26</span>
+          <span>478 lines</span>
           <span>by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></span>
         </div>
 
-        <p>Plan and visualize your posting schedule. Tracks tweet frequency by day/hour, identifies posting gaps, suggests optimal posting times based on historical engagement, and manages a localStorage- persisted content queue.</p>
+        <p>Analyze your posting pattern by day and hour, find gaps and the best times to post, and keep a local queue of planned tweets.</p>
 
         
 
         <h2>How to Use</h2>
         <ol class="usage-steps"><li>Go to your profile (x.com/YOUR_USERNAME)</li>
-<li>Paste and run → analyzes visible timeline</li></ol>
+<li>Paste browser/contentCalendar.js and run → analyzes visible timeline</li></ol>
         
 
         
@@ -149,6 +149,9 @@
           <thead><tr><th>Option</th><th>Default</th><th>Description</th></tr></thead>
           <tbody>
             <tr><td><code>mode</code></td><td><code>'analyze'</code></td><td>'analyze' | 'queue'</td></tr>
+<tr><td><code>maxTweets</code></td><td><code>Infinity</code></td><td>Stop collecting after this many tweets</td></tr>
+<tr><td><code>exportResults</code></td><td><code>true</code></td><td>Download the analysis as JSON</td></tr>
+<tr><td><code>extendedReport</code></td><td><code>false</code></td><td>Day/hour distributions, streaks, extra export stats</td></tr>
           </tbody>
         </table>
       </section>
@@ -160,6 +163,9 @@
     mode: 'analyze',   // 'analyze' | 'queue'
     scrollRounds: 8,
     scrollDelay: 2000,
+    maxTweets: Infinity,     // Stop collecting after this many tweets
+    exportResults: true,     // Download the analysis as JSON
+    extendedReport: false,   // Day/hour distributions, streaks, extra export stats
   };</code></pre>
         </div>
       </section>
@@ -176,14 +182,15 @@
  * ============================================================
  *
  * @name        contentCalendar.js
- * @description Plan and visualize your posting schedule. Tracks
- *              tweet frequency by day/hour, identifies posting
- *              gaps, suggests optimal posting times based on
- *              historical engagement, and manages a localStorage-
- *              persisted content queue.
+ * @title       Content Calendar
+ * @description Analyze your posting pattern by day and hour, find gaps and the best times to post, and keep a local queue of planned tweets.
+ * @category    analytics
+ * @page        x.com/&lt;you&gt;
+ * @writes      false
+ * @aliases     scripts/contentCalendar.js
  * @author      nichxbt (https://x.com/nichxbt)
- * @version     1.0.0
- * @date        2026-02-24
+ * @version     1.1.0
+ * @date        2026-11-26
  * @repository  https://github.com/nirholas/XActions
  *
  * ============================================================
@@ -191,7 +198,9 @@
  *
  * MODE 1 — Analyze posting patterns:
  *   1. Go to your profile (x.com/YOUR_USERNAME)
- *   2. Paste and run → analyzes visible timeline
+ *   2. Paste browser/contentCalendar.js and run → analyzes visible timeline
+ *   Set extendedReport: true for day/hour distributions, posting
+ *   streaks and extra stats in the export.
  *
  * MODE 2 — Manage content queue:
  *   window.XActions.addTweet({ text: '...', scheduledFor: '2026-02-25T14:00' })
@@ -206,6 +215,9 @@
     mode: 'analyze',   // 'analyze' | 'queue'
     scrollRounds: 8,
     scrollDelay: 2000,
+    maxTweets: Infinity,     // Stop collecting after this many tweets
+    exportResults: true,     // Download the analysis as JSON
+    extendedReport: false,   // Day/hour distributions, streaks, extra export stats
   };
 
   const STORAGE_KEY = 'xactions_content_calendar';
@@ -254,6 +266,7 @@
       const articles = document.querySelectorAll('article[data-testid=&quot;tweet&quot;]');
 
       for (const article of articles) {
+        if (tweets.length &gt;= CONFIG.maxTweets) break;
         const timeEl = article.querySelector('time');
         if (!timeEl) continue;
 
@@ -420,6 +433,52 @@
     } else if (consistencyPct &gt; 75) {
       console.log('  ✅ Great consistency! Keep it up.');
     }
+
+    return { gaps, consistency: consistencyPct };
+  };
+
+  // ── Day / hour distributions (extendedReport) ──────────────
+  const showDistributions = (tweets) =&gt; {
+    const dayCounts = Array(7).fill(0);
+    const dayEng = Array(7).fill(0);
+    for (const t of tweets) { dayCounts[t.dayOfWeek]++; dayEng[t.dayOfWeek] += t.engagement; }
+
+    console.log('\n━━━ 📅 DAY-OF-WEEK DISTRIBUTION ━━━');
+    const maxDay = Math.max(...dayCounts, 1);
+    for (let i = 0; i &lt; 7; i++) {
+      const bar = '█'.repeat(Math.round((dayCounts[i] / maxDay) * 20));
+      const avgE = dayCounts[i] &gt; 0 ? (dayEng[i] / dayCounts[i]).toFixed(1) : '0';
+      console.log(`  ${DAYS[i]}  ${bar.padEnd(20)} ${dayCounts[i]} tweets (avg eng: ${avgE})`);
+    }
+
+    const hourCounts = Array(24).fill(0);
+    for (const t of tweets) hourCounts[t.hour]++;
+
+    console.log('\n━━━ ⏰ TIME-OF-DAY DISTRIBUTION ━━━');
+    const maxHour = Math.max(...hourCounts, 1);
+    for (let h = 0; h &lt; 24; h++) {
+      if (hourCounts[h] === 0) continue;
+      const bar = '█'.repeat(Math.round((hourCounts[h] / maxHour) * 15));
+      console.log(`  ${String(h).padStart(2, '0')}:00  ${bar.padEnd(15)} ${hourCounts[h]}`);
+    }
+
+    return Object.fromEntries(DAYS.map((d, i) =&gt; [d, dayCounts[i]]));
+  };
+
+  // ── Posting streaks (extendedReport) ───────────────────────
+  const analyzeStreaks = (tweets) =&gt; {
+    console.log('\n━━━ 🔥 STREAK ANALYSIS ━━━');
+    const postDays = new Set(tweets.map(t =&gt; t.date.toISOString().slice(0, 10)));
+    const sortedDays = [...postDays].sort();
+    let currentStreak = 1, maxStreak = 1, bestStart = sortedDays[0], streakStart = sortedDays[0];
+    for (let i = 1; i &lt; sortedDays.length; i++) {
+      if ((new Date(sortedDays[i]) - new Date(sortedDays[i - 1])) / 86400000 &lt;= 1) {
+        currentStreak++;
+        if (currentStreak &gt; maxStreak) { maxStreak = currentStreak; bestStart = streakStart; }
+      } else { currentStreak = 1; streakStart = sortedDays[i]; }
+    }
+    console.log(`  Posting days: ${sortedDays.length} | Longest streak: ${maxStreak} days (from ${bestStart})`);
+    return { postingDays: sortedDays.length, longestStreak: maxStreak };
   };
 
   // ── Media Impact ───────────────────────────────────────────
@@ -535,10 +594,15 @@
 
     console.log(`\n✅ Collected ${tweets.length} tweets for analysis.\n`);
 
+    let dayDistribution = null;
+    if (CONFIG.extendedReport) dayDistribution = showDistributions(tweets);
+
     generateHeatmap(tweets);
     findOptimalTimes(tweets);
-    analyzeGaps(tweets);
+    const gapStats = analyzeGaps(tweets);
     analyzeMediaImpact(tweets);
+
+    const streaks = CONFIG.extendedReport ? analyzeStreaks(tweets) : null;
 
     // Suggested schedule
     console.log('\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
@@ -572,6 +636,13 @@
       stats: { totalTweets: tweets.length, daySpan: daySpan.toFixed(1), tweetsPerDay },
       analyzedAt: new Date().toISOString(),
     };
+    if (CONFIG.extendedReport) {
+      if (gapStats) data.stats.consistency = gapStats.consistency.toFixed(0) + '%';
+      Object.assign(data.stats, streaks);
+      data.dayDistribution = dayDistribution;
+      if (gapStats) data.gaps = gapStats.gaps.slice(0, 5).map(g =&gt; ({ hours: g.hours.toFixed(1), after: g.after }));
+    }
+    if (!CONFIG.exportResults) return;
     const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
     const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
     a.download = `xactions-content-calendar-${new Date().toISOString().slice(0, 10)}.json`;
@@ -595,17 +666,17 @@
 
     <aside class="sidebar-right">
       <div class="sidebar-card">
-        <h3>📅 Posting</h3>
-        <a href="/scripts/post-advanced">✏️ Advanced post features</a>
-<a href="/scripts/article-publisher">📰 Article Publisher</a>
-<a href="/scripts/poll-creator">📊 Browser console script to create polls</a>
-<a href="/scripts/create-poll">📊 Create Poll</a>
-<a href="/scripts/edit-post">✏️ Edit Post &amp; Undo Post</a>
-<a href="/scripts/pin-tweet">📌 Pin Tweet</a>
-<a href="/scripts/pin-tweet-manager">📌 Pin Tweet Manager</a>
-<a href="/scripts/post-composer">✏️ Post Composer</a>
-<a href="/scripts/post-thread">🧵 Post Thread</a>
-<a href="/scripts/post-tweet">✍️ Post Tweet</a>
+        <h3>📊 Analytics</h3>
+        <a href="/scripts/account-health-monitor">📊 Account Health Monitor</a>
+<a href="/scripts/audience-demographics">📊 Audience Demographics</a>
+<a href="/scripts/audience-overlap">📊 Audience Overlap</a>
+<a href="/scripts/audit-followers">📊 Audit Followers</a>
+<a href="/scripts/best-time-to-post">📊 Best Time to Post</a>
+<a href="/scripts/business-analytics">📊 Business Analytics</a>
+<a href="/scripts/business-tools">📊 Business Tools</a>
+<a href="/scripts/competitor-analysis">📊 Competitor Analysis</a>
+<a href="/scripts/creator-studio">📊 Creator Studio</a>
+<a href="/scripts/engagement-analytics">📊 Engagement Analytics</a>
       </div>
       <div class="sidebar-card">
         <h3>🔗 Quick Links</h3>

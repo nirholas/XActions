@@ -4,14 +4,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Rate Limiter — Free X/Twitter Script | XActions</title>
-  <meta name="description" content="Rate limiting and quota management utility. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
-  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, rate, limiter, automation">
+  <meta name="description" content="Rate limiting and quota helper shared by the action scripts. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
+  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, rate, limiter, automation suite">
   <meta name="author" content="nich (@nichxbt)">
   <meta name="robots" content="index, follow">
 
   <meta property="og:type" content="article">
   <meta property="og:title" content="Rate Limiter — XActions">
-  <meta property="og:description" content="Rate limiting and quota management utility. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
+  <meta property="og:description" content="Rate limiting and quota helper shared by the action scripts. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
   <meta property="og:url" content="https://xactions.app/scripts/rate-limiter">
   <meta property="og:site_name" content="XActions">
   <meta property="og:image" content="https://xactions.app/og-run.png">
@@ -19,7 +19,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@nichxbt">
   <meta name="twitter:title" content="Rate Limiter — XActions">
-  <meta name="twitter:description" content="Rate limiting and quota management utility. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
+  <meta name="twitter:description" content="Rate limiting and quota helper shared by the action scripts. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
   <meta name="twitter:image" content="https://xactions.app/og-run.png">
 
   <link rel="canonical" href="https://xactions.app/scripts/rate-limiter">
@@ -30,14 +30,14 @@
     "@context": "https://schema.org",
     "@type": "TechArticle",
     "headline": "Rate Limiter — Free X/Twitter Script | XActions",
-    "description": "Rate limiting and quota management utility. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.",
+    "description": "Rate limiting and quota helper shared by the action scripts. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.",
     "url": "https://xactions.app/scripts/rate-limiter",
     "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
     "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
     "datePublished": "2026-03-30",
     "dateModified": "2026-03-30",
-    "articleSection": "Automation",
-    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, rate, limiter, automation"
+    "articleSection": "Automation Suite",
+    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, rate, limiter, automation suite"
   }
   </script>
   <script type="application/ld+json">
@@ -47,7 +47,7 @@
     "itemListElement": [
       { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
       { "@type": "ListItem", "position": 2, "name": "Scripts", "item": "https://xactions.app/scripts" },
-      { "@type": "ListItem", "position": 3, "name": "Automation", "item": "https://xactions.app/scripts#automation" },
+      { "@type": "ListItem", "position": 3, "name": "Automation Suite", "item": "https://xactions.app/scripts#automation-suite" },
       { "@type": "ListItem", "position": 4, "name": "Rate Limiter", "item": "https://xactions.app/scripts/rate-limiter" }
     ]
   }
@@ -116,24 +116,24 @@
 
     <main class="main-content" id="main-content">
       <header class="main-header">
-        <h1>⏱️ Rate Limiter</h1>
+        <h1>⚙️ Rate Limiter</h1>
         <div class="breadcrumb">
-          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#automation">Automation</a> › Rate Limiter
+          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#automation-suite">Automation Suite</a> › Rate Limiter
         </div>
       </header>
 
       <article class="article">
-        <span class="cat-badge">Automation</span>
-        <span class="source-badge">scripts/twitter</span>
+        <span class="cat-badge">Automation Suite</span>
+        <span class="source-badge">browser/rateLimiter.js</span>
 
         <div class="meta-row">
           <span>v1.0.0</span>
           <span>Updated: 2026-01-26</span>
-          <span>389 lines</span>
+          <span>394 lines</span>
           <span>by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></span>
         </div>
 
-        <p>Rate limiting and quota management utility</p>
+        <p>Rate limiting and quota helper shared by the action scripts.</p>
 
         
 
@@ -158,8 +158,13 @@
  * ⏱️ Rate Limiter
  * ============================================================
  * 
- * @name        rate-limiter.js
- * @description Rate limiting and quota management utility
+ * @name        rateLimiter.js
+ * @description Rate limiting and quota helper shared by the action scripts.
+ * @title       Rate Limiter
+ * @category    automation
+ * @page        x.com/*
+ * @writes      false
+ * @aliases     scripts/twitter/rate-limiter.js
  * @author      nichxbt (https://x.com/nichxbt)
  * @version     1.0.0
  * @date        2026-01-26
@@ -554,14 +559,15 @@
 
     <aside class="sidebar-right">
       <div class="sidebar-card">
-        <h3>⏱️ Automation</h3>
-        <a href="/scripts/customer-service">🤝 Customer Service Bot</a>
-<a href="/scripts/protect-active-users">🛡️ Don't Unfollow Active Users</a>
-<a href="/scripts/quota-supervisor">⚠️ Quota Supervisor</a>
-<a href="/scripts/session-logger">📋 Session Logger &amp; Analytics</a>
-<a href="/scripts/actions">⚡ XActions Actions Library - Complete X/Twitter Actions</a>
-<a href="/scripts/core">⚙️ XActions Automation Framework - Core Utilities</a>
-<a href="/scripts/control-panel">🎛️ XActions Control Panel — Floating UI for Browser Automations</a>
+        <h3>⚙️ Automation Suite</h3>
+        <a href="/scripts/actions">⚙️ Actions Library</a>
+<a href="/scripts/control-panel">⚙️ Automation Control Panel</a>
+<a href="/scripts/core">⚙️ Automation Core</a>
+<a href="/scripts/blacklist">⚙️ Blacklist Manager</a>
+<a href="/scripts/filter-manager">⚙️ Filter Manager</a>
+<a href="/scripts/quota-supervisor">⚙️ Quota Supervisor</a>
+<a href="/scripts/session-logger">⚙️ Session Logger</a>
+<a href="/scripts/whitelist">⚙️ Whitelist Manager</a>
       </div>
       <div class="sidebar-card">
         <h3>🔗 Quick Links</h3>

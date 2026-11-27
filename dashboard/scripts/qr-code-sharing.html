@@ -4,14 +4,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>QR Code Profile Sharing — Free X/Twitter Script | XActions</title>
-  <meta name="description" content="Generate a shareable QR code for any X profile. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
-  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, code, sharing, account management">
+  <meta name="description" content="Generate a shareable QR code for any X profile, shown in an overlay and downloadable as a PNG.">
+  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, code, sharing, profile and settings">
   <meta name="author" content="nich (@nichxbt)">
   <meta name="robots" content="index, follow">
 
   <meta property="og:type" content="article">
   <meta property="og:title" content="QR Code Profile Sharing — XActions">
-  <meta property="og:description" content="Generate a shareable QR code for any X profile. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
+  <meta property="og:description" content="Generate a shareable QR code for any X profile, shown in an overlay and downloadable as a PNG.">
   <meta property="og:url" content="https://xactions.app/scripts/qr-code-sharing">
   <meta property="og:site_name" content="XActions">
   <meta property="og:image" content="https://xactions.app/og-run.png">
@@ -19,7 +19,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@nichxbt">
   <meta name="twitter:title" content="QR Code Profile Sharing — XActions">
-  <meta name="twitter:description" content="Generate a shareable QR code for any X profile. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
+  <meta name="twitter:description" content="Generate a shareable QR code for any X profile, shown in an overlay and downloadable as a PNG.">
   <meta name="twitter:image" content="https://xactions.app/og-run.png">
 
   <link rel="canonical" href="https://xactions.app/scripts/qr-code-sharing">
@@ -30,14 +30,14 @@
     "@context": "https://schema.org",
     "@type": "TechArticle",
     "headline": "QR Code Profile Sharing — Free X/Twitter Script | XActions",
-    "description": "Generate a shareable QR code for any X profile. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.",
+    "description": "Generate a shareable QR code for any X profile, shown in an overlay and downloadable as a PNG.",
     "url": "https://xactions.app/scripts/qr-code-sharing",
     "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
     "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
     "datePublished": "2026-03-30",
     "dateModified": "2026-03-30",
-    "articleSection": "Account Management",
-    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, code, sharing, account management"
+    "articleSection": "Profile and Settings",
+    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, code, sharing, profile and settings"
   }
   </script>
   <script type="application/ld+json">
@@ -47,7 +47,7 @@
     "itemListElement": [
       { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
       { "@type": "ListItem", "position": 2, "name": "Scripts", "item": "https://xactions.app/scripts" },
-      { "@type": "ListItem", "position": 3, "name": "Account Management", "item": "https://xactions.app/scripts#account-management" },
+      { "@type": "ListItem", "position": 3, "name": "Profile and Settings", "item": "https://xactions.app/scripts#profile-and-settings" },
       { "@type": "ListItem", "position": 4, "name": "QR Code Profile Sharing", "item": "https://xactions.app/scripts/qr-code-sharing" }
     ]
   }
@@ -116,24 +116,24 @@
 
     <main class="main-content" id="main-content">
       <header class="main-header">
-        <h1>📱 QR Code Profile Sharing</h1>
+        <h1>🪪 QR Code Profile Sharing</h1>
         <div class="breadcrumb">
-          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#account-management">Account Management</a> › QR Code Profile Sharing
+          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#profile-and-settings">Profile and Settings</a> › QR Code Profile Sharing
         </div>
       </header>
 
       <article class="article">
-        <span class="cat-badge">Account Management</span>
-        <span class="source-badge">browser</span>
+        <span class="cat-badge">Profile and Settings</span>
+        <span class="source-badge">browser/qrCodeSharing.js</span>
 
         <div class="meta-row">
-          
-          
-          <span>90 lines</span>
+          <span>v1.1.0</span>
+          <span>Updated: 2026-11-27</span>
+          <span>191 lines</span>
           <span>by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></span>
         </div>
 
-        <p>Generate a shareable QR code for any X profile</p>
+        <p>Generate a shareable QR code for any X profile, shown in an overlay and downloadable as a PNG.</p>
 
         
 
@@ -177,15 +177,27 @@
           <div class="code-block">
             <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.querySelector('code').textContent).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy Script',2000)})">Copy Script</button>
             <pre><code>// Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
+/**
+ * @name        qrCodeSharing.js
+ * @title       QR Code Profile Sharing
+ * @description Generate a shareable QR code for any X profile, shown in an overlay and downloadable as a PNG.
+ * @category    profile
+ * @page        x.com/&lt;username&gt; or x.com/*
+ * @writes      false
+ * @aliases     scripts/qrCodeSharing.js
+ * @author      nichxbt (https://x.com/nichxbt)
+ * @version     1.1.0
+ * @date        2026-11-27
+ */
 // QR Code Profile Sharing on X - by nichxbt
 // https://github.com/nirholas/xactions
 // Generate a shareable QR code for any X profile
-// 1. Go to any page on x.com
+// 1. Go to a profile page (x.com/USERNAME), or any page on x.com and set CONFIG.username
 // 2. Open the Developer Console (F12)
-// 3. Edit the username below
-// 4. Paste this into the Developer Console and run it
+// 3. Edit the username below (optional), and darkColor / lightColor to recolor the code
+// 4. Paste browser/qrCodeSharing.js into the Developer Console and run it
 //
-// Last Updated: 24 February 2026
+// Last Updated: 27 November 2026
 (() =&gt; {
   const CONFIG = {
     username: '', // Leave empty to use current page's profile
@@ -201,22 +213,81 @@
     return `https://api.qrserver.com/v1/create-qr-code/?size=${size}x${size}&amp;data=${encodeURIComponent(text)}`;
   };
 
+  // '#abc' or '#aabbcc' -&gt; [r, g, b]
+  const parseHex = (hex) =&gt; {
+    let h = String(hex || '').replace('#', '').trim();
+    if (h.length === 3) h = h.split('').map(c =&gt; c + c).join('');
+    const c = parseInt(h, 16);
+    if (h.length !== 6 || Number.isNaN(c)) return null;
+    return [(c &gt;&gt; 16) &amp; 255, (c &gt;&gt; 8) &amp; 255, c &amp; 255];
+  };
+
+  // Canvas renderer: loads the QR image and redraws it with CONFIG.darkColor / CONFIG.lightColor
+  const renderQRCanvas = async (qrUrl, size, dark, light) =&gt; {
+    const img = new Image();
+    img.crossOrigin = 'anonymous';
+    await new Promise((resolve, reject) =&gt; {
+      img.onload = resolve;
+      img.onerror = reject;
+      img.src = `${qrUrl}&amp;format=png`;
+    });
+    const canvas = document.createElement('canvas');
+    canvas.width = size;
+    canvas.height = size;
+    const ctx = canvas.getContext('2d');
+    ctx.drawImage(img, 0, 0, size, size);
+    const darkRgb = parseHex(dark) || [0, 0, 0];
+    const lightRgb = parseHex(light) || [255, 255, 255];
+    const isDefault = darkRgb.join() === '0,0,0' &amp;&amp; lightRgb.join() === '255,255,255';
+    if (!isDefault) {
+      const imageData = ctx.getImageData(0, 0, size, size);
+      const d = imageData.data;
+      for (let i = 0; i &lt; d.length; i += 4) {
+        const brightness = (d[i] + d[i + 1] + d[i + 2]) / 3;
+        const [r, g, b] = brightness &lt; 128 ? darkRgb : lightRgb;
+        d[i] = r; d[i + 1] = g; d[i + 2] = b;
+      }
+      ctx.putImageData(imageData, 0, 0);
+    }
+    return canvas;
+  };
+
+  const downloadCanvas = (canvas, filename) =&gt; {
+    const a = document.createElement('a');
+    a.href = canvas.toDataURL('image/png');
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+  };
+
+  const downloadFromUrl = async (qrUrl, filename) =&gt; {
+    const response = await fetch(qrUrl);
+    const blob = await response.blob();
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    a.click();
+  };
+
   const run = async () =&gt; {
     console.log('📱 QR CODE SHARING - XActions by nichxbt');
 
-    let username = CONFIG.username;
+    let username = CONFIG.username.replace(/^@/, '');
     if (!username) {
-      const match = window.location.pathname.match(/^\/([^\/]+)/);
+      const match = window.location.pathname.match(/^\/([A-Za-z0-9_]+)/);
       username = match ? match[1] : '';
     }
 
-    if (!username || ['home', 'explore', 'notifications', 'messages', 'i', 'settings'].includes(username)) {
+    if (!username || ['home', 'explore', 'notifications', 'messages', 'i', 'settings', 'search'].includes(username)) {
       console.error('❌ Set CONFIG.username or navigate to a profile page!');
       return;
     }
 
     const profileUrl = `https://x.com/${username}`;
     const qrUrl = generateQRCode(profileUrl, CONFIG.size);
+    const filename = `qr-${username}.png`;
 
     console.log(`👤 Profile: @${username}`);
     console.log(`🔗 URL: ${profileUrl}`);
@@ -230,36 +301,66 @@
       background-size: contain;
     `);
 
+    // Render on a canvas so custom colors apply; fall back to the plain image if the canvas fails
+    let canvas = null;
+    try {
+      canvas = await renderQRCanvas(qrUrl, CONFIG.size, CONFIG.darkColor, CONFIG.lightColor);
+    } catch (e) {
+      console.warn('⚠️ Could not render the QR code on a canvas; showing the plain image (custom colors not applied).');
+    }
+
     // Create a floating overlay with the QR code
     const overlay = document.createElement('div');
     overlay.id = 'xactions-qr-overlay';
-    overlay.innerHTML = `
-      &lt;div style=&quot;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.7);z-index:99999;display:flex;align-items:center;justify-content:center;cursor:pointer;&quot;&gt;
-        &lt;div style=&quot;background:white;border-radius:16px;padding:32px;text-align:center;max-width:400px;&quot;&gt;
-          &lt;h2 style=&quot;margin:0 0 8px 0;font-size:20px;color:#000;&quot;&gt;@${username}&lt;/h2&gt;
-          &lt;p style=&quot;margin:0 0 16px 0;color:#666;font-size:14px;&quot;&gt;Scan to visit profile&lt;/p&gt;
-          &lt;img src=&quot;${qrUrl}&quot; alt=&quot;QR Code&quot; style=&quot;width:${CONFIG.size}px;height:${CONFIG.size}px;border:2px solid #eee;border-radius:8px;&quot;&gt;
-          &lt;p style=&quot;margin:16px 0 0 0;color:#999;font-size:12px;&quot;&gt;Click anywhere to close • XActions by nichxbt&lt;/p&gt;
-        &lt;/div&gt;
-      &lt;/div&gt;
+    overlay.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.7);z-index:99999;display:flex;align-items:center;justify-content:center;cursor:pointer;';
+    const card = document.createElement('div');
+    card.style.cssText = 'background:white;border-radius:16px;padding:32px;text-align:center;max-width:400px;cursor:default;';
+    card.innerHTML = `
+      &lt;h2 style=&quot;margin:0 0 8px 0;font-size:20px;color:#000;&quot;&gt;@${username}&lt;/h2&gt;
+      &lt;p style=&quot;margin:0 0 16px 0;color:#666;font-size:14px;&quot;&gt;Scan to visit profile&lt;/p&gt;
     `;
-    overlay.onclick = () =&gt; overlay.remove();
-    document.body.appendChild(overlay);
+    const qrStyle = `width:${CONFIG.size}px;height:${CONFIG.size}px;border:2px solid #eee;border-radius:8px;`;
+    if (canvas) {
+      canvas.style.cssText = qrStyle;
+      card.appendChild(canvas);
+    } else {
+      const img = document.createElement('img');
+      img.src = qrUrl;
+      img.alt = 'QR Code';
+      img.style.cssText = qrStyle;
+      card.appendChild(img);
+    }
 
-    if (CONFIG.autoDownload) {
-      // Download as image
+    const save = async () =&gt; {
       try {
-        const response = await fetch(qrUrl);
-        const blob = await response.blob();
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `qr-${username}.png`;
-        a.click();
+        if (canvas) downloadCanvas(canvas, filename);
+        else await downloadFromUrl(qrUrl, filename);
         console.log('📥 QR code downloaded');
       } catch (e) {
         console.log('💡 Right-click the QR code to save it manually');
       }
+    };
+
+    const dlBtn = document.createElement('button');
+    dlBtn.textContent = '📥 Download QR';
+    dlBtn.style.cssText = 'margin-top:16px;padding:8px 20px;border:none;border-radius:8px;background:#1d9bf0;color:white;font-size:14px;cursor:pointer;';
+    dlBtn.onclick = (e) =&gt; { e.stopPropagation(); save(); };
+    card.appendChild(dlBtn);
+
+    const footer = document.createElement('p');
+    footer.style.cssText = 'margin:12px 0 0 0;color:#999;font-size:12px;';
+    footer.textContent = 'Click outside to close • XActions by nichxbt';
+    card.appendChild(footer);
+
+    card.onclick = (e) =&gt; e.stopPropagation();
+    overlay.onclick = () =&gt; overlay.remove();
+    overlay.appendChild(card);
+    document.body.appendChild(overlay);
+    console.log('✅ QR code displayed! Click outside overlay to close.');
+
+    if (CONFIG.autoDownload) {
+      // Download as image
+      await save();
     }
   };
 
@@ -279,17 +380,17 @@
 
     <aside class="sidebar-right">
       <div class="sidebar-card">
-        <h3>📱 Account Management</h3>
-        <a href="/scripts/account-settings">⚙️ Account Settings</a>
-<a href="/scripts/backup-account">💾 Backup Account Data</a>
-<a href="/scripts/edit-profile">✏️ Browser console script to update X/Twitter profile fields</a>
-<a href="/scripts/delegate-access">🔑 Delegate Access</a>
-<a href="/scripts/download-account-data">📥 Download Account Data from X</a>
-<a href="/scripts/multi-account">👥 Multi-Account Manager</a>
-<a href="/scripts/profile-manager">👤 Profile Manager</a>
-<a href="/scripts/subscribe-premium">⭐ Subscribe to X Premium</a>
-<a href="/scripts/update-banner">🖼️ Update Banner Image</a>
-<a href="/scripts/update-profile">✏️ Update Profile</a>
+        <h3>🪪 Profile and Settings</h3>
+        <a href="/scripts/account-misc">🪪 Account Utilities</a>
+<a href="/scripts/advanced-profile">🪪 Advanced Profile Tools</a>
+<a href="/scripts/advanced-settings">🪪 Advanced Settings and Privacy</a>
+<a href="/scripts/delegate-access">🪪 Delegate Access</a>
+<a href="/scripts/download-account-data">🪪 Download Account Data</a>
+<a href="/scripts/id-verification">🪪 ID Verification</a>
+<a href="/scripts/multi-account">🪪 Multi-Account Manager</a>
+<a href="/scripts/advanced-notifications">🪪 Notification Settings</a>
+<a href="/scripts/pin-tweet-manager">🪪 Pin Tweet Manager</a>
+<a href="/scripts/account-settings">🪪 Privacy and Safety Settings</a>
       </div>
       <div class="sidebar-card">
         <h3>🔗 Quick Links</h3>

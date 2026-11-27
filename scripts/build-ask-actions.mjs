@@ -8,8 +8,9 @@
  * run. This catalogs all three executable surfaces straight from source, so
  * the catalog cannot drift from what the code offers:
  *
- *   browser scripts  browser/*.js + scripts/*.js, cross-checked against the
- *                    generated /scripts/<slug> pages, with the raw source URL
+ *   browser scripts  browser/index.json (built by scripts/build-script-manifest.mjs),
+ *                    cross-checked against the generated /scripts/<slug> pages,
+ *                    with the raw source URL
  *   CLI commands     the .command()/.description() calls in src/cli/**
  *   MCP tools        the tool definitions in src/mcp/server.js
  *
@@ -24,9 +25,9 @@
  * @license Apache-2.0
  */
 
-import { readFileSync, writeFileSync, readdirSync, existsSync, statSync, mkdirSync } from 'node:fs';
-import { isNodeProgram } from './lib/is-node-program.mjs';
-import { join, dirname, basename, relative } from 'node:path';
+import { readFileSync, writeFileSync, readdirSync, existsSync, mkdirSync } from 'node:fs';
+import { loadScriptManifest } from './lib/script-manifest.mjs';
+import { join, dirname, relative } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { createHash } from 'node:crypto';
 
@@ -46,85 +47,33 @@ const scriptPages = new Set(
     .map((f) => f.replace(/\.html$/, ''))
 );
 
-/** Titles and categories the script pages already publish; better than re-deriving them. */
-const scriptManifest = new Map(
-  JSON.parse(read('dashboard/scripts/_manifest.json')).map((e) => [e.slug, e])
-);
-
-/** X routes that are a real destination rather than someone's profile. */
-const X_ROUTES = new Set(['home', 'messages', 'explore', 'notifications', 'settings', 'compose', 'search', 'i', 'bookmarks', 'lists', 'communities', 'topics']);
-
 /**
- * Where a browser script must be pasted, taken from its header block.
- *
- * The author credit (`https://x.com/nichxbt`) appears in every header, so a
- * bare handle is only accepted when it is a placeholder (USERNAME) or a real
- * X route; otherwise the answer would tell people to run an unfollow script
- * on the author's profile.
- */
-function findRunOn(head) {
-  const explicit = head.match(/(?:Run on|Paste (?:this |in )?(?:on|at)|Navigate to):?\s*(?:https?:\/\/)?(x\.com\/[^\s*,)]+)/i);
-  if (explicit) return clean(explicit[1]);
-  for (const m of head.matchAll(/(?:https?:\/\/)?(x\.com\/[A-Za-z0-9_\/<>{}:$-]+)/g)) {
-    const url = clean(m[1]);
-    const segments = url.split('/').slice(1).filter(Boolean);
-    if (!segments.length) continue;
-    const first = segments[0];
-    if (segments.length === 1 && !/^[A-Z_]{4,}$/.test(first) && !X_ROUTES.has(first.toLowerCase())) continue;
-    if (/^(nichxbt|nirholas)$/i.test(first)) continue;
-    return url;
-  }
-  return '';
-}
-
-const clean = (url) => url.replace(/[.,)]+$/, '');
-
-/**
- * Browser scripts. The header comment block carries the human description and,
- * for most scripts, the page it must be pasted on: that "run on" line is the
- * single most useful thing to hand someone who just asked how to do it.
+ * Browser scripts, one per manifest entry. The manifest already carries the
+ * page each script must be pasted on, which is the single most useful thing
+ * to hand someone who just asked how to do it. Legacy paths ride along so a
+ * question that quotes an old file name still finds the script.
  */
 function collectScripts() {
-  const actions = [];
-  for (const dir of ['browser', 'scripts']) {
-    for (const entry of readdirSync(join(ROOT, dir))) {
-      if (!entry.endsWith('.js') || entry.endsWith('.mjs')) continue;
-      const path = `${dir}/${entry}`;
-      if (!statSync(join(ROOT, path)).isFile()) continue;
-      const source = read(path);
-      if (!/paste|console|DevTools|@name|@description/i.test(source.slice(0, 2000))) continue;
-      // Node tools (build and audit scripts) live here too; they cannot be pasted
-      // into a browser console, so they are not runnable script actions.
-      if (isNodeProgram(source)) continue;
-
-      const head = source.slice(0, 3000);
-      const description =
-        head.match(/@description\s+(.+)/)?.[1] ||
-        head.match(/^\s*(?:\/\/|\*)\s*([A-Z][^@\n]{25,140})$/m)?.[1] ||
-        '';
-      // "Paste in DevTools console on x.com/USERNAME/following" and friends.
-      // An explicit instruction wins. The loose fallback has to reject the
-      // author's own profile link, which sits in every header block and is
-      // not where anyone should paste anything.
-      const runOn = findRunOn(head);
-      const slug = kebab(basename(entry, '.js'));
-      const manifest = scriptManifest.get(slug);
-      actions.push({
-        kind: 'script',
-        id: slug,
-        title: (manifest?.title || slug.replace(/-/g, ' ')).trim(),
-        description: description.trim().replace(/\s+/g, ' ').slice(0, 200),
-        category: manifest?.category || 'Scripts',
-        path,
-        raw: `${RAW}${path}`,
-        source: `${BLOB}${path}`,
-        page: scriptPages.has(slug) ? `/scripts/${slug}` : null,
-        runOn,
-        needsCore: /XActions\?\.Core|Core module not loaded/.test(source),
-      });
-    }
-  }
-  return actions;
+  const manifest = loadScriptManifest(ROOT);
+  const labels = Object.fromEntries(manifest.categories.map((c) => [c.id, c.label]));
+  return manifest.scripts.map((script) => {
+    const slug = kebab(script.id);
+    return {
+      kind: 'script',
+      id: slug,
+      title: script.title,
+      description: script.description,
+      category: labels[script.category],
+      path: script.path,
+      raw: `${RAW}${script.path}`,
+      source: `${BLOB}${script.path}`,
+      page: scriptPages.has(slug) ? `/scripts/${slug}` : null,
+      runOn: script.page === 'x.com/*' ? '' : script.page,
+      needsCore: script.needsCore,
+      writes: script.writes,
+      aliases: script.aliases,
+    };
+  });
 }
 
 /**
@@ -192,25 +141,7 @@ function collectMcp() {
   return actions;
 }
 
-/**
- * 61 scripts exist in both browser/ and scripts/. The generated page was built
- * from one of them, so the catalog keeps that copy: linking a user to a page
- * whose source differs from the file quoted beside it is how a "just paste
- * this" answer stops matching what the page shows.
- */
-function dedupeScripts(list) {
-  const bySlug = new Map();
-  for (const action of list) {
-    const preferred = scriptManifest.get(action.id)?.sourceDir;
-    const existing = bySlug.get(action.id);
-    if (!existing) { bySlug.set(action.id, action); continue; }
-    const wins = preferred ? action.path.startsWith(`${preferred}/`) : action.description.length > existing.description.length;
-    if (wins) bySlug.set(action.id, action);
-  }
-  return [...bySlug.values()];
-}
-
-const actions = [...dedupeScripts(collectScripts()), ...collectCli(), ...collectMcp()];
+const actions = [...collectScripts(), ...collectCli(), ...collectMcp()];
 actions.sort((a, b) => a.kind.localeCompare(b.kind) || a.id.localeCompare(b.id));
 
 const counts = actions.reduce((acc, a) => ({ ...acc, [a.kind]: (acc[a.kind] || 0) + 1 }), {});

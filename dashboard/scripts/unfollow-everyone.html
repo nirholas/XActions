@@ -4,14 +4,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Unfollow Everyone — Free X/Twitter Script | XActions</title>
-  <meta name="description" content="Unfollow every account you follow on X/Twitter. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
-  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, unfollow, everyone, unfollow tools">
+  <meta name="description" content="Unfollow every account you follow, with a whitelist, a cap, a start confirmation and a JSON export.">
+  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, unfollow, everyone, clean up">
   <meta name="author" content="nich (@nichxbt)">
   <meta name="robots" content="index, follow">
 
   <meta property="og:type" content="article">
   <meta property="og:title" content="Unfollow Everyone — XActions">
-  <meta property="og:description" content="Unfollow every account you follow on X/Twitter. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
+  <meta property="og:description" content="Unfollow every account you follow, with a whitelist, a cap, a start confirmation and a JSON export.">
   <meta property="og:url" content="https://xactions.app/scripts/unfollow-everyone">
   <meta property="og:site_name" content="XActions">
   <meta property="og:image" content="https://xactions.app/og-run.png">
@@ -19,7 +19,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@nichxbt">
   <meta name="twitter:title" content="Unfollow Everyone — XActions">
-  <meta name="twitter:description" content="Unfollow every account you follow on X/Twitter. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
+  <meta name="twitter:description" content="Unfollow every account you follow, with a whitelist, a cap, a start confirmation and a JSON export.">
   <meta name="twitter:image" content="https://xactions.app/og-run.png">
 
   <link rel="canonical" href="https://xactions.app/scripts/unfollow-everyone">
@@ -30,14 +30,14 @@
     "@context": "https://schema.org",
     "@type": "TechArticle",
     "headline": "Unfollow Everyone — Free X/Twitter Script | XActions",
-    "description": "Unfollow every account you follow on X/Twitter. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.",
+    "description": "Unfollow every account you follow, with a whitelist, a cap, a start confirmation and a JSON export.",
     "url": "https://xactions.app/scripts/unfollow-everyone",
     "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
     "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
     "datePublished": "2026-03-30",
     "dateModified": "2026-03-30",
-    "articleSection": "Unfollow Tools",
-    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, unfollow, everyone, unfollow tools"
+    "articleSection": "Clean Up",
+    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, unfollow, everyone, clean up"
   }
   </script>
   <script type="application/ld+json">
@@ -47,7 +47,7 @@
     "itemListElement": [
       { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
       { "@type": "ListItem", "position": 2, "name": "Scripts", "item": "https://xactions.app/scripts" },
-      { "@type": "ListItem", "position": 3, "name": "Unfollow Tools", "item": "https://xactions.app/scripts#unfollow-tools" },
+      { "@type": "ListItem", "position": 3, "name": "Clean Up", "item": "https://xactions.app/scripts#clean-up" },
       { "@type": "ListItem", "position": 4, "name": "Unfollow Everyone", "item": "https://xactions.app/scripts/unfollow-everyone" }
     ]
   }
@@ -116,39 +116,40 @@
 
     <main class="main-content" id="main-content">
       <header class="main-header">
-        <h1>👋 Unfollow Everyone</h1>
+        <h1>🧹 Unfollow Everyone</h1>
         <div class="breadcrumb">
-          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#unfollow-tools">Unfollow Tools</a> › Unfollow Everyone
+          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#clean-up">Clean Up</a> › Unfollow Everyone
         </div>
       </header>
 
       <article class="article">
-        <span class="cat-badge">Unfollow Tools</span>
-        <span class="source-badge">browser</span>
+        <span class="cat-badge">Clean Up</span>
+        <span class="source-badge">browser/unfollowEveryone.js</span>
 
         <div class="meta-row">
-          <span>v3.0.0</span>
-          <span>Updated: 2026-02-24</span>
-          <span>252 lines</span>
+          <span>v3.1.0</span>
+          <span>Updated: 2026-11-27</span>
+          <span>295 lines</span>
           <span>by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></span>
         </div>
 
-        <p>Unfollow every account you follow on X/Twitter.</p>
+        <p>Unfollow every account you follow, with a whitelist, a cap, a start confirmation and a JSON export.</p>
 
-        
+        <div class="warning-box"><p>⚠️ WARNING: This will unfollow EVERYONE you follow (except the whitelist)!</p></div>
 
         <h2>How to Use</h2>
         <ol class="usage-steps"><li>Go to: https://x.com/YOUR_USERNAME/following</li>
 <li>Open DevTools Console (F12)</li>
 <li>(Optional) Paste src/utils/core.js first for pause/resume</li>
-<li>Paste this script and press Enter</li></ol>
+<li>Paste browser/unfollowEveryone.js and press Enter. A live run asks</li></ol>
         
 
         <div class="controls-box">
         <h3>Runtime Controls</h3>
         <pre><code>XActionsUtils.pause()   — pause the script
 XActionsUtils.resume()  — resume the script
-XActionsUtils.abort()   — stop entirely</code></pre>
+XActionsUtils.abort()   — stop entirely
+window.stopUnfollow()   - stop after the current unfollow</code></pre>
       </div>
         <section class="config-section">
         <h2>Configuration Options</h2>
@@ -156,17 +157,19 @@ XActionsUtils.abort()   — stop entirely</code></pre>
           <thead><tr><th>Option</th><th>Default</th><th>Description</th></tr></thead>
           <tbody>
             <tr><td><code>maxUnfollows</code></td><td><code>Infinity</code></td><td>Set to e.g. 50 for testing</td></tr>
-<tr><td><code>minDelay</code></td><td><code>1200</code></td><td>Minimum ms between unfollows</td></tr>
+<tr><td><code>minDelay</code></td><td><code>2500</code></td><td>Minimum ms between unfollows</td></tr>
 <tr><td><code>maxDelay</code></td><td><code>3000</code></td><td>Maximum ms between unfollows</td></tr>
 <tr><td><code>scrollDelay</code></td><td><code>2000</code></td><td>Delay after scrolling for new content</td></tr>
 <tr><td><code>confirmDelay</code></td><td><code>600</code></td><td>Wait after clicking confirm dialog</td></tr>
 <tr><td><code>whitelist</code></td><td><code>[</code></td><td>NEVER unfollow these usernames (lowercase)</td></tr>
 <tr><td><code>dryRun</code></td><td><code>false</code></td><td>true = log what WOULD happen, don't act</td></tr>
+<tr><td><code>confirmStart</code></td><td><code>true</code></td><td>Live mode: ask for a browser confirm() before starting</td></tr>
 <tr><td><code>maxRetries</code></td><td><code>8</code></td><td>Empty scrolls before giving up</td></tr>
 <tr><td><code>maxConsecutiveErrors</code></td><td><code>5</code></td><td>Errors in a row before aborting</td></tr>
 <tr><td><code>rateLimitPauseMs</code></td><td><code>60000</code></td><td>Cooldown when rate-limited (60s)</td></tr>
 <tr><td><code>trackUnfollowed</code></td><td><code>true</code></td><td>Persist log to localStorage</td></tr>
 <tr><td><code>exportOnComplete</code></td><td><code>true</code></td><td>Auto-download JSON when done</td></tr>
+<tr><td><code>exportDryRun</code></td><td><code>false</code></td><td>Also download the dry-run preview list as JSON</td></tr>
           </tbody>
         </table>
       </section>
@@ -176,7 +179,7 @@ XActionsUtils.abort()   — stop entirely</code></pre>
           <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.querySelector('code').textContent).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy',2000)})">Copy</button>
           <pre><code>const CONFIG = {
     maxUnfollows: Infinity,         // Set to e.g. 50 for testing
-    minDelay: 1200,                 // Minimum ms between unfollows
+    minDelay: 2500,                 // Minimum ms between unfollows
     maxDelay: 3000,                 // Maximum ms between unfollows
     scrollDelay: 2000,              // Delay after scrolling for new content
     confirmDelay: 600,              // Wait after clicking confirm dialog
@@ -186,6 +189,7 @@ XActionsUtils.abort()   — stop entirely</code></pre>
       // 'nichxbt',
     ],
     dryRun: false,                  // true = log what WOULD happen, don't act
+    confirmStart: true,             // Live mode: ask for a browser confirm() before starting
 
     maxRetries: 8,                  // Empty scrolls before giving up
     maxConsecutiveErrors: 5,        // Errors in a row before aborting
@@ -193,6 +197,7 @@ XActionsUtils.abort()   — stop entirely</code></pre>
 
     trackUnfollowed: true,          // Persist log to localStorage
     exportOnComplete: true,         // Auto-download JSON when done
+    exportDryRun: false,            // Also download the dry-run preview list as JSON
   };</code></pre>
         </div>
       </section>
@@ -209,10 +214,15 @@ XActionsUtils.abort()   — stop entirely</code></pre>
  * ============================================================
  *
  * @name        unfollowEveryone.js
- * @description Unfollow every account you follow on X/Twitter.
+ * @title       Unfollow Everyone
+ * @description Unfollow every account you follow, with a whitelist, a cap, a start confirmation and a JSON export.
+ * @category    cleanup
+ * @page        x.com/&lt;you&gt;/following
+ * @writes      true
+ * @aliases     scripts/unfollowEveryone.js, scripts/twitter/unfollow-everyone.js
  * @author      nichxbt (https://x.com/nichxbt)
- * @version     3.0.0
- * @date        2026-02-24
+ * @version     3.1.0
+ * @date        2026-11-27
  * @repository  https://github.com/nirholas/XActions
  *
  * ============================================================
@@ -221,12 +231,16 @@ XActionsUtils.abort()   — stop entirely</code></pre>
  * 1. Go to: https://x.com/YOUR_USERNAME/following
  * 2. Open DevTools Console (F12)
  * 3. (Optional) Paste src/utils/core.js first for pause/resume
- * 4. Paste this script and press Enter
+ * 4. Paste browser/unfollowEveryone.js and press Enter. A live run asks
+ *    for a browser confirmation first (confirmStart).
+ *
+ * ⚠️ WARNING: This will unfollow EVERYONE you follow (except the whitelist)!
  *
  * CONTROLS (while running):
  *   XActionsUtils.pause()   — pause the script
  *   XActionsUtils.resume()  — resume the script
  *   XActionsUtils.abort()   — stop entirely
+ *   window.stopUnfollow()   - stop after the current unfollow
  *
  * ============================================================
  */
@@ -239,7 +253,7 @@ XActionsUtils.abort()   — stop entirely</code></pre>
 
   const CONFIG = {
     maxUnfollows: Infinity,         // Set to e.g. 50 for testing
-    minDelay: 1200,                 // Minimum ms between unfollows
+    minDelay: 2500,                 // Minimum ms between unfollows
     maxDelay: 3000,                 // Maximum ms between unfollows
     scrollDelay: 2000,              // Delay after scrolling for new content
     confirmDelay: 600,              // Wait after clicking confirm dialog
@@ -249,6 +263,7 @@ XActionsUtils.abort()   — stop entirely</code></pre>
       // 'nichxbt',
     ],
     dryRun: false,                  // true = log what WOULD happen, don't act
+    confirmStart: true,             // Live mode: ask for a browser confirm() before starting
 
     maxRetries: 8,                  // Empty scrolls before giving up
     maxConsecutiveErrors: 5,        // Errors in a row before aborting
@@ -256,6 +271,7 @@ XActionsUtils.abort()   — stop entirely</code></pre>
 
     trackUnfollowed: true,          // Persist log to localStorage
     exportOnComplete: true,         // Auto-download JSON when done
+    exportDryRun: false,            // Also download the dry-run preview list as JSON
   };
 
   // ══════════════════════════════════════════════════════════
@@ -322,12 +338,33 @@ XActionsUtils.abort()   — stop entirely</code></pre>
       return;
     }
 
+    if (!CONFIG.dryRun &amp;&amp; CONFIG.confirmStart) {
+      const confirmed = window.confirm(
+        '⚠️ WARNING: This will unfollow EVERYONE!\n\n' +
+        'Are you sure you want to continue?\n\n' +
+        'Click OK to start unfollowing.'
+      );
+      if (!confirmed) {
+        console.log('❌ Cancelled by user.');
+        return;
+      }
+    }
+
+    let stopped = false;
+    window.stopUnfollow = () =&gt; {
+      stopped = true;
+      U.abort();
+      console.log('🛑 Stopping after the current unfollow...');
+    };
+    console.log('💡 To stop early: window.stopUnfollow()');
+
     console.log(`\n⚙️  Max: ${CONFIG.maxUnfollows === Infinity ? '∞' : CONFIG.maxUnfollows} | ` +
       `Delay: ${CONFIG.minDelay}-${CONFIG.maxDelay}ms | Whitelist: ${CONFIG.whitelist.length} | ` +
       `Dry: ${CONFIG.dryRun}\n`);
 
     const whiteSet = new Set(CONFIG.whitelist.map(u =&gt; u.toLowerCase()));
     const log = CONFIG.trackUnfollowed ? U.loadState('unfollow_everyone_log', []) : [];
+    const preview = [];
     let unfollowed = 0, skipped = 0, errors = 0, consErr = 0, retries = 0;
     const t0 = Date.now();
 
@@ -340,7 +377,7 @@ XActionsUtils.abort()   — stop entirely</code></pre>
     };
 
     while (unfollowed &lt; CONFIG.maxUnfollows) {
-      if (!(await U.shouldContinue())) break;
+      if (stopped || !(await U.shouldContinue())) { stopped = true; break; }
 
       if (U.isRateLimited()) {
         console.warn(`⏳ Rate-limited — cooling down ${CONFIG.rateLimitPauseMs / 1000}s...`);
@@ -353,7 +390,7 @@ XActionsUtils.abort()   — stop entirely</code></pre>
 
       for (const cell of cells) {
         if (unfollowed &gt;= CONFIG.maxUnfollows) break;
-        if (!(await U.shouldContinue())) break;
+        if (stopped || !(await U.shouldContinue())) { stopped = true; break; }
 
         const user = getUser(cell);
         if (user &amp;&amp; whiteSet.has(user.toLowerCase())) { skipped++; continue; }
@@ -363,6 +400,7 @@ XActionsUtils.abort()   — stop entirely</code></pre>
 
         if (CONFIG.dryRun) {
           console.log(`🔍 [DRY] Would unfollow @${user || '?'}`);
+          preview.push({ username: user || '?', timestamp: new Date().toISOString(), dryRun: true });
           unfollowed++; acted = true; continue;
         }
 
@@ -409,7 +447,7 @@ XActionsUtils.abort()   — stop entirely</code></pre>
         }
       }
 
-      if (consErr &gt;= CONFIG.maxConsecutiveErrors) break;
+      if (consErr &gt;= CONFIG.maxConsecutiveErrors || stopped) break;
 
       if (!acted) {
         retries++;
@@ -431,7 +469,9 @@ XActionsUtils.abort()   — stop entirely</code></pre>
     const rate = unfollowed &gt; 0 ? (unfollowed / ((Date.now() - t0) / 60000)).toFixed(1) : '0';
 
     console.log('\n╔' + '═'.repeat(W) + '╗');
-    console.log('║  ✅ COMPLETE' + ' '.repeat(W - 13) + '║');
+    console.log(stopped
+      ? '║  🛑 STOPPED BY USER' + ' '.repeat(W - 20) + '║'
+      : '║  ✅ COMPLETE' + ' '.repeat(W - 13) + '║');
     console.log('╚' + '═'.repeat(W) + '╝');
     console.log(`  🚫 Unfollowed: ${unfollowed}`);
     console.log(`  ⏭️  Skipped:    ${skipped}`);
@@ -450,6 +490,14 @@ XActionsUtils.abort()   — stop entirely</code></pre>
       );
     }
 
+    if (CONFIG.exportDryRun &amp;&amp; CONFIG.dryRun &amp;&amp; preview.length &gt; 0) {
+      U.download(
+        { unfollowed: preview, stats: { total: unfollowed, skipped }, exportedAt: new Date().toISOString() },
+        `xactions-unfollow-everyone-preview-${new Date().toISOString().slice(0, 10)}.json`
+      );
+    }
+
+    delete window.stopUnfollow;
     console.log('\n  💡 Reload &amp; re-run if any were missed.\n');
   })();
 })();
@@ -467,12 +515,17 @@ XActionsUtils.abort()   — stop entirely</code></pre>
 
     <aside class="sidebar-right">
       <div class="sidebar-card">
-        <h3>👋 Unfollow Tools</h3>
-        <a href="/scripts/follow-ratio-manager">⚖️ Follow Ratio Manager</a>
-<a href="/scripts/smart-unfollow">🧠 Smart Unfollow (Time-Based)</a>
+        <h3>🧹 Clean Up</h3>
+        <a href="/scripts/bulk-delete-tweets">🧹 Bulk Delete Tweets</a>
+<a href="/scripts/clear-all-bookmarks">🧹 Clear All Bookmarks</a>
+<a href="/scripts/clear-all-reposts">🧹 Clear All Reposts</a>
+<a href="/scripts/mass-unblock">🧹 Mass Unblock</a>
+<a href="/scripts/mass-unmute">🧹 Mass Unmute</a>
+<a href="/scripts/protect-active-users">🧹 Protect Active Users</a>
+<a href="/scripts/remove-followers">🧹 Remove Followers</a>
+<a href="/scripts/search-sweep">🧹 Search Sweep</a>
+<a href="/scripts/smart-unfollow">🧹 Smart Unfollow</a>
 <a href="/scripts/unfollowback">🧹 Unfollow Non-Followers</a>
-<a href="/scripts/unfollow-non-followers">🧹 Unfollow Non-Followers</a>
-<a href="/scripts/unfollow-with-log">📋 Unfollow Non-Followers With Log</a>
       </div>
       <div class="sidebar-card">
         <h3>🔗 Quick Links</h3>

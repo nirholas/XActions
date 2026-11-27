@@ -3,23 +3,23 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Advanced Grok AI features — Free X/Twitter Script | XActions</title>
-  <meta name="description" content="Advanced Grok AI features. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
-  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, advanced, grok, other tools">
+  <title>Advanced Grok Tools — Free X/Twitter Script | XActions</title>
+  <meta name="description" content="Advanced Grok features: prompts, image generation, conversation history and exports. Free X/Twitter browser script, no API key needed.">
+  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, advanced, grok, ai">
   <meta name="author" content="nich (@nichxbt)">
   <meta name="robots" content="index, follow">
 
   <meta property="og:type" content="article">
-  <meta property="og:title" content="Advanced Grok AI features — XActions">
-  <meta property="og:description" content="Advanced Grok AI features. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
+  <meta property="og:title" content="Advanced Grok Tools — XActions">
+  <meta property="og:description" content="Advanced Grok features: prompts, image generation, conversation history and exports. Free X/Twitter browser script, no API key needed.">
   <meta property="og:url" content="https://xactions.app/scripts/advanced-grok">
   <meta property="og:site_name" content="XActions">
   <meta property="og:image" content="https://xactions.app/og-run.png">
 
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@nichxbt">
-  <meta name="twitter:title" content="Advanced Grok AI features — XActions">
-  <meta name="twitter:description" content="Advanced Grok AI features. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
+  <meta name="twitter:title" content="Advanced Grok Tools — XActions">
+  <meta name="twitter:description" content="Advanced Grok features: prompts, image generation, conversation history and exports. Free X/Twitter browser script, no API key needed.">
   <meta name="twitter:image" content="https://xactions.app/og-run.png">
 
   <link rel="canonical" href="https://xactions.app/scripts/advanced-grok">
@@ -29,15 +29,15 @@
   {
     "@context": "https://schema.org",
     "@type": "TechArticle",
-    "headline": "Advanced Grok AI features — Free X/Twitter Script | XActions",
-    "description": "Advanced Grok AI features. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.",
+    "headline": "Advanced Grok Tools — Free X/Twitter Script | XActions",
+    "description": "Advanced Grok features: prompts, image generation, conversation history and exports. Free X/Twitter browser script, no API key needed.",
     "url": "https://xactions.app/scripts/advanced-grok",
     "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
     "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
     "datePublished": "2026-03-30",
     "dateModified": "2026-03-30",
-    "articleSection": "Other Tools",
-    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, advanced, grok, other tools"
+    "articleSection": "AI",
+    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, advanced, grok, ai"
   }
   </script>
   <script type="application/ld+json">
@@ -47,8 +47,8 @@
     "itemListElement": [
       { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
       { "@type": "ListItem", "position": 2, "name": "Scripts", "item": "https://xactions.app/scripts" },
-      { "@type": "ListItem", "position": 3, "name": "Other Tools", "item": "https://xactions.app/scripts#other-tools" },
-      { "@type": "ListItem", "position": 4, "name": "Advanced Grok AI features", "item": "https://xactions.app/scripts/advanced-grok" }
+      { "@type": "ListItem", "position": 3, "name": "AI", "item": "https://xactions.app/scripts#ai" },
+      { "@type": "ListItem", "position": 4, "name": "Advanced Grok Tools", "item": "https://xactions.app/scripts/advanced-grok" }
     ]
   }
   </script>
@@ -116,24 +116,24 @@
 
     <main class="main-content" id="main-content">
       <header class="main-header">
-        <h1>⚡ Advanced Grok AI features</h1>
+        <h1>🤖 Advanced Grok Tools</h1>
         <div class="breadcrumb">
-          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#other-tools">Other Tools</a> › Advanced Grok AI features
+          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#ai">AI</a> › Advanced Grok Tools
         </div>
       </header>
 
       <article class="article">
-        <span class="cat-badge">Other Tools</span>
-        <span class="source-badge">browser</span>
+        <span class="cat-badge">AI</span>
+        <span class="source-badge">browser/advancedGrok.js</span>
 
         <div class="meta-row">
           
           
-          <span>748 lines</span>
+          <span>756 lines</span>
           <span>by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></span>
         </div>
 
-        <p>Advanced Grok AI features — a free, open-source browser console script for X/Twitter automation. No API keys or fees required.</p>
+        <p>Advanced Grok features: prompts, image generation, conversation history and exports.</p>
 
         
 
@@ -156,6 +156,14 @@
           <div class="code-block">
             <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.querySelector('code').textContent).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy Script',2000)})">Copy Script</button>
             <pre><code>// Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
+/**
+ * @name        advancedGrok.js
+ * @title       Advanced Grok Tools
+ * @description Advanced Grok features: prompts, image generation, conversation history and exports.
+ * @category    ai
+ * @page        x.com/i/grok
+ * @writes      false
+ */
 // browser/advancedGrok.js
 // Advanced Grok AI features for X/Twitter
 // by nichxbt
@@ -916,17 +924,9 @@
 
     <aside class="sidebar-right">
       <div class="sidebar-card">
-        <h3>⚡ Other Tools</h3>
-        <a href="/scripts/ad-campaign-manager">⚡ Ad campaign management</a>
-<a href="/scripts/advanced-creator">⚡ Advanced creator monetization</a>
-<a href="/scripts/advanced-dm">⚡ Advanced Direct Message features</a>
-<a href="/scripts/advanced-notifications">⚡ Advanced notification management</a>
-<a href="/scripts/advanced-premium">⚡ Advanced Premium features</a>
-<a href="/scripts/advanced-profile">⚡ Advanced profile management</a>
-<a href="/scripts/advanced-settings">⚡ Advanced settings and privacy management</a>
-<a href="/scripts/advanced-spaces">⚡ Advanced Spaces features</a>
-<a href="/scripts/community-manager">⚡ Community management</a>
-<a href="/scripts/community-notes">⚡ Community Notes</a>
+        <h3>🤖 AI</h3>
+        <a href="/scripts/grok-integration">🤖 Grok Integration</a>
+<a href="/scripts/persona-engine">🤖 Persona Engine</a>
       </div>
       <div class="sidebar-card">
         <h3>🔗 Quick Links</h3>

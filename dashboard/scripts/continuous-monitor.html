@@ -4,14 +4,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Continuous Monitor — Free X/Twitter Script | XActions</title>
-  <meta name="description" content="Auto-refresh monitoring for followers/following changes. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
-  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, continuous, monitor, follower monitoring">
+  <meta name="description" content="Re-check a followers or following list on a timer and alert you to every follow and unfollow.">
+  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, continuous, monitor, monitor">
   <meta name="author" content="nich (@nichxbt)">
   <meta name="robots" content="index, follow">
 
   <meta property="og:type" content="article">
   <meta property="og:title" content="Continuous Monitor — XActions">
-  <meta property="og:description" content="Auto-refresh monitoring for followers/following changes. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
+  <meta property="og:description" content="Re-check a followers or following list on a timer and alert you to every follow and unfollow.">
   <meta property="og:url" content="https://xactions.app/scripts/continuous-monitor">
   <meta property="og:site_name" content="XActions">
   <meta property="og:image" content="https://xactions.app/og-run.png">
@@ -19,7 +19,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@nichxbt">
   <meta name="twitter:title" content="Continuous Monitor — XActions">
-  <meta name="twitter:description" content="Auto-refresh monitoring for followers/following changes. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
+  <meta name="twitter:description" content="Re-check a followers or following list on a timer and alert you to every follow and unfollow.">
   <meta name="twitter:image" content="https://xactions.app/og-run.png">
 
   <link rel="canonical" href="https://xactions.app/scripts/continuous-monitor">
@@ -30,14 +30,14 @@
     "@context": "https://schema.org",
     "@type": "TechArticle",
     "headline": "Continuous Monitor — Free X/Twitter Script | XActions",
-    "description": "Auto-refresh monitoring for followers/following changes. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.",
+    "description": "Re-check a followers or following list on a timer and alert you to every follow and unfollow.",
     "url": "https://xactions.app/scripts/continuous-monitor",
     "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
     "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
     "datePublished": "2026-03-30",
     "dateModified": "2026-03-30",
-    "articleSection": "Follower Monitoring",
-    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, continuous, monitor, follower monitoring"
+    "articleSection": "Monitor",
+    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, continuous, monitor, monitor"
   }
   </script>
   <script type="application/ld+json">
@@ -47,7 +47,7 @@
     "itemListElement": [
       { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
       { "@type": "ListItem", "position": 2, "name": "Scripts", "item": "https://xactions.app/scripts" },
-      { "@type": "ListItem", "position": 3, "name": "Follower Monitoring", "item": "https://xactions.app/scripts#follower-monitoring" },
+      { "@type": "ListItem", "position": 3, "name": "Monitor", "item": "https://xactions.app/scripts#monitor" },
       { "@type": "ListItem", "position": 4, "name": "Continuous Monitor", "item": "https://xactions.app/scripts/continuous-monitor" }
     ]
   }
@@ -116,59 +116,39 @@
 
     <main class="main-content" id="main-content">
       <header class="main-header">
-        <h1>🔄 Continuous Monitor</h1>
+        <h1>👀 Continuous Monitor</h1>
         <div class="breadcrumb">
-          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#follower-monitoring">Follower Monitoring</a> › Continuous Monitor
+          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#monitor">Monitor</a> › Continuous Monitor
         </div>
       </header>
 
       <article class="article">
-        <span class="cat-badge">Follower Monitoring</span>
-        <span class="source-badge">browser</span>
+        <span class="cat-badge">Monitor</span>
+        <span class="source-badge">browser/continuousMonitor.js</span>
 
         <div class="meta-row">
-          
-          
-          <span>210 lines</span>
+          <span>v1.1.0</span>
+          <span>Updated: 2026-11-26</span>
+          <span>272 lines</span>
           <span>by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></span>
         </div>
 
-        <p>Auto-refresh monitoring for followers/following changes</p>
+        <p>Re-check a followers or following list on a timer and alert you to every follow and unfollow.</p>
 
         
 
         <h2>How to Use</h2>
-        <ol class="usage-steps"><li>Go to https://x.com/USERNAME/followers (or /following)</li>
-<li>Open Developer Console (Ctrl+Shift+J or Cmd+Option+J)</li>
-<li>Paste this script and press Enter</li>
-<li>Leave the tab open — it will check periodically and alert you!</li></ol>
+        <ol class="usage-steps">
+        <li>Navigate to <a href="https://x.com" rel="noopener">x.com</a> and log in</li>
+        <li>Open DevTools Console (F12 or Cmd+Option+I)</li>
+        
+        <li>Paste the script below and press Enter</li>
+      </ol>
         
 
         
-        <section class="config-section">
-        <h2>Configuration Options</h2>
-        <table>
-          <thead><tr><th>Option</th><th>Default</th><th>Description</th></tr></thead>
-          <tbody>
-            <tr><td><code>CHECK_INTERVAL_MINUTES</code></td><td><code>5</code></td><td>How often to check (default: 5 min)</td></tr>
-<tr><td><code>ENABLE_NOTIFICATIONS</code></td><td><code>true</code></td><td>Browser notifications (you'll be prompted)</td></tr>
-<tr><td><code>ENABLE_SOUND</code></td><td><code>true</code></td><td>Play sound on changes</td></tr>
-<tr><td><code>AUTO_SCROLL</code></td><td><code>true</code></td><td>Auto-scroll to load all users</td></tr>
-          </tbody>
-        </table>
-      </section>
-        <section class="config-code">
-        <h2>Default Configuration</h2>
-        <div class="code-block">
-          <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.querySelector('code').textContent).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy',2000)})">Copy</button>
-          <pre><code>const CONFIG = {
-  CHECK_INTERVAL_MINUTES: 5,     // How often to check (default: 5 min)
-  ENABLE_NOTIFICATIONS: true,    // Browser notifications (you'll be prompted)
-  ENABLE_SOUND: true,           // Play sound on changes
-  AUTO_SCROLL: true,            // Auto-scroll to load all users
-};</code></pre>
-        </div>
-      </section>
+        
+        
 
         <section class="full-code">
           <h2>Full Script</h2>
@@ -176,26 +156,54 @@
           <div class="code-block">
             <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.querySelector('code').textContent).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy Script',2000)})">Copy Script</button>
             <pre><code>// Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
-// ContinuousMonitor.js — Auto-refresh monitoring for followers/following changes
-// https://github.com/nirholas/XActions
-//
-// HOW TO USE:
-// 1. Go to https://x.com/USERNAME/followers (or /following)
-// 2. Open Developer Console (Ctrl+Shift+J or Cmd+Option+J)
-// 3. Paste this script and press Enter
-// 4. Leave the tab open — it will check periodically and alert you!
-//
+/**
+ * @name        continuousMonitor.js
+ * @title       Continuous Monitor
+ * @description Re-check a followers or following list on a timer and alert you to every follow and unfollow.
+ * @category    monitor
+ * @page        x.com/&lt;username&gt;/followers or x.com/&lt;username&gt;/following
+ * @writes      false
+ * @aliases     scripts/continuousMonitor.js, scripts/twitter/continuous-monitor.js
+ * @author      nichxbt (https://x.com/nichxbt)
+ * @version     1.1.0
+ * @date        2026-11-26
+ * @repository  https://github.com/nirholas/XActions
+ *
+ * HOW TO USE:
+ * 1. Go to https://x.com/USERNAME/followers (or /following)
+ * 2. Open Developer Console (Ctrl+Shift+J or Cmd+Option+J)
+ * 3. Paste browser/continuousMonitor.js and press Enter
+ * 4. Leave the tab open: it will check periodically and alert you!
+ *
+ * To stop: stopXActionsMonitor() (or window.stopMonitor()). Pasting the
+ * script again replaces the running monitor instead of stacking a second one.
+ */
+
 // CONFIGURATION (edit these values):
-const CONFIG = {
-  CHECK_INTERVAL_MINUTES: 5,     // How often to check (default: 5 min)
+// `var` (not `const`): DevTools keeps top-level lexical bindings alive across
+// separate console pastes, so a `const` here throws &quot;already been declared&quot;
+// the second time this script is pasted in the same tab.
+var CONFIG = {
+  CHECK_INTERVAL_MINUTES: 30,    // How often to check (each check scrolls the whole list)
   ENABLE_NOTIFICATIONS: true,    // Browser notifications (you'll be prompted)
   ENABLE_SOUND: true,           // Play sound on changes
   AUTO_SCROLL: true,            // Auto-scroll to load all users
+  SCROLL_DELAY: 1500,           // Wait after each scroll while loading users (ms)
+  MAX_SCROLLS: 0,               // Max scrolls per check (0 = until the list stops growing)
+  MAX_RETRIES: 3,               // Stop scrolling after this many scrolls with no new users
 };
 
 (() =&gt; {
   const STORAGE_PREFIX = 'xactions_continuous_';
   const sleep = (ms) =&gt; new Promise(r =&gt; setTimeout(r, ms));
+
+  // Re-pasting the script must not stack a second timer on top of a still-running
+  // one: that would double (then triple, ...) every check and every notification.
+  if (typeof window.stopXActionsMonitor === 'function') {
+    try { window.stopXActionsMonitor(); } catch (e) { /* ignore */ }
+  } else if (typeof window.stopMonitor === 'function') {
+    try { window.stopMonitor(); } catch (e) { /* ignore */ }
+  }
 
   // Parse page info
   const path = window.location.pathname;
@@ -208,19 +216,28 @@ const CONFIG = {
   }
 
   const pageType = isFollowersPage ? 'followers' : 'following';
-  const targetUser = path.split('/')[1].toLowerCase();
+  const rawTargetUser = path.split('/')[1];
+  const targetUser = rawTargetUser.toLowerCase();
   const storageKey = `${STORAGE_PREFIX}${targetUser}_${pageType}`;
+  // Older versions keyed the snapshot by the handle as typed in the URL.
+  const legacyStorageKey = `${STORAGE_PREFIX}${rawTargetUser}_${pageType}`;
 
   // Request notification permission
   if (CONFIG.ENABLE_NOTIFICATIONS &amp;&amp; 'Notification' in window) {
-    Notification.requestPermission();
+    if (Notification.permission === 'default') {
+      console.log('🔔 Requesting notification permission...');
+    }
+    Notification.requestPermission().then(permission =&gt; {
+      if (permission === 'granted') console.log('✅ Notifications enabled');
+      else console.log('⚠️ Notifications denied: changes will only show in the console');
+    }).catch(() =&gt; {});
   }
 
   const notify = (title, body) =&gt; {
     console.log(`🔔 ${title}: ${body}`);
     
-    if (CONFIG.ENABLE_NOTIFICATIONS &amp;&amp; Notification.permission === 'granted') {
-      new Notification(title, { body, icon: '🐦' });
+    if (CONFIG.ENABLE_NOTIFICATIONS &amp;&amp; 'Notification' in window &amp;&amp; Notification.permission === 'granted') {
+      new Notification(title, { body, icon: 'https://abs.twimg.com/favicons/twitter.3.ico' });
     }
     
     if (CONFIG.ENABLE_SOUND) {
@@ -245,9 +262,11 @@ const CONFIG = {
     let retries = 0;
 
     if (CONFIG.AUTO_SCROLL) {
-      while (retries &lt; 3) {
+      let scrolls = 0;
+      while (retries &lt; CONFIG.MAX_RETRIES &amp;&amp; (!CONFIG.MAX_SCROLLS || scrolls &lt; CONFIG.MAX_SCROLLS)) {
+        scrolls++;
         window.scrollTo(0, document.body.scrollHeight);
-        await sleep(1500);
+        await sleep(CONFIG.SCROLL_DELAY);
 
         document.querySelectorAll('[data-testid=&quot;UserCell&quot;]').forEach(cell =&gt; {
           const link = cell.querySelector('a[href^=&quot;/&quot;]');
@@ -280,8 +299,12 @@ const CONFIG = {
 
   const loadPrevious = () =&gt; {
     try {
-      const data = localStorage.getItem(storageKey);
-      return data ? JSON.parse(data) : null;
+      const data = localStorage.getItem(storageKey) || localStorage.getItem(legacyStorageKey);
+      const parsed = data ? JSON.parse(data) : null;
+      if (!parsed || !Array.isArray(parsed.users)) return null;
+      // Snapshots from older versions kept the handle's original case.
+      parsed.users = parsed.users.map(u =&gt; String(u).toLowerCase());
+      return parsed;
     } catch (e) {
       return null;
     }
@@ -308,6 +331,9 @@ const CONFIG = {
     };
   };
 
+  // First few handles of a change, for the notification body.
+  const names = (list) =&gt; list.slice(0, 3).map(u =&gt; '@' + u).join(', ') + (list.length &gt; 3 ? ', ...' : '');
+
   let checkCount = 0;
 
   const runCheck = async () =&gt; {
@@ -330,26 +356,28 @@ const CONFIG = {
         
         if (pageType === 'followers') {
           if (removed.length &gt; 0) {
-            notify('👋 Lost Followers', `${removed.length} accounts unfollowed @${targetUser}`);
+            notify('👋 Lost Followers', `${removed.length} accounts unfollowed @${targetUser}: ${names(removed)}`);
             console.log(`🚨 UNFOLLOWED BY: ${removed.map(u =&gt; '@' + u).join(', ')}`);
           }
           if (added.length &gt; 0) {
-            notify('🎉 New Followers', `${added.length} new followers for @${targetUser}`);
+            notify('🎉 New Followers', `${added.length} new followers for @${targetUser}: ${names(added)}`);
             console.log(`✨ NEW FOLLOWERS: ${added.map(u =&gt; '@' + u).join(', ')}`);
           }
         } else {
           if (removed.length &gt; 0) {
-            notify('👋 Unfollowed', `@${targetUser} unfollowed ${removed.length} accounts`);
+            notify('👋 Unfollowed', `@${targetUser} unfollowed ${removed.length} accounts: ${names(removed)}`);
             console.log(`📤 UNFOLLOWED: ${removed.map(u =&gt; '@' + u).join(', ')}`);
           }
           if (added.length &gt; 0) {
-            notify('➕ New Follow', `@${targetUser} followed ${added.length} accounts`);
+            notify('➕ New Follow', `@${targetUser} followed ${added.length} accounts: ${names(added)}`);
             console.log(`📥 FOLLOWED: ${added.map(u =&gt; '@' + u).join(', ')}`);
           }
         }
       } else {
         console.log('   No changes detected.');
       }
+    } else {
+      console.log('   📸 First snapshot saved');
     }
 
     saveData(currentUsers);
@@ -370,17 +398,31 @@ const CONFIG = {
 ╚═══════════════════════════════════════════════════════════╝
   `);
 
-  runCheck();
+  // A scrape can take longer than a short check interval; never let two
+  // checks scroll the page at the same time.
+  let checkRunning = false;
+  const performCheck = async () =&gt; {
+    if (checkRunning) return;
+    checkRunning = true;
+    try {
+      await runCheck();
+    } finally {
+      checkRunning = false;
+    }
+  };
+
+  performCheck();
 
   // Set up interval
   const intervalMs = CONFIG.CHECK_INTERVAL_MINUTES * 60 * 1000;
-  const intervalId = setInterval(runCheck, intervalMs);
+  const intervalId = setInterval(performCheck, intervalMs);
 
-  // Provide stop function
+  // Provide stop function (stopMonitor is the name older versions used)
   window.stopXActionsMonitor = () =&gt; {
     clearInterval(intervalId);
     console.log('\n🛑 Monitoring stopped.');
   };
+  window.stopMonitor = window.stopXActionsMonitor;
 
   console.log('💡 Tip: Run stopXActionsMonitor() to stop monitoring.\n');
 })();
@@ -398,17 +440,13 @@ const CONFIG = {
 
     <aside class="sidebar-right">
       <div class="sidebar-card">
-        <h3>🔄 Follower Monitoring</h3>
-        <a href="/scripts/follower-tools">👥 Advanced follower tools</a>
-<a href="/scripts/audit-followers">📊 Audit Followers</a>
-<a href="/scripts/detect-unfollowers">🔍 Detect Unfollowers</a>
-<a href="/scripts/find-fake-followers">🤖 Find Fake Followers</a>
-<a href="/scripts/follower-growth-tracker">📈 Follower Growth Tracker</a>
-<a href="/scripts/followers-growth-tracker">📈 Followers Growth Tracker</a>
-<a href="/scripts/monitor-account">📊 Monitor Account</a>
-<a href="/scripts/new-followers-alert">🔔 New Followers Alert</a>
-<a href="/scripts/remove-followers">🚫 Remove Followers</a>
-<a href="/scripts/welcome-new-followers">👋 Welcome New Followers</a>
+        <h3>👀 Monitor</h3>
+        <a href="/scripts/detect-unfollowers">👀 Detect Unfollowers</a>
+<a href="/scripts/keyword-monitor">👀 Keyword Monitor</a>
+<a href="/scripts/monitor-account">👀 Monitor Account</a>
+<a href="/scripts/new-followers-alert">👀 New Followers Alert</a>
+<a href="/scripts/notification-manager">👀 Notification Manager</a>
+<a href="/scripts/trending-topic-monitor">👀 Trending Topic Monitor</a>
       </div>
       <div class="sidebar-card">
         <h3>🔗 Quick Links</h3>

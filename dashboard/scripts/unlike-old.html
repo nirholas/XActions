@@ -3,23 +3,23 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Unlike Old Tweets — Free X/Twitter Script | XActions</title>
-  <meta name="description" content="Unlikes tweets older than a specified number of days from your likes page. Free X/Twitter browser script, no API key needed.">
-  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, unlike, old, content tools">
+  <title>Unlike Old Likes — Free X/Twitter Script | XActions</title>
+  <meta name="description" content="Remove likes older than a number of days you set. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
+  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, unlike, old, clean up">
   <meta name="author" content="nich (@nichxbt)">
   <meta name="robots" content="index, follow">
 
   <meta property="og:type" content="article">
-  <meta property="og:title" content="Unlike Old Tweets — XActions">
-  <meta property="og:description" content="Unlikes tweets older than a specified number of days from your likes page. Free X/Twitter browser script, no API key needed.">
+  <meta property="og:title" content="Unlike Old Likes — XActions">
+  <meta property="og:description" content="Remove likes older than a number of days you set. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
   <meta property="og:url" content="https://xactions.app/scripts/unlike-old">
   <meta property="og:site_name" content="XActions">
   <meta property="og:image" content="https://xactions.app/og-run.png">
 
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@nichxbt">
-  <meta name="twitter:title" content="Unlike Old Tweets — XActions">
-  <meta name="twitter:description" content="Unlikes tweets older than a specified number of days from your likes page. Free X/Twitter browser script, no API key needed.">
+  <meta name="twitter:title" content="Unlike Old Likes — XActions">
+  <meta name="twitter:description" content="Remove likes older than a number of days you set. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
   <meta name="twitter:image" content="https://xactions.app/og-run.png">
 
   <link rel="canonical" href="https://xactions.app/scripts/unlike-old">
@@ -29,15 +29,15 @@
   {
     "@context": "https://schema.org",
     "@type": "TechArticle",
-    "headline": "Unlike Old Tweets — Free X/Twitter Script | XActions",
-    "description": "Unlikes tweets older than a specified number of days from your likes page. Free X/Twitter browser script, no API key needed.",
+    "headline": "Unlike Old Likes — Free X/Twitter Script | XActions",
+    "description": "Remove likes older than a number of days you set. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.",
     "url": "https://xactions.app/scripts/unlike-old",
     "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
     "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
     "datePublished": "2026-03-30",
     "dateModified": "2026-03-30",
-    "articleSection": "Content Tools",
-    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, unlike, old, content tools"
+    "articleSection": "Clean Up",
+    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, unlike, old, clean up"
   }
   </script>
   <script type="application/ld+json">
@@ -47,8 +47,8 @@
     "itemListElement": [
       { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
       { "@type": "ListItem", "position": 2, "name": "Scripts", "item": "https://xactions.app/scripts" },
-      { "@type": "ListItem", "position": 3, "name": "Content Tools", "item": "https://xactions.app/scripts#content-tools" },
-      { "@type": "ListItem", "position": 4, "name": "Unlike Old Tweets", "item": "https://xactions.app/scripts/unlike-old" }
+      { "@type": "ListItem", "position": 3, "name": "Clean Up", "item": "https://xactions.app/scripts#clean-up" },
+      { "@type": "ListItem", "position": 4, "name": "Unlike Old Likes", "item": "https://xactions.app/scripts/unlike-old" }
     ]
   }
   </script>
@@ -116,24 +116,24 @@
 
     <main class="main-content" id="main-content">
       <header class="main-header">
-        <h1>💔 Unlike Old Tweets</h1>
+        <h1>🧹 Unlike Old Likes</h1>
         <div class="breadcrumb">
-          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#content-tools">Content Tools</a> › Unlike Old Tweets
+          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#clean-up">Clean Up</a> › Unlike Old Likes
         </div>
       </header>
 
       <article class="article">
-        <span class="cat-badge">Content Tools</span>
-        <span class="source-badge">scripts/twitter</span>
+        <span class="cat-badge">Clean Up</span>
+        <span class="source-badge">browser/unlikeOld.js</span>
 
         <div class="meta-row">
           <span>v1.0.0</span>
           <span>Updated: 2026-01-26</span>
-          <span>268 lines</span>
+          <span>273 lines</span>
           <span>by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></span>
         </div>
 
-        <p>Unlikes tweets older than a specified number of days from your likes page</p>
+        <p>Remove likes older than a number of days you set.</p>
 
         
 
@@ -189,8 +189,13 @@
  * 📅 Unlike Old Tweets - XActions
  * ============================================================================
  * 
- * @name        unlike-old.js
- * @description Unlikes tweets older than a specified number of days from your likes page
+ * @name        unlikeOld.js
+ * @description Remove likes older than a number of days you set.
+ * @title       Unlike Old Likes
+ * @category    cleanup
+ * @page        x.com/&lt;you&gt;/likes
+ * @writes      true
+ * @aliases     scripts/twitter/unlike-old.js
  * @author      nichxbt
  * @version     1.0.0
  * @date        2026-01-26
@@ -464,17 +469,17 @@
 
     <aside class="sidebar-right">
       <div class="sidebar-card">
-        <h3>💔 Content Tools</h3>
-        <a href="/scripts/bookmark-exporter">📚 Bookmark Exporter</a>
-<a href="/scripts/bookmark-manager">📚 Bookmark Manager</a>
-<a href="/scripts/bookmark-organizer">📂 Bookmark Organizer</a>
-<a href="/scripts/bulk-delete-tweets">🗑️ Bulk Delete Tweets</a>
-<a href="/scripts/clear-all-bookmarks">🗑️ Clear All Bookmarks</a>
-<a href="/scripts/clear-all-likes">🗑️ Clear All Likes</a>
-<a href="/scripts/clear-all-reposts">🗑️ Clear All Reposts</a>
-<a href="/scripts/clear-all-retweets">🗑️ Clear All Retweets</a>
-<a href="/scripts/content-repurposer">♻️ Content Repurposer</a>
-<a href="/scripts/delete-tweets">🗑️ Delete Tweets</a>
+        <h3>🧹 Clean Up</h3>
+        <a href="/scripts/bulk-delete-tweets">🧹 Bulk Delete Tweets</a>
+<a href="/scripts/clear-all-bookmarks">🧹 Clear All Bookmarks</a>
+<a href="/scripts/clear-all-reposts">🧹 Clear All Reposts</a>
+<a href="/scripts/mass-unblock">🧹 Mass Unblock</a>
+<a href="/scripts/mass-unmute">🧹 Mass Unmute</a>
+<a href="/scripts/protect-active-users">🧹 Protect Active Users</a>
+<a href="/scripts/remove-followers">🧹 Remove Followers</a>
+<a href="/scripts/search-sweep">🧹 Search Sweep</a>
+<a href="/scripts/smart-unfollow">🧹 Smart Unfollow</a>
+<a href="/scripts/unfollow-everyone">🧹 Unfollow Everyone</a>
       </div>
       <div class="sidebar-card">
         <h3>🔗 Quick Links</h3>

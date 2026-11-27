@@ -3,23 +3,23 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Tweet Sentiment Analyzer — Free X/Twitter Script | XActions</title>
-  <meta name="description" content="Analyze the sentiment of your recent tweets, mentions, or any visible timeline. Categorizes posts as positive/negative/neutral using a battle-tested…">
+  <title>Sentiment Analyzer — Free X/Twitter Script | XActions</title>
+  <meta name="description" content="Score the sentiment of posts on any timeline, search or profile with a weighted lexicon, and report the distribution, extremes, emotional words and toxicity.">
   <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, sentiment, analyzer, analytics">
   <meta name="author" content="nich (@nichxbt)">
   <meta name="robots" content="index, follow">
 
   <meta property="og:type" content="article">
-  <meta property="og:title" content="Tweet Sentiment Analyzer — XActions">
-  <meta property="og:description" content="Analyze the sentiment of your recent tweets, mentions, or any visible timeline. Categorizes posts as positive/negative/neutral using a battle-tested…">
+  <meta property="og:title" content="Sentiment Analyzer — XActions">
+  <meta property="og:description" content="Score the sentiment of posts on any timeline, search or profile with a weighted lexicon, and report the distribution, extremes, emotional words and toxicity.">
   <meta property="og:url" content="https://xactions.app/scripts/sentiment-analyzer">
   <meta property="og:site_name" content="XActions">
   <meta property="og:image" content="https://xactions.app/og-run.png">
 
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@nichxbt">
-  <meta name="twitter:title" content="Tweet Sentiment Analyzer — XActions">
-  <meta name="twitter:description" content="Analyze the sentiment of your recent tweets, mentions, or any visible timeline. Categorizes posts as positive/negative/neutral using a battle-tested…">
+  <meta name="twitter:title" content="Sentiment Analyzer — XActions">
+  <meta name="twitter:description" content="Score the sentiment of posts on any timeline, search or profile with a weighted lexicon, and report the distribution, extremes, emotional words and toxicity.">
   <meta name="twitter:image" content="https://xactions.app/og-run.png">
 
   <link rel="canonical" href="https://xactions.app/scripts/sentiment-analyzer">
@@ -29,8 +29,8 @@
   {
     "@context": "https://schema.org",
     "@type": "TechArticle",
-    "headline": "Tweet Sentiment Analyzer — Free X/Twitter Script | XActions",
-    "description": "Analyze the sentiment of your recent tweets, mentions, or any visible timeline. Categorizes posts as positive/negative/neutral using a battle-tested…",
+    "headline": "Sentiment Analyzer — Free X/Twitter Script | XActions",
+    "description": "Score the sentiment of posts on any timeline, search or profile with a weighted lexicon, and report the distribution, extremes, emotional words and toxicity.",
     "url": "https://xactions.app/scripts/sentiment-analyzer",
     "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
     "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
@@ -48,7 +48,7 @@
       { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
       { "@type": "ListItem", "position": 2, "name": "Scripts", "item": "https://xactions.app/scripts" },
       { "@type": "ListItem", "position": 3, "name": "Analytics", "item": "https://xactions.app/scripts#analytics" },
-      { "@type": "ListItem", "position": 4, "name": "Tweet Sentiment Analyzer", "item": "https://xactions.app/scripts/sentiment-analyzer" }
+      { "@type": "ListItem", "position": 4, "name": "Sentiment Analyzer", "item": "https://xactions.app/scripts/sentiment-analyzer" }
     ]
   }
   </script>
@@ -116,31 +116,31 @@
 
     <main class="main-content" id="main-content">
       <header class="main-header">
-        <h1>🧠 Tweet Sentiment Analyzer</h1>
+        <h1>📊 Sentiment Analyzer</h1>
         <div class="breadcrumb">
-          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#analytics">Analytics</a> › Tweet Sentiment Analyzer
+          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#analytics">Analytics</a> › Sentiment Analyzer
         </div>
       </header>
 
       <article class="article">
         <span class="cat-badge">Analytics</span>
-        <span class="source-badge">browser</span>
+        <span class="source-badge">browser/sentimentAnalyzer.js</span>
 
         <div class="meta-row">
-          <span>v1.0.0</span>
-          <span>Updated: 2026-02-24</span>
-          <span>266 lines</span>
+          <span>v1.1.0</span>
+          <span>Updated: 2026-11-27</span>
+          <span>307 lines</span>
           <span>by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></span>
         </div>
 
-        <p>Analyze the sentiment of your recent tweets, mentions, or any visible timeline. Categorizes posts as positive/negative/neutral using a battle-tested lexicon-based approach. Shows trends, toxicity flags, and emotional distribution.</p>
+        <p>Score the sentiment of posts on any timeline, search or profile with a weighted lexicon, and report the distribution, extremes, emotional words and toxicity.</p>
 
         
 
         <h2>How to Use</h2>
         <ol class="usage-steps"><li>Go to any timeline, profile, or search results on x.com</li>
 <li>Open DevTools Console (F12)</li>
-<li>Paste and run</li>
+<li>Paste browser/sentimentAnalyzer.js and run</li>
 <li>Auto-scrolls and analyzes visible tweets</li></ol>
         
 
@@ -152,6 +152,8 @@
           <tbody>
             <tr><td><code>maxTweets</code></td><td><code>100</code></td><td>Max tweets to analyze</td></tr>
 <tr><td><code>scrollRounds</code></td><td><code>5</code></td><td>Number of scroll rounds to collect</td></tr>
+<tr><td><code>noNewThreshold</code></td><td><code>5</code></td><td>Stop scrolling after this many rounds in a row that add no posts</td></tr>
+<tr><td><code>examples</code></td><td><code>3</code></td><td>How many most-positive / most-negative posts to show</td></tr>
           </tbody>
         </table>
       </section>
@@ -163,6 +165,8 @@
     maxTweets: 100,                   // Max tweets to analyze
     scrollRounds: 5,                  // Number of scroll rounds to collect
     scrollDelay: 2000,
+    noNewThreshold: 5,                // Stop scrolling after this many rounds in a row that add no posts
+    examples: 3,                      // How many most-positive / most-negative posts to show
     exportResults: true,
   };</code></pre>
         </div>
@@ -180,14 +184,15 @@
  * ============================================================
  *
  * @name        sentimentAnalyzer.js
- * @description Analyze the sentiment of your recent tweets,
- *              mentions, or any visible timeline. Categorizes
- *              posts as positive/negative/neutral using a
- *              battle-tested lexicon-based approach. Shows trends,
- *              toxicity flags, and emotional distribution.
+ * @title       Sentiment Analyzer
+ * @description Score the sentiment of posts on any timeline, search or profile with a weighted lexicon, and report the distribution, extremes, emotional words and toxicity.
+ * @category    analytics
+ * @page        x.com/* or x.com/search?q=&lt;query&gt;
+ * @writes      false
+ * @aliases     scripts/sentimentAnalyzer.js, scripts/twitter/sentiment-analyzer.js
  * @author      nichxbt (https://x.com/nichxbt)
- * @version     1.0.0
- * @date        2026-02-24
+ * @version     1.1.0
+ * @date        2026-11-27
  * @repository  https://github.com/nirholas/XActions
  *
  * ============================================================
@@ -195,8 +200,12 @@
  *
  * 1. Go to any timeline, profile, or search results on x.com
  * 2. Open DevTools Console (F12)
- * 3. Paste and run
+ * 3. Paste browser/sentimentAnalyzer.js and run
  * 4. Auto-scrolls and analyzes visible tweets
+ *
+ * Scoring is a word lexicon, so sarcasm and slang are not detected.
+ * To stop the scroll early: window.stopSentimentAnalyzer()
+ * The full report object is left in window.xactionsSentiment.
  * ============================================================
  */
 (() =&gt; {
@@ -206,6 +215,8 @@
     maxTweets: 100,                   // Max tweets to analyze
     scrollRounds: 5,                  // Number of scroll rounds to collect
     scrollDelay: 2000,
+    noNewThreshold: 5,                // Stop scrolling after this many rounds in a row that add no posts
+    examples: 3,                      // How many most-positive / most-negative posts to show
     exportResults: true,
   };
 
@@ -225,6 +236,7 @@
     'interesting': 1, 'cool': 1, 'agree': 1, 'support': 1, 'hope': 1, 'enjoy': 1,
     'fun': 1, 'smart': 1, 'useful': 1, 'solid': 1, 'strong': 1, 'clean': 1, 'better': 1,
     'congrats': 1, 'well': 1, 'glad': 1, 'fair': 1, 'kind': 1, 'sweet': 1, 'gain': 1,
+    'bullish': 2,
   };
 
   const NEGATIVE = {
@@ -241,6 +253,7 @@
     'sad': 1, 'boring': 1, 'wrong': 1, 'slow': 1, 'confusing': 1, 'worried': 1,
     'difficult': 1, 'problem': 1, 'issue': 1, 'miss': 1, 'lost': 1, 'hard': 1,
     'doubt': 1, 'concern': 1, 'risk': 1, 'fear': 1, 'weak': 1, 'lack': 1, 'worse': 1,
+    'bearish': 2,
   };
 
   const NEGATORS = new Set(['not', &quot;n't&quot;, 'no', 'never', 'neither', 'nobody', 'nothing', 'hardly', 'barely', 'rarely']);
@@ -315,7 +328,7 @@
       seen.add(text);
 
       const authorLink = article.querySelector('a[href^=&quot;/&quot;][role=&quot;link&quot;]');
-      const author = authorLink ? (authorLink.getAttribute('href') || '').replace('/', '') : 'unknown';
+      const author = authorLink ? (authorLink.getAttribute('href') || '').replace('/', '').split('/')[0] : 'unknown';
 
       tweets.push({ text, author });
     }
@@ -330,20 +343,48 @@
     console.log('║  by nichxbt — v1.0' + ' '.repeat(W - 21) + '║');
     console.log('╚' + '═'.repeat(W) + '╝');
 
-    console.log(`\n📊 Collecting up to ${CONFIG.maxTweets} tweets (${CONFIG.scrollRounds} scroll rounds)...\n`);
+    if (!/(^|\.)x\.com$/.test(location.hostname) &amp;&amp; !/(^|\.)twitter\.com$/.test(location.hostname)) {
+      console.warn('⚠️ Not on x.com. Open a timeline, search, or profile and run again.');
+      return;
+    }
+
+    console.log(`\n📊 Collecting up to ${CONFIG.maxTweets} tweets (${CONFIG.scrollRounds} scroll rounds)...`);
+    console.log('⚠️ Lexicon-based scoring. It cannot detect sarcasm, slang, or context.');
+    console.log('💡 To stop early: window.stopSentimentAnalyzer()\n');
+
+    let stopped = false;
+    window.stopSentimentAnalyzer = () =&gt; {
+      stopped = true;
+      console.warn('⚠️ Stop requested. Finishing the current pass, then reporting.');
+    };
 
     const allTweets = new Map();
-
-    for (let round = 0; round &lt; CONFIG.scrollRounds &amp;&amp; allTweets.size &lt; CONFIG.maxTweets; round++) {
-      const found = collectTweets();
-      for (const t of found) {
+    const addFound = () =&gt; {
+      for (const t of collectTweets()) {
         if (allTweets.size &gt;= CONFIG.maxTweets) break;
         if (!allTweets.has(t.text)) allTweets.set(t.text, t);
       }
+    };
+    let stalls = 0;
+
+    for (let round = 0; round &lt; CONFIG.scrollRounds &amp;&amp; allTweets.size &lt; CONFIG.maxTweets &amp;&amp; !stopped; round++) {
+      const before = allTweets.size;
+      addFound();
       console.log(`   📜 Round ${round + 1}: ${allTweets.size} tweets collected`);
+      if (allTweets.size === before) {
+        stalls++;
+        if (stalls &gt;= CONFIG.noNewThreshold) {
+          console.warn('⚠️ No new posts after several scrolls. Reached the end of what loaded.');
+          break;
+        }
+      } else {
+        stalls = 0;
+      }
       window.scrollTo(0, document.body.scrollHeight);
       await new Promise(r =&gt; setTimeout(r, CONFIG.scrollDelay));
     }
+    // Pick up the posts the last scroll loaded
+    addFound();
 
     if (allTweets.size === 0) {
       console.error('❌ No tweets found on this page!');
@@ -388,12 +429,12 @@
     // Top positive tweets
     const sorted = [...results].sort((a, b) =&gt; b.score - a.score);
     console.log('\n  🏆 Most Positive Tweets:');
-    for (const t of sorted.slice(0, 3)) {
+    for (const t of sorted.slice(0, CONFIG.examples)) {
       console.log(`    [${t.score.toFixed(2)}] @${t.author}: &quot;${t.text.slice(0, 100)}...&quot;`);
     }
 
     console.log('\n  💀 Most Negative Tweets:');
-    for (const t of sorted.slice(-3).reverse()) {
+    for (const t of sorted.slice(-CONFIG.examples).reverse()) {
       console.log(`    [${t.score.toFixed(2)}] @${t.author}: &quot;${t.text.slice(0, 100)}...&quot;`);
     }
 
@@ -421,19 +462,23 @@
 
     console.log('\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n');
 
+    const data = {
+      summary: { total, positive, negative, neutral, avgScore: parseFloat(avgScore), toxicCount },
+      topWords,
+      tweets: results,
+      analyzedAt: new Date().toISOString(),
+      page: window.location.href,
+    };
+    window.xactionsSentiment = data;
+
     if (CONFIG.exportResults) {
-      const data = {
-        summary: { total, positive, negative, neutral, avgScore: parseFloat(avgScore), toxicCount },
-        tweets: results,
-        analyzedAt: new Date().toISOString(),
-        page: window.location.href,
-      };
       const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
       const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
       a.download = `xactions-sentiment-${new Date().toISOString().slice(0, 10)}.json`;
       document.body.appendChild(a); a.click(); a.remove();
       console.log('📥 Full results exported as JSON.');
     }
+    console.log('💡 Full report object: window.xactionsSentiment');
   };
 
   run();
@@ -452,17 +497,17 @@
 
     <aside class="sidebar-right">
       <div class="sidebar-card">
-        <h3>🧠 Analytics</h3>
-        <a href="/scripts/account-health-monitor">🏥 Account Health Monitor</a>
-<a href="/scripts/audience-demographics">📊 Audience Demographics Analyzer</a>
-<a href="/scripts/audience-overlap">🔗 Audience Overlap Analyzer</a>
-<a href="/scripts/best-time-to-post">⏰ Best Time to Post</a>
-<a href="/scripts/competitor-analysis">🔍 Competitor Analysis</a>
-<a href="/scripts/engagement-analytics">📈 Engagement Analytics</a>
-<a href="/scripts/hashtag-analytics">#️⃣ Hashtag Analytics</a>
-<a href="/scripts/keyword-monitor">🔑 Keyword Monitor &amp; Alerts</a>
-<a href="/scripts/manage-notifications">🔔 Manage Notifications</a>
-<a href="/scripts/notification-manager">🔔 Notification Manager</a>
+        <h3>📊 Analytics</h3>
+        <a href="/scripts/account-health-monitor">📊 Account Health Monitor</a>
+<a href="/scripts/audience-demographics">📊 Audience Demographics</a>
+<a href="/scripts/audience-overlap">📊 Audience Overlap</a>
+<a href="/scripts/audit-followers">📊 Audit Followers</a>
+<a href="/scripts/best-time-to-post">📊 Best Time to Post</a>
+<a href="/scripts/business-analytics">📊 Business Analytics</a>
+<a href="/scripts/business-tools">📊 Business Tools</a>
+<a href="/scripts/competitor-analysis">📊 Competitor Analysis</a>
+<a href="/scripts/content-calendar">📊 Content Calendar</a>
+<a href="/scripts/creator-studio">📊 Creator Studio</a>
       </div>
       <div class="sidebar-card">
         <h3>🔗 Quick Links</h3>

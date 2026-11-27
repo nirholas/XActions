@@ -4,14 +4,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Article Publisher — Free X/Twitter Script | XActions</title>
-  <meta name="description" content="Browser console script for publishing long-form articles on X (Premium+ required). Free X/Twitter browser script, no API key needed.">
-  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, article, publisher, posting">
+  <meta name="description" content="Fill in a long-form X Article and save it as a draft, publish it, or leave it filled for you to review (Premium+).">
+  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, article, publisher, post">
   <meta name="author" content="nich (@nichxbt)">
   <meta name="robots" content="index, follow">
 
   <meta property="og:type" content="article">
   <meta property="og:title" content="Article Publisher — XActions">
-  <meta property="og:description" content="Browser console script for publishing long-form articles on X (Premium+ required). Free X/Twitter browser script, no API key needed.">
+  <meta property="og:description" content="Fill in a long-form X Article and save it as a draft, publish it, or leave it filled for you to review (Premium+).">
   <meta property="og:url" content="https://xactions.app/scripts/article-publisher">
   <meta property="og:site_name" content="XActions">
   <meta property="og:image" content="https://xactions.app/og-run.png">
@@ -19,7 +19,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@nichxbt">
   <meta name="twitter:title" content="Article Publisher — XActions">
-  <meta name="twitter:description" content="Browser console script for publishing long-form articles on X (Premium+ required). Free X/Twitter browser script, no API key needed.">
+  <meta name="twitter:description" content="Fill in a long-form X Article and save it as a draft, publish it, or leave it filled for you to review (Premium+).">
   <meta name="twitter:image" content="https://xactions.app/og-run.png">
 
   <link rel="canonical" href="https://xactions.app/scripts/article-publisher">
@@ -30,14 +30,14 @@
     "@context": "https://schema.org",
     "@type": "TechArticle",
     "headline": "Article Publisher — Free X/Twitter Script | XActions",
-    "description": "Browser console script for publishing long-form articles on X (Premium+ required). Free X/Twitter browser script, no API key needed.",
+    "description": "Fill in a long-form X Article and save it as a draft, publish it, or leave it filled for you to review (Premium+).",
     "url": "https://xactions.app/scripts/article-publisher",
     "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
     "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
     "datePublished": "2026-03-30",
     "dateModified": "2026-03-30",
-    "articleSection": "Posting",
-    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, article, publisher, posting"
+    "articleSection": "Post",
+    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, article, publisher, post"
   }
   </script>
   <script type="application/ld+json">
@@ -47,7 +47,7 @@
     "itemListElement": [
       { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
       { "@type": "ListItem", "position": 2, "name": "Scripts", "item": "https://xactions.app/scripts" },
-      { "@type": "ListItem", "position": 3, "name": "Posting", "item": "https://xactions.app/scripts#posting" },
+      { "@type": "ListItem", "position": 3, "name": "Post", "item": "https://xactions.app/scripts#post" },
       { "@type": "ListItem", "position": 4, "name": "Article Publisher", "item": "https://xactions.app/scripts/article-publisher" }
     ]
   }
@@ -116,24 +116,24 @@
 
     <main class="main-content" id="main-content">
       <header class="main-header">
-        <h1>📰 Article Publisher</h1>
+        <h1>✍️ Article Publisher</h1>
         <div class="breadcrumb">
-          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#posting">Posting</a> › Article Publisher
+          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#post">Post</a> › Article Publisher
         </div>
       </header>
 
       <article class="article">
-        <span class="cat-badge">Posting</span>
-        <span class="source-badge">scripts</span>
+        <span class="cat-badge">Post</span>
+        <span class="source-badge">browser/articlePublisher.js</span>
 
         <div class="meta-row">
-          
-          
-          <span>145 lines</span>
+          <span>v1.1.0</span>
+          <span>Updated: 2026-11-26</span>
+          <span>198 lines</span>
           <span>by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></span>
         </div>
 
-        <p>Browser console script for publishing long-form articles on X (Premium+ required)</p>
+        <p>Fill in a long-form X Article and save it as a draft, publish it, or leave it filled for you to review (Premium+).</p>
 
         
 
@@ -152,8 +152,10 @@
         <table>
           <thead><tr><th>Option</th><th>Default</th><th>Description</th></tr></thead>
           <tbody>
-            <tr><td><code>action</code></td><td><code>'draft'</code></td><td>'draft' | 'publish'</td></tr>
+            <tr><td><code>action</code></td><td><code>'draft'</code></td><td>'draft' | 'publish' | 'fill'</td></tr>
 <tr><td><code>dryRun</code></td><td><code>true</code></td><td>SET FALSE TO EXECUTE</td></tr>
+<tr><td><code>typeCharByChar</code></td><td><code>false</code></td><td>true: type one character at a time, newlines as line breaks (slower, keeps paragraphs)</td></tr>
+<tr><td><code>charDelay</code></td><td><code>5</code></td><td>ms between characters when typeCharByChar is true</td></tr>
           </tbody>
         </table>
       </section>
@@ -164,8 +166,10 @@
           <pre><code>const CONFIG = {
     title: 'My Article',
     body: 'Article content goes here. Replace this with your full article text.',
-    action: 'draft',          // 'draft' | 'publish'
+    action: 'draft',          // 'draft' | 'publish' | 'fill'
     dryRun: true,             // SET FALSE TO EXECUTE
+    typeCharByChar: false,    // true: type one character at a time, newlines as line breaks (slower, keeps paragraphs)
+    charDelay: 5,             // ms between characters when typeCharByChar is true
   };</code></pre>
         </div>
       </section>
@@ -176,10 +180,26 @@
           <div class="code-block">
             <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.querySelector('code').textContent).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy Script',2000)})">Copy Script</button>
             <pre><code>// Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
-// scripts/articlePublisher.js
-// Browser console script for publishing long-form articles on X (Premium+ required)
-// Paste in DevTools console on x.com/compose/article
-// by nichxbt
+/**
+ * @name        articlePublisher.js
+ * @title       Article Publisher
+ * @description Fill in a long-form X Article and save it as a draft, publish it, or leave it filled for you to review (Premium+).
+ * @category    post
+ * @page        x.com/compose/article
+ * @writes      true
+ * @aliases     scripts/articlePublisher.js, scripts/publishArticle.js
+ * @author      nichxbt (https://x.com/nichxbt)
+ * @version     1.1.0
+ * @date        2026-11-26
+ *
+ * Browser console script for publishing long-form articles on X (Premium+ required).
+ * Paste browser/articlePublisher.js in the DevTools console on x.com/compose/article.
+ *
+ * CONFIG.action:
+ *   'draft'   fill the article and click Save Draft
+ *   'publish' fill the article and click Publish (falls back to Save Draft)
+ *   'fill'    fill the title and body only, then stop so you can review and click Publish yourself
+ */
 
 (() =&gt; {
   const sleep = (ms) =&gt; new Promise(r =&gt; setTimeout(r, ms));
@@ -190,20 +210,47 @@
   const CONFIG = {
     title: 'My Article',
     body: 'Article content goes here. Replace this with your full article text.',
-    action: 'draft',          // 'draft' | 'publish'
+    action: 'draft',          // 'draft' | 'publish' | 'fill'
     dryRun: true,             // SET FALSE TO EXECUTE
+    typeCharByChar: false,    // true: type one character at a time, newlines as line breaks (slower, keeps paragraphs)
+    charDelay: 5,             // ms between characters when typeCharByChar is true
   };
   // =============================================
 
   const SELECTORS = {
-    title: '[data-testid=&quot;articleTitle&quot;], h1[contenteditable]',
-    body: '[data-testid=&quot;articleBody&quot;], [data-testid=&quot;richTextEditor&quot;]',
-    publish: '[data-testid=&quot;articlePublish&quot;]',
-    saveDraft: '[data-testid=&quot;articleSaveDraft&quot;]',
+    title: '[data-testid=&quot;articleTitle&quot;], [contenteditable][aria-label*=&quot;title&quot; i], h1[contenteditable]',
+    body: '[data-testid=&quot;articleBody&quot;], [data-testid=&quot;richTextEditor&quot;], [contenteditable][role=&quot;textbox&quot;]',
+    publish: '[data-testid=&quot;articlePublish&quot;], button[data-testid*=&quot;publish&quot; i]',
+    saveDraft: '[data-testid=&quot;articleSaveDraft&quot;], button[data-testid*=&quot;draft&quot; i]',
+  };
+
+  const typeCharByChar = async (el, text) =&gt; {
+    if (el.contentEditable === 'true') {
+      for (const char of text) {
+        if (char === '\n') {
+          document.execCommand('insertLineBreak', false);
+        } else {
+          document.execCommand('insertText', false, char);
+        }
+        await sleep(CONFIG.charDelay);
+      }
+    } else {
+      for (const char of text) {
+        el.dispatchEvent(new InputEvent('beforeinput', { data: char, inputType: 'insertText', bubbles: true }));
+        document.execCommand('insertText', false, char);
+        await sleep(CONFIG.charDelay);
+      }
+    }
   };
 
   const typeInto = async (el, text) =&gt; {
     el.focus();
+    if (CONFIG.typeCharByChar) {
+      await sleep(200);
+      await typeCharByChar(el, text);
+      await sleep(300);
+      return;
+    }
     // Use execCommand for contenteditable elements
     if (el.contentEditable === 'true') {
       document.execCommand('selectAll', false, null);
@@ -232,8 +279,9 @@
     console.log(`  Dry run: ${CONFIG.dryRun}`);
     console.log('');
 
-    // Check we're on the right page
-    if (!window.location.href.includes('/compose/article')) {
+    // Check we're on the right page (the article editor, or an existing article's edit page)
+    const href = window.location.href;
+    if (!href.includes('/compose/article') &amp;&amp; !href.includes('/articles')) {
       console.log('⚠️ Navigate to x.com/compose/article first (Premium+ required).');
       console.log('🔗 Redirecting...');
       window.location.href = 'https://x.com/compose/article';
@@ -250,8 +298,9 @@
       return;
     }
 
-    // Find body editor
-    const bodyEl = document.querySelector(SELECTORS.body);
+    // Find body editor (never the title field, which can also be a contenteditable textbox)
+    const bodyEl = [...document.querySelectorAll(SELECTORS.body)]
+      .find(el =&gt; el !== titleEl &amp;&amp; !titleEl.contains(el) &amp;&amp; !el.contains(titleEl));
     if (!bodyEl) {
       console.error('❌ Body editor not found.');
       console.log('   Tried selectors:', SELECTORS.body);
@@ -260,11 +309,13 @@
 
     console.log('✅ Found title and body fields.');
 
+    const actionLabel = CONFIG.action === 'publish' ? 'PUBLISH' : CONFIG.action === 'fill' ? 'FILL ONLY (no click)' : 'SAVE DRAFT';
+
     if (CONFIG.dryRun) {
       console.log('\n🔒 DRY RUN — no changes made.');
       console.log('   Would fill title:', CONFIG.title);
       console.log('   Would fill body:', CONFIG.body.slice(0, 100) + (CONFIG.body.length &gt; 100 ? '...' : ''));
-      console.log(`   Would ${CONFIG.action === 'publish' ? 'PUBLISH' : 'SAVE DRAFT'}`);
+      console.log(`   Would ${actionLabel}`);
       console.log('\n💡 Set CONFIG.dryRun = false to execute.');
       return;
     }
@@ -274,6 +325,8 @@
     await typeInto(titleEl, CONFIG.title);
     console.log('✅ Title entered.');
 
+    await sleep(1000);
+
     // Fill body
     console.log('📝 Filling body...');
     await typeInto(bodyEl, CONFIG.body);
@@ -282,7 +335,11 @@
     await sleep(1000);
 
     // Perform action
-    if (CONFIG.action === 'publish') {
+    if (CONFIG.action === 'fill') {
+      console.log('\n📄 Article ready to publish!');
+      console.log('   Review it, then click the publish button or run:');
+      console.log('   document.querySelector(&quot;[data-testid=articlePublish]&quot;)?.click()');
+    } else if (CONFIG.action === 'publish') {
       const publishBtn = document.querySelector(SELECTORS.publish);
       if (!publishBtn) {
         console.error('❌ Publish button not found. Saving as draft instead.');
@@ -313,7 +370,7 @@
     console.log('\n📊 Summary:');
     console.log(`  Title:  ${CONFIG.title}`);
     console.log(`  Length: ${CONFIG.body.length} characters`);
-    console.log(`  Action: ${CONFIG.action === 'publish' ? 'Published' : 'Saved as draft'}`);
+    console.log(`  Action: ${CONFIG.action === 'publish' ? 'Published' : CONFIG.action === 'fill' ? 'Filled, not submitted' : 'Saved as draft'}`);
     console.log(`  Time:   ${new Date().toLocaleString()}`);
   };
 
@@ -333,17 +390,17 @@
 
     <aside class="sidebar-right">
       <div class="sidebar-card">
-        <h3>📰 Posting</h3>
-        <a href="/scripts/post-advanced">✏️ Advanced post features</a>
-<a href="/scripts/poll-creator">📊 Browser console script to create polls</a>
-<a href="/scripts/content-calendar">📅 Content Calendar &amp; Tweet Scheduler</a>
-<a href="/scripts/create-poll">📊 Create Poll</a>
-<a href="/scripts/edit-post">✏️ Edit Post &amp; Undo Post</a>
-<a href="/scripts/pin-tweet">📌 Pin Tweet</a>
-<a href="/scripts/pin-tweet-manager">📌 Pin Tweet Manager</a>
-<a href="/scripts/post-composer">✏️ Post Composer</a>
-<a href="/scripts/post-thread">🧵 Post Thread</a>
-<a href="/scripts/post-tweet">✍️ Post Tweet</a>
+        <h3>✍️ Post</h3>
+        <a href="/scripts/post-advanced">✍️ Advanced Posting</a>
+<a href="/scripts/content-repurposer">✍️ Content Repurposer</a>
+<a href="/scripts/create-poll">✍️ Create Poll</a>
+<a href="/scripts/edit-post">✍️ Edit Post</a>
+<a href="/scripts/media-studio">✍️ Media Studio</a>
+<a href="/scripts/mention-users">✍️ Mention Users</a>
+<a href="/scripts/post-composer">✍️ Post Composer</a>
+<a href="/scripts/post-thread">✍️ Post Thread</a>
+<a href="/scripts/quote-tweet">✍️ Quote Post</a>
+<a href="/scripts/schedule-posts">✍️ Schedule Posts</a>
       </div>
       <div class="sidebar-card">
         <h3>🔗 Quick Links</h3>

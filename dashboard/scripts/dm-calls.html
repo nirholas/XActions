@@ -3,23 +3,23 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>DM Audio &amp; Video Calls — Free X/Twitter Script | XActions</title>
-  <meta name="description" content="Navigate to a DM conversation and initiate audio or video calls on X/Twitter. Free X/Twitter browser script, no API key needed.">
-  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, calls, messaging">
+  <title>DM Calls — Free X/Twitter Script | XActions</title>
+  <meta name="description" content="Open a DM conversation and start an audio or video call. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
+  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, calls, messages">
   <meta name="author" content="nich (@nichxbt)">
   <meta name="robots" content="index, follow">
 
   <meta property="og:type" content="article">
-  <meta property="og:title" content="DM Audio &amp; Video Calls — XActions">
-  <meta property="og:description" content="Navigate to a DM conversation and initiate audio or video calls on X/Twitter. Free X/Twitter browser script, no API key needed.">
+  <meta property="og:title" content="DM Calls — XActions">
+  <meta property="og:description" content="Open a DM conversation and start an audio or video call. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
   <meta property="og:url" content="https://xactions.app/scripts/dm-calls">
   <meta property="og:site_name" content="XActions">
   <meta property="og:image" content="https://xactions.app/og-run.png">
 
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@nichxbt">
-  <meta name="twitter:title" content="DM Audio &amp; Video Calls — XActions">
-  <meta name="twitter:description" content="Navigate to a DM conversation and initiate audio or video calls on X/Twitter. Free X/Twitter browser script, no API key needed.">
+  <meta name="twitter:title" content="DM Calls — XActions">
+  <meta name="twitter:description" content="Open a DM conversation and start an audio or video call. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
   <meta name="twitter:image" content="https://xactions.app/og-run.png">
 
   <link rel="canonical" href="https://xactions.app/scripts/dm-calls">
@@ -29,15 +29,15 @@
   {
     "@context": "https://schema.org",
     "@type": "TechArticle",
-    "headline": "DM Audio & Video Calls — Free X/Twitter Script | XActions",
-    "description": "Navigate to a DM conversation and initiate audio or video calls on X/Twitter. Free X/Twitter browser script, no API key needed.",
+    "headline": "DM Calls — Free X/Twitter Script | XActions",
+    "description": "Open a DM conversation and start an audio or video call. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.",
     "url": "https://xactions.app/scripts/dm-calls",
     "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
     "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
     "datePublished": "2026-03-30",
     "dateModified": "2026-03-30",
-    "articleSection": "Messaging",
-    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, calls, messaging"
+    "articleSection": "Messages",
+    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, calls, messages"
   }
   </script>
   <script type="application/ld+json">
@@ -47,8 +47,8 @@
     "itemListElement": [
       { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
       { "@type": "ListItem", "position": 2, "name": "Scripts", "item": "https://xactions.app/scripts" },
-      { "@type": "ListItem", "position": 3, "name": "Messaging", "item": "https://xactions.app/scripts#messaging" },
-      { "@type": "ListItem", "position": 4, "name": "DM Audio & Video Calls", "item": "https://xactions.app/scripts/dm-calls" }
+      { "@type": "ListItem", "position": 3, "name": "Messages", "item": "https://xactions.app/scripts#messages" },
+      { "@type": "ListItem", "position": 4, "name": "DM Calls", "item": "https://xactions.app/scripts/dm-calls" }
     ]
   }
   </script>
@@ -116,24 +116,24 @@
 
     <main class="main-content" id="main-content">
       <header class="main-header">
-        <h1>📞 DM Audio &amp; Video Calls</h1>
+        <h1>✉️ DM Calls</h1>
         <div class="breadcrumb">
-          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#messaging">Messaging</a> › DM Audio &amp; Video Calls
+          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#messages">Messages</a> › DM Calls
         </div>
       </header>
 
       <article class="article">
-        <span class="cat-badge">Messaging</span>
-        <span class="source-badge">browser</span>
+        <span class="cat-badge">Messages</span>
+        <span class="source-badge">browser/dmCalls.js</span>
 
         <div class="meta-row">
           <span>v1.0.0</span>
           <span>Updated: 2026-03-30</span>
-          <span>210 lines</span>
+          <span>214 lines</span>
           <span>by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></span>
         </div>
 
-        <p>Navigate to a DM conversation and initiate audio or video calls on X/Twitter.</p>
+        <p>Open a DM conversation and start an audio or video call.</p>
 
         <div class="warning-box"><p>⚠️ Both parties must have DM calls enabled.</p></div>
 
@@ -195,7 +195,11 @@
  * ============================================================
  *
  * @name        dmCalls.js
- * @description Navigate to a DM conversation and initiate
+ * @description Open a DM conversation and start an audio or video call.
+ * @title       DM Calls
+ * @category    messages
+ * @page        x.com/messages
+ * @writes      true
  *              audio or video calls on X/Twitter.
  * @author      nichxbt (https://x.com/nichxbt)
  * @version     1.0.0
@@ -411,14 +415,16 @@
 
     <aside class="sidebar-right">
       <div class="sidebar-card">
-        <h3>📞 Messaging</h3>
-        <a href="/scripts/auto-reply-dms">💌 Auto Reply DMs</a>
-<a href="/scripts/dm-exporter">📤 Browser console script to export X/Twitter DM conversations</a>
-<a href="/scripts/bulk-dm">📤 Bulk DM</a>
+        <h3>✉️ Messages</h3>
+        <a href="/scripts/advanced-dm">✉️ Advanced DM Tools</a>
+<a href="/scripts/auto-reply-dms">✉️ Auto-Reply DMs</a>
+<a href="/scripts/bulk-dm">✉️ Bulk DM</a>
 <a href="/scripts/dm-manager">✉️ DM Manager</a>
-<a href="/scripts/encrypted-dm">🔒 Encrypted Direct Messages</a>
-<a href="/scripts/group-dm">👥 Group Direct Messages</a>
-<a href="/scripts/send-direct-message">📬 Send Direct Messages</a>
+<a href="/scripts/encrypted-dm">✉️ Encrypted DMs</a>
+<a href="/scripts/group-dm">✉️ Group DM</a>
+<a href="/scripts/scrape-dms">✉️ Scrape DMs</a>
+<a href="/scripts/send-direct-message">✉️ Send Direct Messages</a>
+<a href="/scripts/welcome-new-followers">✉️ Welcome New Followers</a>
       </div>
       <div class="sidebar-card">
         <h3>🔗 Quick Links</h3>

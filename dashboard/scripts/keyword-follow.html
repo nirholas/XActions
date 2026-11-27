@@ -3,23 +3,23 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Keyword Search &amp; Follow — Free X/Twitter Script | XActions</title>
-  <meta name="description" content="Keyword Search &amp; Follow. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
-  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, keyword, follow, growth">
+  <title>Keyword Follow — Free X/Twitter Script | XActions</title>
+  <meta name="description" content="Search People results for each keyword and follow the users that pass bio, follower count and account filters, with a cap.">
+  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, keyword, follow, grow">
   <meta name="author" content="nich (@nichxbt)">
   <meta name="robots" content="index, follow">
 
   <meta property="og:type" content="article">
-  <meta property="og:title" content="Keyword Search &amp; Follow — XActions">
-  <meta property="og:description" content="Keyword Search &amp; Follow. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
+  <meta property="og:title" content="Keyword Follow — XActions">
+  <meta property="og:description" content="Search People results for each keyword and follow the users that pass bio, follower count and account filters, with a cap.">
   <meta property="og:url" content="https://xactions.app/scripts/keyword-follow">
   <meta property="og:site_name" content="XActions">
   <meta property="og:image" content="https://xactions.app/og-run.png">
 
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@nichxbt">
-  <meta name="twitter:title" content="Keyword Search &amp; Follow — XActions">
-  <meta name="twitter:description" content="Keyword Search &amp; Follow. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
+  <meta name="twitter:title" content="Keyword Follow — XActions">
+  <meta name="twitter:description" content="Search People results for each keyword and follow the users that pass bio, follower count and account filters, with a cap.">
   <meta name="twitter:image" content="https://xactions.app/og-run.png">
 
   <link rel="canonical" href="https://xactions.app/scripts/keyword-follow">
@@ -29,15 +29,15 @@
   {
     "@context": "https://schema.org",
     "@type": "TechArticle",
-    "headline": "Keyword Search & Follow — Free X/Twitter Script | XActions",
-    "description": "Keyword Search & Follow. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.",
+    "headline": "Keyword Follow — Free X/Twitter Script | XActions",
+    "description": "Search People results for each keyword and follow the users that pass bio, follower count and account filters, with a cap.",
     "url": "https://xactions.app/scripts/keyword-follow",
     "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
     "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
     "datePublished": "2026-03-30",
     "dateModified": "2026-03-30",
-    "articleSection": "Growth",
-    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, keyword, follow, growth"
+    "articleSection": "Grow",
+    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, keyword, follow, grow"
   }
   </script>
   <script type="application/ld+json">
@@ -47,8 +47,8 @@
     "itemListElement": [
       { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
       { "@type": "ListItem", "position": 2, "name": "Scripts", "item": "https://xactions.app/scripts" },
-      { "@type": "ListItem", "position": 3, "name": "Growth", "item": "https://xactions.app/scripts#growth" },
-      { "@type": "ListItem", "position": 4, "name": "Keyword Search & Follow", "item": "https://xactions.app/scripts/keyword-follow" }
+      { "@type": "ListItem", "position": 3, "name": "Grow", "item": "https://xactions.app/scripts#grow" },
+      { "@type": "ListItem", "position": 4, "name": "Keyword Follow", "item": "https://xactions.app/scripts/keyword-follow" }
     ]
   }
   </script>
@@ -116,32 +116,33 @@
 
     <main class="main-content" id="main-content">
       <header class="main-header">
-        <h1>🔑 Keyword Search &amp; Follow</h1>
+        <h1>🌱 Keyword Follow</h1>
         <div class="breadcrumb">
-          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#growth">Growth</a> › Keyword Search &amp; Follow
+          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#grow">Grow</a> › Keyword Follow
         </div>
       </header>
 
       <article class="article">
-        <span class="cat-badge">Growth</span>
-        <span class="source-badge">src/automation</span>
+        <span class="cat-badge">Grow</span>
+        <span class="source-badge">browser/keywordFollow.js</span>
 
         <div class="meta-row">
-          
-          
-          <span>222 lines</span>
+          <span>v1.1.0</span>
+          <span>Updated: 2026-11-27</span>
+          <span>440 lines</span>
           <span>by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></span>
         </div>
 
-        <p>Keyword Search &amp; Follow — a free, open-source browser console script for X/Twitter automation. No API keys or fees required.</p>
+        <p>Search People results for each keyword and follow the users that pass bio, follower count and account filters, with a cap.</p>
 
         
 
         <h2>How to Use</h2>
-        <ol class="usage-steps"><li>Go to X search page: x.com/search</li>
-<li>Paste core.js, then paste this script</li>
-<li>Configure keywords below and run!</li></ol>
-        <p><strong>Note:</strong> This script requires pasting <code>src/automation/core.js</code> first for shared utilities.</p>
+        <ol class="usage-steps"><li>Either open a People search yourself, e.g.</li>
+<li>Configure keywords and filters below</li>
+<li>Paste browser/keywordFollow.js into the DevTools console and press Enter</li>
+<li>Run stopKeywordFollow() to stop</li></ol>
+        
 
         
         <section class="config-section">
@@ -154,6 +155,9 @@
 <tr><td><code>MUST_HAVE_BIO</code></td><td><code>true</code></td><td>Skip users without bio</td></tr>
 <tr><td><code>BIO_KEYWORDS</code></td><td><code>[]</code></td><td>Bio must contain one of these (empty = any)</td></tr>
 <tr><td><code>SKIP_IF_FOLLOWING</code></td><td><code>true</code></td><td>Skip users you already follow</td></tr>
+<tr><td><code>SKIP_PROTECTED</code></td><td><code>true</code></td><td>Skip protected (private) accounts</td></tr>
+<tr><td><code>SKIP_VERIFIED</code></td><td><code>false</code></td><td>Skip verified accounts</td></tr>
+<tr><td><code>SKIP_FOLLOWS_YOU</code></td><td><code>false</code></td><td>Skip accounts that already follow you</td></tr>
           </tbody>
         </table>
       </section>
@@ -161,21 +165,29 @@
         <h2>Default Configuration</h2>
         <div class="code-block">
           <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.querySelector('code').textContent).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy',2000)})">Copy</button>
-          <pre><code>const OPTIONS = {
+          <pre><code>const CONFIG = {
     // Search terms (will search each one)
     KEYWORDS: ['web3 developer', 'solidity engineer', 'crypto founder'],
-    
+
     // Follow settings
     MAX_FOLLOWS_PER_KEYWORD: 10,
-    MAX_FOLLOWS_TOTAL: 30,
-    
+    MAX_FOLLOWS_TOTAL: 20,
+
     // Filters
     MIN_FOLLOWERS: 100,           // Skip users with fewer followers
     MAX_FOLLOWERS: 100000,        // Skip mega accounts
     MUST_HAVE_BIO: true,          // Skip users without bio
     BIO_KEYWORDS: [],             // Bio must contain one of these (empty = any)
+    BIO_BLACKLIST: ['bot', 'automated', 'promo', 'giveaway'], // Skip if bio contains any of these
     SKIP_IF_FOLLOWING: true,      // Skip users you already follow
-    
+    SKIP_PROTECTED: true,         // Skip protected (private) accounts
+    SKIP_VERIFIED: false,         // Skip verified accounts
+    SKIP_FOLLOWS_YOU: false,      // Skip accounts that already follow you
+
+    // Tracking: who you followed, when, and from which keyword
+    // (xactions_follow_tracking, read by smart-unfollow)
+    TRACK_FOLLOWS: true,
+
     // Timing
     DELAY_BETWEEN_FOLLOWS: 3000,
     DELAY_BETWEEN_SEARCHES: 10000,
@@ -189,42 +201,190 @@
           <div class="code-block">
             <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.querySelector('code').textContent).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy Script',2000)})">Copy Script</button>
             <pre><code>// Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
-// XActions Automation - Keyword Search &amp; Follow
-// https://github.com/nirholas/XActions
-//
-// REQUIRES: Paste core.js first!
-//
-// HOW TO USE:
-// 1. Go to X search page: x.com/search
-// 2. Paste core.js, then paste this script
-// 3. Configure keywords below and run!
+/**
+ * ============================================================
+ * 🔑 Keyword Search &amp; Follow
+ * ============================================================
+ *
+ * @name        keywordFollow.js
+ * @title       Keyword Follow
+ * @description Search People results for each keyword and follow the users that pass bio, follower count and account filters, with a cap.
+ * @category    grow
+ * @page        x.com/search?q=&lt;query&gt;&amp;f=user or x.com/*
+ * @writes      true
+ * @aliases     src/automation/keywordFollow.js, scripts/twitter/keyword-follow.js
+ * @author      nichxbt (https://x.com/nichxbt)
+ * @version     1.1.0
+ * @date        2026-11-27
+ * @repository  https://github.com/nirholas/XActions
+ *
+ * ============================================================
+ * 📋 USAGE:
+ *
+ * 1. Either open a People search yourself, e.g.
+ *    https://x.com/search?q=web3%20developer&amp;f=user
+ *    (the script works through that query), or stay on any x.com page
+ *    and the script searches every entry of CONFIG.KEYWORDS in turn
+ * 2. Configure keywords and filters below
+ * 3. Paste browser/keywordFollow.js into the DevTools console and press Enter
+ *    (src/automation/core.js is optional: when it is pasted first its
+ *    logger, storage, rate limiter and selectors are used)
+ * 4. Run stopKeywordFollow() to stop
+ *
+ * 💡 TIP: Use the &amp;f=user parameter to show People results.
+ * Follows are tracked so smartUnfollow can remove non-followers later.
+ * ============================================================
+ */
 
 (() =&gt; {
-  if (!window.XActions?.Core) {
-    console.error('❌ Core module not loaded! Paste core.js first.');
-    return;
-  }
+  // ============================================
+  // CORE (optional): use core.js when present, built-ins otherwise
+  // ============================================
+  const Core = window.XActions?.Core;
 
-  const { log, sleep, randomDelay, scrollBy, clickElement, waitForElement, storage, rateLimit, SELECTORS, extractUserFromCell, parseCount } = window.XActions.Core;
+  const sleep = Core?.sleep || ((ms) =&gt; new Promise(resolve =&gt; setTimeout(resolve, ms)));
+  const randomDelay = Core?.randomDelay || ((min, max) =&gt; sleep(Math.floor(Math.random() * (max - min + 1)) + min));
+  const log = Core?.log || ((message, type = 'info') =&gt; {
+    const prefix = { info: '📘', success: '✅', warning: '⚠️', error: '❌', action: '🔧' }[type] || '📘';
+    console.log(`${prefix} [${new Date().toLocaleTimeString()}] ${message}`);
+  });
+  const scrollBy = Core?.scrollBy || ((pixels) =&gt; window.scrollBy({ top: pixels, behavior: 'smooth' }));
+  const clickElement = Core?.clickElement || (async (element) =&gt; {
+    if (!element) return false;
+    try {
+      element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      await sleep(300);
+      element.click();
+      return true;
+    } catch (e) {
+      log(`Click error: ${e.message}`, 'error');
+      return false;
+    }
+  });
+  const waitForElement = Core?.waitForElement || (async (selector, timeout = 10000) =&gt; {
+    const startTime = Date.now();
+    while (Date.now() - startTime &lt; timeout) {
+      const element = document.querySelector(selector);
+      if (element) return element;
+      await sleep(100);
+    }
+    return null;
+  });
+  // Same key layout as core.js storage (xactions_ prefix, JSON values)
+  const storage = Core?.storage || {
+    get: (key) =&gt; {
+      try {
+        const data = localStorage.getItem('xactions_' + key);
+        return data ? JSON.parse(data) : null;
+      } catch {
+        return null;
+      }
+    },
+    set: (key, value) =&gt; {
+      try {
+        localStorage.setItem('xactions_' + key, JSON.stringify(value));
+        return true;
+      } catch {
+        return false;
+      }
+    },
+  };
+  // Same keys and windows as core.js rateLimit
+  const rateLimit = Core?.rateLimit || {
+    check: (action, limit, period = 'hour') =&gt; {
+      const data = storage.get(`ratelimit_${action}_${period}`) || { count: 0, timestamp: Date.now() };
+      const periodMs = period === 'hour' ? 3600000 : 86400000;
+      if (Date.now() - data.timestamp &gt; periodMs) {
+        data.count = 0;
+        data.timestamp = Date.now();
+      }
+      return data.count &lt; limit;
+    },
+    increment: (action, period = 'hour') =&gt; {
+      const key = `ratelimit_${action}_${period}`;
+      const data = storage.get(key) || { count: 0, timestamp: Date.now() };
+      data.count++;
+      storage.set(key, data);
+    },
+  };
+  const SELECTORS = Core?.SELECTORS || {
+    followButton: '[data-testid$=&quot;-follow&quot;]',
+    unfollowButton: '[data-testid$=&quot;-unfollow&quot;]',
+    userCell: '[data-testid=&quot;UserCell&quot;]',
+    userFollowIndicator: '[data-testid=&quot;userFollowIndicator&quot;]',
+    userDescription: '[data-testid=&quot;UserDescription&quot;]',
+  };
+  const parseCount = Core?.parseCount || ((str) =&gt; {
+    if (!str) return 0;
+    const clean = str.replace(/,/g, '');
+    const num = parseFloat(clean);
+    if (clean.toUpperCase().includes('K')) return num * 1000;
+    if (clean.toUpperCase().includes('M')) return num * 1000000;
+    if (clean.toUpperCase().includes('B')) return num * 1000000000;
+    return num;
+  });
+  const extractUserFromCell = Core?.extractUserFromCell || ((cell) =&gt; {
+    if (!cell) return null;
+    try {
+      const href = cell.querySelector('a[href^=&quot;/&quot;]')?.getAttribute('href') || '';
+      const username = (href.match(/^\/([^/]+)$/) || [, href.replace(/^\//, '').split('/')[0] || ''])[1].toLowerCase();
+      const displayName = [...cell.querySelectorAll('[data-testid=&quot;User-Name&quot;] span')]
+        .map((el) =&gt; el.textContent.trim())
+        .find((t) =&gt; t &amp;&amp; !t.startsWith('@')) || username;
+      let bioStrategy = 'none';
+      let bio = cell.querySelector(SELECTORS.userDescription)?.textContent.trim() || '';
+      if (bio) {
+        bioStrategy = 'testid';
+      } else {
+        bio = [...cell.querySelectorAll('[dir=&quot;auto&quot;]:not([data-testid])')]
+          .map((el) =&gt; el.textContent.trim())
+          .find((t) =&gt; t &amp;&amp; !t.startsWith('@') &amp;&amp; t.length &gt;= 10 &amp;&amp; t !== displayName) || '';
+        if (bio) bioStrategy = 'dir-auto';
+      }
+      const followerMatch = (cell.textContent || '').match(/(\d[\d,]*\.?\d*[KMB]?)\s*Follower/i);
+      return {
+        username,
+        displayName,
+        bio,
+        followers: followerMatch ? parseCount(followerMatch[1]) : 0,
+        isFollowing: !!cell.querySelector(SELECTORS.unfollowButton),
+        followsYou: !!cell.querySelector(SELECTORS.userFollowIndicator),
+        isVerified: !!cell.querySelector('[data-testid=&quot;icon-verified&quot;]') || !!cell.querySelector('svg[aria-label*=&quot;Verified&quot;]'),
+        isProtected: !!cell.querySelector('[data-testid=&quot;icon-lock&quot;]'),
+        _meta: { bioStrategy },
+      };
+    } catch (e) {
+      log(`extractUserFromCell error: ${e.message}`, 'error');
+      return null;
+    }
+  });
 
   // ============================================
   // CONFIGURATION
   // ============================================
-  const OPTIONS = {
+  const CONFIG = {
     // Search terms (will search each one)
     KEYWORDS: ['web3 developer', 'solidity engineer', 'crypto founder'],
-    
+
     // Follow settings
     MAX_FOLLOWS_PER_KEYWORD: 10,
-    MAX_FOLLOWS_TOTAL: 30,
-    
+    MAX_FOLLOWS_TOTAL: 20,
+
     // Filters
     MIN_FOLLOWERS: 100,           // Skip users with fewer followers
     MAX_FOLLOWERS: 100000,        // Skip mega accounts
     MUST_HAVE_BIO: true,          // Skip users without bio
     BIO_KEYWORDS: [],             // Bio must contain one of these (empty = any)
+    BIO_BLACKLIST: ['bot', 'automated', 'promo', 'giveaway'], // Skip if bio contains any of these
     SKIP_IF_FOLLOWING: true,      // Skip users you already follow
-    
+    SKIP_PROTECTED: true,         // Skip protected (private) accounts
+    SKIP_VERIFIED: false,         // Skip verified accounts
+    SKIP_FOLLOWS_YOU: false,      // Skip accounts that already follow you
+
+    // Tracking: who you followed, when, and from which keyword
+    // (xactions_follow_tracking, read by smart-unfollow)
+    TRACK_FOLLOWS: true,
+
     // Timing
     DELAY_BETWEEN_FOLLOWS: 3000,
     DELAY_BETWEEN_SEARCHES: 10000,
@@ -236,28 +396,72 @@
   let followCount = 0;
   const followedUsers = new Map(Object.entries(storage.get('followed_users') || {}));
 
+  // Keys written by the scripts/twitter variant of this tool
+  const KEYWORD_FOLLOWED_KEY = 'xactions_keyword_followed';
+  const TRACKING_KEY = 'xactions_follow_tracking';
+  const readJson = (key, fallback) =&gt; {
+    try {
+      const saved = localStorage.getItem(key);
+      return saved ? JSON.parse(saved) : fallback;
+    } catch {
+      return fallback;
+    }
+  };
+  const keywordFollowed = new Set(readJson(KEYWORD_FOLLOWED_KEY, []));
+  const keywordFollowedLower = new Set(Array.from(keywordFollowed, u =&gt; String(u).toLowerCase()));
+  const trackingData = readJson(TRACKING_KEY, {});
+
   // ============================================
   // SAVE FOLLOW DATA
   // ============================================
-  const saveFollowedUser = (username) =&gt; {
+  const saveFollowedUser = (username, keyword) =&gt; {
     followedUsers.set(username.toLowerCase(), {
       followedAt: Date.now(),
       followedBack: false,
       checkedAt: null,
     });
     storage.set('followed_users', Object.fromEntries(followedUsers));
+
+    keywordFollowed.add(username);
+    keywordFollowedLower.add(username.toLowerCase());
+    try {
+      localStorage.setItem(KEYWORD_FOLLOWED_KEY, JSON.stringify([...keywordFollowed]));
+      if (CONFIG.TRACK_FOLLOWS) {
+        trackingData[username] = {
+          followedAt: new Date().toISOString(),
+          keyword,
+        };
+        localStorage.setItem(TRACKING_KEY, JSON.stringify(trackingData));
+      }
+    } catch {
+      // storage full or blocked: followed_users above still has it
+    }
   };
 
   // ============================================
   // NAVIGATION
   // ============================================
+  // Navigate within the SPA. Assigning window.location.href triggers a full
+  // page load, which destroys this console script before it can continue.
+  const spaNavigate = (url) =&gt; {
+    try {
+      const target = new URL(url, window.location.href);
+      if (target.origin === window.location.origin) {
+        window.history.pushState({}, '', target.href);
+        window.dispatchEvent(new PopStateEvent('popstate', { state: {} }));
+        return;
+      }
+    } catch { /* fall through to a full page load below */ }
+    window.location.href = url;
+  };
+
   const searchFor = async (keyword) =&gt; {
     log(`Searching for: &quot;${keyword}&quot;`, 'action');
-    
+
     // Navigate to search
     const searchUrl = `https://x.com/search?q=${encodeURIComponent(keyword)}&amp;src=typed_query&amp;f=user`;
-    window.location.href = searchUrl;
-    
+    spaNavigate(searchUrl);
+
     // Wait for page load
     await sleep(3000);
     await waitForElement(SELECTORS.userCell, 10000);
@@ -276,50 +480,66 @@
   // ============================================
   const passesFilters = (userInfo) =&gt; {
     if (!userInfo || !userInfo.username) return false;
-    
+
     // Already following
-    if (OPTIONS.SKIP_IF_FOLLOWING &amp;&amp; userInfo.isFollowing) {
+    if (CONFIG.SKIP_IF_FOLLOWING &amp;&amp; userInfo.isFollowing) {
       return false;
     }
-    
+
     // Already in our tracked list
     if (followedUsers.has(userInfo.username.toLowerCase())) {
       return false;
     }
-    
-    // Bio requirement
-    if (OPTIONS.MUST_HAVE_BIO &amp;&amp; !userInfo.bio) {
+    if (keywordFollowedLower.has(userInfo.username.toLowerCase())) {
       return false;
     }
-    
+
+    // Account flags
+    if (CONFIG.SKIP_PROTECTED &amp;&amp; userInfo.isProtected) return false;
+    if (CONFIG.SKIP_VERIFIED &amp;&amp; userInfo.isVerified) return false;
+    if (CONFIG.SKIP_FOLLOWS_YOU &amp;&amp; userInfo.followsYou) return false;
+
+    // Bio requirement
+    if (CONFIG.MUST_HAVE_BIO &amp;&amp; !userInfo.bio) {
+      return false;
+    }
+
     // Bio keywords
-    if (OPTIONS.BIO_KEYWORDS.length &gt; 0) {
+    if (CONFIG.BIO_KEYWORDS.length &gt; 0) {
       const bioLower = userInfo.bio.toLowerCase();
-      if (!OPTIONS.BIO_KEYWORDS.some(kw =&gt; bioLower.includes(kw.toLowerCase()))) {
+      if (!CONFIG.BIO_KEYWORDS.some(kw =&gt; bioLower.includes(kw.toLowerCase()))) {
         return false;
       }
     }
-    
+
+    // Bio blacklist
+    if (CONFIG.BIO_BLACKLIST.length &gt; 0) {
+      const bioLower = (userInfo.bio || '').toLowerCase();
+      if (CONFIG.BIO_BLACKLIST.some(kw =&gt; bioLower.includes(kw.toLowerCase()))) {
+        return false;
+      }
+    }
+
     // Follower count (if available)
     if (userInfo.followers &gt; 0) {
-      if (userInfo.followers &lt; OPTIONS.MIN_FOLLOWERS) return false;
-      if (userInfo.followers &gt; OPTIONS.MAX_FOLLOWERS) return false;
+      if (userInfo.followers &lt; CONFIG.MIN_FOLLOWERS) return false;
+      if (userInfo.followers &gt; CONFIG.MAX_FOLLOWERS) return false;
     }
-    
+
     return true;
   };
 
   // ============================================
   // FOLLOW ACTION
   // ============================================
-  const followUser = async (userCell, userInfo) =&gt; {
+  const followUser = async (userCell, userInfo, keyword) =&gt; {
     const followBtn = userCell.querySelector(SELECTORS.followButton);
     if (!followBtn) return false;
 
     const clicked = await clickElement(followBtn);
     if (clicked) {
       followCount++;
-      saveFollowedUser(userInfo.username);
+      saveFollowedUser(userInfo.username, keyword);
       rateLimit.increment('follow', 'day');
       log(`Followed @${userInfo.username} (${userInfo.displayName}) - #${followCount}`, 'success');
       return true;
@@ -335,10 +555,10 @@
     let scrolls = 0;
     const maxScrolls = 20;
 
-    while (keywordFollows &lt; OPTIONS.MAX_FOLLOWS_PER_KEYWORD &amp;&amp; 
-           followCount &lt; OPTIONS.MAX_FOLLOWS_TOTAL &amp;&amp;
+    while (keywordFollows &lt; CONFIG.MAX_FOLLOWS_PER_KEYWORD &amp;&amp;
+           followCount &lt; CONFIG.MAX_FOLLOWS_TOTAL &amp;&amp;
            scrolls &lt; maxScrolls) {
-      
+
       // Check rate limit
       if (!rateLimit.check('follow', 100, 'day')) {
         log('Daily follow limit reached', 'warning');
@@ -346,20 +566,20 @@
       }
 
       const userCells = document.querySelectorAll(SELECTORS.userCell);
-      
+
       for (const cell of userCells) {
-        if (keywordFollows &gt;= OPTIONS.MAX_FOLLOWS_PER_KEYWORD) break;
-        if (followCount &gt;= OPTIONS.MAX_FOLLOWS_TOTAL) break;
+        if (keywordFollows &gt;= CONFIG.MAX_FOLLOWS_PER_KEYWORD) break;
+        if (followCount &gt;= CONFIG.MAX_FOLLOWS_TOTAL) break;
 
         const userInfo = extractUserInfo(cell);
         if (!passesFilters(userInfo)) continue;
 
         log(`Found match: @${userInfo.username} [bio:${userInfo._meta?.bioStrategy}] - &quot;${userInfo.bio?.substring(0, 50)}...&quot;`, 'info');
-        
-        await followUser(cell, userInfo);
+
+        await followUser(cell, userInfo, keyword);
         keywordFollows++;
-        
-        await randomDelay(OPTIONS.DELAY_BETWEEN_FOLLOWS, OPTIONS.DELAY_BETWEEN_FOLLOWS * 1.5);
+
+        await randomDelay(CONFIG.DELAY_BETWEEN_FOLLOWS, CONFIG.DELAY_BETWEEN_FOLLOWS * 1.5);
       }
 
       // Scroll for more
@@ -371,41 +591,51 @@
     log(`Followed ${keywordFollows} users from &quot;${keyword}&quot;`, 'info');
   };
 
+  const printSummary = () =&gt; {
+    log(`\n✅ Done! Followed ${followCount} new users.`, 'success');
+    log(`Total tracked: ${followedUsers.size} users`, 'info');
+    if (CONFIG.TRACK_FOLLOWS) {
+      log(`Follow tracking (xactions_follow_tracking): ${Object.keys(trackingData).length} users`, 'info');
+    }
+    log(`Run smartUnfollow.js later to remove non-followers!`, 'info');
+  };
+
   // ============================================
   // RUN
   // ============================================
   const run = async () =&gt; {
     log('🚀 Starting Keyword Follow Bot...', 'info');
-    log(`Keywords: ${OPTIONS.KEYWORDS.join(', ')}`, 'info');
-    log(`Max follows: ${OPTIONS.MAX_FOLLOWS_TOTAL}`, 'info');
+    log(`Keywords: ${CONFIG.KEYWORDS.join(', ')}`, 'info');
+    log(`Max follows: ${CONFIG.MAX_FOLLOWS_TOTAL}`, 'info');
     log(`Tracking ${followedUsers.size} previously followed users`, 'info');
 
-    for (const keyword of OPTIONS.KEYWORDS) {
-      if (followCount &gt;= OPTIONS.MAX_FOLLOWS_TOTAL) break;
-      
+    for (const keyword of CONFIG.KEYWORDS) {
+      if (followCount &gt;= CONFIG.MAX_FOLLOWS_TOTAL) break;
+
       await searchFor(keyword);
       await processSearchResults(keyword);
-      
-      if (OPTIONS.KEYWORDS.indexOf(keyword) &lt; OPTIONS.KEYWORDS.length - 1) {
+
+      if (CONFIG.KEYWORDS.indexOf(keyword) &lt; CONFIG.KEYWORDS.length - 1) {
         log(`Waiting before next search...`, 'info');
-        await sleep(OPTIONS.DELAY_BETWEEN_SEARCHES);
+        await sleep(CONFIG.DELAY_BETWEEN_SEARCHES);
       }
     }
 
-    log(`\n✅ Done! Followed ${followCount} new users.`, 'success');
-    log(`Total tracked: ${followedUsers.size} users`, 'info');
-    log(`Run smartUnfollow.js later to remove non-followers!`, 'info');
+    printSummary();
   };
 
-  // If we're on search page, start immediately. Otherwise, navigate first.
+  // If we're on search page, start immediately on its query. Otherwise, navigate first.
   if (window.location.pathname.includes('/search')) {
-    processSearchResults(OPTIONS.KEYWORDS[0]);
+    const query = new URLSearchParams(window.location.search).get('q') || CONFIG.KEYWORDS[0];
+    log(`🔍 Search query: &quot;${query}&quot;`, 'info');
+    log(`Max follows: ${CONFIG.MAX_FOLLOWS_TOTAL}`, 'info');
+    processSearchResults(query).then(printSummary);
   } else {
     run();
   }
 
   window.stopKeywordFollow = () =&gt; {
-    OPTIONS.MAX_FOLLOWS_TOTAL = 0;
+    CONFIG.MAX_FOLLOWS_TOTAL = 0;
     log('Stopping...', 'warning');
   };
 })();
@@ -423,17 +653,17 @@
 
     <aside class="sidebar-right">
       <div class="sidebar-card">
-        <h3>🔑 Growth</h3>
-        <a href="/scripts/algorithm-builder">🧠 Algorithm Builder</a>
-<a href="/scripts/algorithm-trainer">🧠 Algorithm Trainer</a>
-<a href="/scripts/follow-list">📋 Follow &amp; Manage Lists</a>
-<a href="/scripts/follow-account">➕ Follow Accounts</a>
-<a href="/scripts/follow-back">🔗 Follow Back</a>
-<a href="/scripts/follow-target-users">🎯 Follow Followers/Following of Target Users</a>
-<a href="/scripts/follow-engagers">🎯 Follow Likers &amp; Commenters</a>
-<a href="/scripts/growth-suite">🚀 Growth Automation Suite</a>
-<a href="/scripts/natural-flow">🌊 Natural Flow</a>
-<a href="/scripts/persona-engine">🎭 Persona Engine</a>
+        <h3>🌱 Grow</h3>
+        <a href="/scripts/algorithm-builder">🌱 Algorithm Builder</a>
+<a href="/scripts/algorithm-trainer">🌱 Algorithm Trainer</a>
+<a href="/scripts/auto-plug-replies">🌱 Auto-Plug Replies</a>
+<a href="/scripts/follow-account">🌱 Follow Accounts</a>
+<a href="/scripts/follow-back">🌱 Follow Back</a>
+<a href="/scripts/follow-engagers">🌱 Follow Engagers</a>
+<a href="/scripts/follow-target-users">🌱 Follow Target Users</a>
+<a href="/scripts/follower-tools">🌱 Follower Tools</a>
+<a href="/scripts/growth-suite">🌱 Growth Suite</a>
+<a href="/scripts/natural-flow">🌱 Natural Flow</a>
       </div>
       <div class="sidebar-card">
         <h3>🔗 Quick Links</h3>

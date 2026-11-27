@@ -4,14 +4,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Follow Back — Free X/Twitter Script | XActions</title>
-  <meta name="description" content="Follow every account that follows you but that you don't follow back yet. Free X/Twitter browser script, no API key needed.">
-  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, follow, back, growth">
+  <meta name="description" content="Follow every account that follows you but that you do not follow back yet. Free X/Twitter browser script, no API key needed.">
+  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, follow, back, grow">
   <meta name="author" content="nich (@nichxbt)">
   <meta name="robots" content="index, follow">
 
   <meta property="og:type" content="article">
   <meta property="og:title" content="Follow Back — XActions">
-  <meta property="og:description" content="Follow every account that follows you but that you don't follow back yet. Free X/Twitter browser script, no API key needed.">
+  <meta property="og:description" content="Follow every account that follows you but that you do not follow back yet. Free X/Twitter browser script, no API key needed.">
   <meta property="og:url" content="https://xactions.app/scripts/follow-back">
   <meta property="og:site_name" content="XActions">
   <meta property="og:image" content="https://xactions.app/og-run.png">
@@ -19,7 +19,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@nichxbt">
   <meta name="twitter:title" content="Follow Back — XActions">
-  <meta name="twitter:description" content="Follow every account that follows you but that you don't follow back yet. Free X/Twitter browser script, no API key needed.">
+  <meta name="twitter:description" content="Follow every account that follows you but that you do not follow back yet. Free X/Twitter browser script, no API key needed.">
   <meta name="twitter:image" content="https://xactions.app/og-run.png">
 
   <link rel="canonical" href="https://xactions.app/scripts/follow-back">
@@ -30,14 +30,14 @@
     "@context": "https://schema.org",
     "@type": "TechArticle",
     "headline": "Follow Back — Free X/Twitter Script | XActions",
-    "description": "Follow every account that follows you but that you don't follow back yet. Free X/Twitter browser script, no API key needed.",
+    "description": "Follow every account that follows you but that you do not follow back yet. Free X/Twitter browser script, no API key needed.",
     "url": "https://xactions.app/scripts/follow-back",
     "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
     "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
     "datePublished": "2026-03-30",
     "dateModified": "2026-03-30",
-    "articleSection": "Growth",
-    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, follow, back, growth"
+    "articleSection": "Grow",
+    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, follow, back, grow"
   }
   </script>
   <script type="application/ld+json">
@@ -47,7 +47,7 @@
     "itemListElement": [
       { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
       { "@type": "ListItem", "position": 2, "name": "Scripts", "item": "https://xactions.app/scripts" },
-      { "@type": "ListItem", "position": 3, "name": "Growth", "item": "https://xactions.app/scripts#growth" },
+      { "@type": "ListItem", "position": 3, "name": "Grow", "item": "https://xactions.app/scripts#grow" },
       { "@type": "ListItem", "position": 4, "name": "Follow Back", "item": "https://xactions.app/scripts/follow-back" }
     ]
   }
@@ -116,24 +116,24 @@
 
     <main class="main-content" id="main-content">
       <header class="main-header">
-        <h1>🔗 Follow Back</h1>
+        <h1>🌱 Follow Back</h1>
         <div class="breadcrumb">
-          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#growth">Growth</a> › Follow Back
+          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#grow">Grow</a> › Follow Back
         </div>
       </header>
 
       <article class="article">
-        <span class="cat-badge">Growth</span>
-        <span class="source-badge">scripts/twitter</span>
+        <span class="cat-badge">Grow</span>
+        <span class="source-badge">browser/followBack.js</span>
 
         <div class="meta-row">
           <span>v1.0.0</span>
           <span>Updated: 2026-07-20</span>
-          <span>219 lines</span>
+          <span>224 lines</span>
           <span>by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></span>
         </div>
 
-        <p>Follow every account that follows you but that you don't follow back yet.</p>
+        <p>Follow every account that follows you but that you do not follow back yet.</p>
 
         <div class="warning-box"><p>⚠️ Following many accounts quickly can trip X's rate limits. Keep delays high.</p></div>
 
@@ -183,8 +183,13 @@
  * 🔁 Follow Back - XActions
  * ============================================
  *
- * @name         follow-back
- * @description  Follow every account that follows you but that you don't follow back yet.
+ * @name        followBack.js
+ * @description Follow every account that follows you but that you do not follow back yet.
+ * @title       Follow Back
+ * @category    grow
+ * @page        x.com/&lt;you&gt;/followers
+ * @writes      true
+ * @aliases     scripts/twitter/follow-back.js
  * @author       nichxbt
  * @version      1.0.0
  * @date         2026-07-20
@@ -409,17 +414,17 @@
 
     <aside class="sidebar-right">
       <div class="sidebar-card">
-        <h3>🔗 Growth</h3>
-        <a href="/scripts/algorithm-builder">🧠 Algorithm Builder</a>
-<a href="/scripts/algorithm-trainer">🧠 Algorithm Trainer</a>
-<a href="/scripts/follow-list">📋 Follow &amp; Manage Lists</a>
-<a href="/scripts/follow-account">➕ Follow Accounts</a>
-<a href="/scripts/follow-target-users">🎯 Follow Followers/Following of Target Users</a>
-<a href="/scripts/follow-engagers">🎯 Follow Likers &amp; Commenters</a>
-<a href="/scripts/growth-suite">🚀 Growth Automation Suite</a>
-<a href="/scripts/keyword-follow">🔑 Keyword Search &amp; Follow</a>
-<a href="/scripts/natural-flow">🌊 Natural Flow</a>
-<a href="/scripts/persona-engine">🎭 Persona Engine</a>
+        <h3>🌱 Grow</h3>
+        <a href="/scripts/algorithm-builder">🌱 Algorithm Builder</a>
+<a href="/scripts/algorithm-trainer">🌱 Algorithm Trainer</a>
+<a href="/scripts/auto-plug-replies">🌱 Auto-Plug Replies</a>
+<a href="/scripts/follow-account">🌱 Follow Accounts</a>
+<a href="/scripts/follow-engagers">🌱 Follow Engagers</a>
+<a href="/scripts/follow-target-users">🌱 Follow Target Users</a>
+<a href="/scripts/follower-tools">🌱 Follower Tools</a>
+<a href="/scripts/growth-suite">🌱 Growth Suite</a>
+<a href="/scripts/keyword-follow">🌱 Keyword Follow</a>
+<a href="/scripts/natural-flow">🌱 Natural Flow</a>
       </div>
       <div class="sidebar-card">
         <h3>🔗 Quick Links</h3>

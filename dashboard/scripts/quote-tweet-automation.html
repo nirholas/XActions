@@ -4,14 +4,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Quote Tweet Automation — Free X/Twitter Script | XActions</title>
-  <meta name="description" content="Auto-retweet with quote using customizable templates. Scrape tweets from a timeline/search and quote-RT them with personalized commentary.">
-  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, quote, tweet, automation, engagement">
+  <meta name="description" content="Quote-post tweets from a timeline or search with rotating templates, keyword and engagement filters, a dry run and long delays.">
+  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, quote, tweet, automation, engage">
   <meta name="author" content="nich (@nichxbt)">
   <meta name="robots" content="index, follow">
 
   <meta property="og:type" content="article">
   <meta property="og:title" content="Quote Tweet Automation — XActions">
-  <meta property="og:description" content="Auto-retweet with quote using customizable templates. Scrape tweets from a timeline/search and quote-RT them with personalized commentary.">
+  <meta property="og:description" content="Quote-post tweets from a timeline or search with rotating templates, keyword and engagement filters, a dry run and long delays.">
   <meta property="og:url" content="https://xactions.app/scripts/quote-tweet-automation">
   <meta property="og:site_name" content="XActions">
   <meta property="og:image" content="https://xactions.app/og-run.png">
@@ -19,7 +19,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@nichxbt">
   <meta name="twitter:title" content="Quote Tweet Automation — XActions">
-  <meta name="twitter:description" content="Auto-retweet with quote using customizable templates. Scrape tweets from a timeline/search and quote-RT them with personalized commentary.">
+  <meta name="twitter:description" content="Quote-post tweets from a timeline or search with rotating templates, keyword and engagement filters, a dry run and long delays.">
   <meta name="twitter:image" content="https://xactions.app/og-run.png">
 
   <link rel="canonical" href="https://xactions.app/scripts/quote-tweet-automation">
@@ -30,14 +30,14 @@
     "@context": "https://schema.org",
     "@type": "TechArticle",
     "headline": "Quote Tweet Automation — Free X/Twitter Script | XActions",
-    "description": "Auto-retweet with quote using customizable templates. Scrape tweets from a timeline/search and quote-RT them with personalized commentary.",
+    "description": "Quote-post tweets from a timeline or search with rotating templates, keyword and engagement filters, a dry run and long delays.",
     "url": "https://xactions.app/scripts/quote-tweet-automation",
     "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
     "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
     "datePublished": "2026-03-30",
     "dateModified": "2026-03-30",
-    "articleSection": "Engagement",
-    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, quote, tweet, automation, engagement"
+    "articleSection": "Engage",
+    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, quote, tweet, automation, engage"
   }
   </script>
   <script type="application/ld+json">
@@ -47,7 +47,7 @@
     "itemListElement": [
       { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
       { "@type": "ListItem", "position": 2, "name": "Scripts", "item": "https://xactions.app/scripts" },
-      { "@type": "ListItem", "position": 3, "name": "Engagement", "item": "https://xactions.app/scripts#engagement" },
+      { "@type": "ListItem", "position": 3, "name": "Engage", "item": "https://xactions.app/scripts#engage" },
       { "@type": "ListItem", "position": 4, "name": "Quote Tweet Automation", "item": "https://xactions.app/scripts/quote-tweet-automation" }
     ]
   }
@@ -116,24 +116,24 @@
 
     <main class="main-content" id="main-content">
       <header class="main-header">
-        <h1>🔁 Quote Tweet Automation</h1>
+        <h1>💬 Quote Tweet Automation</h1>
         <div class="breadcrumb">
-          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#engagement">Engagement</a> › Quote Tweet Automation
+          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#engage">Engage</a> › Quote Tweet Automation
         </div>
       </header>
 
       <article class="article">
-        <span class="cat-badge">Engagement</span>
-        <span class="source-badge">browser</span>
+        <span class="cat-badge">Engage</span>
+        <span class="source-badge">browser/quoteTweetAutomation.js</span>
 
         <div class="meta-row">
-          <span>v1.0.0</span>
-          <span>Updated: 2026-02-24</span>
-          <span>330 lines</span>
+          <span>v1.1.0</span>
+          <span>Updated: 2026-11-27</span>
+          <span>335 lines</span>
           <span>by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></span>
         </div>
 
-        <p>Auto-retweet with quote using customizable templates. Scrape tweets from a timeline/search and quote-RT them with personalized commentary. Supports keyword targeting, skip filters, template rotation, and human-like delays.</p>
+        <p>Quote-post tweets from a timeline or search with rotating templates, keyword and engagement filters, a dry run and long delays.</p>
 
         <div class="warning-box"><p>⚠️ Use responsibly — excessive quote tweeting will get you</p></div>
 
@@ -141,7 +141,7 @@
         <ol class="usage-steps"><li>Go to a search result / user timeline / list</li>
 <li>Open DevTools Console (F12)</li>
 <li>Configure templates and filters below</li>
-<li>Paste and run</li></ol>
+<li>Paste browser/quoteTweetAutomation.js and press Enter</li></ol>
         
 
         
@@ -204,14 +204,15 @@
  * ============================================================
  *
  * @name        quoteTweetAutomation.js
- * @description Auto-retweet with quote using customizable
- *              templates. Scrape tweets from a timeline/search
- *              and quote-RT them with personalized commentary.
- *              Supports keyword targeting, skip filters,
- *              template rotation, and human-like delays.
+ * @title       Quote Tweet Automation
+ * @description Quote-post tweets from a timeline or search with rotating templates, keyword and engagement filters, a dry run and long delays.
+ * @category    engage
+ * @page        x.com/search?q=&lt;query&gt; or x.com/home or x.com/&lt;username&gt;
+ * @writes      true
+ * @aliases     scripts/quoteTweetAutomation.js
  * @author      nichxbt (https://x.com/nichxbt)
- * @version     1.0.0
- * @date        2026-02-24
+ * @version     1.1.0
+ * @date        2026-11-27
  * @repository  https://github.com/nirholas/XActions
  *
  * ============================================================
@@ -220,7 +221,7 @@
  * 1. Go to a search result / user timeline / list
  * 2. Open DevTools Console (F12)
  * 3. Configure templates and filters below
- * 4. Paste and run
+ * 4. Paste browser/quoteTweetAutomation.js and press Enter
  *
  * ⚠️ Use responsibly — excessive quote tweeting will get you
  *     flagged. Keep maxQuotes low and delays high.
@@ -286,6 +287,7 @@
     text = text.trim().replace(/,/g, '');
     if (text.endsWith('K')) return Math.round(parseFloat(text) * 1000);
     if (text.endsWith('M')) return Math.round(parseFloat(text) * 1000000);
+    if (text.endsWith('B')) return Math.round(parseFloat(text) * 1000000000);
     return parseInt(text) || 0;
   };
 
@@ -513,6 +515,9 @@
     console.log('\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
     console.log(`  ✅ Quoted: ${success} | ❌ Failed: ${fail}`);
     if (CONFIG.dryRun) console.log('  🏃 (Dry run — nothing was posted)');
+    if (CONFIG.dryRun &amp;&amp; success &gt; 0) {
+      console.log(`  ⚡ Set dryRun = false to post ${success} quotes for real.`);
+    }
     console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n');
 
     if (results.length &gt; 0) {
@@ -540,17 +545,17 @@
 
     <aside class="sidebar-right">
       <div class="sidebar-card">
-        <h3>🔁 Engagement</h3>
+        <h3>💬 Engage</h3>
         <a href="/scripts/auto-commenter">💬 Auto Commenter</a>
-<a href="/scripts/auto-reply-mentions">📨 Auto Reply Mentions</a>
-<a href="/scripts/auto-repost">🔁 Auto Repost (Retweet)</a>
-<a href="/scripts/auto-plug-replies">🔌 Auto-Plug Replies</a>
-<a href="/scripts/auto-reply">💬 Auto-Reply / Auto-Respond</a>
-<a href="/scripts/auto-engage">⚡ Browser console script for automated engagement</a>
-<a href="/scripts/comment-by-hashtag">💬 Comment By Hashtag</a>
-<a href="/scripts/comment-by-location">💬 Comment By Location</a>
-<a href="/scripts/engagement-booster">🚀 Engagement Booster v2</a>
-<a href="/scripts/engagement-leaderboard">🏆 Engagement Leaderboard</a>
+<a href="/scripts/auto-engage">💬 Auto Engage</a>
+<a href="/scripts/auto-liker">💬 Auto Liker</a>
+<a href="/scripts/auto-reply">💬 Auto Reply</a>
+<a href="/scripts/auto-repost">💬 Auto Repost</a>
+<a href="/scripts/auto-reply-mentions">💬 Auto-Reply Mentions</a>
+<a href="/scripts/comment-by-hashtag">💬 Comment by Hashtag</a>
+<a href="/scripts/comment-by-location">💬 Comment by Location</a>
+<a href="/scripts/community-notes">💬 Community Notes</a>
+<a href="/scripts/customer-service">💬 Customer Service Bot</a>
       </div>
       <div class="sidebar-card">
         <h3>🔗 Quick Links</h3>

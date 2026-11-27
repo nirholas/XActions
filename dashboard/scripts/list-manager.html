@@ -3,23 +3,23 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Manage Lists — Free X/Twitter Script | XActions</title>
-  <meta name="description" content="Create, manage, and populate X lists programmatically. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
-  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, list, manager, lists &amp; communities">
+  <title>List Manager — Free X/Twitter Script | XActions</title>
+  <meta name="description" content="Create, rename or delete your X Lists, add users to a list, and export your lists or a list's members, dry run by default.">
+  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, list, manager, lists">
   <meta name="author" content="nich (@nichxbt)">
   <meta name="robots" content="index, follow">
 
   <meta property="og:type" content="article">
-  <meta property="og:title" content="Manage Lists — XActions">
-  <meta property="og:description" content="Create, manage, and populate X lists programmatically. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
+  <meta property="og:title" content="List Manager — XActions">
+  <meta property="og:description" content="Create, rename or delete your X Lists, add users to a list, and export your lists or a list's members, dry run by default.">
   <meta property="og:url" content="https://xactions.app/scripts/list-manager">
   <meta property="og:site_name" content="XActions">
   <meta property="og:image" content="https://xactions.app/og-run.png">
 
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@nichxbt">
-  <meta name="twitter:title" content="Manage Lists — XActions">
-  <meta name="twitter:description" content="Create, manage, and populate X lists programmatically. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
+  <meta name="twitter:title" content="List Manager — XActions">
+  <meta name="twitter:description" content="Create, rename or delete your X Lists, add users to a list, and export your lists or a list's members, dry run by default.">
   <meta name="twitter:image" content="https://xactions.app/og-run.png">
 
   <link rel="canonical" href="https://xactions.app/scripts/list-manager">
@@ -29,15 +29,15 @@
   {
     "@context": "https://schema.org",
     "@type": "TechArticle",
-    "headline": "Manage Lists — Free X/Twitter Script | XActions",
-    "description": "Create, manage, and populate X lists programmatically. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.",
+    "headline": "List Manager — Free X/Twitter Script | XActions",
+    "description": "Create, rename or delete your X Lists, add users to a list, and export your lists or a list's members, dry run by default.",
     "url": "https://xactions.app/scripts/list-manager",
     "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
     "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
     "datePublished": "2026-03-30",
     "dateModified": "2026-03-30",
-    "articleSection": "Lists & Communities",
-    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, list, manager, lists & communities"
+    "articleSection": "Lists",
+    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, list, manager, lists"
   }
   </script>
   <script type="application/ld+json">
@@ -47,8 +47,8 @@
     "itemListElement": [
       { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
       { "@type": "ListItem", "position": 2, "name": "Scripts", "item": "https://xactions.app/scripts" },
-      { "@type": "ListItem", "position": 3, "name": "Lists & Communities", "item": "https://xactions.app/scripts#lists-communities" },
-      { "@type": "ListItem", "position": 4, "name": "Manage Lists", "item": "https://xactions.app/scripts/list-manager" }
+      { "@type": "ListItem", "position": 3, "name": "Lists", "item": "https://xactions.app/scripts#lists" },
+      { "@type": "ListItem", "position": 4, "name": "List Manager", "item": "https://xactions.app/scripts/list-manager" }
     ]
   }
   </script>
@@ -116,24 +116,24 @@
 
     <main class="main-content" id="main-content">
       <header class="main-header">
-        <h1>📝 Manage Lists</h1>
+        <h1>🗂️ List Manager</h1>
         <div class="breadcrumb">
-          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#lists-communities">Lists &amp; Communities</a> › Manage Lists
+          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#lists">Lists</a> › List Manager
         </div>
       </header>
 
       <article class="article">
-        <span class="cat-badge">Lists &amp; Communities</span>
-        <span class="source-badge">browser</span>
+        <span class="cat-badge">Lists</span>
+        <span class="source-badge">browser/listManager.js</span>
 
         <div class="meta-row">
-          
-          
-          <span>188 lines</span>
+          <span>v1.1.0</span>
+          <span>Updated: 2026-11-27</span>
+          <span>500 lines</span>
           <span>by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></span>
         </div>
 
-        <p>Create, manage, and populate X lists programmatically</p>
+        <p>Create, rename or delete your X Lists, add users to a list, and export your lists or a list's members, dry run by default.</p>
 
         
 
@@ -147,18 +147,43 @@
         
 
         
-        
+        <section class="config-section">
+        <h2>Configuration Options</h2>
+        <table>
+          <thead><tr><th>Option</th><th>Default</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td><code>name</code></td><td><code>''</code></td><td>the EXISTING list name</td></tr>
+<tr><td><code>newName</code></td><td><code>''</code></td><td>the name to change it to</td></tr>
+<tr><td><code>name</code></td><td><code>''</code></td><td>the EXISTING list name</td></tr>
+<tr><td><code>copyToClipboard</code></td><td><code>false</code></td><td>Also copy exported JSON to the clipboard</td></tr>
+<tr><td><code>stepDelay</code></td><td><code>1500</code></td><td>Delay between UI steps for rename and delete (ms)</td></tr>
+          </tbody>
+        </table>
+      </section>
         <section class="config-code">
         <h2>Default Configuration</h2>
         <div class="code-block">
           <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.querySelector('code').textContent).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy',2000)})">Copy</button>
           <pre><code>const CONFIG = {
+    // Safety: preview the steps without changing anything. Set to false to execute.
+    dryRun: true,
     // Create a new list
     createList: {
       enabled: false,
       name: 'My List',
       description: 'Created by XActions',
       isPrivate: true,
+    },
+    // Rename one of your lists (run on x.com/&lt;you&gt;/lists so the list is on screen)
+    renameList: {
+      enabled: false,
+      name: '',       // the EXISTING list name
+      newName: '',    // the name to change it to
+    },
+    // Delete one of your lists (run on x.com/&lt;you&gt;/lists). This cannot be undone.
+    deleteList: {
+      enabled: false,
+      name: '',       // the EXISTING list name
     },
     // Add users to an existing list (navigate to list page first)
     addUsers: {
@@ -168,13 +193,20 @@
         // 'user2',
       ],
     },
+    // Export your lists (name, link, description, member count) from x.com/&lt;you&gt;/lists
+    exportLists: {
+      enabled: false,
+      maxLists: 50,
+    },
     // Export list members
     exportMembers: {
       enabled: false,
       maxMembers: 200,
     },
+    copyToClipboard: false,   // Also copy exported JSON to the clipboard
     actionDelay: 2000,
     scrollDelay: 1500,
+    stepDelay: 1500,          // Delay between UI steps for rename and delete (ms)
   };</code></pre>
         </div>
       </section>
@@ -185,23 +217,54 @@
           <div class="code-block">
             <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.querySelector('code').textContent).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy Script',2000)})">Copy Script</button>
             <pre><code>// Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
+/**
+ * @name        listManager.js
+ * @title       List Manager
+ * @description Create, rename or delete your X Lists, add users to a list, and export your lists or a list's members, dry run by default.
+ * @category    lists
+ * @page        x.com/&lt;you&gt;/lists or x.com/i/lists/&lt;id&gt;/members
+ * @writes      true
+ * @aliases     scripts/listManager.js, scripts/manageLists.js, scripts/twitter/list-manager.js
+ * @author      nichxbt (https://x.com/nichxbt)
+ * @version     1.1.0
+ * @date        2026-11-27
+ */
 // Manage Lists on X - by nichxbt
 // https://github.com/nirholas/xactions
 // Create, manage, and populate X lists programmatically
-// 1. Go to x.com (any page)
+// 1. Go to x.com/YOUR_USERNAME/lists (create, rename, delete, export your lists)
+//    or open a list (add users, export its members)
 // 2. Open the Developer Console (F12)
-// 3. Edit the CONFIG below
-// 4. Paste this into the Developer Console and run it
+// 3. Edit the CONFIG below. dryRun is ON by default and only previews the steps:
+//    set dryRun = false to actually create, rename, delete or add.
+// 4. Paste browser/listManager.js into the Developer Console and run it
 //
-// Last Updated: 24 February 2026
+// Sections run in this order when enabled: createList, renameList, deleteList,
+// addUsers, exportLists, exportMembers.
+// To abort mid-flow: window.stopListManager()
+//
+// Last Updated: 27 November 2026
 (() =&gt; {
   const CONFIG = {
+    // Safety: preview the steps without changing anything. Set to false to execute.
+    dryRun: true,
     // Create a new list
     createList: {
       enabled: false,
       name: 'My List',
       description: 'Created by XActions',
       isPrivate: true,
+    },
+    // Rename one of your lists (run on x.com/&lt;you&gt;/lists so the list is on screen)
+    renameList: {
+      enabled: false,
+      name: '',       // the EXISTING list name
+      newName: '',    // the name to change it to
+    },
+    // Delete one of your lists (run on x.com/&lt;you&gt;/lists). This cannot be undone.
+    deleteList: {
+      enabled: false,
+      name: '',       // the EXISTING list name
     },
     // Add users to an existing list (navigate to list page first)
     addUsers: {
@@ -211,29 +274,132 @@
         // 'user2',
       ],
     },
+    // Export your lists (name, link, description, member count) from x.com/&lt;you&gt;/lists
+    exportLists: {
+      enabled: false,
+      maxLists: 50,
+    },
     // Export list members
     exportMembers: {
       enabled: false,
       maxMembers: 200,
     },
+    copyToClipboard: false,   // Also copy exported JSON to the clipboard
     actionDelay: 2000,
     scrollDelay: 1500,
+    stepDelay: 1500,          // Delay between UI steps for rename and delete (ms)
   };
 
-  const $createListButton = '[data-testid=&quot;createList&quot;]';
-  const $listNameInput = '[data-testid=&quot;listNameInput&quot;]';
-  const $listDescInput = '[data-testid=&quot;listDescriptionInput&quot;]';
+  const $createListButton = '[data-testid=&quot;createList&quot;], a[href=&quot;/i/lists/create&quot;]';
+  const $listNameInput = '[data-testid=&quot;listNameInput&quot;], input[name=&quot;name&quot;]';
+  const $listDescInput = '[data-testid=&quot;listDescriptionInput&quot;], textarea[name=&quot;description&quot;]';
   const $listPrivateToggle = '[data-testid=&quot;listPrivateToggle&quot;]';
-  const $listSaveButton = '[data-testid=&quot;listSaveButton&quot;]';
+  const $listSaveButton = '[data-testid=&quot;listSaveButton&quot;], [data-testid=&quot;listCreationSheet-headerButton&quot;]';
   const $addMemberButton = '[data-testid=&quot;addMembers&quot;]';
   const $searchInput = '[data-testid=&quot;searchPeople&quot;]';
   const $userCell = '[data-testid=&quot;UserCell&quot;]';
   const $userName = '[data-testid=&quot;User-Name&quot;]';
+  const $listLink = 'a[href*=&quot;/lists/&quot;]';
+  const $listItem = '[data-testid=&quot;listItem&quot;], a[href*=&quot;/lists/&quot;]';
+  const $editListButton = '[data-testid=&quot;editList&quot;], [aria-label=&quot;Edit List&quot;], [aria-label=&quot;Edit list&quot;]';
+  const $listDeleteButton = '[data-testid=&quot;listDeleteButton&quot;]';
+  const $confirmButton = '[data-testid=&quot;confirmationSheetConfirm&quot;]';
 
   const sleep = (ms) =&gt; new Promise(r =&gt; setTimeout(r, ms));
 
+  let stopped = false;
+  window.stopListManager = () =&gt; {
+    stopped = true;
+    console.warn('⚠️ Stop requested. The script will halt at the next step.');
+  };
+
+  const results = [];
+
+  // Wait for an element to appear (up to timeoutMs)
+  const waitFor = async (sel, timeoutMs = 6000) =&gt; {
+    const start = Date.now();
+    while (Date.now() - start &lt; timeoutMs) {
+      if (stopped) return null;
+      const el = document.querySelector(sel);
+      if (el) return el;
+      await sleep(200);
+    }
+    return null;
+  };
+
+  // Set a value on a React-controlled input/textarea so the framework registers it
+  const setReactInput = (el, value) =&gt; {
+    const proto = el.tagName === 'TEXTAREA'
+      ? window.HTMLTextAreaElement.prototype
+      : window.HTMLInputElement.prototype;
+    const setter = Object.getOwnPropertyDescriptor(proto, 'value').set;
+    setter.call(el, value);
+    el.dispatchEvent(new Event('input', { bubbles: true }));
+    el.dispatchEvent(new Event('change', { bubbles: true }));
+  };
+
+  // Find a clickable button whose visible text matches one of the labels
+  const findButtonByText = (labels) =&gt; {
+    const wanted = labels.map(l =&gt; l.toLowerCase());
+    const buttons = document.querySelectorAll('[role=&quot;button&quot;], button, [role=&quot;menuitem&quot;]');
+    for (const b of buttons) {
+      const t = (b.textContent || '').trim().toLowerCase();
+      if (wanted.some(w =&gt; t === w || t.startsWith(w))) return b;
+    }
+    return null;
+  };
+
+  // Locate a list row on the Lists page by its visible name
+  const findListLinkByName = (name) =&gt; {
+    const target = name.trim().toLowerCase();
+    for (const link of document.querySelectorAll($listLink)) {
+      const text = (link.textContent || '').trim().toLowerCase();
+      if (text.includes(target)) return link;
+    }
+    return null;
+  };
+
+  const extractBio = (cell) =&gt; {
+    const testId = cell.querySelector('[data-testid=&quot;UserDescription&quot;]');
+    if (testId?.textContent?.trim()) return testId.textContent.trim();
+    return cell.querySelector('[dir=&quot;auto&quot;]:not([data-testid])')?.textContent || '';
+  };
+
+  const download = (data, filename) =&gt; {
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+  };
+
+  const copyJson = async (data) =&gt; {
+    if (!CONFIG.copyToClipboard) return;
+    try {
+      await navigator.clipboard.writeText(JSON.stringify(data, null, 2));
+      console.log('📋 Copied to clipboard!');
+    } catch (e) {
+      console.warn(`⚠️ Could not copy to clipboard: ${e.message}`);
+    }
+  };
+
   const createNewList = async () =&gt; {
-    console.log(`📋 Creating list: &quot;${CONFIG.createList.name}&quot;`);
+    const { name, description, isPrivate } = CONFIG.createList;
+    console.log(`📋 Creating list: &quot;${name}&quot; (${isPrivate ? 'private' : 'public'})`);
+    if (!name.trim()) {
+      console.error('❌ CONFIG.createList.name is empty. Set a name to create.');
+      return false;
+    }
+
+    if (CONFIG.dryRun) {
+      console.log('   📝 DRY RUN: would open the create-list dialog');
+      console.log(`   📝 DRY RUN: would type name &quot;${name}&quot; and description &quot;${description}&quot;`);
+      console.log('   📝 DRY RUN: would save. Set CONFIG.dryRun = false to execute.');
+      return true;
+    }
 
     const createBtn = document.querySelector($createListButton);
     if (createBtn) {
@@ -241,39 +407,139 @@
       await sleep(1500);
     }
 
-    const nameInput = document.querySelector($listNameInput);
-    if (nameInput) {
-      nameInput.focus();
-      nameInput.value = '';
-      document.execCommand('insertText', false, CONFIG.createList.name);
-      await sleep(500);
+    const nameInput = document.querySelector($listNameInput) || await waitFor($listNameInput, 4000);
+    if (!nameInput) {
+      console.error('❌ List name input did not appear. Are you on x.com/&lt;you&gt;/lists?');
+      return false;
     }
+    nameInput.focus();
+    nameInput.value = '';
+    document.execCommand('insertText', false, name);
+    await sleep(500);
 
     const descInput = document.querySelector($listDescInput);
-    if (descInput &amp;&amp; CONFIG.createList.description) {
+    if (descInput &amp;&amp; description) {
       descInput.focus();
       descInput.value = '';
-      document.execCommand('insertText', false, CONFIG.createList.description);
+      document.execCommand('insertText', false, description);
       await sleep(500);
     }
 
-    if (CONFIG.createList.isPrivate) {
+    if (isPrivate) {
       const toggle = document.querySelector($listPrivateToggle);
       if (toggle) toggle.click();
       await sleep(300);
     }
 
-    const saveBtn = document.querySelector($listSaveButton);
-    if (saveBtn) {
-      saveBtn.click();
-      console.log('✅ List created!');
-      await sleep(1500);
+    let saveBtn = document.querySelector($listSaveButton);
+    if (!saveBtn) {
+      // The current flow has a &quot;Next&quot; step after the details
+      const next = findButtonByText(['next']);
+      if (next &amp;&amp; !next.getAttribute('aria-disabled')) {
+        next.click();
+        await sleep(CONFIG.stepDelay);
+      }
+      saveBtn = document.querySelector($listSaveButton) || findButtonByText(['done', 'create', 'save']);
     }
+    if (!saveBtn) {
+      console.error('❌ Could not find the save/create button.');
+      return false;
+    }
+    saveBtn.click();
+    console.log('✅ List created!');
+    await sleep(1500);
+    return true;
+  };
+
+  const openTargetList = async (name) =&gt; {
+    const link = findListLinkByName(name);
+    if (!link) {
+      console.error(`❌ Could not find a list named &quot;${name}&quot; on this page.`);
+      console.log('   Make sure you are on x.com/&lt;you&gt;/lists and the list name matches.');
+      return false;
+    }
+    console.log(`   → Opening list &quot;${name}&quot;`);
+    link.click();
+    await sleep(CONFIG.stepDelay);
+    return true;
+  };
+
+  const renameList = async () =&gt; {
+    const { name, newName } = CONFIG.renameList;
+    console.log(`✏️ Rename list: &quot;${name}&quot; -&gt; &quot;${newName}&quot;`);
+    if (!name.trim()) { console.error('❌ CONFIG.renameList.name is empty. Set the existing list name.'); return false; }
+    if (!newName.trim()) { console.error('❌ CONFIG.renameList.newName is empty. Set the new name.'); return false; }
+
+    if (CONFIG.dryRun) {
+      console.log(`   📝 DRY RUN: would open &quot;${name}&quot;, edit it, set name to &quot;${newName}&quot;, and save.`);
+      console.log('   📝 Set CONFIG.dryRun = false to execute.');
+      return true;
+    }
+
+    if (!await openTargetList(name)) return false;
+
+    const editBtn = await waitFor($editListButton, 5000) || findButtonByText(['edit list']);
+    if (!editBtn) { console.error('❌ Could not find the &quot;Edit List&quot; control.'); return false; }
+    editBtn.click();
+    await sleep(CONFIG.stepDelay);
+
+    const nameInput = await waitFor($listNameInput);
+    if (!nameInput) { console.error('❌ List name input did not appear in the edit dialog.'); return false; }
+    nameInput.focus();
+    setReactInput(nameInput, newName);
+    await sleep(500);
+
+    const saveBtn = document.querySelector($listSaveButton) || findButtonByText(['done', 'save']);
+    if (!saveBtn) { console.error('❌ Could not find the save button.'); return false; }
+    saveBtn.click();
+    await sleep(CONFIG.stepDelay);
+    console.log(`✅ List renamed to &quot;${newName}&quot;.`);
+    return true;
+  };
+
+  const deleteList = async () =&gt; {
+    const { name } = CONFIG.deleteList;
+    console.log(`🗑️ Delete list: &quot;${name}&quot;`);
+    if (!name.trim()) { console.error('❌ CONFIG.deleteList.name is empty. Set the list name to delete.'); return false; }
+
+    if (CONFIG.dryRun) {
+      console.log(`   📝 DRY RUN: would open &quot;${name}&quot;, edit it, click Delete, and confirm.`);
+      console.log('   📝 Set CONFIG.dryRun = false to execute. This cannot be undone.');
+      return true;
+    }
+
+    if (!await openTargetList(name)) return false;
+
+    const editBtn = await waitFor($editListButton, 5000) || findButtonByText(['edit list']);
+    if (!editBtn) { console.error('❌ Could not find the &quot;Edit List&quot; control.'); return false; }
+    editBtn.click();
+    await sleep(CONFIG.stepDelay);
+
+    const deleteBtn = await waitFor($listDeleteButton, 4000) || findButtonByText(['delete list']);
+    if (!deleteBtn) { console.error('❌ Could not find the &quot;Delete List&quot; button.'); return false; }
+    deleteBtn.click();
+    await sleep(CONFIG.stepDelay);
+
+    const confirm = await waitFor($confirmButton, 4000) || findButtonByText(['delete']);
+    if (!confirm) { console.error('❌ Could not find the delete confirmation button.'); return false; }
+    confirm.click();
+    await sleep(CONFIG.stepDelay);
+    console.log(`✅ List &quot;${name}&quot; deleted.`);
+    return true;
   };
 
   const addUsersToList = async () =&gt; {
     const users = CONFIG.addUsers.usernames;
+    if (users.length === 0) {
+      console.error('❌ No usernames provided! Edit CONFIG.addUsers.usernames.');
+      return false;
+    }
     console.log(`👥 Adding ${users.length} users to list...`);
+
+    if (CONFIG.dryRun) {
+      users.forEach(u =&gt; console.log(`   📝 Would add: @${u}`));
+      return true;
+    }
 
     const addBtn = document.querySelector($addMemberButton);
     if (addBtn) {
@@ -281,7 +547,9 @@
       await sleep(1500);
     }
 
+    let added = 0;
     for (const username of users) {
+      if (stopped) break;
       const searchInput = document.querySelector($searchInput);
       if (!searchInput) {
         console.error('❌ Search input not found');
@@ -300,6 +568,7 @@
         if (cell.textContent.toLowerCase().includes(username.toLowerCase())) {
           cell.click();
           found = true;
+          added++;
           console.log(`✅ Added @${username}`);
           break;
         }
@@ -314,6 +583,50 @@
       searchInput.dispatchEvent(new Event('input', { bubbles: true }));
       await sleep(CONFIG.actionDelay);
     }
+
+    console.log(`✅ Added ${added}/${users.length} members`);
+    return added &gt; 0;
+  };
+
+  const exportYourLists = async () =&gt; {
+    console.log('📋 Exporting lists...');
+
+    const lists = [];
+    let scrollAttempts = 0;
+
+    while (lists.length &lt; CONFIG.exportLists.maxLists &amp;&amp; scrollAttempts &lt; 10 &amp;&amp; !stopped) {
+      document.querySelectorAll($listItem).forEach(el =&gt; {
+        const name = el.querySelector('[dir=&quot;ltr&quot;]')?.textContent || el.textContent?.trim() || '';
+        const link = el.href || el.querySelector('a')?.href || '';
+        const description = el.querySelector('[data-testid=&quot;listDescription&quot;]')?.textContent || '';
+        const memberCount = el.querySelector('[data-testid=&quot;memberCount&quot;]')?.textContent || '';
+
+        if (name &amp;&amp; link &amp;&amp; !lists.find(l =&gt; l.link === link) &amp;&amp; lists.length &lt; CONFIG.exportLists.maxLists) {
+          lists.push({
+            name: name.trim().substring(0, 100),
+            link,
+            description: description.trim(),
+            memberCount,
+          });
+        }
+      });
+
+      window.scrollBy(0, 800);
+      await sleep(CONFIG.scrollDelay);
+      scrollAttempts++;
+    }
+
+    console.log(`📊 Found ${lists.length} lists`);
+    lists.forEach((l, i) =&gt; {
+      console.log(`  ${i + 1}. ${l.name} ${l.memberCount ? `(${l.memberCount} members)` : ''}`);
+    });
+    if (lists.length === 0) return false;
+
+    const data = { lists, scrapedAt: new Date().toISOString() };
+    download(data, `xactions-lists-${new Date().toISOString().slice(0, 10)}.json`);
+    console.log('📥 Lists exported as JSON');
+    await copyJson(data);
+    return true;
   };
 
   const exportListMembers = async () =&gt; {
@@ -322,20 +635,20 @@
     const members = new Map();
     let noNewItems = 0;
 
-    while (members.size &lt; CONFIG.exportMembers.maxMembers &amp;&amp; noNewItems &lt; 5) {
+    while (members.size &lt; CONFIG.exportMembers.maxMembers &amp;&amp; noNewItems &lt; 5 &amp;&amp; !stopped) {
       const prevSize = members.size;
       const cells = document.querySelectorAll($userCell);
 
       cells.forEach(cell =&gt; {
         const nameEl = cell.querySelector($userName);
         const linkEl = cell.querySelector('a[href^=&quot;/&quot;]');
-        const bioEl = cell.querySelector('[dir=&quot;auto&quot;]:not([data-testid])');
         const username = linkEl?.href?.replace(/^.*x\.com\//, '').split('/')[0] || '';
         if (username &amp;&amp; !members.has(username)) {
           members.set(username, {
             username,
             displayName: nameEl?.textContent?.split('@')[0]?.trim() || '',
-            bio: bioEl?.textContent || '',
+            bio: extractBio(cell),
+            isVerified: !!cell.querySelector('[data-testid=&quot;icon-verified&quot;]'),
           });
         }
       });
@@ -349,23 +662,54 @@
 
     const data = [...members.values()];
     console.log(`📊 Found ${data.length} list members`);
+    if (data.length === 0) return false;
 
-    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `xactions-list-members-${new Date().toISOString().slice(0, 10)}.json`;
-    a.click();
+    download(data, `xactions-list-members-${new Date().toISOString().slice(0, 10)}.json`);
     console.log('📥 List members exported as JSON');
+    await copyJson(data);
+    return true;
+  };
+
+  const runStep = async (label, fn) =&gt; {
+    if (stopped) {
+      results.push({ step: label, result: 'stopped' });
+      return;
+    }
+    let ok = false;
+    try {
+      ok = await fn();
+    } catch (e) {
+      console.error(`❌ ${label} failed: ${e.message}`);
+    }
+    results.push({ step: label, result: CONFIG.dryRun &amp;&amp; !label.startsWith('export') ? 'dry run (no change)' : (ok ? 'success' : 'not completed') });
   };
 
   const run = async () =&gt; {
     console.log('📋 LIST MANAGER - XActions by nichxbt\n');
 
-    if (CONFIG.createList.enabled) await createNewList();
-    if (CONFIG.addUsers.enabled) await addUsersToList();
-    if (CONFIG.exportMembers.enabled) await exportListMembers();
+    // Page guard: every section needs a lists page (your lists, or one list)
+    if (!/\/lists/.test(window.location.pathname)) {
+      console.warn('⚠️ You are not on a Lists page.');
+      console.log('   Go to https://x.com/&lt;your-handle&gt;/lists (or open a list), then paste this script again.');
+      return;
+    }
 
+    if (CONFIG.dryRun) {
+      console.warn('⚠️ DRY RUN is ON. No changes will be made. Set CONFIG.dryRun = false to execute.');
+    }
+    console.log('   To abort mid-flow: window.stopListManager()\n');
+
+    if (CONFIG.createList.enabled) await runStep('createList', createNewList);
+    if (CONFIG.renameList.enabled) await runStep('renameList', renameList);
+    if (CONFIG.deleteList.enabled) await runStep('deleteList', deleteList);
+    if (CONFIG.addUsers.enabled) await runStep('addUsers', addUsersToList);
+    if (CONFIG.exportLists.enabled) await runStep('exportLists', exportYourLists);
+    if (CONFIG.exportMembers.enabled) await runStep('exportMembers', exportListMembers);
+
+    if (results.length &gt; 0) {
+      console.log('\n🏁 SUMMARY');
+      results.forEach(r =&gt; console.log(`   ${r.step.padEnd(14)} ${r.result}`));
+    }
     console.log('\n✅ Done!');
   };
 
@@ -385,17 +729,12 @@
 
     <aside class="sidebar-right">
       <div class="sidebar-card">
-        <h3>📝 Lists &amp; Communities</h3>
-        <a href="/scripts/add-to-list">➕ Add To List</a>
-<a href="/scripts/advanced-lists">📝 Advanced list management</a>
-<a href="/scripts/block-list-manager">📝 Block list import/export/sharing</a>
-<a href="/scripts/manage-lists">📝 Browser console script to manage X/Twitter Lists</a>
-<a href="/scripts/create-community">🏘️ Create Communities</a>
-<a href="/scripts/follow-list-members">👣 Follow List Members</a>
-<a href="/scripts/join-communities">🏘️ Join Communities</a>
-<a href="/scripts/leave-all-communities">🚪 Leave All Communities</a>
-<a href="/scripts/leave-community">🚪 Leave Specific Community</a>
-<a href="/scripts/manage-community">🏘️ Manage Communities</a>
+        <h3>🗂️ Lists</h3>
+        <a href="/scripts/add-to-list">🗂️ Add Users to List</a>
+<a href="/scripts/advanced-lists">🗂️ Advanced List Tools</a>
+<a href="/scripts/follow-list-members">🗂️ Follow List Members</a>
+<a href="/scripts/follow-list">🗂️ Follow Lists</a>
+<a href="/scripts/scrape-list">🗂️ Scrape List</a>
       </div>
       <div class="sidebar-card">
         <h3>🔗 Quick Links</h3>

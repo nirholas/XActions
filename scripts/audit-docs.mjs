@@ -127,6 +127,18 @@ function countTopLevelCommands() {
   return names.size || null;
 }
 
+/**
+ * Browser console scripts: the entries in browser/index.json, which
+ * scripts/build-script-manifest.mjs builds from browser/. Legacy copies in
+ * scripts/ and src/automation/ are not separate scripts and are not counted.
+ */
+function countBrowserScripts() {
+  const file = join(ROOT, 'browser/index.json');
+  if (!existsSync(file)) return null;
+  return JSON.parse(readFileSync(file, 'utf8')).count ?? null;
+}
+
+const BROWSER_SCRIPT_COUNT = countBrowserScripts();
 const SKILL_COUNT = countDirs('skills');
 const ROUTE_MODULE_COUNT = countFiles('api/routes', '.js');
 const CLI_COMMAND_COUNT = countTopLevelCommands();
@@ -461,6 +473,7 @@ for (const file of files) {
       { actual: ROUTE_MODULE_COUNT, label: 'route modules', re: /(?<![\w.])(\d+)\+?\s+(?:REST\s+)?route\s+modules\b/gi, min: 5 },
       // "56-command CLI" is the same claim as "56 CLI commands".
       { actual: CLI_COMMAND_COUNT, label: 'CLI commands', re: /(?<![\w.])(\d+)\+?(?:\s+(?:CLI\s+)?commands\b|-command\b)/gi, min: 10 },
+      { actual: BROWSER_SCRIPT_COUNT, label: 'browser scripts', re: /(?<![\w.])(\d+)\+?\s+(?:standalone\s+)?(?:free\s+)?browser\s+(?:console\s+)?scripts\b/gi, min: 10 },
     ];
     lines.forEach((text, index) => {
       for (const check of countChecks) {
@@ -526,7 +539,7 @@ const counts = [
   ),
   report('documented CLI commands exist', unknownCommands, (f) => `xactions ${f.command}`),
   report(
-    `skill, route and command counts match the tree (${SKILL_COUNT} skills, ${ROUTE_MODULE_COUNT} routes, ${CLI_COMMAND_COUNT} commands)`,
+    `skill, route, command and browser script counts match the tree (${SKILL_COUNT} skills, ${ROUTE_MODULE_COUNT} routes, ${CLI_COMMAND_COUNT} commands, ${BROWSER_SCRIPT_COUNT} browser scripts)`,
     staleCounts,
     (f) => `claims ${f.claimed} ${f.label}, actual ${f.actual}`,
   ),

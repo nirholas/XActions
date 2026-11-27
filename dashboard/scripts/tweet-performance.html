@@ -4,14 +4,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Tweet Performance Comparator — Free X/Twitter Script | XActions</title>
-  <meta name="description" content="Compare the performance of your recent tweets side by side. Ranks by engagement rate, identifies patterns in your best/worst posts, analyzes optimal posting…">
+  <meta name="description" content="Rank your recent posts by engagement, rate and views, and break down what performs by media, content type, length, hashtags and hour.">
   <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, tweet, performance, analytics">
   <meta name="author" content="nich (@nichxbt)">
   <meta name="robots" content="index, follow">
 
   <meta property="og:type" content="article">
   <meta property="og:title" content="Tweet Performance Comparator — XActions">
-  <meta property="og:description" content="Compare the performance of your recent tweets side by side. Ranks by engagement rate, identifies patterns in your best/worst posts, analyzes optimal posting…">
+  <meta property="og:description" content="Rank your recent posts by engagement, rate and views, and break down what performs by media, content type, length, hashtags and hour.">
   <meta property="og:url" content="https://xactions.app/scripts/tweet-performance">
   <meta property="og:site_name" content="XActions">
   <meta property="og:image" content="https://xactions.app/og-run.png">
@@ -19,7 +19,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@nichxbt">
   <meta name="twitter:title" content="Tweet Performance Comparator — XActions">
-  <meta name="twitter:description" content="Compare the performance of your recent tweets side by side. Ranks by engagement rate, identifies patterns in your best/worst posts, analyzes optimal posting…">
+  <meta name="twitter:description" content="Rank your recent posts by engagement, rate and views, and break down what performs by media, content type, length, hashtags and hour.">
   <meta name="twitter:image" content="https://xactions.app/og-run.png">
 
   <link rel="canonical" href="https://xactions.app/scripts/tweet-performance">
@@ -30,7 +30,7 @@
     "@context": "https://schema.org",
     "@type": "TechArticle",
     "headline": "Tweet Performance Comparator — Free X/Twitter Script | XActions",
-    "description": "Compare the performance of your recent tweets side by side. Ranks by engagement rate, identifies patterns in your best/worst posts, analyzes optimal posting…",
+    "description": "Rank your recent posts by engagement, rate and views, and break down what performs by media, content type, length, hashtags and hour.",
     "url": "https://xactions.app/scripts/tweet-performance",
     "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
     "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
@@ -124,28 +124,42 @@
 
       <article class="article">
         <span class="cat-badge">Analytics</span>
-        <span class="source-badge">browser</span>
+        <span class="source-badge">browser/tweetPerformance.js</span>
 
         <div class="meta-row">
-          <span>v1.0.0</span>
-          <span>Updated: 2026-02-24</span>
-          <span>276 lines</span>
+          <span>v1.1.0</span>
+          <span>Updated: 2026-11-27</span>
+          <span>375 lines</span>
           <span>by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></span>
         </div>
 
-        <p>Compare the performance of your recent tweets side by side. Ranks by engagement rate, identifies patterns in your best/worst posts, analyzes optimal posting characteristics (length, media, hashtags, time of day).</p>
+        <p>Rank your recent posts by engagement, rate and views, and break down what performs by media, content type, length, hashtags and hour.</p>
 
         
 
         <h2>How to Use</h2>
-        <ol class="usage-steps"><li>Go to: https://x.com/YOUR_USERNAME (your profile)</li>
+        <ol class="usage-steps"><li>Go to: https://x.com/YOUR_USERNAME (your profile, or any profile)</li>
 <li>Open DevTools Console (F12)</li>
-<li>Paste and run</li>
+<li>Paste browser/tweetPerformance.js and run</li>
 <li>Auto-scrolls to collect tweet performance data</li></ol>
         
 
-        
-        
+        <div class="controls-box">
+        <h3>Runtime Controls</h3>
+        <pre><code>window.stopTweetPerformance() - stop scrolling and report
+window.xactionsPerformance    - the full report object afterwards</code></pre>
+      </div>
+        <section class="config-section">
+        <h2>Configuration Options</h2>
+        <table>
+          <thead><tr><th>Option</th><th>Default</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td><code>sortBy</code></td><td><code>''</code></td><td>'' = off; else also print a top-N table ranked by this key</td></tr>
+<tr><td><code>topN</code></td><td><code>10</code></td><td>rows in the sortBy table</td></tr>
+<tr><td><code>requireProfilePage</code></td><td><code>false</code></td><td>true: refuse to run anywhere but a profile page (otherwise just warn)</td></tr>
+          </tbody>
+        </table>
+      </section>
         <section class="config-code">
         <h2>Default Configuration</h2>
         <div class="code-block">
@@ -156,6 +170,9 @@
     scrollDelay: 2000,
     excludeRetweets: true,
     exportResults: true,
+    sortBy: '',                 // '' = off; else also print a top-N table ranked by this key
+    topN: 10,                   // rows in the sortBy table
+    requireProfilePage: false,  // true: refuse to run anywhere but a profile page (otherwise just warn)
   };</code></pre>
         </div>
       </section>
@@ -172,23 +189,31 @@
  * ============================================================
  *
  * @name        tweetPerformance.js
- * @description Compare the performance of your recent tweets
- *              side by side. Ranks by engagement rate, identifies
- *              patterns in your best/worst posts, analyzes
- *              optimal posting characteristics (length, media,
- *              hashtags, time of day).
+ * @title       Tweet Performance Comparator
+ * @description Rank your recent posts by engagement, rate and views, and break down what performs by media, content type, length, hashtags and hour.
+ * @category    analytics
+ * @page        x.com/&lt;you&gt; or x.com/&lt;username&gt;
+ * @writes      false
+ * @aliases     scripts/tweetPerformance.js, scripts/twitter/tweet-performance.js
  * @author      nichxbt (https://x.com/nichxbt)
- * @version     1.0.0
- * @date        2026-02-24
+ * @version     1.1.0
+ * @date        2026-11-27
  * @repository  https://github.com/nirholas/XActions
  *
  * ============================================================
  * 📋 USAGE:
  *
- * 1. Go to: https://x.com/YOUR_USERNAME (your profile)
+ * 1. Go to: https://x.com/YOUR_USERNAME (your profile, or any profile)
  * 2. Open DevTools Console (F12)
- * 3. Paste and run
+ * 3. Paste browser/tweetPerformance.js and run
  * 4. Auto-scrolls to collect tweet performance data
+ *
+ * Set CONFIG.sortBy ('likes' | 'reposts' | 'replies' | 'views' |
+ * 'engagement' | 'engagementRate') to also print a top-N table.
+ *
+ * 🎮 CONTROLS:
+ *   window.stopTweetPerformance() - stop scrolling and report
+ *   window.xactionsPerformance    - the full report object afterwards
  * ============================================================
  */
 (() =&gt; {
@@ -200,6 +225,9 @@
     scrollDelay: 2000,
     excludeRetweets: true,
     exportResults: true,
+    sortBy: '',                 // '' = off; else also print a top-N table ranked by this key
+    topN: 10,                   // rows in the sortBy table
+    requireProfilePage: false,  // true: refuse to run anywhere but a profile page (otherwise just warn)
   };
 
   const sleep = (ms) =&gt; new Promise(r =&gt; setTimeout(r, ms));
@@ -216,6 +244,24 @@
 
   const fmt = (n) =&gt; n &gt;= 1e6 ? (n/1e6).toFixed(1)+'M' : n &gt;= 1e3 ? (n/1e3).toFixed(1)+'K' : String(n);
 
+  // Stop switch for the scroll loop
+  let stopped = false;
+  window.stopTweetPerformance = () =&gt; {
+    stopped = true;
+    console.log('⚠️ Stop requested. Finishing the current pass, then reporting.');
+  };
+
+  const pathHandle = window.location.pathname.match(/^\/([A-Za-z0-9_]+)/)?.[1] || '';
+  const RESERVED = ['home', 'explore', 'notifications', 'messages', 'i', 'settings', 'search'];
+
+  // Post ID from the time element's permalink first (quoted-post safe)
+  const getTweetId = (article) =&gt; {
+    const timeAnchor = article.querySelector('time')?.closest('a[href*=&quot;/status/&quot;]');
+    const anchor = timeAnchor || article.querySelector('a[href*=&quot;/status/&quot;]');
+    const match = anchor ? anchor.href.match(/\/status\/(\d+)/) : null;
+    return match ? match[1] : null;
+  };
+
   const collectTweets = () =&gt; {
     const articles = document.querySelectorAll('article[data-testid=&quot;tweet&quot;]');
     const tweets = [];
@@ -225,7 +271,8 @@
       // Skip retweets
       if (CONFIG.excludeRetweets) {
         const socialContext = article.querySelector('[data-testid=&quot;socialContext&quot;]');
-        if (socialContext &amp;&amp; /reposted|retweeted/i.test(socialContext.textContent)) continue;
+        // Text match, or a social context that links to the reposter (language independent)
+        if (socialContext &amp;&amp; (/reposted|retweeted/i.test(socialContext.textContent) || socialContext.closest('a'))) continue;
       }
 
       const textEl = article.querySelector('[data-testid=&quot;tweetText&quot;]');
@@ -233,13 +280,15 @@
       if (seen.has(text) &amp;&amp; text.length &gt; 0) continue;
       if (text.length &gt; 0) seen.add(text);
 
-      // Engagement metrics
-      const groups = article.querySelectorAll('[role=&quot;group&quot;] button');
+      // Engagement metrics. The aria-label holds the exact number even when
+      // the visible text is abbreviated (12.3K), so read it first.
+      const groups = article.querySelectorAll('[role=&quot;group&quot;] button, [role=&quot;group&quot;] a');
       let replies = 0, retweets = 0, likes = 0, views = 0, bookmarks = 0;
 
       for (const btn of groups) {
         const label = (btn.getAttribute('aria-label') || '').toLowerCase();
-        const count = parseCount(btn.textContent);
+        const labelNum = label.match(/([\d,.]+)/);
+        const count = labelNum ? parseCount(labelNum[1]) : parseCount(btn.textContent);
         if (label.includes('repl')) replies = count;
         else if (label.includes('repost') || label.includes('retweet')) retweets = count;
         else if (label.includes('like')) likes = count;
@@ -255,9 +304,11 @@
 
       // Media detection
       const hasImage = !!article.querySelector('[data-testid=&quot;tweetPhoto&quot;]');
-      const hasVideo = !!article.querySelector('[data-testid=&quot;videoPlayer&quot;]');
+      const hasVideo = !!article.querySelector('[data-testid=&quot;videoPlayer&quot;], [data-testid=&quot;videoComponent&quot;]');
       const hasLink = !!article.querySelector('[data-testid=&quot;card.wrapper&quot;]');
       const hasPoll = !!article.querySelector('[data-testid=&quot;poll&quot;]');
+      const type = hasPoll ? 'poll' : hasVideo ? 'video' : hasImage ? 'image' : hasLink ? 'link' : 'text';
+      const id = getTweetId(article);
 
       // Timestamp
       const timeEl = article.querySelector('time');
@@ -271,6 +322,9 @@
       const engagementRate = views &gt; 0 ? ((engagement / views) * 100) : 0;
 
       tweets.push({
+        id,
+        url: id &amp;&amp; pathHandle ? `https://x.com/${pathHandle}/status/${id}` : null,
+        type,
         text: text.slice(0, 200),
         fullText: text,
         replies, retweets, likes, views, bookmarks, engagement,
@@ -295,21 +349,41 @@
     console.log('║  by nichxbt — v1.0' + ' '.repeat(W - 21) + '║');
     console.log('╚' + '═'.repeat(W) + '╝');
 
-    console.log(`\n📊 Collecting up to ${CONFIG.maxTweets} tweets...\n`);
+    if (!pathHandle || RESERVED.includes(pathHandle)) {
+      if (CONFIG.requireProfilePage) {
+        console.error('❌ Not on a profile page. Go to x.com/&lt;username&gt; (e.g. your own profile) and run again.');
+        return;
+      }
+      console.warn('⚠️ Not on a profile page. Results work best from x.com/&lt;username&gt;.');
+    } else {
+      console.log(`👤 Profile: @${pathHandle}`);
+    }
+
+    const validSorts = ['likes', 'reposts', 'retweets', 'replies', 'views', 'engagement', 'engagementRate'];
+    if (CONFIG.sortBy &amp;&amp; !validSorts.includes(CONFIG.sortBy)) {
+      console.warn(`⚠️ Unknown sortBy &quot;${CONFIG.sortBy}&quot;. Falling back to &quot;likes&quot;.`);
+      CONFIG.sortBy = 'likes';
+    }
+
+    console.log(`\n📊 Collecting up to ${CONFIG.maxTweets} tweets...`);
+    console.log('💡 To stop early: window.stopTweetPerformance()\n');
 
     const allTweets = new Map();
-
-    for (let round = 0; round &lt; CONFIG.scrollRounds &amp;&amp; allTweets.size &lt; CONFIG.maxTweets; round++) {
-      const found = collectTweets();
-      for (const t of found) {
+    const addFound = () =&gt; {
+      for (const t of collectTweets()) {
         if (allTweets.size &gt;= CONFIG.maxTweets) break;
-        const key = t.text || `tweet_${allTweets.size}`;
+        const key = t.id || t.text || `tweet_${allTweets.size}`;
         if (!allTweets.has(key)) allTweets.set(key, t);
       }
+    };
+
+    for (let round = 0; round &lt; CONFIG.scrollRounds &amp;&amp; allTweets.size &lt; CONFIG.maxTweets &amp;&amp; !stopped; round++) {
+      addFound();
       console.log(`   📜 Round ${round + 1}: ${allTweets.size} tweets`);
       window.scrollTo(0, document.body.scrollHeight);
       await sleep(CONFIG.scrollDelay);
     }
+    addFound();
 
     const tweets = [...allTweets.values()];
     if (tweets.length &lt; 2) {
@@ -359,6 +433,21 @@
       const boost = ((avgMediaEng / avgNoMediaEng - 1) * 100).toFixed(0);
       console.log(`    ${boost &gt; 0 ? '📈' : '📉'} Media ${boost &gt; 0 ? 'boost' : 'penalty'}: ${boost}%`);
     }
+
+    // Content type breakdown
+    const byType = {};
+    for (const t of tweets) {
+      byType[t.type] = byType[t.type] || { count: 0, engagement: 0 };
+      byType[t.type].count++;
+      byType[t.type].engagement += t.engagement;
+    }
+    console.log(`\n  📐 By Content Type:`);
+    Object.entries(byType)
+      .map(([type, d]) =&gt; [type, Math.round(d.engagement / d.count), d.count])
+      .sort((a, b) =&gt; b[1] - a[1])
+      .forEach(([type, avgE, count]) =&gt; {
+        console.log(`    ${type.padEnd(6)} avg ${fmt(avgE)} engagement (${count} tweets)`);
+      });
 
     // Length analysis
     const shortTweets = tweets.filter(t =&gt; t.charLength &lt; 100);
@@ -415,21 +504,48 @@
 
     console.log('\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n');
 
+    // ── Optional top-N table by CONFIG.sortBy ───────────────
+    let ranked = null;
+    if (CONFIG.sortBy) {
+      const sortKey = CONFIG.sortBy === 'reposts' ? 'retweets' : CONFIG.sortBy;
+      ranked = [...tweets].sort((a, b) =&gt; b[sortKey] - a[sortKey]);
+      console.log(`🏆 TOP ${Math.min(CONFIG.topN, ranked.length)} POSTS BY ${CONFIG.sortBy.toUpperCase()}${pathHandle ? ` (@${pathHandle})` : ''}`);
+      console.log(`   #   ❤️ Likes  🔁 RT     💬 Rep    👀 Views   Rate%   Post`);
+      console.log('   ' + '─'.repeat(60));
+      ranked.slice(0, CONFIG.topN).forEach((t, i) =&gt; {
+        const preview = (t.text.replace(/\s+/g, ' ').slice(0, 40) || '(no text)');
+        console.log(`   ${String(i + 1).padEnd(3)} ${fmt(t.likes).padEnd(9)} ${fmt(t.retweets).padEnd(9)} ${fmt(t.replies).padEnd(9)} ${fmt(t.views).padEnd(10)} ${String(t.engagementRate).padEnd(6)} ${preview}`);
+      });
+      console.log('');
+    }
+
+    const data = {
+      profile: pathHandle &amp;&amp; !RESERVED.includes(pathHandle) ? pathHandle : null,
+      profileUrl: pathHandle &amp;&amp; !RESERVED.includes(pathHandle) ? `https://x.com/${pathHandle}` : null,
+      summary: {
+        totalTweets: tweets.length,
+        totalEngagement: tweets.reduce((s, t) =&gt; s + t.engagement, 0),
+        avgLikes: avg(tweets, 'likes'),
+        avgRetweets: avg(tweets, 'retweets'),
+        avgReplies: avg(tweets, 'replies'),
+        avgViews: avg(tweets, 'views'),
+        byType,
+      },
+      rankings: {
+        byEngagement: byEngagement.slice(0, 10).map(t =&gt; ({ text: t.text, engagement: t.engagement, likes: t.likes })),
+        byRate: byRate.slice(0, 10).map(t =&gt; ({ text: t.text, engagementRate: t.engagementRate, views: t.views })),
+      },
+      allTweets: tweets,
+      analyzedAt: new Date().toISOString(),
+    };
+    if (ranked) {
+      data.sortedBy = CONFIG.sortBy;
+      data.ranked = ranked;
+    }
+    window.xactionsPerformance = data;
+    console.log('💡 Full report object: window.xactionsPerformance');
+
     if (CONFIG.exportResults) {
-      const data = {
-        summary: {
-          totalTweets: tweets.length,
-          avgLikes: avg(tweets, 'likes'),
-          avgRetweets: avg(tweets, 'retweets'),
-          avgViews: avg(tweets, 'views'),
-        },
-        rankings: {
-          byEngagement: byEngagement.slice(0, 10).map(t =&gt; ({ text: t.text, engagement: t.engagement, likes: t.likes })),
-          byRate: byRate.slice(0, 10).map(t =&gt; ({ text: t.text, engagementRate: t.engagementRate, views: t.views })),
-        },
-        allTweets: tweets,
-        analyzedAt: new Date().toISOString(),
-      };
       const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
       const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
       a.download = `xactions-performance-${new Date().toISOString().slice(0, 10)}.json`;
@@ -455,16 +571,16 @@
     <aside class="sidebar-right">
       <div class="sidebar-card">
         <h3>📊 Analytics</h3>
-        <a href="/scripts/account-health-monitor">🏥 Account Health Monitor</a>
-<a href="/scripts/audience-demographics">📊 Audience Demographics Analyzer</a>
-<a href="/scripts/audience-overlap">🔗 Audience Overlap Analyzer</a>
-<a href="/scripts/best-time-to-post">⏰ Best Time to Post</a>
-<a href="/scripts/competitor-analysis">🔍 Competitor Analysis</a>
-<a href="/scripts/engagement-analytics">📈 Engagement Analytics</a>
-<a href="/scripts/hashtag-analytics">#️⃣ Hashtag Analytics</a>
-<a href="/scripts/keyword-monitor">🔑 Keyword Monitor &amp; Alerts</a>
-<a href="/scripts/manage-notifications">🔔 Manage Notifications</a>
-<a href="/scripts/notification-manager">🔔 Notification Manager</a>
+        <a href="/scripts/account-health-monitor">📊 Account Health Monitor</a>
+<a href="/scripts/audience-demographics">📊 Audience Demographics</a>
+<a href="/scripts/audience-overlap">📊 Audience Overlap</a>
+<a href="/scripts/audit-followers">📊 Audit Followers</a>
+<a href="/scripts/best-time-to-post">📊 Best Time to Post</a>
+<a href="/scripts/business-analytics">📊 Business Analytics</a>
+<a href="/scripts/business-tools">📊 Business Tools</a>
+<a href="/scripts/competitor-analysis">📊 Competitor Analysis</a>
+<a href="/scripts/content-calendar">📊 Content Calendar</a>
+<a href="/scripts/creator-studio">📊 Creator Studio</a>
       </div>
       <div class="sidebar-card">
         <h3>🔗 Quick Links</h3>

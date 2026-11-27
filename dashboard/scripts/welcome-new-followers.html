@@ -4,14 +4,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Welcome New Followers — Free X/Twitter Script | XActions</title>
-  <meta name="description" content="Automatically send DM welcome messages to new followers. Monitors the followers list, detects new ones via localStorage diff, and sends a personalized…">
-  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, welcome, new, followers, follower monitoring">
+  <meta name="description" content="Detect followers who are new since the last run and draft a personalized welcome DM for each, with a dry run, a cap and long delays.">
+  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, welcome, new, followers, messages">
   <meta name="author" content="nich (@nichxbt)">
   <meta name="robots" content="index, follow">
 
   <meta property="og:type" content="article">
   <meta property="og:title" content="Welcome New Followers — XActions">
-  <meta property="og:description" content="Automatically send DM welcome messages to new followers. Monitors the followers list, detects new ones via localStorage diff, and sends a personalized…">
+  <meta property="og:description" content="Detect followers who are new since the last run and draft a personalized welcome DM for each, with a dry run, a cap and long delays.">
   <meta property="og:url" content="https://xactions.app/scripts/welcome-new-followers">
   <meta property="og:site_name" content="XActions">
   <meta property="og:image" content="https://xactions.app/og-run.png">
@@ -19,7 +19,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@nichxbt">
   <meta name="twitter:title" content="Welcome New Followers — XActions">
-  <meta name="twitter:description" content="Automatically send DM welcome messages to new followers. Monitors the followers list, detects new ones via localStorage diff, and sends a personalized…">
+  <meta name="twitter:description" content="Detect followers who are new since the last run and draft a personalized welcome DM for each, with a dry run, a cap and long delays.">
   <meta name="twitter:image" content="https://xactions.app/og-run.png">
 
   <link rel="canonical" href="https://xactions.app/scripts/welcome-new-followers">
@@ -30,14 +30,14 @@
     "@context": "https://schema.org",
     "@type": "TechArticle",
     "headline": "Welcome New Followers — Free X/Twitter Script | XActions",
-    "description": "Automatically send DM welcome messages to new followers. Monitors the followers list, detects new ones via localStorage diff, and sends a personalized…",
+    "description": "Detect followers who are new since the last run and draft a personalized welcome DM for each, with a dry run, a cap and long delays.",
     "url": "https://xactions.app/scripts/welcome-new-followers",
     "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
     "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
     "datePublished": "2026-03-30",
     "dateModified": "2026-03-30",
-    "articleSection": "Follower Monitoring",
-    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, welcome, new, followers, follower monitoring"
+    "articleSection": "Messages",
+    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, welcome, new, followers, messages"
   }
   </script>
   <script type="application/ld+json">
@@ -47,7 +47,7 @@
     "itemListElement": [
       { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
       { "@type": "ListItem", "position": 2, "name": "Scripts", "item": "https://xactions.app/scripts" },
-      { "@type": "ListItem", "position": 3, "name": "Follower Monitoring", "item": "https://xactions.app/scripts#follower-monitoring" },
+      { "@type": "ListItem", "position": 3, "name": "Messages", "item": "https://xactions.app/scripts#messages" },
       { "@type": "ListItem", "position": 4, "name": "Welcome New Followers", "item": "https://xactions.app/scripts/welcome-new-followers" }
     ]
   }
@@ -116,24 +116,24 @@
 
     <main class="main-content" id="main-content">
       <header class="main-header">
-        <h1>👋 Welcome New Followers</h1>
+        <h1>✉️ Welcome New Followers</h1>
         <div class="breadcrumb">
-          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#follower-monitoring">Follower Monitoring</a> › Welcome New Followers
+          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#messages">Messages</a> › Welcome New Followers
         </div>
       </header>
 
       <article class="article">
-        <span class="cat-badge">Follower Monitoring</span>
-        <span class="source-badge">browser</span>
+        <span class="cat-badge">Messages</span>
+        <span class="source-badge">browser/welcomeNewFollowers.js</span>
 
         <div class="meta-row">
-          <span>v1.0.0</span>
-          <span>Updated: 2026-02-24</span>
-          <span>242 lines</span>
+          <span>v1.1.0</span>
+          <span>Updated: 2026-11-27</span>
+          <span>245 lines</span>
           <span>by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></span>
         </div>
 
-        <p>Automatically send DM welcome messages to new followers. Monitors the followers list, detects new ones via localStorage diff, and sends a personalized greeting. Rate-limited to avoid spam.</p>
+        <p>Detect followers who are new since the last run and draft a personalized welcome DM for each, with a dry run, a cap and long delays.</p>
 
         
 
@@ -141,7 +141,7 @@
         <ol class="usage-steps"><li>Go to: https://x.com/YOUR_USERNAME/followers</li>
 <li>Open DevTools Console (F12)</li>
 <li>Customize CONFIG.messageTemplates</li>
-<li>Paste and run</li></ol>
+<li>Paste browser/welcomeNewFollowers.js and press Enter</li></ol>
         
 
         <div class="controls-box">
@@ -198,13 +198,15 @@
  * ============================================================
  *
  * @name        welcomeNewFollowers.js
- * @description Automatically send DM welcome messages to new
- *              followers. Monitors the followers list, detects
- *              new ones via localStorage diff, and sends a
- *              personalized greeting. Rate-limited to avoid spam.
+ * @title       Welcome New Followers
+ * @description Detect followers who are new since the last run and draft a personalized welcome DM for each, with a dry run, a cap and long delays.
+ * @category    messages
+ * @page        x.com/&lt;you&gt;/followers
+ * @writes      false
+ * @aliases     scripts/welcomeNewFollowers.js
  * @author      nichxbt (https://x.com/nichxbt)
- * @version     1.0.0
- * @date        2026-02-24
+ * @version     1.1.0
+ * @date        2026-11-27
  * @repository  https://github.com/nirholas/XActions
  *
  * ============================================================
@@ -213,7 +215,7 @@
  * 1. Go to: https://x.com/YOUR_USERNAME/followers
  * 2. Open DevTools Console (F12)
  * 3. Customize CONFIG.messageTemplates
- * 4. Paste and run
+ * 4. Paste browser/welcomeNewFollowers.js and press Enter
  *
  * First run: Records existing followers as &quot;known.&quot;
  * Next run:  Detects NEW followers and optionally sends DMs.
@@ -379,6 +381,7 @@
     // Send welcome DMs if configured
     if (CONFIG.sendDMs &amp;&amp; !CONFIG.dryRun &amp;&amp; CONFIG.messageTemplates.length &gt; 0) {
       console.log(`\n📬 Sending welcome DMs (max ${CONFIG.maxDMs})...`);
+      console.log('⚠️ NOTE: Mass DMing may violate X ToS. Use responsibly.\n');
 
       for (const follower of newFollowersList.slice(0, CONFIG.maxDMs)) {
         if (!(await shouldContinue())) break;
@@ -446,17 +449,16 @@
 
     <aside class="sidebar-right">
       <div class="sidebar-card">
-        <h3>👋 Follower Monitoring</h3>
-        <a href="/scripts/follower-tools">👥 Advanced follower tools</a>
-<a href="/scripts/audit-followers">📊 Audit Followers</a>
-<a href="/scripts/continuous-monitor">🔄 Continuous Monitor</a>
-<a href="/scripts/detect-unfollowers">🔍 Detect Unfollowers</a>
-<a href="/scripts/find-fake-followers">🤖 Find Fake Followers</a>
-<a href="/scripts/follower-growth-tracker">📈 Follower Growth Tracker</a>
-<a href="/scripts/followers-growth-tracker">📈 Followers Growth Tracker</a>
-<a href="/scripts/monitor-account">📊 Monitor Account</a>
-<a href="/scripts/new-followers-alert">🔔 New Followers Alert</a>
-<a href="/scripts/remove-followers">🚫 Remove Followers</a>
+        <h3>✉️ Messages</h3>
+        <a href="/scripts/advanced-dm">✉️ Advanced DM Tools</a>
+<a href="/scripts/auto-reply-dms">✉️ Auto-Reply DMs</a>
+<a href="/scripts/bulk-dm">✉️ Bulk DM</a>
+<a href="/scripts/dm-calls">✉️ DM Calls</a>
+<a href="/scripts/dm-manager">✉️ DM Manager</a>
+<a href="/scripts/encrypted-dm">✉️ Encrypted DMs</a>
+<a href="/scripts/group-dm">✉️ Group DM</a>
+<a href="/scripts/scrape-dms">✉️ Scrape DMs</a>
+<a href="/scripts/send-direct-message">✉️ Send Direct Messages</a>
       </div>
       <div class="sidebar-card">
         <h3>🔗 Quick Links</h3>

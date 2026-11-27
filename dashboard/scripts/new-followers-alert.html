@@ -4,14 +4,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>New Followers Alert — Free X/Twitter Script | XActions</title>
-  <meta name="description" content="Get notified when you gain new followers. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
-  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, new, followers, alert, follower monitoring">
+  <meta name="description" content="Compare your followers with the last snapshot to list new followers and unfollowers, with welcome message templates.">
+  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, new, followers, alert, monitor">
   <meta name="author" content="nich (@nichxbt)">
   <meta name="robots" content="index, follow">
 
   <meta property="og:type" content="article">
   <meta property="og:title" content="New Followers Alert — XActions">
-  <meta property="og:description" content="Get notified when you gain new followers. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
+  <meta property="og:description" content="Compare your followers with the last snapshot to list new followers and unfollowers, with welcome message templates.">
   <meta property="og:url" content="https://xactions.app/scripts/new-followers-alert">
   <meta property="og:site_name" content="XActions">
   <meta property="og:image" content="https://xactions.app/og-run.png">
@@ -19,7 +19,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@nichxbt">
   <meta name="twitter:title" content="New Followers Alert — XActions">
-  <meta name="twitter:description" content="Get notified when you gain new followers. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
+  <meta name="twitter:description" content="Compare your followers with the last snapshot to list new followers and unfollowers, with welcome message templates.">
   <meta name="twitter:image" content="https://xactions.app/og-run.png">
 
   <link rel="canonical" href="https://xactions.app/scripts/new-followers-alert">
@@ -30,14 +30,14 @@
     "@context": "https://schema.org",
     "@type": "TechArticle",
     "headline": "New Followers Alert — Free X/Twitter Script | XActions",
-    "description": "Get notified when you gain new followers. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.",
+    "description": "Compare your followers with the last snapshot to list new followers and unfollowers, with welcome message templates.",
     "url": "https://xactions.app/scripts/new-followers-alert",
     "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
     "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
     "datePublished": "2026-03-30",
     "dateModified": "2026-03-30",
-    "articleSection": "Follower Monitoring",
-    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, new, followers, alert, follower monitoring"
+    "articleSection": "Monitor",
+    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, new, followers, alert, monitor"
   }
   </script>
   <script type="application/ld+json">
@@ -47,7 +47,7 @@
     "itemListElement": [
       { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
       { "@type": "ListItem", "position": 2, "name": "Scripts", "item": "https://xactions.app/scripts" },
-      { "@type": "ListItem", "position": 3, "name": "Follower Monitoring", "item": "https://xactions.app/scripts#follower-monitoring" },
+      { "@type": "ListItem", "position": 3, "name": "Monitor", "item": "https://xactions.app/scripts#monitor" },
       { "@type": "ListItem", "position": 4, "name": "New Followers Alert", "item": "https://xactions.app/scripts/new-followers-alert" }
     ]
   }
@@ -116,37 +116,72 @@
 
     <main class="main-content" id="main-content">
       <header class="main-header">
-        <h1>🔔 New Followers Alert</h1>
+        <h1>👀 New Followers Alert</h1>
         <div class="breadcrumb">
-          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#follower-monitoring">Follower Monitoring</a> › New Followers Alert
+          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#monitor">Monitor</a> › New Followers Alert
         </div>
       </header>
 
       <article class="article">
-        <span class="cat-badge">Follower Monitoring</span>
-        <span class="source-badge">browser</span>
+        <span class="cat-badge">Monitor</span>
+        <span class="source-badge">browser/newFollowersAlert.js</span>
 
         <div class="meta-row">
-          
-          
-          <span>138 lines</span>
+          <span>v1.1.0</span>
+          <span>Updated: 2026-11-26</span>
+          <span>265 lines</span>
           <span>by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></span>
         </div>
 
-        <p>Get notified when you gain new followers</p>
+        <p>Compare your followers with the last snapshot to list new followers and unfollowers, with welcome message templates.</p>
 
         
 
         <h2>How to Use</h2>
         <ol class="usage-steps"><li>Go to https://x.com/YOUR_USERNAME/followers</li>
 <li>Open Developer Console (Ctrl+Shift+J or Cmd+Option+J)</li>
-<li>Paste this script and press Enter</li>
-<li>Run periodically to see your new followers!</li></ol>
+<li>Paste browser/newFollowersAlert.js and press Enter</li>
+<li>Run periodically to see your new followers!</li>
+<li>The last result is available as window.newFollowersResult</li></ol>
         
 
         
-        
-        
+        <section class="config-section">
+        <h2>Configuration Options</h2>
+        <table>
+          <thead><tr><th>Option</th><th>Default</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td><code>scrollDelay</code></td><td><code>1500</code></td><td>ms between scrolls</td></tr>
+<tr><td><code>maxRetries</code></td><td><code>5</code></td><td>Empty scrolls before stopping</td></tr>
+<tr><td><code>maxScrolls</code></td><td><code>0</code></td><td>Hard cap on scrolls, 0 = no cap</td></tr>
+<tr><td><code>maxFollowers</code></td><td><code>0</code></td><td>Stop after this many followers, 0 = no cap</td></tr>
+<tr><td><code>autoDownload</code></td><td><code>false</code></td><td>Download a .txt report when there are new followers</td></tr>
+<tr><td><code>copyToClipboard</code></td><td><code>false</code></td><td>Copy the welcome messages to the clipboard</td></tr>
+          </tbody>
+        </table>
+      </section>
+        <section class="config-code">
+        <h2>Default Configuration</h2>
+        <div class="code-block">
+          <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.querySelector('code').textContent).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy',2000)})">Copy</button>
+          <pre><code>const CONFIG = {
+    scrollDelay: 1500,    // ms between scrolls
+    maxRetries: 5,        // Empty scrolls before stopping
+    maxScrolls: 0,        // Hard cap on scrolls, 0 = no cap
+    maxFollowers: 0,      // Stop after this many followers, 0 = no cap
+    // Welcome message templates, rotated per new follower. {name} = first name,
+    // {username} = handle. Empty = the short &quot;thanks for the follow&quot; template.
+    welcomeMessages: [
+      // &quot;Hey {name}! Thanks for the follow! 🙏 Glad to connect!&quot;,
+      // &quot;Welcome {name}! 👋 Thanks for following! What brings you here?&quot;,
+      // &quot;Hey {name}! Appreciate the follow! Looking forward to connecting! 🚀&quot;,
+      // &quot;Thanks for following {name}! Always great to meet new people! ✨&quot;,
+    ],
+    autoDownload: false,     // Download a .txt report when there are new followers
+    copyToClipboard: false,  // Copy the welcome messages to the clipboard
+  };</code></pre>
+        </div>
+      </section>
 
         <section class="full-code">
           <h2>Full Script</h2>
@@ -154,17 +189,53 @@
           <div class="code-block">
             <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.querySelector('code').textContent).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy Script',2000)})">Copy Script</button>
             <pre><code>// Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
+/**
+ * @name        newFollowersAlert.js
+ * @title       New Followers Alert
+ * @description Compare your followers with the last snapshot to list new followers and unfollowers, with welcome message templates.
+ * @category    monitor
+ * @page        x.com/&lt;you&gt;/followers
+ * @writes      false
+ * @aliases     scripts/newFollowersAlert.js, scripts/twitter/new-followers-alert.js
+ * @author      nichxbt (https://x.com/nichxbt)
+ * @version     1.1.0
+ * @date        2026-11-26
+ */
 // NewFollowersAlert.js — Get notified when you gain new followers
 // https://github.com/nirholas/XActions
 //
 // HOW TO USE:
 // 1. Go to https://x.com/YOUR_USERNAME/followers
 // 2. Open Developer Console (Ctrl+Shift+J or Cmd+Option+J)
-// 3. Paste this script and press Enter
+// 3. Paste browser/newFollowersAlert.js and press Enter
 // 4. Run periodically to see your new followers!
+// 5. The last result is available as window.newFollowersResult
 
 (() =&gt; {
+  // =============================================
+  // CONFIGURATION
+  // =============================================
+  const CONFIG = {
+    scrollDelay: 1500,    // ms between scrolls
+    maxRetries: 5,        // Empty scrolls before stopping
+    maxScrolls: 0,        // Hard cap on scrolls, 0 = no cap
+    maxFollowers: 0,      // Stop after this many followers, 0 = no cap
+    // Welcome message templates, rotated per new follower. {name} = first name,
+    // {username} = handle. Empty = the short &quot;thanks for the follow&quot; template.
+    welcomeMessages: [
+      // &quot;Hey {name}! Thanks for the follow! 🙏 Glad to connect!&quot;,
+      // &quot;Welcome {name}! 👋 Thanks for following! What brings you here?&quot;,
+      // &quot;Hey {name}! Appreciate the follow! Looking forward to connecting! 🚀&quot;,
+      // &quot;Thanks for following {name}! Always great to meet new people! ✨&quot;,
+    ],
+    autoDownload: false,     // Download a .txt report when there are new followers
+    copyToClipboard: false,  // Copy the welcome messages to the clipboard
+  };
+  // =============================================
+
   const STORAGE_KEY = 'xactions_new_followers';
+  // Snapshot key used by the old scripts/twitter/new-followers-alert.js, read as a fallback
+  const LEGACY_STORAGE_KEY = 'xactions_followers_snapshot';
   const sleep = (ms) =&gt; new Promise(r =&gt; setTimeout(r, ms));
 
   if (!window.location.pathname.includes('/followers')) {
@@ -178,17 +249,21 @@
     const followers = new Map(); // username -&gt; display name
     let previousSize = 0;
     let retries = 0;
+    let scrolls = 0;
 
     console.log('🔍 Scanning followers...');
 
-    while (retries &lt; 5) {
+    while (retries &lt; CONFIG.maxRetries
+      &amp;&amp; (!CONFIG.maxScrolls || scrolls &lt; CONFIG.maxScrolls)
+      &amp;&amp; (!CONFIG.maxFollowers || followers.size &lt; CONFIG.maxFollowers)) {
       window.scrollTo(0, document.body.scrollHeight);
-      await sleep(1500);
+      await sleep(CONFIG.scrollDelay);
+      scrolls++;
 
       document.querySelectorAll('[data-testid=&quot;UserCell&quot;]').forEach(cell =&gt; {
         const link = cell.querySelector('a[href^=&quot;/&quot;]');
         const nameEl = cell.querySelector('[dir=&quot;ltr&quot;] &gt; span');
-        
+
         if (link) {
           const user = link.getAttribute('href').replace('/', '').split('/')[0].toLowerCase();
           const displayName = nameEl?.textContent || user;
@@ -200,7 +275,7 @@
 
       if (followers.size === previousSize) retries++;
       else { retries = 0; previousSize = followers.size; }
-      
+
       console.log(`   Found ${followers.size} followers...`);
     }
 
@@ -210,7 +285,19 @@
   const loadPrevious = () =&gt; {
     try {
       const data = localStorage.getItem(STORAGE_KEY);
-      return data ? JSON.parse(data) : null;
+      if (data) return JSON.parse(data);
+      // Fall back to a snapshot saved by the old standalone variant
+      const legacy = localStorage.getItem(LEGACY_STORAGE_KEY);
+      if (!legacy) return null;
+      const parsed = JSON.parse(legacy);
+      const legacyFollowers = {};
+      Object.entries(parsed.followers || {}).forEach(([u, name]) =&gt; { legacyFollowers[u.toLowerCase()] = name; });
+      return {
+        username,
+        followers: legacyFollowers,
+        timestamp: parsed.savedAt,
+        count: parsed.count ?? Object.keys(legacyFollowers).length,
+      };
     } catch (e) {
       return null;
     }
@@ -227,6 +314,53 @@
     return data;
   };
 
+  const welcomeFor = (f, i) =&gt; {
+    if (CONFIG.welcomeMessages.length === 0) return `Hey @${f.user}, thanks for the follow! 🙏`;
+    const template = CONFIG.welcomeMessages[i % CONFIG.welcomeMessages.length];
+    return template
+      .replace('{name}', (f.displayName || f.user).split(' ')[0])
+      .replace('{username}', f.user);
+  };
+
+  const downloadReport = (timestamp, since, newFollowers, lostFollowers, previousNames) =&gt; {
+    let report = `NEW FOLLOWERS REPORT\n`;
+    report += `${'='.repeat(50)}\n`;
+    report += `Generated: ${timestamp}\n`;
+    report += `Since: ${since}\n`;
+    report += `New followers: ${newFollowers.length}\n`;
+    report += `${'='.repeat(50)}\n\n`;
+
+    report += `NEW FOLLOWERS:\n`;
+    report += `${'-'.repeat(30)}\n\n`;
+
+    newFollowers.forEach((f, i) =&gt; {
+      report += `${i + 1}. ${f.displayName} (@${f.user})\n`;
+      report += `   Profile: https://x.com/${f.user}\n`;
+      report += `   Welcome Message: ${welcomeFor(f, i)}\n`;
+      report += '\n';
+    });
+
+    if (lostFollowers.length &gt; 0) {
+      report += `\nUNFOLLOWERS (${lostFollowers.length}):\n`;
+      report += `${'-'.repeat(30)}\n`;
+      lostFollowers.forEach((u, i) =&gt; {
+        report += `${i + 1}. ${previousNames[u] || u} (@${u})\n`;
+      });
+    }
+
+    const blob = new Blob([report], { type: 'text/plain' });
+    const blobUrl = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = blobUrl;
+    a.download = `new_followers_${timestamp.split('T')[0]}.txt`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(blobUrl);
+
+    console.log('💾 Report downloaded!');
+  };
+
   const run = async () =&gt; {
     console.log(`\n🎉 XActions — New Followers Tracker for @${username}\n`);
 
@@ -234,6 +368,8 @@
     console.log(`\n✅ Total followers: ${currentFollowers.size}\n`);
 
     const previous = loadPrevious();
+    const timestamp = new Date().toISOString();
+    const result = { timestamp, newFollowers: [], unfollowers: [] };
 
     if (previous &amp;&amp; previous.username.toLowerCase() === username.toLowerCase()) {
       const prevUsers = new Set(Object.keys(previous.followers));
@@ -255,18 +391,21 @@
         newFollowers.forEach((f, i) =&gt; {
           console.log(`   ${i + 1}. ${f.displayName} (@${f.user})`);
           console.log(`      https://x.com/${f.user}`);
+          if (CONFIG.welcomeMessages.length &gt; 0) console.log(`      💬 &quot;${welcomeFor(f, i)}&quot;`);
         });
 
-        // Create welcome message template
-        console.log('\n📝 Quick welcome template (copy &amp; customize):');
-        console.log('─'.repeat(50));
-        newFollowers.slice(0, 5).forEach(f =&gt; {
-          console.log(`Hey @${f.user}, thanks for the follow! 🙏`);
-        });
-        if (newFollowers.length &gt; 5) {
-          console.log(`... and ${newFollowers.length - 5} more!`);
+        if (CONFIG.welcomeMessages.length === 0) {
+          // Create welcome message template
+          console.log('\n📝 Quick welcome template (copy &amp; customize):');
+          console.log('─'.repeat(50));
+          newFollowers.slice(0, 5).forEach((f, i) =&gt; {
+            console.log(welcomeFor(f, i));
+          });
+          if (newFollowers.length &gt; 5) {
+            console.log(`... and ${newFollowers.length - 5} more!`);
+          }
+          console.log('─'.repeat(50));
         }
-        console.log('─'.repeat(50));
       } else {
         console.log('📭 No new followers since last check.');
       }
@@ -274,10 +413,30 @@
       // Check for unfollowers too
       const currentUsers = new Set(currentFollowers.keys());
       const lostFollowers = Object.keys(previous.followers).filter(u =&gt; !currentUsers.has(u));
-      
+
       if (lostFollowers.length &gt; 0) {
         console.log(`\n👋 ${lostFollowers.length} people unfollowed you:`);
-        lostFollowers.forEach(u =&gt; console.log(`   @${u}`));
+        lostFollowers.forEach(u =&gt; {
+          const name = previous.followers[u];
+          console.log(`   ${name &amp;&amp; name !== u ? `${name} ` : ''}@${u}`);
+        });
+      }
+
+      result.newFollowers = newFollowers;
+      result.unfollowers = lostFollowers.map(u =&gt; ({ user: u, displayName: previous.followers[u] || u }));
+
+      if (CONFIG.autoDownload &amp;&amp; newFollowers.length &gt; 0) {
+        downloadReport(timestamp, previous.timestamp, newFollowers, lostFollowers, previous.followers);
+      }
+
+      if (CONFIG.copyToClipboard &amp;&amp; newFollowers.length &gt; 0) {
+        const messages = newFollowers.map((f, i) =&gt; `@${f.user}: ${welcomeFor(f, i)}`).join('\n\n');
+        try {
+          await navigator.clipboard.writeText(messages);
+          console.log('📋 Welcome messages copied to clipboard!');
+        } catch (e) {
+          console.warn('⚠️ Could not copy to clipboard (click the page first, then run again).');
+        }
       }
     } else {
       console.log('📸 First scan! Saving your current followers...');
@@ -286,6 +445,9 @@
 
     saveFollowers(currentFollowers);
     console.log('\n💾 Snapshot saved! Run again anytime to track changes.\n');
+
+    window.newFollowersResult = result;
+    console.log('💡 Access via: window.newFollowersResult');
   };
 
   run();
@@ -304,17 +466,13 @@
 
     <aside class="sidebar-right">
       <div class="sidebar-card">
-        <h3>🔔 Follower Monitoring</h3>
-        <a href="/scripts/follower-tools">👥 Advanced follower tools</a>
-<a href="/scripts/audit-followers">📊 Audit Followers</a>
-<a href="/scripts/continuous-monitor">🔄 Continuous Monitor</a>
-<a href="/scripts/detect-unfollowers">🔍 Detect Unfollowers</a>
-<a href="/scripts/find-fake-followers">🤖 Find Fake Followers</a>
-<a href="/scripts/follower-growth-tracker">📈 Follower Growth Tracker</a>
-<a href="/scripts/followers-growth-tracker">📈 Followers Growth Tracker</a>
-<a href="/scripts/monitor-account">📊 Monitor Account</a>
-<a href="/scripts/remove-followers">🚫 Remove Followers</a>
-<a href="/scripts/welcome-new-followers">👋 Welcome New Followers</a>
+        <h3>👀 Monitor</h3>
+        <a href="/scripts/continuous-monitor">👀 Continuous Monitor</a>
+<a href="/scripts/detect-unfollowers">👀 Detect Unfollowers</a>
+<a href="/scripts/keyword-monitor">👀 Keyword Monitor</a>
+<a href="/scripts/monitor-account">👀 Monitor Account</a>
+<a href="/scripts/notification-manager">👀 Notification Manager</a>
+<a href="/scripts/trending-topic-monitor">👀 Trending Topic Monitor</a>
       </div>
       <div class="sidebar-card">
         <h3>🔗 Quick Links</h3>

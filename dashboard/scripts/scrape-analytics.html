@@ -3,23 +3,23 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Browser console script to scrape X/Twitter analytics data | XActions</title>
-  <meta name="description" content="Browser console script to scrape X/Twitter analytics data. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
-  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, scrape, analytics, scrapers">
+  <title>Scrape Analytics — Free X/Twitter Script | XActions</title>
+  <meta name="description" content="Scrape account and post analytics: impressions, engagement rates and audience. Free X/Twitter browser script, no API key needed.">
+  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, scrape, analytics, analytics">
   <meta name="author" content="nich (@nichxbt)">
   <meta name="robots" content="index, follow">
 
   <meta property="og:type" content="article">
-  <meta property="og:title" content="Browser console script to scrape X/Twitter analytics data — XActions">
-  <meta property="og:description" content="Browser console script to scrape X/Twitter analytics data. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
+  <meta property="og:title" content="Scrape Analytics — XActions">
+  <meta property="og:description" content="Scrape account and post analytics: impressions, engagement rates and audience. Free X/Twitter browser script, no API key needed.">
   <meta property="og:url" content="https://xactions.app/scripts/scrape-analytics">
   <meta property="og:site_name" content="XActions">
   <meta property="og:image" content="https://xactions.app/og-run.png">
 
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@nichxbt">
-  <meta name="twitter:title" content="Browser console script to scrape X/Twitter analytics data — XActions">
-  <meta name="twitter:description" content="Browser console script to scrape X/Twitter analytics data. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
+  <meta name="twitter:title" content="Scrape Analytics — XActions">
+  <meta name="twitter:description" content="Scrape account and post analytics: impressions, engagement rates and audience. Free X/Twitter browser script, no API key needed.">
   <meta name="twitter:image" content="https://xactions.app/og-run.png">
 
   <link rel="canonical" href="https://xactions.app/scripts/scrape-analytics">
@@ -29,15 +29,15 @@
   {
     "@context": "https://schema.org",
     "@type": "TechArticle",
-    "headline": "Browser console script to scrape X/Twitter analytics data | XActions",
-    "description": "Browser console script to scrape X/Twitter analytics data. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.",
+    "headline": "Scrape Analytics — Free X/Twitter Script | XActions",
+    "description": "Scrape account and post analytics: impressions, engagement rates and audience. Free X/Twitter browser script, no API key needed.",
     "url": "https://xactions.app/scripts/scrape-analytics",
     "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
     "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
     "datePublished": "2026-03-30",
     "dateModified": "2026-03-30",
-    "articleSection": "Scrapers",
-    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, scrape, analytics, scrapers"
+    "articleSection": "Analytics",
+    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, scrape, analytics, analytics"
   }
   </script>
   <script type="application/ld+json">
@@ -47,8 +47,8 @@
     "itemListElement": [
       { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
       { "@type": "ListItem", "position": 2, "name": "Scripts", "item": "https://xactions.app/scripts" },
-      { "@type": "ListItem", "position": 3, "name": "Scrapers", "item": "https://xactions.app/scripts#scrapers" },
-      { "@type": "ListItem", "position": 4, "name": "Browser console script to scrape X/Twitter analytics data", "item": "https://xactions.app/scripts/scrape-analytics" }
+      { "@type": "ListItem", "position": 3, "name": "Analytics", "item": "https://xactions.app/scripts#analytics" },
+      { "@type": "ListItem", "position": 4, "name": "Scrape Analytics", "item": "https://xactions.app/scripts/scrape-analytics" }
     ]
   }
   </script>
@@ -116,24 +116,24 @@
 
     <main class="main-content" id="main-content">
       <header class="main-header">
-        <h1>📊 Browser console script to scrape X/Twitter analytics data</h1>
+        <h1>📊 Scrape Analytics</h1>
         <div class="breadcrumb">
-          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#scrapers">Scrapers</a> › Browser console script to scrape X/Twitter analytics data
+          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#analytics">Analytics</a> › Scrape Analytics
         </div>
       </header>
 
       <article class="article">
-        <span class="cat-badge">Scrapers</span>
-        <span class="source-badge">scripts</span>
+        <span class="cat-badge">Analytics</span>
+        <span class="source-badge">browser/scrapeAnalytics.js</span>
 
         <div class="meta-row">
           
           
-          <span>145 lines</span>
+          <span>153 lines</span>
           <span>by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></span>
         </div>
 
-        <p>Browser console script to scrape X/Twitter analytics data — a free, open-source browser console script for X/Twitter automation. No API keys or fees required.</p>
+        <p>Scrape account and post analytics: impressions, engagement rates and audience.</p>
 
         
 
@@ -175,7 +175,15 @@
           <div class="code-block">
             <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.querySelector('code').textContent).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy Script',2000)})">Copy Script</button>
             <pre><code>// Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
-// scripts/scrapeAnalytics.js
+/**
+ * @name        scrapeAnalytics.js
+ * @title       Scrape Analytics
+ * @description Scrape account and post analytics: impressions, engagement rates and audience.
+ * @category    analytics
+ * @page        x.com/i/account_analytics
+ * @writes      false
+ * @aliases     scripts/scrapeAnalytics.js
+ */
 // Browser console script to scrape X/Twitter analytics data
 // Paste in DevTools console on x.com/i/account_analytics or any post
 // by nichxbt
@@ -313,7 +321,7 @@
     try {
       await navigator.clipboard.writeText(JSON.stringify(result, null, 2));
       console.log('\n✅ Copied to clipboard!');
-    } catch (e) {}
+    } catch { /* clipboard needs page focus; the result is already printed above */ }
   };
 
   run();
@@ -332,17 +340,17 @@
 
     <aside class="sidebar-right">
       <div class="sidebar-card">
-        <h3>📊 Scrapers</h3>
-        <a href="/scripts/scrape-bookmarks">🔖 Bookmarks Scraper</a>
-<a href="/scripts/scrape-dms">✉️ DM Scraper</a>
-<a href="/scripts/export-to-csv">📄 Export to CSV Utility</a>
-<a href="/scripts/scrape-followers">👥 Followers Scraper</a>
-<a href="/scripts/scrape-following">👥 Following Scraper</a>
-<a href="/scripts/scrape-hashtag">#️⃣ Hashtag Scraper</a>
-<a href="/scripts/scrape-likers">❤️ Likers Scraper</a>
-<a href="/scripts/scrape-likes">❤️ Likes Scraper</a>
-<a href="/scripts/link-scraper">🔗 Link Scraper</a>
-<a href="/scripts/scrape-list">📝 List Members Scraper</a>
+        <h3>📊 Analytics</h3>
+        <a href="/scripts/account-health-monitor">📊 Account Health Monitor</a>
+<a href="/scripts/audience-demographics">📊 Audience Demographics</a>
+<a href="/scripts/audience-overlap">📊 Audience Overlap</a>
+<a href="/scripts/audit-followers">📊 Audit Followers</a>
+<a href="/scripts/best-time-to-post">📊 Best Time to Post</a>
+<a href="/scripts/business-analytics">📊 Business Analytics</a>
+<a href="/scripts/business-tools">📊 Business Tools</a>
+<a href="/scripts/competitor-analysis">📊 Competitor Analysis</a>
+<a href="/scripts/content-calendar">📊 Content Calendar</a>
+<a href="/scripts/creator-studio">📊 Creator Studio</a>
       </div>
       <div class="sidebar-card">
         <h3>🔗 Quick Links</h3>

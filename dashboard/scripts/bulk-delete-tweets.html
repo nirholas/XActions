@@ -4,14 +4,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Bulk Delete Tweets — Free X/Twitter Script | XActions</title>
-  <meta name="description" content="Delete your tweets by age, keyword, or engagement threshold. The #1 most-requested Twitter automation feature.">
-  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, bulk, delete, tweets, content tools">
+  <meta name="description" content="Delete your own posts by age, keyword, type or engagement, with a dry run, a cap and a countdown.">
+  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, bulk, delete, tweets, clean up">
   <meta name="author" content="nich (@nichxbt)">
   <meta name="robots" content="index, follow">
 
   <meta property="og:type" content="article">
   <meta property="og:title" content="Bulk Delete Tweets — XActions">
-  <meta property="og:description" content="Delete your tweets by age, keyword, or engagement threshold. The #1 most-requested Twitter automation feature.">
+  <meta property="og:description" content="Delete your own posts by age, keyword, type or engagement, with a dry run, a cap and a countdown.">
   <meta property="og:url" content="https://xactions.app/scripts/bulk-delete-tweets">
   <meta property="og:site_name" content="XActions">
   <meta property="og:image" content="https://xactions.app/og-run.png">
@@ -19,7 +19,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@nichxbt">
   <meta name="twitter:title" content="Bulk Delete Tweets — XActions">
-  <meta name="twitter:description" content="Delete your tweets by age, keyword, or engagement threshold. The #1 most-requested Twitter automation feature.">
+  <meta name="twitter:description" content="Delete your own posts by age, keyword, type or engagement, with a dry run, a cap and a countdown.">
   <meta name="twitter:image" content="https://xactions.app/og-run.png">
 
   <link rel="canonical" href="https://xactions.app/scripts/bulk-delete-tweets">
@@ -30,14 +30,14 @@
     "@context": "https://schema.org",
     "@type": "TechArticle",
     "headline": "Bulk Delete Tweets — Free X/Twitter Script | XActions",
-    "description": "Delete your tweets by age, keyword, or engagement threshold. The #1 most-requested Twitter automation feature.",
+    "description": "Delete your own posts by age, keyword, type or engagement, with a dry run, a cap and a countdown.",
     "url": "https://xactions.app/scripts/bulk-delete-tweets",
     "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
     "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
     "datePublished": "2026-03-30",
     "dateModified": "2026-03-30",
-    "articleSection": "Content Tools",
-    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, bulk, delete, tweets, content tools"
+    "articleSection": "Clean Up",
+    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, bulk, delete, tweets, clean up"
   }
   </script>
   <script type="application/ld+json">
@@ -47,7 +47,7 @@
     "itemListElement": [
       { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
       { "@type": "ListItem", "position": 2, "name": "Scripts", "item": "https://xactions.app/scripts" },
-      { "@type": "ListItem", "position": 3, "name": "Content Tools", "item": "https://xactions.app/scripts#content-tools" },
+      { "@type": "ListItem", "position": 3, "name": "Clean Up", "item": "https://xactions.app/scripts#clean-up" },
       { "@type": "ListItem", "position": 4, "name": "Bulk Delete Tweets", "item": "https://xactions.app/scripts/bulk-delete-tweets" }
     ]
   }
@@ -116,24 +116,24 @@
 
     <main class="main-content" id="main-content">
       <header class="main-header">
-        <h1>🗑️ Bulk Delete Tweets</h1>
+        <h1>🧹 Bulk Delete Tweets</h1>
         <div class="breadcrumb">
-          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#content-tools">Content Tools</a> › Bulk Delete Tweets
+          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#clean-up">Clean Up</a> › Bulk Delete Tweets
         </div>
       </header>
 
       <article class="article">
-        <span class="cat-badge">Content Tools</span>
-        <span class="source-badge">browser</span>
+        <span class="cat-badge">Clean Up</span>
+        <span class="source-badge">browser/bulkDeleteTweets.js</span>
 
         <div class="meta-row">
-          <span>v1.0.0</span>
-          <span>Updated: 2026-02-24</span>
-          <span>428 lines</span>
+          <span>v1.1.0</span>
+          <span>Updated: 2026-11-26</span>
+          <span>501 lines</span>
           <span>by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></span>
         </div>
 
-        <p>Delete your tweets by age, keyword, or engagement threshold. The #1 most-requested Twitter automation feature.</p>
+        <p>Delete your own posts by age, keyword, type or engagement, with a dry run, a cap and a countdown.</p>
 
         <div class="warning-box"><p>⚠️ DELETION IS PERMANENT. There is no undo. Export first!</p></div>
 
@@ -141,14 +141,15 @@
         <ol class="usage-steps"><li>Go to: https://x.com/YOUR_USERNAME (its tabs work too, e.g. /with_replies)</li>
 <li>Open DevTools Console (F12)</li>
 <li>Configure the filters below. This deletes for real: set dryRun = true</li>
-<li>Paste this script and press Enter</li></ol>
+<li>Paste browser/bulkDeleteTweets.js and press Enter. Live mode counts</li></ol>
         
 
         <div class="controls-box">
         <h3>Runtime Controls</h3>
         <pre><code>XActionsUtils.pause()   — pause
 XActionsUtils.resume()  — resume
-XActionsUtils.abort()   — stop</code></pre>
+XActionsUtils.abort()   — stop
+window.stopDeleteTweets() - stop after the current post</code></pre>
       </div>
         <section class="config-section">
         <h2>Configuration Options</h2>
@@ -158,7 +159,7 @@ XActionsUtils.abort()   — stop</code></pre>
             <tr><td><code>olderThanDays</code></td><td><code>null</code></td><td>Delete tweets older than N days (null = ignore)</td></tr>
 <tr><td><code>beforeDate</code></td><td><code>null</code></td><td>Delete tweets before this date: 'YYYY-MM-DD' (null = ignore)</td></tr>
 <tr><td><code>afterDate</code></td><td><code>null</code></td><td>Delete tweets after this date: 'YYYY-MM-DD' (null = ignore)</td></tr>
-<tr><td><code>maxLikes</code></td><td><code>null</code></td><td>Only delete if likes &lt;= this (null = ignore)</td></tr>
+<tr><td><code>maxLikes</code></td><td><code>null</code></td><td>Only delete if likes &lt;= this (null = ignore); protects high performers</td></tr>
 <tr><td><code>maxRetweets</code></td><td><code>null</code></td><td>Only delete if retweets &lt;= this (null = ignore)</td></tr>
 <tr><td><code>containsKeywords</code></td><td><code>[]</code></td><td>Delete if text contains ANY of these (empty = ignore)</td></tr>
 <tr><td><code>excludeKeywords</code></td><td><code>[]</code></td><td>NEVER delete if text contains ANY of these</td></tr>
@@ -166,10 +167,12 @@ XActionsUtils.abort()   — stop</code></pre>
 <tr><td><code>excludeThreads</code></td><td><code>false</code></td><td>Skip tweets that are part of a thread</td></tr>
 <tr><td><code>onlyRetweets</code></td><td><code>false</code></td><td>Only delete retweets (not original tweets)</td></tr>
 <tr><td><code>onlyReplies</code></td><td><code>false</code></td><td>Only delete replies</td></tr>
-<tr><td><code>maxDeletes</code></td><td><code>Infinity</code></td><td>Stop after this many deletions</td></tr>
+<tr><td><code>maxDeletes</code></td><td><code>10</code></td><td>Stop after this many deletions (raise once your filters are right)</td></tr>
 <tr><td><code>scrollCycles</code></td><td><code>100</code></td><td>Maximum scroll attempts</td></tr>
+<tr><td><code>noNewPostsThreshold</code></td><td><code>0</code></td><td>Stop after N consecutive scrolls that load no new posts (0 = never)</td></tr>
 <tr><td><code>dryRun</code></td><td><code>false</code></td><td>false = PERMANENT deletion. true = preview only.</td></tr>
 <tr><td><code>confirmEvery</code></td><td><code>50</code></td><td>Pause for user confirmation every N deletes (0 = never)</td></tr>
+<tr><td><code>countdownSeconds</code></td><td><code>5</code></td><td>Live mode: seconds to wait before the first deletion (0 = start immediately)</td></tr>
 <tr><td><code>rateLimitPauseMs</code></td><td><code>90000</code></td><td>90s when rate-limited</td></tr>
 <tr><td><code>exportDeleted</code></td><td><code>true</code></td><td>Save deleted tweet data before removal</td></tr>
           </tbody>
@@ -185,7 +188,7 @@ XActionsUtils.abort()   — stop</code></pre>
       olderThanDays: null,          // Delete tweets older than N days (null = ignore)
       beforeDate: null,             // Delete tweets before this date: 'YYYY-MM-DD' (null = ignore)
       afterDate: null,              // Delete tweets after this date: 'YYYY-MM-DD' (null = ignore)
-      maxLikes: null,               // Only delete if likes &lt;= this (null = ignore)
+      maxLikes: null,               // Only delete if likes &lt;= this (null = ignore); protects high performers
       maxRetweets: null,            // Only delete if retweets &lt;= this (null = ignore)
       containsKeywords: [],         // Delete if text contains ANY of these (empty = ignore)
       excludeKeywords: [],          // NEVER delete if text contains ANY of these
@@ -196,13 +199,14 @@ XActionsUtils.abort()   — stop</code></pre>
     },
 
     // ── Limits ──────────────────────────────────────────────
-    maxDeletes: Infinity,           // Stop after this many deletions
+    maxDeletes: 10,                 // Stop after this many deletions (raise once your filters are right)
     scrollCycles: 100,              // Maximum scroll attempts
+    noNewPostsThreshold: 0,         // Stop after N consecutive scrolls that load no new posts (0 = never)
 
     // ── Timing ──────────────────────────────────────────────
     // X throttles bursts of deletions and starts failing them silently, so
     // these are deliberately unhurried.
-    minDelay: 3000,
+    minDelay: 5000,
     maxDelay: 7000,
     scrollDelay: 4000,
     menuDelay: 1200,
@@ -210,6 +214,7 @@ XActionsUtils.abort()   — stop</code></pre>
     // ── Safety ──────────────────────────────────────────────
     dryRun: false,                  // false = PERMANENT deletion. true = preview only.
     confirmEvery: 50,               // Pause for user confirmation every N deletes (0 = never)
+    countdownSeconds: 5,            // Live mode: seconds to wait before the first deletion (0 = start immediately)
 
     // ── Recovery ────────────────────────────────────────────
     maxConsecutiveErrors: 5,
@@ -234,11 +239,15 @@ XActionsUtils.abort()   — stop</code></pre>
  * ============================================================
  *
  * @name        bulkDeleteTweets.js
- * @description Delete your tweets by age, keyword, or engagement threshold.
- *              The #1 most-requested Twitter automation feature.
+ * @title       Bulk Delete Tweets
+ * @description Delete your own posts by age, keyword, type or engagement, with a dry run, a cap and a countdown.
+ * @category    cleanup
+ * @page        x.com/&lt;you&gt;
+ * @writes      true
+ * @aliases     scripts/bulkDeleteTweets.js, scripts/twitter/delete-tweets.js
  * @author      nichxbt (https://x.com/nichxbt)
- * @version     1.0.0
- * @date        2026-02-24
+ * @version     1.1.0
+ * @date        2026-11-26
  * @repository  https://github.com/nirholas/XActions
  *
  * ============================================================
@@ -247,8 +256,10 @@ XActionsUtils.abort()   — stop</code></pre>
  * 1. Go to: https://x.com/YOUR_USERNAME (its tabs work too, e.g. /with_replies)
  * 2. Open DevTools Console (F12)
  * 3. Configure the filters below. This deletes for real: set dryRun = true
- *    for a preview run that removes nothing.
- * 4. Paste this script and press Enter
+ *    for a preview run that removes nothing. maxDeletes (10 by default) caps
+ *    how many posts one run removes; raise it once the filters are right.
+ * 4. Paste browser/bulkDeleteTweets.js and press Enter. Live mode counts
+ *    down countdownSeconds before the first deletion.
  *
  * ⚠️ DELETION IS PERMANENT. There is no undo. Export first!
  *    Use browser/backupAccount.js to save your tweets before deleting.
@@ -257,6 +268,7 @@ XActionsUtils.abort()   — stop</code></pre>
  *   XActionsUtils.pause()   — pause
  *   XActionsUtils.resume()  — resume
  *   XActionsUtils.abort()   — stop
+ *   window.stopDeleteTweets() - stop after the current post
  * ============================================================
  */
 (() =&gt; {
@@ -268,7 +280,7 @@ XActionsUtils.abort()   — stop</code></pre>
       olderThanDays: null,          // Delete tweets older than N days (null = ignore)
       beforeDate: null,             // Delete tweets before this date: 'YYYY-MM-DD' (null = ignore)
       afterDate: null,              // Delete tweets after this date: 'YYYY-MM-DD' (null = ignore)
-      maxLikes: null,               // Only delete if likes &lt;= this (null = ignore)
+      maxLikes: null,               // Only delete if likes &lt;= this (null = ignore); protects high performers
       maxRetweets: null,            // Only delete if retweets &lt;= this (null = ignore)
       containsKeywords: [],         // Delete if text contains ANY of these (empty = ignore)
       excludeKeywords: [],          // NEVER delete if text contains ANY of these
@@ -279,13 +291,14 @@ XActionsUtils.abort()   — stop</code></pre>
     },
 
     // ── Limits ──────────────────────────────────────────────
-    maxDeletes: Infinity,           // Stop after this many deletions
+    maxDeletes: 10,                 // Stop after this many deletions (raise once your filters are right)
     scrollCycles: 100,              // Maximum scroll attempts
+    noNewPostsThreshold: 0,         // Stop after N consecutive scrolls that load no new posts (0 = never)
 
     // ── Timing ──────────────────────────────────────────────
     // X throttles bursts of deletions and starts failing them silently, so
     // these are deliberately unhurried.
-    minDelay: 3000,
+    minDelay: 5000,
     maxDelay: 7000,
     scrollDelay: 4000,
     menuDelay: 1200,
@@ -293,6 +306,7 @@ XActionsUtils.abort()   — stop</code></pre>
     // ── Safety ──────────────────────────────────────────────
     dryRun: false,                  // false = PERMANENT deletion. true = preview only.
     confirmEvery: 50,               // Pause for user confirmation every N deletes (0 = never)
+    countdownSeconds: 5,            // Live mode: seconds to wait before the first deletion (0 = start immediately)
 
     // ── Recovery ────────────────────────────────────────────
     maxConsecutiveErrors: 5,
@@ -379,13 +393,21 @@ XActionsUtils.abort()   — stop</code></pre>
     console.log('║  by nichxbt — v1.0' + ' '.repeat(W - 21) + '║');
     console.log('╚' + '═'.repeat(W) + '╝');
 
+    // Stop switch: window.stopDeleteTweets() halts after the current post.
+    let stopped = false;
+    window.stopDeleteTweets = () =&gt; {
+      stopped = true;
+      console.warn('🛑 Stop requested. Finishing the current post, then exiting.');
+    };
+    const keepGoing = async () =&gt; !stopped &amp;&amp; (await U.shouldContinue());
+
     // Live mode deletes for real, so give the run a stoppable head start.
     if (!CONFIG.dryRun) {
-      for (let i = 5; i &gt; 0; i--) {
-        console.warn(`⚠️  Starting in ${i}s. Call XActionsUtils.abort() now to stop.`);
+      for (let i = CONFIG.countdownSeconds; i &gt; 0 &amp;&amp; !stopped; i--) {
+        console.warn(`⚠️  Starting in ${i}s. Call XActionsUtils.abort() or window.stopDeleteTweets() now to stop.`);
         await U.sleep(1000);
       }
-      if (!(await U.shouldContinue())) { console.log('🛑 Aborted before deleting anything.'); return; }
+      if (!(await keepGoing())) { console.log('🛑 Aborted before deleting anything.'); return; }
     }
 
     // Detect profile. X serves it at /&lt;handle&gt; and its tabs at /&lt;handle&gt;/&lt;tab&gt;,
@@ -393,7 +415,7 @@ XActionsUtils.abort()   — stop</code></pre>
     // profile timeline. The signed-in handle comes from the left nav.
     const PROFILE_TABS = ['with_replies', 'media', 'likes', 'highlights', 'articles', 'superfollows', 'affiliates'];
     const RESERVED = ['home', 'explore', 'notifications', 'messages', 'i', 'search', 'settings', 'compose',
-      'hashtag', 'bookmarks', 'lists', 'topics', 'communities', 'jobs'];
+      'hashtag', 'bookmarks', 'lists', 'topics', 'communities', 'jobs', 'tos', 'privacy'];
     const pathMatch = window.location.pathname.match(/^\/([A-Za-z0-9_]{1,15})(?:\/([A-Za-z0-9_]+))?\/?$/);
     const pathUser = pathMatch &amp;&amp; !RESERVED.includes(pathMatch[1].toLowerCase()) ? pathMatch[1] : null;
     const onProfile = Boolean(pathUser) &amp;&amp; (!pathMatch[2] || PROFILE_TABS.includes(pathMatch[2].toLowerCase()));
@@ -414,6 +436,9 @@ XActionsUtils.abort()   — stop</code></pre>
     }
     const profileUser = ownHandle || pathUser;
     console.log(`\n👤 Profile: @${profileUser}`);
+    if (!ownHandle) {
+      console.warn('⚠️  Could not confirm the signed-in account from the page. Make sure this is YOUR profile before letting the countdown finish.');
+    }
 
     // Log active filters
     const f = CONFIG.filters;
@@ -432,6 +457,8 @@ XActionsUtils.abort()   — stop</code></pre>
         f.maxRetweets === null &amp;&amp; !f.containsKeywords.length &amp;&amp; !f.onlyRetweets &amp;&amp; !f.onlyReplies) {
       console.log('   ⚠️  NO FILTERS SET — ALL tweets will be deleted!');
     }
+    console.log(`   • Max deletes this run: ${CONFIG.maxDeletes}`);
+    console.log('   • To stop early: window.stopDeleteTweets()');
     console.log('');
 
     // Helpers
@@ -439,39 +466,43 @@ XActionsUtils.abort()   — stop</code></pre>
     const beforeDate = f.beforeDate ? new Date(f.beforeDate) : null;
     const afterDate = f.afterDate ? new Date(f.afterDate) : null;
 
-    const shouldDelete = (tweetData) =&gt; {
+    // Returns null when the post should be deleted, otherwise the reason it
+    // is kept (a key of skipReasons, reported in the summary).
+    const skipReason = (tweetData) =&gt; {
       const { text, likes, retweets, timestamp, isRetweet, isReply, isPinned } = tweetData;
 
-      if (f.excludePinned &amp;&amp; isPinned) return false;
-      if (f.onlyRetweets &amp;&amp; !isRetweet) return false;
-      if (f.onlyReplies &amp;&amp; !isReply) return false;
+      if (f.excludePinned &amp;&amp; isPinned) return 'pinned';
+      if (f.onlyRetweets &amp;&amp; !isRetweet) return 'type';
+      if (f.onlyReplies &amp;&amp; !isReply) return 'type';
 
       if (timestamp) {
         const d = new Date(timestamp);
-        if (cutoffDate &amp;&amp; d &gt; cutoffDate) return false;
-        if (beforeDate &amp;&amp; d &gt; beforeDate) return false;
-        if (afterDate &amp;&amp; d &lt; afterDate) return false;
+        if (cutoffDate &amp;&amp; d &gt; cutoffDate) return 'date';
+        if (beforeDate &amp;&amp; d &gt; beforeDate) return 'date';
+        if (afterDate &amp;&amp; d &lt; afterDate) return 'date';
       }
 
-      if (f.maxLikes !== null &amp;&amp; likes &gt; f.maxLikes) return false;
-      if (f.maxRetweets !== null &amp;&amp; retweets &gt; f.maxRetweets) return false;
+      if (f.maxLikes !== null &amp;&amp; likes &gt; f.maxLikes) return 'engagement';
+      if (f.maxRetweets !== null &amp;&amp; retweets &gt; f.maxRetweets) return 'engagement';
 
       const lowerText = text.toLowerCase();
       if (f.containsKeywords.length &gt; 0) {
-        if (!f.containsKeywords.some(kw =&gt; lowerText.includes(kw.toLowerCase()))) return false;
+        if (!f.containsKeywords.some(kw =&gt; lowerText.includes(kw.toLowerCase()))) return 'keyword';
       }
       if (f.excludeKeywords.length &gt; 0) {
-        if (f.excludeKeywords.some(kw =&gt; lowerText.includes(kw.toLowerCase()))) return false;
+        if (f.excludeKeywords.some(kw =&gt; lowerText.includes(kw.toLowerCase()))) return 'keyword';
       }
 
-      return true;
+      return null;
     };
 
     const extractTweetData = (article) =&gt; {
       const text = U.$('tweetText', article)?.textContent || '';
       const timeEl = article.querySelector('time');
       const timestamp = timeEl?.getAttribute('datetime') || '';
-      const tweetLink = article.querySelector('a[href*=&quot;/status/&quot;]');
+      // The timestamp's anchor is the post's own permalink; the first /status/
+      // link can belong to a quoted post.
+      const tweetLink = timeEl?.closest('a[href*=&quot;/status/&quot;]') || article.querySelector('a[href*=&quot;/status/&quot;]');
       const tweetUrl = tweetLink?.getAttribute('href') || '';
       const tweetId = tweetUrl.split('/status/')[1]?.split(/[?/]/)[0] || '';
 
@@ -492,11 +523,25 @@ XActionsUtils.abort()   — stop</code></pre>
     const deletedLog = [];
     const processed = new Set();
     let deleted = 0, skippedCount = 0, errors = 0, consErr = 0;
+    const skipReasons = { pinned: 0, notYours: 0, type: 0, date: 0, engagement: 0, keyword: 0, noMenu: 0 };
+    let noNewPostsCount = 0;
     const t0 = Date.now();
+
+    // The timeline hydrates after the shell paints, so poll instead of giving
+    // up on the first empty query.
+    if (!U.$('tweet')) {
+      console.log('⏳ Waiting for your posts to render...');
+      const deadline = Date.now() + 15000;
+      while (!U.$('tweet') &amp;&amp; Date.now() &lt; deadline) await U.sleep(500);
+      if (!U.$('tweet')) {
+        console.warn('⚠️ No posts rendered after 15s. Reload the page, let the timeline appear, then run this again.');
+        return;
+      }
+    }
 
     for (let scroll = 0; scroll &lt; CONFIG.scrollCycles; scroll++) {
       if (deleted &gt;= CONFIG.maxDeletes) break;
-      if (!(await U.shouldContinue())) break;
+      if (!(await keepGoing())) break;
 
       if (U.isRateLimited()) {
         console.warn(`⏳ Rate-limited — waiting ${CONFIG.rateLimitPauseMs / 1000}s...`);
@@ -506,21 +551,29 @@ XActionsUtils.abort()   — stop</code></pre>
 
       const articles = U.$$('tweet');
       let actedThisScroll = false;
+      let foundNewPost = false;
 
       for (const article of articles) {
         if (deleted &gt;= CONFIG.maxDeletes) break;
-        if (!(await U.shouldContinue())) break;
+        if (!(await keepGoing())) break;
+
+        // A live deletion re-renders the timeline, which detaches nodes still
+        // held by this snapshot; clicking one does nothing.
+        if (!article.isConnected) continue;
 
         const data = extractTweetData(article);
         if (!data.tweetId || processed.has(data.tweetId)) continue;
         processed.add(data.tweetId);
+        foundNewPost = true;
 
         // Check if it belongs to profile owner
-        const authorLink = article.querySelector(`a[href=&quot;/${profileUser}&quot;]`);
-        if (!authorLink &amp;&amp; !data.isRetweet) continue;
+        const authorLink = article.querySelector(`a[href=&quot;/${profileUser}&quot; i]`);
+        if (!authorLink &amp;&amp; !data.isRetweet) { skipReasons.notYours++; continue; }
 
-        if (!shouldDelete(data)) {
+        const reason = skipReason(data);
+        if (reason) {
           skippedCount++;
+          skipReasons[reason]++;
           continue;
         }
 
@@ -536,7 +589,7 @@ XActionsUtils.abort()   — stop</code></pre>
         try {
           // Find and click the &quot;more&quot; menu (caret)
           const caret = U.$('caret', article);
-          if (!caret) { skippedCount++; continue; }
+          if (!caret) { skippedCount++; skipReasons.noMenu++; continue; }
 
           caret.scrollIntoView({ block: 'center', behavior: 'smooth' });
           await U.sleep(300);
@@ -568,16 +621,20 @@ XActionsUtils.abort()   — stop</code></pre>
             document.body.click();
             await U.sleep(300);
             skippedCount++;
+            skipReasons.noMenu++;
             continue;
           }
 
+          const wasRepost = /undo repost|undo retweet/i.test(deleteBtn.textContent);
           deleteBtn.click();
           await U.sleep(CONFIG.menuDelay);
 
-          // Confirm deletion
-          const confirmBtn = U.$('confirmBtn');
-          if (confirmBtn) {
-            confirmBtn.click();
+          // Confirm deletion. Deleting an original post asks for
+          // confirmation; undoing a repost is instant.
+          const confirmBtn = wasRepost ? null : U.$('confirmBtn');
+          if (confirmBtn || wasRepost) {
+            if (confirmBtn) confirmBtn.click();
+            data.repost = wasRepost;
             deleted++;
             consErr = 0;
             actedThisScroll = true;
@@ -619,6 +676,16 @@ XActionsUtils.abort()   — stop</code></pre>
 
       if (consErr &gt;= CONFIG.maxConsecutiveErrors) break;
 
+      if (!foundNewPost) {
+        noNewPostsCount++;
+        if (CONFIG.noNewPostsThreshold &gt; 0 &amp;&amp; noNewPostsCount &gt;= CONFIG.noNewPostsThreshold) {
+          console.warn('⚠️ No new posts found after multiple scrolls. Stopping.');
+          break;
+        }
+      } else {
+        noNewPostsCount = 0;
+      }
+
       window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
       await U.sleep(CONFIG.scrollDelay);
 
@@ -637,6 +704,13 @@ XActionsUtils.abort()   — stop</code></pre>
     console.log('╚' + '═'.repeat(W) + '╝');
     console.log(`  🗑️  Deleted:    ${deleted}`);
     console.log(`  ⏭️  Skipped:    ${skippedCount}`);
+    console.log(`     └─ Pinned:      ${skipReasons.pinned}`);
+    console.log(`     └─ Type:        ${skipReasons.type}`);
+    console.log(`     └─ Date:        ${skipReasons.date}`);
+    console.log(`     └─ Engagement:  ${skipReasons.engagement}`);
+    console.log(`     └─ Keyword:     ${skipReasons.keyword}`);
+    console.log(`     └─ No menu:     ${skipReasons.noMenu}`);
+    console.log(`  👤 Not yours:  ${skipReasons.notYours}`);
     console.log(`  ⚠️  Errors:     ${errors}`);
     console.log(`  📝 Processed:  ${processed.size}`);
     console.log(`  ⏱️  Time:       ${elapsed}s`);
@@ -644,13 +718,17 @@ XActionsUtils.abort()   — stop</code></pre>
 
     if (CONFIG.exportOnComplete &amp;&amp; deletedLog.length &gt; 0) {
       U.download(
-        { deleted: deletedLog, stats: { count: deleted, skipped: skippedCount, errors, elapsed: elapsed + 's' } },
+        { profile: profileUser, dryRun: CONFIG.dryRun, deleted: deletedLog, stats: { count: deleted, skipped: skippedCount, skipReasons, errors, elapsed: elapsed + 's' } },
         `xactions-deleted-tweets-${new Date().toISOString().slice(0, 10)}.json`
       );
     }
 
     if (CONFIG.dryRun &amp;&amp; deleted &gt; 0) {
       console.log(`\n  ⚡ Set dryRun = false and re-run to actually delete ${deleted} tweets.\n`);
+    } else if (!CONFIG.dryRun &amp;&amp; deleted &gt;= CONFIG.maxDeletes) {
+      console.log(`\n  ℹ️ Hit maxDeletes (${CONFIG.maxDeletes}) for this run. Re-run the script to continue where it stopped.\n`);
+    } else if (deleted === 0) {
+      console.log('\n  ℹ️ Nothing matched your filters. Loosen the date, keyword or engagement filters.\n');
     }
   })();
 })();
@@ -668,17 +746,17 @@ XActionsUtils.abort()   — stop</code></pre>
 
     <aside class="sidebar-right">
       <div class="sidebar-card">
-        <h3>🗑️ Content Tools</h3>
-        <a href="/scripts/bookmark-exporter">📚 Bookmark Exporter</a>
-<a href="/scripts/bookmark-manager">📚 Bookmark Manager</a>
-<a href="/scripts/bookmark-organizer">📂 Bookmark Organizer</a>
-<a href="/scripts/clear-all-bookmarks">🗑️ Clear All Bookmarks</a>
-<a href="/scripts/clear-all-likes">🗑️ Clear All Likes</a>
-<a href="/scripts/clear-all-reposts">🗑️ Clear All Reposts</a>
-<a href="/scripts/clear-all-retweets">🗑️ Clear All Retweets</a>
-<a href="/scripts/content-repurposer">♻️ Content Repurposer</a>
-<a href="/scripts/delete-tweets">🗑️ Delete Tweets</a>
-<a href="/scripts/video-downloader-browser">🎬 Download videos from X/Twitter posts in browser</a>
+        <h3>🧹 Clean Up</h3>
+        <a href="/scripts/clear-all-bookmarks">🧹 Clear All Bookmarks</a>
+<a href="/scripts/clear-all-reposts">🧹 Clear All Reposts</a>
+<a href="/scripts/mass-unblock">🧹 Mass Unblock</a>
+<a href="/scripts/mass-unmute">🧹 Mass Unmute</a>
+<a href="/scripts/protect-active-users">🧹 Protect Active Users</a>
+<a href="/scripts/remove-followers">🧹 Remove Followers</a>
+<a href="/scripts/search-sweep">🧹 Search Sweep</a>
+<a href="/scripts/smart-unfollow">🧹 Smart Unfollow</a>
+<a href="/scripts/unfollow-everyone">🧹 Unfollow Everyone</a>
+<a href="/scripts/unfollowback">🧹 Unfollow Non-Followers</a>
       </div>
       <div class="sidebar-card">
         <h3>🔗 Quick Links</h3>

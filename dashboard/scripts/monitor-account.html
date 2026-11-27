@@ -4,14 +4,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Monitor Account — Free X/Twitter Script | XActions</title>
-  <meta name="description" content="Track follows/unfollows on ANY public X (Twitter) account. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
-  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, monitor, account, follower monitoring">
+  <meta name="description" content="Snapshot a public account's followers or following list and report who was added or removed since the last run.">
+  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, monitor, account, monitor">
   <meta name="author" content="nich (@nichxbt)">
   <meta name="robots" content="index, follow">
 
   <meta property="og:type" content="article">
   <meta property="og:title" content="Monitor Account — XActions">
-  <meta property="og:description" content="Track follows/unfollows on ANY public X (Twitter) account. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
+  <meta property="og:description" content="Snapshot a public account's followers or following list and report who was added or removed since the last run.">
   <meta property="og:url" content="https://xactions.app/scripts/monitor-account">
   <meta property="og:site_name" content="XActions">
   <meta property="og:image" content="https://xactions.app/og-run.png">
@@ -19,7 +19,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@nichxbt">
   <meta name="twitter:title" content="Monitor Account — XActions">
-  <meta name="twitter:description" content="Track follows/unfollows on ANY public X (Twitter) account. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
+  <meta name="twitter:description" content="Snapshot a public account's followers or following list and report who was added or removed since the last run.">
   <meta name="twitter:image" content="https://xactions.app/og-run.png">
 
   <link rel="canonical" href="https://xactions.app/scripts/monitor-account">
@@ -30,14 +30,14 @@
     "@context": "https://schema.org",
     "@type": "TechArticle",
     "headline": "Monitor Account — Free X/Twitter Script | XActions",
-    "description": "Track follows/unfollows on ANY public X (Twitter) account. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.",
+    "description": "Snapshot a public account's followers or following list and report who was added or removed since the last run.",
     "url": "https://xactions.app/scripts/monitor-account",
     "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
     "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
     "datePublished": "2026-03-30",
     "dateModified": "2026-03-30",
-    "articleSection": "Follower Monitoring",
-    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, monitor, account, follower monitoring"
+    "articleSection": "Monitor",
+    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, monitor, account, monitor"
   }
   </script>
   <script type="application/ld+json">
@@ -47,7 +47,7 @@
     "itemListElement": [
       { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
       { "@type": "ListItem", "position": 2, "name": "Scripts", "item": "https://xactions.app/scripts" },
-      { "@type": "ListItem", "position": 3, "name": "Follower Monitoring", "item": "https://xactions.app/scripts#follower-monitoring" },
+      { "@type": "ListItem", "position": 3, "name": "Monitor", "item": "https://xactions.app/scripts#monitor" },
       { "@type": "ListItem", "position": 4, "name": "Monitor Account", "item": "https://xactions.app/scripts/monitor-account" }
     ]
   }
@@ -116,37 +116,63 @@
 
     <main class="main-content" id="main-content">
       <header class="main-header">
-        <h1>📊 Monitor Account</h1>
+        <h1>👀 Monitor Account</h1>
         <div class="breadcrumb">
-          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#follower-monitoring">Follower Monitoring</a> › Monitor Account
+          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#monitor">Monitor</a> › Monitor Account
         </div>
       </header>
 
       <article class="article">
-        <span class="cat-badge">Follower Monitoring</span>
-        <span class="source-badge">browser</span>
+        <span class="cat-badge">Monitor</span>
+        <span class="source-badge">browser/monitorAccount.js</span>
 
         <div class="meta-row">
-          
-          
-          <span>176 lines</span>
+          <span>v1.1.0</span>
+          <span>Updated: 2026-11-27</span>
+          <span>278 lines</span>
           <span>by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></span>
         </div>
 
-        <p>Track follows/unfollows on ANY public X (Twitter) account</p>
+        <p>Snapshot a public account's followers or following list and report who was added or removed since the last run.</p>
 
         
 
         <h2>How to Use</h2>
-        <ol class="usage-steps"><li>Go to https://x.com/TARGET_USERNAME/followers (or /following)</li>
-<li>Open Developer Console (Ctrl+Shift+J or Cmd+Option+J)</li>
-<li>Paste this script and press Enter</li>
-<li>Run again later to see changes!</li></ol>
+        <ol class="usage-steps">
+        <li>Navigate to <a href="https://x.com" rel="noopener">x.com</a> and log in</li>
+        <li>Open DevTools Console (F12 or Cmd+Option+I)</li>
+        
+        <li>Paste the script below and press Enter</li>
+      </ol>
         
 
         
-        
-        
+        <section class="config-section">
+        <h2>Configuration Options</h2>
+        <table>
+          <thead><tr><th>Option</th><th>Default</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td><code>scrollDelay</code></td><td><code>2000</code></td><td>ms between scrolls</td></tr>
+<tr><td><code>maxRetries</code></td><td><code>5</code></td><td>Scrolls with no new accounts before stopping</td></tr>
+<tr><td><code>maxScrolls</code></td><td><code>Infinity</code></td><td>Hard cap on scrolls</td></tr>
+<tr><td><code>maxUsers</code></td><td><code>Infinity</code></td><td>Stop after this many accounts (a capped scan reports the rest as removed)</td></tr>
+<tr><td><code>downloadReport</code></td><td><code>false</code></td><td>Also download a full added/removed report (.txt) when something changed</td></tr>
+          </tbody>
+        </table>
+      </section>
+        <section class="config-code">
+        <h2>Default Configuration</h2>
+        <div class="code-block">
+          <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.querySelector('code').textContent).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy',2000)})">Copy</button>
+          <pre><code>const CONFIG = {
+    scrollDelay: 2000,       // ms between scrolls
+    maxRetries: 5,           // Scrolls with no new accounts before stopping
+    maxScrolls: Infinity,    // Hard cap on scrolls
+    maxUsers: Infinity,      // Stop after this many accounts (a capped scan reports the rest as removed)
+    downloadReport: false,   // Also download a full added/removed report (.txt) when something changed
+  };</code></pre>
+        </div>
+      </section>
 
         <section class="full-code">
           <h2>Full Script</h2>
@@ -154,22 +180,46 @@
           <div class="code-block">
             <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.querySelector('code').textContent).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy Script',2000)})">Copy Script</button>
             <pre><code>// Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
-// MonitorAccount.js — Track follows/unfollows on ANY public X (Twitter) account
-// https://github.com/nirholas/XActions
-//
-// HOW TO USE:
-// 1. Go to https://x.com/TARGET_USERNAME/followers (or /following)
-// 2. Open Developer Console (Ctrl+Shift+J or Cmd+Option+J)
-// 3. Paste this script and press Enter
-// 4. Run again later to see changes!
-//
-// Works on:
-// - /followers — track who follows/unfollows this account
-// - /following — track who this account follows/unfollows
-//
-// NOTE: Only works on PUBLIC accounts. Private accounts hide their lists.
+/**
+ * MonitorAccount.js — Track follows/unfollows on ANY public X (Twitter) account
+ * https://github.com/nirholas/XActions
+ *
+ * @name        monitorAccount.js
+ * @title       Monitor Account
+ * @description Snapshot a public account's followers or following list and report who was added or removed since the last run.
+ * @category    monitor
+ * @page        x.com/&lt;username&gt;/followers or x.com/&lt;username&gt;/following
+ * @writes      false
+ * @aliases     scripts/monitorAccount.js, scripts/twitter/monitor-account.js
+ * @author      nichxbt (https://x.com/nichxbt)
+ * @version     1.1.0
+ * @date        2026-11-27
+ *
+ * HOW TO USE:
+ * 1. Go to https://x.com/TARGET_USERNAME/followers (or /following)
+ * 2. Open Developer Console (Ctrl+Shift+J or Cmd+Option+J)
+ * 3. Paste browser/monitorAccount.js and press Enter
+ * 4. Run again later to see changes!
+ *
+ * Works on:
+ * - /followers — track who follows/unfollows this account
+ * - /following — track who this account follows/unfollows
+ *
+ * After a run: window.accountSnapshot (first run) or
+ * window.accountChanges ({ removed, added } with display names).
+ *
+ * NOTE: Only works on PUBLIC accounts. Private accounts hide their lists.
+ */
 
 (() =&gt; {
+  const CONFIG = {
+    scrollDelay: 2000,       // ms between scrolls
+    maxRetries: 5,           // Scrolls with no new accounts before stopping
+    maxScrolls: Infinity,    // Hard cap on scrolls
+    maxUsers: Infinity,      // Stop after this many accounts (a capped scan reports the rest as removed)
+    downloadReport: false,   // Also download a full added/removed report (.txt) when something changed
+  };
+
   const STORAGE_PREFIX = 'xactions_monitor_';
   const sleep = (ms) =&gt; new Promise(r =&gt; setTimeout(r, ms));
 
@@ -185,20 +235,27 @@
   }
 
   const pageType = isFollowersPage ? 'followers' : 'following';
-  const targetUser = path.split('/')[1].toLowerCase();
+  const rawTargetUser = path.split('/')[1];
+  const targetUser = rawTargetUser.toLowerCase();
   const storageKey = `${STORAGE_PREFIX}${targetUser}_${pageType}`;
+  // Older standalone versions kept the handle's original case in the key.
+  const legacyStorageKey = `${STORAGE_PREFIX}${rawTargetUser}_${pageType}`;
+
+  const displayNames = {};
 
   const scrapeUsers = async () =&gt; {
     const users = new Set();
     let previousSize = 0;
     let retries = 0;
-    const maxRetries = 5;
+    let scrolls = 0;
+    const maxRetries = CONFIG.maxRetries;
 
     console.log(`🔍 Scanning @${targetUser}'s ${pageType}...`);
 
-    while (retries &lt; maxRetries) {
+    while (retries &lt; maxRetries &amp;&amp; scrolls &lt; CONFIG.maxScrolls &amp;&amp; users.size &lt; CONFIG.maxUsers) {
       window.scrollTo(0, document.body.scrollHeight);
-      await sleep(1500);
+      await sleep(CONFIG.scrollDelay);
+      scrolls++;
 
       const userCells = document.querySelectorAll('[data-testid=&quot;UserCell&quot;]');
       userCells.forEach(cell =&gt; {
@@ -208,8 +265,12 @@
           const href = link.getAttribute('href');
           if (href &amp;&amp; href.startsWith('/') &amp;&amp; !href.includes('/status/')) {
             const username = href.replace('/', '').split('/')[0].toLowerCase();
-            if (username &amp;&amp; username !== targetUser &amp;&amp; !username.includes('?')) {
+            if (username &amp;&amp; username !== targetUser &amp;&amp; !username.includes('?') &amp;&amp; users.size &lt; CONFIG.maxUsers) {
               users.add(username);
+              if (!displayNames[username]) {
+                const span = cell.querySelector('[dir=&quot;ltr&quot;] span');
+                if (span &amp;&amp; span.textContent) displayNames[username] = span.textContent;
+              }
             }
           }
         });
@@ -228,10 +289,25 @@
     return Array.from(users);
   };
 
+  // Accepts both snapshot shapes: { users: [..], timestamp } and the older
+  // standalone { users: { name: displayName }, savedAt }.
+  const normalize = (data) =&gt; {
+    if (!data || !data.users) return null;
+    if (Array.isArray(data.users)) return data;
+    const users = Object.keys(data.users);
+    return {
+      ...data,
+      users,
+      displayNames: { ...data.users },
+      timestamp: data.timestamp || data.savedAt,
+      count: data.count ?? users.length,
+    };
+  };
+
   const loadPrevious = () =&gt; {
     try {
-      const data = localStorage.getItem(storageKey);
-      return data ? JSON.parse(data) : null;
+      const data = localStorage.getItem(storageKey) || localStorage.getItem(legacyStorageKey);
+      return data ? normalize(JSON.parse(data)) : null;
     } catch (e) {
       return null;
     }
@@ -243,7 +319,8 @@
       type: pageType,
       users,
       timestamp: new Date().toISOString(),
-      count: users.length
+      count: users.length,
+      displayNames: Object.fromEntries(users.filter(u =&gt; displayNames[u]).map(u =&gt; [u, displayNames[u]])),
     };
     localStorage.setItem(storageKey, JSON.stringify(data));
     return data;
@@ -273,6 +350,35 @@
     document.body.removeChild(a);
   };
 
+  const downloadReport = (previous, currentCount, removed, added, timestamp) =&gt; {
+    let report = 'ACCOUNT MONITOR REPORT\n';
+    report += `${'='.repeat(50)}\n`;
+    report += `Account: @${targetUser}\n`;
+    report += `Type: ${pageType}\n`;
+    report += `Generated: ${timestamp}\n`;
+    report += `Previous: ${previous.count} (${previous.timestamp})\n`;
+    report += `Current: ${currentCount}\n`;
+    report += `${'='.repeat(50)}\n\n`;
+    if (removed.length &gt; 0) {
+      report += `REMOVED (${removed.length}):\n`;
+      removed.forEach((u, i) =&gt; { report += `${i + 1}. @${u}\n`; });
+      report += '\n';
+    }
+    if (added.length &gt; 0) {
+      report += `ADDED (${added.length}):\n`;
+      added.forEach((u, i) =&gt; { report += `${i + 1}. @${u}\n`; });
+    }
+    const blob = new Blob([report], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${targetUser}_${pageType}_changes_${timestamp.split('T')[0]}.txt`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    console.log('💾 Report downloaded!');
+  };
+
   const run = async () =&gt; {
     console.log(`\n🔭 XActions Monitor — Tracking @${targetUser}'s ${pageType}\n`);
 
@@ -280,6 +386,7 @@
     console.log(`\n✅ Found ${currentUsers.length} accounts\n`);
 
     const previous = loadPrevious();
+    let changes = null;
 
     if (previous) {
       console.log(`📊 Comparing with snapshot from ${formatDate(previous.timestamp)}`);
@@ -315,6 +422,20 @@
       if (removed.length === 0 &amp;&amp; added.length === 0) {
         console.log('✨ No changes detected since last check!');
       }
+
+      const timestamp = new Date().toISOString();
+      if (CONFIG.downloadReport &amp;&amp; (removed.length &gt; 0 || added.length &gt; 0)) {
+        downloadReport(previous, currentUsers.length, removed, added, timestamp);
+      }
+
+      const prevNames = previous.displayNames || {};
+      changes = {
+        username: targetUser,
+        pageType,
+        removed: removed.map(u =&gt; ({ username: u, displayName: prevNames[u] || prevNames[u.toLowerCase()] || u })),
+        added: added.map(u =&gt; ({ username: u, displayName: displayNames[u] || u })),
+        timestamp,
+      };
     } else {
       console.log('📸 First scan! Saving snapshot...');
       console.log('   Run again later to detect changes.');
@@ -324,6 +445,13 @@
     console.log(`\n💾 Snapshot saved at ${formatDate(saved.timestamp)}`);
     console.log(`   Stored as: ${storageKey}`);
     console.log('   Run this script again to check for changes!\n');
+
+    if (changes) {
+      window.accountChanges = changes;
+      console.log('💡 Access via: window.accountChanges');
+    } else {
+      window.accountSnapshot = saved;
+    }
   };
 
   run();
@@ -342,17 +470,13 @@
 
     <aside class="sidebar-right">
       <div class="sidebar-card">
-        <h3>📊 Follower Monitoring</h3>
-        <a href="/scripts/follower-tools">👥 Advanced follower tools</a>
-<a href="/scripts/audit-followers">📊 Audit Followers</a>
-<a href="/scripts/continuous-monitor">🔄 Continuous Monitor</a>
-<a href="/scripts/detect-unfollowers">🔍 Detect Unfollowers</a>
-<a href="/scripts/find-fake-followers">🤖 Find Fake Followers</a>
-<a href="/scripts/follower-growth-tracker">📈 Follower Growth Tracker</a>
-<a href="/scripts/followers-growth-tracker">📈 Followers Growth Tracker</a>
-<a href="/scripts/new-followers-alert">🔔 New Followers Alert</a>
-<a href="/scripts/remove-followers">🚫 Remove Followers</a>
-<a href="/scripts/welcome-new-followers">👋 Welcome New Followers</a>
+        <h3>👀 Monitor</h3>
+        <a href="/scripts/continuous-monitor">👀 Continuous Monitor</a>
+<a href="/scripts/detect-unfollowers">👀 Detect Unfollowers</a>
+<a href="/scripts/keyword-monitor">👀 Keyword Monitor</a>
+<a href="/scripts/new-followers-alert">👀 New Followers Alert</a>
+<a href="/scripts/notification-manager">👀 Notification Manager</a>
+<a href="/scripts/trending-topic-monitor">👀 Trending Topic Monitor</a>
       </div>
       <div class="sidebar-card">
         <h3>🔗 Quick Links</h3>

@@ -4,14 +4,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Engagement Leaderboard — Free X/Twitter Script | XActions</title>
-  <meta name="description" content="Analyze who engages with your tweets the most. Scrapes your recent tweets to build a leaderboard of top repliers, likers, and retweeters.">
-  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, engagement, leaderboard, engagement">
+  <meta name="description" content="Rank who replies to your posts most, sort them into engagement tiers and export a VIP list.">
+  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, engagement, leaderboard, analytics">
   <meta name="author" content="nich (@nichxbt)">
   <meta name="robots" content="index, follow">
 
   <meta property="og:type" content="article">
   <meta property="og:title" content="Engagement Leaderboard — XActions">
-  <meta property="og:description" content="Analyze who engages with your tweets the most. Scrapes your recent tweets to build a leaderboard of top repliers, likers, and retweeters.">
+  <meta property="og:description" content="Rank who replies to your posts most, sort them into engagement tiers and export a VIP list.">
   <meta property="og:url" content="https://xactions.app/scripts/engagement-leaderboard">
   <meta property="og:site_name" content="XActions">
   <meta property="og:image" content="https://xactions.app/og-run.png">
@@ -19,7 +19,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@nichxbt">
   <meta name="twitter:title" content="Engagement Leaderboard — XActions">
-  <meta name="twitter:description" content="Analyze who engages with your tweets the most. Scrapes your recent tweets to build a leaderboard of top repliers, likers, and retweeters.">
+  <meta name="twitter:description" content="Rank who replies to your posts most, sort them into engagement tiers and export a VIP list.">
   <meta name="twitter:image" content="https://xactions.app/og-run.png">
 
   <link rel="canonical" href="https://xactions.app/scripts/engagement-leaderboard">
@@ -30,14 +30,14 @@
     "@context": "https://schema.org",
     "@type": "TechArticle",
     "headline": "Engagement Leaderboard — Free X/Twitter Script | XActions",
-    "description": "Analyze who engages with your tweets the most. Scrapes your recent tweets to build a leaderboard of top repliers, likers, and retweeters.",
+    "description": "Rank who replies to your posts most, sort them into engagement tiers and export a VIP list.",
     "url": "https://xactions.app/scripts/engagement-leaderboard",
     "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
     "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
     "datePublished": "2026-03-30",
     "dateModified": "2026-03-30",
-    "articleSection": "Engagement",
-    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, engagement, leaderboard, engagement"
+    "articleSection": "Analytics",
+    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, engagement, leaderboard, analytics"
   }
   </script>
   <script type="application/ld+json">
@@ -47,7 +47,7 @@
     "itemListElement": [
       { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
       { "@type": "ListItem", "position": 2, "name": "Scripts", "item": "https://xactions.app/scripts" },
-      { "@type": "ListItem", "position": 3, "name": "Engagement", "item": "https://xactions.app/scripts#engagement" },
+      { "@type": "ListItem", "position": 3, "name": "Analytics", "item": "https://xactions.app/scripts#analytics" },
       { "@type": "ListItem", "position": 4, "name": "Engagement Leaderboard", "item": "https://xactions.app/scripts/engagement-leaderboard" }
     ]
   }
@@ -116,31 +116,31 @@
 
     <main class="main-content" id="main-content">
       <header class="main-header">
-        <h1>🏆 Engagement Leaderboard</h1>
+        <h1>📊 Engagement Leaderboard</h1>
         <div class="breadcrumb">
-          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#engagement">Engagement</a> › Engagement Leaderboard
+          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#analytics">Analytics</a> › Engagement Leaderboard
         </div>
       </header>
 
       <article class="article">
-        <span class="cat-badge">Engagement</span>
-        <span class="source-badge">browser</span>
+        <span class="cat-badge">Analytics</span>
+        <span class="source-badge">browser/engagementLeaderboard.js</span>
 
         <div class="meta-row">
-          <span>v1.0.0</span>
-          <span>Updated: 2026-02-24</span>
-          <span>339 lines</span>
+          <span>v1.1.0</span>
+          <span>Updated: 2026-11-27</span>
+          <span>341 lines</span>
           <span>by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></span>
         </div>
 
-        <p>Analyze who engages with your tweets the most. Scrapes your recent tweets to build a leaderboard of top repliers, likers, and retweeters. Exports a VIP list for relationship building. Identifies superfans, dormant followers, and engagement tiers.</p>
+        <p>Rank who replies to your posts most, sort them into engagement tiers and export a VIP list.</p>
 
         
 
         <h2>How to Use</h2>
         <ol class="usage-steps"><li>Go to your profile: x.com/YOUR_USERNAME</li>
 <li>Open DevTools Console (F12)</li>
-<li>Paste and run — auto-scrolls your timeline</li>
+<li>Paste browser/engagementLeaderboard.js and run — auto-scrolls your timeline</li>
 <li>Outputs leaderboard + exports VIP list</li></ol>
         
 
@@ -150,7 +150,8 @@
         <table>
           <thead><tr><th>Option</th><th>Default</th><th>Description</th></tr></thead>
           <tbody>
-            <tr><td><code>topN</code></td><td><code>20</code></td><td>Show top N users per category</td></tr>
+            <tr><td><code>maxPosts</code></td><td><code>15</code></td><td>Max tweet threads to drill into for repliers</td></tr>
+<tr><td><code>topN</code></td><td><code>20</code></td><td>Show top N users per category</td></tr>
 <tr><td><code>vipThreshold</code></td><td><code>3</code></td><td>Min interactions to be considered VIP</td></tr>
           </tbody>
         </table>
@@ -161,6 +162,7 @@
           <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.querySelector('code').textContent).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy',2000)})">Copy</button>
           <pre><code>const CONFIG = {
     scrollRounds: 12,
+    maxPosts: 15,          // Max tweet threads to drill into for repliers
     scrollDelay: 2000,
     topN: 20,              // Show top N users per category
     vipThreshold: 3,       // Min interactions to be considered VIP
@@ -181,14 +183,15 @@
  * ============================================================
  *
  * @name        engagementLeaderboard.js
- * @description Analyze who engages with your tweets the most.
- *              Scrapes your recent tweets to build a leaderboard
- *              of top repliers, likers, and retweeters. Exports
- *              a VIP list for relationship building. Identifies
- *              superfans, dormant followers, and engagement tiers.
+ * @title       Engagement Leaderboard
+ * @description Rank who replies to your posts most, sort them into engagement tiers and export a VIP list.
+ * @category    analytics
+ * @page        x.com/&lt;you&gt;
+ * @writes      false
+ * @aliases     scripts/engagementLeaderboard.js
  * @author      nichxbt (https://x.com/nichxbt)
- * @version     1.0.0
- * @date        2026-02-24
+ * @version     1.1.0
+ * @date        2026-11-27
  * @repository  https://github.com/nirholas/XActions
  *
  * ============================================================
@@ -196,7 +199,7 @@
  *
  * 1. Go to your profile: x.com/YOUR_USERNAME
  * 2. Open DevTools Console (F12)
- * 3. Paste and run — auto-scrolls your timeline
+ * 3. Paste browser/engagementLeaderboard.js and run — auto-scrolls your timeline
  * 4. Outputs leaderboard + exports VIP list
  * ============================================================
  */
@@ -205,6 +208,7 @@
 
   const CONFIG = {
     scrollRounds: 12,
+    maxPosts: 15,          // Max tweet threads to drill into for repliers
     scrollDelay: 2000,
     topN: 20,              // Show top N users per category
     vipThreshold: 3,       // Min interactions to be considered VIP
@@ -272,7 +276,7 @@
     const processed = [];
 
     // Only drill into tweets that have replies and links
-    const withReplies = tweetData.filter(t =&gt; t.replies &gt; 0 &amp;&amp; t.href).slice(0, 15);
+    const withReplies = tweetData.filter(t =&gt; t.replies &gt; 0 &amp;&amp; t.href).slice(0, CONFIG.maxPosts);
     console.log(`\n🔍 Drilling into ${withReplies.length} tweet threads for replier data...\n`);
 
     for (let i = 0; i &lt; withReplies.length; i++) {
@@ -526,17 +530,17 @@
 
     <aside class="sidebar-right">
       <div class="sidebar-card">
-        <h3>🏆 Engagement</h3>
-        <a href="/scripts/auto-commenter">💬 Auto Commenter</a>
-<a href="/scripts/auto-reply-mentions">📨 Auto Reply Mentions</a>
-<a href="/scripts/auto-repost">🔁 Auto Repost (Retweet)</a>
-<a href="/scripts/auto-plug-replies">🔌 Auto-Plug Replies</a>
-<a href="/scripts/auto-reply">💬 Auto-Reply / Auto-Respond</a>
-<a href="/scripts/auto-engage">⚡ Browser console script for automated engagement</a>
-<a href="/scripts/comment-by-hashtag">💬 Comment By Hashtag</a>
-<a href="/scripts/comment-by-location">💬 Comment By Location</a>
-<a href="/scripts/engagement-booster">🚀 Engagement Booster v2</a>
-<a href="/scripts/engagement-manager">⚡ Engagement Manager</a>
+        <h3>📊 Analytics</h3>
+        <a href="/scripts/account-health-monitor">📊 Account Health Monitor</a>
+<a href="/scripts/audience-demographics">📊 Audience Demographics</a>
+<a href="/scripts/audience-overlap">📊 Audience Overlap</a>
+<a href="/scripts/audit-followers">📊 Audit Followers</a>
+<a href="/scripts/best-time-to-post">📊 Best Time to Post</a>
+<a href="/scripts/business-analytics">📊 Business Analytics</a>
+<a href="/scripts/business-tools">📊 Business Tools</a>
+<a href="/scripts/competitor-analysis">📊 Competitor Analysis</a>
+<a href="/scripts/content-calendar">📊 Content Calendar</a>
+<a href="/scripts/creator-studio">📊 Creator Studio</a>
       </div>
       <div class="sidebar-card">
         <h3>🔗 Quick Links</h3>

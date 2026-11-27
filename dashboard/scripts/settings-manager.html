@@ -4,14 +4,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Settings Manager — Free X/Twitter Script | XActions</title>
-  <meta name="description" content="Browser console script for exporting settings and toggling protection on X/Twitter. Free X/Twitter browser script, no API key needed.">
-  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, settings, manager, safety &amp; privacy">
+  <meta name="description" content="Export and audit the settings pages and toggle states on x.com/settings, or toggle protected posts, dry run by default.">
+  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, settings, manager, profile and settings">
   <meta name="author" content="nich (@nichxbt)">
   <meta name="robots" content="index, follow">
 
   <meta property="og:type" content="article">
   <meta property="og:title" content="Settings Manager — XActions">
-  <meta property="og:description" content="Browser console script for exporting settings and toggling protection on X/Twitter. Free X/Twitter browser script, no API key needed.">
+  <meta property="og:description" content="Export and audit the settings pages and toggle states on x.com/settings, or toggle protected posts, dry run by default.">
   <meta property="og:url" content="https://xactions.app/scripts/settings-manager">
   <meta property="og:site_name" content="XActions">
   <meta property="og:image" content="https://xactions.app/og-run.png">
@@ -19,7 +19,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@nichxbt">
   <meta name="twitter:title" content="Settings Manager — XActions">
-  <meta name="twitter:description" content="Browser console script for exporting settings and toggling protection on X/Twitter. Free X/Twitter browser script, no API key needed.">
+  <meta name="twitter:description" content="Export and audit the settings pages and toggle states on x.com/settings, or toggle protected posts, dry run by default.">
   <meta name="twitter:image" content="https://xactions.app/og-run.png">
 
   <link rel="canonical" href="https://xactions.app/scripts/settings-manager">
@@ -30,14 +30,14 @@
     "@context": "https://schema.org",
     "@type": "TechArticle",
     "headline": "Settings Manager — Free X/Twitter Script | XActions",
-    "description": "Browser console script for exporting settings and toggling protection on X/Twitter. Free X/Twitter browser script, no API key needed.",
+    "description": "Export and audit the settings pages and toggle states on x.com/settings, or toggle protected posts, dry run by default.",
     "url": "https://xactions.app/scripts/settings-manager",
     "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
     "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
     "datePublished": "2026-03-30",
     "dateModified": "2026-03-30",
-    "articleSection": "Safety & Privacy",
-    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, settings, manager, safety & privacy"
+    "articleSection": "Profile and Settings",
+    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, settings, manager, profile and settings"
   }
   </script>
   <script type="application/ld+json">
@@ -47,7 +47,7 @@
     "itemListElement": [
       { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
       { "@type": "ListItem", "position": 2, "name": "Scripts", "item": "https://xactions.app/scripts" },
-      { "@type": "ListItem", "position": 3, "name": "Safety & Privacy", "item": "https://xactions.app/scripts#safety-privacy" },
+      { "@type": "ListItem", "position": 3, "name": "Profile and Settings", "item": "https://xactions.app/scripts#profile-and-settings" },
       { "@type": "ListItem", "position": 4, "name": "Settings Manager", "item": "https://xactions.app/scripts/settings-manager" }
     ]
   }
@@ -116,24 +116,24 @@
 
     <main class="main-content" id="main-content">
       <header class="main-header">
-        <h1>⚙️ Settings Manager</h1>
+        <h1>🪪 Settings Manager</h1>
         <div class="breadcrumb">
-          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#safety-privacy">Safety &amp; Privacy</a> › Settings Manager
+          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#profile-and-settings">Profile and Settings</a> › Settings Manager
         </div>
       </header>
 
       <article class="article">
-        <span class="cat-badge">Safety &amp; Privacy</span>
-        <span class="source-badge">scripts</span>
+        <span class="cat-badge">Profile and Settings</span>
+        <span class="source-badge">browser/settingsManager.js</span>
 
         <div class="meta-row">
-          
-          
-          <span>110 lines</span>
+          <span>v1.1.0</span>
+          <span>Updated: 2026-11-27</span>
+          <span>160 lines</span>
           <span>by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></span>
         </div>
 
-        <p>Browser console script for exporting settings and toggling protection on X/Twitter</p>
+        <p>Export and audit the settings pages and toggle states on x.com/settings, or toggle protected posts, dry run by default.</p>
 
         
 
@@ -154,6 +154,9 @@
           <tbody>
             <tr><td><code>action</code></td><td><code>'export'</code></td><td>'export' | 'toggleProtect'</td></tr>
 <tr><td><code>dryRun</code></td><td><code>true</code></td><td>SET FALSE TO EXECUTE (for toggleProtect)</td></tr>
+<tr><td><code>logDetails</code></td><td><code>false</code></td><td>export: also list every toggle state and settings page in the console</td></tr>
+<tr><td><code>logJSON</code></td><td><code>false</code></td><td>export: also print the full JSON to the console</td></tr>
+<tr><td><code>copyToClipboard</code></td><td><code>false</code></td><td>export: also copy the JSON to the clipboard</td></tr>
           </tbody>
         </table>
       </section>
@@ -164,6 +167,9 @@
           <pre><code>const CONFIG = {
     action: 'export',           // 'export' | 'toggleProtect'
     dryRun: true,               // SET FALSE TO EXECUTE (for toggleProtect)
+    logDetails: false,          // export: also list every toggle state and settings page in the console
+    logJSON: false,             // export: also print the full JSON to the console
+    copyToClipboard: false,     // export: also copy the JSON to the clipboard
   };</code></pre>
         </div>
       </section>
@@ -174,10 +180,26 @@
           <div class="code-block">
             <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.querySelector('code').textContent).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy Script',2000)})">Copy Script</button>
             <pre><code>// Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
-// scripts/settingsManager.js
+/**
+ * @name        settingsManager.js
+ * @title       Settings Manager
+ * @description Export and audit the settings pages and toggle states on x.com/settings, or toggle protected posts, dry run by default.
+ * @category    profile
+ * @page        x.com/settings or x.com/settings/audience_and_tagging
+ * @writes      false
+ * @aliases     scripts/manageSettings.js, scripts/settingsManager.js
+ * @author      nichxbt (https://x.com/nichxbt)
+ * @version     1.1.0
+ * @date        2026-11-27
+ */
+// Settings Manager on X - by nichxbt
 // Browser console script for exporting settings and toggling protection on X/Twitter
-// Paste in DevTools console on x.com/settings
-// by nichxbt
+// 1. Go to x.com/settings (or any settings page you want to audit)
+// 2. Open the Developer Console (F12)
+// 3. Set CONFIG.action: 'export' downloads the settings pages, section
+//    headers and toggle states as JSON; 'toggleProtect' flips &quot;Protect your
+//    posts&quot; (dryRun: true only reports what it would do)
+// 4. Paste browser/settingsManager.js into the Developer Console and run it
 
 (() =&gt; {
   const sleep = (ms) =&gt; new Promise(r =&gt; setTimeout(r, ms));
@@ -188,6 +210,9 @@
   const CONFIG = {
     action: 'export',           // 'export' | 'toggleProtect'
     dryRun: true,               // SET FALSE TO EXECUTE (for toggleProtect)
+    logDetails: false,          // export: also list every toggle state and settings page in the console
+    logJSON: false,             // export: also print the full JSON to the console
+    copyToClipboard: false,     // export: also copy the JSON to the clipboard
   };
   // =============================================
 
@@ -206,7 +231,7 @@
 
     // Scrape settings links and toggles from the page
     const links = Array.from(document.querySelectorAll('a[href^=&quot;/settings/&quot;]')).map(link =&gt; ({
-      text: link.textContent?.trim() || '',
+      text: link.textContent?.trim()?.substring(0, 100) || '',
       href: link.getAttribute('href') || '',
     }));
 
@@ -215,14 +240,44 @@
       enabled: sw.getAttribute('aria-checked') === 'true',
     }));
 
+    // Section headers on the current settings page
+    const headings = Array.from(document.querySelectorAll('[role=&quot;heading&quot;], h2, h3'))
+      .map(h =&gt; h.textContent?.trim() || '')
+      .filter(Boolean);
+
     const settings = {
       exportedAt: new Date().toISOString(),
       currentUrl: window.location.href,
       settingsSections: links.filter(l =&gt; l.text),
       toggles: switches,
+      headings,
     };
 
     console.log(`   📄 Found ${links.length} settings sections, ${switches.length} toggles`);
+
+    if (CONFIG.logDetails) {
+      if (switches.length &gt; 0) {
+        console.log('\n🔘 Toggle states:');
+        switches.forEach(t =&gt; console.log(`  ${t.enabled ? '✅' : '❌'} ${t.label || 'Unknown'}`));
+      }
+      console.log('\n📁 Setting pages:');
+      settings.settingsSections.forEach(l =&gt; console.log(`  → ${l.text}: ${l.href}`));
+    }
+
+    if (CONFIG.logJSON) {
+      console.log('\n📦 Full JSON:');
+      console.log(JSON.stringify(settings, null, 2));
+    }
+
+    if (CONFIG.copyToClipboard) {
+      try {
+        await navigator.clipboard.writeText(JSON.stringify(settings, null, 2));
+        console.log('✅ Copied to clipboard!');
+      } catch (e) {
+        console.warn('⚠️ Could not copy to clipboard.');
+      }
+    }
+
     download(settings, `xactions-settings-${new Date().toISOString().slice(0, 10)}.json`);
     console.log('✅ Settings exported');
   };
@@ -235,6 +290,7 @@
       const link = document.querySelector('a[href=&quot;/settings/audience_and_tagging&quot;]');
       if (link) { link.click(); await sleep(2000); }
       else {
+        console.log('   ↪️ Opening x.com/settings/audience_and_tagging; paste the script again once it loads.');
         window.location.href = 'https://x.com/settings/audience_and_tagging';
         await sleep(3000);
       }
@@ -266,7 +322,7 @@
   };
 
   const run = async () =&gt; {
-    console.log('⚙️ SETTINGS MANAGER — XActions by nichxbt\n');
+    console.log('⚙️ SETTINGS MANAGER - XActions by nichxbt\n');
 
     if (!window.location.href.includes('/settings')) {
       console.error('❌ Navigate to x.com/settings first!');
@@ -296,17 +352,17 @@
 
     <aside class="sidebar-right">
       <div class="sidebar-card">
-        <h3>⚙️ Safety &amp; Privacy</h3>
-        <a href="/scripts/blacklist">🚫 Blacklist Manager</a>
-<a href="/scripts/block-bots">🤖 Block Bot Accounts</a>
-<a href="/scripts/block-by-keywords">🚫 Block By Keywords</a>
-<a href="/scripts/block-by-ratio">🚫 Block By Ratio</a>
-<a href="/scripts/block-list-transfer">🧱 Block List Transfer</a>
-<a href="/scripts/filter-manager">🔍 Filter Manager</a>
-<a href="/scripts/id-verification">🪪 ID Verification management</a>
-<a href="/scripts/manage-muted-words">🔇 Manage Muted Words</a>
-<a href="/scripts/manage-settings">⚙️ Manage Settings</a>
-<a href="/scripts/mass-block">🚫 Mass Block Users</a>
+        <h3>🪪 Profile and Settings</h3>
+        <a href="/scripts/account-misc">🪪 Account Utilities</a>
+<a href="/scripts/advanced-profile">🪪 Advanced Profile Tools</a>
+<a href="/scripts/advanced-settings">🪪 Advanced Settings and Privacy</a>
+<a href="/scripts/delegate-access">🪪 Delegate Access</a>
+<a href="/scripts/download-account-data">🪪 Download Account Data</a>
+<a href="/scripts/id-verification">🪪 ID Verification</a>
+<a href="/scripts/multi-account">🪪 Multi-Account Manager</a>
+<a href="/scripts/advanced-notifications">🪪 Notification Settings</a>
+<a href="/scripts/pin-tweet-manager">🪪 Pin Tweet Manager</a>
+<a href="/scripts/account-settings">🪪 Privacy and Safety Settings</a>
       </div>
       <div class="sidebar-card">
         <h3>🔗 Quick Links</h3>

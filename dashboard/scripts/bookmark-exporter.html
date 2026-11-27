@@ -4,14 +4,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Bookmark Exporter — Free X/Twitter Script | XActions</title>
-  <meta name="description" content="Export all your X/Twitter bookmarks to JSON/CSV. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
-  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, bookmark, exporter, content tools">
+  <meta name="description" content="Export all your bookmarks to JSON and CSV, with optional full metadata and a summary. Free X/Twitter browser script, no API key needed.">
+  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, bookmark, exporter, scrape and export">
   <meta name="author" content="nich (@nichxbt)">
   <meta name="robots" content="index, follow">
 
   <meta property="og:type" content="article">
   <meta property="og:title" content="Bookmark Exporter — XActions">
-  <meta property="og:description" content="Export all your X/Twitter bookmarks to JSON/CSV. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
+  <meta property="og:description" content="Export all your bookmarks to JSON and CSV, with optional full metadata and a summary. Free X/Twitter browser script, no API key needed.">
   <meta property="og:url" content="https://xactions.app/scripts/bookmark-exporter">
   <meta property="og:site_name" content="XActions">
   <meta property="og:image" content="https://xactions.app/og-run.png">
@@ -19,7 +19,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@nichxbt">
   <meta name="twitter:title" content="Bookmark Exporter — XActions">
-  <meta name="twitter:description" content="Export all your X/Twitter bookmarks to JSON/CSV. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
+  <meta name="twitter:description" content="Export all your bookmarks to JSON and CSV, with optional full metadata and a summary. Free X/Twitter browser script, no API key needed.">
   <meta name="twitter:image" content="https://xactions.app/og-run.png">
 
   <link rel="canonical" href="https://xactions.app/scripts/bookmark-exporter">
@@ -30,14 +30,14 @@
     "@context": "https://schema.org",
     "@type": "TechArticle",
     "headline": "Bookmark Exporter — Free X/Twitter Script | XActions",
-    "description": "Export all your X/Twitter bookmarks to JSON/CSV. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.",
+    "description": "Export all your bookmarks to JSON and CSV, with optional full metadata and a summary. Free X/Twitter browser script, no API key needed.",
     "url": "https://xactions.app/scripts/bookmark-exporter",
     "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
     "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
     "datePublished": "2026-03-30",
     "dateModified": "2026-03-30",
-    "articleSection": "Content Tools",
-    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, bookmark, exporter, content tools"
+    "articleSection": "Scrape and Export",
+    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, bookmark, exporter, scrape and export"
   }
   </script>
   <script type="application/ld+json">
@@ -47,7 +47,7 @@
     "itemListElement": [
       { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
       { "@type": "ListItem", "position": 2, "name": "Scripts", "item": "https://xactions.app/scripts" },
-      { "@type": "ListItem", "position": 3, "name": "Content Tools", "item": "https://xactions.app/scripts#content-tools" },
+      { "@type": "ListItem", "position": 3, "name": "Scrape and Export", "item": "https://xactions.app/scripts#scrape-and-export" },
       { "@type": "ListItem", "position": 4, "name": "Bookmark Exporter", "item": "https://xactions.app/scripts/bookmark-exporter" }
     ]
   }
@@ -116,59 +116,38 @@
 
     <main class="main-content" id="main-content">
       <header class="main-header">
-        <h1>📚 Bookmark Exporter</h1>
+        <h1>📥 Bookmark Exporter</h1>
         <div class="breadcrumb">
-          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#content-tools">Content Tools</a> › Bookmark Exporter
+          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#scrape-and-export">Scrape and Export</a> › Bookmark Exporter
         </div>
       </header>
 
       <article class="article">
-        <span class="cat-badge">Content Tools</span>
-        <span class="source-badge">scripts</span>
+        <span class="cat-badge">Scrape and Export</span>
+        <span class="source-badge">browser/bookmarkExporter.js</span>
 
         <div class="meta-row">
-          
-          
-          <span>195 lines</span>
+          <span>v1.1.0</span>
+          <span>Updated: 2026-11-26</span>
+          <span>386 lines</span>
           <span>by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></span>
         </div>
 
-        <p>Export all your X/Twitter bookmarks to JSON/CSV</p>
+        <p>Export all your bookmarks to JSON and CSV, with optional full metadata and a summary.</p>
 
         
 
         <h2>How to Use</h2>
-        <ol class="usage-steps">
-        <li>Navigate to <a href="https://x.com" rel="noopener">x.com</a> and log in</li>
-        <li>Open DevTools Console (F12 or Cmd+Option+I)</li>
-        
-        <li>Paste the script below and press Enter</li>
-      </ol>
+        <ol class="usage-steps"><li>Go to your Bookmarks page: https://x.com/i/bookmarks</li>
+<li>Open Chrome DevTools (F12 or Cmd+Option+I)</li>
+<li>Paste browser/bookmarkExporter.js and press Enter</li>
+<li>Wait for scrolling to complete</li>
+<li>JSON and CSV files will download automatically</li></ol>
         
 
         
-        <section class="config-section">
-        <h2>Configuration Options</h2>
-        <table>
-          <thead><tr><th>Option</th><th>Default</th><th>Description</th></tr></thead>
-          <tbody>
-            <tr><td><code>MAX_BOOKMARKS</code></td><td><code>1000</code></td><td>Max bookmarks to export</td></tr>
-<tr><td><code>SCROLL_DELAY</code></td><td><code>1500</code></td><td>Delay between scrolls (ms)</td></tr>
-<tr><td><code>FORMAT</code></td><td><code>'both'</code></td><td>'json', 'csv', 'both'</td></tr>
-          </tbody>
-        </table>
-      </section>
-        <section class="config-code">
-        <h2>Default Configuration</h2>
-        <div class="code-block">
-          <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.querySelector('code').textContent).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy',2000)})">Copy</button>
-          <pre><code>const CONFIG = {
-    MAX_BOOKMARKS: 1000,    // Max bookmarks to export
-    SCROLL_DELAY: 1500,     // Delay between scrolls (ms)
-    FORMAT: 'both',         // 'json', 'csv', 'both'
-  };</code></pre>
-        </div>
-      </section>
+        
+        
 
         <section class="full-code">
           <h2>Full Script</h2>
@@ -177,197 +156,388 @@
             <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.querySelector('code').textContent).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy Script',2000)})">Copy Script</button>
             <pre><code>// Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
 /**
- * Bookmark Exporter
- * Export all your X/Twitter bookmarks to JSON/CSV
- * 
- * HOW TO USE:
- * 1. Go to x.com/i/bookmarks
- * 2. Open Developer Console (Ctrl+Shift+J or Cmd+Option+J)
- * 3. Paste this script and press Enter
- * 
- * by nichxbt - https://github.com/nirholas/XActions
+ * ============================================================
+ * 🔖 Bookmark Exporter
+ * ============================================================
+ *
+ * @name        bookmarkExporter.js
+ * @title       Bookmark Exporter
+ * @description Export all your bookmarks to JSON and CSV, with optional full metadata and a summary.
+ * @category    scrape
+ * @page        x.com/i/bookmarks
+ * @writes      false
+ * @aliases     scripts/bookmarkExporter.js, scripts/scrapeBookmarks.js, scripts/twitter/bookmark-exporter.js
+ * @author      nichxbt (https://x.com/nichxbt)
+ * @version     1.1.0
+ * @date        2026-11-26
+ * @repository  https://github.com/nirholas/XActions
+ *
+ * ============================================================
+ * 📋 USAGE INSTRUCTIONS:
+ *
+ * 1. Go to your Bookmarks page: https://x.com/i/bookmarks
+ * 2. Open Chrome DevTools (F12 or Cmd+Option+I)
+ * 3. Paste browser/bookmarkExporter.js and press Enter
+ * 4. Wait for scrolling to complete
+ * 5. JSON and CSV files will download automatically
+ *
+ * Data is also left on the page as window.exportedBookmarks (the full
+ * result object) and window.scrapedBookmarks (the plain array).
+ *
+ * ============================================================
+ * ⚙️ CONFIGURATION
+ * ============================================================
  */
 
-(() =&gt; {
-  const CONFIG = {
-    MAX_BOOKMARKS: 1000,    // Max bookmarks to export
-    SCROLL_DELAY: 1500,     // Delay between scrolls (ms)
-    FORMAT: 'both',         // 'json', 'csv', 'both'
-  };
+// `var` (not `const`): a repeated top-level `const` paste in the same
+// DevTools tab throws &quot;already been declared&quot; instead of re-running.
+var CONFIG = {
+  // Maximum bookmarks to export
+  maxBookmarks: 1000,
 
+  // Scroll delay (increase if bookmarks aren't loading)
+  scrollDelay: 1500,
+
+  // Max scroll attempts
+  maxScrolls: 200,
+
+  // Retry when no new bookmarks
+  maxRetries: 5,
+
+  // Export formats
+  exportJSON: true,
+  exportCSV: true,
+
+  // Copy to clipboard
+  copyToClipboard: true,
+
+  // What goes on the clipboard: 'json' (the full result) or 'summary'
+  // (one &quot;@handle: text... - url&quot; line per bookmark)
+  clipboardFormat: 'json',
+
+  // Collect image URLs and external links (set false to leave them out)
+  includeMediaUrls: true,
+  includeLinks: true,
+
+  // Rewrite image URLs to their large size (&amp;name=large)
+  fullSizeImages: false,
+
+  // Add verified flag, video posters, hashtags, mentions and numeric
+  // reply/repost/like/view counts to each bookmark, and matching CSV columns
+  fullMetadata: false
+};
+
+/**
+ * ============================================================
+ * 🚀 SCRIPT START
+ * ============================================================
+ */
+
+(async function bookmarkExporter() {
   const sleep = (ms) =&gt; new Promise(r =&gt; setTimeout(r, ms));
 
-  // Parse engagement numbers
+  const $tweet = 'article[data-testid=&quot;tweet&quot;]';
+  const $tweetText = '[data-testid=&quot;tweetText&quot;]';
+
+  console.log('╔════════════════════════════════════════════════════════════╗');
+  console.log('║  🔖 BOOKMARK EXPORTER                                      ║');
+  console.log('║  by nichxbt - https://github.com/nirholas/XActions         ║');
+  console.log('╚════════════════════════════════════════════════════════════╝');
+  console.log('');
+
+  // Verify page
+  if (!window.location.href.includes('/bookmarks')) {
+    console.error('❌ ERROR: Must be on the Bookmarks page!');
+    console.log('📍 Go to: https://x.com/i/bookmarks');
+    return;
+  }
+
+  console.log('🚀 Exporting bookmarks...');
+  console.log('📜 Auto-scrolling to load all bookmarks...');
+  console.log('');
+
+  const bookmarks = [];
+  const seenIds = new Set();
+  let scrolls = 0;
+  let retries = 0;
+  let lastCount = 0;
+
+  // Parse an engagement count such as &quot;1,234&quot;, &quot;1.2K&quot; or &quot;3M&quot; into a number
   const parseNumber = (str) =&gt; {
     if (!str) return 0;
     const num = parseFloat(str.replace(/,/g, ''));
+    if (isNaN(num)) return 0;
     if (str.includes('K')) return num * 1000;
     if (str.includes('M')) return num * 1000000;
     return num;
   };
 
-  // Extract bookmark data
-  const extractBookmark = (article) =&gt; {
+  // Numeric counts from the action bar's aria-labels (the views count is a
+  // link to the post's analytics, the others are buttons)
+  const getMetricCounts = (tweet) =&gt; {
+    const counts = { replies: 0, retweets: 0, likes: 0, views: 0 };
+    tweet.querySelectorAll('[role=&quot;group&quot;] button, [role=&quot;group&quot;] a[href*=&quot;/analytics&quot;]').forEach(el =&gt; {
+      const label = el.getAttribute('aria-label') || '';
+      const num = parseNumber(label.match(/[\d,.]+[KM]?/)?.[0] || '0');
+      if (label.includes('repl')) counts.replies = num;
+      else if (label.includes('repost') || label.includes('Retweet')) counts.retweets = num;
+      else if (label.includes('like')) counts.likes = num;
+      else if (label.includes('view')) counts.views = num;
+    });
+    return counts;
+  };
+
+  /**
+   * Extract bookmark data from tweet element
+   */
+  function extractBookmark(tweet) {
     try {
-      const tweetText = article.querySelector('[data-testid=&quot;tweetText&quot;]')?.textContent || '';
-      const userName = article.querySelector('[data-testid=&quot;User-Name&quot;]')?.textContent || '';
-      const handle = userName.match(/@(\w+)/)?.[1] || '';
-      const displayName = userName.split('@')[0]?.trim() || '';
-      
-      // Get tweet link
-      const timeLink = article.querySelector('time')?.closest('a');
-      const tweetUrl = timeLink?.href || '';
-      const tweetId = tweetUrl.split('/status/')[1]?.split('?')[0] || '';
-      
-      // Get time
-      const time = article.querySelector('time')?.getAttribute('datetime') || '';
-      
-      // Get engagement
-      const buttons = article.querySelectorAll('[role=&quot;group&quot;] button');
-      let replies = 0, retweets = 0, likes = 0, views = 0;
-      
-      buttons.forEach(btn =&gt; {
-        const label = btn.getAttribute('aria-label') || '';
-        const num = parseNumber(label.match(/[\d,.]+[KM]?/)?.[0] || '0');
-        
-        if (label.includes('repl')) replies = num;
-        else if (label.includes('repost') || label.includes('Retweet')) retweets = num;
-        else if (label.includes('like')) likes = num;
-        else if (label.includes('view')) views = num;
-      });
+      // Get tweet ID: the timestamp's enclosing anchor is the tweet's own
+      // permalink; the first /status/ link can belong to a quoted tweet
+      const timeAnchor = tweet.querySelector('time')?.closest('a[href*=&quot;/status/&quot;]');
+      const link = timeAnchor || tweet.querySelector('a[href*=&quot;/status/&quot;]');
+      if (!link) return null;
 
-      // Get images
-      const images = Array.from(article.querySelectorAll('img[src*=&quot;media&quot;]'))
-        .map(img =&gt; img.src)
-        .filter(src =&gt; !src.includes('profile'));
+      const href = link.getAttribute('href');
+      const match = href.match(/\/status\/(\d+)/);
+      if (!match) return null;
 
-      // Get links
-      const links = Array.from(article.querySelectorAll('a[href^=&quot;http&quot;]'))
-        .map(a =&gt; a.href)
-        .filter(href =&gt; !href.includes('x.com') &amp;&amp; !href.includes('twitter.com'));
+      const tweetId = match[1];
+      if (seenIds.has(tweetId)) return null;
+      seenIds.add(tweetId);
 
-      return {
-        tweetId,
-        handle,
-        displayName,
-        text: tweetText,
-        url: tweetUrl,
-        time,
-        likes,
-        retweets,
-        replies,
-        views,
-        images,
-        links,
+      // Get author (User-Name block is the real author; a bare first link in
+      // the article can belong to a reposter's socialContext or a quoted tweet)
+      const authorLink = tweet.querySelector('[data-testid=&quot;User-Name&quot;] a[href^=&quot;/&quot;]') ||
+                         tweet.querySelector('a[href^=&quot;/&quot;][role=&quot;link&quot;]');
+      const authorUsername = authorLink ? authorLink.getAttribute('href').replace('/', '').split('/')[0] : 'unknown';
+
+      // Get display name
+      const nameSpan = tweet.querySelector('[dir=&quot;ltr&quot;] span');
+      const authorName = nameSpan ? nameSpan.textContent : authorUsername;
+
+      // Get text
+      const textEl = tweet.querySelector($tweetText);
+      const text = textEl ? textEl.innerText : '';
+
+      // Get timestamp
+      const timeEl = tweet.querySelector('time');
+      const timestamp = timeEl ? timeEl.getAttribute('datetime') : null;
+      const displayTime = timeEl ? timeEl.innerText : '';
+
+      // Get engagement metrics
+      const getMetric = (testId) =&gt; {
+        const el = tweet.querySelector(`[data-testid=&quot;${testId}&quot;]`);
+        const span = el?.querySelector('span span');
+        return span ? span.innerText : '0';
       };
+
+      // Check for media
+      const hasImage = tweet.querySelector('[data-testid=&quot;tweetPhoto&quot;]') !== null;
+      const hasVideo = tweet.querySelector('[data-testid=&quot;videoPlayer&quot;], [data-testid=&quot;videoComponent&quot;]') !== null;
+
+      // Get image URLs
+      const images = [];
+      if (CONFIG.includeMediaUrls) {
+        tweet.querySelectorAll('[data-testid=&quot;tweetPhoto&quot;] img').forEach(img =&gt; {
+          if (img.src &amp;&amp; img.src.includes('pbs.twimg.com')) {
+            images.push(CONFIG.fullSizeImages ? img.src.replace(/&amp;name=\w+/, '&amp;name=large') : img.src);
+          }
+        });
+      }
+
+      // Extract URLs from text
+      const urls = [];
+      if (CONFIG.includeLinks) {
+        tweet.querySelectorAll('a[href^=&quot;https://t.co&quot;]').forEach(a =&gt; {
+          const expandedUrl = a.getAttribute('title') || a.textContent;
+          if (expandedUrl &amp;&amp; expandedUrl.startsWith('http')) {
+            urls.push(expandedUrl);
+          }
+        });
+      }
+
+      const bookmark = {
+        id: tweetId,
+        url: `https://x.com/${authorUsername}/status/${tweetId}`,
+        author: {
+          username: authorUsername,
+          name: authorName
+        },
+        text,
+        timestamp,
+        displayTime,
+        metrics: {
+          replies: getMetric('reply'),
+          retweets: getMetric('retweet'),
+          likes: getMetric('like')
+        },
+        media: {
+          hasImage,
+          hasVideo,
+          images
+        },
+        urls,
+        exportedAt: new Date().toISOString()
+      };
+
+      if (CONFIG.fullMetadata) {
+        bookmark.author.verified = !!tweet.querySelector('[data-testid=&quot;User-Name&quot;] svg[aria-label*=&quot;Verified&quot;], [data-testid=&quot;icon-verified&quot;]');
+        bookmark.media.videos = CONFIG.includeMediaUrls
+          ? Array.from(tweet.querySelectorAll('video')).map(v =&gt; v.poster || v.src).filter(Boolean)
+          : [];
+        bookmark.hashtags = text.match(/#\w+/g) || [];
+        bookmark.mentions = text.match(/@\w+/g) || [];
+        bookmark.metricCounts = getMetricCounts(tweet);
+      }
+
+      return bookmark;
+
     } catch (e) {
       return null;
     }
-  };
+  }
 
-  // Main function
-  const run = async () =&gt; {
-    // Check if on bookmarks page
-    if (!window.location.pathname.includes('/bookmarks')) {
-      console.error('❌ Please go to x.com/i/bookmarks first!');
-      return;
-    }
+  // Scroll and extract
+  while (bookmarks.length &lt; CONFIG.maxBookmarks &amp;&amp; scrolls &lt; CONFIG.maxScrolls &amp;&amp; retries &lt; CONFIG.maxRetries) {
+    const tweets = document.querySelectorAll($tweet);
 
-    console.log('📚 Exporting Bookmarks...');
-    console.log(`📊 Will export up to ${CONFIG.MAX_BOOKMARKS} bookmarks\n`);
-
-    const bookmarks = new Map();
-    let scrolls = 0;
-    let lastHeight = 0;
-    let noNewCount = 0;
-
-    while (bookmarks.size &lt; CONFIG.MAX_BOOKMARKS &amp;&amp; noNewCount &lt; 5) {
-      const articles = document.querySelectorAll('article[data-testid=&quot;tweet&quot;]');
-      const beforeCount = bookmarks.size;
-
-      articles.forEach(article =&gt; {
-        const bookmark = extractBookmark(article);
-        if (bookmark &amp;&amp; bookmark.tweetId &amp;&amp; !bookmarks.has(bookmark.tweetId)) {
-          bookmarks.set(bookmark.tweetId, bookmark);
-        }
-      });
-
-      const added = bookmarks.size - beforeCount;
-      if (added &gt; 0) {
-        console.log(`📖 Collected ${bookmarks.size} bookmarks...`);
-        noNewCount = 0;
-      } else {
-        noNewCount++;
+    tweets.forEach(tweet =&gt; {
+      const bookmark = extractBookmark(tweet);
+      if (bookmark) {
+        bookmarks.push(bookmark);
       }
-
-      // Scroll
-      window.scrollBy(0, 800);
-      await sleep(CONFIG.SCROLL_DELAY);
-
-      scrolls++;
-      if (scrolls &gt; 100) break;
-    }
-
-    const bookmarkList = Array.from(bookmarks.values());
-
-    // Results
-    console.log('\n' + '='.repeat(60));
-    console.log(`📚 EXPORTED ${bookmarkList.length} BOOKMARKS`);
-    console.log('='.repeat(60) + '\n');
-
-    // Show preview
-    bookmarkList.slice(0, 5).forEach((b, i) =&gt; {
-      console.log(`${i + 1}. @${b.handle}: &quot;${b.text.slice(0, 60)}...&quot;`);
     });
-    if (bookmarkList.length &gt; 5) {
-      console.log(`   ... and ${bookmarkList.length - 5} more\n`);
+
+    if (bookmarks.length === lastCount) {
+      retries++;
+    } else {
+      retries = 0;
+      lastCount = bookmarks.length;
     }
 
-    // Generate JSON
-    if (CONFIG.FORMAT === 'json' || CONFIG.FORMAT === 'both') {
-      const json = JSON.stringify(bookmarkList, null, 2);
-      const blob = new Blob([json], { type: 'application/json' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `bookmarks_${Date.now()}.json`;
-      a.click();
-      console.log('💾 Downloaded bookmarks.json');
-    }
+    console.log(`📊 Exported ${bookmarks.length} bookmarks...`);
 
-    // Generate CSV
-    if (CONFIG.FORMAT === 'csv' || CONFIG.FORMAT === 'both') {
-      const csv = [
-        'Handle,DisplayName,Text,URL,Time,Likes,Retweets,Replies,Views',
-        ...bookmarkList.map(b =&gt; 
-          `&quot;@${b.handle}&quot;,&quot;${b.displayName.replace(/&quot;/g, '&quot;&quot;')}&quot;,&quot;${b.text.replace(/&quot;/g, '&quot;&quot;').replace(/\n/g, ' ')}&quot;,&quot;${b.url}&quot;,&quot;${b.time}&quot;,${b.likes},${b.retweets},${b.replies},${b.views}`
-        )
-      ].join('\n');
+    window.scrollTo(0, document.body.scrollHeight);
+    await sleep(CONFIG.scrollDelay);
+    scrolls++;
+  }
 
-      const blob = new Blob([csv], { type: 'text/csv' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `bookmarks_${Date.now()}.csv`;
-      a.click();
-      console.log('💾 Downloaded bookmarks.csv');
-    }
+  console.log('');
+  console.log(`✅ Finished exporting: ${bookmarks.length} bookmarks`);
+  console.log('');
 
-    // Copy summary to clipboard
-    try {
-      const summary = bookmarkList.map(b =&gt; `@${b.handle}: ${b.text.slice(0, 100)}... - ${b.url}`).join('\n');
-      await navigator.clipboard.writeText(summary);
-      console.log('📋 Summary copied to clipboard!');
-    } catch (e) {}
+  // Preview the first few
+  bookmarks.slice(0, 5).forEach((b, i) =&gt; {
+    console.log(`${i + 1}. @${b.author.username}: &quot;${b.text.slice(0, 60)}...&quot;`);
+  });
+  if (bookmarks.length &gt; 5) {
+    console.log(`   ... and ${bookmarks.length - 5} more`);
+  }
 
-    // Store globally
-    window.exportedBookmarks = bookmarkList;
+  // Stats
+  const withMedia = bookmarks.filter(b =&gt; b.media.hasImage || b.media.hasVideo).length;
+  const withLinks = bookmarks.filter(b =&gt; b.urls.length &gt; 0).length;
+  const uniqueAuthors = new Set(bookmarks.map(b =&gt; b.author.username)).size;
+  console.log('');
+  console.log('📊 Stats:');
+  console.log(`   - ${uniqueAuthors} unique authors`);
+  console.log(`   - ${withMedia} with media`);
+  console.log(`   - ${withLinks} with external links`);
+  console.log('');
 
-    console.log('\n✅ Done! Access data: window.exportedBookmarks');
-    console.log(`📊 Total: ${bookmarkList.length} bookmarks exported`);
+  // Build result
+  const result = {
+    exportedAt: new Date().toISOString(),
+    totalBookmarks: bookmarks.length,
+    bookmarks
   };
 
-  run();
+  // Download JSON
+  if (CONFIG.exportJSON) {
+    const jsonBlob = new Blob([JSON.stringify(result, null, 2)], { type: 'application/json' });
+    const jsonUrl = URL.createObjectURL(jsonBlob);
+    const jsonLink = document.createElement('a');
+    jsonLink.href = jsonUrl;
+    jsonLink.download = `bookmarks_${new Date().toISOString().split('T')[0]}.json`;
+    document.body.appendChild(jsonLink);
+    jsonLink.click();
+    document.body.removeChild(jsonLink);
+    URL.revokeObjectURL(jsonUrl);
+    console.log('💾 JSON downloaded!');
+  }
+
+  // Download CSV
+  if (CONFIG.exportCSV) {
+    const headers = ['ID', 'Author', 'Username', 'Text', 'Date', 'Likes', 'Retweets', 'Replies', 'Has Image', 'Has Video', 'URL'];
+    if (CONFIG.fullMetadata) headers.push('Timestamp', 'Verified', 'Views', 'Hashtags', 'Mentions');
+    const rows = bookmarks.map(b =&gt; {
+      const cells = [
+        b.id,
+        `&quot;${b.author.name.replace(/&quot;/g, '&quot;&quot;')}&quot;`,
+        b.author.username,
+        `&quot;${b.text.replace(/&quot;/g, '&quot;&quot;').replace(/\n/g, ' ')}&quot;`,
+        `&quot;${b.displayTime.replace(/&quot;/g, '&quot;&quot;')}&quot;`,
+        b.metrics.likes,
+        b.metrics.retweets,
+        b.metrics.replies,
+        b.media.hasImage,
+        b.media.hasVideo,
+        b.url
+      ];
+      if (CONFIG.fullMetadata) {
+        cells.push(
+          b.timestamp || '',
+          b.author.verified,
+          b.metricCounts.views,
+          `&quot;${b.hashtags.join(' ')}&quot;`,
+          `&quot;${b.mentions.join(' ')}&quot;`
+        );
+      }
+      return cells.join(',');
+    });
+
+    const csv = [headers.join(','), ...rows].join('\n');
+    const csvBlob = new Blob([csv], { type: 'text/csv' });
+    const csvUrl = URL.createObjectURL(csvBlob);
+    const csvLink = document.createElement('a');
+    csvLink.href = csvUrl;
+    csvLink.download = `bookmarks_${new Date().toISOString().split('T')[0]}.csv`;
+    document.body.appendChild(csvLink);
+    csvLink.click();
+    document.body.removeChild(csvLink);
+    URL.revokeObjectURL(csvUrl);
+    console.log('💾 CSV downloaded!');
+  }
+
+  // Copy to clipboard
+  if (CONFIG.copyToClipboard) {
+    try {
+      if (CONFIG.clipboardFormat === 'summary') {
+        const summary = bookmarks.map(b =&gt; `@${b.author.username}: ${b.text.slice(0, 100)}... - ${b.url}`).join('\n');
+        await navigator.clipboard.writeText(summary);
+        console.log('📋 Summary copied to clipboard!');
+      } else {
+        await navigator.clipboard.writeText(JSON.stringify(result, null, 2));
+        console.log('📋 JSON copied to clipboard!');
+      }
+    } catch (e) {
+      console.warn(`⚠️ Could not copy to clipboard: ${e.message}`);
+    }
+  }
+
+  console.log('');
+  console.log('╔════════════════════════════════════════════════════════════╗');
+  console.log('║  ✅ EXPORT COMPLETE!                                       ║');
+  console.log('╚════════════════════════════════════════════════════════════╝');
+  console.log(`📊 Total bookmarks: ${bookmarks.length}`);
+  console.log('');
+
+  window.exportedBookmarks = result;
+  window.scrapedBookmarks = bookmarks;
+  console.log('💡 Access data via: window.exportedBookmarks (or the plain array: window.scrapedBookmarks)');
+
+  return result;
 })();
 </code></pre>
           </div>
@@ -383,17 +553,17 @@
 
     <aside class="sidebar-right">
       <div class="sidebar-card">
-        <h3>📚 Content Tools</h3>
-        <a href="/scripts/bookmark-manager">📚 Bookmark Manager</a>
-<a href="/scripts/bookmark-organizer">📂 Bookmark Organizer</a>
-<a href="/scripts/bulk-delete-tweets">🗑️ Bulk Delete Tweets</a>
-<a href="/scripts/clear-all-bookmarks">🗑️ Clear All Bookmarks</a>
-<a href="/scripts/clear-all-likes">🗑️ Clear All Likes</a>
-<a href="/scripts/clear-all-reposts">🗑️ Clear All Reposts</a>
-<a href="/scripts/clear-all-retweets">🗑️ Clear All Retweets</a>
-<a href="/scripts/content-repurposer">♻️ Content Repurposer</a>
-<a href="/scripts/delete-tweets">🗑️ Delete Tweets</a>
-<a href="/scripts/video-downloader-browser">🎬 Download videos from X/Twitter posts in browser</a>
+        <h3>📥 Scrape and Export</h3>
+        <a href="/scripts/backup-account">📥 Backup Account</a>
+<a href="/scripts/bookmark-organizer">📥 Bookmark Organizer</a>
+<a href="/scripts/export-to-csv">📥 Export to CSV</a>
+<a href="/scripts/link-scraper">📥 Link Scraper</a>
+<a href="/scripts/manage-bookmarks">📥 Manage Bookmarks</a>
+<a href="/scripts/scrape-cashtag-search">📥 Scrape Cashtag Search</a>
+<a href="/scripts/scrape-explore">📥 Scrape Explore</a>
+<a href="/scripts/scrape-followers">📥 Scrape Followers</a>
+<a href="/scripts/scrape-following">📥 Scrape Following</a>
+<a href="/scripts/scrape-hashtag">📥 Scrape Hashtag</a>
       </div>
       <div class="sidebar-card">
         <h3>🔗 Quick Links</h3>

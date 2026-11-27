@@ -4,14 +4,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Search Sweep — Free X/Twitter Script | XActions</title>
-  <meta name="description" content="Delete, like, repost, or reply to every post an X search returns. Built for &quot;remove every reply I ever sent this account&quot;.">
-  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, search, sweep, other tools">
+  <meta name="description" content="Delete, like, repost or reply to every post an X search returns. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
+  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, search, sweep, clean up">
   <meta name="author" content="nich (@nichxbt)">
   <meta name="robots" content="index, follow">
 
   <meta property="og:type" content="article">
   <meta property="og:title" content="Search Sweep — XActions">
-  <meta property="og:description" content="Delete, like, repost, or reply to every post an X search returns. Built for &quot;remove every reply I ever sent this account&quot;.">
+  <meta property="og:description" content="Delete, like, repost or reply to every post an X search returns. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
   <meta property="og:url" content="https://xactions.app/scripts/search-sweep">
   <meta property="og:site_name" content="XActions">
   <meta property="og:image" content="https://xactions.app/og-run.png">
@@ -19,7 +19,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@nichxbt">
   <meta name="twitter:title" content="Search Sweep — XActions">
-  <meta name="twitter:description" content="Delete, like, repost, or reply to every post an X search returns. Built for &quot;remove every reply I ever sent this account&quot;.">
+  <meta name="twitter:description" content="Delete, like, repost or reply to every post an X search returns. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
   <meta name="twitter:image" content="https://xactions.app/og-run.png">
 
   <link rel="canonical" href="https://xactions.app/scripts/search-sweep">
@@ -30,14 +30,14 @@
     "@context": "https://schema.org",
     "@type": "TechArticle",
     "headline": "Search Sweep — Free X/Twitter Script | XActions",
-    "description": "Delete, like, repost, or reply to every post an X search returns. Built for \"remove every reply I ever sent this account\".",
+    "description": "Delete, like, repost or reply to every post an X search returns. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.",
     "url": "https://xactions.app/scripts/search-sweep",
     "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
     "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
     "datePublished": "2026-03-30",
     "dateModified": "2026-03-30",
-    "articleSection": "Other Tools",
-    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, search, sweep, other tools"
+    "articleSection": "Clean Up",
+    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, search, sweep, clean up"
   }
   </script>
   <script type="application/ld+json">
@@ -47,7 +47,7 @@
     "itemListElement": [
       { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
       { "@type": "ListItem", "position": 2, "name": "Scripts", "item": "https://xactions.app/scripts" },
-      { "@type": "ListItem", "position": 3, "name": "Other Tools", "item": "https://xactions.app/scripts#other-tools" },
+      { "@type": "ListItem", "position": 3, "name": "Clean Up", "item": "https://xactions.app/scripts#clean-up" },
       { "@type": "ListItem", "position": 4, "name": "Search Sweep", "item": "https://xactions.app/scripts/search-sweep" }
     ]
   }
@@ -116,24 +116,24 @@
 
     <main class="main-content" id="main-content">
       <header class="main-header">
-        <h1>⚡ Search Sweep</h1>
+        <h1>🧹 Search Sweep</h1>
         <div class="breadcrumb">
-          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#other-tools">Other Tools</a> › Search Sweep
+          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#clean-up">Clean Up</a> › Search Sweep
         </div>
       </header>
 
       <article class="article">
-        <span class="cat-badge">Other Tools</span>
-        <span class="source-badge">scripts</span>
+        <span class="cat-badge">Clean Up</span>
+        <span class="source-badge">browser/searchSweep.js</span>
 
         <div class="meta-row">
           <span>v1.0.0</span>
           <span>Updated: 2026-08-27</span>
-          <span>1495 lines</span>
+          <span>1499 lines</span>
           <span>by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></span>
         </div>
 
-        <p>Delete, like, repost, or reply to every post an X search returns. Built for &quot;remove every reply I ever sent this account&quot;.</p>
+        <p>Delete, like, repost or reply to every post an X search returns.</p>
 
         
 
@@ -260,7 +260,6 @@
           <div class="code-block">
             <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.querySelector('code').textContent).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy Script',2000)})">Copy Script</button>
             <pre><code>// Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
-// scripts/searchSweep.js
 // Delete, like, repost, or reply to every post an X search returns, e.g. from:you @someone
 // Paste in DevTools console on x.com/search?q=...
 // by nichxbt
@@ -297,7 +296,12 @@
  * ============================================================
  *
  * @name        searchSweep.js
- * @description Delete, like, repost, or reply to every post an X search returns. Built for &quot;remove every reply I ever sent this account&quot;.
+ * @description Delete, like, repost or reply to every post an X search returns.
+ * @title       Search Sweep
+ * @category    cleanup
+ * @page        x.com/search?q=&lt;query&gt;
+ * @writes      true
+ * @aliases     scripts/searchSweep.js
  * @author      nichxbt (https://x.com/nichxbt)
  * @version     1.0.0
  * @date        2026-08-27
@@ -810,7 +814,7 @@
     t = t.replace(/^```[a-z]*\n?/i, '').replace(/\n?```$/, '').trim();
     const unquote = (s) =&gt; { const m = s.match(/^[&quot;“'‘](.*)[&quot;”'’]$/s); return m ? m[1].trim() : s; };
     t = unquote(t);
-    t = t.replace(/^(reply|comment|response|answer)\s*[:\-]\s*/i, '').trim();
+    t = t.replace(/^(reply|comment|response|answer)\s*[:-]\s*/i, '').trim();
     t = unquote(t);
     if (!CONFIG.reply.allowHashtags) t = t.replace(/(^|\s)#[\w]+/g, '$1');
     t = t.replace(/[ \t]+/g, ' ').replace(/\n{3,}/g, '\n\n').trim();
@@ -1767,17 +1771,17 @@
 
     <aside class="sidebar-right">
       <div class="sidebar-card">
-        <h3>⚡ Other Tools</h3>
-        <a href="/scripts/ad-campaign-manager">⚡ Ad campaign management</a>
-<a href="/scripts/advanced-creator">⚡ Advanced creator monetization</a>
-<a href="/scripts/advanced-dm">⚡ Advanced Direct Message features</a>
-<a href="/scripts/advanced-grok">⚡ Advanced Grok AI features</a>
-<a href="/scripts/advanced-notifications">⚡ Advanced notification management</a>
-<a href="/scripts/advanced-premium">⚡ Advanced Premium features</a>
-<a href="/scripts/advanced-profile">⚡ Advanced profile management</a>
-<a href="/scripts/advanced-settings">⚡ Advanced settings and privacy management</a>
-<a href="/scripts/advanced-spaces">⚡ Advanced Spaces features</a>
-<a href="/scripts/community-manager">⚡ Community management</a>
+        <h3>🧹 Clean Up</h3>
+        <a href="/scripts/bulk-delete-tweets">🧹 Bulk Delete Tweets</a>
+<a href="/scripts/clear-all-bookmarks">🧹 Clear All Bookmarks</a>
+<a href="/scripts/clear-all-reposts">🧹 Clear All Reposts</a>
+<a href="/scripts/mass-unblock">🧹 Mass Unblock</a>
+<a href="/scripts/mass-unmute">🧹 Mass Unmute</a>
+<a href="/scripts/protect-active-users">🧹 Protect Active Users</a>
+<a href="/scripts/remove-followers">🧹 Remove Followers</a>
+<a href="/scripts/smart-unfollow">🧹 Smart Unfollow</a>
+<a href="/scripts/unfollow-everyone">🧹 Unfollow Everyone</a>
+<a href="/scripts/unfollowback">🧹 Unfollow Non-Followers</a>
       </div>
       <div class="sidebar-card">
         <h3>🔗 Quick Links</h3>

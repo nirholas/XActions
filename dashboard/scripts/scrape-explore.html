@@ -4,14 +4,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Scrape Explore — Free X/Twitter Script | XActions</title>
-  <meta name="description" content="Browser console script to scrape Explore page trends and content. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
-  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, scrape, explore, scrapers">
+  <meta name="description" content="Scrape trending topics, search results, or the Explore page's trends and posts, and export them as JSON.">
+  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, scrape, explore, scrape and export">
   <meta name="author" content="nich (@nichxbt)">
   <meta name="robots" content="index, follow">
 
   <meta property="og:type" content="article">
   <meta property="og:title" content="Scrape Explore — XActions">
-  <meta property="og:description" content="Browser console script to scrape Explore page trends and content. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
+  <meta property="og:description" content="Scrape trending topics, search results, or the Explore page's trends and posts, and export them as JSON.">
   <meta property="og:url" content="https://xactions.app/scripts/scrape-explore">
   <meta property="og:site_name" content="XActions">
   <meta property="og:image" content="https://xactions.app/og-run.png">
@@ -19,7 +19,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@nichxbt">
   <meta name="twitter:title" content="Scrape Explore — XActions">
-  <meta name="twitter:description" content="Browser console script to scrape Explore page trends and content. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
+  <meta name="twitter:description" content="Scrape trending topics, search results, or the Explore page's trends and posts, and export them as JSON.">
   <meta name="twitter:image" content="https://xactions.app/og-run.png">
 
   <link rel="canonical" href="https://xactions.app/scripts/scrape-explore">
@@ -30,14 +30,14 @@
     "@context": "https://schema.org",
     "@type": "TechArticle",
     "headline": "Scrape Explore — Free X/Twitter Script | XActions",
-    "description": "Browser console script to scrape Explore page trends and content. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.",
+    "description": "Scrape trending topics, search results, or the Explore page's trends and posts, and export them as JSON.",
     "url": "https://xactions.app/scripts/scrape-explore",
     "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
     "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
     "datePublished": "2026-03-30",
     "dateModified": "2026-03-30",
-    "articleSection": "Scrapers",
-    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, scrape, explore, scrapers"
+    "articleSection": "Scrape and Export",
+    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, scrape, explore, scrape and export"
   }
   </script>
   <script type="application/ld+json">
@@ -47,7 +47,7 @@
     "itemListElement": [
       { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
       { "@type": "ListItem", "position": 2, "name": "Scripts", "item": "https://xactions.app/scripts" },
-      { "@type": "ListItem", "position": 3, "name": "Scrapers", "item": "https://xactions.app/scripts#scrapers" },
+      { "@type": "ListItem", "position": 3, "name": "Scrape and Export", "item": "https://xactions.app/scripts#scrape-and-export" },
       { "@type": "ListItem", "position": 4, "name": "Scrape Explore", "item": "https://xactions.app/scripts/scrape-explore" }
     ]
   }
@@ -116,24 +116,24 @@
 
     <main class="main-content" id="main-content">
       <header class="main-header">
-        <h1>🔍 Scrape Explore</h1>
+        <h1>📥 Scrape Explore</h1>
         <div class="breadcrumb">
-          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#scrapers">Scrapers</a> › Scrape Explore
+          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#scrape-and-export">Scrape and Export</a> › Scrape Explore
         </div>
       </header>
 
       <article class="article">
-        <span class="cat-badge">Scrapers</span>
-        <span class="source-badge">scripts</span>
+        <span class="cat-badge">Scrape and Export</span>
+        <span class="source-badge">browser/scrapeExplore.js</span>
 
         <div class="meta-row">
-          
-          
-          <span>95 lines</span>
+          <span>v1.1.0</span>
+          <span>Updated: 2026-11-27</span>
+          <span>226 lines</span>
           <span>by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></span>
         </div>
 
-        <p>Browser console script to scrape Explore page trends and content</p>
+        <p>Scrape trending topics, search results, or the Explore page's trends and posts, and export them as JSON.</p>
 
         
 
@@ -152,7 +152,13 @@
         <table>
           <thead><tr><th>Option</th><th>Default</th><th>Description</th></tr></thead>
           <tbody>
-            <tr><td><code>outputFormat</code></td><td><code>'json'</code></td><td>'json' or 'csv'</td></tr>
+            <tr><td><code>action</code></td><td><code>'trends'</code></td><td>'trends' | 'search' | 'explore'</td></tr>
+<tr><td><code>searchQuery</code></td><td><code>''</code></td><td>Query for 'search' action</td></tr>
+<tr><td><code>maxResults</code></td><td><code>20</code></td><td>Max trends ('trends', 'explore') or posts ('search')</td></tr>
+<tr><td><code>maxTweets</code></td><td><code>50</code></td><td>'explore' only: max posts to scrape from the Explore feed (0 = trends only)</td></tr>
+<tr><td><code>outputFormat</code></td><td><code>'json'</code></td><td>'json' or 'csv' ('csv' also prints the trends as CSV in the console)</td></tr>
+<tr><td><code>printJson</code></td><td><code>false</code></td><td>Also print the full JSON result in the console</td></tr>
+<tr><td><code>copyToClipboard</code></td><td><code>false</code></td><td>Also copy the full JSON result to the clipboard</td></tr>
           </tbody>
         </table>
       </section>
@@ -161,10 +167,16 @@
         <div class="code-block">
           <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.querySelector('code').textContent).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy',2000)})">Copy</button>
           <pre><code>const CONFIG = {
-    maxTrends: 30,
-    scrapeTweets: true,
-    maxTweets: 50,
-    outputFormat: 'json', // 'json' or 'csv'
+    action: 'trends',           // 'trends' | 'search' | 'explore'
+    searchQuery: '',            // Query for 'search' action
+    maxResults: 20,             // Max trends ('trends', 'explore') or posts ('search')
+    maxTweets: 50,              // 'explore' only: max posts to scrape from the Explore feed (0 = trends only)
+    exportResults: true,
+    outputFormat: 'json',       // 'json' or 'csv' ('csv' also prints the trends as CSV in the console)
+    printJson: false,           // Also print the full JSON result in the console
+    copyToClipboard: false,     // Also copy the full JSON result to the clipboard
+    scrollDelay: 1500,
+    maxScrollRetries: 5,
   };</code></pre>
         </div>
       </section>
@@ -175,95 +187,226 @@
           <div class="code-block">
             <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.querySelector('code').textContent).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy Script',2000)})">Copy Script</button>
             <pre><code>// Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
-// scripts/scrapeExplore.js
-// Browser console script to scrape Explore page trends and content
-// Paste in DevTools console on x.com/explore
+/**
+ * @name        scrapeExplore.js
+ * @title       Scrape Explore
+ * @description Scrape trending topics, search results, or the Explore page's trends and posts, and export them as JSON.
+ * @category    scrape
+ * @page        x.com/explore or x.com/explore/tabs/trending
+ * @writes      false
+ * @aliases     scripts/discoveryExplore.js, scripts/scrapeExplore.js
+ * @author      nichxbt (https://x.com/nichxbt)
+ * @version     1.1.0
+ * @date        2026-11-27
+ */
+// Browser console script for scraping trending topics and search results on X/Twitter
+// Paste browser/scrapeExplore.js in the DevTools console on x.com/explore
 // by nichxbt
+//
+// Actions:
+//   'trends'  - switch to the Trending tab and scroll it for trends
+//   'search'  - search CONFIG.searchQuery (Latest) and scrape the posts
+//   'explore' - the trends and posts on the Explore page you are on, without switching tabs
 
 (() =&gt; {
   const sleep = (ms) =&gt; new Promise(r =&gt; setTimeout(r, ms));
 
+  // =============================================
+  // CONFIGURATION
+  // =============================================
   const CONFIG = {
-    maxTrends: 30,
-    scrapeTweets: true,
-    maxTweets: 50,
-    outputFormat: 'json', // 'json' or 'csv'
+    action: 'trends',           // 'trends' | 'search' | 'explore'
+    searchQuery: '',            // Query for 'search' action
+    maxResults: 20,             // Max trends ('trends', 'explore') or posts ('search')
+    maxTweets: 50,              // 'explore' only: max posts to scrape from the Explore feed (0 = trends only)
+    exportResults: true,
+    outputFormat: 'json',       // 'json' or 'csv' ('csv' also prints the trends as CSV in the console)
+    printJson: false,           // Also print the full JSON result in the console
+    copyToClipboard: false,     // Also copy the full JSON result to the clipboard
+    scrollDelay: 1500,
+    maxScrollRetries: 5,
+  };
+  // =============================================
+
+  const download = (data, filename) =&gt; {
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' }));
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    console.log(`📥 Downloaded: ${filename}`);
+  };
+
+  // Add the trends currently on screen to the list (deduplicated by name)
+  const collectTrends = (trends) =&gt; {
+    document.querySelectorAll('[data-testid=&quot;trend&quot;]').forEach((trend) =&gt; {
+      if (trends.length &gt;= CONFIG.maxResults) return;
+      const spans = trend.querySelectorAll('[dir=&quot;ltr&quot;] span');
+      const texts = Array.from(spans).map(s =&gt; s.textContent).filter(Boolean);
+      const name = texts.find(t =&gt; t.startsWith('#') || t.length &gt; 3) || texts[0] || '';
+      const category = texts.find(t =&gt; t.includes('·') || t.includes('Trending')) || '';
+      const count = texts.find(t =&gt; /\d+[KMB]?\s*(posts|tweets)/i.test(t)) || '';
+
+      if (name &amp;&amp; !trends.find(t =&gt; t.name === name)) {
+        trends.push({ rank: trends.length + 1, name, category: category.trim(), tweetCount: count.trim() });
+      }
+    });
+  };
+
+  const printTrends = (trends) =&gt; {
+    console.log(`\n📈 Found ${trends.length} trends:\n`);
+    trends.slice(0, 20).forEach(t =&gt; {
+      console.log(`   #${t.rank} ${t.name} ${t.tweetCount ? '(' + t.tweetCount + ')' : ''}`);
+    });
+  };
+
+  const scrapeTrends = async () =&gt; {
+    console.log('📈 Scraping trending topics...');
+
+    // Navigate to trending tab if not already there
+    if (!window.location.href.includes('/explore/tabs/trending')) {
+      const trendingTab = document.querySelector('a[href=&quot;/explore/tabs/trending&quot;]');
+      if (trendingTab) { trendingTab.click(); await sleep(2000); }
+    }
+
+    const trends = [];
+    let retries = 0;
+
+    while (trends.length &lt; CONFIG.maxResults &amp;&amp; retries &lt; CONFIG.maxScrollRetries) {
+      const prevSize = trends.length;
+
+      collectTrends(trends);
+
+      if (trends.length === prevSize) retries++;
+      else retries = 0;
+
+      window.scrollTo(0, document.body.scrollHeight);
+      await sleep(CONFIG.scrollDelay);
+    }
+
+    printTrends(trends);
+
+    return { type: 'trends', trends };
+  };
+
+  // Scroll the current page and collect posts (deduplicated by URL)
+  const collectPosts = async (max) =&gt; {
+    const results = new Map();
+    let retries = 0;
+
+    while (results.size &lt; max &amp;&amp; retries &lt; CONFIG.maxScrollRetries) {
+      const prevSize = results.size;
+
+      document.querySelectorAll('article[data-testid=&quot;tweet&quot;]').forEach(tweet =&gt; {
+        if (results.size &gt;= max) return;
+        const linkEl = tweet.querySelector('a[href*=&quot;/status/&quot;]');
+        if (!linkEl || results.has(linkEl.href)) return;
+
+        const text = tweet.querySelector('[data-testid=&quot;tweetText&quot;]')?.textContent || '';
+        const author = tweet.querySelector('[data-testid=&quot;User-Name&quot;] a')?.textContent || '';
+        const time = tweet.querySelector('time')?.getAttribute('datetime') || '';
+        const likes = tweet.querySelector('[data-testid=&quot;like&quot;] span, [data-testid=&quot;unlike&quot;] span')?.textContent || '0';
+        const reposts = tweet.querySelector('[data-testid=&quot;retweet&quot;] span')?.textContent || '0';
+
+        results.set(linkEl.href, { text: text.substring(0, 300), author, time, url: linkEl.href, likes, reposts });
+      });
+
+      if (results.size === prevSize) retries++;
+      else retries = 0;
+
+      window.scrollTo(0, document.body.scrollHeight);
+      await sleep(CONFIG.scrollDelay);
+    }
+
+    return [...results.values()];
+  };
+
+  const searchTweets = async () =&gt; {
+    if (!CONFIG.searchQuery) {
+      console.error('❌ Set CONFIG.searchQuery first!');
+      return null;
+    }
+
+    console.log(`🔍 Searching: &quot;${CONFIG.searchQuery}&quot;...`);
+
+    // Type in search box
+    const searchInput = document.querySelector('[data-testid=&quot;SearchBox_Search_Input&quot;]');
+    if (searchInput) {
+      searchInput.focus();
+      searchInput.value = '';
+      document.execCommand('insertText', false, CONFIG.searchQuery);
+      await sleep(500);
+      searchInput.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', keyCode: 13, bubbles: true }));
+      await sleep(3000);
+    } else {
+      // Navigate directly
+      window.location.href = `https://x.com/search?q=${encodeURIComponent(CONFIG.searchQuery)}&amp;f=live`;
+      await sleep(4000);
+    }
+
+    const all = await collectPosts(CONFIG.maxResults);
+    console.log(`\n🔍 Found ${all.length} results`);
+
+    return { type: 'search', query: CONFIG.searchQuery, results: all };
+  };
+
+  // The Explore page as it is: trends on screen plus the posts in its feed
+  const scrapeExplorePage = async () =&gt; {
+    console.log('🧭 Scraping the Explore page...');
+
+    const trends = [];
+    collectTrends(trends);
+    printTrends(trends);
+
+    let tweets = [];
+    if (CONFIG.maxTweets &gt; 0) {
+      tweets = await collectPosts(CONFIG.maxTweets);
+      console.log(`\n📰 Scraped ${tweets.length} posts`);
+    }
+
+    return { type: 'explore', trends, tweets };
   };
 
   const run = async () =&gt; {
-    console.log('🔍 XActions Explore Scraper');
-    console.log('===========================');
+    console.log('🔍 DISCOVERY &amp; EXPLORE — XActions by nichxbt\n');
 
-    // Scrape trends
-    const trends = [];
-    document.querySelectorAll('[data-testid=&quot;trend&quot;]').forEach((el, i) =&gt; {
-      if (i &gt;= CONFIG.maxTrends) return;
-      const spans = el.querySelectorAll('[dir=&quot;ltr&quot;] span');
-      const texts = Array.from(spans).map(s =&gt; s.textContent.trim()).filter(Boolean);
-      trends.push({
-        rank: i + 1,
-        name: texts[0] || '',
-        category: texts.length &gt; 1 ? texts[1] : '',
-        postCount: texts.length &gt; 2 ? texts[2] : '',
-      });
-    });
+    let data;
+    if (CONFIG.action === 'trends') data = await scrapeTrends();
+    else if (CONFIG.action === 'search') data = await searchTweets();
+    else if (CONFIG.action === 'explore') data = await scrapeExplorePage();
+    else { console.error(`❌ Unknown action: ${CONFIG.action}`); return; }
 
-    console.log(`\n📊 Found ${trends.length} trends:`);
-    trends.forEach(t =&gt; {
-      console.log(`  ${t.rank}. ${t.name} ${t.postCount ? `(${t.postCount})` : ''}`);
-    });
+    if (!data) return;
+    const result = { exportedAt: new Date().toISOString(), url: window.location.href, ...data };
 
-    // Scrape tweets from explore
-    const tweets = [];
-    if (CONFIG.scrapeTweets) {
-      let scrollAttempts = 0;
-      
-      while (tweets.length &lt; CONFIG.maxTweets &amp;&amp; scrollAttempts &lt; 20) {
-        document.querySelectorAll('article[data-testid=&quot;tweet&quot;]').forEach(tweet =&gt; {
-          const text = tweet.querySelector('[data-testid=&quot;tweetText&quot;]')?.textContent || '';
-          const author = tweet.querySelector('[data-testid=&quot;User-Name&quot;] a')?.textContent || '';
-          const time = tweet.querySelector('time')?.getAttribute('datetime') || '';
-          const link = tweet.querySelector('a[href*=&quot;/status/&quot;]')?.href || '';
-          const likes = tweet.querySelector('[data-testid=&quot;like&quot;] span')?.textContent || '0';
-
-          if (link &amp;&amp; !tweets.find(t =&gt; t.link === link)) {
-            tweets.push({ text, author, time, link, likes });
-          }
-        });
-
-        window.scrollBy(0, 1000);
-        await sleep(1500);
-        scrollAttempts++;
-      }
-
-      console.log(`\n📰 Scraped ${tweets.length} tweets`);
-    }
-
-    // Output results
-    const result = {
-      trends,
-      tweets: tweets.slice(0, CONFIG.maxTweets),
-      scrapedAt: new Date().toISOString(),
-      url: window.location.href,
-    };
-
-    if (CONFIG.outputFormat === 'csv') {
+    if (CONFIG.outputFormat === 'csv' &amp;&amp; data.trends) {
       const csvTrends = 'rank,name,category,postCount\n' +
-        trends.map(t =&gt; `${t.rank},&quot;${t.name}&quot;,&quot;${t.category}&quot;,&quot;${t.postCount}&quot;`).join('\n');
+        data.trends.map(t =&gt; `${t.rank},&quot;${t.name}&quot;,&quot;${t.category}&quot;,&quot;${t.tweetCount}&quot;`).join('\n');
       console.log('\n📋 Trends CSV:');
       console.log(csvTrends);
     }
 
-    console.log('\n📦 Full JSON result:');
-    console.log(JSON.stringify(result, null, 2));
-
-    // Copy to clipboard
-    try {
-      await navigator.clipboard.writeText(JSON.stringify(result, null, 2));
-      console.log('\n✅ Results copied to clipboard!');
-    } catch (e) {
-      console.log('\n⚠️ Could not copy to clipboard. Use console output above.');
+    if (CONFIG.printJson) {
+      console.log('\n📦 Full JSON result:');
+      console.log(JSON.stringify(result, null, 2));
     }
+
+    if (CONFIG.copyToClipboard) {
+      try {
+        await navigator.clipboard.writeText(JSON.stringify(result, null, 2));
+        console.log('\n✅ Results copied to clipboard!');
+      } catch {
+        console.log('\n⚠️ Could not copy to clipboard. Use the download or console output.');
+      }
+    }
+
+    if (CONFIG.exportResults) {
+      const date = new Date().toISOString().slice(0, 10);
+      download(result, `xactions-explore-${CONFIG.action}-${date}.json`);
+    }
+
+    console.log('\n🏁 Done!');
   };
 
   run();
@@ -282,17 +425,17 @@
 
     <aside class="sidebar-right">
       <div class="sidebar-card">
-        <h3>🔍 Scrapers</h3>
-        <a href="/scripts/scrape-bookmarks">🔖 Bookmarks Scraper</a>
-<a href="/scripts/scrape-analytics">📊 Browser console script to scrape X/Twitter analytics data</a>
-<a href="/scripts/scrape-dms">✉️ DM Scraper</a>
-<a href="/scripts/export-to-csv">📄 Export to CSV Utility</a>
-<a href="/scripts/scrape-followers">👥 Followers Scraper</a>
-<a href="/scripts/scrape-following">👥 Following Scraper</a>
-<a href="/scripts/scrape-hashtag">#️⃣ Hashtag Scraper</a>
-<a href="/scripts/scrape-likers">❤️ Likers Scraper</a>
-<a href="/scripts/scrape-likes">❤️ Likes Scraper</a>
-<a href="/scripts/link-scraper">🔗 Link Scraper</a>
+        <h3>📥 Scrape and Export</h3>
+        <a href="/scripts/backup-account">📥 Backup Account</a>
+<a href="/scripts/bookmark-exporter">📥 Bookmark Exporter</a>
+<a href="/scripts/bookmark-organizer">📥 Bookmark Organizer</a>
+<a href="/scripts/export-to-csv">📥 Export to CSV</a>
+<a href="/scripts/link-scraper">📥 Link Scraper</a>
+<a href="/scripts/manage-bookmarks">📥 Manage Bookmarks</a>
+<a href="/scripts/scrape-cashtag-search">📥 Scrape Cashtag Search</a>
+<a href="/scripts/scrape-followers">📥 Scrape Followers</a>
+<a href="/scripts/scrape-following">📥 Scrape Following</a>
+<a href="/scripts/scrape-hashtag">📥 Scrape Hashtag</a>
       </div>
       <div class="sidebar-card">
         <h3>🔗 Quick Links</h3>

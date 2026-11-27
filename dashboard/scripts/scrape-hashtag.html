@@ -3,23 +3,23 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Hashtag Scraper — Free X/Twitter Script | XActions</title>
-  <meta name="description" content="Get tweets by hashtag. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
-  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, scrape, hashtag, scrapers">
+  <title>Scrape Hashtag — Free X/Twitter Script | XActions</title>
+  <meta name="description" content="Scroll a hashtag's live results and export every post (text, author, counts, media) to JSON and CSV.">
+  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, scrape, hashtag, scrape and export">
   <meta name="author" content="nich (@nichxbt)">
   <meta name="robots" content="index, follow">
 
   <meta property="og:type" content="article">
-  <meta property="og:title" content="Hashtag Scraper — XActions">
-  <meta property="og:description" content="Get tweets by hashtag. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
+  <meta property="og:title" content="Scrape Hashtag — XActions">
+  <meta property="og:description" content="Scroll a hashtag's live results and export every post (text, author, counts, media) to JSON and CSV.">
   <meta property="og:url" content="https://xactions.app/scripts/scrape-hashtag">
   <meta property="og:site_name" content="XActions">
   <meta property="og:image" content="https://xactions.app/og-run.png">
 
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@nichxbt">
-  <meta name="twitter:title" content="Hashtag Scraper — XActions">
-  <meta name="twitter:description" content="Get tweets by hashtag. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
+  <meta name="twitter:title" content="Scrape Hashtag — XActions">
+  <meta name="twitter:description" content="Scroll a hashtag's live results and export every post (text, author, counts, media) to JSON and CSV.">
   <meta name="twitter:image" content="https://xactions.app/og-run.png">
 
   <link rel="canonical" href="https://xactions.app/scripts/scrape-hashtag">
@@ -29,15 +29,15 @@
   {
     "@context": "https://schema.org",
     "@type": "TechArticle",
-    "headline": "Hashtag Scraper — Free X/Twitter Script | XActions",
-    "description": "Get tweets by hashtag. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.",
+    "headline": "Scrape Hashtag — Free X/Twitter Script | XActions",
+    "description": "Scroll a hashtag's live results and export every post (text, author, counts, media) to JSON and CSV.",
     "url": "https://xactions.app/scripts/scrape-hashtag",
     "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
     "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
     "datePublished": "2026-03-30",
     "dateModified": "2026-03-30",
-    "articleSection": "Scrapers",
-    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, scrape, hashtag, scrapers"
+    "articleSection": "Scrape and Export",
+    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, scrape, hashtag, scrape and export"
   }
   </script>
   <script type="application/ld+json">
@@ -47,8 +47,8 @@
     "itemListElement": [
       { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
       { "@type": "ListItem", "position": 2, "name": "Scripts", "item": "https://xactions.app/scripts" },
-      { "@type": "ListItem", "position": 3, "name": "Scrapers", "item": "https://xactions.app/scripts#scrapers" },
-      { "@type": "ListItem", "position": 4, "name": "Hashtag Scraper", "item": "https://xactions.app/scripts/scrape-hashtag" }
+      { "@type": "ListItem", "position": 3, "name": "Scrape and Export", "item": "https://xactions.app/scripts#scrape-and-export" },
+      { "@type": "ListItem", "position": 4, "name": "Scrape Hashtag", "item": "https://xactions.app/scripts/scrape-hashtag" }
     ]
   }
   </script>
@@ -116,54 +116,68 @@
 
     <main class="main-content" id="main-content">
       <header class="main-header">
-        <h1>#️⃣ Hashtag Scraper</h1>
+        <h1>📥 Scrape Hashtag</h1>
         <div class="breadcrumb">
-          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#scrapers">Scrapers</a> › Hashtag Scraper
+          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#scrape-and-export">Scrape and Export</a> › Scrape Hashtag
         </div>
       </header>
 
       <article class="article">
-        <span class="cat-badge">Scrapers</span>
-        <span class="source-badge">scripts</span>
+        <span class="cat-badge">Scrape and Export</span>
+        <span class="source-badge">browser/scrapeHashtag.js</span>
 
         <div class="meta-row">
-          
-          
-          <span>164 lines</span>
+          <span>v1.1.0</span>
+          <span>Updated: 2026-11-27</span>
+          <span>366 lines</span>
           <span>by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></span>
         </div>
 
-        <p>Get tweets by hashtag</p>
+        <p>Scroll a hashtag's live results and export every post (text, author, counts, media) to JSON and CSV.</p>
 
         
 
         <h2>How to Use</h2>
-        <ol class="usage-steps">
-        <li>Navigate to <a href="https://x.com" rel="noopener">x.com</a> and log in</li>
-        <li>Open DevTools Console (F12 or Cmd+Option+I)</li>
-        
-        <li>Paste the script below and press Enter</li>
-      </ol>
+        <ol class="usage-steps"><li>Go to a hashtag results page, e.g. x.com/search?q=%23solana&amp;f=live</li>
+<li>Open the browser console (F12 or Cmd+Option+I -&gt; Console)</li>
+<li>(Optional) edit the CONFIG options at the top of the script</li>
+<li>Paste browser/scrapeHashtag.js and press Enter</li></ol>
         
 
         
-        <section class="config-section">
-        <h2>Configuration Options</h2>
-        <table>
-          <thead><tr><th>Option</th><th>Default</th><th>Description</th></tr></thead>
-          <tbody>
-            <tr><td><code>FORMAT</code></td><td><code>'both'</code></td><td>'json', 'csv', 'both'</td></tr>
-          </tbody>
-        </table>
-      </section>
+        
         <section class="config-code">
         <h2>Default Configuration</h2>
         <div class="code-block">
           <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.querySelector('code').textContent).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy',2000)})">Copy</button>
           <pre><code>const CONFIG = {
-    MAX_TWEETS: 500,
-    SCROLL_DELAY: 1500,
-    FORMAT: 'both', // 'json', 'csv', 'both'
+    // Hashtag to scrape WITHOUT the # (e.g. &quot;solana&quot;). Leave &quot;&quot; to scrape the
+    // hashtag already open in the current search results.
+    hashtag: '',
+
+    // Maximum number of posts to collect before stopping
+    maxPosts: 300,
+
+    // Include reply posts in the results (false = original posts only)
+    includeReplies: true,
+
+    // Delay between scrolls (ms). Raise if posts load slowly.
+    scrollDelay: 1800,
+
+    // Give up after this many scrolls that add no new posts
+    noNewPostsThreshold: 6,
+
+    // Hard cap on scroll attempts so the loop can never run forever
+    maxScrollAttempts: 400,
+
+    // Auto-download a CSV file too
+    downloadCsv: true,
+
+    // Auto-download the JSON file (false + downloadCsv: true = CSV only)
+    downloadJson: true,
+
+    // Sort the exported posts by likes, most liked first (false = page order)
+    sortByLikes: false
   };</code></pre>
         </div>
       </section>
@@ -175,166 +189,368 @@
             <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.querySelector('code').textContent).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy Script',2000)})">Copy Script</button>
             <pre><code>// Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
 /**
- * Hashtag Scraper
- * Get tweets by hashtag
- * 
- * HOW TO USE:
- * 1. Go to x.com/search?q=%23HASHTAG or x.com/hashtag/HASHTAG
- * 2. Open Developer Console (Ctrl+Shift+J or Cmd+Option+J)
- * 3. Paste this script and press Enter
- * 
- * by nichxbt - https://github.com/nirholas/XActions
+ * ============================================
+ * #️⃣ Scrape Hashtag - XActions
+ * ============================================
+ *
+ * @name        scrapeHashtag.js
+ * @title       Scrape Hashtag
+ * @description Scroll a hashtag's live results and export every post (text, author, counts, media) to JSON and CSV.
+ * @category    scrape
+ * @page        x.com/search?q=%23&lt;query&gt;&amp;f=live or x.com/hashtag/&lt;query&gt;
+ * @writes      false
+ * @aliases     scripts/scrapeHashtag.js, scripts/twitter/scrape-hashtag.js
+ * @author      nichxbt
+ * @version     1.1.0
+ * @date        2026-11-27
+ * @website     https://xactions.app
+ *
+ * Usage:
+ *   1. Go to a hashtag results page, e.g. x.com/search?q=%23solana&amp;f=live
+ *      (%23 is the URL encoding of #). Or set CONFIG.hashtag below and run this
+ *      from any x.com page to jump there automatically.
+ *   2. Open the browser console (F12 or Cmd+Option+I -&gt; Console)
+ *   3. (Optional) edit the CONFIG options at the top of the script
+ *   4. Paste browser/scrapeHashtag.js and press Enter
+ *
+ * Example:
+ *   Set CONFIG.hashtag = &quot;solana&quot; and CONFIG.maxPosts = 250, then paste. If you are not
+ *   already on the #solana results the script navigates there once; run it again after
+ *   the page loads to collect. It downloads a JSON file and offers window.exportCSV().
+ *   To stop early, run window.stopScrapeHashtag() in the console.
+ *
+ * ============================================
  */
 
-(() =&gt; {
+(async function scrapeHashtag() {
+  'use strict';
+
+  // ============================================
+  // 📝 CONFIGURATION - Customize these options
+  // ============================================
   const CONFIG = {
-    MAX_TWEETS: 500,
-    SCROLL_DELAY: 1500,
-    FORMAT: 'both', // 'json', 'csv', 'both'
+    // Hashtag to scrape WITHOUT the # (e.g. &quot;solana&quot;). Leave &quot;&quot; to scrape the
+    // hashtag already open in the current search results.
+    hashtag: '',
+
+    // Maximum number of posts to collect before stopping
+    maxPosts: 300,
+
+    // Include reply posts in the results (false = original posts only)
+    includeReplies: true,
+
+    // Delay between scrolls (ms). Raise if posts load slowly.
+    scrollDelay: 1800,
+
+    // Give up after this many scrolls that add no new posts
+    noNewPostsThreshold: 6,
+
+    // Hard cap on scroll attempts so the loop can never run forever
+    maxScrollAttempts: 400,
+
+    // Auto-download a CSV file too
+    downloadCsv: true,
+
+    // Auto-download the JSON file (false + downloadCsv: true = CSV only)
+    downloadJson: true,
+
+    // Sort the exported posts by likes, most liked first (false = page order)
+    sortByLikes: false
   };
 
-  const sleep = (ms) =&gt; new Promise(r =&gt; setTimeout(r, ms));
-
-  const download = (content, filename, type) =&gt; {
-    const blob = new Blob([content], { type });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = filename;
-    a.click();
-    URL.revokeObjectURL(url);
+  // ============================================
+  // 🔧 SELECTORS
+  // ============================================
+  const SELECTORS = {
+    tweet: 'article[data-testid=&quot;tweet&quot;]',
+    tweetText: '[data-testid=&quot;tweetText&quot;]',
+    userName: '[data-testid=&quot;User-Name&quot;]',
+    actionGroup: '[role=&quot;group&quot;]',
+    photo: '[data-testid=&quot;tweetPhoto&quot;] img',
+    video: 'video'
   };
 
-  const parseNumber = (str) =&gt; {
-    if (!str) return 0;
-    const num = parseFloat(str.replace(/,/g, ''));
-    if (str.includes('K')) return num * 1000;
-    if (str.includes('M')) return num * 1000000;
-    return num;
+  // ============================================
+  // 🛠️ HELPERS
+  // ============================================
+  const sleep = (ms) =&gt; new Promise((r) =&gt; setTimeout(r, ms));
+
+  const log = {
+    info: (msg) =&gt; console.log(`ℹ️ ${msg}`),
+    success: (msg) =&gt; console.log(`✅ ${msg}`),
+    warning: (msg) =&gt; console.log(`⚠️ ${msg}`),
+    error: (msg) =&gt; console.log(`❌ ${msg}`),
+    progress: (n, total) =&gt; console.log(`📊 Collected ${n}/${total} posts...`)
   };
 
-  const extractTweet = (article) =&gt; {
+  const countFromLabel = (label) =&gt; {
+    if (!label) return 0;
+    const raw = (label.match(/[\d.,]+\s*[KMB]?/i) || ['0'])[0].trim().toUpperCase();
+    const num = parseFloat(raw.replace(/,/g, '')) || 0;
+    if (raw.includes('K')) return Math.round(num * 1e3);
+    if (raw.includes('M')) return Math.round(num * 1e6);
+    if (raw.includes('B')) return Math.round(num * 1e9);
+    return Math.round(num);
+  };
+
+  const getCounts = (article) =&gt; {
+    const counts = { replies: 0, reposts: 0, likes: 0, views: 0 };
+    const group = article.querySelector(SELECTORS.actionGroup);
+    const nodes = group ? group.querySelectorAll('[aria-label]') : [];
+    nodes.forEach((node) =&gt; {
+      const label = (node.getAttribute('aria-label') || '').toLowerCase();
+      const value = countFromLabel(label);
+      if (label.includes('repl')) counts.replies = value;
+      else if (label.includes('repost') || label.includes('retweet')) counts.reposts = value;
+      else if (label.includes('like')) counts.likes = value;
+      else if (label.includes('view')) counts.views = value;
+    });
+    return counts;
+  };
+
+  const toOriginalImage = (url) =&gt; {
+    if (!url) return url;
+    return url.replace(/&amp;name=[^&amp;]*/i, '&amp;name=orig').replace(/\?name=[^&amp;]*/i, '?name=orig');
+  };
+
+  const getMediaUrls = (article) =&gt; {
+    const urls = new Set();
+    article.querySelectorAll(SELECTORS.photo).forEach((img) =&gt; {
+      if (img.src) urls.add(toOriginalImage(img.src));
+    });
+    article.querySelectorAll(SELECTORS.video).forEach((v) =&gt; {
+      if (v.src) urls.add(v.src);
+      else if (v.poster) urls.add(v.poster);
+    });
+    return Array.from(urls);
+  };
+
+  const isReply = (article) =&gt; {
+    if (article.querySelector('[data-testid=&quot;in-reply-to&quot;]') !== null) return true;
+    return Array.from(article.querySelectorAll('div[dir]')).some((el) =&gt;
+      (el.textContent || '').startsWith('Replying to'));
+  };
+
+  const extractHashtags = (text) =&gt; text.match(/#\w+/g) || [];
+
+  const extractPost = (article) =&gt; {
+    const timeEl = article.querySelector('time');
+    const permalink = timeEl ? timeEl.closest('a[href*=&quot;/status/&quot;]') : null;
+    const anchor = permalink || article.querySelector('a[href*=&quot;/status/&quot;]');
+    const url = anchor ? anchor.href : '';
+    const id = url ? (url.split('/status/')[1] || '').split(/[?/]/)[0] : '';
+    if (!id) return null;
+
+    const nameBlock = article.querySelector(SELECTORS.userName);
+    const nameText = nameBlock ? nameBlock.textContent : '';
+    const handle = (nameText.match(/@(\w+)/) || [, ''])[1];
+    const name = nameText.split('@')[0].trim();
+
+    const textEl = article.querySelector(SELECTORS.tweetText);
+    const text = textEl ? textEl.textContent : '';
+
+    const counts = getCounts(article);
+
+    return {
+      id,
+      url,
+      author: { handle, name },
+      text,
+      likes: counts.likes,
+      reposts: counts.reposts,
+      replies: counts.replies,
+      views: counts.views,
+      timestamp: timeEl ? timeEl.getAttribute('datetime') : null,
+      mediaUrls: getMediaUrls(article),
+      hashtags: extractHashtags(text),
+      isReply: isReply(article),
+      scrapedAt: new Date().toISOString()
+    };
+  };
+
+  const downloadFile = (content, filename, mime) =&gt; {
     try {
-      const tweetText = article.querySelector('[data-testid=&quot;tweetText&quot;]')?.textContent || '';
-      const userName = article.querySelector('[data-testid=&quot;User-Name&quot;]')?.textContent || '';
-      const handle = userName.match(/@(\w+)/)?.[1] || '';
-      const displayName = userName.split('@')[0]?.trim() || '';
-      
-      const timeLink = article.querySelector('time')?.closest('a');
-      const tweetUrl = timeLink?.href || '';
-      const tweetId = tweetUrl.split('/status/')[1]?.split('?')[0] || '';
-      const time = article.querySelector('time')?.getAttribute('datetime') || '';
-
-      const buttons = article.querySelectorAll('[role=&quot;group&quot;] button');
-      let replies = 0, retweets = 0, likes = 0, views = 0;
-      
-      buttons.forEach(btn =&gt; {
-        const label = btn.getAttribute('aria-label') || '';
-        const num = parseNumber(label.match(/[\d,.]+[KM]?/)?.[0] || '0');
-        
-        if (label.includes('repl')) replies = num;
-        else if (label.includes('repost') || label.includes('Retweet')) retweets = num;
-        else if (label.includes('like')) likes = num;
-        else if (label.includes('view')) views = num;
-      });
-
-      // Extract hashtags from text
-      const hashtags = tweetText.match(/#\w+/g) || [];
-
-      return {
-        tweetId,
-        handle,
-        displayName,
-        text: tweetText,
-        url: tweetUrl,
-        time,
-        likes,
-        retweets,
-        replies,
-        views,
-        hashtags,
-      };
+      const blob = new Blob([content], { type: mime });
+      const href = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = href;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(href);
+      return true;
     } catch (e) {
-      return null;
+      log.error(`Failed to download ${filename}: ${e.message}`);
+      return false;
     }
   };
 
-  const getHashtag = () =&gt; {
-    const urlMatch = window.location.href.match(/hashtag\/(\w+)/);
-    if (urlMatch) return urlMatch[1];
-    
-    const searchMatch = window.location.href.match(/q=%23(\w+)/);
-    if (searchMatch) return searchMatch[1];
-    
-    return 'unknown';
+  const csvCell = (value) =&gt; `&quot;${String(value == null ? '' : value).replace(/&quot;/g, '&quot;&quot;').replace(/\r?\n/g, ' ')}&quot;`;
+
+  const toCSV = (posts) =&gt; {
+    const headers = ['id', 'handle', 'name', 'text', 'likes', 'reposts', 'replies', 'views', 'timestamp', 'hashtags', 'mediaUrls', 'url'];
+    const rows = posts.map((p) =&gt; [
+      p.id,
+      '@' + p.author.handle,
+      p.author.name,
+      p.text,
+      p.likes,
+      p.reposts,
+      p.replies,
+      p.views,
+      p.timestamp || '',
+      p.hashtags.join(' '),
+      p.mediaUrls.join(' '),
+      p.url
+    ].map(csvCell).join(','));
+    return [headers.join(','), ...rows].join('\n');
   };
 
-  const run = async () =&gt; {
-    const hashtag = getHashtag();
-    console.log(`#️⃣ Scraping tweets for #${hashtag}...`);
+  // Resolve the target hashtag from CONFIG or the current URL.
+  const currentHashtag = () =&gt; {
+    const q = new URLSearchParams(window.location.search).get('q') || '';
+    const fromSearch = q.match(/#(\w+)/) || q.match(/%23(\w+)/i);
+    if (fromSearch) return fromSearch[1];
+    const fromPath = window.location.pathname.match(/hashtag\/(\w+)/);
+    return fromPath ? fromPath[1] : '';
+  };
 
-    const tweets = new Map();
-    let scrolls = 0;
-    let noNewCount = 0;
+  // ============================================
+  // 🎯 MAIN
+  // ============================================
+  console.log(`
+╔══════════════════════════════════════════════════════════╗
+║  #️⃣ SCRAPE HASHTAG - XActions                           ║
+║  👤 Author: nichxbt                                      ║
+║  🌐 https://xactions.app                                 ║
+╚══════════════════════════════════════════════════════════╝
+  `);
 
-    while (tweets.size &lt; CONFIG.MAX_TWEETS &amp;&amp; noNewCount &lt; 5) {
-      const articles = document.querySelectorAll('article[data-testid=&quot;tweet&quot;]');
-      const beforeCount = tweets.size;
+  const configTag = CONFIG.hashtag.replace(/^#/, '').trim();
+  const openTag = currentHashtag();
 
-      articles.forEach(article =&gt; {
-        const tweet = extractTweet(article);
-        if (tweet &amp;&amp; tweet.tweetId &amp;&amp; !tweets.has(tweet.tweetId)) {
-          tweets.set(tweet.tweetId, tweet);
-        }
-      });
+  // If a hashtag is configured and we are not already on its results, navigate
+  // there once. Re-run the script after the page loads to collect.
+  if (configTag &amp;&amp; configTag.toLowerCase() !== openTag.toLowerCase()) {
+    const target = `https://x.com/search?q=%23${encodeURIComponent(configTag)}&amp;f=live`;
+    log.warning(`Not on the #${configTag} results yet. Opening them now.`);
+    log.info('When the results finish loading, paste this script again to collect.');
+    window.location.href = target;
+    return;
+  }
 
-      const added = tweets.size - beforeCount;
-      if (added &gt; 0) {
-        console.log(`#️⃣ Collected ${tweets.size} tweets...`);
-        noNewCount = 0;
-      } else {
-        noNewCount++;
+  const hashtag = configTag || openTag;
+  if (!hashtag) {
+    log.warning('No hashtag detected.');
+    log.info('Set CONFIG.hashtag = &quot;yourtag&quot;, or go to x.com/search?q=%23yourtag&amp;f=live, then run again.');
+    return;
+  }
+
+  const posts = new Map();
+
+  // Stop switch: run window.stopScrapeHashtag() to end the scroll loop.
+  let stopped = false;
+  window.stopScrapeHashtag = () =&gt; {
+    stopped = true;
+    log.warning('Stop requested. Finishing the current pass, then exporting.');
+  };
+
+  log.info(`Hashtag: #${hashtag}`);
+  log.info(`Max posts: ${CONFIG.maxPosts} | Include replies: ${CONFIG.includeReplies}`);
+  log.info('To stop early: window.stopScrapeHashtag()');
+
+  let scrollAttempts = 0;
+  let noNewCount = 0;
+
+  while (!stopped &amp;&amp; posts.size &lt; CONFIG.maxPosts &amp;&amp; scrollAttempts &lt; CONFIG.maxScrollAttempts) {
+    const before = posts.size;
+    const articles = document.querySelectorAll(SELECTORS.tweet);
+
+    articles.forEach((article) =&gt; {
+      try {
+        const post = extractPost(article);
+        if (!post || posts.has(post.id)) return;
+        if (!CONFIG.includeReplies &amp;&amp; post.isReply) return;
+        posts.set(post.id, post);
+      } catch (e) {
+        log.error(`Skipped a post: ${e.message}`);
       }
-
-      window.scrollBy(0, 800);
-      await sleep(CONFIG.SCROLL_DELAY);
-      scrolls++;
-
-      if (scrolls &gt; 100) break;
-    }
-
-    const tweetList = Array.from(tweets.values());
-    tweetList.sort((a, b) =&gt; b.likes - a.likes);
-
-    console.log('\n' + '='.repeat(60));
-    console.log(`#️⃣ SCRAPED ${tweetList.length} TWEETS FOR #${hashtag}`);
-    console.log('='.repeat(60) + '\n');
-
-    tweetList.slice(0, 5).forEach((t, i) =&gt; {
-      console.log(`${i + 1}. @${t.handle} (${t.likes} ❤️): &quot;${t.text.slice(0, 60)}...&quot;`);
     });
 
-    if (CONFIG.FORMAT === 'json' || CONFIG.FORMAT === 'both') {
-      download(JSON.stringify({ hashtag, tweets: tweetList }, null, 2), `hashtag_${hashtag}_${Date.now()}.json`, 'application/json');
-      console.log('💾 Downloaded hashtag tweets.json');
+    if (posts.size &gt; before) {
+      log.progress(posts.size, CONFIG.maxPosts);
+      noNewCount = 0;
+    } else {
+      noNewCount++;
+      if (noNewCount &gt;= CONFIG.noNewPostsThreshold) {
+        log.warning('No new posts after several scrolls. Reached the end of the results.');
+        break;
+      }
     }
 
-    if (CONFIG.FORMAT === 'csv' || CONFIG.FORMAT === 'both') {
-      const csv = [
-        'Handle,Text,Likes,Retweets,Replies,Views,URL,Time',
-        ...tweetList.map(t =&gt; 
-          `&quot;@${t.handle}&quot;,&quot;${t.text.replace(/&quot;/g, '&quot;&quot;').replace(/\n/g, ' ')}&quot;,${t.likes},${t.retweets},${t.replies},${t.views},&quot;${t.url}&quot;,&quot;${t.time}&quot;`
-        )
-      ].join('\n');
-      download(csv, `hashtag_${hashtag}_${Date.now()}.csv`, 'text/csv');
-      console.log('💾 Downloaded hashtag tweets.csv');
-    }
+    if (posts.size &gt;= CONFIG.maxPosts) break;
 
-    window.scrapedHashtag = { hashtag, tweets: tweetList };
-    console.log('\n✅ Done! Access data: window.scrapedHashtag');
-  };
+    window.scrollTo(0, document.body.scrollHeight);
+    await sleep(CONFIG.scrollDelay);
+    scrollAttempts++;
+  }
 
-  run();
+  const list = Array.from(posts.values()).slice(0, CONFIG.maxPosts);
+  if (CONFIG.sortByLikes) list.sort((a, b) =&gt; b.likes - a.likes);
+
+  // ============================================
+  // 📊 SUMMARY + EXPORT
+  // ============================================
+  if (list.length === 0) {
+    log.warning('No posts were found for this hashtag. The results may be empty, or the page had not loaded yet.');
+    return;
+  }
+
+  const totalLikes = list.reduce((s, p) =&gt; s + p.likes, 0);
+  const coTags = {};
+  list.forEach((p) =&gt; p.hashtags.forEach((h) =&gt; {
+    const k = h.toLowerCase();
+    coTags[k] = (coTags[k] || 0) + 1;
+  }));
+  const topCoTags = Object.entries(coTags).sort((a, b) =&gt; b[1] - a[1]).slice(0, 8);
+
+  console.log(`
+╔══════════════════════════════════════════════════════════╗
+║  📊 SCRAPE HASHTAG - COMPLETE                           ║
+╠══════════════════════════════════════════════════════════╣
+║  #️⃣ Hashtag:      ${String('#' + hashtag).slice(0, 36).padEnd(37)}║
+║  📝 Posts:        ${String(list.length).padEnd(37)}║
+║  ❤️  Total likes:  ${String(totalLikes.toLocaleString()).padEnd(37)}║
+╚══════════════════════════════════════════════════════════╝
+  `);
+
+  if (topCoTags.length &gt; 0) {
+    console.log('🏷️ Co-occurring hashtags:');
+    topCoTags.forEach(([tag, count], i) =&gt; console.log(`   ${i + 1}. ${tag} (${count})`));
+  }
+
+  list.slice(0, 5).forEach((p, i) =&gt; {
+    console.log(`${i + 1}. @${p.author.handle} (${p.likes} ❤️): &quot;${p.text.slice(0, 60)}&quot;`);
+  });
+
+  const stamp = new Date().toISOString().split('T')[0];
+  const result = { hashtag, scrapedAt: new Date().toISOString(), count: list.length, posts: list };
+
+  if (CONFIG.downloadJson &amp;&amp; downloadFile(JSON.stringify(result, null, 2), `hashtag_${hashtag}_${stamp}.json`, 'application/json')) {
+    log.success('JSON downloaded');
+  }
+  if (CONFIG.downloadCsv &amp;&amp; downloadFile(toCSV(list), `hashtag_${hashtag}_${stamp}.csv`, 'text/csv')) {
+    log.success('CSV downloaded');
+  }
+
+  window.scrapedHashtag = result;
+  window.exportCSV = () =&gt; toCSV(list);
+  console.log('');
+  log.info('window.scrapedHashtag holds the full data. window.exportCSV() returns the CSV string.');
+  log.success('Done! by nichxbt');
+
+  return result;
 })();
 </code></pre>
           </div>
@@ -350,17 +566,17 @@
 
     <aside class="sidebar-right">
       <div class="sidebar-card">
-        <h3>#️⃣ Scrapers</h3>
-        <a href="/scripts/scrape-bookmarks">🔖 Bookmarks Scraper</a>
-<a href="/scripts/scrape-analytics">📊 Browser console script to scrape X/Twitter analytics data</a>
-<a href="/scripts/scrape-dms">✉️ DM Scraper</a>
-<a href="/scripts/export-to-csv">📄 Export to CSV Utility</a>
-<a href="/scripts/scrape-followers">👥 Followers Scraper</a>
-<a href="/scripts/scrape-following">👥 Following Scraper</a>
-<a href="/scripts/scrape-likers">❤️ Likers Scraper</a>
-<a href="/scripts/scrape-likes">❤️ Likes Scraper</a>
-<a href="/scripts/link-scraper">🔗 Link Scraper</a>
-<a href="/scripts/scrape-list">📝 List Members Scraper</a>
+        <h3>📥 Scrape and Export</h3>
+        <a href="/scripts/backup-account">📥 Backup Account</a>
+<a href="/scripts/bookmark-exporter">📥 Bookmark Exporter</a>
+<a href="/scripts/bookmark-organizer">📥 Bookmark Organizer</a>
+<a href="/scripts/export-to-csv">📥 Export to CSV</a>
+<a href="/scripts/link-scraper">📥 Link Scraper</a>
+<a href="/scripts/manage-bookmarks">📥 Manage Bookmarks</a>
+<a href="/scripts/scrape-cashtag-search">📥 Scrape Cashtag Search</a>
+<a href="/scripts/scrape-explore">📥 Scrape Explore</a>
+<a href="/scripts/scrape-followers">📥 Scrape Followers</a>
+<a href="/scripts/scrape-following">📥 Scrape Following</a>
       </div>
       <div class="sidebar-card">
         <h3>🔗 Quick Links</h3>

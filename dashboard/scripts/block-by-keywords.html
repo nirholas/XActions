@@ -3,23 +3,23 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Block By Keywords — Free X/Twitter Script | XActions</title>
-  <meta name="description" content="Block users with specific keywords in their bio. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
-  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, block, keywords, safety &amp; privacy">
+  <title>Block by Keywords — Free X/Twitter Script | XActions</title>
+  <meta name="description" content="Block users whose bio contains keywords you set. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
+  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, block, keywords, safety">
   <meta name="author" content="nich (@nichxbt)">
   <meta name="robots" content="index, follow">
 
   <meta property="og:type" content="article">
-  <meta property="og:title" content="Block By Keywords — XActions">
-  <meta property="og:description" content="Block users with specific keywords in their bio. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
+  <meta property="og:title" content="Block by Keywords — XActions">
+  <meta property="og:description" content="Block users whose bio contains keywords you set. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
   <meta property="og:url" content="https://xactions.app/scripts/block-by-keywords">
   <meta property="og:site_name" content="XActions">
   <meta property="og:image" content="https://xactions.app/og-run.png">
 
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@nichxbt">
-  <meta name="twitter:title" content="Block By Keywords — XActions">
-  <meta name="twitter:description" content="Block users with specific keywords in their bio. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
+  <meta name="twitter:title" content="Block by Keywords — XActions">
+  <meta name="twitter:description" content="Block users whose bio contains keywords you set. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
   <meta name="twitter:image" content="https://xactions.app/og-run.png">
 
   <link rel="canonical" href="https://xactions.app/scripts/block-by-keywords">
@@ -29,15 +29,15 @@
   {
     "@context": "https://schema.org",
     "@type": "TechArticle",
-    "headline": "Block By Keywords — Free X/Twitter Script | XActions",
-    "description": "Block users with specific keywords in their bio. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.",
+    "headline": "Block by Keywords — Free X/Twitter Script | XActions",
+    "description": "Block users whose bio contains keywords you set. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.",
     "url": "https://xactions.app/scripts/block-by-keywords",
     "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
     "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
     "datePublished": "2026-03-30",
     "dateModified": "2026-03-30",
-    "articleSection": "Safety & Privacy",
-    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, block, keywords, safety & privacy"
+    "articleSection": "Safety",
+    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, block, keywords, safety"
   }
   </script>
   <script type="application/ld+json">
@@ -47,8 +47,8 @@
     "itemListElement": [
       { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
       { "@type": "ListItem", "position": 2, "name": "Scripts", "item": "https://xactions.app/scripts" },
-      { "@type": "ListItem", "position": 3, "name": "Safety & Privacy", "item": "https://xactions.app/scripts#safety-privacy" },
-      { "@type": "ListItem", "position": 4, "name": "Block By Keywords", "item": "https://xactions.app/scripts/block-by-keywords" }
+      { "@type": "ListItem", "position": 3, "name": "Safety", "item": "https://xactions.app/scripts#safety" },
+      { "@type": "ListItem", "position": 4, "name": "Block by Keywords", "item": "https://xactions.app/scripts/block-by-keywords" }
     ]
   }
   </script>
@@ -116,24 +116,24 @@
 
     <main class="main-content" id="main-content">
       <header class="main-header">
-        <h1>🚫 Block By Keywords</h1>
+        <h1>🛡️ Block by Keywords</h1>
         <div class="breadcrumb">
-          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#safety-privacy">Safety &amp; Privacy</a> › Block By Keywords
+          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#safety">Safety</a> › Block by Keywords
         </div>
       </header>
 
       <article class="article">
-        <span class="cat-badge">Safety &amp; Privacy</span>
-        <span class="source-badge">scripts/twitter</span>
+        <span class="cat-badge">Safety</span>
+        <span class="source-badge">browser/blockByKeywords.js</span>
 
         <div class="meta-row">
           <span>v1.0.0</span>
           <span>Updated: 2026-01-26</span>
-          <span>206 lines</span>
+          <span>211 lines</span>
           <span>by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></span>
         </div>
 
-        <p>Block users with specific keywords in their bio</p>
+        <p>Block users whose bio contains keywords you set.</p>
 
         
 
@@ -159,8 +159,13 @@
  * 🚫 Block By Keywords
  * ============================================================
  * 
- * @name        block-by-keywords.js
- * @description Block users with specific keywords in their bio
+ * @name        blockByKeywords.js
+ * @description Block users whose bio contains keywords you set.
+ * @title       Block by Keywords
+ * @category    safety
+ * @page        x.com/&lt;you&gt;/followers
+ * @writes      true
+ * @aliases     scripts/twitter/block-by-keywords.js
  * @author      nichxbt (https://x.com/nichxbt)
  * @version     1.0.0
  * @date        2026-01-26
@@ -372,17 +377,16 @@ ${CONFIG.dryRun ? '║  ⚠️  DRY RUN MODE - No accounts will be blocked      
 
     <aside class="sidebar-right">
       <div class="sidebar-card">
-        <h3>🚫 Safety &amp; Privacy</h3>
-        <a href="/scripts/blacklist">🚫 Blacklist Manager</a>
-<a href="/scripts/block-bots">🤖 Block Bot Accounts</a>
-<a href="/scripts/block-by-ratio">🚫 Block By Ratio</a>
-<a href="/scripts/block-list-transfer">🧱 Block List Transfer</a>
-<a href="/scripts/filter-manager">🔍 Filter Manager</a>
-<a href="/scripts/id-verification">🪪 ID Verification management</a>
-<a href="/scripts/manage-muted-words">🔇 Manage Muted Words</a>
-<a href="/scripts/manage-settings">⚙️ Manage Settings</a>
-<a href="/scripts/mass-block">🚫 Mass Block Users</a>
-<a href="/scripts/mass-unblock">🔓 Mass Unblock Users</a>
+        <h3>🛡️ Safety</h3>
+        <a href="/scripts/block-bots">🛡️ Block Bots</a>
+<a href="/scripts/block-by-ratio">🛡️ Block by Ratio</a>
+<a href="/scripts/block-list-transfer">🛡️ Block List Import and Export</a>
+<a href="/scripts/block-list-manager">🛡️ Block List Manager</a>
+<a href="/scripts/manage-muted-words">🛡️ Manage Muted Words</a>
+<a href="/scripts/mass-block">🛡️ Mass Block</a>
+<a href="/scripts/mute-by-keywords">🛡️ Mute by Keywords</a>
+<a href="/scripts/report-spam">🛡️ Report Spam</a>
+<a href="/scripts/shadowban-checker">🛡️ Shadowban Checker</a>
       </div>
       <div class="sidebar-card">
         <h3>🔗 Quick Links</h3>

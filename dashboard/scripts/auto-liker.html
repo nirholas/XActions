@@ -3,23 +3,23 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Timeline Auto-Liker — Free X/Twitter Script | XActions</title>
-  <meta name="description" content="Timeline Auto-Liker. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
-  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, auto, liker, engagement">
+  <title>Auto Liker — Free X/Twitter Script | XActions</title>
+  <meta name="description" content="Like posts in your timeline or on a profile that match keywords or authors, with a per-run and a daily cap.">
+  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, auto, liker, engage">
   <meta name="author" content="nich (@nichxbt)">
   <meta name="robots" content="index, follow">
 
   <meta property="og:type" content="article">
-  <meta property="og:title" content="Timeline Auto-Liker — XActions">
-  <meta property="og:description" content="Timeline Auto-Liker. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
+  <meta property="og:title" content="Auto Liker — XActions">
+  <meta property="og:description" content="Like posts in your timeline or on a profile that match keywords or authors, with a per-run and a daily cap.">
   <meta property="og:url" content="https://xactions.app/scripts/auto-liker">
   <meta property="og:site_name" content="XActions">
   <meta property="og:image" content="https://xactions.app/og-run.png">
 
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@nichxbt">
-  <meta name="twitter:title" content="Timeline Auto-Liker — XActions">
-  <meta name="twitter:description" content="Timeline Auto-Liker. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
+  <meta name="twitter:title" content="Auto Liker — XActions">
+  <meta name="twitter:description" content="Like posts in your timeline or on a profile that match keywords or authors, with a per-run and a daily cap.">
   <meta name="twitter:image" content="https://xactions.app/og-run.png">
 
   <link rel="canonical" href="https://xactions.app/scripts/auto-liker">
@@ -29,15 +29,15 @@
   {
     "@context": "https://schema.org",
     "@type": "TechArticle",
-    "headline": "Timeline Auto-Liker — Free X/Twitter Script | XActions",
-    "description": "Timeline Auto-Liker. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.",
+    "headline": "Auto Liker — Free X/Twitter Script | XActions",
+    "description": "Like posts in your timeline or on a profile that match keywords or authors, with a per-run and a daily cap.",
     "url": "https://xactions.app/scripts/auto-liker",
     "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
     "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
     "datePublished": "2026-03-30",
     "dateModified": "2026-03-30",
-    "articleSection": "Engagement",
-    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, auto, liker, engagement"
+    "articleSection": "Engage",
+    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, auto, liker, engage"
   }
   </script>
   <script type="application/ld+json">
@@ -47,8 +47,8 @@
     "itemListElement": [
       { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
       { "@type": "ListItem", "position": 2, "name": "Scripts", "item": "https://xactions.app/scripts" },
-      { "@type": "ListItem", "position": 3, "name": "Engagement", "item": "https://xactions.app/scripts#engagement" },
-      { "@type": "ListItem", "position": 4, "name": "Timeline Auto-Liker", "item": "https://xactions.app/scripts/auto-liker" }
+      { "@type": "ListItem", "position": 3, "name": "Engage", "item": "https://xactions.app/scripts#engage" },
+      { "@type": "ListItem", "position": 4, "name": "Auto Liker", "item": "https://xactions.app/scripts/auto-liker" }
     ]
   }
   </script>
@@ -116,78 +116,38 @@
 
     <main class="main-content" id="main-content">
       <header class="main-header">
-        <h1>❤️ Timeline Auto-Liker</h1>
+        <h1>💬 Auto Liker</h1>
         <div class="breadcrumb">
-          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#engagement">Engagement</a> › Timeline Auto-Liker
+          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#engage">Engage</a> › Auto Liker
         </div>
       </header>
 
       <article class="article">
-        <span class="cat-badge">Engagement</span>
-        <span class="source-badge">src/automation</span>
+        <span class="cat-badge">Engage</span>
+        <span class="source-badge">browser/autoLiker.js</span>
 
         <div class="meta-row">
-          
-          
-          <span>198 lines</span>
+          <span>v1.1.0</span>
+          <span>Updated: 2026-11-27</span>
+          <span>344 lines</span>
           <span>by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></span>
         </div>
 
-        <p>Timeline Auto-Liker — a free, open-source browser console script for X/Twitter automation. No API keys or fees required.</p>
+        <p>Like posts in your timeline or on a profile that match keywords or authors, with a per-run and a daily cap.</p>
 
         
 
         <h2>How to Use</h2>
-        <ol class="usage-steps"><li>Go to your X home feed or any user's profile</li>
-<li>Paste core.js, then paste this script</li>
-<li>Configure options below and run!</li></ol>
-        <p><strong>Note:</strong> This script requires pasting <code>src/automation/core.js</code> first for shared utilities.</p>
+        <ol class="usage-steps"><li>Go to:</li>
+<li>Open Chrome DevTools (F12 or Cmd+Option+I)</li>
+<li>Go to Console tab</li>
+<li>Customize the CONFIG below</li>
+<li>Paste browser/autoLiker.js and press Enter</li></ol>
+        
 
         
-        <section class="config-section">
-        <h2>Configuration Options</h2>
-        <table>
-          <thead><tr><th>Option</th><th>Default</th><th>Description</th></tr></thead>
-          <tbody>
-            <tr><td><code>LIKE_ALL</code></td><td><code>false</code></td><td>Like everything (careful!)</td></tr>
-<tr><td><code>FROM_USERS</code></td><td><code>[]</code></td><td>Only like posts from these users (empty = all)</td></tr>
-<tr><td><code>MAX_LIKES</code></td><td><code>20</code></td><td>Max likes per session</td></tr>
-<tr><td><code>MAX_SCROLL_DEPTH</code></td><td><code>50</code></td><td>Max times to scroll down</td></tr>
-<tr><td><code>ALSO_RETWEET</code></td><td><code>false</code></td><td>Also retweet liked posts</td></tr>
-<tr><td><code>MIN_DELAY</code></td><td><code>2000</code></td><td>Min delay between likes (ms)</td></tr>
-<tr><td><code>MAX_DELAY</code></td><td><code>5000</code></td><td>Max delay between likes (ms)</td></tr>
-<tr><td><code>SKIP_REPLIES</code></td><td><code>true</code></td><td>Skip reply tweets</td></tr>
-<tr><td><code>SKIP_ADS</code></td><td><code>true</code></td><td>Skip promoted tweets</td></tr>
-<tr><td><code>MIN_LIKES_ON_POST</code></td><td><code>0</code></td><td>Only like posts with at least X likes</td></tr>
-          </tbody>
-        </table>
-      </section>
-        <section class="config-code">
-        <h2>Default Configuration</h2>
-        <div class="code-block">
-          <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.querySelector('code').textContent).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy',2000)})">Copy</button>
-          <pre><code>const OPTIONS = {
-    // What to like
-    LIKE_ALL: false,                    // Like everything (careful!)
-    KEYWORDS: ['web3', 'crypto', 'AI'], // Only like posts containing these words
-    FROM_USERS: [],                     // Only like posts from these users (empty = all)
-    
-    // Limits
-    MAX_LIKES: 20,                      // Max likes per session
-    MAX_SCROLL_DEPTH: 50,               // Max times to scroll down
-    
-    // Behavior
-    ALSO_RETWEET: false,                // Also retweet liked posts
-    MIN_DELAY: 2000,                    // Min delay between likes (ms)
-    MAX_DELAY: 5000,                    // Max delay between likes (ms)
-    
-    // Filters
-    SKIP_REPLIES: true,                 // Skip reply tweets
-    SKIP_ADS: true,                     // Skip promoted tweets
-    MIN_LIKES_ON_POST: 0,               // Only like posts with at least X likes
-  };</code></pre>
-        </div>
-      </section>
+        
+        
 
         <section class="full-code">
           <h2>Full Script</h2>
@@ -195,201 +155,347 @@
           <div class="code-block">
             <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.querySelector('code').textContent).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy Script',2000)})">Copy Script</button>
             <pre><code>// Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
-// XActions Automation - Timeline Auto-Liker
-// https://github.com/nirholas/XActions
-//
-// REQUIRES: Paste core.js first!
-//
-// HOW TO USE:
-// 1. Go to your X home feed or any user's profile
-// 2. Paste core.js, then paste this script
-// 3. Configure options below and run!
+/**
+ * ============================================================
+ * ❤️ Auto Liker
+ * ============================================================
+ * 
+ * @name        autoLiker.js
+ * @title       Auto Liker
+ * @description Like posts in your timeline or on a profile that match keywords or authors, with a per-run and a daily cap.
+ * @category    engage
+ * @page        x.com/home or x.com/&lt;username&gt;
+ * @writes      true
+ * @aliases     src/automation/autoLiker.js, scripts/twitter/auto-liker.js
+ * @author      nichxbt (https://x.com/nichxbt)
+ * @version     1.1.0
+ * @date        2026-11-27
+ * @repository  https://github.com/nirholas/XActions
+ * 
+ * ============================================================
+ * 📋 USAGE INSTRUCTIONS:
+ * 
+ * 1. Go to:
+ *    - Your home timeline: https://x.com/home
+ *    - OR any user's profile: https://x.com/username
+ * 
+ * 2. Open Chrome DevTools (F12 or Cmd+Option+I)
+ * 3. Go to Console tab
+ * 4. Customize the CONFIG below
+ * 5. Paste browser/autoLiker.js and press Enter
+ * 
+ * Stop early: window.stopAutoLiker()
+ * If src/automation/core.js was pasted first, its storage and daily
+ * rate limiter are used (same keys either way).
+ * 
+ * ============================================================
+ * ⚙️ CONFIGURATION
+ * ============================================================
+ */
 
-(() =&gt; {
-  if (!window.XActions?.Core) {
-    console.error('❌ Core module not loaded! Paste core.js first.');
-    return;
+// `var` (not `const`): a repeated top-level `const` paste in the same
+// DevTools tab throws &quot;already been declared&quot; instead of re-running.
+var CONFIG = {
+  // ---- TARGETING ----
+  
+  // Like ALL tweets (ignores keywords filter)
+  // 💡 Set to false to only like tweets matching keywords
+  likeAll: false,
+  
+  // Only like tweets containing these words (case-insensitive)
+  // 💡 Leave empty [] and set likeAll: true to like everything
+  keywords: ['web3', 'crypto', 'AI', 'startup'],
+  
+  // Only like tweets from these specific users (leave empty for any user)
+  // 💡 Example: ['elonmusk', 'naval']
+  fromUsers: [],
+  
+  // Only like posts that already have at least this many likes (0 = any)
+  minLikesOnPost: 0,
+  
+  // ---- LIMITS ----
+  
+  // Maximum tweets to like
+  maxLikes: 20,
+  
+  // Daily cap across runs, kept in localStorage (xactions_ratelimit_like_day)
+  maxLikesPerDay: 200,
+  
+  // Maximum scroll depth
+  maxScrolls: 50,
+  
+  // ---- BEHAVIOR ----
+  
+  // Also retweet liked posts
+  alsoRetweet: false,
+  
+  // Skip replies (only like original tweets)
+  skipReplies: true,
+  
+  // Skip promoted/ad tweets
+  skipAds: true,
+  
+  // Remember liked post IDs across runs (localStorage xactions_liked_tweets)
+  // so a second run continues where the last one left off
+  rememberLiked: false,
+  
+  // ---- TIMING ----
+  
+  // Random delay between likes (milliseconds)
+  minDelay: 2000,
+  maxDelay: 5000,
+  
+  // Scroll delay
+  scrollDelay: 2000
+};
+
+/**
+ * ============================================================
+ * 🚀 SCRIPT START
+ * ============================================================
+ */
+
+(async function autoLiker() {
+  const sleep = (ms) =&gt; new Promise(r =&gt; setTimeout(r, ms));
+  const randomDelay = () =&gt; Math.floor(Math.random() * (CONFIG.maxDelay - CONFIG.minDelay) + CONFIG.minDelay);
+  
+  // Storage and daily rate limit: core.js when pasted first, otherwise the
+  // same localStorage keys core.js uses (prefix xactions_).
+  const Core = (window.XActions &amp;&amp; window.XActions.Core) || {};
+  const storage = Core.storage || {
+    get: (key) =&gt; {
+      try {
+        const data = localStorage.getItem('xactions_' + key);
+        return data ? JSON.parse(data) : null;
+      } catch (e) {
+        console.warn('⚠️ Storage read failed:', e.message);
+        return null;
+      }
+    },
+    set: (key, value) =&gt; {
+      try {
+        localStorage.setItem('xactions_' + key, JSON.stringify(value));
+      } catch (e) {
+        console.warn('⚠️ Storage write failed:', e.message);
+      }
+    },
+  };
+  const rateLimit = Core.rateLimit || {
+    check: (action, limit, period = 'hour') =&gt; {
+      const data = storage.get(`ratelimit_${action}_${period}`) || { count: 0, timestamp: Date.now() };
+      const periodMs = period === 'hour' ? 3600000 : 86400000;
+      if (Date.now() - data.timestamp &gt; periodMs) {
+        data.count = 0;
+        data.timestamp = Date.now();
+      }
+      return data.count &lt; limit;
+    },
+    increment: (action, period = 'hour') =&gt; {
+      const key = `ratelimit_${action}_${period}`;
+      const data = storage.get(key) || { count: 0, timestamp: Date.now() };
+      data.count++;
+      storage.set(key, data);
+    },
+  };
+  
+  // Stop switch: window.stopAutoLiker() halts after the current post.
+  let stopped = false;
+  window.stopAutoLiker = () =&gt; {
+    stopped = true;
+    console.log('🛑 Stopping...');
+  };
+  
+  // DOM Selectors
+  const $tweet = 'article[data-testid=&quot;tweet&quot;]';
+  const $tweetText = '[data-testid=&quot;tweetText&quot;]';
+  const $likeButton = '[data-testid=&quot;like&quot;]';
+  const $unlikeButton = '[data-testid=&quot;unlike&quot;]';
+  const $retweetButton = '[data-testid=&quot;retweet&quot;]';
+  const $confirmRetweet = '[data-testid=&quot;retweetConfirm&quot;]';
+  
+  console.log('╔════════════════════════════════════════════════════════════╗');
+  console.log('║  ❤️ AUTO LIKER                                              ║');
+  console.log('║  by nichxbt - https://github.com/nirholas/XActions         ║');
+  console.log('╚════════════════════════════════════════════════════════════╝');
+  console.log('');
+  console.log(`🎯 Mode: ${CONFIG.likeAll ? 'Like ALL tweets' : 'Keyword filter'}`);
+  if (!CONFIG.likeAll &amp;&amp; CONFIG.keywords.length &gt; 0) {
+    console.log(`🔍 Keywords: ${CONFIG.keywords.join(', ')}`);
   }
-
-  const { log, sleep, randomDelay, scrollBy, clickElement, rateLimit, storage, SELECTORS } = window.XActions.Core;
-
-  // ============================================
-  // CONFIGURATION
-  // ============================================
-  const OPTIONS = {
-    // What to like
-    LIKE_ALL: false,                    // Like everything (careful!)
-    KEYWORDS: ['web3', 'crypto', 'AI'], // Only like posts containing these words
-    FROM_USERS: [],                     // Only like posts from these users (empty = all)
-    
-    // Limits
-    MAX_LIKES: 20,                      // Max likes per session
-    MAX_SCROLL_DEPTH: 50,               // Max times to scroll down
-    
-    // Behavior
-    ALSO_RETWEET: false,                // Also retweet liked posts
-    MIN_DELAY: 2000,                    // Min delay between likes (ms)
-    MAX_DELAY: 5000,                    // Max delay between likes (ms)
-    
-    // Filters
-    SKIP_REPLIES: true,                 // Skip reply tweets
-    SKIP_ADS: true,                     // Skip promoted tweets
-    MIN_LIKES_ON_POST: 0,               // Only like posts with at least X likes
-  };
-
-  // ============================================
-  // STATE
-  // ============================================
-  let likeCount = 0;
-  let scrollCount = 0;
-  const likedTweets = new Set(storage.get('liked_tweets') || []);
-
-  // ============================================
-  // HELPER FUNCTIONS
-  // ============================================
+  if (CONFIG.fromUsers.length &gt; 0) {
+    console.log(`👤 From users: ${CONFIG.fromUsers.join(', ')}`);
+  }
+  console.log(`📊 Max likes: ${CONFIG.maxLikes} (daily cap ${CONFIG.maxLikesPerDay})`);
+  console.log('🛑 Stop early: window.stopAutoLiker()');
+  console.log('');
   
-  const matchesKeywords = (text) =&gt; {
-    if (OPTIONS.LIKE_ALL) return true;
-    if (OPTIONS.KEYWORDS.length === 0) return true;
-    const lowerText = text.toLowerCase();
-    return OPTIONS.KEYWORDS.some(kw =&gt; lowerText.includes(kw.toLowerCase()));
-  };
-
-  const matchesUser = (tweetElement) =&gt; {
-    if (OPTIONS.FROM_USERS.length === 0) return true;
-    const userLink = tweetElement.querySelector('a[href^=&quot;/&quot;]');
-    if (!userLink) return false;
-    const username = userLink.getAttribute('href').replace('/', '').toLowerCase();
-    return OPTIONS.FROM_USERS.some(u =&gt; u.toLowerCase() === username);
-  };
-
-  const isAlreadyLiked = (tweetElement) =&gt; {
-    return !!tweetElement.querySelector(SELECTORS.unlikeButton);
-  };
-
-  const isReply = (tweetElement) =&gt; {
-    return !!tweetElement.querySelector('[data-testid=&quot;Tweet-User-Avatar&quot;]')?.closest('article')?.querySelector('span')?.textContent?.includes('Replying to');
-  };
-
-  const isAd = (tweetElement) =&gt; {
-    return !!tweetElement.querySelector('[data-testid=&quot;placementTracking&quot;]') || 
-           !!tweetElement.textContent?.includes('Promoted');
-  };
-
-  const getTweetId = (tweetElement) =&gt; {
-    const link = tweetElement.querySelector('a[href*=&quot;/status/&quot;]');
-    if (link) {
-      const match = link.href.match(/status\/(\d+)/);
-      return match ? match[1] : null;
-    }
-    return null;
-  };
-
-  // ============================================
-  // MAIN FUNCTIONS
-  // ============================================
+  const likedTweets = new Set(CONFIG.rememberLiked ? (storage.get('liked_tweets') || []) : []);
+  let totalLiked = 0;
+  let totalRetweeted = 0;
+  let scrolls = 0;
   
-  const likeTweet = async (tweetElement) =&gt; {
-    const likeBtn = tweetElement.querySelector(SELECTORS.likeButton);
-    if (!likeBtn) return false;
-
-    const clicked = await clickElement(likeBtn);
-    if (clicked) {
-      likeCount++;
-      const tweetId = getTweetId(tweetElement);
-      if (tweetId) {
-        likedTweets.add(tweetId);
-        storage.set('liked_tweets', Array.from(likedTweets));
-      }
-      rateLimit.increment('like', 'day');
-      log(`Liked tweet #${likeCount}`, 'success');
-      
-      // Optional retweet
-      if (OPTIONS.ALSO_RETWEET) {
-        await sleep(1000);
-        const rtBtn = tweetElement.querySelector(SELECTORS.retweetButton);
-        if (rtBtn) {
-          await clickElement(rtBtn);
-          await sleep(500);
-          const confirmRt = document.querySelector('[data-testid=&quot;retweetConfirm&quot;]');
-          if (confirmRt) await clickElement(confirmRt);
-          log('Also retweeted', 'action');
-        }
-      }
-      
-      return true;
-    }
-    return false;
-  };
-
-  const processVisibleTweets = async () =&gt; {
-    const tweets = document.querySelectorAll(SELECTORS.tweet);
+  /**
+   * Check if tweet matches filters
+   */
+  function matchesFilters(tweetEl) {
+    const textEl = tweetEl.querySelector($tweetText);
+    const text = textEl ? textEl.innerText.toLowerCase() : '';
     
-    for (const tweet of tweets) {
-      // Check limits
-      if (likeCount &gt;= OPTIONS.MAX_LIKES) {
-        log(`Reached max likes (${OPTIONS.MAX_LIKES})`, 'warning');
+    // Check if from specific users (User-Name block is the author; the first
+    // profile link in the article can be a reposter's socialContext link)
+    if (CONFIG.fromUsers.length &gt; 0) {
+      const userLink = tweetEl.querySelector('[data-testid=&quot;User-Name&quot;] a[href^=&quot;/&quot;]') ||
+                       tweetEl.querySelector('a[href^=&quot;/&quot;]');
+      const username = userLink ? userLink.getAttribute('href').replace('/', '').toLowerCase() : '';
+      if (!CONFIG.fromUsers.some(u =&gt; u.toLowerCase() === username)) {
         return false;
       }
-
-      if (!rateLimit.check('like', 200, 'day')) {
-        log('Daily rate limit reached', 'warning');
+    }
+    
+    // Check keywords
+    if (!CONFIG.likeAll &amp;&amp; CONFIG.keywords.length &gt; 0) {
+      if (!CONFIG.keywords.some(k =&gt; text.includes(k.toLowerCase()))) {
         return false;
       }
+    }
+    
+    // Skip replies (structural marker first; English text as fallback)
+    if (CONFIG.skipReplies) {
+      const isReply = tweetEl.querySelector('[data-testid=&quot;in-reply-to&quot;]') !== null ||
+        Array.from(tweetEl.querySelectorAll('div[dir]')).some(el =&gt;
+          el.innerText.startsWith('Replying to'));
+      if (isReply) return false;
+    }
 
-      // Skip conditions
-      const tweetId = getTweetId(tweet);
-      if (tweetId &amp;&amp; likedTweets.has(tweetId)) continue;
-      if (isAlreadyLiked(tweet)) continue;
-      if (OPTIONS.SKIP_REPLIES &amp;&amp; isReply(tweet)) continue;
-      if (OPTIONS.SKIP_ADS &amp;&amp; isAd(tweet)) continue;
+    // Minimum likes already on the post (count from the like button's aria-label)
+    if (CONFIG.minLikesOnPost &gt; 0) {
+      const btn = tweetEl.querySelector($likeButton) || tweetEl.querySelector($unlikeButton);
+      const match = (btn?.getAttribute('aria-label') || '').match(/(\d[\d,]*)/);
+      const likes = match ? parseInt(match[1].replace(/,/g, ''), 10) : 0;
+      if (likes &lt; CONFIG.minLikesOnPost) return false;
+    }
 
-      // Get tweet text
-      const textEl = tweet.querySelector(SELECTORS.tweetText);
-      const text = textEl?.textContent || '';
-
-      // Check filters
-      if (!matchesKeywords(text)) continue;
-      if (!matchesUser(tweet)) continue;
-
-      // Like it!
-      log(`Found matching tweet: &quot;${text.substring(0, 50)}...&quot;`, 'info');
-      await likeTweet(tweet);
-      await randomDelay(OPTIONS.MIN_DELAY, OPTIONS.MAX_DELAY);
+    // Skip ads: placementTracking wraps promoted tweets; the label check needs
+    // an exact span match (&quot;Ad&quot; as a substring hits words like &quot;Advice&quot;)
+    if (CONFIG.skipAds) {
+      const isAd = tweetEl.querySelector('[data-testid=&quot;placementTracking&quot;]') !== null ||
+        Array.from(tweetEl.querySelectorAll('span')).some(s =&gt; {
+          const t = s.innerText.trim();
+          return t === 'Ad' || t === 'Promoted';
+        });
+      if (isAd) return false;
     }
     
     return true;
-  };
-
-  const run = async () =&gt; {
-    log('🚀 Starting Auto-Liker...', 'info');
-    log(`Keywords: ${OPTIONS.KEYWORDS.length ? OPTIONS.KEYWORDS.join(', ') : 'ALL'}`, 'info');
-    log(`Max likes: ${OPTIONS.MAX_LIKES}`, 'info');
-
-    while (scrollCount &lt; OPTIONS.MAX_SCROLL_DEPTH &amp;&amp; likeCount &lt; OPTIONS.MAX_LIKES) {
-      const shouldContinue = await processVisibleTweets();
-      if (!shouldContinue) break;
-
-      scrollBy(800);
-      scrollCount++;
-      await randomDelay(1500, 3000);
+  }
+  
+  /**
+   * Get tweet ID
+   */
+  function getTweetId(tweetEl) {
+    // The timestamp's enclosing anchor is the tweet's own permalink; the first
+    // /status/ link in the article can belong to a quoted tweet
+    const timeEl = tweetEl.querySelector('time');
+    const link = (timeEl &amp;&amp; timeEl.closest('a[href*=&quot;/status/&quot;]')) ||
+                 tweetEl.querySelector('a[href*=&quot;/status/&quot;]');
+    if (link) {
+      const match = link.href.match(/\/status\/(\d+)/);
+      return match ? match[1] : null;
+    }
+    return null;
+  }
+  
+  console.log('🚀 Starting auto-liker...');
+  console.log('');
+  
+  let dailyCapHit = false;
+  while (totalLiked &lt; CONFIG.maxLikes &amp;&amp; scrolls &lt; CONFIG.maxScrolls &amp;&amp; !stopped &amp;&amp; !dailyCapHit) {
+    const tweets = document.querySelectorAll($tweet);
+    
+    for (const tweet of tweets) {
+      if (totalLiked &gt;= CONFIG.maxLikes || stopped) break;
+      if (!rateLimit.check('like', CONFIG.maxLikesPerDay, 'day')) {
+        console.warn(`⚠️ Daily like cap reached (${CONFIG.maxLikesPerDay}). Run again tomorrow.`);
+        dailyCapHit = true;
+        break;
+      }
       
-      if (scrollCount % 10 === 0) {
-        log(`Progress: ${likeCount} likes, scrolled ${scrollCount}x`, 'info');
+      const tweetId = getTweetId(tweet);
+      if (!tweetId || likedTweets.has(tweetId)) continue;
+      
+      // Check if already liked
+      const unlikeBtn = tweet.querySelector($unlikeButton);
+      if (unlikeBtn) {
+        likedTweets.add(tweetId);
+        continue;
+      }
+      
+      // Check filters
+      if (!matchesFilters(tweet)) continue;
+      
+      // Find like button
+      const likeBtn = tweet.querySelector($likeButton);
+      if (!likeBtn) continue;
+      
+      try {
+        // Like the tweet
+        likeBtn.click();
+        likedTweets.add(tweetId);
+        totalLiked++;
+        rateLimit.increment('like', 'day');
+        if (CONFIG.rememberLiked) storage.set('liked_tweets', Array.from(likedTweets));
+        
+        const textEl = tweet.querySelector($tweetText);
+        const preview = textEl ? textEl.innerText.substring(0, 40) + '...' : '[No text]';
+        console.log(`❤️ Liked #${totalLiked}: &quot;${preview}&quot;`);
+        
+        // Also retweet if enabled
+        if (CONFIG.alsoRetweet) {
+          await sleep(1000);
+          const rtBtn = tweet.querySelector($retweetButton);
+          if (rtBtn) {
+            rtBtn.click();
+            await sleep(500);
+            const confirmBtn = document.querySelector($confirmRetweet);
+            if (confirmBtn) {
+              confirmBtn.click();
+              totalRetweeted++;
+              console.log(`   🔄 Retweeted`);
+            }
+          }
+        }
+        
+        await sleep(randomDelay());
+        
+      } catch (e) {
+        console.warn('⚠️ Error:', e.message);
       }
     }
-
-    log(`\n✅ Done! Liked ${likeCount} tweets.`, 'success');
-    log(`Session saved. Run again to continue where you left off.`, 'info');
-  };
-
-  // Expose stop function
-  window.stopAutoLiker = () =&gt; {
-    OPTIONS.MAX_LIKES = 0;
-    log('Stopping...', 'warning');
-  };
-
-  run();
+    
+    if (stopped || dailyCapHit) break;
+    
+    // Scroll for more
+    window.scrollTo(0, document.body.scrollHeight);
+    await sleep(CONFIG.scrollDelay);
+    scrolls++;
+    
+    if (scrolls % 10 === 0) {
+      console.log(`📜 Scrolled ${scrolls} times, liked ${totalLiked}...`);
+    }
+  }
+  
+  console.log('');
+  console.log('╔════════════════════════════════════════════════════════════╗');
+  console.log('║  ✅ AUTO LIKER COMPLETE!                                   ║');
+  console.log('╚════════════════════════════════════════════════════════════╝');
+  console.log(`❤️ Total liked: ${totalLiked}`);
+  if (CONFIG.alsoRetweet) {
+    console.log(`🔄 Total retweeted: ${totalRetweeted}`);
+  }
+  if (CONFIG.rememberLiked) console.log('💾 Session saved. Run again to continue where you left off.');
+  console.log('');
+  
+  return { liked: totalLiked, retweeted: totalRetweeted };
 })();
 </code></pre>
           </div>
@@ -405,17 +511,17 @@
 
     <aside class="sidebar-right">
       <div class="sidebar-card">
-        <h3>❤️ Engagement</h3>
+        <h3>💬 Engage</h3>
         <a href="/scripts/auto-commenter">💬 Auto Commenter</a>
-<a href="/scripts/auto-reply-mentions">📨 Auto Reply Mentions</a>
-<a href="/scripts/auto-repost">🔁 Auto Repost (Retweet)</a>
-<a href="/scripts/auto-plug-replies">🔌 Auto-Plug Replies</a>
-<a href="/scripts/auto-reply">💬 Auto-Reply / Auto-Respond</a>
-<a href="/scripts/auto-engage">⚡ Browser console script for automated engagement</a>
-<a href="/scripts/comment-by-hashtag">💬 Comment By Hashtag</a>
-<a href="/scripts/comment-by-location">💬 Comment By Location</a>
-<a href="/scripts/engagement-booster">🚀 Engagement Booster v2</a>
-<a href="/scripts/engagement-leaderboard">🏆 Engagement Leaderboard</a>
+<a href="/scripts/auto-engage">💬 Auto Engage</a>
+<a href="/scripts/auto-reply">💬 Auto Reply</a>
+<a href="/scripts/auto-repost">💬 Auto Repost</a>
+<a href="/scripts/auto-reply-mentions">💬 Auto-Reply Mentions</a>
+<a href="/scripts/comment-by-hashtag">💬 Comment by Hashtag</a>
+<a href="/scripts/comment-by-location">💬 Comment by Location</a>
+<a href="/scripts/community-notes">💬 Community Notes</a>
+<a href="/scripts/customer-service">💬 Customer Service Bot</a>
+<a href="/scripts/engage-profile">💬 Engage Profile</a>
       </div>
       <div class="sidebar-card">
         <h3>🔗 Quick Links</h3>

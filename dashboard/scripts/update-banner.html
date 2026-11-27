@@ -3,23 +3,23 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Update Banner Image — Free X/Twitter Script | XActions</title>
-  <meta name="description" content="Guide and helper for updating X/Twitter profile banner. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
-  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, update, banner, account management">
+  <title>Update Banner — Free X/Twitter Script | XActions</title>
+  <meta name="description" content="Guided helper for changing your profile banner. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
+  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, update, banner, profile and settings">
   <meta name="author" content="nich (@nichxbt)">
   <meta name="robots" content="index, follow">
 
   <meta property="og:type" content="article">
-  <meta property="og:title" content="Update Banner Image — XActions">
-  <meta property="og:description" content="Guide and helper for updating X/Twitter profile banner. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
+  <meta property="og:title" content="Update Banner — XActions">
+  <meta property="og:description" content="Guided helper for changing your profile banner. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
   <meta property="og:url" content="https://xactions.app/scripts/update-banner">
   <meta property="og:site_name" content="XActions">
   <meta property="og:image" content="https://xactions.app/og-run.png">
 
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@nichxbt">
-  <meta name="twitter:title" content="Update Banner Image — XActions">
-  <meta name="twitter:description" content="Guide and helper for updating X/Twitter profile banner. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
+  <meta name="twitter:title" content="Update Banner — XActions">
+  <meta name="twitter:description" content="Guided helper for changing your profile banner. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
   <meta name="twitter:image" content="https://xactions.app/og-run.png">
 
   <link rel="canonical" href="https://xactions.app/scripts/update-banner">
@@ -29,15 +29,15 @@
   {
     "@context": "https://schema.org",
     "@type": "TechArticle",
-    "headline": "Update Banner Image — Free X/Twitter Script | XActions",
-    "description": "Guide and helper for updating X/Twitter profile banner. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.",
+    "headline": "Update Banner — Free X/Twitter Script | XActions",
+    "description": "Guided helper for changing your profile banner. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.",
     "url": "https://xactions.app/scripts/update-banner",
     "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
     "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
     "datePublished": "2026-03-30",
     "dateModified": "2026-03-30",
-    "articleSection": "Account Management",
-    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, update, banner, account management"
+    "articleSection": "Profile and Settings",
+    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, update, banner, profile and settings"
   }
   </script>
   <script type="application/ld+json">
@@ -47,8 +47,8 @@
     "itemListElement": [
       { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
       { "@type": "ListItem", "position": 2, "name": "Scripts", "item": "https://xactions.app/scripts" },
-      { "@type": "ListItem", "position": 3, "name": "Account Management", "item": "https://xactions.app/scripts#account-management" },
-      { "@type": "ListItem", "position": 4, "name": "Update Banner Image", "item": "https://xactions.app/scripts/update-banner" }
+      { "@type": "ListItem", "position": 3, "name": "Profile and Settings", "item": "https://xactions.app/scripts#profile-and-settings" },
+      { "@type": "ListItem", "position": 4, "name": "Update Banner", "item": "https://xactions.app/scripts/update-banner" }
     ]
   }
   </script>
@@ -116,24 +116,24 @@
 
     <main class="main-content" id="main-content">
       <header class="main-header">
-        <h1>🖼️ Update Banner Image</h1>
+        <h1>🪪 Update Banner</h1>
         <div class="breadcrumb">
-          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#account-management">Account Management</a> › Update Banner Image
+          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#profile-and-settings">Profile and Settings</a> › Update Banner
         </div>
       </header>
 
       <article class="article">
-        <span class="cat-badge">Account Management</span>
-        <span class="source-badge">scripts/twitter</span>
+        <span class="cat-badge">Profile and Settings</span>
+        <span class="source-badge">browser/updateBanner.js</span>
 
         <div class="meta-row">
           <span>v1.0.0</span>
           <span>Updated: 2026-01-26</span>
-          <span>164 lines</span>
+          <span>168 lines</span>
           <span>by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></span>
         </div>
 
-        <p>Guide and helper for updating X/Twitter profile banner</p>
+        <p>Guided helper for changing your profile banner.</p>
 
         <div class="warning-box"><p>⚠️ NOTE: Due to browser security, file selection requires</p></div>
 
@@ -159,8 +159,13 @@
  * 🏞️ Update Banner Image
  * ============================================================
  * 
- * @name        update-banner.js
- * @description Guide and helper for updating X/Twitter profile banner
+ * @name        updateBanner.js
+ * @description Guided helper for changing your profile banner.
+ * @title       Update Banner
+ * @category    profile
+ * @page        x.com/settings/profile
+ * @writes      true
+ * @aliases     scripts/twitter/update-banner.js
  * @author      nichxbt (https://x.com/nichxbt)
  * @version     1.0.0
  * @date        2026-01-26
@@ -205,7 +210,6 @@ var CONFIG = {
   // DOM Selectors
   const $editProfileBtn = '[data-testid=&quot;editProfileButton&quot;]';
   const $addBannerBtn = '[data-testid=&quot;addBannerButton&quot;], [data-testid=&quot;editProfileHeader&quot;]';
-  const $bannerImageInput = 'input[data-testid=&quot;fileInput&quot;]';
   const $saveButton = '[data-testid=&quot;Profile_Save_Button&quot;]';
   const $cancelBtn = '[data-testid=&quot;cancelButton&quot;]';
   
@@ -330,17 +334,17 @@ var CONFIG = {
 
     <aside class="sidebar-right">
       <div class="sidebar-card">
-        <h3>🖼️ Account Management</h3>
-        <a href="/scripts/account-settings">⚙️ Account Settings</a>
-<a href="/scripts/backup-account">💾 Backup Account Data</a>
-<a href="/scripts/edit-profile">✏️ Browser console script to update X/Twitter profile fields</a>
-<a href="/scripts/delegate-access">🔑 Delegate Access</a>
-<a href="/scripts/download-account-data">📥 Download Account Data from X</a>
-<a href="/scripts/multi-account">👥 Multi-Account Manager</a>
-<a href="/scripts/profile-manager">👤 Profile Manager</a>
-<a href="/scripts/qr-code-sharing">📱 QR Code Profile Sharing</a>
-<a href="/scripts/subscribe-premium">⭐ Subscribe to X Premium</a>
-<a href="/scripts/update-profile">✏️ Update Profile</a>
+        <h3>🪪 Profile and Settings</h3>
+        <a href="/scripts/account-misc">🪪 Account Utilities</a>
+<a href="/scripts/advanced-profile">🪪 Advanced Profile Tools</a>
+<a href="/scripts/advanced-settings">🪪 Advanced Settings and Privacy</a>
+<a href="/scripts/delegate-access">🪪 Delegate Access</a>
+<a href="/scripts/download-account-data">🪪 Download Account Data</a>
+<a href="/scripts/id-verification">🪪 ID Verification</a>
+<a href="/scripts/multi-account">🪪 Multi-Account Manager</a>
+<a href="/scripts/advanced-notifications">🪪 Notification Settings</a>
+<a href="/scripts/pin-tweet-manager">🪪 Pin Tweet Manager</a>
+<a href="/scripts/account-settings">🪪 Privacy and Safety Settings</a>
       </div>
       <div class="sidebar-card">
         <h3>🔗 Quick Links</h3>

@@ -3,15 +3,10 @@
 /**
  * Regenerate the browser-script catalog inside docs/browser-scripts.md.
  *
- * The catalog is derived from the scripts themselves rather than maintained by
- * hand, because a hand-kept list of ~100 files is a list that is wrong within a
- * month. Each browser script carries a three-line header:
- *
- *   // scripts/keywordLiker.js
- *   // Like only posts containing specific keywords — with a prompt input box
- *   // Paste in DevTools console on x.com/home or any feed/search page
- *
- * Line 2 becomes the description, line 3 becomes the "Run it on" column.
+ * The catalog is read from browser/index.json, the manifest that
+ * scripts/build-script-manifest.mjs builds from the header and CONFIG of each
+ * browser/*.js script, so the doc lists exactly the scripts that exist, under
+ * the same titles, categories and pages as every other script list.
  *
  * Only the region between the AUTOGEN markers is rewritten; the prose around it
  * is hand-written and preserved.
@@ -25,12 +20,12 @@
  * @license Apache-2.0
  */
 
-import { readFileSync, writeFileSync, readdirSync } from 'node:fs';
+import { readFileSync, writeFileSync } from 'node:fs';
 import { join, resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { loadScriptManifest } from './lib/script-manifest.mjs';
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
-const SCRIPTS_DIR = join(ROOT, 'scripts');
 const DOC = join(ROOT, 'docs', 'browser-scripts.md');
 
 const START = '<!-- AUTOGEN:SCRIPTS start -->';
@@ -38,83 +33,29 @@ const END = '<!-- AUTOGEN:SCRIPTS end -->';
 
 const checkOnly = process.argv.includes('--check');
 
-/**
- * Read the header metadata out of one browser script.
- *
- * @param {string} file - File name inside scripts/
- * @returns {{file: string, name: string, description: string, page: string}|null}
- *   Null when the file is not a browser console script.
- */
-function parseScript(file) {
-  const source = readFileSync(join(SCRIPTS_DIR, file), 'utf8');
-  const head = source.split('\n').slice(0, 8);
+const manifest = loadScriptManifest(ROOT);
+const legacy = manifest.scripts.reduce((n, s) => n + s.aliases.length, 0);
 
-  const pasteLine = head.find((l) => /paste in devtools/i.test(l));
-  if (!pasteLine) return null;
-
-  const commentLines = head
-    .filter((l) => l.trim().startsWith('//'))
-    .map((l) => l.replace(/^\s*\/\/\s?/, '').trim())
-    .filter((l) => l.length > 0 && !/^copyright/i.test(l));
-
-  // First comment naming the file itself, then the description, then the
-  // "Paste in DevTools ..." line.
-  const description =
-    commentLines.find(
-      (l) => l !== `scripts/${file}` && !/paste in devtools/i.test(l) && !/^by /i.test(l),
-    ) ?? '';
-
-  const page = pasteLine
-    .replace(/^\s*\/\/\s?/, '')
-    .replace(/^Paste in DevTools console on\s*/i, '')
-    .trim();
-
-  return {
-    file,
-    name: file.replace(/\.js$/, ''),
-    description: description.replace(/^Browser console script for /i, '') || file,
-    page,
-  };
-}
-
-const jsFiles = readdirSync(SCRIPTS_DIR).filter((f) => f.endsWith('.js'));
-
-// A script that carries the "Paste in DevTools" line further down the file was
-// meant for this catalog and is being dropped from it silently: parseScript only
-// reads the first 8 lines, and a doc that consistently omits a file still passes
-// --check. Catch it here instead, where the fix (move the line up, or move a
-// JSDoc header below the // block) is obvious. This is exactly how
-// reputationAudit.js went missing after gaining a JSDoc header.
-const missed = jsFiles.filter((file) => {
-  const source = readFileSync(join(SCRIPTS_DIR, file), 'utf8');
-  if (!/paste in devtools/i.test(source)) return false;
-  return !source.split('\n').slice(0, 8).some((l) => /paste in devtools/i.test(l));
-});
-
-if (missed.length > 0) {
-  console.error(
-    `These scripts say "Paste in DevTools" but not within their first 8 lines, so the catalog silently skips them:\n` +
-    missed.map((f) => `  scripts/${f}`).join('\n') +
-    `\n\nMove that line into the leading // header block. A JSDoc header belongs below it, just above the IIFE.`,
-  );
-  process.exit(1);
-}
-
-const scripts = jsFiles
-  .map(parseScript)
-  .filter(Boolean)
-  .sort((a, b) => a.name.localeCompare(b.name));
+const sections = manifest.categories
+  .map((category) => ({ category, scripts: manifest.scripts.filter((s) => s.category === category.id) }))
+  .filter((section) => section.scripts.length > 0)
+  .map(({ category, scripts }) => [
+    `### ${category.label}`,
+    '',
+    '| Script | What it does | Run it on | Writes | Dry run |',
+    '|--------|--------------|-----------|--------|---------|',
+    ...scripts.map((s) => {
+      const dryRun = s.supportsDryRun ? (s.dryRunDefault ? 'on by default' : 'off by default') : '';
+      const core = s.needsCore ? ' Paste [`core.js`](../browser/core.js) first.' : '';
+      return `| [\`${s.id}\`](../${s.path}) | ${escapePipes(s.description)}${core} | ${s.pages.map((p) => `\`${escapePipes(p)}\``).join(' or ')} | ${s.writes ? 'yes' : ''} | ${dryRun} |`;
+    }),
+  ].join('\n'));
 
 const table = [
-  `_${scripts.length} scripts. Generated by \`npm run docs:scripts\` from the header of each file in [\`scripts/\`](../scripts/)._`,
+  `_${manifest.count} scripts. Generated by \`npm run docs:scripts\` from [\`browser/index.json\`](../browser/index.json), which \`npm run browser:build\` reads from the header of each file in [\`browser/\`](../browser/). ${legacy} older paths in \`scripts/\`, \`scripts/twitter/\` and \`src/automation/\` are generated copies of these files, kept so saved links still work._`,
   '',
-  '| Script | What it does | Run it on |',
-  '|--------|--------------|-----------|',
-  ...scripts.map(
-    (s) =>
-      `| [\`${s.name}\`](../scripts/${s.file}) | ${escapePipes(capitalize(s.description))} | \`${escapePipes(s.page)}\` |`,
-  ),
-].join('\n');
+  ...sections.flatMap((s) => [s, '']),
+].join('\n').trimEnd();
 
 const existing = readFileSync(DOC, 'utf8');
 const startIndex = existing.indexOf(START);
@@ -130,7 +71,7 @@ const updated =
 
 if (checkOnly) {
   if (updated === existing) {
-    console.log(`docs/browser-scripts.md is up to date (${scripts.length} scripts).`);
+    console.log(`docs/browser-scripts.md is up to date (${manifest.count} scripts).`);
     process.exit(0);
   }
   console.error('docs/browser-scripts.md is out of date. Run: npm run docs:scripts');
@@ -138,7 +79,7 @@ if (checkOnly) {
 }
 
 writeFileSync(DOC, updated);
-console.log(`Wrote ${scripts.length} scripts into docs/browser-scripts.md`);
+console.log(`Wrote ${manifest.count} scripts into docs/browser-scripts.md`);
 
 /**
  * Escape pipes so a description cannot break the markdown table.
@@ -147,13 +88,4 @@ console.log(`Wrote ${scripts.length} scripts into docs/browser-scripts.md`);
  */
 function escapePipes(text) {
   return text.replace(/\|/g, '\\|');
-}
-
-/**
- * Capitalise the first letter, leaving the rest alone.
- * @param {string} text
- * @returns {string}
- */
-function capitalize(text) {
-  return text.charAt(0).toUpperCase() + text.slice(1);
 }

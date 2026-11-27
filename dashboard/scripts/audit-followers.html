@@ -4,14 +4,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Audit Followers — Free X/Twitter Script | XActions</title>
-  <meta name="description" content="Analyze your followers: find fakes, bots, inactive accounts. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
-  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, audit, followers, follower monitoring">
+  <meta name="description" content="Scan your followers list and score each account as legitimate, suspicious or likely fake, with an optional audience quality report.">
+  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, audit, followers, analytics">
   <meta name="author" content="nich (@nichxbt)">
   <meta name="robots" content="index, follow">
 
   <meta property="og:type" content="article">
   <meta property="og:title" content="Audit Followers — XActions">
-  <meta property="og:description" content="Analyze your followers: find fakes, bots, inactive accounts. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
+  <meta property="og:description" content="Scan your followers list and score each account as legitimate, suspicious or likely fake, with an optional audience quality report.">
   <meta property="og:url" content="https://xactions.app/scripts/audit-followers">
   <meta property="og:site_name" content="XActions">
   <meta property="og:image" content="https://xactions.app/og-run.png">
@@ -19,7 +19,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@nichxbt">
   <meta name="twitter:title" content="Audit Followers — XActions">
-  <meta name="twitter:description" content="Analyze your followers: find fakes, bots, inactive accounts. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
+  <meta name="twitter:description" content="Scan your followers list and score each account as legitimate, suspicious or likely fake, with an optional audience quality report.">
   <meta name="twitter:image" content="https://xactions.app/og-run.png">
 
   <link rel="canonical" href="https://xactions.app/scripts/audit-followers">
@@ -30,14 +30,14 @@
     "@context": "https://schema.org",
     "@type": "TechArticle",
     "headline": "Audit Followers — Free X/Twitter Script | XActions",
-    "description": "Analyze your followers: find fakes, bots, inactive accounts. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.",
+    "description": "Scan your followers list and score each account as legitimate, suspicious or likely fake, with an optional audience quality report.",
     "url": "https://xactions.app/scripts/audit-followers",
     "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
     "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
     "datePublished": "2026-03-30",
     "dateModified": "2026-03-30",
-    "articleSection": "Follower Monitoring",
-    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, audit, followers, follower monitoring"
+    "articleSection": "Analytics",
+    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, audit, followers, analytics"
   }
   </script>
   <script type="application/ld+json">
@@ -47,7 +47,7 @@
     "itemListElement": [
       { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
       { "@type": "ListItem", "position": 2, "name": "Scripts", "item": "https://xactions.app/scripts" },
-      { "@type": "ListItem", "position": 3, "name": "Follower Monitoring", "item": "https://xactions.app/scripts#follower-monitoring" },
+      { "@type": "ListItem", "position": 3, "name": "Analytics", "item": "https://xactions.app/scripts#analytics" },
       { "@type": "ListItem", "position": 4, "name": "Audit Followers", "item": "https://xactions.app/scripts/audit-followers" }
     ]
   }
@@ -118,22 +118,22 @@
       <header class="main-header">
         <h1>📊 Audit Followers</h1>
         <div class="breadcrumb">
-          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#follower-monitoring">Follower Monitoring</a> › Audit Followers
+          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#analytics">Analytics</a> › Audit Followers
         </div>
       </header>
 
       <article class="article">
-        <span class="cat-badge">Follower Monitoring</span>
-        <span class="source-badge">browser</span>
+        <span class="cat-badge">Analytics</span>
+        <span class="source-badge">browser/auditFollowers.js</span>
 
         <div class="meta-row">
-          
-          
-          <span>177 lines</span>
+          <span>v1.1.0</span>
+          <span>Updated: 2026-11-27</span>
+          <span>408 lines</span>
           <span>by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></span>
         </div>
 
-        <p>Analyze your followers: find fakes, bots, inactive accounts</p>
+        <p>Scan your followers list and score each account as legitimate, suspicious or likely fake, with an optional audience quality report.</p>
 
         
 
@@ -147,7 +147,20 @@
         
 
         
-        
+        <section class="config-section">
+        <h2>Configuration Options</h2>
+        <table>
+          <thead><tr><th>Option</th><th>Default</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td><code>maxRetries</code></td><td><code>3</code></td><td>Stop after this many scrolls in a row that find no new followers</td></tr>
+<tr><td><code>qualityReport</code></td><td><code>false</code></td><td>Also print the audience quality report (composition, quality score, interests)</td></tr>
+<tr><td><code>saveToLocalStorage</code></td><td><code>false</code></td><td>Save the quality summary to localStorage &quot;xactions_audit_&lt;you&gt;&quot; (implies the quality analysis)</td></tr>
+<tr><td><code>influencer</code></td><td><code>10</code></td><td>Followers 10x+ following = influencer</td></tr>
+<tr><td><code>balanced</code></td><td><code>0.5</code></td><td>Followers/following ratio from 0.5 up to the influencer ratio = balanced</td></tr>
+<tr><td><code>massFollower</code></td><td><code>2000</code></td><td>Following 2000+ = aggressive follower</td></tr>
+          </tbody>
+        </table>
+      </section>
         <section class="config-code">
         <h2>Default Configuration</h2>
         <div class="code-block">
@@ -156,7 +169,15 @@
     maxFollowers: 200,
     scrollDelay: 2000,
     maxScrollAttempts: 30,
+    maxRetries: 3,              // Stop after this many scrolls in a row that find no new followers
     exportResults: true,
+    qualityReport: false,       // Also print the audience quality report (composition, quality score, interests)
+    saveToLocalStorage: false,  // Save the quality summary to localStorage &quot;xactions_audit_&lt;you&gt;&quot; (implies the quality analysis)
+    thresholds: {
+      influencer: 10,           // Followers 10x+ following = influencer
+      balanced: 0.5,            // Followers/following ratio from 0.5 up to the influencer ratio = balanced
+      massFollower: 2000,       // Following 2000+ = aggressive follower
+    },
   };</code></pre>
         </div>
       </section>
@@ -167,20 +188,45 @@
           <div class="code-block">
             <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.querySelector('code').textContent).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy Script',2000)})">Copy Script</button>
             <pre><code>// Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
+/**
+ * @name        auditFollowers.js
+ * @title       Audit Followers
+ * @description Scan your followers list and score each account as legitimate, suspicious or likely fake, with an optional audience quality report.
+ * @category    analytics
+ * @page        x.com/&lt;you&gt;/followers
+ * @writes      false
+ * @aliases     scripts/auditFollowers.js, scripts/twitter/audit-followers.js
+ * @author      nichxbt (https://x.com/nichxbt)
+ * @version     1.1.0
+ * @date        2026-11-27
+ */
 // Audit Followers on X - by nichxbt
 // https://github.com/nirholas/xactions
 // Analyze your followers: find fakes, bots, inactive accounts
 // 1. Go to https://x.com/YOUR_USERNAME/followers
 // 2. Open the Developer Console (F12)
-// 3. Paste this into the Developer Console and run it
+// 3. Paste browser/auditFollowers.js into the Developer Console and run it
 //
-// Last Updated: 24 February 2026
+// CONFIG.qualityReport adds the audience quality report: verified accounts,
+// influencers, high-quality accounts, red flags, a 0-100 quality score, top
+// influential and verified followers, bio interests and recommendations.
+// CONFIG.saveToLocalStorage keeps a summary in localStorage &quot;xactions_audit_&lt;you&gt;&quot;.
+//
+// Last Updated: 27 November 2026
 (() =&gt; {
   const CONFIG = {
     maxFollowers: 200,
     scrollDelay: 2000,
     maxScrollAttempts: 30,
+    maxRetries: 3,              // Stop after this many scrolls in a row that find no new followers
     exportResults: true,
+    qualityReport: false,       // Also print the audience quality report (composition, quality score, interests)
+    saveToLocalStorage: false,  // Save the quality summary to localStorage &quot;xactions_audit_&lt;you&gt;&quot; (implies the quality analysis)
+    thresholds: {
+      influencer: 10,           // Followers 10x+ following = influencer
+      balanced: 0.5,            // Followers/following ratio from 0.5 up to the influencer ratio = balanced
+      massFollower: 2000,       // Following 2000+ = aggressive follower
+    },
   };
 
   const $userCell = '[data-testid=&quot;UserCell&quot;]';
@@ -203,6 +249,167 @@
     return '';
   };
 
+  const parseCount = (str) =&gt; {
+    if (!str) return 0;
+    str = str.replace(/,/g, '');
+    const match = str.match(/([\d.]+)([KMB])?/i);
+    if (match) {
+      let num = parseFloat(match[1]);
+      const multipliers = { 'K': 1000, 'M': 1000000, 'B': 1000000000 };
+      if (match[2]) num *= multipliers[match[2].toUpperCase()];
+      return Math.round(num);
+    }
+    return 0;
+  };
+
+  const formatNum = (n) =&gt; {
+    if (n &gt;= 1000000) return (n / 1000000).toFixed(1) + 'M';
+    if (n &gt;= 1000) return (n / 1000).toFixed(1) + 'K';
+    return Math.round(n).toString();
+  };
+
+  const interestCategories = {
+    tech: ['developer', 'engineer', 'programmer', 'tech', 'software', 'coding', 'ai', 'data'],
+    crypto: ['crypto', 'bitcoin', 'btc', 'eth', 'nft', 'web3', 'defi', 'blockchain'],
+    business: ['founder', 'ceo', 'entrepreneur', 'startup', 'investor', 'business'],
+    marketing: ['marketing', 'growth', 'social media', 'brand', 'digital'],
+    creative: ['creator', 'artist', 'designer', 'writer', 'photographer', 'content'],
+    finance: ['finance', 'trading', 'forex', 'investment', 'stocks'],
+  };
+
+  const qualityAnalysis = (all, owner) =&gt; {
+    const pct = (n) =&gt; (n / all.length * 100).toFixed(1);
+    const categories = {
+      influencers: all.filter(f =&gt; f.followers &gt; 0 &amp;&amp; f.followers / (f.following || 1) &gt;= CONFIG.thresholds.influencer),
+      balanced: all.filter(f =&gt; {
+        const ratio = (f.followers || 1) / (f.following || 1);
+        return ratio &gt;= CONFIG.thresholds.balanced &amp;&amp; ratio &lt; CONFIG.thresholds.influencer;
+      }),
+      aggressiveFollowers: all.filter(f =&gt; f.following &gt; CONFIG.thresholds.massFollower),
+      verified: all.filter(f =&gt; f.verified),
+      defaultAvatars: all.filter(f =&gt; f.defaultAvatar),
+      noBio: all.filter(f =&gt; !f.bio),
+      zeroFollowers: all.filter(f =&gt; f.followers === 0),
+      highQuality: all.filter(f =&gt; f.followers &gt;= 1000 &amp;&amp; f.bio &amp;&amp; !f.defaultAvatar),
+    };
+
+    const avgFollowing = all.reduce((sum, f) =&gt; sum + f.following, 0) / all.length;
+    const avgFollowers = all.reduce((sum, f) =&gt; sum + f.followers, 0) / all.length;
+    const totalReach = all.reduce((sum, f) =&gt; sum + f.followers, 0);
+
+    const qualityScore = Math.min(100, Math.round(
+      (categories.highQuality.length * 3 +
+       categories.influencers.length * 2 +
+       categories.verified.length * 5 +
+       categories.balanced.length * 1) /
+      (all.length * 3) * 100
+    ));
+
+    const interests = {};
+    all.forEach(f =&gt; {
+      const bioLower = f.bio.toLowerCase();
+      Object.entries(interestCategories).forEach(([category, words]) =&gt; {
+        if (words.some(w =&gt; bioLower.includes(w))) {
+          interests[category] = (interests[category] || 0) + 1;
+        }
+      });
+    });
+    const sortedInterests = Object.entries(interests).sort((a, b) =&gt; b[1] - a[1]);
+    const topInfluencers = [...categories.influencers].sort((a, b) =&gt; b.followers - a.followers);
+
+    if (CONFIG.qualityReport) {
+      console.log('\n' + '═'.repeat(60));
+      console.log(`📊 AUDIENCE QUALITY REPORT: @${owner}`);
+      console.log('═'.repeat(60));
+
+      console.log('\n📈 OVERVIEW:');
+      console.log(`   Total audience reach:     ${formatNum(totalReach)}`);
+      console.log(`   Average following:        ${formatNum(avgFollowing)}`);
+      console.log(`   Average followers:        ${formatNum(avgFollowers)}`);
+
+      console.log('\n👥 FOLLOWER COMPOSITION:');
+      console.log(`   ⭐ Verified accounts:     ${categories.verified.length} (${pct(categories.verified.length)}%)`);
+      console.log(`   🌟 Influencers (${CONFIG.thresholds.influencer}:1+):   ${categories.influencers.length} (${pct(categories.influencers.length)}%)`);
+      console.log(`   💎 High-quality:          ${categories.highQuality.length} (${pct(categories.highQuality.length)}%)`);
+      console.log(`   ⚖️  Balanced accounts:     ${categories.balanced.length} (${pct(categories.balanced.length)}%)`);
+      console.log(`   🔄 Aggressive followers:  ${categories.aggressiveFollowers.length} (${pct(categories.aggressiveFollowers.length)}%)`);
+
+      console.log('\n⚠️  RED FLAGS:');
+      console.log(`   🖼️  Default avatars:       ${categories.defaultAvatars.length} (${pct(categories.defaultAvatars.length)}%)`);
+      console.log(`   📝 No bio:                ${categories.noBio.length} (${pct(categories.noBio.length)}%)`);
+      console.log(`   👻 Zero followers:        ${categories.zeroFollowers.length} (${pct(categories.zeroFollowers.length)}%)`);
+
+      console.log('\n🏆 QUALITY SCORE:');
+      const scoreBar = '█'.repeat(Math.round(qualityScore / 5)) + '░'.repeat(20 - Math.round(qualityScore / 5));
+      console.log(`   [${scoreBar}] ${qualityScore}/100`);
+      if (qualityScore &gt;= 80) console.log('   🏆 EXCELLENT - Premium quality audience!');
+      else if (qualityScore &gt;= 60) console.log('   👍 GOOD - Solid audience quality');
+      else if (qualityScore &gt;= 40) console.log('   ⚠️  MODERATE - Room for improvement');
+      else console.log('   🚨 POOR - Consider audience cleanup');
+
+      if (topInfluencers.length &gt; 0) {
+        console.log('\n🌟 YOUR TOP INFLUENTIAL FOLLOWERS:');
+        topInfluencers.slice(0, 15).forEach((f, i) =&gt; {
+          const badge = f.verified ? ' ✓' : '';
+          console.log(`\n${i + 1}. ${f.displayName}${badge} (@${f.username})`);
+          console.log(`   ${formatNum(f.followers)} followers | ${formatNum(f.following)} following`);
+          if (f.bio) console.log(`   &quot;${f.bio.slice(0, 60)}${f.bio.length &gt; 60 ? '...' : ''}&quot;`);
+        });
+      }
+
+      if (categories.verified.length &gt; 0) {
+        console.log('\n⭐ VERIFIED FOLLOWERS:');
+        categories.verified.slice(0, 20).forEach((f, i) =&gt; {
+          console.log(`   ${i + 1}. @${f.username} - ${formatNum(f.followers)} followers`);
+        });
+      }
+
+      console.log('\n🏷️  AUDIENCE INTERESTS (Bio Keywords):');
+      if (sortedInterests.length &gt; 0) {
+        const maxCount = sortedInterests[0][1];
+        sortedInterests.forEach(([category, count]) =&gt; {
+          const bar = '█'.repeat(Math.round(count / maxCount * 20));
+          console.log(`   ${category.padEnd(12)} ${bar.padEnd(20)} ${count} (${pct(count)}%)`);
+        });
+      } else {
+        console.log('   Not enough bio data to analyze interests');
+      }
+
+      console.log('\n💡 RECOMMENDATIONS:');
+      if (categories.defaultAvatars.length / all.length &gt; 0.2) {
+        console.log('   ⚠️  High number of default avatars - consider removing bots');
+      }
+      if (categories.zeroFollowers.length / all.length &gt; 0.1) {
+        console.log('   ⚠️  Many followers have 0 followers - possible fake accounts');
+      }
+      if (categories.influencers.length &gt; 0) {
+        console.log(`   ✅ You have ${categories.influencers.length} influencer followers - engage with them!`);
+      }
+      if (categories.verified.length &gt; 0) {
+        console.log(`   ✅ You have ${categories.verified.length} verified followers - great credibility!`);
+      }
+    }
+
+    return {
+      qualityScore,
+      totalReach,
+      composition: {
+        verified: categories.verified.length,
+        influencers: categories.influencers.length,
+        highQuality: categories.highQuality.length,
+        balanced: categories.balanced.length,
+        aggressiveFollowers: categories.aggressiveFollowers.length,
+        defaultAvatars: categories.defaultAvatars.length,
+        noBio: categories.noBio.length,
+        zeroFollowers: categories.zeroFollowers.length,
+      },
+      interests: Object.fromEntries(sortedInterests),
+      topInfluencers: topInfluencers
+        .slice(0, 50)
+        .map(f =&gt; ({ username: f.username, followers: f.followers, verified: f.verified })),
+    };
+  };
+
   const run = async () =&gt; {
     console.log('🔍 AUDIT FOLLOWERS - XActions by nichxbt');
 
@@ -211,7 +418,8 @@
       return;
     }
 
-    console.log('📊 Scanning followers...\n');
+    const owner = window.location.pathname.split('/')[1];
+    console.log(`📊 Scanning followers of @${owner}...\n`);
 
     const followers = new Map();
     let scrollAttempts = 0;
@@ -232,13 +440,23 @@
         const bio = extractBio(cell);
         const displayName = nameEl?.textContent?.split('@')[0]?.trim() || '';
 
+        // Counts and badges for the quality report (counts are 0 when the cell does not show them)
+        const text = cell.textContent;
+        const followingMatch = text.match(/([\d,.]+[KMB]?)\s*Following/i);
+        const followersMatch = text.match(/([\d,.]+[KMB]?)\s*Follower/i);
+        const following = followingMatch ? parseCount(followingMatch[1]) : 0;
+        const followerCount = followersMatch ? parseCount(followersMatch[1]) : 0;
+        // testid is locale-independent; aria-label kept as fallback
+        const verified = cell.querySelector('[data-testid=&quot;icon-verified&quot;], svg[aria-label*=&quot;Verified&quot;]') !== null;
+
         // Heuristic scoring
         let suspicionScore = 0;
         const flags = [];
 
         // Default/no avatar
         const avatarImg = cell.querySelector('img');
-        if (avatarImg &amp;&amp; avatarImg.src.includes('default_profile')) {
+        const defaultAvatar = !!(avatarImg &amp;&amp; avatarImg.src.includes('default_profile'));
+        if (defaultAvatar) {
           suspicionScore += 2;
           flags.push('default avatar');
         }
@@ -273,6 +491,10 @@
           displayName,
           bio: bio.substring(0, 100),
           followsYou,
+          verified,
+          defaultAvatar,
+          following,
+          followers: followerCount,
           suspicionScore,
           flags,
           category: suspicionScore &gt;= 3 ? 'likely-fake' : suspicionScore &gt;= 2 ? 'suspicious' : 'legitimate',
@@ -282,13 +504,19 @@
       if (followers.size === prevSize) retries++;
       else retries = 0;
 
-      if (retries &gt;= 3) break;
+      if (retries &gt;= CONFIG.maxRetries) break;
       scrollAttempts++;
       window.scrollTo(0, document.body.scrollHeight);
       await sleep(CONFIG.scrollDelay);
+      console.log(`   Scanned ${followers.size} followers...`);
     }
 
     const all = [...followers.values()];
+    if (all.length === 0) {
+      console.error('❌ No followers found! Scroll the list once or reload the page, then run again.');
+      return;
+    }
+
     const legitimate = all.filter(f =&gt; f.category === 'legitimate');
     const suspicious = all.filter(f =&gt; f.category === 'suspicious');
     const fakes = all.filter(f =&gt; f.category === 'likely-fake');
@@ -297,7 +525,7 @@
     console.log('╔════════════════════════════════════════════════════════════╗');
     console.log('║  🔍 FOLLOWER AUDIT REPORT                                  ║');
     console.log('╚════════════════════════════════════════════════════════════╝');
-    console.log(`\n📊 OVERVIEW (${all.length} followers scanned)`);
+    console.log(`\n📊 OVERVIEW (${all.length} followers of @${owner} scanned)`);
     console.log(`   ✅ Legitimate:  ${legitimate.length} (${(legitimate.length / all.length * 100).toFixed(1)}%)`);
     console.log(`   ⚠️  Suspicious:  ${suspicious.length} (${(suspicious.length / all.length * 100).toFixed(1)}%)`);
     console.log(`   🚫 Likely fake: ${fakes.length} (${(fakes.length / all.length * 100).toFixed(1)}%)`);
@@ -318,9 +546,28 @@
       if (suspicious.length &gt; 20) console.log(`   ... and ${suspicious.length - 20} more`);
     }
 
+    const quality = (CONFIG.qualityReport || CONFIG.saveToLocalStorage) ? qualityAnalysis(all, owner) : null;
+
+    if (quality &amp;&amp; CONFIG.saveToLocalStorage) {
+      const storageKey = `xactions_audit_${owner}`;
+      try {
+        localStorage.setItem(storageKey, JSON.stringify({
+          username: owner,
+          timestamp: new Date().toISOString(),
+          totalFollowers: all.length,
+          ...quality,
+        }));
+        console.log(`\n💾 Audit saved. Run it periodically to track audience quality.`);
+        console.log(`   Export: copy(localStorage.getItem(&quot;${storageKey}&quot;))`);
+      } catch (e) {
+        console.warn(`⚠️ Could not save the audit to localStorage: ${e.message}`);
+      }
+    }
+
     if (CONFIG.exportResults) {
       const report = {
         auditedAt: new Date().toISOString(),
+        owner,
         summary: {
           total: all.length,
           legitimate: legitimate.length,
@@ -328,6 +575,7 @@
           fakes: fakes.length,
           followBack: followBack.length,
         },
+        ...(quality ? { quality } : {}),
         followers: all,
       };
       const blob = new Blob([JSON.stringify(report, null, 2)], { type: 'application/json' });
@@ -335,9 +583,13 @@
       const a = document.createElement('a');
       a.href = url;
       a.download = `xactions-follower-audit-${new Date().toISOString().slice(0, 10)}.json`;
+      document.body.appendChild(a);
       a.click();
+      a.remove();
       console.log('\n📥 Full audit report downloaded as JSON');
     }
+
+    console.log('\n✅ Audit complete!\n');
   };
 
   run();
@@ -356,17 +608,17 @@
 
     <aside class="sidebar-right">
       <div class="sidebar-card">
-        <h3>📊 Follower Monitoring</h3>
-        <a href="/scripts/follower-tools">👥 Advanced follower tools</a>
-<a href="/scripts/continuous-monitor">🔄 Continuous Monitor</a>
-<a href="/scripts/detect-unfollowers">🔍 Detect Unfollowers</a>
-<a href="/scripts/find-fake-followers">🤖 Find Fake Followers</a>
-<a href="/scripts/follower-growth-tracker">📈 Follower Growth Tracker</a>
-<a href="/scripts/followers-growth-tracker">📈 Followers Growth Tracker</a>
-<a href="/scripts/monitor-account">📊 Monitor Account</a>
-<a href="/scripts/new-followers-alert">🔔 New Followers Alert</a>
-<a href="/scripts/remove-followers">🚫 Remove Followers</a>
-<a href="/scripts/welcome-new-followers">👋 Welcome New Followers</a>
+        <h3>📊 Analytics</h3>
+        <a href="/scripts/account-health-monitor">📊 Account Health Monitor</a>
+<a href="/scripts/audience-demographics">📊 Audience Demographics</a>
+<a href="/scripts/audience-overlap">📊 Audience Overlap</a>
+<a href="/scripts/best-time-to-post">📊 Best Time to Post</a>
+<a href="/scripts/business-analytics">📊 Business Analytics</a>
+<a href="/scripts/business-tools">📊 Business Tools</a>
+<a href="/scripts/competitor-analysis">📊 Competitor Analysis</a>
+<a href="/scripts/content-calendar">📊 Content Calendar</a>
+<a href="/scripts/creator-studio">📊 Creator Studio</a>
+<a href="/scripts/engagement-analytics">📊 Engagement Analytics</a>
       </div>
       <div class="sidebar-card">
         <h3>🔗 Quick Links</h3>

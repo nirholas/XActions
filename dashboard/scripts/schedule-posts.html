@@ -4,14 +4,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Schedule Posts — Free X/Twitter Script | XActions</title>
-  <meta name="description" content="Queue multiple posts to be published at specified times. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
-  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, schedule, posts, posting">
+  <meta name="description" content="Queue one or more posts in X's native scheduler, setting each date and time in the Schedule dialog, dry run by default.">
+  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, schedule, posts, post">
   <meta name="author" content="nich (@nichxbt)">
   <meta name="robots" content="index, follow">
 
   <meta property="og:type" content="article">
   <meta property="og:title" content="Schedule Posts — XActions">
-  <meta property="og:description" content="Queue multiple posts to be published at specified times. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
+  <meta property="og:description" content="Queue one or more posts in X's native scheduler, setting each date and time in the Schedule dialog, dry run by default.">
   <meta property="og:url" content="https://xactions.app/scripts/schedule-posts">
   <meta property="og:site_name" content="XActions">
   <meta property="og:image" content="https://xactions.app/og-run.png">
@@ -19,7 +19,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@nichxbt">
   <meta name="twitter:title" content="Schedule Posts — XActions">
-  <meta name="twitter:description" content="Queue multiple posts to be published at specified times. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
+  <meta name="twitter:description" content="Queue one or more posts in X's native scheduler, setting each date and time in the Schedule dialog, dry run by default.">
   <meta name="twitter:image" content="https://xactions.app/og-run.png">
 
   <link rel="canonical" href="https://xactions.app/scripts/schedule-posts">
@@ -30,14 +30,14 @@
     "@context": "https://schema.org",
     "@type": "TechArticle",
     "headline": "Schedule Posts — Free X/Twitter Script | XActions",
-    "description": "Queue multiple posts to be published at specified times. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.",
+    "description": "Queue one or more posts in X's native scheduler, setting each date and time in the Schedule dialog, dry run by default.",
     "url": "https://xactions.app/scripts/schedule-posts",
     "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
     "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
     "datePublished": "2026-03-30",
     "dateModified": "2026-03-30",
-    "articleSection": "Posting",
-    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, schedule, posts, posting"
+    "articleSection": "Post",
+    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, schedule, posts, post"
   }
   </script>
   <script type="application/ld+json">
@@ -47,7 +47,7 @@
     "itemListElement": [
       { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
       { "@type": "ListItem", "position": 2, "name": "Scripts", "item": "https://xactions.app/scripts" },
-      { "@type": "ListItem", "position": 3, "name": "Posting", "item": "https://xactions.app/scripts#posting" },
+      { "@type": "ListItem", "position": 3, "name": "Post", "item": "https://xactions.app/scripts#post" },
       { "@type": "ListItem", "position": 4, "name": "Schedule Posts", "item": "https://xactions.app/scripts/schedule-posts" }
     ]
   }
@@ -116,24 +116,24 @@
 
     <main class="main-content" id="main-content">
       <header class="main-header">
-        <h1>⏰ Schedule Posts</h1>
+        <h1>✍️ Schedule Posts</h1>
         <div class="breadcrumb">
-          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#posting">Posting</a> › Schedule Posts
+          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#post">Post</a> › Schedule Posts
         </div>
       </header>
 
       <article class="article">
-        <span class="cat-badge">Posting</span>
-        <span class="source-badge">browser</span>
+        <span class="cat-badge">Post</span>
+        <span class="source-badge">browser/schedulePosts.js</span>
 
         <div class="meta-row">
-          
-          
-          <span>157 lines</span>
+          <span>v1.1.0</span>
+          <span>Updated: 2026-11-27</span>
+          <span>323 lines</span>
           <span>by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></span>
         </div>
 
-        <p>Queue multiple posts to be published at specified times</p>
+        <p>Queue one or more posts in X's native scheduler, setting each date and time in the Schedule dialog, dry run by default.</p>
 
         
 
@@ -147,7 +147,17 @@
         
 
         
-        
+        <section class="config-section">
+        <h2>Configuration Options</h2>
+        <table>
+          <thead><tr><th>Option</th><th>Default</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td><code>dryRun</code></td><td><code>true</code></td><td>Preview only: list the queue without opening the composer. Set false to schedule.</td></tr>
+<tr><td><code>delay</code></td><td><code>3000</code></td><td>ms between scheduling each post</td></tr>
+<tr><td><code>maxLength</code></td><td><code>0</code></td><td>Fail posts longer than this many characters (0 = no check; 280 for non-Premium)</td></tr>
+          </tbody>
+        </table>
+      </section>
         <section class="config-code">
         <h2>Default Configuration</h2>
         <div class="code-block">
@@ -156,11 +166,14 @@
     posts: [
       // Add your scheduled posts here
       // { text: 'Hello world!', scheduledFor: '2026-02-25T10:00:00' },
-      // { text: 'Another post!', scheduledFor: '2026-02-25T14:00:00' },
+      // { text: 'Another post!', date: '2026-02-25', time: '14:00' },
     ],
     // Use X's native scheduling via compose dialog
     useNativeScheduler: true,
     retryOnFailure: true,
+    dryRun: true,          // Preview only: list the queue without opening the composer. Set false to schedule.
+    delay: 3000,           // ms between scheduling each post
+    maxLength: 0,          // Fail posts longer than this many characters (0 = no check; 280 for non-Premium)
   };</code></pre>
         </div>
       </section>
@@ -171,34 +184,56 @@
           <div class="code-block">
             <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.querySelector('code').textContent).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy Script',2000)})">Copy Script</button>
             <pre><code>// Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
+/**
+ * @name        schedulePosts.js
+ * @title       Schedule Posts
+ * @description Queue one or more posts in X's native scheduler, setting each date and time in the Schedule dialog, dry run by default.
+ * @category    post
+ * @page        x.com/home or x.com/compose/post
+ * @writes      true
+ * @aliases     scripts/schedulePosts.js, scripts/twitter/schedule-post.js
+ * @author      nichxbt (https://x.com/nichxbt)
+ * @version     1.1.0
+ * @date        2026-11-27
+ */
 // Schedule Posts on X - by nichxbt
 // https://github.com/nirholas/xactions
 // Queue multiple posts to be published at specified times
 // 1. Go to x.com
 // 2. Open the Developer Console (F12)
-// 3. Edit the POSTS array below
-// 4. Paste this into the Developer Console and run it
+// 3. Edit the posts array below. Each post takes { text, scheduledFor: 'YYYY-MM-DDTHH:MM' }
+//    (local time) or { text, date: 'YYYY-MM-DD', time: 'HH:MM' }.
+//    dryRun is ON by default and only lists the queue: set dryRun = false to schedule.
+// 4. Paste browser/schedulePosts.js into the Developer Console and run it
 //
-// Last Updated: 24 February 2026
+// X native scheduling may need X Premium. After the Schedule dialog is confirmed,
+// scheduled posts appear under the composer's &quot;Unsent posts&quot; tab.
+//
+// Last Updated: 27 November 2026
 (() =&gt; {
   const CONFIG = {
     posts: [
       // Add your scheduled posts here
       // { text: 'Hello world!', scheduledFor: '2026-02-25T10:00:00' },
-      // { text: 'Another post!', scheduledFor: '2026-02-25T14:00:00' },
+      // { text: 'Another post!', date: '2026-02-25', time: '14:00' },
     ],
     // Use X's native scheduling via compose dialog
     useNativeScheduler: true,
     retryOnFailure: true,
+    dryRun: true,          // Preview only: list the queue without opening the composer. Set false to schedule.
+    delay: 3000,           // ms between scheduling each post
+    maxLength: 0,          // Fail posts longer than this many characters (0 = no check; 280 for non-Premium)
   };
 
   const $composeButton = '[data-testid=&quot;SideNav_NewTweet_Button&quot;]';
   const $tweetInput = '[data-testid=&quot;tweetTextarea_0&quot;]';
   const $scheduleButton = '[data-testid=&quot;scheduleOption&quot;]';
+  const $scheduleAria = '[aria-label=&quot;Schedule post&quot;], [aria-label=&quot;Schedule&quot;]';
   const $scheduleDateInput = '[data-testid=&quot;scheduledDateField&quot;]';
   const $scheduleTimeInput = '[data-testid=&quot;scheduledTimeField&quot;]';
   const $scheduleConfirm = '[data-testid=&quot;scheduledConfirmationPrimaryAction&quot;]';
-  const $tweetButton = '[data-testid=&quot;tweetButtonInline&quot;]';
+
+  const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
   const sleep = (ms) =&gt; new Promise(r =&gt; setTimeout(r, ms));
 
@@ -206,11 +241,7 @@
 
   const typeText = async (element, text) =&gt; {
     element.focus();
-    // Use native input simulation for React-controlled inputs
-    const nativeInputValueSetter = Object.getOwnPropertyDescriptor(
-      window.HTMLElement.prototype, 'textContent'
-    )?.set;
-    
+
     // Simulate keyboard input
     for (const char of text) {
       const event = new InputEvent('beforeinput', {
@@ -222,27 +253,165 @@
       element.dispatchEvent(event);
       await sleep(30);
     }
-    
+
     // Also try document.execCommand as fallback
-    document.execCommand('insertText', false, text);
+    const inserted = document.execCommand('insertText', false, text);
+    if (!inserted) {
+      element.textContent = text;
+      element.dispatchEvent(new InputEvent('input', { inputType: 'insertText', data: text, bubbles: true }));
+    }
+  };
+
+  const waitForSelector = async (selector, timeoutMs = 6000) =&gt; {
+    const start = Date.now();
+    while (Date.now() - start &lt; timeoutMs) {
+      const el = document.querySelector(selector);
+      if (el) return el;
+      await sleep(200);
+    }
+    return null;
+  };
+
+  // Set a native &lt;select&gt; by matching an option's visible text or value, then
+  // dispatch the change event React listens for.
+  const setSelectByText = (select, wanted) =&gt; {
+    if (!select) return false;
+    const target = String(wanted).trim().toLowerCase();
+    const opts = Array.from(select.options);
+    const match =
+      opts.find((o) =&gt; o.textContent.trim().toLowerCase() === target) ||
+      opts.find((o) =&gt; o.value.trim().toLowerCase() === target) ||
+      opts.find((o) =&gt; o.textContent.trim().toLowerCase().startsWith(target));
+    if (!match) return false;
+    select.value = match.value;
+    select.dispatchEvent(new Event('input', { bubbles: true }));
+    select.dispatchEvent(new Event('change', { bubbles: true }));
+    return true;
+  };
+
+  // Find a select inside the dialog by its aria-label or id (case-insensitive contains).
+  const findSelectByLabel = (root, label) =&gt; {
+    const selects = Array.from(root.querySelectorAll('select'));
+    const l = label.toLowerCase();
+    return selects.find((s) =&gt; {
+      const aria = (s.getAttribute('aria-label') || '').toLowerCase();
+      const id = (s.getAttribute('id') || '').toLowerCase();
+      return aria.includes(l) || id.includes(l);
+    }) || null;
+  };
+
+  // Accept { scheduledFor } or { date, time }
+  const whenOf = (post) =&gt; post.scheduledFor || (post.date ? `${post.date}T${post.time || '00:00'}` : '');
+
+  const pad2 = (n) =&gt; String(n).padStart(2, '0');
+
+  // Set the date and time in the Schedule dialog: month/day/year/hour/minute/AM-PM
+  // selects, or the scheduledDateField/scheduledTimeField text fields.
+  const setDateTime = async (schedDate) =&gt; {
+    const monthName = MONTHS[schedDate.getMonth()];
+    const day = String(schedDate.getDate());
+    const year = String(schedDate.getFullYear());
+    let hour12 = schedDate.getHours() % 12;
+    if (hour12 === 0) hour12 = 12;
+    const minute = pad2(schedDate.getMinutes());
+    const ampm = schedDate.getHours() &lt; 12 ? 'AM' : 'PM';
+
+    const dialog = document.querySelector('[role=&quot;dialog&quot;]') || document;
+    const selects = Array.from(dialog.querySelectorAll('select'));
+    if (selects.length &gt; 0) {
+      // Prefer aria-label matching; fall back to positional order.
+      const monthSel = findSelectByLabel(dialog, 'month') || selects[0];
+      const daySel = findSelectByLabel(dialog, 'day') || selects[1];
+      const yearSel = findSelectByLabel(dialog, 'year') || selects[2];
+      const hourSel = findSelectByLabel(dialog, 'hour') || selects[3];
+      const minSel = findSelectByLabel(dialog, 'minute') || selects[4];
+      const ampmSel = findSelectByLabel(dialog, 'am') || findSelectByLabel(dialog, 'pm') || selects[5];
+
+      const setOk = [
+        ['Month', setSelectByText(monthSel, monthName)],
+        ['Day', setSelectByText(daySel, day)],
+        ['Year', setSelectByText(yearSel, year)],
+        ['Hour', setSelectByText(hourSel, String(hour12))],
+        ['Minute', setSelectByText(minSel, minute)],
+        ['AM/PM', setSelectByText(ampmSel, ampm)],
+      ];
+      await sleep(500);
+      const failed = setOk.filter(([, ok]) =&gt; !ok).map(([name]) =&gt; name);
+      if (failed.length &gt; 0) {
+        console.warn(`   ⚠️ Could not set: ${failed.join(', ')}. Adjust those fields by hand before confirming.`);
+      }
+      return failed.length === 0;
+    }
+
+    // Text-field variant of the dialog
+    const date = `${year}-${pad2(schedDate.getMonth() + 1)}-${pad2(schedDate.getDate())}`;
+    const time = `${pad2(schedDate.getHours())}:${minute}`;
+    let ok = true;
+
+    const dateInput = document.querySelector($scheduleDateInput);
+    if (dateInput) {
+      dateInput.click();
+      await sleep(300);
+      dateInput.focus();
+      document.execCommand('selectAll', false, null);
+      document.execCommand('insertText', false, date);
+      await sleep(500);
+    } else {
+      console.warn('   ⚠️ Date picker not found - set date manually');
+      ok = false;
+    }
+
+    const timeInput = document.querySelector($scheduleTimeInput);
+    if (timeInput) {
+      timeInput.click();
+      await sleep(300);
+      timeInput.focus();
+      document.execCommand('selectAll', false, null);
+      document.execCommand('insertText', false, time);
+      await sleep(500);
+    } else {
+      console.warn('   ⚠️ Time picker not found - set time manually');
+      ok = false;
+    }
+    return ok;
+  };
+
+  // Returns a reason string when the post cannot be scheduled
+  const validate = (post) =&gt; {
+    if (!post.text || !post.text.trim()) return 'text is empty';
+    if (CONFIG.maxLength &amp;&amp; post.text.length &gt; CONFIG.maxLength) return `text exceeds ${CONFIG.maxLength} chars (${post.text.length})`;
+    const schedDate = new Date(whenOf(post));
+    if (Number.isNaN(schedDate.getTime())) return `not a valid date/time: &quot;${whenOf(post)}&quot;. Use &quot;YYYY-MM-DDTHH:MM&quot;`;
+    if (schedDate.getTime() &lt;= Date.now()) return 'scheduled time is in the past';
+    return null;
   };
 
   const schedulePost = async (post) =&gt; {
-    const { text, scheduledFor } = post;
-    const schedDate = new Date(scheduledFor);
+    const { text } = post;
+    const schedDate = new Date(whenOf(post));
 
     console.log(`📝 Scheduling: &quot;${text.substring(0, 40)}...&quot; for ${schedDate.toLocaleString()}`);
 
+    const invalid = validate(post);
+    if (invalid) {
+      console.error(`❌ Skipped: ${invalid}`);
+      results.failed.push(post);
+      return;
+    }
+
     try {
       // Open compose
-      const composeBtn = document.querySelector($composeButton);
-      if (composeBtn) {
-        composeBtn.click();
-        await sleep(1500);
+      let textInput = document.querySelector($tweetInput);
+      if (!textInput) {
+        const composeBtn = document.querySelector($composeButton);
+        if (composeBtn) {
+          composeBtn.click();
+          await sleep(1500);
+        }
+        textInput = await waitForSelector($tweetInput, 6000);
       }
 
       // Type the post text
-      const textInput = document.querySelector($tweetInput);
       if (!textInput) {
         console.error('❌ Tweet input not found');
         results.failed.push(post);
@@ -254,28 +423,23 @@
 
       if (CONFIG.useNativeScheduler) {
         // Click the schedule icon
-        const schedBtn = document.querySelector($scheduleButton);
+        const schedBtn = document.querySelector($scheduleButton) || document.querySelector($scheduleAria);
         if (schedBtn) {
           schedBtn.click();
-          await sleep(1000);
+          await sleep(1500);
 
           // Set date and time
-          // X's scheduler uses date/time pickers
-          const dateInput = document.querySelector($scheduleDateInput);
-          const timeInput = document.querySelector($scheduleTimeInput);
-
-          if (dateInput) {
-            dateInput.click();
-            await sleep(500);
-            // Set the value through the picker
-          }
+          const dateTimeSet = await setDateTime(schedDate);
 
           // Confirm schedule
-          const confirmBtn = document.querySelector($scheduleConfirm);
+          const confirmBtn = await waitForSelector($scheduleConfirm, 3000);
           if (confirmBtn) {
             confirmBtn.click();
             results.scheduled.push(post);
-            console.log(`✅ Scheduled for ${schedDate.toLocaleString()}`);
+            console.log(`✅ Scheduled for ${schedDate.toLocaleString()}${dateTimeSet ? '' : ' (check the date/time fields that could not be set)'}`);
+          } else {
+            console.warn('⚠️ Confirm button not found - review the dialog and confirm manually');
+            results.failed.push(post);
           }
         } else {
           console.warn('⚠️ Native scheduler not available (Premium feature)');
@@ -293,35 +457,50 @@
   const run = async () =&gt; {
     console.log('📅 SCHEDULE POSTS - XActions by nichxbt');
 
+    const host = window.location.hostname;
+    if (!/(^|\.)x\.com$/.test(host) &amp;&amp; !/(^|\.)twitter\.com$/.test(host)) {
+      console.warn('⚠️ Not on x.com. Open x.com/home, then re-run.');
+      return;
+    }
+
     if (CONFIG.posts.length === 0) {
       console.log('❌ No posts to schedule! Edit CONFIG.posts array.');
       console.log('\nExample:');
       console.log('  posts: [');
       console.log('    { text: &quot;Hello world!&quot;, scheduledFor: &quot;2026-02-25T10:00:00&quot; },');
-      console.log('    { text: &quot;Another post!&quot;, scheduledFor: &quot;2026-02-25T14:00:00&quot; },');
+      console.log('    { text: &quot;Another post!&quot;, date: &quot;2026-02-25&quot;, time: &quot;14:00&quot; },');
       console.log('  ]');
       return;
     }
 
     // Sort posts by scheduled time
     const sorted = [...CONFIG.posts].sort(
-      (a, b) =&gt; new Date(a.scheduledFor) - new Date(b.scheduledFor)
+      (a, b) =&gt; new Date(whenOf(a)) - new Date(whenOf(b))
     );
 
     console.log(`📋 Posts to schedule: ${sorted.length}`);
     sorted.forEach((p, i) =&gt; {
-      console.log(`   ${i + 1}. ${new Date(p.scheduledFor).toLocaleString()} — &quot;${p.text.substring(0, 40)}...&quot;`);
+      const invalid = validate(p);
+      console.log(`   ${i + 1}. ${new Date(whenOf(p)).toLocaleString()} - &quot;${(p.text || '').substring(0, 40)}...&quot;${invalid ? ` ⚠️ ${invalid}` : ''}`);
     });
     console.log('');
 
-    for (const post of sorted) {
-      await schedulePost(post);
-      await sleep(2000);
+    if (CONFIG.dryRun) {
+      console.log('⚠️ DRY RUN MODE - Set CONFIG.dryRun = false to actually schedule');
+      return;
+    }
+
+    for (let i = 0; i &lt; sorted.length; i++) {
+      await schedulePost(sorted[i]);
+      if (i &lt; sorted.length - 1) await sleep(CONFIG.delay);
     }
 
     console.log('\n📊 RESULTS:');
     console.log(`   ✅ Scheduled: ${results.scheduled.length}`);
     console.log(`   ❌ Failed: ${results.failed.length}`);
+    if (results.scheduled.length &gt; 0) {
+      console.log('💡 Scheduled posts appear under the composer\'s &quot;Unsent posts&quot; tab.');
+    }
   };
 
   run();
@@ -340,17 +519,17 @@
 
     <aside class="sidebar-right">
       <div class="sidebar-card">
-        <h3>⏰ Posting</h3>
-        <a href="/scripts/post-advanced">✏️ Advanced post features</a>
-<a href="/scripts/article-publisher">📰 Article Publisher</a>
-<a href="/scripts/poll-creator">📊 Browser console script to create polls</a>
-<a href="/scripts/content-calendar">📅 Content Calendar &amp; Tweet Scheduler</a>
-<a href="/scripts/create-poll">📊 Create Poll</a>
-<a href="/scripts/edit-post">✏️ Edit Post &amp; Undo Post</a>
-<a href="/scripts/pin-tweet">📌 Pin Tweet</a>
-<a href="/scripts/pin-tweet-manager">📌 Pin Tweet Manager</a>
-<a href="/scripts/post-composer">✏️ Post Composer</a>
-<a href="/scripts/post-thread">🧵 Post Thread</a>
+        <h3>✍️ Post</h3>
+        <a href="/scripts/post-advanced">✍️ Advanced Posting</a>
+<a href="/scripts/article-publisher">✍️ Article Publisher</a>
+<a href="/scripts/content-repurposer">✍️ Content Repurposer</a>
+<a href="/scripts/create-poll">✍️ Create Poll</a>
+<a href="/scripts/edit-post">✍️ Edit Post</a>
+<a href="/scripts/media-studio">✍️ Media Studio</a>
+<a href="/scripts/mention-users">✍️ Mention Users</a>
+<a href="/scripts/post-composer">✍️ Post Composer</a>
+<a href="/scripts/post-thread">✍️ Post Thread</a>
+<a href="/scripts/quote-tweet">✍️ Quote Post</a>
       </div>
       <div class="sidebar-card">
         <h3>🔗 Quick Links</h3>

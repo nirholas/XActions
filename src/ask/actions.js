@@ -51,7 +51,7 @@ export function createActionMatcher(catalog) {
       ...tokenize(action.category || ''),
     ]),
     // The file an action came from, so a retrieved passage can name it directly.
-    paths: new Set([action.path, action.id].filter(Boolean)),
+    paths: new Set([action.path, action.id, ...(action['aliases'] || [])].filter(Boolean)),
   }));
 
   // A term carried by a large share of the catalog identifies nothing. Every

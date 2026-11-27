@@ -4,14 +4,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Tweet A/B Tester — Free X/Twitter Script | XActions</title>
-  <meta name="description" content="A/B test tweet performance. Post two variations of a tweet, track their engagement over time, and determine a statistical winner.">
-  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, tweet, abtester, other tools">
+  <meta name="description" content="Track the engagement of two posted tweet variants over time and pick a winner, with tests saved in localStorage.">
+  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, tweet, abtester, analytics">
   <meta name="author" content="nich (@nichxbt)">
   <meta name="robots" content="index, follow">
 
   <meta property="og:type" content="article">
   <meta property="og:title" content="Tweet A/B Tester — XActions">
-  <meta property="og:description" content="A/B test tweet performance. Post two variations of a tweet, track their engagement over time, and determine a statistical winner.">
+  <meta property="og:description" content="Track the engagement of two posted tweet variants over time and pick a winner, with tests saved in localStorage.">
   <meta property="og:url" content="https://xactions.app/scripts/tweet-abtester">
   <meta property="og:site_name" content="XActions">
   <meta property="og:image" content="https://xactions.app/og-run.png">
@@ -19,7 +19,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@nichxbt">
   <meta name="twitter:title" content="Tweet A/B Tester — XActions">
-  <meta name="twitter:description" content="A/B test tweet performance. Post two variations of a tweet, track their engagement over time, and determine a statistical winner.">
+  <meta name="twitter:description" content="Track the engagement of two posted tweet variants over time and pick a winner, with tests saved in localStorage.">
   <meta name="twitter:image" content="https://xactions.app/og-run.png">
 
   <link rel="canonical" href="https://xactions.app/scripts/tweet-abtester">
@@ -30,14 +30,14 @@
     "@context": "https://schema.org",
     "@type": "TechArticle",
     "headline": "Tweet A/B Tester — Free X/Twitter Script | XActions",
-    "description": "A/B test tweet performance. Post two variations of a tweet, track their engagement over time, and determine a statistical winner.",
+    "description": "Track the engagement of two posted tweet variants over time and pick a winner, with tests saved in localStorage.",
     "url": "https://xactions.app/scripts/tweet-abtester",
     "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
     "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
     "datePublished": "2026-03-30",
     "dateModified": "2026-03-30",
-    "articleSection": "Other Tools",
-    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, tweet, abtester, other tools"
+    "articleSection": "Analytics",
+    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, tweet, abtester, analytics"
   }
   </script>
   <script type="application/ld+json">
@@ -47,7 +47,7 @@
     "itemListElement": [
       { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
       { "@type": "ListItem", "position": 2, "name": "Scripts", "item": "https://xactions.app/scripts" },
-      { "@type": "ListItem", "position": 3, "name": "Other Tools", "item": "https://xactions.app/scripts#other-tools" },
+      { "@type": "ListItem", "position": 3, "name": "Analytics", "item": "https://xactions.app/scripts#analytics" },
       { "@type": "ListItem", "position": 4, "name": "Tweet A/B Tester", "item": "https://xactions.app/scripts/tweet-abtester" }
     ]
   }
@@ -116,30 +116,30 @@
 
     <main class="main-content" id="main-content">
       <header class="main-header">
-        <h1>⚡ Tweet A/B Tester</h1>
+        <h1>📊 Tweet A/B Tester</h1>
         <div class="breadcrumb">
-          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#other-tools">Other Tools</a> › Tweet A/B Tester
+          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#analytics">Analytics</a> › Tweet A/B Tester
         </div>
       </header>
 
       <article class="article">
-        <span class="cat-badge">Other Tools</span>
-        <span class="source-badge">browser</span>
+        <span class="cat-badge">Analytics</span>
+        <span class="source-badge">browser/tweetABTester.js</span>
 
         <div class="meta-row">
           <span>v1.0.0</span>
-          <span>Updated: 2026-02-24</span>
-          <span>323 lines</span>
+          <span>Updated: 2026-11-27</span>
+          <span>324 lines</span>
           <span>by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></span>
         </div>
 
-        <p>A/B test tweet performance. Post two variations of a tweet, track their engagement over time, and determine a statistical winner. Persists test data in localStorage. Supports multiple concurrent tests with unique IDs.</p>
+        <p>Track the engagement of two posted tweet variants over time and pick a winner, with tests saved in localStorage.</p>
 
         
 
         <h2>How to Use</h2>
         <ol class="usage-steps"><li>Open x.com in DevTools Console</li>
-<li>Paste this script</li>
+<li>Paste browser/tweetABTester.js</li>
 <li>Use the interactive API:</li></ol>
         
 
@@ -159,21 +159,22 @@
  * ============================================================
  *
  * @name        tweetABTester.js
- * @description A/B test tweet performance. Post two variations
- *              of a tweet, track their engagement over time,
- *              and determine a statistical winner. Persists
- *              test data in localStorage. Supports multiple
- *              concurrent tests with unique IDs.
+ * @title       Tweet A/B Tester
+ * @description Track the engagement of two posted tweet variants over time and pick a winner, with tests saved in localStorage.
+ * @category    analytics
+ * @page        x.com/*
+ * @writes      false
+ * @aliases     scripts/tweetABTester.js
  * @author      nichxbt (https://x.com/nichxbt)
  * @version     1.0.0
- * @date        2026-02-24
+ * @date        2026-11-27
  * @repository  https://github.com/nirholas/XActions
  *
  * ============================================================
  * 📋 USAGE:
  *
  * 1. Open x.com in DevTools Console
- * 2. Paste this script
+ * 2. Paste browser/tweetABTester.js
  * 3. Use the interactive API:
  *
  *   XActions.createTest({
@@ -488,17 +489,17 @@
 
     <aside class="sidebar-right">
       <div class="sidebar-card">
-        <h3>⚡ Other Tools</h3>
-        <a href="/scripts/ad-campaign-manager">⚡ Ad campaign management</a>
-<a href="/scripts/advanced-creator">⚡ Advanced creator monetization</a>
-<a href="/scripts/advanced-dm">⚡ Advanced Direct Message features</a>
-<a href="/scripts/advanced-grok">⚡ Advanced Grok AI features</a>
-<a href="/scripts/advanced-notifications">⚡ Advanced notification management</a>
-<a href="/scripts/advanced-premium">⚡ Advanced Premium features</a>
-<a href="/scripts/advanced-profile">⚡ Advanced profile management</a>
-<a href="/scripts/advanced-settings">⚡ Advanced settings and privacy management</a>
-<a href="/scripts/advanced-spaces">⚡ Advanced Spaces features</a>
-<a href="/scripts/community-manager">⚡ Community management</a>
+        <h3>📊 Analytics</h3>
+        <a href="/scripts/account-health-monitor">📊 Account Health Monitor</a>
+<a href="/scripts/audience-demographics">📊 Audience Demographics</a>
+<a href="/scripts/audience-overlap">📊 Audience Overlap</a>
+<a href="/scripts/audit-followers">📊 Audit Followers</a>
+<a href="/scripts/best-time-to-post">📊 Best Time to Post</a>
+<a href="/scripts/business-analytics">📊 Business Analytics</a>
+<a href="/scripts/business-tools">📊 Business Tools</a>
+<a href="/scripts/competitor-analysis">📊 Competitor Analysis</a>
+<a href="/scripts/content-calendar">📊 Content Calendar</a>
+<a href="/scripts/creator-studio">📊 Creator Studio</a>
       </div>
       <div class="sidebar-card">
         <h3>🔗 Quick Links</h3>

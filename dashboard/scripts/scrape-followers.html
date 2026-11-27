@@ -3,23 +3,23 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Followers Scraper — Free X/Twitter Script | XActions</title>
-  <meta name="description" content="Export your followers list to JSON/CSV. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
-  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, scrape, followers, scrapers">
+  <title>Scrape Followers — Free X/Twitter Script | XActions</title>
+  <meta name="description" content="Scroll the followers list of any profile and export every follower (handle, name, bio, verified, follows-you) to JSON and CSV.">
+  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, scrape, followers, scrape and export">
   <meta name="author" content="nich (@nichxbt)">
   <meta name="robots" content="index, follow">
 
   <meta property="og:type" content="article">
-  <meta property="og:title" content="Followers Scraper — XActions">
-  <meta property="og:description" content="Export your followers list to JSON/CSV. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
+  <meta property="og:title" content="Scrape Followers — XActions">
+  <meta property="og:description" content="Scroll the followers list of any profile and export every follower (handle, name, bio, verified, follows-you) to JSON and CSV.">
   <meta property="og:url" content="https://xactions.app/scripts/scrape-followers">
   <meta property="og:site_name" content="XActions">
   <meta property="og:image" content="https://xactions.app/og-run.png">
 
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@nichxbt">
-  <meta name="twitter:title" content="Followers Scraper — XActions">
-  <meta name="twitter:description" content="Export your followers list to JSON/CSV. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
+  <meta name="twitter:title" content="Scrape Followers — XActions">
+  <meta name="twitter:description" content="Scroll the followers list of any profile and export every follower (handle, name, bio, verified, follows-you) to JSON and CSV.">
   <meta name="twitter:image" content="https://xactions.app/og-run.png">
 
   <link rel="canonical" href="https://xactions.app/scripts/scrape-followers">
@@ -29,15 +29,15 @@
   {
     "@context": "https://schema.org",
     "@type": "TechArticle",
-    "headline": "Followers Scraper — Free X/Twitter Script | XActions",
-    "description": "Export your followers list to JSON/CSV. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.",
+    "headline": "Scrape Followers — Free X/Twitter Script | XActions",
+    "description": "Scroll the followers list of any profile and export every follower (handle, name, bio, verified, follows-you) to JSON and CSV.",
     "url": "https://xactions.app/scripts/scrape-followers",
     "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
     "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
     "datePublished": "2026-03-30",
     "dateModified": "2026-03-30",
-    "articleSection": "Scrapers",
-    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, scrape, followers, scrapers"
+    "articleSection": "Scrape and Export",
+    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, scrape, followers, scrape and export"
   }
   </script>
   <script type="application/ld+json">
@@ -47,8 +47,8 @@
     "itemListElement": [
       { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
       { "@type": "ListItem", "position": 2, "name": "Scripts", "item": "https://xactions.app/scripts" },
-      { "@type": "ListItem", "position": 3, "name": "Scrapers", "item": "https://xactions.app/scripts#scrapers" },
-      { "@type": "ListItem", "position": 4, "name": "Followers Scraper", "item": "https://xactions.app/scripts/scrape-followers" }
+      { "@type": "ListItem", "position": 3, "name": "Scrape and Export", "item": "https://xactions.app/scripts#scrape-and-export" },
+      { "@type": "ListItem", "position": 4, "name": "Scrape Followers", "item": "https://xactions.app/scripts/scrape-followers" }
     ]
   }
   </script>
@@ -116,55 +116,59 @@
 
     <main class="main-content" id="main-content">
       <header class="main-header">
-        <h1>👥 Followers Scraper</h1>
+        <h1>📥 Scrape Followers</h1>
         <div class="breadcrumb">
-          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#scrapers">Scrapers</a> › Followers Scraper
+          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#scrape-and-export">Scrape and Export</a> › Scrape Followers
         </div>
       </header>
 
       <article class="article">
-        <span class="cat-badge">Scrapers</span>
-        <span class="source-badge">scripts</span>
+        <span class="cat-badge">Scrape and Export</span>
+        <span class="source-badge">browser/scrapeFollowers.js</span>
 
         <div class="meta-row">
-          
-          
-          <span>159 lines</span>
+          <span>v1.1.0</span>
+          <span>Updated: 2026-11-27</span>
+          <span>306 lines</span>
           <span>by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></span>
         </div>
 
-        <p>Export your followers list to JSON/CSV</p>
+        <p>Scroll the followers list of any profile and export every follower (handle, name, bio, verified, follows-you) to JSON and CSV.</p>
 
         
 
         <h2>How to Use</h2>
-        <ol class="usage-steps">
-        <li>Navigate to <a href="https://x.com" rel="noopener">x.com</a> and log in</li>
-        <li>Open DevTools Console (F12 or Cmd+Option+I)</li>
-        
-        <li>Paste the script below and press Enter</li>
-      </ol>
+        <ol class="usage-steps"><li>Go to x.com/&lt;user&gt;/followers (for your own list: x.com/&lt;you&gt;/followers)</li>
+<li>Open the browser console (F12 or Cmd+Option+I -&gt; Console)</li>
+<li>(Optional) edit the CONFIG options at the top of the script</li>
+<li>Paste browser/scrapeFollowers.js and press Enter</li></ol>
         
 
         
-        <section class="config-section">
-        <h2>Configuration Options</h2>
-        <table>
-          <thead><tr><th>Option</th><th>Default</th><th>Description</th></tr></thead>
-          <tbody>
-            <tr><td><code>FORMAT</code></td><td><code>'both'</code></td><td>'json', 'csv', 'both'</td></tr>
-          </tbody>
-        </table>
-      </section>
+        
         <section class="config-code">
         <h2>Default Configuration</h2>
         <div class="code-block">
           <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.querySelector('code').textContent).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy',2000)})">Copy</button>
           <pre><code>const CONFIG = {
-    MAX_FOLLOWERS: 5000,
-    SCROLL_DELAY: 1500,
-    MAX_SCROLLS: 1000,
-    FORMAT: 'both', // 'json', 'csv', 'both'
+    // Stop after collecting this many followers (safety cap)
+    maxUsers: 5000,
+
+    // How far to scroll each step (pixels). 0 = one screen (80% of the window
+    // height): X virtualizes the list, so a bigger fixed jump can skip rows.
+    scrollStep: 0,
+
+    // Delay between scrolls (ms). Raise to 2500+ on a slow connection so rows load.
+    scrollDelay: 1500,
+
+    // Give up after this many consecutive scrolls with no new followers (end of list)
+    stallLimit: 6,
+
+    // Hard cap on scroll attempts, independent of stalls
+    maxScrollAttempts: 400,
+
+    // Also trigger a browser download of the CSV file (JSON always downloads)
+    autoDownloadCsv: false
   };</code></pre>
         </div>
       </section>
@@ -176,26 +180,88 @@
             <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.querySelector('code').textContent).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy Script',2000)})">Copy Script</button>
             <pre><code>// Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
 /**
- * Followers Scraper
- * Export your followers list to JSON/CSV
- * 
- * HOW TO USE:
- * 1. Go to x.com/USERNAME/followers
- * 2. Open Developer Console (Ctrl+Shift+J or Cmd+Option+J)
- * 3. Paste this script and press Enter
- * 
- * by nichxbt - https://github.com/nirholas/XActions
+ * ============================================
+ * 👥 Scrape Followers - XActions
+ * ============================================
+ *
+ * @name        scrapeFollowers.js
+ * @title       Scrape Followers
+ * @description Scroll the followers list of any profile and export every follower (handle, name, bio, verified, follows-you) to JSON and CSV.
+ * @category    scrape
+ * @page        x.com/&lt;username&gt;/followers
+ * @writes      false
+ * @aliases     scripts/scrapeFollowers.js, scripts/twitter/scrape-followers.js
+ * @author      nichxbt (https://x.com/nichxbt)
+ * @version     1.1.0
+ * @date        2026-11-27
+ * @website     https://xactions.app
+ *
+ * Usage:
+ *   1. Go to x.com/&lt;user&gt;/followers (for your own list: x.com/&lt;you&gt;/followers)
+ *   2. Open the browser console (F12 or Cmd+Option+I -&gt; Console)
+ *   3. (Optional) edit the CONFIG options at the top of the script
+ *   4. Paste browser/scrapeFollowers.js and press Enter
+ *
+ * Example:
+ *   On x.com/nasa/followers with the default maxUsers of 5000, the script
+ *   auto-scrolls the list, prints a running count (&quot;Collected 240 followers...&quot;),
+ *   and when it stalls at the end it downloads nasa_followers_&lt;date&gt;.json and
+ *   prints a CSV string. To stop early: window.stopScrapeFollowers().
+ *
+ * ============================================
  */
 
-(() =&gt; {
+(async function scrapeFollowers() {
+  'use strict';
+
+  // ============================================
+  // 📝 CONFIGURATION - Customize these options
+  // ============================================
   const CONFIG = {
-    MAX_FOLLOWERS: 5000,
-    SCROLL_DELAY: 1500,
-    MAX_SCROLLS: 1000,
-    FORMAT: 'both', // 'json', 'csv', 'both'
+    // Stop after collecting this many followers (safety cap)
+    maxUsers: 5000,
+
+    // How far to scroll each step (pixels). 0 = one screen (80% of the window
+    // height): X virtualizes the list, so a bigger fixed jump can skip rows.
+    scrollStep: 0,
+
+    // Delay between scrolls (ms). Raise to 2500+ on a slow connection so rows load.
+    scrollDelay: 1500,
+
+    // Give up after this many consecutive scrolls with no new followers (end of list)
+    stallLimit: 6,
+
+    // Hard cap on scroll attempts, independent of stalls
+    maxScrollAttempts: 400,
+
+    // Also trigger a browser download of the CSV file (JSON always downloads)
+    autoDownloadCsv: false
   };
 
-  const sleep = (ms) =&gt; new Promise(r =&gt; setTimeout(r, ms));
+  // ============================================
+  // 🔧 SELECTORS
+  // ============================================
+  const SELECTORS = {
+    userCell: '[data-testid=&quot;UserCell&quot;]',
+    userDescription: '[data-testid=&quot;UserDescription&quot;]',
+    followsYou: '[data-testid=&quot;userFollowIndicator&quot;]',
+    verified: 'svg[aria-label*=&quot;Verified&quot;], [data-testid=&quot;icon-verified&quot;]',
+    profileLink: 'a[href^=&quot;/&quot;]'
+  };
+
+  // ============================================
+  // 🛠️ HELPERS
+  // ============================================
+  const sleep = (ms) =&gt; new Promise((r) =&gt; setTimeout(r, ms));
+  const randomDelay = () =&gt; sleep(CONFIG.scrollDelay + Math.floor(Math.random() * 500));
+
+  const log = {
+    info: (m) =&gt; console.log(`ℹ️ ${m}`),
+    success: (m) =&gt; console.log(`✅ ${m}`),
+    warning: (m) =&gt; console.log(`⚠️ ${m}`),
+    error: (m) =&gt; console.log(`❌ ${m}`),
+    count: (n) =&gt; console.log(`👥 Collected ${n} followers...`)
+  };
 
   // When X throttles a long list it stops loading and shows a Retry button.
   // Clicking it resumes the list; without this a throttled list looked done.
@@ -209,128 +275,213 @@
   // A spinner means the next page is still on its way, not that the list ended.
   const isLoading = () =&gt; !!document.querySelector('[role=&quot;progressbar&quot;]');
 
+  const csvCell = (v) =&gt; `&quot;${String(v == null ? '' : v).replace(/&quot;/g, '&quot;&quot;').replace(/\r?\n/g, ' ')}&quot;`;
+
   const download = (content, filename, type) =&gt; {
-    const blob = new Blob([content], { type });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = filename;
-    a.click();
-    URL.revokeObjectURL(url);
-  };
-
-  const extractBio = (cell) =&gt; {
-    const testId = cell.querySelector('[data-testid=&quot;UserDescription&quot;]');
-    if (testId?.textContent?.trim()) return testId.textContent.trim();
-    const autoDir = cell.querySelector('[dir=&quot;auto&quot;]:not([data-testid])');
-    const text = autoDir?.textContent?.trim();
-    if (text &amp;&amp; text.length &gt;= 10 &amp;&amp; !text.startsWith('@')) return text;
-    return '';
-  };
-
-  const extractUser = (cell) =&gt; {
     try {
-      const nameEl = cell.querySelector('[dir=&quot;ltr&quot;] &gt; span');
-      const handleEl = cell.querySelector('a[href^=&quot;/&quot;]');
-      const followsYou = !!cell.querySelector('[data-testid=&quot;userFollowIndicator&quot;]');
-      
-      const href = handleEl?.getAttribute('href') || '';
-      const handle = href.replace('/', '').split('/')[0];
-      
-      return {
-        handle,
-        displayName: nameEl?.textContent || '',
-        bio: extractBio(cell),
-        followsYou,
-        profileUrl: `https://x.com/${handle}`,
-      };
+      const blob = new Blob([content], { type });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      return true;
     } catch (e) {
-      return null;
+      log.error(`Download of ${filename} failed: ${e.message}`);
+      return false;
     }
   };
 
-  const run = async () =&gt; {
-    if (!window.location.pathname.includes('/followers')) {
-      console.error('❌ Please go to x.com/USERNAME/followers first!');
-      return;
+  // Pull {handle, displayName, bio, verified, followsYou} from one UserCell.
+  const extractUser = (cell) =&gt; {
+    const anchors = Array.from(cell.querySelectorAll(SELECTORS.profileLink));
+
+    // Canonical handle: the bare /username link (avoids /username/photo etc.)
+    let handle = '';
+    for (const a of anchors) {
+      const href = a.getAttribute('href') || '';
+      const m = href.match(/^\/([A-Za-z0-9_]{1,15})$/);
+      if (m) { handle = m[1]; break; }
     }
-
-    const username = window.location.pathname.split('/')[1];
-    console.log(`👥 Scraping followers of @${username}...`);
-
-    const followers = new Map();
-    let scrolls = 0;
-    let noNewCount = 0;
-
-    while (followers.size &lt; CONFIG.MAX_FOLLOWERS &amp;&amp; noNewCount &lt; 5) {
-      const cells = document.querySelectorAll('[data-testid=&quot;UserCell&quot;]');
-      const beforeCount = followers.size;
-
-      cells.forEach(cell =&gt; {
-        const user = extractUser(cell);
-        if (user &amp;&amp; user.handle &amp;&amp; !followers.has(user.handle)) {
-          followers.set(user.handle, user);
-        }
-      });
-
-      const added = followers.size - beforeCount;
-      if (added &gt; 0) {
-        console.log(`👥 Collected ${followers.size} followers...`);
-        noNewCount = 0;
-      } else if (clickRetryIfPresent()) {
-        console.log('🔁 X paused the list with a Retry button, clicked it...');
-        await sleep(CONFIG.SCROLL_DELAY * 2);
-      } else if (!isLoading()) {
-        noNewCount++;
-      }
-
-      // One screen at a time: X virtualizes the list, so a fixed jump can skip
-      // rows that are rendered and recycled between two passes.
-      window.scrollBy(0, window.innerHeight * 0.8);
-      await sleep(CONFIG.SCROLL_DELAY);
-      scrolls++;
-
-      if (scrolls &gt; CONFIG.MAX_SCROLLS) break;
+    if (!handle) {
+      // Fallback: an anchor whose visible text is the @handle
+      const at = anchors.find((a) =&gt; a.textContent.trim().startsWith('@'));
+      if (at) handle = at.textContent.trim().slice(1).split(/\s/)[0];
     }
+    if (!handle) return null;
 
-    if (noNewCount &gt;= 5 &amp;&amp; followers.size &lt; CONFIG.MAX_FOLLOWERS) {
-      console.warn(`⚠️ X stopped serving new rows after ${followers.size}. Wait a few minutes and run again to continue past a rate limit.`);
-    }
-
-    const followerList = Array.from(followers.values());
-
-    console.log('\n' + '='.repeat(60));
-    console.log(`👥 SCRAPED ${followerList.length} FOLLOWERS`);
-    console.log('='.repeat(60) + '\n');
-
-    followerList.slice(0, 5).forEach((f, i) =&gt; {
-      console.log(`${i + 1}. @${f.handle} - ${f.displayName}`);
+    // Display name: profile-link text that is not the @handle line
+    const nameAnchor = anchors.find((a) =&gt; {
+      const t = a.textContent.trim();
+      return t &amp;&amp; !t.startsWith('@');
     });
-    if (followerList.length &gt; 5) {
-      console.log(`   ... and ${followerList.length - 5} more\n`);
+    const displayName = (nameAnchor &amp;&amp; nameAnchor.textContent.trim()) ||
+      (cell.querySelector('div[dir=&quot;ltr&quot;] span')?.textContent.trim()) || '';
+
+    let bio = cell.querySelector(SELECTORS.userDescription)?.textContent?.trim() || '';
+    if (!bio) {
+      const auto = cell.querySelector('[dir=&quot;auto&quot;]:not([data-testid])')?.textContent?.trim();
+      if (auto &amp;&amp; auto.length &gt;= 10 &amp;&amp; !auto.startsWith('@')) bio = auto;
     }
 
-    if (CONFIG.FORMAT === 'json' || CONFIG.FORMAT === 'both') {
-      download(JSON.stringify(followerList, null, 2), `${username}_followers_${Date.now()}.json`, 'application/json');
-      console.log('💾 Downloaded followers.json');
-    }
-
-    if (CONFIG.FORMAT === 'csv' || CONFIG.FORMAT === 'both') {
-      const csv = [
-        'Handle,DisplayName,Bio,FollowsYou,ProfileURL',
-        ...followerList.map(f =&gt; 
-          `&quot;@${f.handle}&quot;,&quot;${f.displayName.replace(/&quot;/g, '&quot;&quot;')}&quot;,&quot;${f.bio.replace(/&quot;/g, '&quot;&quot;').replace(/\n/g, ' ')}&quot;,${f.followsYou},&quot;${f.profileUrl}&quot;`
-        )
-      ].join('\n');
-      download(csv, `${username}_followers_${Date.now()}.csv`, 'text/csv');
-      console.log('💾 Downloaded followers.csv');
-    }
-
-    window.scrapedFollowers = followerList;
-    console.log('\n✅ Done! Access data: window.scrapedFollowers');
+    return {
+      handle,
+      displayName,
+      bio,
+      verified: !!cell.querySelector(SELECTORS.verified),
+      followsYou: !!cell.querySelector(SELECTORS.followsYou),
+      profileUrl: `https://x.com/${handle}`
+    };
   };
 
-  run();
+  // ============================================
+  // 🛑 STOP SWITCH
+  // ============================================
+  let stopped = false;
+  window.stopScrapeFollowers = () =&gt; {
+    stopped = true;
+    log.warning('Stop requested. Finishing the current scroll, then exporting what was collected.');
+  };
+
+  // ============================================
+  // 🚦 PAGE GUARD
+  // ============================================
+  console.log(`
+╔══════════════════════════════════════════════════════════╗
+║  👥 SCRAPE FOLLOWERS - XActions                          ║
+║  🌐 https://xactions.app                                 ║
+╚══════════════════════════════════════════════════════════╝
+  `);
+
+  if (!/\/followers\/?$/.test(window.location.pathname)) {
+    log.warning('You are not on a followers page.');
+    log.info('Go to x.com/&lt;user&gt;/followers (for example x.com/nasa/followers), then run this again.');
+    return;
+  }
+
+  const username = window.location.pathname.split('/')[1] || 'unknown';
+  log.info(`Scraping followers of @${username}`);
+  log.info(`Max followers: ${CONFIG.maxUsers}. To stop early: window.stopScrapeFollowers()`);
+
+  // ============================================
+  // 🎯 MAIN LOOP
+  // ============================================
+  const users = new Map();
+  const stats = { collected: 0, verified: 0, followsYou: 0, scrolls: 0, errors: 0 };
+
+  let scrollAttempts = 0;
+  let stall = 0;
+
+  while (!stopped &amp;&amp; users.size &lt; CONFIG.maxUsers &amp;&amp; stall &lt; CONFIG.stallLimit &amp;&amp; scrollAttempts &lt; CONFIG.maxScrollAttempts) {
+    const before = users.size;
+    const cells = document.querySelectorAll(SELECTORS.userCell);
+
+    cells.forEach((cell) =&gt; {
+      try {
+        const u = extractUser(cell);
+        if (u &amp;&amp; u.handle &amp;&amp; !users.has(u.handle)) users.set(u.handle, u);
+      } catch (e) {
+        stats.errors++;
+      }
+    });
+
+    if (users.size &gt; before) {
+      log.count(users.size);
+      stall = 0;
+    } else if (clickRetryIfPresent()) {
+      log.info('X paused the list with a Retry button, clicked it...');
+      await sleep(CONFIG.scrollDelay * 2);
+    } else if (!isLoading()) {
+      stall++;
+    }
+
+    window.scrollBy(0, CONFIG.scrollStep &gt; 0 ? CONFIG.scrollStep : window.innerHeight * 0.8);
+    await randomDelay();
+    scrollAttempts++;
+    stats.scrolls = scrollAttempts;
+  }
+
+  if (!stopped &amp;&amp; stall &gt;= CONFIG.stallLimit &amp;&amp; users.size &gt; 0 &amp;&amp; users.size &lt; CONFIG.maxUsers) {
+    log.warning(`X stopped serving new rows after ${users.size}. If this is not the end of the list, wait a few minutes and run again to continue past a rate limit.`);
+  }
+
+  const list = Array.from(users.values()).slice(0, CONFIG.maxUsers);
+  stats.collected = list.length;
+  stats.verified = list.filter((u) =&gt; u.verified).length;
+  stats.followsYou = list.filter((u) =&gt; u.followsYou).length;
+
+  // ============================================
+  // 📤 EXPORT
+  // ============================================
+  const result = {
+    profile: username,
+    profileUrl: `https://x.com/${username}`,
+    scrapedAt: new Date().toISOString(),
+    total: list.length,
+    followers: list
+  };
+
+  const buildCsv = () =&gt; {
+    const header = 'Handle,DisplayName,Bio,Verified,FollowsYou,ProfileURL';
+    const rows = list.map((u) =&gt; [
+      csvCell('@' + u.handle),
+      csvCell(u.displayName),
+      csvCell(u.bio),
+      u.verified,
+      u.followsYou,
+      csvCell(u.profileUrl)
+    ].join(','));
+    return [header, ...rows].join('\n');
+  };
+
+  const csv = buildCsv();
+  const dateStr = new Date().toISOString().split('T')[0];
+
+  if (list.length === 0) {
+    log.warning('No followers were collected. The list may be empty, private, or blocked from view.');
+  } else {
+    download(JSON.stringify(result, null, 2), `${username}_followers_${dateStr}.json`, 'application/json');
+    log.success(`Downloaded ${username}_followers_${dateStr}.json`);
+    if (CONFIG.autoDownloadCsv) {
+      download(csv, `${username}_followers_${dateStr}.csv`, 'text/csv');
+      log.success(`Downloaded ${username}_followers_${dateStr}.csv`);
+    }
+  }
+
+  window.scrapedFollowers = result;
+  window.scrapeFollowersExportCSV = () =&gt; {
+    download(csv, `${username}_followers_${dateStr}.csv`, 'text/csv');
+    return csv;
+  };
+
+  // ============================================
+  // 📊 SUMMARY
+  // ============================================
+  console.log(`
+╔══════════════════════════════════════════════════════════╗
+║  📊 SCRAPE FOLLOWERS - COMPLETE                          ║
+╠══════════════════════════════════════════════════════════╣
+║  👥 Followers collected: ${String(stats.collected).padEnd(30)}║
+║  ✔️  Verified:            ${String(stats.verified).padEnd(30)}║
+║  🔁 Follow you back:     ${String(stats.followsYou).padEnd(30)}║
+║  📜 Scrolls:             ${String(stats.scrolls).padEnd(30)}║
+║  ❌ Row errors:          ${String(stats.errors).padEnd(30)}║
+╚══════════════════════════════════════════════════════════╝
+  `);
+
+  list.slice(0, 5).forEach((u, i) =&gt; {
+    console.log(`${i + 1}. @${u.handle}${u.verified ? ' ✓' : ''} - ${u.displayName}${u.followsYou ? ' (follows you)' : ''}`);
+  });
+  if (list.length &gt; 5) console.log(`   ... and ${list.length - 5} more`);
+
+  console.log('\n📋 CSV preview (full string via window.scrapeFollowersExportCSV()):');
+  console.log(csv.split('\n').slice(0, 6).join('\n'));
+  console.log('\n💡 window.scrapedFollowers = full data. window.scrapeFollowersExportCSV() = download + return CSV.');
+
+  return result;
 })();
 </code></pre>
           </div>
@@ -346,17 +497,17 @@
 
     <aside class="sidebar-right">
       <div class="sidebar-card">
-        <h3>👥 Scrapers</h3>
-        <a href="/scripts/scrape-bookmarks">🔖 Bookmarks Scraper</a>
-<a href="/scripts/scrape-analytics">📊 Browser console script to scrape X/Twitter analytics data</a>
-<a href="/scripts/scrape-dms">✉️ DM Scraper</a>
-<a href="/scripts/export-to-csv">📄 Export to CSV Utility</a>
-<a href="/scripts/scrape-following">👥 Following Scraper</a>
-<a href="/scripts/scrape-hashtag">#️⃣ Hashtag Scraper</a>
-<a href="/scripts/scrape-likers">❤️ Likers Scraper</a>
-<a href="/scripts/scrape-likes">❤️ Likes Scraper</a>
-<a href="/scripts/link-scraper">🔗 Link Scraper</a>
-<a href="/scripts/scrape-list">📝 List Members Scraper</a>
+        <h3>📥 Scrape and Export</h3>
+        <a href="/scripts/backup-account">📥 Backup Account</a>
+<a href="/scripts/bookmark-exporter">📥 Bookmark Exporter</a>
+<a href="/scripts/bookmark-organizer">📥 Bookmark Organizer</a>
+<a href="/scripts/export-to-csv">📥 Export to CSV</a>
+<a href="/scripts/link-scraper">📥 Link Scraper</a>
+<a href="/scripts/manage-bookmarks">📥 Manage Bookmarks</a>
+<a href="/scripts/scrape-cashtag-search">📥 Scrape Cashtag Search</a>
+<a href="/scripts/scrape-explore">📥 Scrape Explore</a>
+<a href="/scripts/scrape-following">📥 Scrape Following</a>
+<a href="/scripts/scrape-hashtag">📥 Scrape Hashtag</a>
       </div>
       <div class="sidebar-card">
         <h3>🔗 Quick Links</h3>

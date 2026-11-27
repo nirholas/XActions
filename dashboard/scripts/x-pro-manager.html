@@ -3,23 +3,23 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>X Pro (TweetDeck) automation — Free X/Twitter Script | XActions</title>
-  <meta name="description" content="X Pro (TweetDeck) automation. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
-  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, pro, manager, discovery">
+  <title>X Pro Manager — Free X/Twitter Script | XActions</title>
+  <meta name="description" content="X Pro (TweetDeck) automation: decks, columns and layouts. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
+  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, pro, manager, premium and business">
   <meta name="author" content="nich (@nichxbt)">
   <meta name="robots" content="index, follow">
 
   <meta property="og:type" content="article">
-  <meta property="og:title" content="X Pro (TweetDeck) automation — XActions">
-  <meta property="og:description" content="X Pro (TweetDeck) automation. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
+  <meta property="og:title" content="X Pro Manager — XActions">
+  <meta property="og:description" content="X Pro (TweetDeck) automation: decks, columns and layouts. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
   <meta property="og:url" content="https://xactions.app/scripts/x-pro-manager">
   <meta property="og:site_name" content="XActions">
   <meta property="og:image" content="https://xactions.app/og-run.png">
 
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@nichxbt">
-  <meta name="twitter:title" content="X Pro (TweetDeck) automation — XActions">
-  <meta name="twitter:description" content="X Pro (TweetDeck) automation. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
+  <meta name="twitter:title" content="X Pro Manager — XActions">
+  <meta name="twitter:description" content="X Pro (TweetDeck) automation: decks, columns and layouts. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
   <meta name="twitter:image" content="https://xactions.app/og-run.png">
 
   <link rel="canonical" href="https://xactions.app/scripts/x-pro-manager">
@@ -29,15 +29,15 @@
   {
     "@context": "https://schema.org",
     "@type": "TechArticle",
-    "headline": "X Pro (TweetDeck) automation — Free X/Twitter Script | XActions",
-    "description": "X Pro (TweetDeck) automation. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.",
+    "headline": "X Pro Manager — Free X/Twitter Script | XActions",
+    "description": "X Pro (TweetDeck) automation: decks, columns and layouts. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.",
     "url": "https://xactions.app/scripts/x-pro-manager",
     "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
     "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
     "datePublished": "2026-03-30",
     "dateModified": "2026-03-30",
-    "articleSection": "Discovery",
-    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, pro, manager, discovery"
+    "articleSection": "Premium and Business",
+    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, pro, manager, premium and business"
   }
   </script>
   <script type="application/ld+json">
@@ -47,8 +47,8 @@
     "itemListElement": [
       { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
       { "@type": "ListItem", "position": 2, "name": "Scripts", "item": "https://xactions.app/scripts" },
-      { "@type": "ListItem", "position": 3, "name": "Discovery", "item": "https://xactions.app/scripts#discovery" },
-      { "@type": "ListItem", "position": 4, "name": "X Pro (TweetDeck) automation", "item": "https://xactions.app/scripts/x-pro-manager" }
+      { "@type": "ListItem", "position": 3, "name": "Premium and Business", "item": "https://xactions.app/scripts#premium-and-business" },
+      { "@type": "ListItem", "position": 4, "name": "X Pro Manager", "item": "https://xactions.app/scripts/x-pro-manager" }
     ]
   }
   </script>
@@ -116,24 +116,24 @@
 
     <main class="main-content" id="main-content">
       <header class="main-header">
-        <h1>⚡ X Pro (TweetDeck) automation</h1>
+        <h1>💎 X Pro Manager</h1>
         <div class="breadcrumb">
-          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#discovery">Discovery</a> › X Pro (TweetDeck) automation
+          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#premium-and-business">Premium and Business</a> › X Pro Manager
         </div>
       </header>
 
       <article class="article">
-        <span class="cat-badge">Discovery</span>
-        <span class="source-badge">browser</span>
+        <span class="cat-badge">Premium and Business</span>
+        <span class="source-badge">browser/xProManager.js</span>
 
         <div class="meta-row">
           
           
-          <span>1024 lines</span>
+          <span>1032 lines</span>
           <span>by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></span>
         </div>
 
-        <p>X Pro (TweetDeck) automation — a free, open-source browser console script for X/Twitter automation. No API keys or fees required.</p>
+        <p>X Pro (TweetDeck) automation: decks, columns and layouts.</p>
 
         
 
@@ -177,6 +177,14 @@
           <div class="code-block">
             <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.querySelector('code').textContent).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy Script',2000)})">Copy Script</button>
             <pre><code>// Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
+/**
+ * @name        xProManager.js
+ * @title       X Pro Manager
+ * @description X Pro (TweetDeck) automation: decks, columns and layouts.
+ * @category    premium
+ * @page        x.com/*
+ * @writes      true
+ */
 // browser/xProManager.js
 // X Pro (TweetDeck) automation for X/Twitter
 // by nichxbt
@@ -1213,11 +1221,16 @@
 
     <aside class="sidebar-right">
       <div class="sidebar-card">
-        <h3>⚡ Discovery</h3>
-        <a href="/scripts/discovery-explore">🔍 Discovery Explore</a>
-<a href="/scripts/save-search">🔍 Save Searches</a>
-<a href="/scripts/topic-manager">🏷️ Topic Manager</a>
-<a href="/scripts/x-pro">⚡ X Pro (TweetDeck)</a>
+        <h3>💎 Premium and Business</h3>
+        <a href="/scripts/ad-campaign-manager">💎 Ad Campaign Manager</a>
+<a href="/scripts/ads-manager">💎 Ads and Campaigns</a>
+<a href="/scripts/advanced-creator">💎 Advanced Creator Tools</a>
+<a href="/scripts/advanced-premium">💎 Advanced Premium Tools</a>
+<a href="/scripts/creator-subscriptions">💎 Creator Subscriptions</a>
+<a href="/scripts/premium-gifting">💎 Premium Gifting</a>
+<a href="/scripts/premium-manager">💎 Premium Manager</a>
+<a href="/scripts/subscribe-premium">💎 Subscribe to Premium</a>
+<a href="/scripts/x-pro">💎 X Pro</a>
       </div>
       <div class="sidebar-card">
         <h3>🔗 Quick Links</h3>

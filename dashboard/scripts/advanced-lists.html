@@ -3,23 +3,23 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Advanced list management — Free X/Twitter Script | XActions</title>
-  <meta name="description" content="Advanced list management: delete list, edit list, remove member, follow/unfollow list, pin list, scrape list timeline, view subscribers, view lists you're on…">
-  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, advanced, lists, lists &amp; communities">
+  <title>Advanced List Tools — Free X/Twitter Script | XActions</title>
+  <meta name="description" content="Advanced List management: create, copy, pin, follow and export Lists. Free X/Twitter browser script, no API key needed.">
+  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, advanced, lists, lists">
   <meta name="author" content="nich (@nichxbt)">
   <meta name="robots" content="index, follow">
 
   <meta property="og:type" content="article">
-  <meta property="og:title" content="Advanced list management — XActions">
-  <meta property="og:description" content="Advanced list management: delete list, edit list, remove member, follow/unfollow list, pin list, scrape list timeline, view subscribers, view lists you're on…">
+  <meta property="og:title" content="Advanced List Tools — XActions">
+  <meta property="og:description" content="Advanced List management: create, copy, pin, follow and export Lists. Free X/Twitter browser script, no API key needed.">
   <meta property="og:url" content="https://xactions.app/scripts/advanced-lists">
   <meta property="og:site_name" content="XActions">
   <meta property="og:image" content="https://xactions.app/og-run.png">
 
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@nichxbt">
-  <meta name="twitter:title" content="Advanced list management — XActions">
-  <meta name="twitter:description" content="Advanced list management: delete list, edit list, remove member, follow/unfollow list, pin list, scrape list timeline, view subscribers, view lists you're on…">
+  <meta name="twitter:title" content="Advanced List Tools — XActions">
+  <meta name="twitter:description" content="Advanced List management: create, copy, pin, follow and export Lists. Free X/Twitter browser script, no API key needed.">
   <meta name="twitter:image" content="https://xactions.app/og-run.png">
 
   <link rel="canonical" href="https://xactions.app/scripts/advanced-lists">
@@ -29,15 +29,15 @@
   {
     "@context": "https://schema.org",
     "@type": "TechArticle",
-    "headline": "Advanced list management — Free X/Twitter Script | XActions",
-    "description": "Advanced list management: delete list, edit list, remove member, follow/unfollow list, pin list, scrape list timeline, view subscribers, view lists you're on…",
+    "headline": "Advanced List Tools — Free X/Twitter Script | XActions",
+    "description": "Advanced List management: create, copy, pin, follow and export Lists. Free X/Twitter browser script, no API key needed.",
     "url": "https://xactions.app/scripts/advanced-lists",
     "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
     "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
     "datePublished": "2026-03-30",
     "dateModified": "2026-03-30",
-    "articleSection": "Lists & Communities",
-    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, advanced, lists, lists & communities"
+    "articleSection": "Lists",
+    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, advanced, lists, lists"
   }
   </script>
   <script type="application/ld+json">
@@ -47,8 +47,8 @@
     "itemListElement": [
       { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
       { "@type": "ListItem", "position": 2, "name": "Scripts", "item": "https://xactions.app/scripts" },
-      { "@type": "ListItem", "position": 3, "name": "Lists & Communities", "item": "https://xactions.app/scripts#lists-communities" },
-      { "@type": "ListItem", "position": 4, "name": "Advanced list management", "item": "https://xactions.app/scripts/advanced-lists" }
+      { "@type": "ListItem", "position": 3, "name": "Lists", "item": "https://xactions.app/scripts#lists" },
+      { "@type": "ListItem", "position": 4, "name": "Advanced List Tools", "item": "https://xactions.app/scripts/advanced-lists" }
     ]
   }
   </script>
@@ -116,24 +116,24 @@
 
     <main class="main-content" id="main-content">
       <header class="main-header">
-        <h1>📝 Advanced list management</h1>
+        <h1>🗂️ Advanced List Tools</h1>
         <div class="breadcrumb">
-          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#lists-communities">Lists &amp; Communities</a> › Advanced list management
+          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#lists">Lists</a> › Advanced List Tools
         </div>
       </header>
 
       <article class="article">
-        <span class="cat-badge">Lists &amp; Communities</span>
-        <span class="source-badge">browser</span>
+        <span class="cat-badge">Lists</span>
+        <span class="source-badge">browser/advancedLists.js</span>
 
         <div class="meta-row">
           
           
-          <span>697 lines</span>
+          <span>705 lines</span>
           <span>by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></span>
         </div>
 
-        <p>Advanced list management: delete list, edit list, remove member, follow/unfollow list, pin list, scrape list timeline, view subscribers, view lists you're on, share list.</p>
+        <p>Advanced List management: create, copy, pin, follow and export Lists.</p>
 
         
 
@@ -156,6 +156,14 @@
           <div class="code-block">
             <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.querySelector('code').textContent).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy Script',2000)})">Copy Script</button>
             <pre><code>// Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
+/**
+ * @name        advancedLists.js
+ * @title       Advanced List Tools
+ * @description Advanced List management: create, copy, pin, follow and export Lists.
+ * @category    lists
+ * @page        x.com/i/lists
+ * @writes      true
+ */
 // browser/advancedLists.js
 // Advanced list management for X/Twitter
 // by nichxbt
@@ -865,17 +873,12 @@
 
     <aside class="sidebar-right">
       <div class="sidebar-card">
-        <h3>📝 Lists &amp; Communities</h3>
-        <a href="/scripts/add-to-list">➕ Add To List</a>
-<a href="/scripts/block-list-manager">📝 Block list import/export/sharing</a>
-<a href="/scripts/manage-lists">📝 Browser console script to manage X/Twitter Lists</a>
-<a href="/scripts/create-community">🏘️ Create Communities</a>
-<a href="/scripts/follow-list-members">👣 Follow List Members</a>
-<a href="/scripts/join-communities">🏘️ Join Communities</a>
-<a href="/scripts/leave-all-communities">🚪 Leave All Communities</a>
-<a href="/scripts/leave-community">🚪 Leave Specific Community</a>
-<a href="/scripts/manage-community">🏘️ Manage Communities</a>
-<a href="/scripts/list-manager">📝 Manage Lists</a>
+        <h3>🗂️ Lists</h3>
+        <a href="/scripts/add-to-list">🗂️ Add Users to List</a>
+<a href="/scripts/follow-list-members">🗂️ Follow List Members</a>
+<a href="/scripts/follow-list">🗂️ Follow Lists</a>
+<a href="/scripts/list-manager">🗂️ List Manager</a>
+<a href="/scripts/scrape-list">🗂️ Scrape List</a>
       </div>
       <div class="sidebar-card">
         <h3>🔗 Quick Links</h3>

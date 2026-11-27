@@ -4,14 +4,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Follow Ratio Manager — Free X/Twitter Script | XActions</title>
-  <meta name="description" content="Monitor and manage your follow/following ratio. Scrapes follower and following counts, calculates your ratio, tracks it over time in localStorage, identifies…">
-  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, follow, ratio, manager, unfollow tools">
+  <meta name="description" content="Grade your followers to following ratio, track it over time and plan how to reach a target ratio.">
+  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, follow, ratio, manager, analytics">
   <meta name="author" content="nich (@nichxbt)">
   <meta name="robots" content="index, follow">
 
   <meta property="og:type" content="article">
   <meta property="og:title" content="Follow Ratio Manager — XActions">
-  <meta property="og:description" content="Monitor and manage your follow/following ratio. Scrapes follower and following counts, calculates your ratio, tracks it over time in localStorage, identifies…">
+  <meta property="og:description" content="Grade your followers to following ratio, track it over time and plan how to reach a target ratio.">
   <meta property="og:url" content="https://xactions.app/scripts/follow-ratio-manager">
   <meta property="og:site_name" content="XActions">
   <meta property="og:image" content="https://xactions.app/og-run.png">
@@ -19,7 +19,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@nichxbt">
   <meta name="twitter:title" content="Follow Ratio Manager — XActions">
-  <meta name="twitter:description" content="Monitor and manage your follow/following ratio. Scrapes follower and following counts, calculates your ratio, tracks it over time in localStorage, identifies…">
+  <meta name="twitter:description" content="Grade your followers to following ratio, track it over time and plan how to reach a target ratio.">
   <meta name="twitter:image" content="https://xactions.app/og-run.png">
 
   <link rel="canonical" href="https://xactions.app/scripts/follow-ratio-manager">
@@ -30,14 +30,14 @@
     "@context": "https://schema.org",
     "@type": "TechArticle",
     "headline": "Follow Ratio Manager — Free X/Twitter Script | XActions",
-    "description": "Monitor and manage your follow/following ratio. Scrapes follower and following counts, calculates your ratio, tracks it over time in localStorage, identifies…",
+    "description": "Grade your followers to following ratio, track it over time and plan how to reach a target ratio.",
     "url": "https://xactions.app/scripts/follow-ratio-manager",
     "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
     "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
     "datePublished": "2026-03-30",
     "dateModified": "2026-03-30",
-    "articleSection": "Unfollow Tools",
-    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, follow, ratio, manager, unfollow tools"
+    "articleSection": "Analytics",
+    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, follow, ratio, manager, analytics"
   }
   </script>
   <script type="application/ld+json">
@@ -47,7 +47,7 @@
     "itemListElement": [
       { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
       { "@type": "ListItem", "position": 2, "name": "Scripts", "item": "https://xactions.app/scripts" },
-      { "@type": "ListItem", "position": 3, "name": "Unfollow Tools", "item": "https://xactions.app/scripts#unfollow-tools" },
+      { "@type": "ListItem", "position": 3, "name": "Analytics", "item": "https://xactions.app/scripts#analytics" },
       { "@type": "ListItem", "position": 4, "name": "Follow Ratio Manager", "item": "https://xactions.app/scripts/follow-ratio-manager" }
     ]
   }
@@ -116,31 +116,31 @@
 
     <main class="main-content" id="main-content">
       <header class="main-header">
-        <h1>⚖️ Follow Ratio Manager</h1>
+        <h1>📊 Follow Ratio Manager</h1>
         <div class="breadcrumb">
-          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#unfollow-tools">Unfollow Tools</a> › Follow Ratio Manager
+          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#analytics">Analytics</a> › Follow Ratio Manager
         </div>
       </header>
 
       <article class="article">
-        <span class="cat-badge">Unfollow Tools</span>
-        <span class="source-badge">browser</span>
+        <span class="cat-badge">Analytics</span>
+        <span class="source-badge">browser/followRatioManager.js</span>
 
         <div class="meta-row">
-          <span>v1.0.0</span>
-          <span>Updated: 2026-02-24</span>
-          <span>271 lines</span>
+          <span>v1.1.0</span>
+          <span>Updated: 2026-11-26</span>
+          <span>272 lines</span>
           <span>by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></span>
         </div>
 
-        <p>Monitor and manage your follow/following ratio. Scrapes follower and following counts, calculates your ratio, tracks it over time in localStorage, identifies who to unfollow to improve your ratio, and provides actionable recommendations.</p>
+        <p>Grade your followers to following ratio, track it over time and plan how to reach a target ratio.</p>
 
         
 
         <h2>How to Use</h2>
         <ol class="usage-steps"><li>Go to your profile: x.com/YOUR_USERNAME</li>
 <li>Open DevTools Console (F12)</li>
-<li>Paste and run</li></ol>
+<li>Paste browser/followRatioManager.js and run</li></ol>
         
 
         <div class="controls-box">
@@ -185,14 +185,15 @@ XActions.plan()                — get a plan to reach target</code></pre>
  * ============================================================
  *
  * @name        followRatioManager.js
- * @description Monitor and manage your follow/following ratio.
- *              Scrapes follower and following counts, calculates
- *              your ratio, tracks it over time in localStorage,
- *              identifies who to unfollow to improve your ratio,
- *              and provides actionable recommendations.
+ * @title       Follow Ratio Manager
+ * @description Grade your followers to following ratio, track it over time and plan how to reach a target ratio.
+ * @category    analytics
+ * @page        x.com/&lt;you&gt;
+ * @writes      false
+ * @aliases     scripts/followRatioManager.js
  * @author      nichxbt (https://x.com/nichxbt)
- * @version     1.0.0
- * @date        2026-02-24
+ * @version     1.1.0
+ * @date        2026-11-26
  * @repository  https://github.com/nirholas/XActions
  *
  * ============================================================
@@ -200,7 +201,7 @@ XActions.plan()                — get a plan to reach target</code></pre>
  *
  * 1. Go to your profile: x.com/YOUR_USERNAME
  * 2. Open DevTools Console (F12)
- * 3. Paste and run
+ * 3. Paste browser/followRatioManager.js and run
  *
  * Controls:
  *   XActions.setTarget(2.0)        — target ratio (followers/following)
@@ -386,7 +387,7 @@ XActions.plan()                — get a plan to reach target</code></pre>
       }
 
       // Direction
-      if (history.length &gt;= 3) {
+      if (history.length &gt;= 2) {
         const prev = history[history.length - 2];
         const diff = snapshot.ratio - prev.ratio;
         if (diff &gt; 0.01) console.log(`  📈 Ratio improving: +${diff.toFixed(3)} since last check`);
@@ -462,12 +463,17 @@ XActions.plan()                — get a plan to reach target</code></pre>
 
     <aside class="sidebar-right">
       <div class="sidebar-card">
-        <h3>⚖️ Unfollow Tools</h3>
-        <a href="/scripts/smart-unfollow">🧠 Smart Unfollow (Time-Based)</a>
-<a href="/scripts/unfollow-everyone">👋 Unfollow Everyone</a>
-<a href="/scripts/unfollowback">🧹 Unfollow Non-Followers</a>
-<a href="/scripts/unfollow-non-followers">🧹 Unfollow Non-Followers</a>
-<a href="/scripts/unfollow-with-log">📋 Unfollow Non-Followers With Log</a>
+        <h3>📊 Analytics</h3>
+        <a href="/scripts/account-health-monitor">📊 Account Health Monitor</a>
+<a href="/scripts/audience-demographics">📊 Audience Demographics</a>
+<a href="/scripts/audience-overlap">📊 Audience Overlap</a>
+<a href="/scripts/audit-followers">📊 Audit Followers</a>
+<a href="/scripts/best-time-to-post">📊 Best Time to Post</a>
+<a href="/scripts/business-analytics">📊 Business Analytics</a>
+<a href="/scripts/business-tools">📊 Business Tools</a>
+<a href="/scripts/competitor-analysis">📊 Competitor Analysis</a>
+<a href="/scripts/content-calendar">📊 Content Calendar</a>
+<a href="/scripts/creator-studio">📊 Creator Studio</a>
       </div>
       <div class="sidebar-card">
         <h3>🔗 Quick Links</h3>

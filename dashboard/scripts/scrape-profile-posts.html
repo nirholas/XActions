@@ -3,23 +3,23 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Twitter/X Profile Posts Scraper — Free X/Twitter Script | XActions</title>
-  <meta name="description" content="Scrapes posts from any Twitter/X profile with filtering, multiple export formats, and analytics">
-  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, scrape, profile, posts, scrapers">
+  <title>Scrape Profile Posts — Free X/Twitter Script | XActions</title>
+  <meta name="description" content="Scrape every post from a profile with filters, analytics and JSON, CSV and Markdown exports.">
+  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, scrape, profile, posts, scrape and export">
   <meta name="author" content="nich (@nichxbt)">
   <meta name="robots" content="index, follow">
 
   <meta property="og:type" content="article">
-  <meta property="og:title" content="Twitter/X Profile Posts Scraper — XActions">
-  <meta property="og:description" content="Scrapes posts from any Twitter/X profile with filtering, multiple export formats, and analytics">
+  <meta property="og:title" content="Scrape Profile Posts — XActions">
+  <meta property="og:description" content="Scrape every post from a profile with filters, analytics and JSON, CSV and Markdown exports.">
   <meta property="og:url" content="https://xactions.app/scripts/scrape-profile-posts">
   <meta property="og:site_name" content="XActions">
   <meta property="og:image" content="https://xactions.app/og-run.png">
 
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@nichxbt">
-  <meta name="twitter:title" content="Twitter/X Profile Posts Scraper — XActions">
-  <meta name="twitter:description" content="Scrapes posts from any Twitter/X profile with filtering, multiple export formats, and analytics">
+  <meta name="twitter:title" content="Scrape Profile Posts — XActions">
+  <meta name="twitter:description" content="Scrape every post from a profile with filters, analytics and JSON, CSV and Markdown exports.">
   <meta name="twitter:image" content="https://xactions.app/og-run.png">
 
   <link rel="canonical" href="https://xactions.app/scripts/scrape-profile-posts">
@@ -29,15 +29,15 @@
   {
     "@context": "https://schema.org",
     "@type": "TechArticle",
-    "headline": "Twitter/X Profile Posts Scraper — Free X/Twitter Script | XActions",
-    "description": "Scrapes posts from any Twitter/X profile with filtering, multiple export formats, and analytics",
+    "headline": "Scrape Profile Posts — Free X/Twitter Script | XActions",
+    "description": "Scrape every post from a profile with filters, analytics and JSON, CSV and Markdown exports.",
     "url": "https://xactions.app/scripts/scrape-profile-posts",
     "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
     "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
     "datePublished": "2026-03-30",
     "dateModified": "2026-03-30",
-    "articleSection": "Scrapers",
-    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, scrape, profile, posts, scrapers"
+    "articleSection": "Scrape and Export",
+    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, scrape, profile, posts, scrape and export"
   }
   </script>
   <script type="application/ld+json">
@@ -47,8 +47,8 @@
     "itemListElement": [
       { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
       { "@type": "ListItem", "position": 2, "name": "Scripts", "item": "https://xactions.app/scripts" },
-      { "@type": "ListItem", "position": 3, "name": "Scrapers", "item": "https://xactions.app/scripts#scrapers" },
-      { "@type": "ListItem", "position": 4, "name": "Twitter/X Profile Posts Scraper", "item": "https://xactions.app/scripts/scrape-profile-posts" }
+      { "@type": "ListItem", "position": 3, "name": "Scrape and Export", "item": "https://xactions.app/scripts#scrape-and-export" },
+      { "@type": "ListItem", "position": 4, "name": "Scrape Profile Posts", "item": "https://xactions.app/scripts/scrape-profile-posts" }
     ]
   }
   </script>
@@ -116,24 +116,24 @@
 
     <main class="main-content" id="main-content">
       <header class="main-header">
-        <h1>👤 Twitter/X Profile Posts Scraper</h1>
+        <h1>📥 Scrape Profile Posts</h1>
         <div class="breadcrumb">
-          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#scrapers">Scrapers</a> › Twitter/X Profile Posts Scraper
+          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#scrape-and-export">Scrape and Export</a> › Scrape Profile Posts
         </div>
       </header>
 
       <article class="article">
-        <span class="cat-badge">Scrapers</span>
-        <span class="source-badge">scripts/twitter</span>
+        <span class="cat-badge">Scrape and Export</span>
+        <span class="source-badge">browser/scrapeProfilePosts.js</span>
 
         <div class="meta-row">
           <span>v2.2.0</span>
           <span>Updated: 2026-10-09</span>
-          <span>950 lines</span>
+          <span>955 lines</span>
           <span>by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></span>
         </div>
 
-        <p>Scrapes posts from any Twitter/X profile with filtering, multiple export formats, and analytics</p>
+        <p>Scrape every post from a profile with filters, analytics and JSON, CSV and Markdown exports.</p>
 
         
 
@@ -161,8 +161,13 @@
  * 🐦 Twitter/X Profile Posts Scraper (Advanced)
  * ============================================================
  * 
- * @name        scrape-profile-posts.js
- * @description Scrapes posts from any Twitter/X profile with filtering,
+ * @name        scrapeProfilePosts.js
+ * @description Scrape every post from a profile with filters, analytics and JSON, CSV and Markdown exports.
+ * @title       Scrape Profile Posts
+ * @category    scrape
+ * @page        x.com/&lt;username&gt;
+ * @writes      false
+ * @aliases     scripts/twitter/scrape-profile-posts.js
  *              multiple export formats, and analytics
  * @author      nichxbt (https://x.com/nichxbt)
  * @version     2.2.0
@@ -376,7 +381,7 @@ var CONFIG = {
   const startTime = Date.now();
   
   // Get profile name from URL
-  const profileMatch = window.location.pathname.match(/^\/([^\/]+)/);
+  const profileMatch = window.location.pathname.match(/^\/([^/]+)/);
   const profileName = profileMatch ? profileMatch[1] : 'unknown';
   
   console.log('╔════════════════════════════════════════════════════════════╗');
@@ -1118,17 +1123,17 @@ var CONFIG = {
 
     <aside class="sidebar-right">
       <div class="sidebar-card">
-        <h3>👤 Scrapers</h3>
-        <a href="/scripts/scrape-bookmarks">🔖 Bookmarks Scraper</a>
-<a href="/scripts/scrape-analytics">📊 Browser console script to scrape X/Twitter analytics data</a>
-<a href="/scripts/scrape-dms">✉️ DM Scraper</a>
-<a href="/scripts/export-to-csv">📄 Export to CSV Utility</a>
-<a href="/scripts/scrape-followers">👥 Followers Scraper</a>
-<a href="/scripts/scrape-following">👥 Following Scraper</a>
-<a href="/scripts/scrape-hashtag">#️⃣ Hashtag Scraper</a>
-<a href="/scripts/scrape-likers">❤️ Likers Scraper</a>
-<a href="/scripts/scrape-likes">❤️ Likes Scraper</a>
-<a href="/scripts/link-scraper">🔗 Link Scraper</a>
+        <h3>📥 Scrape and Export</h3>
+        <a href="/scripts/backup-account">📥 Backup Account</a>
+<a href="/scripts/bookmark-exporter">📥 Bookmark Exporter</a>
+<a href="/scripts/bookmark-organizer">📥 Bookmark Organizer</a>
+<a href="/scripts/export-to-csv">📥 Export to CSV</a>
+<a href="/scripts/link-scraper">📥 Link Scraper</a>
+<a href="/scripts/manage-bookmarks">📥 Manage Bookmarks</a>
+<a href="/scripts/scrape-cashtag-search">📥 Scrape Cashtag Search</a>
+<a href="/scripts/scrape-explore">📥 Scrape Explore</a>
+<a href="/scripts/scrape-followers">📥 Scrape Followers</a>
+<a href="/scripts/scrape-following">📥 Scrape Following</a>
       </div>
       <div class="sidebar-card">
         <h3>🔗 Quick Links</h3>

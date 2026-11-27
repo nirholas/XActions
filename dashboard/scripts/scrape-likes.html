@@ -3,23 +3,23 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Likes Scraper — Free X/Twitter Script | XActions</title>
-  <meta name="description" content="Export your liked tweets. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
-  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, scrape, likes, scrapers">
+  <title>Scrape Likes — Free X/Twitter Script | XActions</title>
+  <meta name="description" content="Scroll a user's Likes timeline and export the posts they liked (url, author, text, counts) to JSON and CSV.">
+  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, scrape, likes, scrape and export">
   <meta name="author" content="nich (@nichxbt)">
   <meta name="robots" content="index, follow">
 
   <meta property="og:type" content="article">
-  <meta property="og:title" content="Likes Scraper — XActions">
-  <meta property="og:description" content="Export your liked tweets. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
+  <meta property="og:title" content="Scrape Likes — XActions">
+  <meta property="og:description" content="Scroll a user's Likes timeline and export the posts they liked (url, author, text, counts) to JSON and CSV.">
   <meta property="og:url" content="https://xactions.app/scripts/scrape-likes">
   <meta property="og:site_name" content="XActions">
   <meta property="og:image" content="https://xactions.app/og-run.png">
 
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@nichxbt">
-  <meta name="twitter:title" content="Likes Scraper — XActions">
-  <meta name="twitter:description" content="Export your liked tweets. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
+  <meta name="twitter:title" content="Scrape Likes — XActions">
+  <meta name="twitter:description" content="Scroll a user's Likes timeline and export the posts they liked (url, author, text, counts) to JSON and CSV.">
   <meta name="twitter:image" content="https://xactions.app/og-run.png">
 
   <link rel="canonical" href="https://xactions.app/scripts/scrape-likes">
@@ -29,15 +29,15 @@
   {
     "@context": "https://schema.org",
     "@type": "TechArticle",
-    "headline": "Likes Scraper — Free X/Twitter Script | XActions",
-    "description": "Export your liked tweets. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.",
+    "headline": "Scrape Likes — Free X/Twitter Script | XActions",
+    "description": "Scroll a user's Likes timeline and export the posts they liked (url, author, text, counts) to JSON and CSV.",
     "url": "https://xactions.app/scripts/scrape-likes",
     "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
     "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
     "datePublished": "2026-03-30",
     "dateModified": "2026-03-30",
-    "articleSection": "Scrapers",
-    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, scrape, likes, scrapers"
+    "articleSection": "Scrape and Export",
+    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, scrape, likes, scrape and export"
   }
   </script>
   <script type="application/ld+json">
@@ -47,8 +47,8 @@
     "itemListElement": [
       { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
       { "@type": "ListItem", "position": 2, "name": "Scripts", "item": "https://xactions.app/scripts" },
-      { "@type": "ListItem", "position": 3, "name": "Scrapers", "item": "https://xactions.app/scripts#scrapers" },
-      { "@type": "ListItem", "position": 4, "name": "Likes Scraper", "item": "https://xactions.app/scripts/scrape-likes" }
+      { "@type": "ListItem", "position": 3, "name": "Scrape and Export", "item": "https://xactions.app/scripts#scrape-and-export" },
+      { "@type": "ListItem", "position": 4, "name": "Scrape Likes", "item": "https://xactions.app/scripts/scrape-likes" }
     ]
   }
   </script>
@@ -116,54 +116,61 @@
 
     <main class="main-content" id="main-content">
       <header class="main-header">
-        <h1>❤️ Likes Scraper</h1>
+        <h1>📥 Scrape Likes</h1>
         <div class="breadcrumb">
-          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#scrapers">Scrapers</a> › Likes Scraper
+          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#scrape-and-export">Scrape and Export</a> › Scrape Likes
         </div>
       </header>
 
       <article class="article">
-        <span class="cat-badge">Scrapers</span>
-        <span class="source-badge">scripts</span>
+        <span class="cat-badge">Scrape and Export</span>
+        <span class="source-badge">browser/scrapeLikes.js</span>
 
         <div class="meta-row">
-          
-          
-          <span>169 lines</span>
+          <span>v1.1.0</span>
+          <span>Updated: 2026-11-27</span>
+          <span>323 lines</span>
           <span>by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></span>
         </div>
 
-        <p>Export your liked tweets</p>
+        <p>Scroll a user's Likes timeline and export the posts they liked (url, author, text, counts) to JSON and CSV.</p>
 
         
 
         <h2>How to Use</h2>
-        <ol class="usage-steps">
-        <li>Navigate to <a href="https://x.com" rel="noopener">x.com</a> and log in</li>
-        <li>Open DevTools Console (F12 or Cmd+Option+I)</li>
-        
-        <li>Paste the script below and press Enter</li>
-      </ol>
+        <ol class="usage-steps"><li>Go to the Likes tab of a profile: x.com/&lt;user&gt;/likes</li>
+<li>Open the browser console (F12 or Cmd+Option+I -&gt; Console)</li>
+<li>(Optional) edit the CONFIG options at the top of the script</li>
+<li>Paste browser/scrapeLikes.js and press Enter</li></ol>
         
 
         
-        <section class="config-section">
-        <h2>Configuration Options</h2>
-        <table>
-          <thead><tr><th>Option</th><th>Default</th><th>Description</th></tr></thead>
-          <tbody>
-            <tr><td><code>FORMAT</code></td><td><code>'both'</code></td><td>'json', 'csv', 'both'</td></tr>
-          </tbody>
-        </table>
-      </section>
+        
         <section class="config-code">
         <h2>Default Configuration</h2>
         <div class="code-block">
           <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.querySelector('code').textContent).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy',2000)})">Copy</button>
           <pre><code>const CONFIG = {
-    MAX_LIKES: 1000,
-    SCROLL_DELAY: 1500,
-    FORMAT: 'both', // 'json', 'csv', 'both'
+    // Stop after collecting this many liked posts (safety cap)
+    maxPosts: 1000,
+
+    // How far to scroll each step (pixels)
+    scrollStep: 1600,
+
+    // Delay between scrolls (ms). Raise to 2500+ on a slow connection so posts load.
+    scrollDelay: 1600,
+
+    // Give up after this many consecutive scrolls with no new posts (end of timeline)
+    stallLimit: 6,
+
+    // Hard cap on scroll attempts, independent of stalls
+    maxScrollAttempts: 400,
+
+    // Also trigger a browser download of the CSV file
+    autoDownloadCsv: false,
+
+    // Trigger a browser download of the JSON file
+    downloadJson: true
   };</code></pre>
         </div>
       </section>
@@ -175,171 +182,325 @@
             <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.querySelector('code').textContent).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy Script',2000)})">Copy Script</button>
             <pre><code>// Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
 /**
- * Likes Scraper
- * Export your liked tweets
- * 
- * HOW TO USE:
- * 1. Go to x.com/USERNAME/likes (your own likes page)
- * 2. Open Developer Console (Ctrl+Shift+J or Cmd+Option+J)
- * 3. Paste this script and press Enter
- * 
- * by nichxbt - https://github.com/nirholas/XActions
+ * ============================================
+ * 💛 Scrape User Likes - XActions
+ * ============================================
+ *
+ * @name        scrapeLikes.js
+ * @title       Scrape Likes
+ * @description Scroll a user's Likes timeline and export the posts they liked (url, author, text, counts) to JSON and CSV.
+ * @category    scrape
+ * @page        x.com/&lt;you&gt;/likes or x.com/&lt;username&gt;/likes
+ * @writes      false
+ * @aliases     scripts/scrapeLikes.js, scripts/twitter/scrape-user-likes.js
+ * @author      nichxbt (https://x.com/nichxbt)
+ * @version     1.1.0
+ * @date        2026-11-27
+ * @website     https://xactions.app
+ *
+ * Usage:
+ *   1. Go to the Likes tab of a profile: x.com/&lt;user&gt;/likes
+ *      (X only shows the Likes tab for your own account unless it is public)
+ *   2. Open the browser console (F12 or Cmd+Option+I -&gt; Console)
+ *   3. (Optional) edit the CONFIG options at the top of the script
+ *   4. Paste browser/scrapeLikes.js and press Enter
+ *
+ * Example:
+ *   On x.com/&lt;you&gt;/likes the script scrolls your liked posts, prints a running
+ *   count (&quot;Collected 120 liked posts...&quot;), then downloads &lt;you&gt;_likes_&lt;date&gt;.json
+ *   with each post's url, author, text and like/repost/reply/view counts, and
+ *   reports the accounts you like most. To stop early: window.stopScrapeUserLikes().
+ *   For CSV only, set autoDownloadCsv: true and downloadJson: false.
+ *   The posts array is also on window.scrapedLikes.
+ *
+ * ============================================
  */
 
-(() =&gt; {
+(async function scrapeUserLikes() {
+  'use strict';
+
+  // ============================================
+  // 📝 CONFIGURATION - Customize these options
+  // ============================================
   const CONFIG = {
-    MAX_LIKES: 1000,
-    SCROLL_DELAY: 1500,
-    FORMAT: 'both', // 'json', 'csv', 'both'
+    // Stop after collecting this many liked posts (safety cap)
+    maxPosts: 1000,
+
+    // How far to scroll each step (pixels)
+    scrollStep: 1600,
+
+    // Delay between scrolls (ms). Raise to 2500+ on a slow connection so posts load.
+    scrollDelay: 1600,
+
+    // Give up after this many consecutive scrolls with no new posts (end of timeline)
+    stallLimit: 6,
+
+    // Hard cap on scroll attempts, independent of stalls
+    maxScrollAttempts: 400,
+
+    // Also trigger a browser download of the CSV file
+    autoDownloadCsv: false,
+
+    // Trigger a browser download of the JSON file
+    downloadJson: true
   };
 
-  const sleep = (ms) =&gt; new Promise(r =&gt; setTimeout(r, ms));
-
-  const download = (content, filename, type) =&gt; {
-    const blob = new Blob([content], { type });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = filename;
-    a.click();
-    URL.revokeObjectURL(url);
+  // ============================================
+  // 🔧 SELECTORS
+  // ============================================
+  const SELECTORS = {
+    tweet: 'article[data-testid=&quot;tweet&quot;]',
+    tweetText: '[data-testid=&quot;tweetText&quot;]',
+    userName: '[data-testid=&quot;User-Name&quot;]',
+    verified: 'svg[aria-label*=&quot;Verified&quot;], [data-testid=&quot;icon-verified&quot;]',
+    photo: '[data-testid=&quot;tweetPhoto&quot;]',
+    video: '[data-testid=&quot;videoPlayer&quot;], [data-testid=&quot;videoComponent&quot;]'
   };
+
+  // ============================================
+  // 🛠️ HELPERS
+  // ============================================
+  const sleep = (ms) =&gt; new Promise((r) =&gt; setTimeout(r, ms));
+  const randomDelay = () =&gt; sleep(CONFIG.scrollDelay + Math.floor(Math.random() * 500));
+
+  const log = {
+    info: (m) =&gt; console.log(`ℹ️ ${m}`),
+    success: (m) =&gt; console.log(`✅ ${m}`),
+    warning: (m) =&gt; console.log(`⚠️ ${m}`),
+    error: (m) =&gt; console.log(`❌ ${m}`),
+    count: (n) =&gt; console.log(`💛 Collected ${n} liked posts...`)
+  };
+
+  const csvCell = (v) =&gt; `&quot;${String(v == null ? '' : v).replace(/&quot;/g, '&quot;&quot;').replace(/\r?\n/g, ' ')}&quot;`;
 
   const parseNumber = (str) =&gt; {
     if (!str) return 0;
-    const num = parseFloat(str.replace(/,/g, ''));
-    if (str.includes('K')) return num * 1000;
-    if (str.includes('M')) return num * 1000000;
-    return num;
+    const s = str.trim().toUpperCase();
+    const num = parseFloat(s.replace(/,/g, '')) || 0;
+    if (s.includes('K')) return Math.round(num * 1000);
+    if (s.includes('M')) return Math.round(num * 1000000);
+    return Math.round(num);
   };
 
-  const extractTweet = (article) =&gt; {
+  const download = (content, filename, type) =&gt; {
     try {
-      const tweetText = article.querySelector('[data-testid=&quot;tweetText&quot;]')?.textContent || '';
-      const userName = article.querySelector('[data-testid=&quot;User-Name&quot;]')?.textContent || '';
-      const handle = userName.match(/@(\w+)/)?.[1] || '';
-      const displayName = userName.split('@')[0]?.trim() || '';
-      
-      const timeLink = article.querySelector('time')?.closest('a');
-      const tweetUrl = timeLink?.href || '';
-      const tweetId = tweetUrl.split('/status/')[1]?.split('?')[0] || '';
-      const time = article.querySelector('time')?.getAttribute('datetime') || '';
-
-      const buttons = article.querySelectorAll('[role=&quot;group&quot;] button');
-      let replies = 0, retweets = 0, likes = 0, views = 0;
-      
-      buttons.forEach(btn =&gt; {
-        const label = btn.getAttribute('aria-label') || '';
-        const num = parseNumber(label.match(/[\d,.]+[KM]?/)?.[0] || '0');
-        
-        if (label.includes('repl')) replies = num;
-        else if (label.includes('repost') || label.includes('Retweet')) retweets = num;
-        else if (label.includes('like')) likes = num;
-        else if (label.includes('view')) views = num;
-      });
-
-      const images = Array.from(article.querySelectorAll('img[src*=&quot;media&quot;]'))
-        .map(img =&gt; img.src)
-        .filter(src =&gt; !src.includes('profile'));
-
-      return {
-        tweetId,
-        handle,
-        displayName,
-        text: tweetText,
-        url: tweetUrl,
-        time,
-        likes,
-        retweets,
-        replies,
-        views,
-        hasMedia: images.length &gt; 0,
-      };
+      const blob = new Blob([content], { type });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      return true;
     } catch (e) {
-      return null;
+      log.error(`Download of ${filename} failed: ${e.message}`);
+      return false;
     }
   };
 
-  const run = async () =&gt; {
-    if (!window.location.pathname.includes('/likes')) {
-      console.error('❌ Please go to x.com/USERNAME/likes first!');
-      return;
-    }
+  const extractPost = (article) =&gt; {
+    // The permalink around the timestamp is the post's own URL (not a quoted one).
+    const timeEl = article.querySelector('time');
+    const permalink = timeEl?.closest('a[href*=&quot;/status/&quot;]') || article.querySelector('a[href*=&quot;/status/&quot;]');
+    const url = permalink ? permalink.href : '';
+    const id = url ? (url.split('/status/')[1] || '').split(/[?/]/)[0] : '';
+    if (!id) return null;
 
-    const username = window.location.pathname.split('/')[1];
-    console.log(`❤️ Scraping liked tweets of @${username}...`);
+    // Author handle is reliable from the permalink path: /&lt;handle&gt;/status/&lt;id&gt;
+    const handle = (url.match(/x\.com\/([^/]+)\/status/) || [])[1] || '';
+    const nameText = article.querySelector(SELECTORS.userName)?.textContent || '';
+    const displayName = nameText.split('@')[0].trim();
+    const verified = !!article.querySelector(`${SELECTORS.userName} ${SELECTORS.verified}`);
 
-    const likedTweets = new Map();
-    let scrolls = 0;
-    let noNewCount = 0;
+    const text = article.querySelector(SELECTORS.tweetText)?.textContent || '';
+    const time = timeEl ? timeEl.getAttribute('datetime') : '';
 
-    while (likedTweets.size &lt; CONFIG.MAX_LIKES &amp;&amp; noNewCount &lt; 5) {
-      const articles = document.querySelectorAll('article[data-testid=&quot;tweet&quot;]');
-      const beforeCount = likedTweets.size;
+    const getMetric = (testId) =&gt; {
+      const el = article.querySelector(`[data-testid=&quot;${testId}&quot;]`);
+      const span = el?.querySelector('span span');
+      return parseNumber(span ? span.textContent : '0');
+    };
+    const viewsEl = article.querySelector('a[href$=&quot;/analytics&quot;]');
+    const views = parseNumber(viewsEl ? viewsEl.textContent : '0');
 
-      articles.forEach(article =&gt; {
-        const tweet = extractTweet(article);
-        if (tweet &amp;&amp; tweet.tweetId &amp;&amp; !likedTweets.has(tweet.tweetId)) {
-          likedTweets.set(tweet.tweetId, tweet);
-        }
-      });
+    const hasImage = article.querySelector(SELECTORS.photo) !== null;
+    const hasVideo = article.querySelector(SELECTORS.video) !== null;
 
-      const added = likedTweets.size - beforeCount;
-      if (added &gt; 0) {
-        console.log(`❤️ Collected ${likedTweets.size} liked tweets...`);
-        noNewCount = 0;
-      } else {
-        noNewCount++;
+    return {
+      id,
+      url,
+      author: { handle, displayName, verified },
+      text,
+      time,
+      counts: {
+        likes: getMetric('like'),
+        retweets: getMetric('retweet'),
+        replies: getMetric('reply'),
+        views
+      },
+      hasMedia: hasImage || hasVideo
+    };
+  };
+
+  // ============================================
+  // 🛑 STOP SWITCH
+  // ============================================
+  let stopped = false;
+  window.stopScrapeUserLikes = () =&gt; {
+    stopped = true;
+    log.warning('Stop requested. Finishing the current scroll, then exporting what was collected.');
+  };
+
+  // ============================================
+  // 🚦 PAGE GUARD
+  // ============================================
+  console.log(`
+╔══════════════════════════════════════════════════════════╗
+║  💛 SCRAPE USER LIKES - XActions                         ║
+║  🌐 https://xactions.app                                 ║
+╚══════════════════════════════════════════════════════════╝
+  `);
+
+  if (!/\/likes\/?$/.test(window.location.pathname) || /\/status\//.test(window.location.pathname)) {
+    log.warning('You are not on a profile Likes page.');
+    log.info('Go to x.com/&lt;user&gt;/likes (the Likes tab of a profile), then run this again.');
+    return;
+  }
+
+  const username = window.location.pathname.split('/')[1] || 'unknown';
+  log.info(`Scraping liked posts of @${username}`);
+  log.info(`Max posts: ${CONFIG.maxPosts}. To stop early: window.stopScrapeUserLikes()`);
+
+  // ============================================
+  // 🎯 MAIN LOOP
+  // ============================================
+  const posts = new Map();
+  const stats = { collected: 0, withMedia: 0, scrolls: 0, errors: 0 };
+
+  let scrollAttempts = 0;
+  let stall = 0;
+
+  while (!stopped &amp;&amp; posts.size &lt; CONFIG.maxPosts &amp;&amp; stall &lt; CONFIG.stallLimit &amp;&amp; scrollAttempts &lt; CONFIG.maxScrollAttempts) {
+    const before = posts.size;
+
+    document.querySelectorAll(SELECTORS.tweet).forEach((article) =&gt; {
+      try {
+        const p = extractPost(article);
+        if (p &amp;&amp; p.id &amp;&amp; !posts.has(p.id)) posts.set(p.id, p);
+      } catch (e) {
+        stats.errors++;
       }
-
-      window.scrollBy(0, 800);
-      await sleep(CONFIG.SCROLL_DELAY);
-      scrolls++;
-
-      if (scrolls &gt; 150) break;
-    }
-
-    const likesList = Array.from(likedTweets.values());
-
-    console.log('\n' + '='.repeat(60));
-    console.log(`❤️ SCRAPED ${likesList.length} LIKED TWEETS`);
-    console.log('='.repeat(60) + '\n');
-
-    // Top liked accounts
-    const accountCounts = {};
-    likesList.forEach(t =&gt; {
-      accountCounts[t.handle] = (accountCounts[t.handle] || 0) + 1;
-    });
-    const topAccounts = Object.entries(accountCounts)
-      .sort((a, b) =&gt; b[1] - a[1])
-      .slice(0, 5);
-    
-    console.log('📊 Most liked accounts:');
-    topAccounts.forEach(([handle, count]) =&gt; {
-      console.log(`   @${handle}: ${count} likes`);
     });
 
-    if (CONFIG.FORMAT === 'json' || CONFIG.FORMAT === 'both') {
-      download(JSON.stringify(likesList, null, 2), `${username}_likes_${Date.now()}.json`, 'application/json');
-      console.log('💾 Downloaded likes.json');
+    if (posts.size &gt; before) {
+      log.count(posts.size);
+      stall = 0;
+    } else {
+      stall++;
     }
 
-    if (CONFIG.FORMAT === 'csv' || CONFIG.FORMAT === 'both') {
-      const csv = [
-        'Handle,DisplayName,Text,URL,Time,Likes,Retweets,HasMedia',
-        ...likesList.map(t =&gt; 
-          `&quot;@${t.handle}&quot;,&quot;${t.displayName.replace(/&quot;/g, '&quot;&quot;')}&quot;,&quot;${t.text.replace(/&quot;/g, '&quot;&quot;').replace(/\n/g, ' ')}&quot;,&quot;${t.url}&quot;,&quot;${t.time}&quot;,${t.likes},${t.retweets},${t.hasMedia}`
-        )
-      ].join('\n');
-      download(csv, `${username}_likes_${Date.now()}.csv`, 'text/csv');
-      console.log('💾 Downloaded likes.csv');
-    }
+    window.scrollBy(0, CONFIG.scrollStep);
+    await randomDelay();
+    scrollAttempts++;
+    stats.scrolls = scrollAttempts;
+  }
 
-    window.scrapedLikes = likesList;
-    console.log('\n✅ Done! Access data: window.scrapedLikes');
+  const list = Array.from(posts.values()).slice(0, CONFIG.maxPosts);
+  stats.collected = list.length;
+  stats.withMedia = list.filter((p) =&gt; p.hasMedia).length;
+
+  // Most-liked accounts
+  const accountCounts = {};
+  list.forEach((p) =&gt; {
+    const h = p.author.handle || 'unknown';
+    accountCounts[h] = (accountCounts[h] || 0) + 1;
+  });
+  const topAccounts = Object.entries(accountCounts).sort((a, b) =&gt; b[1] - a[1]).slice(0, 5);
+
+  // ============================================
+  // 📤 EXPORT
+  // ============================================
+  const result = {
+    profile: username,
+    profileUrl: `https://x.com/${username}`,
+    scrapedAt: new Date().toISOString(),
+    total: list.length,
+    topLikedAccounts: topAccounts.map(([handle, count]) =&gt; ({ handle, count })),
+    posts: list
   };
 
-  run();
+  const buildCsv = () =&gt; {
+    const header = 'AuthorHandle,AuthorName,Verified,Text,Likes,Retweets,Replies,Views,HasMedia,URL,Time';
+    const rows = list.map((p) =&gt; [
+      csvCell('@' + p.author.handle),
+      csvCell(p.author.displayName),
+      p.author.verified,
+      csvCell(p.text),
+      p.counts.likes,
+      p.counts.retweets,
+      p.counts.replies,
+      p.counts.views,
+      p.hasMedia,
+      csvCell(p.url),
+      csvCell(p.time)
+    ].join(','));
+    return [header, ...rows].join('\n');
+  };
+
+  const csv = buildCsv();
+  const dateStr = new Date().toISOString().split('T')[0];
+
+  if (list.length === 0) {
+    log.warning('No liked posts were collected. The Likes tab may be empty or hidden (X hides it for other users).');
+  } else {
+    if (CONFIG.downloadJson) {
+      download(JSON.stringify(result, null, 2), `${username}_likes_${dateStr}.json`, 'application/json');
+      log.success(`Downloaded ${username}_likes_${dateStr}.json`);
+    }
+    if (CONFIG.autoDownloadCsv) {
+      download(csv, `${username}_likes_${dateStr}.csv`, 'text/csv');
+      log.success(`Downloaded ${username}_likes_${dateStr}.csv`);
+    }
+  }
+
+  window.scrapedUserLikes = result;
+  window.scrapedLikes = list;
+  window.scrapeUserLikesExportCSV = () =&gt; {
+    download(csv, `${username}_likes_${dateStr}.csv`, 'text/csv');
+    return csv;
+  };
+
+  // ============================================
+  // 📊 SUMMARY
+  // ============================================
+  console.log(`
+╔══════════════════════════════════════════════════════════╗
+║  📊 SCRAPE USER LIKES - COMPLETE                         ║
+╠══════════════════════════════════════════════════════════╣
+║  💛 Liked posts:         ${String(stats.collected).padEnd(30)}║
+║  🖼️  With media:          ${String(stats.withMedia).padEnd(30)}║
+║  📜 Scrolls:             ${String(stats.scrolls).padEnd(30)}║
+║  ❌ Row errors:          ${String(stats.errors).padEnd(30)}║
+╚══════════════════════════════════════════════════════════╝
+  `);
+
+  if (topAccounts.length &gt; 0) {
+    console.log('📊 Most-liked accounts:');
+    topAccounts.forEach(([handle, count]) =&gt; console.log(`   @${handle}: ${count}`));
+  }
+
+  list.slice(0, 5).forEach((p, i) =&gt; {
+    console.log(`${i + 1}. @${p.author.handle} (${p.counts.likes} ❤️): &quot;${p.text.slice(0, 50)}...&quot;`);
+  });
+  if (list.length &gt; 5) console.log(`   ... and ${list.length - 5} more`);
+
+  console.log('\n📋 CSV preview (full string via window.scrapeUserLikesExportCSV()):');
+  console.log(csv.split('\n').slice(0, 6).join('\n'));
+  console.log('\n💡 window.scrapedUserLikes = full data. window.scrapedLikes = posts array. window.scrapeUserLikesExportCSV() = download + return CSV.');
+
+  return result;
 })();
 </code></pre>
           </div>
@@ -355,17 +516,17 @@
 
     <aside class="sidebar-right">
       <div class="sidebar-card">
-        <h3>❤️ Scrapers</h3>
-        <a href="/scripts/scrape-bookmarks">🔖 Bookmarks Scraper</a>
-<a href="/scripts/scrape-analytics">📊 Browser console script to scrape X/Twitter analytics data</a>
-<a href="/scripts/scrape-dms">✉️ DM Scraper</a>
-<a href="/scripts/export-to-csv">📄 Export to CSV Utility</a>
-<a href="/scripts/scrape-followers">👥 Followers Scraper</a>
-<a href="/scripts/scrape-following">👥 Following Scraper</a>
-<a href="/scripts/scrape-hashtag">#️⃣ Hashtag Scraper</a>
-<a href="/scripts/scrape-likers">❤️ Likers Scraper</a>
-<a href="/scripts/link-scraper">🔗 Link Scraper</a>
-<a href="/scripts/scrape-list">📝 List Members Scraper</a>
+        <h3>📥 Scrape and Export</h3>
+        <a href="/scripts/backup-account">📥 Backup Account</a>
+<a href="/scripts/bookmark-exporter">📥 Bookmark Exporter</a>
+<a href="/scripts/bookmark-organizer">📥 Bookmark Organizer</a>
+<a href="/scripts/export-to-csv">📥 Export to CSV</a>
+<a href="/scripts/link-scraper">📥 Link Scraper</a>
+<a href="/scripts/manage-bookmarks">📥 Manage Bookmarks</a>
+<a href="/scripts/scrape-cashtag-search">📥 Scrape Cashtag Search</a>
+<a href="/scripts/scrape-explore">📥 Scrape Explore</a>
+<a href="/scripts/scrape-followers">📥 Scrape Followers</a>
+<a href="/scripts/scrape-following">📥 Scrape Following</a>
       </div>
       <div class="sidebar-card">
         <h3>🔗 Quick Links</h3>

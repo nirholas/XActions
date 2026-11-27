@@ -4,14 +4,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Best Time to Post — Free X/Twitter Script | XActions</title>
-  <meta name="description" content="Analyze your posting history to find optimal posting times. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
+  <meta name="description" content="Analyze a profile's posting history and engagement to find the best days and hours to post.">
   <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, best, time, post, analytics">
   <meta name="author" content="nich (@nichxbt)">
   <meta name="robots" content="index, follow">
 
   <meta property="og:type" content="article">
   <meta property="og:title" content="Best Time to Post — XActions">
-  <meta property="og:description" content="Analyze your posting history to find optimal posting times. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
+  <meta property="og:description" content="Analyze a profile's posting history and engagement to find the best days and hours to post.">
   <meta property="og:url" content="https://xactions.app/scripts/best-time-to-post">
   <meta property="og:site_name" content="XActions">
   <meta property="og:image" content="https://xactions.app/og-run.png">
@@ -19,7 +19,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@nichxbt">
   <meta name="twitter:title" content="Best Time to Post — XActions">
-  <meta name="twitter:description" content="Analyze your posting history to find optimal posting times. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
+  <meta name="twitter:description" content="Analyze a profile's posting history and engagement to find the best days and hours to post.">
   <meta name="twitter:image" content="https://xactions.app/og-run.png">
 
   <link rel="canonical" href="https://xactions.app/scripts/best-time-to-post">
@@ -30,7 +30,7 @@
     "@context": "https://schema.org",
     "@type": "TechArticle",
     "headline": "Best Time to Post — Free X/Twitter Script | XActions",
-    "description": "Analyze your posting history to find optimal posting times. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.",
+    "description": "Analyze a profile's posting history and engagement to find the best days and hours to post.",
     "url": "https://xactions.app/scripts/best-time-to-post",
     "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
     "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
@@ -116,7 +116,7 @@
 
     <main class="main-content" id="main-content">
       <header class="main-header">
-        <h1>⏰ Best Time to Post</h1>
+        <h1>📊 Best Time to Post</h1>
         <div class="breadcrumb">
           <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#analytics">Analytics</a> › Best Time to Post
         </div>
@@ -124,16 +124,16 @@
 
       <article class="article">
         <span class="cat-badge">Analytics</span>
-        <span class="source-badge">browser</span>
+        <span class="source-badge">browser/bestTimeToPost.js</span>
 
         <div class="meta-row">
-          
-          
-          <span>182 lines</span>
+          <span>v1.1.0</span>
+          <span>Updated: 2026-11-26</span>
+          <span>270 lines</span>
           <span>by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></span>
         </div>
 
-        <p>Analyze your posting history to find optimal posting times</p>
+        <p>Analyze a profile's posting history and engagement to find the best days and hours to post.</p>
 
         
 
@@ -147,7 +147,21 @@
         
 
         
-        
+        <section class="config-section">
+        <h2>Configuration Options</h2>
+        <table>
+          <thead><tr><th>Option</th><th>Default</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td><code>maxScrollAttempts</code></td><td><code>40</code></td><td>Hard cap on scrolls, even while new posts keep loading</td></tr>
+<tr><td><code>maxRetries</code></td><td><code>3</code></td><td>Stop after this many scrolls in a row that load no new posts</td></tr>
+<tr><td><code>minPosts</code></td><td><code>0</code></td><td>Refuse to report with fewer posts than this (0 = always report)</td></tr>
+<tr><td><code>showHeatmap</code></td><td><code>false</code></td><td>Also print a day x 3-hour engagement heatmap</td></tr>
+<tr><td><code>showWorstTime</code></td><td><code>false</code></td><td>Also print the hour with the lowest average engagement</td></tr>
+<tr><td><code>use12HourClock</code></td><td><code>false</code></td><td>Print hours as &quot;3:00 PM&quot; instead of &quot;15:00&quot;</td></tr>
+<tr><td><code>saveToLocalStorage</code></td><td><code>false</code></td><td>Save the analysis under localStorage key xactions_best_time_&lt;username&gt;</td></tr>
+          </tbody>
+        </table>
+      </section>
         <section class="config-code">
         <h2>Default Configuration</h2>
         <div class="code-block">
@@ -155,8 +169,14 @@
           <pre><code>const CONFIG = {
     maxPosts: 100,
     scrollDelay: 1500,
-    maxScrollAttempts: 40,
+    maxScrollAttempts: 40,  // Hard cap on scrolls, even while new posts keep loading
+    maxRetries: 3,          // Stop after this many scrolls in a row that load no new posts
+    minPosts: 0,            // Refuse to report with fewer posts than this (0 = always report)
     exportResults: true,
+    showHeatmap: false,     // Also print a day x 3-hour engagement heatmap
+    showWorstTime: false,   // Also print the hour with the lowest average engagement
+    use12HourClock: false,  // Print hours as &quot;3:00 PM&quot; instead of &quot;15:00&quot;
+    saveToLocalStorage: false, // Save the analysis under localStorage key xactions_best_time_&lt;username&gt;
   };</code></pre>
         </div>
       </section>
@@ -167,24 +187,39 @@
           <div class="code-block">
             <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.querySelector('code').textContent).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy Script',2000)})">Copy Script</button>
             <pre><code>// Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
-// Best Time to Post on X - by nichxbt
-// https://github.com/nirholas/xactions
-// Analyze your posting history to find optimal posting times
-// 1. Go to https://x.com/YOUR_USERNAME
-// 2. Open the Developer Console (F12)
-// 3. Paste this into the Developer Console and run it
-//
-// Last Updated: 24 February 2026
+/**
+ * @name        bestTimeToPost.js
+ * @title       Best Time to Post
+ * @description Analyze a profile's posting history and engagement to find the best days and hours to post.
+ * @category    analytics
+ * @page        x.com/&lt;you&gt; or x.com/&lt;username&gt;
+ * @writes      false
+ * @aliases     scripts/bestTimeToPost.js, scripts/twitter/best-time-to-post.js
+ * @author      nichxbt (https://x.com/nichxbt)
+ * @version     1.1.0
+ * @date        2026-11-26
+ * @repository  https://github.com/nirholas/XActions
+ *
+ * Usage (browser/bestTimeToPost.js):
+ * 1. Go to https://x.com/YOUR_USERNAME
+ * 2. Open the Developer Console (F12)
+ * 3. Paste this into the Developer Console and run it
+ */
 (() =&gt; {
   const CONFIG = {
     maxPosts: 100,
     scrollDelay: 1500,
-    maxScrollAttempts: 40,
+    maxScrollAttempts: 40,  // Hard cap on scrolls, even while new posts keep loading
+    maxRetries: 3,          // Stop after this many scrolls in a row that load no new posts
+    minPosts: 0,            // Refuse to report with fewer posts than this (0 = always report)
     exportResults: true,
+    showHeatmap: false,     // Also print a day x 3-hour engagement heatmap
+    showWorstTime: false,   // Also print the hour with the lowest average engagement
+    use12HourClock: false,  // Print hours as &quot;3:00 PM&quot; instead of &quot;15:00&quot;
+    saveToLocalStorage: false, // Save the analysis under localStorage key xactions_best_time_&lt;username&gt;
   };
 
   const $tweet = 'article[data-testid=&quot;tweet&quot;]';
-  const $tweetText = '[data-testid=&quot;tweetText&quot;]';
   const $like = '[data-testid=&quot;like&quot;], [data-testid=&quot;unlike&quot;]';
   const $retweet = '[data-testid=&quot;retweet&quot;], [data-testid=&quot;unretweet&quot;]';
   const $reply = '[data-testid=&quot;reply&quot;]';
@@ -204,6 +239,13 @@
   const DAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
   const HOURS = Array.from({ length: 24 }, (_, i) =&gt; `${i.toString().padStart(2, '0')}:00`);
 
+  const formatHour = (hourLabel) =&gt; {
+    if (!CONFIG.use12HourClock) return hourLabel;
+    const h = parseInt(hourLabel, 10);
+    const ampm = h &gt;= 12 ? 'PM' : 'AM';
+    return `${h % 12 || 12}:00 ${ampm}`;
+  };
+
   const run = async () =&gt; {
     console.log('⏰ BEST TIME TO POST - XActions by nichxbt');
 
@@ -217,8 +259,9 @@
 
     const posts = new Map();
     let retries = 0;
+    let scrollCount = 0;
 
-    while (posts.size &lt; CONFIG.maxPosts &amp;&amp; retries &lt; 3) {
+    while (posts.size &lt; CONFIG.maxPosts &amp;&amp; retries &lt; CONFIG.maxRetries &amp;&amp; scrollCount &lt; CONFIG.maxScrollAttempts) {
       const prevSize = posts.size;
 
       document.querySelectorAll($tweet).forEach(tweet =&gt; {
@@ -248,12 +291,20 @@
       if (posts.size === prevSize) retries++;
       else retries = 0;
 
+      console.log(`   Found ${posts.size} posts...`);
+
       window.scrollTo(0, document.body.scrollHeight);
       await sleep(CONFIG.scrollDelay);
+      scrollCount++;
     }
 
     const postsArray = [...posts.values()];
     console.log(`📊 Analyzed ${postsArray.length} posts\n`);
+
+    if (postsArray.length &lt; CONFIG.minPosts) {
+      console.error(`❌ Not enough posts to analyze. Need at least ${CONFIG.minPosts}, found ${postsArray.length}. Try scrolling more.`);
+      return;
+    }
 
     // Build hour x day engagement matrix
     const hourEngagement = {};
@@ -313,16 +364,71 @@
     console.log('\n⏰ BEST HOURS (by avg engagement):');
     hourAvg.slice(0, 8).forEach((h, i) =&gt; {
       const bar = '█'.repeat(Math.min(20, Math.round(h.avg / (hourAvg[0]?.avg || 1) * 20)));
-      console.log(`   ${i + 1}. ${h.hour.padEnd(8)} ${bar} ${h.avg.toFixed(1)} avg (${h.posts} posts)`);
+      console.log(`   ${i + 1}. ${formatHour(h.hour).padEnd(8)} ${bar} ${h.avg.toFixed(1)} avg (${h.posts} posts)`);
     });
 
     console.log('\n🏆 BEST DAY+HOUR COMBOS:');
     combos.slice(0, 5).forEach((c, i) =&gt; {
-      console.log(`   ${i + 1}. ${c.day} at ${c.hour} — ${c.avg.toFixed(1)} avg engagement (${c.posts} posts)`);
+      console.log(`   ${i + 1}. ${c.day} at ${formatHour(c.hour)} - ${c.avg.toFixed(1)} avg engagement (${c.posts} posts)`);
     });
 
+    if (CONFIG.showHeatmap &amp;&amp; postsArray.length &gt; 0) {
+      console.log('\n📊 ENGAGEMENT HEATMAP (3-hour blocks, your local time):');
+      console.log('        ' + ['12a', '3a', '6a', '9a', '12p', '3p', '6p', '9p'].join('  '));
+
+      const heatmapData = {};
+      postsArray.forEach(p =&gt; {
+        const date = new Date(p.timestamp);
+        const key = `${date.getDay()}-${Math.floor(date.getHours() / 3)}`;
+        if (!heatmapData[key]) heatmapData[key] = { count: 0, engagement: 0 };
+        heatmapData[key].count++;
+        heatmapData[key].engagement += p.engagement;
+      });
+
+      const heatValues = Object.values(heatmapData).map(d =&gt; d.engagement / d.count);
+      const maxHeat = heatValues.length &gt; 0 ? Math.max(...heatValues) : 0;
+      const heatChars = [' ', '░', '▒', '▓', '█'];
+
+      DAYS.forEach((day, d) =&gt; {
+        let row = day.slice(0, 3).padEnd(4) + '    ';
+        for (let block = 0; block &lt; 8; block++) {
+          const data = heatmapData[`${d}-${block}`];
+          if (data) {
+            const intensity = maxHeat &gt; 0
+              ? Math.min(4, Math.floor((data.engagement / data.count) / maxHeat * 4))
+              : 0;
+            row += heatChars[intensity] + '    ';
+          } else {
+            row += '·    ';
+          }
+        }
+        console.log(row);
+      });
+    }
+
     if (hourAvg[0]) {
-      console.log(`\n💡 RECOMMENDATION: Post on ${dayAvg[0]?.day || 'any day'} around ${hourAvg[0].hour} for best engagement`);
+      console.log(`\n💡 RECOMMENDATION: Post on ${dayAvg[0]?.day || 'any day'} around ${formatHour(hourAvg[0].hour)} for best engagement`);
+    }
+
+    if (CONFIG.showWorstTime &amp;&amp; hourAvg.length &gt; 0) {
+      const worst = hourAvg[hourAvg.length - 1];
+      console.log(`\n❌ WORST time to post: ${formatHour(worst.hour)} (${worst.avg.toFixed(1)} avg engagement)`);
+    }
+
+    if (CONFIG.saveToLocalStorage) {
+      try {
+        localStorage.setItem(`xactions_best_time_${username}`, JSON.stringify({
+          username,
+          timestamp: new Date().toISOString(),
+          postCount: postsArray.length,
+          bestDays: dayAvg,
+          bestHours: hourAvg,
+          bestCombos: combos.slice(0, 10),
+        }));
+        console.log(`\n💾 Analysis saved to localStorage (xactions_best_time_${username})`);
+      } catch (e) {
+        console.warn('⚠️ Could not save to localStorage:', e.message);
+      }
     }
 
     if (CONFIG.exportResults) {
@@ -340,7 +446,9 @@
       const a = document.createElement('a');
       a.href = url;
       a.download = `xactions-best-time-${username}-${new Date().toISOString().slice(0, 10)}.json`;
+      document.body.appendChild(a);
       a.click();
+      a.remove();
       console.log('\n📥 Report downloaded as JSON');
     }
   };
@@ -361,17 +469,17 @@
 
     <aside class="sidebar-right">
       <div class="sidebar-card">
-        <h3>⏰ Analytics</h3>
-        <a href="/scripts/account-health-monitor">🏥 Account Health Monitor</a>
-<a href="/scripts/audience-demographics">📊 Audience Demographics Analyzer</a>
-<a href="/scripts/audience-overlap">🔗 Audience Overlap Analyzer</a>
-<a href="/scripts/competitor-analysis">🔍 Competitor Analysis</a>
-<a href="/scripts/engagement-analytics">📈 Engagement Analytics</a>
-<a href="/scripts/hashtag-analytics">#️⃣ Hashtag Analytics</a>
-<a href="/scripts/keyword-monitor">🔑 Keyword Monitor &amp; Alerts</a>
-<a href="/scripts/manage-notifications">🔔 Manage Notifications</a>
-<a href="/scripts/notification-manager">🔔 Notification Manager</a>
-<a href="/scripts/profile-stats">📊 Profile Stats</a>
+        <h3>📊 Analytics</h3>
+        <a href="/scripts/account-health-monitor">📊 Account Health Monitor</a>
+<a href="/scripts/audience-demographics">📊 Audience Demographics</a>
+<a href="/scripts/audience-overlap">📊 Audience Overlap</a>
+<a href="/scripts/audit-followers">📊 Audit Followers</a>
+<a href="/scripts/business-analytics">📊 Business Analytics</a>
+<a href="/scripts/business-tools">📊 Business Tools</a>
+<a href="/scripts/competitor-analysis">📊 Competitor Analysis</a>
+<a href="/scripts/content-calendar">📊 Content Calendar</a>
+<a href="/scripts/creator-studio">📊 Creator Studio</a>
+<a href="/scripts/engagement-analytics">📊 Engagement Analytics</a>
       </div>
       <div class="sidebar-card">
         <h3>🔗 Quick Links</h3>

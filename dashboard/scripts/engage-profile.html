@@ -4,14 +4,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Engage Profile — Free X/Twitter Script | XActions</title>
-  <meta name="description" content="Like, repost, and comment on every post of one profile, with comments from your templates or from an LLM.">
-  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, engage, profile, other tools">
+  <meta name="description" content="Like, repost and comment on every post of one profile, with comments from your templates or from an LLM.">
+  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, engage, profile, engage">
   <meta name="author" content="nich (@nichxbt)">
   <meta name="robots" content="index, follow">
 
   <meta property="og:type" content="article">
   <meta property="og:title" content="Engage Profile — XActions">
-  <meta property="og:description" content="Like, repost, and comment on every post of one profile, with comments from your templates or from an LLM.">
+  <meta property="og:description" content="Like, repost and comment on every post of one profile, with comments from your templates or from an LLM.">
   <meta property="og:url" content="https://xactions.app/scripts/engage-profile">
   <meta property="og:site_name" content="XActions">
   <meta property="og:image" content="https://xactions.app/og-run.png">
@@ -19,7 +19,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@nichxbt">
   <meta name="twitter:title" content="Engage Profile — XActions">
-  <meta name="twitter:description" content="Like, repost, and comment on every post of one profile, with comments from your templates or from an LLM.">
+  <meta name="twitter:description" content="Like, repost and comment on every post of one profile, with comments from your templates or from an LLM.">
   <meta name="twitter:image" content="https://xactions.app/og-run.png">
 
   <link rel="canonical" href="https://xactions.app/scripts/engage-profile">
@@ -30,14 +30,14 @@
     "@context": "https://schema.org",
     "@type": "TechArticle",
     "headline": "Engage Profile — Free X/Twitter Script | XActions",
-    "description": "Like, repost, and comment on every post of one profile, with comments from your templates or from an LLM.",
+    "description": "Like, repost and comment on every post of one profile, with comments from your templates or from an LLM.",
     "url": "https://xactions.app/scripts/engage-profile",
     "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
     "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
     "datePublished": "2026-03-30",
     "dateModified": "2026-03-30",
-    "articleSection": "Other Tools",
-    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, engage, profile, other tools"
+    "articleSection": "Engage",
+    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, engage, profile, engage"
   }
   </script>
   <script type="application/ld+json">
@@ -47,7 +47,7 @@
     "itemListElement": [
       { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
       { "@type": "ListItem", "position": 2, "name": "Scripts", "item": "https://xactions.app/scripts" },
-      { "@type": "ListItem", "position": 3, "name": "Other Tools", "item": "https://xactions.app/scripts#other-tools" },
+      { "@type": "ListItem", "position": 3, "name": "Engage", "item": "https://xactions.app/scripts#engage" },
       { "@type": "ListItem", "position": 4, "name": "Engage Profile", "item": "https://xactions.app/scripts/engage-profile" }
     ]
   }
@@ -116,24 +116,24 @@
 
     <main class="main-content" id="main-content">
       <header class="main-header">
-        <h1>⚡ Engage Profile</h1>
+        <h1>💬 Engage Profile</h1>
         <div class="breadcrumb">
-          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#other-tools">Other Tools</a> › Engage Profile
+          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#engage">Engage</a> › Engage Profile
         </div>
       </header>
 
       <article class="article">
-        <span class="cat-badge">Other Tools</span>
-        <span class="source-badge">scripts</span>
+        <span class="cat-badge">Engage</span>
+        <span class="source-badge">browser/engageProfile.js</span>
 
         <div class="meta-row">
           <span>v1.0.0</span>
           <span>Updated: 2026-08-27</span>
-          <span>1264 lines</span>
+          <span>1268 lines</span>
           <span>by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></span>
         </div>
 
-        <p>Like, repost, and comment on every post of one profile, with comments from your templates or from an LLM.</p>
+        <p>Like, repost and comment on every post of one profile, with comments from your templates or from an LLM.</p>
 
         
 
@@ -249,7 +249,6 @@
           <div class="code-block">
             <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.querySelector('code').textContent).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy Script',2000)})">Copy Script</button>
             <pre><code>// Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
-// scripts/engageProfile.js
 // Like, repost, and comment on every post in a feed: a profile, a search, a list, a hashtag, or home
 // Paste in DevTools console on x.com/USERNAME, a search, a list, a hashtag, or x.com/home
 // by nichxbt
@@ -280,7 +279,12 @@
  * ============================================================
  *
  * @name        engageProfile.js
- * @description Like, repost, and comment on every post of one profile, with comments from your templates or from an LLM.
+ * @description Like, repost and comment on every post of one profile, with comments from your templates or from an LLM.
+ * @title       Engage Profile
+ * @category    engage
+ * @page        x.com/&lt;username&gt;
+ * @writes      true
+ * @aliases     scripts/engageProfile.js
  * @author      nichxbt (https://x.com/nichxbt)
  * @version     1.0.0
  * @date        2026-08-27
@@ -699,7 +703,7 @@
     t = t.replace(/^```[a-z]*\n?/i, '').replace(/\n?```$/, '').trim();
     const unquote = (s) =&gt; { const m = s.match(/^[&quot;“'‘](.*)[&quot;”'’]$/s); return m ? m[1].trim() : s; };
     t = unquote(t);
-    t = t.replace(/^(reply|comment|response|answer)\s*[:\-]\s*/i, '').trim();
+    t = t.replace(/^(reply|comment|response|answer)\s*[:-]\s*/i, '').trim();
     t = unquote(t);
     if (!CONFIG.comments.allowHashtags) t = t.replace(/(^|\s)#[\w]+/g, '$1');
     t = t.replace(/[ \t]+/g, ' ').replace(/\n{3,}/g, '\n\n').trim();
@@ -1525,17 +1529,17 @@
 
     <aside class="sidebar-right">
       <div class="sidebar-card">
-        <h3>⚡ Other Tools</h3>
-        <a href="/scripts/ad-campaign-manager">⚡ Ad campaign management</a>
-<a href="/scripts/advanced-creator">⚡ Advanced creator monetization</a>
-<a href="/scripts/advanced-dm">⚡ Advanced Direct Message features</a>
-<a href="/scripts/advanced-grok">⚡ Advanced Grok AI features</a>
-<a href="/scripts/advanced-notifications">⚡ Advanced notification management</a>
-<a href="/scripts/advanced-premium">⚡ Advanced Premium features</a>
-<a href="/scripts/advanced-profile">⚡ Advanced profile management</a>
-<a href="/scripts/advanced-settings">⚡ Advanced settings and privacy management</a>
-<a href="/scripts/advanced-spaces">⚡ Advanced Spaces features</a>
-<a href="/scripts/community-manager">⚡ Community management</a>
+        <h3>💬 Engage</h3>
+        <a href="/scripts/auto-commenter">💬 Auto Commenter</a>
+<a href="/scripts/auto-engage">💬 Auto Engage</a>
+<a href="/scripts/auto-liker">💬 Auto Liker</a>
+<a href="/scripts/auto-reply">💬 Auto Reply</a>
+<a href="/scripts/auto-repost">💬 Auto Repost</a>
+<a href="/scripts/auto-reply-mentions">💬 Auto-Reply Mentions</a>
+<a href="/scripts/comment-by-hashtag">💬 Comment by Hashtag</a>
+<a href="/scripts/comment-by-location">💬 Comment by Location</a>
+<a href="/scripts/community-notes">💬 Community Notes</a>
+<a href="/scripts/customer-service">💬 Customer Service Bot</a>
       </div>
       <div class="sidebar-card">
         <h3>🔗 Quick Links</h3>

@@ -4,14 +4,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Unfollow Non-Followers — Free X/Twitter Script | XActions</title>
-  <meta name="description" content="Unfollow accounts that do NOT follow you back. Detects &quot;Follows you&quot; badge per user cell and only unfollows those missing it.">
-  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, unfollowback, unfollow tools">
+  <meta name="description" content="Unfollow accounts that do not follow you back, with a whitelist, a dry run, rate-limit cooldowns and a JSON export.">
+  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, unfollowback, clean up">
   <meta name="author" content="nich (@nichxbt)">
   <meta name="robots" content="index, follow">
 
   <meta property="og:type" content="article">
   <meta property="og:title" content="Unfollow Non-Followers — XActions">
-  <meta property="og:description" content="Unfollow accounts that do NOT follow you back. Detects &quot;Follows you&quot; badge per user cell and only unfollows those missing it.">
+  <meta property="og:description" content="Unfollow accounts that do not follow you back, with a whitelist, a dry run, rate-limit cooldowns and a JSON export.">
   <meta property="og:url" content="https://xactions.app/scripts/unfollowback">
   <meta property="og:site_name" content="XActions">
   <meta property="og:image" content="https://xactions.app/og-run.png">
@@ -19,7 +19,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@nichxbt">
   <meta name="twitter:title" content="Unfollow Non-Followers — XActions">
-  <meta name="twitter:description" content="Unfollow accounts that do NOT follow you back. Detects &quot;Follows you&quot; badge per user cell and only unfollows those missing it.">
+  <meta name="twitter:description" content="Unfollow accounts that do not follow you back, with a whitelist, a dry run, rate-limit cooldowns and a JSON export.">
   <meta name="twitter:image" content="https://xactions.app/og-run.png">
 
   <link rel="canonical" href="https://xactions.app/scripts/unfollowback">
@@ -30,14 +30,14 @@
     "@context": "https://schema.org",
     "@type": "TechArticle",
     "headline": "Unfollow Non-Followers — Free X/Twitter Script | XActions",
-    "description": "Unfollow accounts that do NOT follow you back. Detects \"Follows you\" badge per user cell and only unfollows those missing it.",
+    "description": "Unfollow accounts that do not follow you back, with a whitelist, a dry run, rate-limit cooldowns and a JSON export.",
     "url": "https://xactions.app/scripts/unfollowback",
     "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
     "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
     "datePublished": "2026-03-30",
     "dateModified": "2026-03-30",
-    "articleSection": "Unfollow Tools",
-    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, unfollowback, unfollow tools"
+    "articleSection": "Clean Up",
+    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, unfollowback, clean up"
   }
   </script>
   <script type="application/ld+json">
@@ -47,7 +47,7 @@
     "itemListElement": [
       { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
       { "@type": "ListItem", "position": 2, "name": "Scripts", "item": "https://xactions.app/scripts" },
-      { "@type": "ListItem", "position": 3, "name": "Unfollow Tools", "item": "https://xactions.app/scripts#unfollow-tools" },
+      { "@type": "ListItem", "position": 3, "name": "Clean Up", "item": "https://xactions.app/scripts#clean-up" },
       { "@type": "ListItem", "position": 4, "name": "Unfollow Non-Followers", "item": "https://xactions.app/scripts/unfollowback" }
     ]
   }
@@ -118,22 +118,22 @@
       <header class="main-header">
         <h1>🧹 Unfollow Non-Followers</h1>
         <div class="breadcrumb">
-          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#unfollow-tools">Unfollow Tools</a> › Unfollow Non-Followers
+          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#clean-up">Clean Up</a> › Unfollow Non-Followers
         </div>
       </header>
 
       <article class="article">
-        <span class="cat-badge">Unfollow Tools</span>
-        <span class="source-badge">browser</span>
+        <span class="cat-badge">Clean Up</span>
+        <span class="source-badge">browser/unfollowback.js</span>
 
         <div class="meta-row">
-          <span>v2.0.0</span>
-          <span>Updated: 2026-02-24</span>
-          <span>308 lines</span>
+          <span>v2.1.0</span>
+          <span>Updated: 2026-11-27</span>
+          <span>340 lines</span>
           <span>by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></span>
         </div>
 
-        <p>Unfollow accounts that do NOT follow you back. Detects &quot;Follows you&quot; badge per user cell and only unfollows those missing it. Whitelist protection, dry-run, rate-limit detection, pause/resume, full export of unfollowed list.</p>
+        <p>Unfollow accounts that do not follow you back, with a whitelist, a dry run, rate-limit cooldowns and a JSON export.</p>
 
         
 
@@ -141,7 +141,7 @@
         <ol class="usage-steps"><li>Go to: https://x.com/YOUR_USERNAME/following</li>
 <li>Open DevTools Console (F12)</li>
 <li>Edit CONFIG below (whitelist, dryRun, etc.)</li>
-<li>Paste and run</li></ol>
+<li>Paste browser/unfollowback.js and run</li></ol>
         
 
         <div class="controls-box">
@@ -149,7 +149,8 @@
         <pre><code>window.XActions.pause()   — Pause after current action
 window.XActions.resume()  — Resume
 window.XActions.abort()   — Stop permanently
-window.XActions.status()  — Show progress</code></pre>
+window.XActions.status()  — Show progress
+window.stopUnfollow()     - Stop after the current action</code></pre>
       </div>
         <section class="config-section">
         <h2>Configuration Options</h2>
@@ -158,8 +159,10 @@ window.XActions.status()  — Show progress</code></pre>
           <tbody>
             <tr><td><code>maxUnfollows</code></td><td><code>Infinity</code></td><td>Cap total unfollows</td></tr>
 <tr><td><code>whitelist</code></td><td><code>[]</code></td><td>Usernames to never unfollow (without @)</td></tr>
-<tr><td><code>dryRun</code></td><td><code>false</code></td><td>Preview without unfollowing — SET FALSE TO RUN</td></tr>
-<tr><td><code>minDelay</code></td><td><code>1500</code></td><td>Minimum ms between actions</td></tr>
+<tr><td><code>dryRun</code></td><td><code>true</code></td><td>Preview without unfollowing — SET FALSE TO RUN</td></tr>
+<tr><td><code>confirmStart</code></td><td><code>true</code></td><td>Live mode: ask for a browser confirm() before the first unfollow</td></tr>
+<tr><td><code>logKept</code></td><td><code>false</code></td><td>Log each mutual follower that is kept</td></tr>
+<tr><td><code>minDelay</code></td><td><code>2500</code></td><td>Minimum ms between actions</td></tr>
 <tr><td><code>maxDelay</code></td><td><code>3500</code></td><td>Maximum ms between actions</td></tr>
 <tr><td><code>scrollDelay</code></td><td><code>2000</code></td><td>Wait after scroll for DOM to load</td></tr>
 <tr><td><code>maxConsecutiveErrors</code></td><td><code>8</code></td><td>Abort after N errors in a row</td></tr>
@@ -176,8 +179,10 @@ window.XActions.status()  — Show progress</code></pre>
           <pre><code>const CONFIG = {
     maxUnfollows: Infinity,           // Cap total unfollows
     whitelist: [],                    // Usernames to never unfollow (without @)
-    dryRun: false,                     // Preview without unfollowing — SET FALSE TO RUN
-    minDelay: 1500,                   // Minimum ms between actions
+    dryRun: true,                     // Preview without unfollowing — SET FALSE TO RUN
+    confirmStart: true,               // Live mode: ask for a browser confirm() before the first unfollow
+    logKept: false,                   // Log each mutual follower that is kept
+    minDelay: 2500,                   // Minimum ms between actions
     maxDelay: 3500,                   // Maximum ms between actions
     scrollDelay: 2000,                // Wait after scroll for DOM to load
     maxConsecutiveErrors: 8,          // Abort after N errors in a row
@@ -200,14 +205,15 @@ window.XActions.status()  — Show progress</code></pre>
  * ============================================================
  *
  * @name        unfollowback.js
- * @description Unfollow accounts that do NOT follow you back.
- *              Detects &quot;Follows you&quot; badge per user cell and
- *              only unfollows those missing it. Whitelist
- *              protection, dry-run, rate-limit detection,
- *              pause/resume, full export of unfollowed list.
+ * @title       Unfollow Non-Followers
+ * @description Unfollow accounts that do not follow you back, with a whitelist, a dry run, rate-limit cooldowns and a JSON export.
+ * @category    cleanup
+ * @page        x.com/&lt;you&gt;/following
+ * @writes      true
+ * @aliases     scripts/unfollowback.js, scripts/twitter/unfollow-non-followers.js
  * @author      nichxbt (https://x.com/nichxbt)
- * @version     2.0.0
- * @date        2026-02-24
+ * @version     2.1.0
+ * @date        2026-11-27
  * @repository  https://github.com/nirholas/XActions
  *
  * ============================================================
@@ -216,13 +222,19 @@ window.XActions.status()  — Show progress</code></pre>
  * 1. Go to: https://x.com/YOUR_USERNAME/following
  * 2. Open DevTools Console (F12)
  * 3. Edit CONFIG below (whitelist, dryRun, etc.)
- * 4. Paste and run
+ * 4. Paste browser/unfollowback.js and run
+ *
+ * Only accounts without the &quot;Follows you&quot; badge are unfollowed.
+ * Starts as a DRY RUN that lists who would be unfollowed. Set
+ * dryRun: false to unfollow for real; live mode asks for a browser
+ * confirmation first (confirmStart).
  *
  * 🎮 CONTROLS:
  *   window.XActions.pause()   — Pause after current action
  *   window.XActions.resume()  — Resume
  *   window.XActions.abort()   — Stop permanently
  *   window.XActions.status()  — Show progress
+ *   window.stopUnfollow()     - Stop after the current action
  * ============================================================
  */
 (() =&gt; {
@@ -232,8 +244,10 @@ window.XActions.status()  — Show progress</code></pre>
   const CONFIG = {
     maxUnfollows: Infinity,           // Cap total unfollows
     whitelist: [],                    // Usernames to never unfollow (without @)
-    dryRun: false,                     // Preview without unfollowing — SET FALSE TO RUN
-    minDelay: 1500,                   // Minimum ms between actions
+    dryRun: true,                     // Preview without unfollowing — SET FALSE TO RUN
+    confirmStart: true,               // Live mode: ask for a browser confirm() before the first unfollow
+    logKept: false,                   // Log each mutual follower that is kept
+    minDelay: 2500,                   // Minimum ms between actions
     maxDelay: 3500,                   // Maximum ms between actions
     scrollDelay: 2000,                // Wait after scroll for DOM to load
     maxConsecutiveErrors: 8,          // Abort after N errors in a row
@@ -291,7 +305,10 @@ window.XActions.status()  — Show progress</code></pre>
     if (saved.processed) saved.processed.forEach(u =&gt; processedUsers.add(u));
   } catch {}
 
+  // Dry runs never write the processed list: a later live run must not skip
+  // the accounts a preview only looked at.
   const persist = () =&gt; {
+    if (CONFIG.dryRun) return;
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify({
         processed: [...processedUsers],
@@ -312,6 +329,8 @@ window.XActions.status()  — Show progress</code></pre>
       console.log(`📊 Unfollowed: ${unfollowed} | Scanned: ${scanned} | Follows back: ${skippedFollowsBack} | Whitelisted: ${skippedWhitelist} | Errors: ${errors} | Rate: ${rate}/min | Elapsed: ${elapsed}s`);
     },
   };
+
+  window.stopUnfollow = () =&gt; window.XActions.abort();
 
   const shouldContinue = async () =&gt; {
     while (paused &amp;&amp; !aborted) await sleep(500);
@@ -359,7 +378,19 @@ window.XActions.status()  — Show progress</code></pre>
     if (CONFIG.dryRun) {
       console.log('\n⚠️  DRY RUN — no accounts will be unfollowed.');
       console.log('   Set CONFIG.dryRun = false to execute.\n');
+    } else if (CONFIG.confirmStart) {
+      const confirmed = window.confirm(
+        '🔙 UNFOLLOW NON-FOLLOWERS\n\n' +
+        'This will unfollow accounts that don\'t follow you back.\n' +
+        'Mutual followers will be kept.\n\n' +
+        'Click OK to start.'
+      );
+      if (!confirmed) {
+        console.log('❌ Cancelled by user.');
+        return;
+      }
     }
+    console.log('💡 To stop early: window.stopUnfollow() or XActions.abort()\n');
 
     let emptyScrolls = 0;
 
@@ -391,6 +422,7 @@ window.XActions.status()  — Show progress</code></pre>
         const followsYou = $(SEL.followsYou, cell);
         if (followsYou) {
           skippedFollowsBack++;
+          if (CONFIG.logKept) console.log(`   💚 Keeping: @${username} (follows you)`);
           continue;
         }
 
@@ -471,7 +503,9 @@ window.XActions.status()  — Show progress</code></pre>
     // ── Summary ─────────────────────────────────────────────
     const elapsed = ((Date.now() - startTime) / 1000).toFixed(0);
     console.log('\n╔' + '═'.repeat(50) + '╗');
-    console.log('║  📊 RESULTS' + ' '.repeat(38) + '║');
+    console.log(aborted
+      ? '║  🛑 STOPPED BY USER' + ' '.repeat(30) + '║'
+      : '║  📊 RESULTS' + ' '.repeat(38) + '║');
     console.log('╠' + '═'.repeat(50) + '╣');
     console.log(`║  Scanned:          ${String(scanned).padEnd(29)}║`);
     console.log(`║  Unfollowed:       ${String(unfollowed).padEnd(29)}║`);
@@ -496,6 +530,9 @@ window.XActions.status()  — Show progress</code></pre>
       document.body.appendChild(a); a.click(); a.remove();
       console.log('📥 Results exported as JSON.');
     }
+
+    console.log('✅ Done! Reload &amp; re-run if any were missed.\n');
+    return { scanned, unfollowed, skippedFollowsBack, skippedWhitelist, errors, dryRun: CONFIG.dryRun };
   };
 
   run();
@@ -514,12 +551,17 @@ window.XActions.status()  — Show progress</code></pre>
 
     <aside class="sidebar-right">
       <div class="sidebar-card">
-        <h3>🧹 Unfollow Tools</h3>
-        <a href="/scripts/follow-ratio-manager">⚖️ Follow Ratio Manager</a>
-<a href="/scripts/smart-unfollow">🧠 Smart Unfollow (Time-Based)</a>
-<a href="/scripts/unfollow-everyone">👋 Unfollow Everyone</a>
-<a href="/scripts/unfollow-non-followers">🧹 Unfollow Non-Followers</a>
-<a href="/scripts/unfollow-with-log">📋 Unfollow Non-Followers With Log</a>
+        <h3>🧹 Clean Up</h3>
+        <a href="/scripts/bulk-delete-tweets">🧹 Bulk Delete Tweets</a>
+<a href="/scripts/clear-all-bookmarks">🧹 Clear All Bookmarks</a>
+<a href="/scripts/clear-all-reposts">🧹 Clear All Reposts</a>
+<a href="/scripts/mass-unblock">🧹 Mass Unblock</a>
+<a href="/scripts/mass-unmute">🧹 Mass Unmute</a>
+<a href="/scripts/protect-active-users">🧹 Protect Active Users</a>
+<a href="/scripts/remove-followers">🧹 Remove Followers</a>
+<a href="/scripts/search-sweep">🧹 Search Sweep</a>
+<a href="/scripts/smart-unfollow">🧹 Smart Unfollow</a>
+<a href="/scripts/unfollow-everyone">🧹 Unfollow Everyone</a>
       </div>
       <div class="sidebar-card">
         <h3>🔗 Quick Links</h3>

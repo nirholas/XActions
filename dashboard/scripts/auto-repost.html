@@ -3,23 +3,23 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Auto Repost (Retweet) — Free X/Twitter Script | XActions</title>
-  <meta name="description" content="Automatically repost tweets matching keywords or from specific users. Free X/Twitter browser script, no API key needed.">
-  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, auto, repost, engagement">
+  <title>Auto Repost — Free X/Twitter Script | XActions</title>
+  <meta name="description" content="Repost timeline or search posts that match keywords, authors, likes and media filters, dry run by default.">
+  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, auto, repost, engage">
   <meta name="author" content="nich (@nichxbt)">
   <meta name="robots" content="index, follow">
 
   <meta property="og:type" content="article">
-  <meta property="og:title" content="Auto Repost (Retweet) — XActions">
-  <meta property="og:description" content="Automatically repost tweets matching keywords or from specific users. Free X/Twitter browser script, no API key needed.">
+  <meta property="og:title" content="Auto Repost — XActions">
+  <meta property="og:description" content="Repost timeline or search posts that match keywords, authors, likes and media filters, dry run by default.">
   <meta property="og:url" content="https://xactions.app/scripts/auto-repost">
   <meta property="og:site_name" content="XActions">
   <meta property="og:image" content="https://xactions.app/og-run.png">
 
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@nichxbt">
-  <meta name="twitter:title" content="Auto Repost (Retweet) — XActions">
-  <meta name="twitter:description" content="Automatically repost tweets matching keywords or from specific users. Free X/Twitter browser script, no API key needed.">
+  <meta name="twitter:title" content="Auto Repost — XActions">
+  <meta name="twitter:description" content="Repost timeline or search posts that match keywords, authors, likes and media filters, dry run by default.">
   <meta name="twitter:image" content="https://xactions.app/og-run.png">
 
   <link rel="canonical" href="https://xactions.app/scripts/auto-repost">
@@ -29,15 +29,15 @@
   {
     "@context": "https://schema.org",
     "@type": "TechArticle",
-    "headline": "Auto Repost (Retweet) — Free X/Twitter Script | XActions",
-    "description": "Automatically repost tweets matching keywords or from specific users. Free X/Twitter browser script, no API key needed.",
+    "headline": "Auto Repost — Free X/Twitter Script | XActions",
+    "description": "Repost timeline or search posts that match keywords, authors, likes and media filters, dry run by default.",
     "url": "https://xactions.app/scripts/auto-repost",
     "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
     "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
     "datePublished": "2026-03-30",
     "dateModified": "2026-03-30",
-    "articleSection": "Engagement",
-    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, auto, repost, engagement"
+    "articleSection": "Engage",
+    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, auto, repost, engage"
   }
   </script>
   <script type="application/ld+json">
@@ -47,8 +47,8 @@
     "itemListElement": [
       { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
       { "@type": "ListItem", "position": 2, "name": "Scripts", "item": "https://xactions.app/scripts" },
-      { "@type": "ListItem", "position": 3, "name": "Engagement", "item": "https://xactions.app/scripts#engagement" },
-      { "@type": "ListItem", "position": 4, "name": "Auto Repost (Retweet)", "item": "https://xactions.app/scripts/auto-repost" }
+      { "@type": "ListItem", "position": 3, "name": "Engage", "item": "https://xactions.app/scripts#engage" },
+      { "@type": "ListItem", "position": 4, "name": "Auto Repost", "item": "https://xactions.app/scripts/auto-repost" }
     ]
   }
   </script>
@@ -116,24 +116,24 @@
 
     <main class="main-content" id="main-content">
       <header class="main-header">
-        <h1>🔁 Auto Repost (Retweet)</h1>
+        <h1>💬 Auto Repost</h1>
         <div class="breadcrumb">
-          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#engagement">Engagement</a> › Auto Repost (Retweet)
+          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#engage">Engage</a> › Auto Repost
         </div>
       </header>
 
       <article class="article">
-        <span class="cat-badge">Engagement</span>
-        <span class="source-badge">browser</span>
+        <span class="cat-badge">Engage</span>
+        <span class="source-badge">browser/autoRepost.js</span>
 
         <div class="meta-row">
-          
-          
-          <span>145 lines</span>
+          <span>v1.1.0</span>
+          <span>Updated: 2026-11-27</span>
+          <span>282 lines</span>
           <span>by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></span>
         </div>
 
-        <p>Automatically repost tweets matching keywords or from specific users</p>
+        <p>Repost timeline or search posts that match keywords, authors, likes and media filters, dry run by default.</p>
 
         
 
@@ -152,7 +152,13 @@
         <table>
           <thead><tr><th>Option</th><th>Default</th><th>Description</th></tr></thead>
           <tbody>
-            <tr><td><code>minLikes</code></td><td><code>5</code></td><td>Only repost tweets with at least this many likes</td></tr>
+            <tr><td><code>allowUnfiltered</code></td><td><code>false</code></td><td>true = run with no keywords/fromUsers and repost every post that passes the other filters</td></tr>
+<tr><td><code>maxScrollAttempts</code></td><td><code>20</code></td><td>Stop after this many consecutive scrolls with no new posts</td></tr>
+<tr><td><code>maxTotalScrolls</code></td><td><code>0</code></td><td>Stop after this many scrolls in total (0 = no limit)</td></tr>
+<tr><td><code>dryRun</code></td><td><code>true</code></td><td>true = only log what would be reposted. false = repost for real.</td></tr>
+<tr><td><code>skipAds</code></td><td><code>true</code></td><td>Skip promoted/ad posts</td></tr>
+<tr><td><code>onlyWithMedia</code></td><td><code>false</code></td><td>Only repost posts that contain an image or video</td></tr>
+<tr><td><code>minLikes</code></td><td><code>5</code></td><td>Only repost tweets with at least this many likes</td></tr>
           </tbody>
         </table>
       </section>
@@ -170,14 +176,19 @@
       // 'elonmusk',
       // 'nichxbt',
     ],
-    maxReposts: 20,
-    minDelay: 2000,
+    allowUnfiltered: false, // true = run with no keywords/fromUsers and repost every post that passes the other filters
+    maxReposts: 5,
+    minDelay: 3000,
     maxDelay: 4000,
     scrollDelay: 2000,
-    maxScrollAttempts: 20,
+    maxScrollAttempts: 20, // Stop after this many consecutive scrolls with no new posts
+    maxTotalScrolls: 0,    // Stop after this many scrolls in total (0 = no limit)
     // Safety
+    dryRun: true,          // true = only log what would be reposted. false = repost for real.
     skipReplies: true,
+    skipAds: true,         // Skip promoted/ad posts
     skipSensitive: true,
+    onlyWithMedia: false,  // Only repost posts that contain an image or video
     minLikes: 5, // Only repost tweets with at least this many likes
   };</code></pre>
         </div>
@@ -189,14 +200,30 @@
           <div class="code-block">
             <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.querySelector('code').textContent).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy Script',2000)})">Copy Script</button>
             <pre><code>// Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
+/**
+ * @name        autoRepost.js
+ * @title       Auto Repost
+ * @description Repost timeline or search posts that match keywords, authors, likes and media filters, dry run by default.
+ * @category    engage
+ * @page        x.com/home or x.com/search?q=&lt;query&gt;&amp;f=live
+ * @writes      true
+ * @aliases     scripts/autoRepost.js, scripts/twitter/auto-repost.js
+ * @author      nichxbt (https://x.com/nichxbt)
+ * @version     1.1.0
+ * @date        2026-11-27
+ */
 // Auto Repost (Retweet) on X - by nichxbt
 // https://github.com/nirholas/xactions
 // Automatically repost tweets matching keywords or from specific users
-// 1. Go to x.com/home or x.com/search
+// 1. Go to x.com/home or x.com/search (a hashtag or profile timeline works too)
 // 2. Open the Developer Console (F12)
-// 3. Paste this into the Developer Console and run it
+// 3. Paste browser/autoRepost.js into the Developer Console and run it
+//    It starts as a dry run that only lists what it would repost: set
+//    CONFIG.dryRun = false to repost for real.
 //
-// Last Updated: 24 February 2026
+// To stop early: window.stopAutoRepost()
+//
+// Last Updated: 27 November 2026
 (() =&gt; {
   const CONFIG = {
     // Filter criteria (at least one must match)
@@ -208,14 +235,19 @@
       // 'elonmusk',
       // 'nichxbt',
     ],
-    maxReposts: 20,
-    minDelay: 2000,
+    allowUnfiltered: false, // true = run with no keywords/fromUsers and repost every post that passes the other filters
+    maxReposts: 5,
+    minDelay: 3000,
     maxDelay: 4000,
     scrollDelay: 2000,
-    maxScrollAttempts: 20,
+    maxScrollAttempts: 20, // Stop after this many consecutive scrolls with no new posts
+    maxTotalScrolls: 0,    // Stop after this many scrolls in total (0 = no limit)
     // Safety
+    dryRun: true,          // true = only log what would be reposted. false = repost for real.
     skipReplies: true,
+    skipAds: true,         // Skip promoted/ad posts
     skipSensitive: true,
+    onlyWithMedia: false,  // Only repost posts that contain an image or video
     minLikes: 5, // Only repost tweets with at least this many likes
   };
 
@@ -224,6 +256,8 @@
   const $retweetButton = '[data-testid=&quot;retweet&quot;]';
   const $retweetConfirm = '[data-testid=&quot;retweetConfirm&quot;]';
   const $like = '[data-testid=&quot;like&quot;], [data-testid=&quot;unlike&quot;]';
+  const $promoted = '[data-testid=&quot;placementTracking&quot;]';
+  const $media = '[data-testid=&quot;tweetPhoto&quot;], [data-testid=&quot;videoPlayer&quot;], [data-testid=&quot;videoComponent&quot;]';
 
   const sleep = (ms) =&gt; new Promise(r =&gt; setTimeout(r, ms));
   const randomDelay = () =&gt; Math.floor(Math.random() * (CONFIG.maxDelay - CONFIG.minDelay + 1)) + CONFIG.minDelay;
@@ -240,14 +274,64 @@
 
   let reposted = 0;
   const processedTweets = new Set();
+  const stats = {
+    skippedReplies: 0,
+    skippedAds: 0,
+    skippedNoMedia: 0,
+    skippedLowLikes: 0,
+    skippedNoMatch: 0,
+    alreadyReposted: 0,
+    errors: 0,
+  };
+
+  // Stop switch: run window.stopAutoRepost() from the console to abort the
+  // loop after the post currently being processed.
+  let stopped = false;
+  window.stopAutoRepost = () =&gt; {
+    stopped = true;
+    console.log('⚠️ Stop requested. Finishing the current post, then exiting.');
+  };
+
+  // Post ID from the time element's permalink first, so a quoted post's link
+  // is never mistaken for the post itself.
+  const getTweetId = (tweetEl) =&gt; {
+    const timeAnchor = tweetEl.querySelector('time')?.closest('a[href*=&quot;/status/&quot;]');
+    const timeMatch = timeAnchor?.href?.match(/\/status\/(\d+)/);
+    if (timeMatch) return timeMatch[1];
+    for (const link of tweetEl.querySelectorAll('a[href*=&quot;/status/&quot;]')) {
+      const match = link.href.match(/\/status\/(\d+)/);
+      if (match) return match[1];
+    }
+    return (tweetEl.querySelector($tweetText)?.textContent || '').substring(0, 100);
+  };
+
+  const isReply = (tweetEl) =&gt; {
+    if (tweetEl.querySelector('[data-testid=&quot;in-reply-to&quot;]') !== null) return true;
+    return Array.from(tweetEl.querySelectorAll('div[dir]')).some(el =&gt;
+      el.innerText.startsWith('Replying to'));
+  };
+
+  const isAd = (tweetEl) =&gt; {
+    if (tweetEl.querySelector($promoted) !== null) return true;
+    return Array.from(tweetEl.querySelectorAll('span')).some(el =&gt; {
+      const t = el.textContent.trim();
+      return t === 'Ad' || t === 'Promoted';
+    });
+  };
+
+  const hasMedia = (tweetEl) =&gt; tweetEl.querySelector($media) !== null;
+
+  const getUsername = (tweetEl) =&gt; {
+    const userLink = tweetEl.querySelector('a[href^=&quot;/&quot;][role=&quot;link&quot;]');
+    return userLink?.href?.match(/x\.com\/([^\/]+)/)?.[1] || '';
+  };
 
   const matchesCriteria = (tweetEl) =&gt; {
     const textEl = tweetEl.querySelector($tweetText);
     const text = textEl?.textContent?.toLowerCase() || '';
 
     // Check username
-    const userLink = tweetEl.querySelector('a[href^=&quot;/&quot;][role=&quot;link&quot;]');
-    const username = userLink?.href?.match(/x\.com\/([^\/]+)/)?.[1]?.toLowerCase() || '';
+    const username = getUsername(tweetEl).toLowerCase();
 
     const matchesKeyword = CONFIG.keywords.length === 0 || CONFIG.keywords.some(kw =&gt; text.includes(kw.toLowerCase()));
     const matchesUser = CONFIG.fromUsers.length === 0 || CONFIG.fromUsers.some(u =&gt; u.toLowerCase() === username);
@@ -264,42 +348,90 @@
   const run = async () =&gt; {
     console.log('🔄 AUTO REPOST - XActions by nichxbt');
 
-    if (CONFIG.keywords.length === 0 &amp;&amp; CONFIG.fromUsers.length === 0) {
-      console.error('❌ No filters! Edit CONFIG.keywords or CONFIG.fromUsers');
+    if (CONFIG.keywords.length === 0 &amp;&amp; CONFIG.fromUsers.length === 0 &amp;&amp; !CONFIG.allowUnfiltered) {
+      console.error('❌ No filters! Edit CONFIG.keywords or CONFIG.fromUsers (or set CONFIG.allowUnfiltered = true)');
       return;
     }
 
+    // Page guard: reposting reads the rendered timeline.
+    if (document.querySelector($tweet) === null) {
+      console.warn('⚠️ No posts visible yet. Go to your home timeline, a search/hashtag results page or a profile, wait for posts to load, then re-run.');
+      return;
+    }
+
+    console.log(`⚙️ Mode: ${CONFIG.dryRun ? '🔍 DRY RUN (nothing is reposted)' : '⚡ LIVE'}`);
     console.log(`🔍 Keywords: ${CONFIG.keywords.join(', ') || 'none'}`);
     console.log(`👤 Users: ${CONFIG.fromUsers.join(', ') || 'none'}`);
-    console.log(`📊 Max reposts: ${CONFIG.maxReposts}\n`);
+    console.log(`🚫 Skip ads: ${CONFIG.skipAds} | Skip replies: ${CONFIG.skipReplies} | Only media: ${CONFIG.onlyWithMedia} | Min likes: ${CONFIG.minLikes}`);
+    console.log(`📊 Max reposts: ${CONFIG.maxReposts}`);
+    console.log('🛑 To stop early: window.stopAutoRepost()\n');
 
     let scrollAttempts = 0;
+    let totalScrolls = 0;
 
-    while (reposted &lt; CONFIG.maxReposts &amp;&amp; scrollAttempts &lt; CONFIG.maxScrollAttempts) {
+    while (!stopped &amp;&amp; reposted &lt; CONFIG.maxReposts &amp;&amp; scrollAttempts &lt; CONFIG.maxScrollAttempts) {
+      if (CONFIG.maxTotalScrolls &gt; 0 &amp;&amp; totalScrolls &gt;= CONFIG.maxTotalScrolls) break;
+
       const tweets = document.querySelectorAll($tweet);
       let foundNew = false;
 
       for (const tweet of tweets) {
-        if (reposted &gt;= CONFIG.maxReposts) break;
+        if (stopped || reposted &gt;= CONFIG.maxReposts) break;
 
-        const tweetLink = tweet.querySelector('a[href*=&quot;/status/&quot;]')?.href || '';
-        if (processedTweets.has(tweetLink)) continue;
-        processedTweets.add(tweetLink);
+        const tweetId = getTweetId(tweet);
+        if (!tweetId || processedTweets.has(tweetId)) continue;
+        processedTweets.add(tweetId);
         foundNew = true;
 
+        if (CONFIG.skipAds &amp;&amp; isAd(tweet)) {
+          stats.skippedAds++;
+          continue;
+        }
+
+        if (CONFIG.skipReplies &amp;&amp; isReply(tweet)) {
+          stats.skippedReplies++;
+          continue;
+        }
+
+        if (CONFIG.onlyWithMedia &amp;&amp; !hasMedia(tweet)) {
+          stats.skippedNoMedia++;
+          continue;
+        }
+
         // Skip if already retweeted
-        if (tweet.querySelector('[data-testid=&quot;unretweet&quot;]')) continue;
+        if (tweet.querySelector('[data-testid=&quot;unretweet&quot;]')) {
+          stats.alreadyReposted++;
+          continue;
+        }
 
         // Check likes threshold
         const likeEl = tweet.querySelector($like);
         const likes = parseCount(likeEl?.getAttribute('aria-label') || '0');
-        if (likes &lt; CONFIG.minLikes) continue;
+        if (likes &lt; CONFIG.minLikes) {
+          stats.skippedLowLikes++;
+          continue;
+        }
 
-        if (!matchesCriteria(tweet)) continue;
+        if (!matchesCriteria(tweet)) {
+          stats.skippedNoMatch++;
+          continue;
+        }
+
+        const text = tweet.querySelector($tweetText)?.textContent?.substring(0, 50).replace(/\n/g, ' ') || '';
+        const username = getUsername(tweet);
+
+        if (CONFIG.dryRun) {
+          reposted++;
+          console.log(`🔍 [DRY] #${reposted} Would repost @${username}: &quot;${text}...&quot;`);
+          continue;
+        }
 
         try {
           const rtBtn = tweet.querySelector($retweetButton);
           if (!rtBtn) continue;
+
+          tweet.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          await sleep(500);
 
           rtBtn.click();
           await sleep(800);
@@ -308,14 +440,15 @@
           if (confirmBtn) {
             confirmBtn.click();
             reposted++;
-            const text = tweet.querySelector($tweetText)?.textContent?.substring(0, 50) || '';
-            console.log(`🔄 Reposted (${reposted}/${CONFIG.maxReposts}): &quot;${text}...&quot;`);
+            console.log(`🔄 Reposted (${reposted}/${CONFIG.maxReposts}) @${username}: &quot;${text}...&quot;`);
           } else {
             document.body.click(); // Close menu
           }
 
           await sleep(randomDelay());
         } catch (e) {
+          stats.errors++;
+          console.warn(`⚠️ Error: ${e.message}`);
           document.body.click();
         }
       }
@@ -323,11 +456,26 @@
       if (!foundNew) scrollAttempts++;
       else scrollAttempts = 0;
 
+      if (stopped) break;
       window.scrollTo(0, document.body.scrollHeight);
+      totalScrolls++;
       await sleep(CONFIG.scrollDelay);
     }
 
-    console.log(`\n✅ Done! Reposted ${reposted} tweets.`);
+    const totalSkipped = stats.skippedReplies + stats.skippedAds + stats.skippedNoMedia + stats.skippedLowLikes + stats.skippedNoMatch;
+    console.log(`\n✅ Done! ${CONFIG.dryRun ? 'Would have reposted' : 'Reposted'} ${reposted} tweets.`);
+    console.log(`   📜 Scanned: ${processedTweets.size}`);
+    console.log(`   ⏭️ Skipped: ${totalSkipped} (replies ${stats.skippedReplies}, ads ${stats.skippedAds}, no media ${stats.skippedNoMedia}, low likes ${stats.skippedLowLikes}, no filter match ${stats.skippedNoMatch})`);
+    console.log(`   🔁 Already reposted: ${stats.alreadyReposted}`);
+    console.log(`   ❌ Errors: ${stats.errors}`);
+    console.log(`   📜 Scrolls: ${totalScrolls}`);
+    if (reposted === 0) {
+      console.warn('⚠️ Nothing matched. Loosen your filters (keywords, users, likes, media) or scroll a busier feed.');
+    } else if (CONFIG.dryRun) {
+      console.log(`\n⚡ Set CONFIG.dryRun = false to repost ${reposted} tweets for real.`);
+    }
+
+    return { reposted, scanned: processedTweets.size, scrolls: totalScrolls, dryRun: CONFIG.dryRun, ...stats };
   };
 
   run();
@@ -346,17 +494,17 @@
 
     <aside class="sidebar-right">
       <div class="sidebar-card">
-        <h3>🔁 Engagement</h3>
+        <h3>💬 Engage</h3>
         <a href="/scripts/auto-commenter">💬 Auto Commenter</a>
-<a href="/scripts/auto-reply-mentions">📨 Auto Reply Mentions</a>
-<a href="/scripts/auto-plug-replies">🔌 Auto-Plug Replies</a>
-<a href="/scripts/auto-reply">💬 Auto-Reply / Auto-Respond</a>
-<a href="/scripts/auto-engage">⚡ Browser console script for automated engagement</a>
-<a href="/scripts/comment-by-hashtag">💬 Comment By Hashtag</a>
-<a href="/scripts/comment-by-location">💬 Comment By Location</a>
-<a href="/scripts/engagement-booster">🚀 Engagement Booster v2</a>
-<a href="/scripts/engagement-leaderboard">🏆 Engagement Leaderboard</a>
-<a href="/scripts/engagement-manager">⚡ Engagement Manager</a>
+<a href="/scripts/auto-engage">💬 Auto Engage</a>
+<a href="/scripts/auto-liker">💬 Auto Liker</a>
+<a href="/scripts/auto-reply">💬 Auto Reply</a>
+<a href="/scripts/auto-reply-mentions">💬 Auto-Reply Mentions</a>
+<a href="/scripts/comment-by-hashtag">💬 Comment by Hashtag</a>
+<a href="/scripts/comment-by-location">💬 Comment by Location</a>
+<a href="/scripts/community-notes">💬 Community Notes</a>
+<a href="/scripts/customer-service">💬 Customer Service Bot</a>
+<a href="/scripts/engage-profile">💬 Engage Profile</a>
       </div>
       <div class="sidebar-card">
         <h3>🔗 Quick Links</h3>

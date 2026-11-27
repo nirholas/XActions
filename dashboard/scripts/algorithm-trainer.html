@@ -4,14 +4,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Algorithm Trainer — Free X/Twitter Script | XActions</title>
-  <meta name="description" content="Trains your X/Twitter algorithm by simulating natural browsing behavior in your chosen niche(s).">
-  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, algorithm, trainer, growth">
+  <meta name="description" content="Cycle through training phases (search, like, follow, comment) to teach the algorithm your niche.">
+  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, algorithm, trainer, grow">
   <meta name="author" content="nich (@nichxbt)">
   <meta name="robots" content="index, follow">
 
   <meta property="og:type" content="article">
   <meta property="og:title" content="Algorithm Trainer — XActions">
-  <meta property="og:description" content="Trains your X/Twitter algorithm by simulating natural browsing behavior in your chosen niche(s).">
+  <meta property="og:description" content="Cycle through training phases (search, like, follow, comment) to teach the algorithm your niche.">
   <meta property="og:url" content="https://xactions.app/scripts/algorithm-trainer">
   <meta property="og:site_name" content="XActions">
   <meta property="og:image" content="https://xactions.app/og-run.png">
@@ -19,7 +19,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@nichxbt">
   <meta name="twitter:title" content="Algorithm Trainer — XActions">
-  <meta name="twitter:description" content="Trains your X/Twitter algorithm by simulating natural browsing behavior in your chosen niche(s).">
+  <meta name="twitter:description" content="Cycle through training phases (search, like, follow, comment) to teach the algorithm your niche.">
   <meta name="twitter:image" content="https://xactions.app/og-run.png">
 
   <link rel="canonical" href="https://xactions.app/scripts/algorithm-trainer">
@@ -30,14 +30,14 @@
     "@context": "https://schema.org",
     "@type": "TechArticle",
     "headline": "Algorithm Trainer — Free X/Twitter Script | XActions",
-    "description": "Trains your X/Twitter algorithm by simulating natural browsing behavior in your chosen niche(s).",
+    "description": "Cycle through training phases (search, like, follow, comment) to teach the algorithm your niche.",
     "url": "https://xactions.app/scripts/algorithm-trainer",
     "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
     "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
     "datePublished": "2026-03-30",
     "dateModified": "2026-03-30",
-    "articleSection": "Growth",
-    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, algorithm, trainer, growth"
+    "articleSection": "Grow",
+    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, algorithm, trainer, grow"
   }
   </script>
   <script type="application/ld+json">
@@ -47,7 +47,7 @@
     "itemListElement": [
       { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
       { "@type": "ListItem", "position": 2, "name": "Scripts", "item": "https://xactions.app/scripts" },
-      { "@type": "ListItem", "position": 3, "name": "Growth", "item": "https://xactions.app/scripts#growth" },
+      { "@type": "ListItem", "position": 3, "name": "Grow", "item": "https://xactions.app/scripts#grow" },
       { "@type": "ListItem", "position": 4, "name": "Algorithm Trainer", "item": "https://xactions.app/scripts/algorithm-trainer" }
     ]
   }
@@ -116,24 +116,24 @@
 
     <main class="main-content" id="main-content">
       <header class="main-header">
-        <h1>🧠 Algorithm Trainer</h1>
+        <h1>🌱 Algorithm Trainer</h1>
         <div class="breadcrumb">
-          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#growth">Growth</a> › Algorithm Trainer
+          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#grow">Grow</a> › Algorithm Trainer
         </div>
       </header>
 
       <article class="article">
-        <span class="cat-badge">Growth</span>
-        <span class="source-badge">src/automation</span>
+        <span class="cat-badge">Grow</span>
+        <span class="source-badge">browser/algorithmTrainer.js</span>
 
         <div class="meta-row">
           
           
-          <span>875 lines</span>
+          <span>859 lines</span>
           <span>by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></span>
         </div>
 
-        <p>Trains your X/Twitter algorithm by simulating natural browsing behavior in your chosen niche(s). Searches topics, scrolls feeds, likes posts, follows viral accounts, comments on content, visits your own profile — all with human-like timing and randomness.</p>
+        <p>Cycle through training phases (search, like, follow, comment) to teach the algorithm your niche.</p>
 
         
 
@@ -142,7 +142,7 @@
 <li>Paste core.js, then paste this script</li>
 <li>Configure NICHES, PERSONA, and BEHAVIOR below</li>
 <li>Let it run — it cycles continuously through training phases</li></ol>
-        <p><strong>Note:</strong> This script requires pasting <code>src/automation/core.js</code> first for shared utilities.</p>
+        <p><strong>Note:</strong> This script requires pasting <code>browser/core.js</code> first for shared utilities.</p>
 
         
         
@@ -154,6 +154,15 @@
           <div class="code-block">
             <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.querySelector('code').textContent).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy Script',2000)})">Copy Script</button>
             <pre><code>// Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
+/**
+ * @name        algorithmTrainer.js
+ * @title       Algorithm Trainer
+ * @description Cycle through training phases (search, like, follow, comment) to teach the algorithm your niche.
+ * @category    grow
+ * @page        x.com/home
+ * @writes      true
+ * @aliases     src/automation/algorithmTrainer.js
+ */
 // XActions Automation - Algorithm Trainer
 // https://github.com/nirholas/XActions
 // by nichxbt
@@ -183,9 +192,9 @@
   }
 
   const {
-    log, sleep, randomDelay, scrollBy, scrollToTop, scrollToBottom,
-    clickElement, waitForElement, waitForElements, typeText,
-    storage, rateLimit, SELECTORS, extractTweetInfo,
+    log, sleep, randomDelay, scrollBy, scrollToTop,
+    clickElement, waitForElement,
+    storage, rateLimit, SELECTORS,
   } = window.XActions.Core;
 
   // ============================================
@@ -376,15 +385,6 @@
 
   const pick = (arr) =&gt; arr[Math.floor(Math.random() * arr.length)];
 
-  const shuffle = (arr) =&gt; {
-    const a = [...arr];
-    for (let i = a.length - 1; i &gt; 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [a[i], a[j]] = [a[j], a[i]];
-    }
-    return a;
-  };
-
   const humanDelay = () =&gt; randomDelay(BEHAVIOR.MIN_ACTION_DELAY, BEHAVIOR.MAX_ACTION_DELAY);
   const scrollPause = () =&gt; randomDelay(BEHAVIOR.MIN_SCROLL_PAUSE, BEHAVIOR.MAX_SCROLL_PAUSE);
   const readTime = () =&gt; randomDelay(BEHAVIOR.MIN_READ_TIME, BEHAVIOR.MAX_READ_TIME);
@@ -563,22 +563,6 @@
     saveTracked();
     log(`💬 Commented &quot;${comment}&quot; on ${tweetId}`, 'success');
     return true;
-  };
-
-  const doFollow = async (tweet) =&gt; {
-    if (!canDo('follows')) return false;
-
-    // Find the user link in the tweet to get username
-    const userLink = tweet.querySelector('a[href^=&quot;/&quot;][role=&quot;link&quot;]');
-    if (!userLink) return false;
-    const username = userLink.getAttribute('href')?.replace('/', '').toLowerCase();
-    if (!username || tracked.followedUsers.has(username)) return false;
-    if (username === myUsername()) return false;
-
-    // Find a follow button within or near the tweet
-    // We need to visit the profile to follow — too complex in-feed.
-    // Instead, look for follow buttons in user cells on search/people pages.
-    return false; // Handled separately in followFromPeoplePage
   };
 
   const followFromUserCell = async (cell) =&gt; {
@@ -1041,17 +1025,17 @@
 
     <aside class="sidebar-right">
       <div class="sidebar-card">
-        <h3>🧠 Growth</h3>
-        <a href="/scripts/algorithm-builder">🧠 Algorithm Builder</a>
-<a href="/scripts/follow-list">📋 Follow &amp; Manage Lists</a>
-<a href="/scripts/follow-account">➕ Follow Accounts</a>
-<a href="/scripts/follow-back">🔗 Follow Back</a>
-<a href="/scripts/follow-target-users">🎯 Follow Followers/Following of Target Users</a>
-<a href="/scripts/follow-engagers">🎯 Follow Likers &amp; Commenters</a>
-<a href="/scripts/growth-suite">🚀 Growth Automation Suite</a>
-<a href="/scripts/keyword-follow">🔑 Keyword Search &amp; Follow</a>
-<a href="/scripts/natural-flow">🌊 Natural Flow</a>
-<a href="/scripts/persona-engine">🎭 Persona Engine</a>
+        <h3>🌱 Grow</h3>
+        <a href="/scripts/algorithm-builder">🌱 Algorithm Builder</a>
+<a href="/scripts/auto-plug-replies">🌱 Auto-Plug Replies</a>
+<a href="/scripts/follow-account">🌱 Follow Accounts</a>
+<a href="/scripts/follow-back">🌱 Follow Back</a>
+<a href="/scripts/follow-engagers">🌱 Follow Engagers</a>
+<a href="/scripts/follow-target-users">🌱 Follow Target Users</a>
+<a href="/scripts/follower-tools">🌱 Follower Tools</a>
+<a href="/scripts/growth-suite">🌱 Growth Suite</a>
+<a href="/scripts/keyword-follow">🌱 Keyword Follow</a>
+<a href="/scripts/natural-flow">🌱 Natural Flow</a>
       </div>
       <div class="sidebar-card">
         <h3>🔗 Quick Links</h3>

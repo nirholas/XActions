@@ -4,14 +4,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>DM Manager — Free X/Twitter Script | XActions</title>
-  <meta name="description" content="Browser console script for sending DMs and exporting conversations on X/Twitter. Free X/Twitter browser script, no API key needed.">
-  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, manager, messaging">
+  <meta name="description" content="Send DMs, export conversations and manage message requests. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
+  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, manager, messages">
   <meta name="author" content="nich (@nichxbt)">
   <meta name="robots" content="index, follow">
 
   <meta property="og:type" content="article">
   <meta property="og:title" content="DM Manager — XActions">
-  <meta property="og:description" content="Browser console script for sending DMs and exporting conversations on X/Twitter. Free X/Twitter browser script, no API key needed.">
+  <meta property="og:description" content="Send DMs, export conversations and manage message requests. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
   <meta property="og:url" content="https://xactions.app/scripts/dm-manager">
   <meta property="og:site_name" content="XActions">
   <meta property="og:image" content="https://xactions.app/og-run.png">
@@ -19,7 +19,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@nichxbt">
   <meta name="twitter:title" content="DM Manager — XActions">
-  <meta name="twitter:description" content="Browser console script for sending DMs and exporting conversations on X/Twitter. Free X/Twitter browser script, no API key needed.">
+  <meta name="twitter:description" content="Send DMs, export conversations and manage message requests. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
   <meta name="twitter:image" content="https://xactions.app/og-run.png">
 
   <link rel="canonical" href="https://xactions.app/scripts/dm-manager">
@@ -30,14 +30,14 @@
     "@context": "https://schema.org",
     "@type": "TechArticle",
     "headline": "DM Manager — Free X/Twitter Script | XActions",
-    "description": "Browser console script for sending DMs and exporting conversations on X/Twitter. Free X/Twitter browser script, no API key needed.",
+    "description": "Send DMs, export conversations and manage message requests. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.",
     "url": "https://xactions.app/scripts/dm-manager",
     "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
     "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
     "datePublished": "2026-03-30",
     "dateModified": "2026-03-30",
-    "articleSection": "Messaging",
-    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, manager, messaging"
+    "articleSection": "Messages",
+    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, manager, messages"
   }
   </script>
   <script type="application/ld+json">
@@ -47,7 +47,7 @@
     "itemListElement": [
       { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
       { "@type": "ListItem", "position": 2, "name": "Scripts", "item": "https://xactions.app/scripts" },
-      { "@type": "ListItem", "position": 3, "name": "Messaging", "item": "https://xactions.app/scripts#messaging" },
+      { "@type": "ListItem", "position": 3, "name": "Messages", "item": "https://xactions.app/scripts#messages" },
       { "@type": "ListItem", "position": 4, "name": "DM Manager", "item": "https://xactions.app/scripts/dm-manager" }
     ]
   }
@@ -118,22 +118,22 @@
       <header class="main-header">
         <h1>✉️ DM Manager</h1>
         <div class="breadcrumb">
-          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#messaging">Messaging</a> › DM Manager
+          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#messages">Messages</a> › DM Manager
         </div>
       </header>
 
       <article class="article">
-        <span class="cat-badge">Messaging</span>
-        <span class="source-badge">scripts</span>
+        <span class="cat-badge">Messages</span>
+        <span class="source-badge">browser/dmManager.js</span>
 
         <div class="meta-row">
           
           
-          <span>142 lines</span>
+          <span>149 lines</span>
           <span>by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></span>
         </div>
 
-        <p>Browser console script for sending DMs and exporting conversations on X/Twitter</p>
+        <p>Send DMs, export conversations and manage message requests.</p>
 
         
 
@@ -181,7 +181,15 @@
           <div class="code-block">
             <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.querySelector('code').textContent).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy Script',2000)})">Copy Script</button>
             <pre><code>// Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
-// scripts/dmManager.js
+/**
+ * @name        dmManager.js
+ * @title       DM Manager
+ * @description Send DMs, export conversations and manage message requests.
+ * @category    messages
+ * @page        x.com/messages
+ * @writes      true
+ * @aliases     scripts/dmManager.js
+ */
 // Browser console script for sending DMs and exporting conversations on X/Twitter
 // Paste in DevTools console on x.com/messages
 // by nichxbt
@@ -285,7 +293,6 @@
         const lastMsg = conv.querySelector('[data-testid=&quot;lastMessage&quot;]')?.textContent || conv.querySelector('[dir=&quot;auto&quot;]')?.textContent || '';
         const time = conv.querySelector('time')?.getAttribute('datetime') || '';
         const unread = !!conv.querySelector('[data-testid=&quot;unread&quot;]');
-        const id = name + time;
 
         if (!conversations.find(c =&gt; c.name === name &amp;&amp; c.time === time)) {
           conversations.push({ name, lastMessage: lastMsg.substring(0, 200), time, unread });
@@ -335,14 +342,16 @@
 
     <aside class="sidebar-right">
       <div class="sidebar-card">
-        <h3>✉️ Messaging</h3>
-        <a href="/scripts/auto-reply-dms">💌 Auto Reply DMs</a>
-<a href="/scripts/dm-exporter">📤 Browser console script to export X/Twitter DM conversations</a>
-<a href="/scripts/bulk-dm">📤 Bulk DM</a>
-<a href="/scripts/dm-calls">📞 DM Audio &amp; Video Calls</a>
-<a href="/scripts/encrypted-dm">🔒 Encrypted Direct Messages</a>
-<a href="/scripts/group-dm">👥 Group Direct Messages</a>
-<a href="/scripts/send-direct-message">📬 Send Direct Messages</a>
+        <h3>✉️ Messages</h3>
+        <a href="/scripts/advanced-dm">✉️ Advanced DM Tools</a>
+<a href="/scripts/auto-reply-dms">✉️ Auto-Reply DMs</a>
+<a href="/scripts/bulk-dm">✉️ Bulk DM</a>
+<a href="/scripts/dm-calls">✉️ DM Calls</a>
+<a href="/scripts/encrypted-dm">✉️ Encrypted DMs</a>
+<a href="/scripts/group-dm">✉️ Group DM</a>
+<a href="/scripts/scrape-dms">✉️ Scrape DMs</a>
+<a href="/scripts/send-direct-message">✉️ Send Direct Messages</a>
+<a href="/scripts/welcome-new-followers">✉️ Welcome New Followers</a>
       </div>
       <div class="sidebar-card">
         <h3>🔗 Quick Links</h3>

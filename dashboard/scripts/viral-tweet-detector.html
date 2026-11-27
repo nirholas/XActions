@@ -4,14 +4,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Viral Tweet Detector — Free X/Twitter Script | XActions</title>
-  <meta name="description" content="Scan any timeline and identify tweets going viral in real-time. Calculates velocity (engagement/hour) and flags tweets with abnormally high engagement relative…">
+  <meta name="description" content="Scan a timeline or search and rank posts going viral by engagement rate and velocity (engagement per hour), with a JSON export.">
   <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, viral, tweet, detector, analytics">
   <meta name="author" content="nich (@nichxbt)">
   <meta name="robots" content="index, follow">
 
   <meta property="og:type" content="article">
   <meta property="og:title" content="Viral Tweet Detector — XActions">
-  <meta property="og:description" content="Scan any timeline and identify tweets going viral in real-time. Calculates velocity (engagement/hour) and flags tweets with abnormally high engagement relative…">
+  <meta property="og:description" content="Scan a timeline or search and rank posts going viral by engagement rate and velocity (engagement per hour), with a JSON export.">
   <meta property="og:url" content="https://xactions.app/scripts/viral-tweet-detector">
   <meta property="og:site_name" content="XActions">
   <meta property="og:image" content="https://xactions.app/og-run.png">
@@ -19,7 +19,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@nichxbt">
   <meta name="twitter:title" content="Viral Tweet Detector — XActions">
-  <meta name="twitter:description" content="Scan any timeline and identify tweets going viral in real-time. Calculates velocity (engagement/hour) and flags tweets with abnormally high engagement relative…">
+  <meta name="twitter:description" content="Scan a timeline or search and rank posts going viral by engagement rate and velocity (engagement per hour), with a JSON export.">
   <meta name="twitter:image" content="https://xactions.app/og-run.png">
 
   <link rel="canonical" href="https://xactions.app/scripts/viral-tweet-detector">
@@ -30,7 +30,7 @@
     "@context": "https://schema.org",
     "@type": "TechArticle",
     "headline": "Viral Tweet Detector — Free X/Twitter Script | XActions",
-    "description": "Scan any timeline and identify tweets going viral in real-time. Calculates velocity (engagement/hour) and flags tweets with abnormally high engagement relative…",
+    "description": "Scan a timeline or search and rank posts going viral by engagement rate and velocity (engagement per hour), with a JSON export.",
     "url": "https://xactions.app/scripts/viral-tweet-detector",
     "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
     "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
@@ -116,7 +116,7 @@
 
     <main class="main-content" id="main-content">
       <header class="main-header">
-        <h1>🔥 Viral Tweet Detector</h1>
+        <h1>📊 Viral Tweet Detector</h1>
         <div class="breadcrumb">
           <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#analytics">Analytics</a> › Viral Tweet Detector
         </div>
@@ -124,23 +124,23 @@
 
       <article class="article">
         <span class="cat-badge">Analytics</span>
-        <span class="source-badge">browser</span>
+        <span class="source-badge">browser/viralTweetDetector.js</span>
 
         <div class="meta-row">
           <span>v1.0.0</span>
-          <span>Updated: 2026-02-24</span>
-          <span>224 lines</span>
+          <span>Updated: 2026-11-27</span>
+          <span>226 lines</span>
           <span>by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></span>
         </div>
 
-        <p>Scan any timeline and identify tweets going viral in real-time. Calculates velocity (engagement/hour) and flags tweets with abnormally high engagement relative to the author's follower count.</p>
+        <p>Scan a timeline or search and rank posts going viral by engagement rate and velocity (engagement per hour), with a JSON export.</p>
 
         
 
         <h2>How to Use</h2>
         <ol class="usage-steps"><li>Go to any timeline, search, or explore page on x.com</li>
 <li>Open DevTools Console (F12)</li>
-<li>Paste and run</li>
+<li>Paste browser/viralTweetDetector.js and run</li>
 <li>Identifies tweets with viral potential</li></ol>
         
 
@@ -182,13 +182,15 @@
  * ============================================================
  *
  * @name        viralTweetDetector.js
- * @description Scan any timeline and identify tweets going viral
- *              in real-time. Calculates velocity (engagement/hour)
- *              and flags tweets with abnormally high engagement
- *              relative to the author's follower count.
+ * @title       Viral Tweet Detector
+ * @description Scan a timeline or search and rank posts going viral by engagement rate and velocity (engagement per hour), with a JSON export.
+ * @category    analytics
+ * @page        x.com/home or x.com/search?q=&lt;query&gt;&amp;f=live or x.com/explore
+ * @writes      false
+ * @aliases     scripts/viralTweetDetector.js
  * @author      nichxbt (https://x.com/nichxbt)
  * @version     1.0.0
- * @date        2026-02-24
+ * @date        2026-11-27
  * @repository  https://github.com/nirholas/XActions
  *
  * ============================================================
@@ -196,7 +198,7 @@
  *
  * 1. Go to any timeline, search, or explore page on x.com
  * 2. Open DevTools Console (F12)
- * 3. Paste and run
+ * 3. Paste browser/viralTweetDetector.js and run
  * 4. Identifies tweets with viral potential
  * ============================================================
  */
@@ -412,17 +414,17 @@
 
     <aside class="sidebar-right">
       <div class="sidebar-card">
-        <h3>🔥 Analytics</h3>
-        <a href="/scripts/account-health-monitor">🏥 Account Health Monitor</a>
-<a href="/scripts/audience-demographics">📊 Audience Demographics Analyzer</a>
-<a href="/scripts/audience-overlap">🔗 Audience Overlap Analyzer</a>
-<a href="/scripts/best-time-to-post">⏰ Best Time to Post</a>
-<a href="/scripts/competitor-analysis">🔍 Competitor Analysis</a>
-<a href="/scripts/engagement-analytics">📈 Engagement Analytics</a>
-<a href="/scripts/hashtag-analytics">#️⃣ Hashtag Analytics</a>
-<a href="/scripts/keyword-monitor">🔑 Keyword Monitor &amp; Alerts</a>
-<a href="/scripts/manage-notifications">🔔 Manage Notifications</a>
-<a href="/scripts/notification-manager">🔔 Notification Manager</a>
+        <h3>📊 Analytics</h3>
+        <a href="/scripts/account-health-monitor">📊 Account Health Monitor</a>
+<a href="/scripts/audience-demographics">📊 Audience Demographics</a>
+<a href="/scripts/audience-overlap">📊 Audience Overlap</a>
+<a href="/scripts/audit-followers">📊 Audit Followers</a>
+<a href="/scripts/best-time-to-post">📊 Best Time to Post</a>
+<a href="/scripts/business-analytics">📊 Business Analytics</a>
+<a href="/scripts/business-tools">📊 Business Tools</a>
+<a href="/scripts/competitor-analysis">📊 Competitor Analysis</a>
+<a href="/scripts/content-calendar">📊 Content Calendar</a>
+<a href="/scripts/creator-studio">📊 Creator Studio</a>
       </div>
       <div class="sidebar-card">
         <h3>🔗 Quick Links</h3>

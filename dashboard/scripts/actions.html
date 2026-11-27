@@ -3,23 +3,23 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>XActions Actions Library - Complete X/Twitter Actions | XActions</title>
-  <meta name="description" content="This module contains ALL available X/Twitter actions - visible, hidden, and undocumented. Free X/Twitter browser script, no API key needed.">
-  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, actions, automation">
+  <title>Actions Library — Free X/Twitter Script | XActions</title>
+  <meta name="description" content="Library of X actions (like, follow, post, DM, lists and more) on window.XActions for the other automation scripts.">
+  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, actions, automation suite">
   <meta name="author" content="nich (@nichxbt)">
   <meta name="robots" content="index, follow">
 
   <meta property="og:type" content="article">
-  <meta property="og:title" content="XActions Actions Library - Complete X/Twitter Actions — XActions">
-  <meta property="og:description" content="This module contains ALL available X/Twitter actions - visible, hidden, and undocumented. Free X/Twitter browser script, no API key needed.">
+  <meta property="og:title" content="Actions Library — XActions">
+  <meta property="og:description" content="Library of X actions (like, follow, post, DM, lists and more) on window.XActions for the other automation scripts.">
   <meta property="og:url" content="https://xactions.app/scripts/actions">
   <meta property="og:site_name" content="XActions">
   <meta property="og:image" content="https://xactions.app/og-run.png">
 
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@nichxbt">
-  <meta name="twitter:title" content="XActions Actions Library - Complete X/Twitter Actions — XActions">
-  <meta name="twitter:description" content="This module contains ALL available X/Twitter actions - visible, hidden, and undocumented. Free X/Twitter browser script, no API key needed.">
+  <meta name="twitter:title" content="Actions Library — XActions">
+  <meta name="twitter:description" content="Library of X actions (like, follow, post, DM, lists and more) on window.XActions for the other automation scripts.">
   <meta name="twitter:image" content="https://xactions.app/og-run.png">
 
   <link rel="canonical" href="https://xactions.app/scripts/actions">
@@ -29,15 +29,15 @@
   {
     "@context": "https://schema.org",
     "@type": "TechArticle",
-    "headline": "XActions Actions Library - Complete X/Twitter Actions | XActions",
-    "description": "This module contains ALL available X/Twitter actions - visible, hidden, and undocumented. Free X/Twitter browser script, no API key needed.",
+    "headline": "Actions Library — Free X/Twitter Script | XActions",
+    "description": "Library of X actions (like, follow, post, DM, lists and more) on window.XActions for the other automation scripts.",
     "url": "https://xactions.app/scripts/actions",
     "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
     "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
     "datePublished": "2026-03-30",
     "dateModified": "2026-03-30",
-    "articleSection": "Automation",
-    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, actions, automation"
+    "articleSection": "Automation Suite",
+    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, actions, automation suite"
   }
   </script>
   <script type="application/ld+json">
@@ -47,8 +47,8 @@
     "itemListElement": [
       { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
       { "@type": "ListItem", "position": 2, "name": "Scripts", "item": "https://xactions.app/scripts" },
-      { "@type": "ListItem", "position": 3, "name": "Automation", "item": "https://xactions.app/scripts#automation" },
-      { "@type": "ListItem", "position": 4, "name": "XActions Actions Library - Complete X/Twitter Actions", "item": "https://xactions.app/scripts/actions" }
+      { "@type": "ListItem", "position": 3, "name": "Automation Suite", "item": "https://xactions.app/scripts#automation-suite" },
+      { "@type": "ListItem", "position": 4, "name": "Actions Library", "item": "https://xactions.app/scripts/actions" }
     ]
   }
   </script>
@@ -116,24 +116,24 @@
 
     <main class="main-content" id="main-content">
       <header class="main-header">
-        <h1>⚡ XActions Actions Library - Complete X/Twitter Actions</h1>
+        <h1>⚙️ Actions Library</h1>
         <div class="breadcrumb">
-          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#automation">Automation</a> › XActions Actions Library - Complete X/Twitter Actions
+          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#automation-suite">Automation Suite</a> › Actions Library
         </div>
       </header>
 
       <article class="article">
-        <span class="cat-badge">Automation</span>
-        <span class="source-badge">src/automation</span>
+        <span class="cat-badge">Automation Suite</span>
+        <span class="source-badge">browser/actions.js</span>
 
         <div class="meta-row">
           
           
-          <span>2117 lines</span>
+          <span>2126 lines</span>
           <span>by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></span>
         </div>
 
-        <p>This module contains ALL available X/Twitter actions - visible, hidden, and undocumented.</p>
+        <p>Library of X actions (like, follow, post, DM, lists and more) on window.XActions for the other automation scripts.</p>
 
         
 
@@ -141,10 +141,10 @@
         <ol class="usage-steps">
         <li>Navigate to <a href="https://x.com" rel="noopener">x.com</a> and log in</li>
         <li>Open DevTools Console (F12 or Cmd+Option+I)</li>
-        <li>Paste <code>src/automation/core.js</code> first</li>
+        <li>Paste <code>browser/core.js</code> first</li>
         <li>Paste the script below and press Enter</li>
       </ol>
-        <p><strong>Note:</strong> This script requires pasting <code>src/automation/core.js</code> first for shared utilities.</p>
+        <p><strong>Note:</strong> This script requires pasting <code>browser/core.js</code> first for shared utilities.</p>
 
         
         
@@ -156,6 +156,15 @@
           <div class="code-block">
             <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.querySelector('code').textContent).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy Script',2000)})">Copy Script</button>
             <pre><code>// Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
+/**
+ * @name        actions.js
+ * @title       Actions Library
+ * @description Library of X actions (like, follow, post, DM, lists and more) on window.XActions for the other automation scripts.
+ * @category    automation
+ * @page        x.com/*
+ * @writes      true
+ * @aliases     src/automation/actions.js
+ */
 // XActions Actions Library - Complete X/Twitter Actions
 // https://github.com/nirholas/XActions
 //
@@ -175,7 +184,7 @@ window.XActions = (() =&gt; {
     return null;
   }
 
-  const { sleep, randomDelay, log, storage, waitForElement, waitForElements, clickElement, typeText } = Core;
+  const { sleep, randomDelay, log, waitForElement, clickElement, typeText } = Core;
 
   // ============================================
   // EXTENDED SELECTORS (All X UI Elements)
@@ -601,7 +610,7 @@ window.XActions = (() =&gt; {
     },
     
     // Report a tweet
-    report: async (tweetElement, reason) =&gt; {
+    report: async (tweetElement, _reason) =&gt; {
       log('Opening report dialog...', 'action');
       
       const caret = tweetElement.querySelector(SEL.caret);
@@ -1256,7 +1265,7 @@ window.XActions = (() =&gt; {
     },
     
     // Create group DM
-    createGroup: async (usernames, groupName = null) =&gt; {
+    createGroup: async (usernames, _groupName = null) =&gt; {
       log(`Creating group DM with ${usernames.length} users...`, 'action');
       
       window.location.href = `https://x.com/messages`;
@@ -1700,7 +1709,7 @@ window.XActions = (() =&gt; {
     blockedAccounts: async () =&gt; { window.location.href = 'https://x.com/settings/blocked/all'; await sleep(2000); },
     
     // Add muted word
-    addMutedWord: async (word, options = {}) =&gt; {
+    addMutedWord: async (word, _options = {}) =&gt; {
       log(`Muting word: &quot;${word}&quot;...`, 'action');
       
       window.location.href = 'https://x.com/settings/add_muted_keyword';
@@ -2285,14 +2294,15 @@ console.log(`
 
     <aside class="sidebar-right">
       <div class="sidebar-card">
-        <h3>⚡ Automation</h3>
-        <a href="/scripts/customer-service">🤝 Customer Service Bot</a>
-<a href="/scripts/protect-active-users">🛡️ Don't Unfollow Active Users</a>
-<a href="/scripts/quota-supervisor">⚠️ Quota Supervisor</a>
-<a href="/scripts/rate-limiter">⏱️ Rate Limiter</a>
-<a href="/scripts/session-logger">📋 Session Logger &amp; Analytics</a>
-<a href="/scripts/core">⚙️ XActions Automation Framework - Core Utilities</a>
-<a href="/scripts/control-panel">🎛️ XActions Control Panel — Floating UI for Browser Automations</a>
+        <h3>⚙️ Automation Suite</h3>
+        <a href="/scripts/control-panel">⚙️ Automation Control Panel</a>
+<a href="/scripts/core">⚙️ Automation Core</a>
+<a href="/scripts/blacklist">⚙️ Blacklist Manager</a>
+<a href="/scripts/filter-manager">⚙️ Filter Manager</a>
+<a href="/scripts/quota-supervisor">⚙️ Quota Supervisor</a>
+<a href="/scripts/rate-limiter">⚙️ Rate Limiter</a>
+<a href="/scripts/session-logger">⚙️ Session Logger</a>
+<a href="/scripts/whitelist">⚙️ Whitelist Manager</a>
       </div>
       <div class="sidebar-card">
         <h3>🔗 Quick Links</h3>

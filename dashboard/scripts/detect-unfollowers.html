@@ -4,14 +4,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Detect Unfollowers — Free X/Twitter Script | XActions</title>
-  <meta name="description" content="Find out who unfollowed you on X (Twitter). Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
-  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, detect, unfollowers, follower monitoring">
+  <meta name="description" content="Snapshot your followers and, on the next run, list who unfollowed you and who is new. Free X/Twitter browser script, no API key needed.">
+  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, detect, unfollowers, monitor">
   <meta name="author" content="nich (@nichxbt)">
   <meta name="robots" content="index, follow">
 
   <meta property="og:type" content="article">
   <meta property="og:title" content="Detect Unfollowers — XActions">
-  <meta property="og:description" content="Find out who unfollowed you on X (Twitter). Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
+  <meta property="og:description" content="Snapshot your followers and, on the next run, list who unfollowed you and who is new. Free X/Twitter browser script, no API key needed.">
   <meta property="og:url" content="https://xactions.app/scripts/detect-unfollowers">
   <meta property="og:site_name" content="XActions">
   <meta property="og:image" content="https://xactions.app/og-run.png">
@@ -19,7 +19,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@nichxbt">
   <meta name="twitter:title" content="Detect Unfollowers — XActions">
-  <meta name="twitter:description" content="Find out who unfollowed you on X (Twitter). Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
+  <meta name="twitter:description" content="Snapshot your followers and, on the next run, list who unfollowed you and who is new. Free X/Twitter browser script, no API key needed.">
   <meta name="twitter:image" content="https://xactions.app/og-run.png">
 
   <link rel="canonical" href="https://xactions.app/scripts/detect-unfollowers">
@@ -30,14 +30,14 @@
     "@context": "https://schema.org",
     "@type": "TechArticle",
     "headline": "Detect Unfollowers — Free X/Twitter Script | XActions",
-    "description": "Find out who unfollowed you on X (Twitter). Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.",
+    "description": "Snapshot your followers and, on the next run, list who unfollowed you and who is new. Free X/Twitter browser script, no API key needed.",
     "url": "https://xactions.app/scripts/detect-unfollowers",
     "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
     "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
     "datePublished": "2026-03-30",
     "dateModified": "2026-03-30",
-    "articleSection": "Follower Monitoring",
-    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, detect, unfollowers, follower monitoring"
+    "articleSection": "Monitor",
+    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, detect, unfollowers, monitor"
   }
   </script>
   <script type="application/ld+json">
@@ -47,7 +47,7 @@
     "itemListElement": [
       { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
       { "@type": "ListItem", "position": 2, "name": "Scripts", "item": "https://xactions.app/scripts" },
-      { "@type": "ListItem", "position": 3, "name": "Follower Monitoring", "item": "https://xactions.app/scripts#follower-monitoring" },
+      { "@type": "ListItem", "position": 3, "name": "Monitor", "item": "https://xactions.app/scripts#monitor" },
       { "@type": "ListItem", "position": 4, "name": "Detect Unfollowers", "item": "https://xactions.app/scripts/detect-unfollowers" }
     ]
   }
@@ -116,38 +116,70 @@
 
     <main class="main-content" id="main-content">
       <header class="main-header">
-        <h1>🔍 Detect Unfollowers</h1>
+        <h1>👀 Detect Unfollowers</h1>
         <div class="breadcrumb">
-          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#follower-monitoring">Follower Monitoring</a> › Detect Unfollowers
+          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#monitor">Monitor</a> › Detect Unfollowers
         </div>
       </header>
 
       <article class="article">
-        <span class="cat-badge">Follower Monitoring</span>
-        <span class="source-badge">browser</span>
+        <span class="cat-badge">Monitor</span>
+        <span class="source-badge">browser/detectUnfollowers.js</span>
 
         <div class="meta-row">
-          
-          
-          <span>167 lines</span>
+          <span>v1.1.0</span>
+          <span>Updated: 2026-11-27</span>
+          <span>296 lines</span>
           <span>by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></span>
         </div>
 
-        <p>Find out who unfollowed you on X (Twitter)</p>
+        <p>Snapshot your followers and, on the next run, list who unfollowed you and who is new.</p>
 
         
 
         <h2>How to Use</h2>
         <ol class="usage-steps"><li>Go to https://x.com/YOUR_USERNAME/followers</li>
 <li>Open Developer Console (Ctrl+Shift+J or Cmd+Option+J)</li>
-<li>Paste this script and press Enter</li>
+<li>Paste browser/detectUnfollowers.js and press Enter</li>
 <li>The script will scan your followers and save them</li>
 <li>Run again later to see who unfollowed you!</li></ol>
         
 
         
-        
-        
+        <section class="config-section">
+        <h2>Configuration Options</h2>
+        <table>
+          <thead><tr><th>Option</th><th>Default</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td><code>scrollDelay</code></td><td><code>1500</code></td><td>ms between scrolls</td></tr>
+<tr><td><code>maxRetries</code></td><td><code>5</code></td><td>Scrolls with no new followers before stopping</td></tr>
+<tr><td><code>maxScrolls</code></td><td><code>0</code></td><td>Maximum scroll attempts (0 = no limit)</td></tr>
+<tr><td><code>maxFollowers</code></td><td><code>0</code></td><td>Stop scanning after this many followers (0 = no limit)</td></tr>
+<tr><td><code>autoDownload</code></td><td><code>true</code></td><td>Download a file when the comparison finds changes</td></tr>
+<tr><td><code>downloadFormat</code></td><td><code>'txt'</code></td><td>'txt' = unfollower usernames, 'report' = full text report</td></tr>
+<tr><td><code>showDisplayNames</code></td><td><code>false</code></td><td>Print display names next to usernames in the results</td></tr>
+<tr><td><code>legacyStorageKeys</code></td><td><code>['xactions_followers']</code></td><td>Older snapshot keys read when storageKey has none</td></tr>
+          </tbody>
+        </table>
+      </section>
+        <section class="config-code">
+        <h2>Default Configuration</h2>
+        <div class="code-block">
+          <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.querySelector('code').textContent).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy',2000)})">Copy</button>
+          <pre><code>const CONFIG = {
+    scrollDelay: 1500,               // ms between scrolls
+    maxRetries: 5,                   // Scrolls with no new followers before stopping
+    maxScrolls: 0,                   // Maximum scroll attempts (0 = no limit)
+    maxFollowers: 0,                 // Stop scanning after this many followers (0 = no limit)
+    autoDownload: true,              // Download a file when the comparison finds changes
+    downloadFormat: 'txt',           // 'txt' = unfollower usernames, 'report' = full text report
+                                     // (unfollowers and new followers), 'json' = JSON file
+    showDisplayNames: false,         // Print display names next to usernames in the results
+    storageKey: 'xactions_my_followers',
+    legacyStorageKeys: ['xactions_followers'], // Older snapshot keys read when storageKey has none
+  };</code></pre>
+        </div>
+      </section>
 
         <section class="full-code">
           <h2>Full Script</h2>
@@ -155,20 +187,47 @@
           <div class="code-block">
             <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.querySelector('code').textContent).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy Script',2000)})">Copy Script</button>
             <pre><code>// Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
+/**
+ * @name        detectUnfollowers.js
+ * @title       Detect Unfollowers
+ * @description Snapshot your followers and, on the next run, list who unfollowed you and who is new.
+ * @category    monitor
+ * @page        x.com/&lt;you&gt;/followers
+ * @writes      false
+ * @aliases     scripts/detectUnfollowers.js, scripts/twitter/detect-unfollowers.js
+ * @author      nichxbt (https://x.com/nichxbt)
+ * @version     1.1.0
+ * @date        2026-11-27
+ */
 // DetectUnfollowers.js — Find out who unfollowed you on X (Twitter)
 // https://github.com/nirholas/XActions
 //
 // HOW TO USE:
 // 1. Go to https://x.com/YOUR_USERNAME/followers
 // 2. Open Developer Console (Ctrl+Shift+J or Cmd+Option+J)
-// 3. Paste this script and press Enter
+// 3. Paste browser/detectUnfollowers.js and press Enter
 // 4. The script will scan your followers and save them
 // 5. Run again later to see who unfollowed you!
 //
 // Data is stored in your browser's localStorage, so it persists between sessions.
+// After a comparison the result is on window.unfollowerReport; after a first
+// scan the snapshot is on window.followerSnapshot.
 
 (() =&gt; {
-  const STORAGE_KEY = 'xactions_my_followers';
+  const CONFIG = {
+    scrollDelay: 1500,               // ms between scrolls
+    maxRetries: 5,                   // Scrolls with no new followers before stopping
+    maxScrolls: 0,                   // Maximum scroll attempts (0 = no limit)
+    maxFollowers: 0,                 // Stop scanning after this many followers (0 = no limit)
+    autoDownload: true,              // Download a file when the comparison finds changes
+    downloadFormat: 'txt',           // 'txt' = unfollower usernames, 'report' = full text report
+                                     // (unfollowers and new followers), 'json' = JSON file
+    showDisplayNames: false,         // Print display names next to usernames in the results
+    storageKey: 'xactions_my_followers',
+    legacyStorageKeys: ['xactions_followers'], // Older snapshot keys read when storageKey has none
+  };
+
+  const STORAGE_KEY = CONFIG.storageKey;
   const sleep = (ms) =&gt; new Promise(r =&gt; setTimeout(r, ms));
 
   // Check we're on the right page
@@ -184,28 +243,42 @@
     return match ? match[1] : 'unknown';
   };
 
+  // username -&gt; display name, filled while scanning
+  const displayNames = {};
+
   const scrapeFollowers = async () =&gt; {
     const followers = new Set();
     let previousSize = 0;
     let retries = 0;
-    const maxRetries = 5;
+    let scrolls = 0;
+    const maxRetries = CONFIG.maxRetries;
 
     console.log('🔍 Scanning your followers...');
 
     while (retries &lt; maxRetries) {
+      if (CONFIG.maxScrolls &gt; 0 &amp;&amp; scrolls &gt;= CONFIG.maxScrolls) break;
+      if (CONFIG.maxFollowers &gt; 0 &amp;&amp; followers.size &gt;= CONFIG.maxFollowers) break;
+
       // Scroll to load more
       window.scrollTo(0, document.body.scrollHeight);
-      await sleep(1500);
+      await sleep(CONFIG.scrollDelay);
+      scrolls++;
 
       // Find all user cells and extract usernames
       const userCells = document.querySelectorAll('[data-testid=&quot;UserCell&quot;]');
       userCells.forEach(cell =&gt; {
+        if (CONFIG.maxFollowers &gt; 0 &amp;&amp; followers.size &gt;= CONFIG.maxFollowers) return;
         const usernameEl = cell.querySelector('a[href^=&quot;/&quot;]');
         if (usernameEl) {
           const href = usernameEl.getAttribute('href');
           const username = href.replace('/', '').toLowerCase();
           if (username &amp;&amp; !username.includes('/')) {
             followers.add(username);
+            if (!displayNames[username]) {
+              const span = cell.querySelector('[dir=&quot;ltr&quot;] span');
+              const name = span ? span.textContent.trim() : '';
+              if (name) displayNames[username] = name;
+            }
           }
         }
       });
@@ -223,24 +296,53 @@
     return Array.from(followers);
   };
 
-  const loadPreviousFollowers = () =&gt; {
-    try {
-      const data = localStorage.getItem(STORAGE_KEY);
-      if (data) {
-        return JSON.parse(data);
+  // Accepts this script's snapshot ({ username, followers: [...], timestamp, count })
+  // and the older scripts/twitter format ({ savedAt, count, followers: { user: name } }).
+  const normalizeSnapshot = (data) =&gt; {
+    if (!data || typeof data !== 'object' || Array.isArray(data) || !data.followers) return null;
+    if (Array.isArray(data.followers)) {
+      return {
+        username: data.username,
+        followers: data.followers,
+        timestamp: data.timestamp || data.savedAt,
+        count: data.count ?? data.followers.length,
+        displayNames: data.displayNames || {},
+      };
+    }
+    const followers = Object.keys(data.followers);
+    return {
+      username: data.username,
+      followers,
+      timestamp: data.timestamp || data.savedAt,
+      count: data.count ?? followers.length,
+      displayNames: data.followers,
+    };
+  };
+
+  const loadPreviousFollowers = (username) =&gt; {
+    for (const key of [STORAGE_KEY, ...CONFIG.legacyStorageKeys]) {
+      try {
+        const snapshot = normalizeSnapshot(JSON.parse(localStorage.getItem(key) || 'null'));
+        if (!snapshot) continue;
+        // Snapshots from the old scripts/twitter version carry no username.
+        if (snapshot.username === undefined &amp;&amp; key === STORAGE_KEY) snapshot.username = username;
+        if (snapshot.username === username) return snapshot;
+      } catch (e) {
+        console.warn('Could not load previous data:', e);
       }
-    } catch (e) {
-      console.warn('Could not load previous data:', e);
     }
     return null;
   };
 
   const saveFollowers = (followers, username) =&gt; {
+    const names = {};
+    followers.forEach(f =&gt; { if (displayNames[f]) names[f] = displayNames[f]; });
     const data = {
       username,
       followers,
       timestamp: new Date().toISOString(),
-      count: followers.length
+      count: followers.length,
+      displayNames: names
     };
     localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
     return data;
@@ -260,6 +362,18 @@
     return new Date(isoString).toLocaleString();
   };
 
+  const downloadFile = (content, type, filename) =&gt; {
+    const blob = new Blob([content], { type });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
+
   const run = async () =&gt; {
     const username = getCurrentUsername();
     console.log(`\n🐦 XActions Detector — Monitoring @${username}\n`);
@@ -269,9 +383,13 @@
     console.log(`\n✅ Found ${currentFollowers.length} total followers\n`);
 
     // Check for previous data
-    const previousData = loadPreviousFollowers();
+    const previousData = loadPreviousFollowers(username);
 
-    if (previousData &amp;&amp; previousData.username === username) {
+    if (previousData) {
+      const previousNames = previousData.displayNames || {};
+      const nameOf = (u) =&gt; previousNames[u] || displayNames[u] || previousNames[u.toLowerCase()] || u;
+      const label = (u) =&gt; (CONFIG.showDisplayNames ? `@${u} (${nameOf(u)})` : `@${u}`);
+
       console.log(`📊 Comparing with snapshot from ${formatDate(previousData.timestamp)}`);
       console.log(`   Previous count: ${previousData.count}`);
       console.log(`   Current count: ${currentFollowers.length}`);
@@ -282,7 +400,7 @@
       if (unfollowed.length &gt; 0) {
         console.log(`\n🚨 ${unfollowed.length} PEOPLE UNFOLLOWED YOU:\n`);
         unfollowed.forEach((u, i) =&gt; {
-          console.log(`   ${i + 1}. @${u} — https://x.com/${u}`);
+          console.log(`   ${i + 1}. ${label(u)} — https://x.com/${u}`);
         });
       } else {
         console.log('✨ No one unfollowed you since last check!');
@@ -291,22 +409,64 @@
       if (newFollowers.length &gt; 0) {
         console.log(`\n🎉 ${newFollowers.length} NEW FOLLOWERS:\n`);
         newFollowers.forEach((u, i) =&gt; {
-          console.log(`   ${i + 1}. @${u} — https://x.com/${u}`);
+          console.log(`   ${i + 1}. ${label(u)} — https://x.com/${u}`);
         });
+      } else {
+        console.log('📭 No new followers since last check.');
       }
 
-      // Offer download of unfollowers
-      if (unfollowed.length &gt; 0) {
-        const blob = new Blob([unfollowed.join('\n')], { type: 'text/plain' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `unfollowers-${new Date().toISOString().split('T')[0]}.txt`;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        console.log('\n📥 Downloaded list of unfollowers!');
+      const now = new Date().toISOString();
+      const day = now.split('T')[0];
+
+      // Offer download
+      if (CONFIG.autoDownload) {
+        if (CONFIG.downloadFormat === 'report' &amp;&amp; (unfollowed.length &gt; 0 || newFollowers.length &gt; 0)) {
+          let report = 'UNFOLLOWER DETECTION REPORT\n';
+          report += `${'='.repeat(50)}\n`;
+          report += `Generated: ${now}\n`;
+          report += `Previous snapshot: ${previousData.timestamp}\n`;
+          report += `Previous count: ${previousData.count}\n`;
+          report += `Current count: ${currentFollowers.length}\n`;
+          report += `${'='.repeat(50)}\n\n`;
+          if (unfollowed.length &gt; 0) {
+            report += `UNFOLLOWERS (${unfollowed.length}):\n`;
+            report += `${'-'.repeat(30)}\n`;
+            unfollowed.forEach((u, i) =&gt; {
+              report += `${i + 1}. @${u} (${nameOf(u)})\n`;
+              report += `   https://x.com/${u}\n`;
+            });
+            report += '\n';
+          }
+          if (newFollowers.length &gt; 0) {
+            report += `NEW FOLLOWERS (${newFollowers.length}):\n`;
+            report += `${'-'.repeat(30)}\n`;
+            newFollowers.forEach((u, i) =&gt; {
+              report += `${i + 1}. @${u} (${nameOf(u)})\n`;
+            });
+          }
+          downloadFile(report, 'text/plain', `unfollowers_${day}.txt`);
+          console.log('\n📥 Downloaded the unfollower report!');
+        } else if (CONFIG.downloadFormat === 'json' &amp;&amp; unfollowed.length &gt; 0) {
+          downloadFile(
+            JSON.stringify({ unfollowers: unfollowed, newFollowers, detectedAt: now, previousSnapshot: previousData.timestamp }, null, 2),
+            'application/json',
+            `xactions-unfollowers-${day}.json`
+          );
+          console.log('\n📥 Downloaded list of unfollowers!');
+        } else if (CONFIG.downloadFormat !== 'report' &amp;&amp; CONFIG.downloadFormat !== 'json' &amp;&amp; unfollowed.length &gt; 0) {
+          downloadFile(unfollowed.join('\n'), 'text/plain', `unfollowers-${day}.txt`);
+          console.log('\n📥 Downloaded list of unfollowers!');
+        }
       }
+
+      window.unfollowerReport = {
+        timestamp: now,
+        previous: previousData.count,
+        current: currentFollowers.length,
+        unfollowers: unfollowed.map(u =&gt; ({ username: u, displayName: nameOf(u) })),
+        newFollowers: newFollowers.map(u =&gt; ({ username: u, displayName: nameOf(u) }))
+      };
+      console.log('\n💡 Access data via: window.unfollowerReport');
     } else {
       console.log('📸 First scan! Saving snapshot of your followers...');
       console.log('   Run this script again later to detect changes.');
@@ -314,6 +474,7 @@
 
     // Save current state
     const saved = saveFollowers(currentFollowers, username);
+    if (!previousData) window.followerSnapshot = saved;
     console.log(`\n💾 Snapshot saved at ${formatDate(saved.timestamp)}`);
     console.log('   Run this script again anytime to check for changes!\n');
   };
@@ -334,17 +495,13 @@
 
     <aside class="sidebar-right">
       <div class="sidebar-card">
-        <h3>🔍 Follower Monitoring</h3>
-        <a href="/scripts/follower-tools">👥 Advanced follower tools</a>
-<a href="/scripts/audit-followers">📊 Audit Followers</a>
-<a href="/scripts/continuous-monitor">🔄 Continuous Monitor</a>
-<a href="/scripts/find-fake-followers">🤖 Find Fake Followers</a>
-<a href="/scripts/follower-growth-tracker">📈 Follower Growth Tracker</a>
-<a href="/scripts/followers-growth-tracker">📈 Followers Growth Tracker</a>
-<a href="/scripts/monitor-account">📊 Monitor Account</a>
-<a href="/scripts/new-followers-alert">🔔 New Followers Alert</a>
-<a href="/scripts/remove-followers">🚫 Remove Followers</a>
-<a href="/scripts/welcome-new-followers">👋 Welcome New Followers</a>
+        <h3>👀 Monitor</h3>
+        <a href="/scripts/continuous-monitor">👀 Continuous Monitor</a>
+<a href="/scripts/keyword-monitor">👀 Keyword Monitor</a>
+<a href="/scripts/monitor-account">👀 Monitor Account</a>
+<a href="/scripts/new-followers-alert">👀 New Followers Alert</a>
+<a href="/scripts/notification-manager">👀 Notification Manager</a>
+<a href="/scripts/trending-topic-monitor">👀 Trending Topic Monitor</a>
       </div>
       <div class="sidebar-card">
         <h3>🔗 Quick Links</h3>

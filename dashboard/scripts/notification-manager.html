@@ -4,14 +4,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Notification Manager — Free X/Twitter Script | XActions</title>
-  <meta name="description" content="Browser console script for scraping and filtering notifications on X/Twitter. Free X/Twitter browser script, no API key needed.">
-  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, notification, manager, analytics">
+  <meta name="description" content="Scrape a categorized summary of your notifications and export it, or mark all notifications as read.">
+  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, notification, manager, monitor">
   <meta name="author" content="nich (@nichxbt)">
   <meta name="robots" content="index, follow">
 
   <meta property="og:type" content="article">
   <meta property="og:title" content="Notification Manager — XActions">
-  <meta property="og:description" content="Browser console script for scraping and filtering notifications on X/Twitter. Free X/Twitter browser script, no API key needed.">
+  <meta property="og:description" content="Scrape a categorized summary of your notifications and export it, or mark all notifications as read.">
   <meta property="og:url" content="https://xactions.app/scripts/notification-manager">
   <meta property="og:site_name" content="XActions">
   <meta property="og:image" content="https://xactions.app/og-run.png">
@@ -19,7 +19,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@nichxbt">
   <meta name="twitter:title" content="Notification Manager — XActions">
-  <meta name="twitter:description" content="Browser console script for scraping and filtering notifications on X/Twitter. Free X/Twitter browser script, no API key needed.">
+  <meta name="twitter:description" content="Scrape a categorized summary of your notifications and export it, or mark all notifications as read.">
   <meta name="twitter:image" content="https://xactions.app/og-run.png">
 
   <link rel="canonical" href="https://xactions.app/scripts/notification-manager">
@@ -30,14 +30,14 @@
     "@context": "https://schema.org",
     "@type": "TechArticle",
     "headline": "Notification Manager — Free X/Twitter Script | XActions",
-    "description": "Browser console script for scraping and filtering notifications on X/Twitter. Free X/Twitter browser script, no API key needed.",
+    "description": "Scrape a categorized summary of your notifications and export it, or mark all notifications as read.",
     "url": "https://xactions.app/scripts/notification-manager",
     "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
     "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
     "datePublished": "2026-03-30",
     "dateModified": "2026-03-30",
-    "articleSection": "Analytics",
-    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, notification, manager, analytics"
+    "articleSection": "Monitor",
+    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, notification, manager, monitor"
   }
   </script>
   <script type="application/ld+json">
@@ -47,7 +47,7 @@
     "itemListElement": [
       { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
       { "@type": "ListItem", "position": 2, "name": "Scripts", "item": "https://xactions.app/scripts" },
-      { "@type": "ListItem", "position": 3, "name": "Analytics", "item": "https://xactions.app/scripts#analytics" },
+      { "@type": "ListItem", "position": 3, "name": "Monitor", "item": "https://xactions.app/scripts#monitor" },
       { "@type": "ListItem", "position": 4, "name": "Notification Manager", "item": "https://xactions.app/scripts/notification-manager" }
     ]
   }
@@ -116,34 +116,32 @@
 
     <main class="main-content" id="main-content">
       <header class="main-header">
-        <h1>🔔 Notification Manager</h1>
+        <h1>👀 Notification Manager</h1>
         <div class="breadcrumb">
-          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#analytics">Analytics</a> › Notification Manager
+          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#monitor">Monitor</a> › Notification Manager
         </div>
       </header>
 
       <article class="article">
-        <span class="cat-badge">Analytics</span>
-        <span class="source-badge">scripts</span>
+        <span class="cat-badge">Monitor</span>
+        <span class="source-badge">browser/notificationManager.js</span>
 
         <div class="meta-row">
-          
-          
-          <span>120 lines</span>
+          <span>v1.1.0</span>
+          <span>Updated: 2026-11-27</span>
+          <span>297 lines</span>
           <span>by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></span>
         </div>
 
-        <p>Browser console script for scraping and filtering notifications on X/Twitter</p>
+        <p>Scrape a categorized summary of your notifications and export it, or mark all notifications as read.</p>
 
         
 
         <h2>How to Use</h2>
-        <ol class="usage-steps">
-        <li>Navigate to <a href="https://x.com" rel="noopener">x.com</a> and log in</li>
-        <li>Open DevTools Console (F12 or Cmd+Option+I)</li>
-        
-        <li>Paste the script below and press Enter</li>
-      </ol>
+        <ol class="usage-steps"><li>Go to x.com/notifications</li>
+<li>Open the browser console (F12 or Cmd+Option+I -&gt; Console)</li>
+<li>Set CONFIG.action to 'markRead' or 'summary'</li>
+<li>Paste browser/notificationManager.js and press Enter</li></ol>
         
 
         
@@ -152,7 +150,14 @@
         <table>
           <thead><tr><th>Option</th><th>Default</th><th>Description</th></tr></thead>
           <tbody>
-            <tr><td><code>filterType</code></td><td><code>'all'</code></td><td>'all' | 'mentions' | 'verified'</td></tr>
+            <tr><td><code>maxNotifications</code></td><td><code>100</code></td><td>cap for the summary scrape</td></tr>
+<tr><td><code>filterType</code></td><td><code>'all'</code></td><td>'all' | 'mentions' | 'verified'</td></tr>
+<tr><td><code>separateReplies</code></td><td><code>false</code></td><td>count &quot;replied&quot; as its own 'reply' type instead of 'mention'</td></tr>
+<tr><td><code>includeLinks</code></td><td><code>false</code></td><td>add the first 5 profile/post links of each notification as `users`</td></tr>
+<tr><td><code>exportResults</code></td><td><code>true</code></td><td>download JSON + CSV when action is 'summary'</td></tr>
+<tr><td><code>logJSON</code></td><td><code>false</code></td><td>also print the full JSON report to the console</td></tr>
+<tr><td><code>copyToClipboard</code></td><td><code>false</code></td><td>also copy the JSON report to the clipboard</td></tr>
+<tr><td><code>maxScrollRetries</code></td><td><code>5</code></td><td>summary stops after N scrolls with nothing new</td></tr>
           </tbody>
         </table>
       </section>
@@ -161,11 +166,22 @@
         <div class="code-block">
           <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.querySelector('code').textContent).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy',2000)})">Copy</button>
           <pre><code>const CONFIG = {
-    maxNotifications: 50,
-    filterType: 'all',          // 'all' | 'mentions' | 'verified'
-    exportResults: true,
-    scrollDelay: 1500,
-    maxScrollRetries: 5,
+    // 'markRead' -&gt; clear the unread state. 'summary' -&gt; scrape + export.
+    action: 'summary',
+
+    // ---- summary options ----
+    maxNotifications: 100,   // cap for the summary scrape
+    filterType: 'all',       // 'all' | 'mentions' | 'verified'
+    separateReplies: false,  // count &quot;replied&quot; as its own 'reply' type instead of 'mention'
+    includeLinks: false,     // add the first 5 profile/post links of each notification as `users`
+    exportResults: true,     // download JSON + CSV when action is 'summary'
+    logJSON: false,          // also print the full JSON report to the console
+    copyToClipboard: false,  // also copy the JSON report to the clipboard
+
+    // ---- shared scrolling ----
+    maxScrollRounds: 30,
+    maxScrollRetries: 5,     // summary stops after N scrolls with nothing new
+    scrollDelay: 1500
   };</code></pre>
         </div>
       </section>
@@ -176,29 +192,89 @@
           <div class="code-block">
             <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.querySelector('code').textContent).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy Script',2000)})">Copy Script</button>
             <pre><code>// Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
-// scripts/notificationManager.js
-// Browser console script for scraping and filtering notifications on X/Twitter
-// Paste in DevTools console on x.com/notifications
-// by nichxbt
+/**
+ * ============================================
+ * 🔔 Notification Manager - XActions
+ * ============================================
+ *
+ * @name        notificationManager.js
+ * @title       Notification Manager
+ * @description Scrape a categorized summary of your notifications and export it, or mark all notifications as read.
+ * @category    monitor
+ * @page        x.com/notifications or x.com/notifications/mentions
+ * @writes      false
+ * @aliases     scripts/manageNotifications.js, scripts/notificationManager.js, scripts/twitter/notification-manager.js
+ * @author      nichxbt (https://x.com/nichxbt)
+ * @version     1.1.0
+ * @date        2026-11-27
+ * @website     https://xactions.app
+ *
+ * Usage:
+ *   1. Go to x.com/notifications
+ *   2. Open the browser console (F12 or Cmd+Option+I -&gt; Console)
+ *   3. Set CONFIG.action to 'markRead' or 'summary'
+ *   4. Paste browser/notificationManager.js and press Enter
+ *
+ * Example:
+ *   action: 'markRead' -&gt; opens the notifications overflow (...) menu and clicks
+ *   &quot;Mark all as read&quot; if X exposes it, then scrolls the feed so anything left is
+ *   marked read on view. action: 'summary' -&gt; scrolls the feed, classifies each
+ *   notification (like / repost / follow / mention / quote), prints the counts,
+ *   and downloads a JSON + CSV report.
+ *
+ *   filterType: 'mentions' switches to the Mentions tab and keeps only mentions
+ *   and replies; 'verified' keeps only notifications from verified accounts.
+ *
+ * ============================================
+ */
 
-(() =&gt; {
+(async function notificationManager() {
+  'use strict';
+
+  // ============================================
+  // 📝 CONFIGURATION - Customize these options
+  // ============================================
+  const CONFIG = {
+    // 'markRead' -&gt; clear the unread state. 'summary' -&gt; scrape + export.
+    action: 'summary',
+
+    // ---- summary options ----
+    maxNotifications: 100,   // cap for the summary scrape
+    filterType: 'all',       // 'all' | 'mentions' | 'verified'
+    separateReplies: false,  // count &quot;replied&quot; as its own 'reply' type instead of 'mention'
+    includeLinks: false,     // add the first 5 profile/post links of each notification as `users`
+    exportResults: true,     // download JSON + CSV when action is 'summary'
+    logJSON: false,          // also print the full JSON report to the console
+    copyToClipboard: false,  // also copy the JSON report to the clipboard
+
+    // ---- shared scrolling ----
+    maxScrollRounds: 30,
+    maxScrollRetries: 5,     // summary stops after N scrolls with nothing new
+    scrollDelay: 1500
+  };
+
+  // ============================================
+  // 🔧 SELECTORS
+  // ============================================
+  const SELECTORS = {
+    cell: '[data-testid=&quot;cellInnerDiv&quot;]',
+    notification: '[data-testid=&quot;notification&quot;]',
+    tweet: 'article[data-testid=&quot;tweet&quot;]',
+    verified: '[data-testid=&quot;icon-verified&quot;]',
+    caret: '[data-testid=&quot;caret&quot;]',
+    menuItem: '[role=&quot;menuitem&quot;]',
+    confirm: '[data-testid=&quot;confirmationSheetConfirm&quot;]',
+    mentionsTab: 'a[href=&quot;/notifications/mentions&quot;]'
+  };
+
+  // ============================================
+  // 🛠️ HELPERS
+  // ============================================
   const sleep = (ms) =&gt; new Promise(r =&gt; setTimeout(r, ms));
 
-  // =============================================
-  // CONFIGURATION
-  // =============================================
-  const CONFIG = {
-    maxNotifications: 50,
-    filterType: 'all',          // 'all' | 'mentions' | 'verified'
-    exportResults: true,
-    scrollDelay: 1500,
-    maxScrollRetries: 5,
-  };
-  // =============================================
-
-  const download = (data, filename) =&gt; {
+  const download = (blob, filename) =&gt; {
     const a = document.createElement('a');
-    a.href = URL.createObjectURL(new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' }));
+    a.href = URL.createObjectURL(blob);
     a.download = filename;
     document.body.appendChild(a);
     a.click();
@@ -206,93 +282,210 @@
     console.log(`📥 Downloaded: ${filename}`);
   };
 
-  const classifyNotification = (text) =&gt; {
+  const downloadJSON = (data, filename) =&gt;
+    download(new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' }), filename);
+
+  const downloadCSV = (rows, filename) =&gt; {
+    const esc = (v) =&gt; `&quot;${String(v == null ? '' : v).replace(/&quot;/g, '&quot;&quot;')}&quot;`;
+    const headers = ['type', 'time', 'verified', 'text'];
+    const lines = [headers.join(',')];
+    for (const r of rows) {
+      lines.push([r.type, r.time, r.isVerified, r.text].map(esc).join(','));
+    }
+    download(new Blob([lines.join('\n')], { type: 'text/csv' }), filename);
+  };
+
+  const classify = (text) =&gt; {
     const lc = text.toLowerCase();
-    if (lc.includes('liked your') || lc.includes('likes')) return 'like';
-    if (lc.includes('retweeted') || lc.includes('reposted')) return 'repost';
+    if (lc.includes('liked your') || lc.includes(' liked ')) return 'like';
+    if (lc.includes('reposted') || lc.includes('retweeted')) return 'repost';
     if (lc.includes('followed you')) return 'follow';
-    if (lc.includes('replied') || lc.includes('mentioned')) return 'mention';
     if (lc.includes('quoted')) return 'quote';
+    if (CONFIG.separateReplies &amp;&amp; lc.includes('replied')) return 'reply';
+    if (lc.includes('replied') || lc.includes('mentioned') || lc.includes(' tagged ')) return 'mention';
     return 'other';
   };
 
-  const run = async () =&gt; {
-    console.log('🔔 NOTIFICATION MANAGER — XActions by nichxbt\n');
+  const log = {
+    info: (msg) =&gt; console.log(`ℹ️ ${msg}`),
+    success: (msg) =&gt; console.log(`✅ ${msg}`),
+    warning: (msg) =&gt; console.log(`⚠️ ${msg}`),
+    error: (msg) =&gt; console.log(`❌ ${msg}`)
+  };
 
-    if (!window.location.href.includes('/notifications')) {
-      console.error('❌ Navigate to x.com/notifications first!');
-      return;
+  console.log(`
+╔══════════════════════════════════════════════════════════╗
+║  🔔 NOTIFICATION MANAGER - XActions                      ║
+║  👤 Author: nichxbt                                      ║
+║  🌐 https://xactions.app                                 ║
+╚══════════════════════════════════════════════════════════╝
+  `);
+
+  // Page guard
+  if (!/\/notifications/.test(window.location.pathname)) {
+    log.error('Not on the Notifications page. Go to https://x.com/notifications and re-run.');
+    return;
+  }
+
+  // ============================================
+  // ✅ ACTION: MARK ALL AS READ
+  // ============================================
+  const markRead = async () =&gt; {
+    log.info('Attempting to mark all notifications as read...');
+
+    // Try the timeline overflow (...) menu first. X labels it via the caret testid.
+    let clickedMenu = false;
+    const carets = document.querySelectorAll(SELECTORS.caret);
+    // The header caret sits high on the page; take the top-most one.
+    const headerCaret = Array.from(carets)
+      .sort((a, b) =&gt; a.getBoundingClientRect().top - b.getBoundingClientRect().top)[0];
+
+    if (headerCaret) {
+      try {
+        headerCaret.click();
+        await sleep(700);
+        const items = document.querySelectorAll(SELECTORS.menuItem);
+        for (const item of items) {
+          if (/mark all as read/i.test(item.textContent)) {
+            item.click();
+            clickedMenu = true;
+            await sleep(700);
+            const confirm = document.querySelector(SELECTORS.confirm);
+            if (confirm) { confirm.click(); await sleep(700); }
+            log.success('Clicked &quot;Mark all as read&quot;.');
+            break;
+          }
+        }
+        if (!clickedMenu) {
+          // Close the menu we opened.
+          document.body.click();
+          await sleep(300);
+        }
+      } catch (e) {
+        log.warning(`Overflow menu path failed: ${e.message}`);
+      }
     }
 
-    // Switch to mentions tab if needed
-    if (CONFIG.filterType === 'mentions') {
-      const mentionsTab = document.querySelector('a[href=&quot;/notifications/mentions&quot;]');
+    if (!clickedMenu) {
+      log.info('No &quot;Mark all as read&quot; menu item found. Falling back to scroll-to-view.');
+    }
+
+    // Scrolling the feed makes X mark notifications read server-side on view.
+    let seen = 0;
+    let rounds = 0;
+    let lastHeight = -1;
+    while (rounds &lt; CONFIG.maxScrollRounds) {
+      seen = document.querySelectorAll(`${SELECTORS.cell}, ${SELECTORS.notification}, ${SELECTORS.tweet}`).length;
+      window.scrollTo(0, document.body.scrollHeight);
+      await sleep(CONFIG.scrollDelay);
+      rounds++;
+      if (document.body.scrollHeight === lastHeight) break;
+      lastHeight = document.body.scrollHeight;
+    }
+    window.scrollTo(0, 0);
+
+    log.success(`Done. Menu action: ${clickedMenu ? 'yes' : 'no'}. Notifications viewed: ${seen}.`);
+    log.info('X marks notifications read as they scroll into view; the blue badge should clear shortly.');
+  };
+
+  // ============================================
+  // 📊 ACTION: SUMMARY (SCRAPE + EXPORT)
+  // ============================================
+  const summary = async () =&gt; {
+    // Switch to the Mentions tab when filtering for mentions
+    if (CONFIG.filterType === 'mentions' &amp;&amp; !/\/notifications\/mentions/.test(window.location.pathname)) {
+      const mentionsTab = document.querySelector(SELECTORS.mentionsTab);
       if (mentionsTab) { mentionsTab.click(); await sleep(2000); }
     }
 
-    console.log(`📊 Scraping notifications (filter: ${CONFIG.filterType})...`);
-    const notifications = new Map();
-    let retries = 0;
+    log.info(`Scraping up to ${CONFIG.maxNotifications} notifications (filter: ${CONFIG.filterType})...`);
+    const seen = new Map();
+    let rounds = 0;
+    let empty = 0;
 
-    while (notifications.size &lt; CONFIG.maxNotifications &amp;&amp; retries &lt; CONFIG.maxScrollRetries) {
-      const prevSize = notifications.size;
-
-      document.querySelectorAll('[data-testid=&quot;notification&quot;], article[data-testid=&quot;tweet&quot;]').forEach(notif =&gt; {
-        const text = notif.textContent?.substring(0, 300) || '';
-        const time = notif.querySelector('time')?.getAttribute('datetime') || '';
-        const links = Array.from(notif.querySelectorAll('a[href^=&quot;/&quot;]')).map(a =&gt; ({
-          text: a.textContent,
-          href: a.href,
-        })).filter(l =&gt; l.href.includes('x.com/'));
-        const isVerified = !!notif.querySelector('[data-testid=&quot;icon-verified&quot;]');
-        const type = classifyNotification(text);
-        const key = text.substring(0, 80) + time;
-
-        if (!notifications.has(key)) {
-          // Apply filter
-          if (CONFIG.filterType === 'mentions' &amp;&amp; type !== 'mention') return;
-          if (CONFIG.filterType === 'verified' &amp;&amp; !isVerified) return;
-
-          notifications.set(key, { text: text.substring(0, 200), type, time, isVerified, users: links.slice(0, 5) });
+    while (seen.size &lt; CONFIG.maxNotifications &amp;&amp; rounds &lt; CONFIG.maxScrollRounds &amp;&amp; empty &lt; CONFIG.maxScrollRetries) {
+      const before = seen.size;
+      const cells = document.querySelectorAll(`${SELECTORS.cell}, ${SELECTORS.notification}, ${SELECTORS.tweet}`);
+      for (const cell of cells) {
+        const text = (cell.textContent || '').trim().slice(0, 280);
+        if (!text || text.length &lt; 5) continue;
+        const time = cell.querySelector('time')?.getAttribute('datetime') || '';
+        const key = text.slice(0, 90) + time;
+        if (seen.has(key)) continue;
+        const type = classify(text);
+        const isVerified = !!cell.querySelector(SELECTORS.verified);
+        if (CONFIG.filterType === 'mentions' &amp;&amp; type !== 'mention' &amp;&amp; type !== 'reply') continue;
+        if (CONFIG.filterType === 'verified' &amp;&amp; !isVerified) continue;
+        const entry = { type, text, time, isVerified };
+        if (CONFIG.includeLinks) {
+          entry.users = Array.from(cell.querySelectorAll('a[href^=&quot;/&quot;]'))
+            .map(a =&gt; ({ text: (a.textContent || '').trim(), href: a.href }))
+            .filter(l =&gt; l.href.includes('x.com/'))
+            .slice(0, 5);
         }
-      });
+        seen.set(key, entry);
+      }
 
-      if (notifications.size === prevSize) retries++;
-      else retries = 0;
+      if (seen.size === before) empty++;
+      else empty = 0;
 
       window.scrollTo(0, document.body.scrollHeight);
       await sleep(CONFIG.scrollDelay);
+      rounds++;
+      if (rounds % 5 === 0) log.info(`Scraped ${seen.size} notifications...`);
+    }
+    window.scrollTo(0, 0);
+
+    const all = [...seen.values()].slice(0, CONFIG.maxNotifications);
+    if (all.length === 0) {
+      log.warning('No notifications found to summarize.');
+      return;
     }
 
-    const all = [...notifications.values()];
-
-    // Group by type
     const byType = {};
-    all.forEach(n =&gt; {
-      if (!byType[n.type]) byType[n.type] = [];
-      byType[n.type].push(n);
+    for (const n of all) byType[n.type] = (byType[n.type] || 0) + 1;
+
+    console.log(`\n🔔 Total notifications: ${all.length}\n📊 BY TYPE:`);
+    const emoji = { like: '❤️', repost: '🔁', follow: '👤', mention: '💬', reply: '↩️', quote: '💭', other: '📌' };
+    Object.entries(byType).sort((a, b) =&gt; b[1] - a[1]).forEach(([t, c]) =&gt; {
+      console.log(`   ${emoji[t] || '📌'} ${t}: ${c}`);
     });
 
-    console.log(`\n🔔 Total notifications: ${all.length}\n`);
-    console.log('📊 BY TYPE:');
-    Object.entries(byType)
-      .sort((a, b) =&gt; b[1].length - a[1].length)
-      .forEach(([type, items]) =&gt; {
-        console.log(`   ${type}: ${items.length}`);
-      });
+    const report = { exportedAt: new Date().toISOString(), filter: CONFIG.filterType, total: all.length, byType, notifications: all };
+
+    if (CONFIG.logJSON) {
+      console.log('\n📦 Full JSON:');
+      console.log(JSON.stringify(report, null, 2));
+    }
+
+    if (CONFIG.copyToClipboard) {
+      try {
+        await navigator.clipboard.writeText(JSON.stringify(report, null, 2));
+        log.success('Copied to clipboard!');
+      } catch (e) {
+        log.warning('Could not copy to clipboard.');
+      }
+    }
 
     if (CONFIG.exportResults) {
       const date = new Date().toISOString().slice(0, 10);
-      download(
-        { exportedAt: new Date().toISOString(), filter: CONFIG.filterType, total: all.length, byType, notifications: all },
-        `xactions-notifications-${date}.json`
-      );
+      downloadJSON(report, `xactions-notifications-${date}.json`);
+      downloadCSV(all, `xactions-notifications-${date}.csv`);
     }
-
-    console.log('\n🏁 Done!');
   };
 
-  run();
+  // ============================================
+  // 🎯 DISPATCH
+  // ============================================
+  try {
+    if (CONFIG.action === 'markRead') await markRead();
+    else if (CONFIG.action === 'summary') await summary();
+    else log.error(`Unknown action &quot;${CONFIG.action}&quot;. Use 'markRead' or 'summary'.`);
+  } catch (error) {
+    log.error(`Fatal: ${error.message}`);
+  }
+
+  log.success('Script completed! by nichxbt');
 })();
 </code></pre>
           </div>
@@ -308,17 +501,13 @@
 
     <aside class="sidebar-right">
       <div class="sidebar-card">
-        <h3>🔔 Analytics</h3>
-        <a href="/scripts/account-health-monitor">🏥 Account Health Monitor</a>
-<a href="/scripts/audience-demographics">📊 Audience Demographics Analyzer</a>
-<a href="/scripts/audience-overlap">🔗 Audience Overlap Analyzer</a>
-<a href="/scripts/best-time-to-post">⏰ Best Time to Post</a>
-<a href="/scripts/competitor-analysis">🔍 Competitor Analysis</a>
-<a href="/scripts/engagement-analytics">📈 Engagement Analytics</a>
-<a href="/scripts/hashtag-analytics">#️⃣ Hashtag Analytics</a>
-<a href="/scripts/keyword-monitor">🔑 Keyword Monitor &amp; Alerts</a>
-<a href="/scripts/manage-notifications">🔔 Manage Notifications</a>
-<a href="/scripts/profile-stats">📊 Profile Stats</a>
+        <h3>👀 Monitor</h3>
+        <a href="/scripts/continuous-monitor">👀 Continuous Monitor</a>
+<a href="/scripts/detect-unfollowers">👀 Detect Unfollowers</a>
+<a href="/scripts/keyword-monitor">👀 Keyword Monitor</a>
+<a href="/scripts/monitor-account">👀 Monitor Account</a>
+<a href="/scripts/new-followers-alert">👀 New Followers Alert</a>
+<a href="/scripts/trending-topic-monitor">👀 Trending Topic Monitor</a>
       </div>
       <div class="sidebar-card">
         <h3>🔗 Quick Links</h3>

@@ -3,23 +3,23 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Share &amp; Embed Posts — Free X/Twitter Script | XActions</title>
-  <meta name="description" content="Copy post links, get embed codes, or bulk copy links from timeline. Free X/Twitter browser script, no API key needed.">
-  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, share, embed, content tools">
+  <title>Share and Embed Posts — Free X/Twitter Script | XActions</title>
+  <meta name="description" content="Copy post links and embed codes, one post or in bulk. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
+  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, share, embed, post">
   <meta name="author" content="nich (@nichxbt)">
   <meta name="robots" content="index, follow">
 
   <meta property="og:type" content="article">
-  <meta property="og:title" content="Share &amp; Embed Posts — XActions">
-  <meta property="og:description" content="Copy post links, get embed codes, or bulk copy links from timeline. Free X/Twitter browser script, no API key needed.">
+  <meta property="og:title" content="Share and Embed Posts — XActions">
+  <meta property="og:description" content="Copy post links and embed codes, one post or in bulk. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
   <meta property="og:url" content="https://xactions.app/scripts/share-embed">
   <meta property="og:site_name" content="XActions">
   <meta property="og:image" content="https://xactions.app/og-run.png">
 
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@nichxbt">
-  <meta name="twitter:title" content="Share &amp; Embed Posts — XActions">
-  <meta name="twitter:description" content="Copy post links, get embed codes, or bulk copy links from timeline. Free X/Twitter browser script, no API key needed.">
+  <meta name="twitter:title" content="Share and Embed Posts — XActions">
+  <meta name="twitter:description" content="Copy post links and embed codes, one post or in bulk. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
   <meta name="twitter:image" content="https://xactions.app/og-run.png">
 
   <link rel="canonical" href="https://xactions.app/scripts/share-embed">
@@ -29,15 +29,15 @@
   {
     "@context": "https://schema.org",
     "@type": "TechArticle",
-    "headline": "Share & Embed Posts — Free X/Twitter Script | XActions",
-    "description": "Copy post links, get embed codes, or bulk copy links from timeline. Free X/Twitter browser script, no API key needed.",
+    "headline": "Share and Embed Posts — Free X/Twitter Script | XActions",
+    "description": "Copy post links and embed codes, one post or in bulk. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.",
     "url": "https://xactions.app/scripts/share-embed",
     "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
     "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
     "datePublished": "2026-03-30",
     "dateModified": "2026-03-30",
-    "articleSection": "Content Tools",
-    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, share, embed, content tools"
+    "articleSection": "Post",
+    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, share, embed, post"
   }
   </script>
   <script type="application/ld+json">
@@ -47,8 +47,8 @@
     "itemListElement": [
       { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
       { "@type": "ListItem", "position": 2, "name": "Scripts", "item": "https://xactions.app/scripts" },
-      { "@type": "ListItem", "position": 3, "name": "Content Tools", "item": "https://xactions.app/scripts#content-tools" },
-      { "@type": "ListItem", "position": 4, "name": "Share & Embed Posts", "item": "https://xactions.app/scripts/share-embed" }
+      { "@type": "ListItem", "position": 3, "name": "Post", "item": "https://xactions.app/scripts#post" },
+      { "@type": "ListItem", "position": 4, "name": "Share and Embed Posts", "item": "https://xactions.app/scripts/share-embed" }
     ]
   }
   </script>
@@ -116,24 +116,24 @@
 
     <main class="main-content" id="main-content">
       <header class="main-header">
-        <h1>🔗 Share &amp; Embed Posts</h1>
+        <h1>✍️ Share and Embed Posts</h1>
         <div class="breadcrumb">
-          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#content-tools">Content Tools</a> › Share &amp; Embed Posts
+          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#post">Post</a> › Share and Embed Posts
         </div>
       </header>
 
       <article class="article">
-        <span class="cat-badge">Content Tools</span>
-        <span class="source-badge">browser</span>
+        <span class="cat-badge">Post</span>
+        <span class="source-badge">browser/shareEmbed.js</span>
 
         <div class="meta-row">
           
           
-          <span>282 lines</span>
+          <span>290 lines</span>
           <span>by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></span>
         </div>
 
-        <p>Copy post links, get embed codes, or bulk copy links from timeline</p>
+        <p>Copy post links and embed codes, one post or in bulk.</p>
 
         
 
@@ -195,6 +195,14 @@
           <div class="code-block">
             <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.querySelector('code').textContent).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy Script',2000)})">Copy Script</button>
             <pre><code>// Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
+/**
+ * @name        shareEmbed.js
+ * @title       Share and Embed Posts
+ * @description Copy post links and embed codes, one post or in bulk.
+ * @category    post
+ * @page        x.com/*
+ * @writes      false
+ */
 // Share &amp; Embed Posts on X - by nichxbt
 // https://github.com/nirholas/xactions
 // Copy post links, get embed codes, or bulk copy links from timeline
@@ -489,17 +497,17 @@
 
     <aside class="sidebar-right">
       <div class="sidebar-card">
-        <h3>🔗 Content Tools</h3>
-        <a href="/scripts/bookmark-exporter">📚 Bookmark Exporter</a>
-<a href="/scripts/bookmark-manager">📚 Bookmark Manager</a>
-<a href="/scripts/bookmark-organizer">📂 Bookmark Organizer</a>
-<a href="/scripts/bulk-delete-tweets">🗑️ Bulk Delete Tweets</a>
-<a href="/scripts/clear-all-bookmarks">🗑️ Clear All Bookmarks</a>
-<a href="/scripts/clear-all-likes">🗑️ Clear All Likes</a>
-<a href="/scripts/clear-all-reposts">🗑️ Clear All Reposts</a>
-<a href="/scripts/clear-all-retweets">🗑️ Clear All Retweets</a>
-<a href="/scripts/content-repurposer">♻️ Content Repurposer</a>
-<a href="/scripts/delete-tweets">🗑️ Delete Tweets</a>
+        <h3>✍️ Post</h3>
+        <a href="/scripts/post-advanced">✍️ Advanced Posting</a>
+<a href="/scripts/article-publisher">✍️ Article Publisher</a>
+<a href="/scripts/content-repurposer">✍️ Content Repurposer</a>
+<a href="/scripts/create-poll">✍️ Create Poll</a>
+<a href="/scripts/edit-post">✍️ Edit Post</a>
+<a href="/scripts/media-studio">✍️ Media Studio</a>
+<a href="/scripts/mention-users">✍️ Mention Users</a>
+<a href="/scripts/post-composer">✍️ Post Composer</a>
+<a href="/scripts/post-thread">✍️ Post Thread</a>
+<a href="/scripts/quote-tweet">✍️ Quote Post</a>
       </div>
       <div class="sidebar-card">
         <h3>🔗 Quick Links</h3>

@@ -3,23 +3,23 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Advanced notification management — Free X/Twitter Script | XActions</title>
-  <meta name="description" content="Advanced notification management. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
-  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, advanced, notifications, other tools">
+  <title>Notification Settings — Free X/Twitter Script | XActions</title>
+  <meta name="description" content="Clear notifications and configure email, push, desktop and verified-only notification settings.">
+  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, advanced, notifications, profile and settings">
   <meta name="author" content="nich (@nichxbt)">
   <meta name="robots" content="index, follow">
 
   <meta property="og:type" content="article">
-  <meta property="og:title" content="Advanced notification management — XActions">
-  <meta property="og:description" content="Advanced notification management. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
+  <meta property="og:title" content="Notification Settings — XActions">
+  <meta property="og:description" content="Clear notifications and configure email, push, desktop and verified-only notification settings.">
   <meta property="og:url" content="https://xactions.app/scripts/advanced-notifications">
   <meta property="og:site_name" content="XActions">
   <meta property="og:image" content="https://xactions.app/og-run.png">
 
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@nichxbt">
-  <meta name="twitter:title" content="Advanced notification management — XActions">
-  <meta name="twitter:description" content="Advanced notification management. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
+  <meta name="twitter:title" content="Notification Settings — XActions">
+  <meta name="twitter:description" content="Clear notifications and configure email, push, desktop and verified-only notification settings.">
   <meta name="twitter:image" content="https://xactions.app/og-run.png">
 
   <link rel="canonical" href="https://xactions.app/scripts/advanced-notifications">
@@ -29,15 +29,15 @@
   {
     "@context": "https://schema.org",
     "@type": "TechArticle",
-    "headline": "Advanced notification management — Free X/Twitter Script | XActions",
-    "description": "Advanced notification management. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.",
+    "headline": "Notification Settings — Free X/Twitter Script | XActions",
+    "description": "Clear notifications and configure email, push, desktop and verified-only notification settings.",
     "url": "https://xactions.app/scripts/advanced-notifications",
     "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
     "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
     "datePublished": "2026-03-30",
     "dateModified": "2026-03-30",
-    "articleSection": "Other Tools",
-    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, advanced, notifications, other tools"
+    "articleSection": "Profile and Settings",
+    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, advanced, notifications, profile and settings"
   }
   </script>
   <script type="application/ld+json">
@@ -47,8 +47,8 @@
     "itemListElement": [
       { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
       { "@type": "ListItem", "position": 2, "name": "Scripts", "item": "https://xactions.app/scripts" },
-      { "@type": "ListItem", "position": 3, "name": "Other Tools", "item": "https://xactions.app/scripts#other-tools" },
-      { "@type": "ListItem", "position": 4, "name": "Advanced notification management", "item": "https://xactions.app/scripts/advanced-notifications" }
+      { "@type": "ListItem", "position": 3, "name": "Profile and Settings", "item": "https://xactions.app/scripts#profile-and-settings" },
+      { "@type": "ListItem", "position": 4, "name": "Notification Settings", "item": "https://xactions.app/scripts/advanced-notifications" }
     ]
   }
   </script>
@@ -116,24 +116,24 @@
 
     <main class="main-content" id="main-content">
       <header class="main-header">
-        <h1>⚡ Advanced notification management</h1>
+        <h1>🪪 Notification Settings</h1>
         <div class="breadcrumb">
-          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#other-tools">Other Tools</a> › Advanced notification management
+          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#profile-and-settings">Profile and Settings</a> › Notification Settings
         </div>
       </header>
 
       <article class="article">
-        <span class="cat-badge">Other Tools</span>
-        <span class="source-badge">browser</span>
+        <span class="cat-badge">Profile and Settings</span>
+        <span class="source-badge">browser/advancedNotifications.js</span>
 
         <div class="meta-row">
           
           
-          <span>445 lines</span>
+          <span>453 lines</span>
           <span>by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></span>
         </div>
 
-        <p>Advanced notification management — a free, open-source browser console script for X/Twitter automation. No API keys or fees required.</p>
+        <p>Clear notifications and configure email, push, desktop and verified-only notification settings.</p>
 
         
 
@@ -156,6 +156,14 @@
           <div class="code-block">
             <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.querySelector('code').textContent).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy Script',2000)})">Copy Script</button>
             <pre><code>// Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
+/**
+ * @name        advancedNotifications.js
+ * @title       Notification Settings
+ * @description Clear notifications and configure email, push, desktop and verified-only notification settings.
+ * @category    profile
+ * @page        x.com/settings/notifications
+ * @writes      true
+ */
 // browser/advancedNotifications.js
 // Advanced notification management for X/Twitter
 // by nichxbt
@@ -613,17 +621,17 @@
 
     <aside class="sidebar-right">
       <div class="sidebar-card">
-        <h3>⚡ Other Tools</h3>
-        <a href="/scripts/ad-campaign-manager">⚡ Ad campaign management</a>
-<a href="/scripts/advanced-creator">⚡ Advanced creator monetization</a>
-<a href="/scripts/advanced-dm">⚡ Advanced Direct Message features</a>
-<a href="/scripts/advanced-grok">⚡ Advanced Grok AI features</a>
-<a href="/scripts/advanced-premium">⚡ Advanced Premium features</a>
-<a href="/scripts/advanced-profile">⚡ Advanced profile management</a>
-<a href="/scripts/advanced-settings">⚡ Advanced settings and privacy management</a>
-<a href="/scripts/advanced-spaces">⚡ Advanced Spaces features</a>
-<a href="/scripts/community-manager">⚡ Community management</a>
-<a href="/scripts/community-notes">⚡ Community Notes</a>
+        <h3>🪪 Profile and Settings</h3>
+        <a href="/scripts/account-misc">🪪 Account Utilities</a>
+<a href="/scripts/advanced-profile">🪪 Advanced Profile Tools</a>
+<a href="/scripts/advanced-settings">🪪 Advanced Settings and Privacy</a>
+<a href="/scripts/delegate-access">🪪 Delegate Access</a>
+<a href="/scripts/download-account-data">🪪 Download Account Data</a>
+<a href="/scripts/id-verification">🪪 ID Verification</a>
+<a href="/scripts/multi-account">🪪 Multi-Account Manager</a>
+<a href="/scripts/pin-tweet-manager">🪪 Pin Tweet Manager</a>
+<a href="/scripts/account-settings">🪪 Privacy and Safety Settings</a>
+<a href="/scripts/qr-code-sharing">🪪 QR Code Profile Sharing</a>
       </div>
       <div class="sidebar-card">
         <h3>🔗 Quick Links</h3>

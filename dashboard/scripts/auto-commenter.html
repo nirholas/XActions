@@ -4,14 +4,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Auto Commenter — Free X/Twitter Script | XActions</title>
-  <meta name="description" content="Monitors a user's profile for new posts and auto-comments. Great for engagement, building relationships, never missing a post.">
-  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, auto, commenter, engagement">
+  <meta name="description" content="Watch a user's profile for new posts and reply to them with a random comment from your list, with an age window and a cap.">
+  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, auto, commenter, engage">
   <meta name="author" content="nich (@nichxbt)">
   <meta name="robots" content="index, follow">
 
   <meta property="og:type" content="article">
   <meta property="og:title" content="Auto Commenter — XActions">
-  <meta property="og:description" content="Monitors a user's profile for new posts and auto-comments. Great for engagement, building relationships, never missing a post.">
+  <meta property="og:description" content="Watch a user's profile for new posts and reply to them with a random comment from your list, with an age window and a cap.">
   <meta property="og:url" content="https://xactions.app/scripts/auto-commenter">
   <meta property="og:site_name" content="XActions">
   <meta property="og:image" content="https://xactions.app/og-run.png">
@@ -19,7 +19,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@nichxbt">
   <meta name="twitter:title" content="Auto Commenter — XActions">
-  <meta name="twitter:description" content="Monitors a user's profile for new posts and auto-comments. Great for engagement, building relationships, never missing a post.">
+  <meta name="twitter:description" content="Watch a user's profile for new posts and reply to them with a random comment from your list, with an age window and a cap.">
   <meta name="twitter:image" content="https://xactions.app/og-run.png">
 
   <link rel="canonical" href="https://xactions.app/scripts/auto-commenter">
@@ -30,14 +30,14 @@
     "@context": "https://schema.org",
     "@type": "TechArticle",
     "headline": "Auto Commenter — Free X/Twitter Script | XActions",
-    "description": "Monitors a user's profile for new posts and auto-comments. Great for engagement, building relationships, never missing a post.",
+    "description": "Watch a user's profile for new posts and reply to them with a random comment from your list, with an age window and a cap.",
     "url": "https://xactions.app/scripts/auto-commenter",
     "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
     "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
     "datePublished": "2026-03-30",
     "dateModified": "2026-03-30",
-    "articleSection": "Engagement",
-    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, auto, commenter, engagement"
+    "articleSection": "Engage",
+    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, auto, commenter, engage"
   }
   </script>
   <script type="application/ld+json">
@@ -47,7 +47,7 @@
     "itemListElement": [
       { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
       { "@type": "ListItem", "position": 2, "name": "Scripts", "item": "https://xactions.app/scripts" },
-      { "@type": "ListItem", "position": 3, "name": "Engagement", "item": "https://xactions.app/scripts#engagement" },
+      { "@type": "ListItem", "position": 3, "name": "Engage", "item": "https://xactions.app/scripts#engage" },
       { "@type": "ListItem", "position": 4, "name": "Auto Commenter", "item": "https://xactions.app/scripts/auto-commenter" }
     ]
   }
@@ -118,30 +118,31 @@
       <header class="main-header">
         <h1>💬 Auto Commenter</h1>
         <div class="breadcrumb">
-          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#engagement">Engagement</a> › Auto Commenter
+          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#engage">Engage</a> › Auto Commenter
         </div>
       </header>
 
       <article class="article">
-        <span class="cat-badge">Engagement</span>
-        <span class="source-badge">src/automation</span>
+        <span class="cat-badge">Engage</span>
+        <span class="source-badge">browser/autoCommenter.js</span>
 
         <div class="meta-row">
-          
-          
-          <span>289 lines</span>
+          <span>v1.1.0</span>
+          <span>Updated: 2026-11-27</span>
+          <span>448 lines</span>
           <span>by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></span>
         </div>
 
-        <p>Monitors a user's profile for new posts and auto-comments. Great for engagement, building relationships, never missing a post.</p>
+        <p>Watch a user's profile for new posts and reply to them with a random comment from your list, with an age window and a cap.</p>
 
-        
+        <div class="warning-box"><p>⚠️ WARNING: Use responsibly! Spammy comments can get you limited.</p></div>
 
         <h2>How to Use</h2>
         <ol class="usage-steps"><li>Go to the user's profile: x.com/USERNAME</li>
-<li>Paste core.js, then paste this script</li>
-<li>Configure your comments and let it run!</li></ol>
-        <p><strong>Note:</strong> This script requires pasting <code>src/automation/core.js</code> first for shared utilities.</p>
+<li>Customize the COMMENTS array in CONFIG with your messages</li>
+<li>Paste browser/autoCommenter.js into the DevTools console and press Enter</li>
+<li>Run stopAutoComment() to stop</li></ol>
+        
 
         
         <section class="config-section">
@@ -151,11 +152,16 @@
           <tbody>
             <tr><td><code>CHECK_INTERVAL_SECONDS</code></td><td><code>60</code></td><td>How often to check for new posts</td></tr>
 <tr><td><code>MAX_COMMENTS_PER_SESSION</code></td><td><code>5</code></td><td>Stop after this many comments</td></tr>
+<tr><td><code>RUN_ONCE</code></td><td><code>false</code></td><td>true = one scan and stop instead of re-checking every interval</td></tr>
+<tr><td><code>SCROLLS_PER_CHECK</code></td><td><code>0</code></td><td>Scroll down the profile this many times per check (0 = visible posts only)</td></tr>
+<tr><td><code>SCROLL_DELAY_MS</code></td><td><code>2000</code></td><td>Wait after each scroll</td></tr>
 <tr><td><code>ONLY_ORIGINAL_TWEETS</code></td><td><code>true</code></td><td>Skip replies and retweets</td></tr>
+<tr><td><code>ONLY_WITH_MEDIA</code></td><td><code>false</code></td><td>Only comment on posts with an image or video</td></tr>
 <tr><td><code>REQUIRE_KEYWORD</code></td><td><code>false</code></td><td>Only comment if post contains keyword</td></tr>
 <tr><td><code>KEYWORDS</code></td><td><code>[]</code></td><td>Keywords to match (if REQUIRE_KEYWORD is true)</td></tr>
 <tr><td><code>MIN_POST_AGE_SECONDS</code></td><td><code>30</code></td><td>Don't comment on posts younger than this</td></tr>
 <tr><td><code>MAX_POST_AGE_MINUTES</code></td><td><code>30</code></td><td>Don't comment on posts older than this</td></tr>
+<tr><td><code>MIN_DELAY_MS</code></td><td><code>30000</code></td><td>Delay between comments: 30 seconds minimum!</td></tr>
           </tbody>
         </table>
       </section>
@@ -163,7 +169,7 @@
         <h2>Default Configuration</h2>
         <div class="code-block">
           <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.querySelector('code').textContent).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy',2000)})">Copy</button>
-          <pre><code>const OPTIONS = {
+          <pre><code>const CONFIG = {
     // Comments to randomly choose from
     COMMENTS: [
       '🔥',
@@ -174,19 +180,25 @@
       '💯',
       'Facts!',
     ],
-    
+
     // Monitoring settings
     CHECK_INTERVAL_SECONDS: 60,   // How often to check for new posts
     MAX_COMMENTS_PER_SESSION: 5,  // Stop after this many comments
-    
+    RUN_ONCE: false,              // true = one scan and stop instead of re-checking every interval
+    SCROLLS_PER_CHECK: 0,         // Scroll down the profile this many times per check (0 = visible posts only)
+    SCROLL_DELAY_MS: 2000,        // Wait after each scroll
+
     // Behavior
     ONLY_ORIGINAL_TWEETS: true,   // Skip replies and retweets
+    ONLY_WITH_MEDIA: false,       // Only comment on posts with an image or video
     REQUIRE_KEYWORD: false,       // Only comment if post contains keyword
     KEYWORDS: [],                 // Keywords to match (if REQUIRE_KEYWORD is true)
-    
+
     // Safety
     MIN_POST_AGE_SECONDS: 30,     // Don't comment on posts younger than this
     MAX_POST_AGE_MINUTES: 30,     // Don't comment on posts older than this
+    MIN_DELAY_MS: 30000,          // Delay between comments: 30 seconds minimum!
+    MAX_DELAY_MS: 60000,
   };</code></pre>
         </div>
       </section>
@@ -197,33 +209,104 @@
           <div class="code-block">
             <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.querySelector('code').textContent).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy Script',2000)})">Copy Script</button>
             <pre><code>// Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
-// XActions Automation - Auto Commenter
-// https://github.com/nirholas/XActions
-//
-// REQUIRES: Paste core.js first!
-//
-// Monitors a user's profile for new posts and auto-comments.
-// Great for engagement, building relationships, never missing a post.
-//
-// HOW TO USE:
-// 1. Go to the user's profile: x.com/USERNAME
-// 2. Paste core.js, then paste this script
-// 3. Configure your comments and let it run!
-//
-// ⚠️ WARNING: Use responsibly! Spammy comments can get you limited.
+/**
+ * ============================================================
+ * 💬 Auto Commenter
+ * ============================================================
+ *
+ * @name        autoCommenter.js
+ * @title       Auto Commenter
+ * @description Watch a user's profile for new posts and reply to them with a random comment from your list, with an age window and a cap.
+ * @category    engage
+ * @page        x.com/&lt;username&gt;
+ * @writes      true
+ * @aliases     src/automation/autoCommenter.js, scripts/twitter/auto-commenter.js
+ * @author      nichxbt (https://x.com/nichxbt)
+ * @version     1.1.0
+ * @date        2026-11-27
+ * @repository  https://github.com/nirholas/XActions
+ *
+ * ============================================================
+ * 📋 USAGE:
+ *
+ * Monitors a user's profile for new posts and auto-comments.
+ * Great for engagement, building relationships, never missing a post.
+ *
+ * 1. Go to the user's profile: x.com/USERNAME
+ * 2. Customize the COMMENTS array in CONFIG with your messages
+ * 3. Paste browser/autoCommenter.js into the DevTools console and press Enter
+ *    (src/automation/core.js is optional: when it is pasted first its
+ *    logger, storage and selectors are used)
+ * 4. Run stopAutoComment() to stop
+ *
+ * ⚠️ WARNING: Use responsibly! Spammy comments can get you limited.
+ * Keep the delays long and the comments varied.
+ * ============================================================
+ */
 
 (() =&gt; {
-  if (!window.XActions?.Core) {
-    console.error('❌ Core module not loaded! Paste core.js first.');
-    return;
-  }
+  // ============================================
+  // CORE (optional): use core.js when present, built-ins otherwise
+  // ============================================
+  const Core = window.XActions?.Core;
 
-  const { log, sleep, randomDelay, scrollToTop, clickElement, waitForElement, storage, SELECTORS } = window.XActions.Core;
+  const sleep = Core?.sleep || ((ms) =&gt; new Promise(resolve =&gt; setTimeout(resolve, ms)));
+  const randomDelay = Core?.randomDelay || ((min, max) =&gt; sleep(Math.floor(Math.random() * (max - min + 1)) + min));
+  const log = Core?.log || ((message, type = 'info') =&gt; {
+    const prefix = { info: '📘', success: '✅', warning: '⚠️', error: '❌', action: '🔧' }[type] || '📘';
+    console.log(`${prefix} [${new Date().toLocaleTimeString()}] ${message}`);
+  });
+  const scrollToTop = Core?.scrollToTop || (() =&gt; window.scrollTo({ top: 0, behavior: 'smooth' }));
+  const clickElement = Core?.clickElement || (async (element) =&gt; {
+    if (!element) return false;
+    try {
+      element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      await sleep(300);
+      element.click();
+      return true;
+    } catch (e) {
+      log(`Click error: ${e.message}`, 'error');
+      return false;
+    }
+  });
+  const waitForElement = Core?.waitForElement || (async (selector, timeout = 10000) =&gt; {
+    const startTime = Date.now();
+    while (Date.now() - startTime &lt; timeout) {
+      const element = document.querySelector(selector);
+      if (element) return element;
+      await sleep(100);
+    }
+    return null;
+  });
+  // Same key layout as core.js storage (xactions_ prefix, JSON values)
+  const storage = Core?.storage || {
+    get: (key) =&gt; {
+      try {
+        const data = localStorage.getItem('xactions_' + key);
+        return data ? JSON.parse(data) : null;
+      } catch {
+        return null;
+      }
+    },
+    set: (key, value) =&gt; {
+      try {
+        localStorage.setItem('xactions_' + key, JSON.stringify(value));
+        return true;
+      } catch {
+        return false;
+      }
+    },
+  };
+  const SELECTORS = Core?.SELECTORS || {
+    replyButton: '[data-testid=&quot;reply&quot;]',
+    tweet: '[data-testid=&quot;tweet&quot;]',
+    tweetText: '[data-testid=&quot;tweetText&quot;]',
+  };
 
   // ============================================
   // CONFIGURATION
   // ============================================
-  const OPTIONS = {
+  const CONFIG = {
     // Comments to randomly choose from
     COMMENTS: [
       '🔥',
@@ -234,19 +317,25 @@
       '💯',
       'Facts!',
     ],
-    
+
     // Monitoring settings
     CHECK_INTERVAL_SECONDS: 60,   // How often to check for new posts
     MAX_COMMENTS_PER_SESSION: 5,  // Stop after this many comments
-    
+    RUN_ONCE: false,              // true = one scan and stop instead of re-checking every interval
+    SCROLLS_PER_CHECK: 0,         // Scroll down the profile this many times per check (0 = visible posts only)
+    SCROLL_DELAY_MS: 2000,        // Wait after each scroll
+
     // Behavior
     ONLY_ORIGINAL_TWEETS: true,   // Skip replies and retweets
+    ONLY_WITH_MEDIA: false,       // Only comment on posts with an image or video
     REQUIRE_KEYWORD: false,       // Only comment if post contains keyword
     KEYWORDS: [],                 // Keywords to match (if REQUIRE_KEYWORD is true)
-    
+
     // Safety
     MIN_POST_AGE_SECONDS: 30,     // Don't comment on posts younger than this
     MAX_POST_AGE_MINUTES: 30,     // Don't comment on posts older than this
+    MIN_DELAY_MS: 30000,          // Delay between comments: 30 seconds minimum!
+    MAX_DELAY_MS: 60000,
   };
 
   // ============================================
@@ -255,7 +344,6 @@
   let commentCount = 0;
   let checkCount = 0;
   let isRunning = true;
-  const commentedTweets = new Set(storage.get('commented_tweets') || []);
 
   // ============================================
   // HELPERS
@@ -265,12 +353,33 @@
     return match ? match[1] : 'unknown';
   };
 
+  const RESERVED_PATHS = ['home', 'explore', 'search', 'notifications', 'messages', 'i', 'unknown'];
+  const targetUser = getUsername();
+  // Per-profile history written by the scripts/twitter variant of this tool
+  const PROFILE_STORAGE_KEY = `xactions_commented_${targetUser}`;
+
+  const loadProfileHistory = () =&gt; {
+    try {
+      const saved = localStorage.getItem(PROFILE_STORAGE_KEY);
+      return saved ? JSON.parse(saved) : [];
+    } catch {
+      return [];
+    }
+  };
+
+  const commentedTweets = new Set([...(storage.get('commented_tweets') || []), ...loadProfileHistory()]);
+  const profileCommented = new Set(loadProfileHistory());
+
   const getRandomComment = () =&gt; {
-    return OPTIONS.COMMENTS[Math.floor(Math.random() * OPTIONS.COMMENTS.length)];
+    return CONFIG.COMMENTS[Math.floor(Math.random() * CONFIG.COMMENTS.length)];
   };
 
   const getTweetId = (tweetElement) =&gt; {
-    const link = tweetElement.querySelector('a[href*=&quot;/status/&quot;]');
+    // The timestamp's enclosing anchor is the tweet's own permalink; the first
+    // /status/ link in the article can belong to a quoted tweet
+    const timeEl = tweetElement.querySelector('time');
+    const link = (timeEl &amp;&amp; timeEl.closest('a[href*=&quot;/status/&quot;]')) ||
+                 tweetElement.querySelector('a[href*=&quot;/status/&quot;]');
     if (link) {
       const match = link.href.match(/status\/(\d+)/);
       return match ? match[1] : null;
@@ -291,6 +400,8 @@
   };
 
   const isReply = (tweetElement) =&gt; {
+    // Structural marker first; English text as fallback
+    if (tweetElement.querySelector('[data-testid=&quot;in-reply-to&quot;]')) return true;
     return !!tweetElement.textContent?.includes('Replying to');
   };
 
@@ -298,11 +409,25 @@
     return !!tweetElement.closest('article')?.textContent?.includes('reposted');
   };
 
+  const hasMedia = (tweetElement) =&gt; {
+    return !!(tweetElement.querySelector('[data-testid=&quot;tweetPhoto&quot;]') ||
+              tweetElement.querySelector('[data-testid=&quot;videoPlayer&quot;], [data-testid=&quot;videoComponent&quot;]'));
+  };
+
   const matchesKeywords = (text) =&gt; {
-    if (!OPTIONS.REQUIRE_KEYWORD) return true;
-    if (OPTIONS.KEYWORDS.length === 0) return true;
+    if (!CONFIG.REQUIRE_KEYWORD) return true;
+    if (CONFIG.KEYWORDS.length === 0) return true;
     const lowerText = text.toLowerCase();
-    return OPTIONS.KEYWORDS.some(kw =&gt; lowerText.includes(kw.toLowerCase()));
+    return CONFIG.KEYWORDS.some(kw =&gt; lowerText.includes(kw.toLowerCase()));
+  };
+
+  const closeComposer = () =&gt; {
+    const closeBtn = document.querySelector('[data-testid=&quot;app-bar-close&quot;]');
+    if (closeBtn) {
+      closeBtn.click();
+    } else {
+      document.body.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
+    }
   };
 
   // ============================================
@@ -326,18 +451,17 @@
     const replyInput = await waitForElement('[data-testid=&quot;tweetTextarea_0&quot;]', 5000);
     if (!replyInput) {
       log('Reply input not found', 'warning');
-      // Press Escape to close any modal
-      document.body.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
+      closeComposer();
       return false;
     }
 
     // Type the comment
     const comment = getRandomComment();
-    
+
     // Focus and type
     replyInput.focus();
     await sleep(300);
-    
+
     // Use execCommand for contenteditable
     document.execCommand('insertText', false, comment);
     await sleep(500);
@@ -346,7 +470,7 @@
     const postBtn = await waitForElement('[data-testid=&quot;tweetButton&quot;]', 3000);
     if (!postBtn) {
       log('Post button not found', 'warning');
-      document.body.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
+      closeComposer();
       return false;
     }
 
@@ -354,6 +478,11 @@
     if (postBtn.disabled || postBtn.getAttribute('aria-disabled') === 'true') {
       log('Post button is disabled', 'warning');
       await sleep(500);
+      if (postBtn.disabled || postBtn.getAttribute('aria-disabled') === 'true') {
+        log('Post button still disabled, skipping this post', 'warning');
+        closeComposer();
+        return false;
+      }
     }
 
     await clickElement(postBtn);
@@ -362,6 +491,12 @@
     // Save that we commented
     commentedTweets.add(tweetId);
     storage.set('commented_tweets', Array.from(commentedTweets));
+    profileCommented.add(tweetId);
+    try {
+      localStorage.setItem(PROFILE_STORAGE_KEY, JSON.stringify([...profileCommented]));
+    } catch {
+      // storage full or blocked: the global history above still has it
+    }
     commentCount++;
 
     log(`💬 Commented &quot;${comment}&quot; on tweet ${tweetId}`, 'success');
@@ -378,24 +513,25 @@
     for (const tweet of tweets) {
       const tweetId = getTweetId(tweet);
       if (!tweetId) continue;
-      
+
       // Skip if already commented
       if (commentedTweets.has(tweetId)) continue;
 
       // Skip replies/retweets if configured
-      if (OPTIONS.ONLY_ORIGINAL_TWEETS) {
+      if (CONFIG.ONLY_ORIGINAL_TWEETS) {
         if (isReply(tweet) || isRetweet(tweet)) continue;
       }
 
-      // Check age
+      if (CONFIG.ONLY_WITH_MEDIA &amp;&amp; !hasMedia(tweet)) continue;
+
+      // Check age (posts with no timestamp, such as promoted posts, are skipped)
       const ageMs = getTweetAge(tweet);
-      if (ageMs !== null) {
-        const ageSeconds = ageMs / 1000;
-        const ageMinutes = ageSeconds / 60;
-        
-        if (ageSeconds &lt; OPTIONS.MIN_POST_AGE_SECONDS) continue;
-        if (ageMinutes &gt; OPTIONS.MAX_POST_AGE_MINUTES) continue;
-      }
+      if (ageMs === null) continue;
+      const ageSeconds = ageMs / 1000;
+      const ageMinutes = ageSeconds / 60;
+
+      if (ageSeconds &lt; CONFIG.MIN_POST_AGE_SECONDS) continue;
+      if (ageMinutes &gt; CONFIG.MAX_POST_AGE_MINUTES) continue;
 
       // Check keywords
       const textEl = tweet.querySelector(SELECTORS.tweetText);
@@ -408,13 +544,35 @@
     return newTweets;
   };
 
+  const commentOnVisible = async () =&gt; {
+    const newTweets = findNewTweets();
+
+    if (newTweets.length &gt; 0) {
+      log(`Found ${newTweets.length} new tweets to comment on!`, 'success');
+
+      for (const { element, text } of newTweets) {
+        if (!isRunning || commentCount &gt;= CONFIG.MAX_COMMENTS_PER_SESSION) break;
+        if (!element.isConnected) continue;
+
+        log(`Commenting on: &quot;${text}...&quot;`, 'action');
+        const posted = await postComment(element);
+        if (posted &amp;&amp; commentCount &lt; CONFIG.MAX_COMMENTS_PER_SESSION) {
+          log(`⏳ Waiting ${Math.round(CONFIG.MIN_DELAY_MS / 1000)}-${Math.round(CONFIG.MAX_DELAY_MS / 1000)}s before next comment...`, 'info');
+          await randomDelay(CONFIG.MIN_DELAY_MS, CONFIG.MAX_DELAY_MS);
+        }
+      }
+      return true;
+    }
+    return false;
+  };
+
   // ============================================
   // MAIN LOOP
   // ============================================
   const check = async () =&gt; {
     if (!isRunning) return;
-    if (commentCount &gt;= OPTIONS.MAX_COMMENTS_PER_SESSION) {
-      log(`Reached max comments (${OPTIONS.MAX_COMMENTS_PER_SESSION}). Stopping.`, 'warning');
+    if (commentCount &gt;= CONFIG.MAX_COMMENTS_PER_SESSION) {
+      log(`Reached max comments (${CONFIG.MAX_COMMENTS_PER_SESSION}). Stopping.`, 'warning');
       return;
     }
 
@@ -427,26 +585,32 @@
     await sleep(2000);
 
     // Find new tweets
-    const newTweets = findNewTweets();
+    let found = await commentOnVisible();
 
-    if (newTweets.length &gt; 0) {
-      log(`Found ${newTweets.length} new tweets to comment on!`, 'success');
-      
-      for (const { element, tweetId, text } of newTweets) {
-        if (commentCount &gt;= OPTIONS.MAX_COMMENTS_PER_SESSION) break;
-        
-        log(`Commenting on: &quot;${text}...&quot;`, 'action');
-        await postComment(element);
-        await randomDelay(3000, 6000);
-      }
-    } else {
+    // Optionally scroll further down the profile
+    for (let s = 0; s &lt; CONFIG.SCROLLS_PER_CHECK; s++) {
+      if (!isRunning || commentCount &gt;= CONFIG.MAX_COMMENTS_PER_SESSION) break;
+      window.scrollTo(0, document.body.scrollHeight);
+      await sleep(CONFIG.SCROLL_DELAY_MS);
+      if (await commentOnVisible()) found = true;
+    }
+
+    if (!found) {
       log('No new tweets found', 'info');
     }
 
+    if (CONFIG.RUN_ONCE) {
+      isRunning = false;
+      log(`Single scan complete. Total comments posted: ${commentCount}`, 'success');
+      return;
+    }
+
     // Schedule next check
-    if (isRunning &amp;&amp; commentCount &lt; OPTIONS.MAX_COMMENTS_PER_SESSION) {
-      log(`Next check in ${OPTIONS.CHECK_INTERVAL_SECONDS} seconds...`, 'info');
-      setTimeout(check, OPTIONS.CHECK_INTERVAL_SECONDS * 1000);
+    if (isRunning &amp;&amp; commentCount &lt; CONFIG.MAX_COMMENTS_PER_SESSION) {
+      log(`Next check in ${CONFIG.CHECK_INTERVAL_SECONDS} seconds...`, 'info');
+      setTimeout(check, CONFIG.CHECK_INTERVAL_SECONDS * 1000);
+    } else if (commentCount &gt;= CONFIG.MAX_COMMENTS_PER_SESSION) {
+      log(`Reached max comments (${CONFIG.MAX_COMMENTS_PER_SESSION}). Total comments posted: ${commentCount}`, 'success');
     }
   };
 
@@ -454,15 +618,21 @@
   // START
   // ============================================
   const run = async () =&gt; {
-    const username = getUsername();
-    
+    const username = targetUser;
+
+    if (RESERVED_PATHS.includes(username)) {
+      log('Must be on a user\'s profile page! Go to: https://x.com/TARGET_USERNAME', 'error');
+      isRunning = false;
+      return;
+    }
+
     console.log(`
 ╔═══════════════════════════════════════════════════════════╗
 ║  💬 XActions Auto Commenter                              ║
 ║                                                           ║
 ║  Watching: @${username.padEnd(20)}                        ║
-║  Interval: Every ${OPTIONS.CHECK_INTERVAL_SECONDS} seconds                         ║
-║  Max comments: ${OPTIONS.MAX_COMMENTS_PER_SESSION}                                    ║
+║  Interval: Every ${CONFIG.CHECK_INTERVAL_SECONDS} seconds                         ║
+║  Max comments: ${CONFIG.MAX_COMMENTS_PER_SESSION}                                    ║
 ║                                                           ║
 ║  Keep this tab open!                                      ║
 ║  Run stopAutoComment() to stop.                           ║
@@ -470,7 +640,8 @@
     `);
 
     log('Starting auto-commenter...', 'info');
-    log(`Comments pool: ${OPTIONS.COMMENTS.join(', ')}`, 'info');
+    log(`Comments pool: ${CONFIG.COMMENTS.join(', ')}`, 'info');
+    log(`Post age window: ${CONFIG.MIN_POST_AGE_SECONDS}s - ${CONFIG.MAX_POST_AGE_MINUTES}min`, 'info');
     log(`Previously commented on ${commentedTweets.size} tweets`, 'info');
 
     await check();
@@ -498,17 +669,17 @@
 
     <aside class="sidebar-right">
       <div class="sidebar-card">
-        <h3>💬 Engagement</h3>
-        <a href="/scripts/auto-reply-mentions">📨 Auto Reply Mentions</a>
-<a href="/scripts/auto-repost">🔁 Auto Repost (Retweet)</a>
-<a href="/scripts/auto-plug-replies">🔌 Auto-Plug Replies</a>
-<a href="/scripts/auto-reply">💬 Auto-Reply / Auto-Respond</a>
-<a href="/scripts/auto-engage">⚡ Browser console script for automated engagement</a>
-<a href="/scripts/comment-by-hashtag">💬 Comment By Hashtag</a>
-<a href="/scripts/comment-by-location">💬 Comment By Location</a>
-<a href="/scripts/engagement-booster">🚀 Engagement Booster v2</a>
-<a href="/scripts/engagement-leaderboard">🏆 Engagement Leaderboard</a>
-<a href="/scripts/engagement-manager">⚡ Engagement Manager</a>
+        <h3>💬 Engage</h3>
+        <a href="/scripts/auto-engage">💬 Auto Engage</a>
+<a href="/scripts/auto-liker">💬 Auto Liker</a>
+<a href="/scripts/auto-reply">💬 Auto Reply</a>
+<a href="/scripts/auto-repost">💬 Auto Repost</a>
+<a href="/scripts/auto-reply-mentions">💬 Auto-Reply Mentions</a>
+<a href="/scripts/comment-by-hashtag">💬 Comment by Hashtag</a>
+<a href="/scripts/comment-by-location">💬 Comment by Location</a>
+<a href="/scripts/community-notes">💬 Community Notes</a>
+<a href="/scripts/customer-service">💬 Customer Service Bot</a>
+<a href="/scripts/engage-profile">💬 Engage Profile</a>
       </div>
       <div class="sidebar-card">
         <h3>🔗 Quick Links</h3>

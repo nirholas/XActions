@@ -3,23 +3,23 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Post interaction tools — Free X/Twitter Script | XActions</title>
-  <meta name="description" content="Post interaction tools. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
-  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, post, interactions, engagement">
+  <title>Post Interactions — Free X/Twitter Script | XActions</title>
+  <meta name="description" content="Post interaction tools: like, repost, bookmark, share, mute and report a post. Free X/Twitter browser script, no API key needed.">
+  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, post, interactions, engage">
   <meta name="author" content="nich (@nichxbt)">
   <meta name="robots" content="index, follow">
 
   <meta property="og:type" content="article">
-  <meta property="og:title" content="Post interaction tools — XActions">
-  <meta property="og:description" content="Post interaction tools. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
+  <meta property="og:title" content="Post Interactions — XActions">
+  <meta property="og:description" content="Post interaction tools: like, repost, bookmark, share, mute and report a post. Free X/Twitter browser script, no API key needed.">
   <meta property="og:url" content="https://xactions.app/scripts/post-interactions">
   <meta property="og:site_name" content="XActions">
   <meta property="og:image" content="https://xactions.app/og-run.png">
 
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@nichxbt">
-  <meta name="twitter:title" content="Post interaction tools — XActions">
-  <meta name="twitter:description" content="Post interaction tools. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
+  <meta name="twitter:title" content="Post Interactions — XActions">
+  <meta name="twitter:description" content="Post interaction tools: like, repost, bookmark, share, mute and report a post. Free X/Twitter browser script, no API key needed.">
   <meta name="twitter:image" content="https://xactions.app/og-run.png">
 
   <link rel="canonical" href="https://xactions.app/scripts/post-interactions">
@@ -29,15 +29,15 @@
   {
     "@context": "https://schema.org",
     "@type": "TechArticle",
-    "headline": "Post interaction tools — Free X/Twitter Script | XActions",
-    "description": "Post interaction tools. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.",
+    "headline": "Post Interactions — Free X/Twitter Script | XActions",
+    "description": "Post interaction tools: like, repost, bookmark, share, mute and report a post. Free X/Twitter browser script, no API key needed.",
     "url": "https://xactions.app/scripts/post-interactions",
     "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
     "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
     "datePublished": "2026-03-30",
     "dateModified": "2026-03-30",
-    "articleSection": "Engagement",
-    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, post, interactions, engagement"
+    "articleSection": "Engage",
+    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, post, interactions, engage"
   }
   </script>
   <script type="application/ld+json">
@@ -47,8 +47,8 @@
     "itemListElement": [
       { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
       { "@type": "ListItem", "position": 2, "name": "Scripts", "item": "https://xactions.app/scripts" },
-      { "@type": "ListItem", "position": 3, "name": "Engagement", "item": "https://xactions.app/scripts#engagement" },
-      { "@type": "ListItem", "position": 4, "name": "Post interaction tools", "item": "https://xactions.app/scripts/post-interactions" }
+      { "@type": "ListItem", "position": 3, "name": "Engage", "item": "https://xactions.app/scripts#engage" },
+      { "@type": "ListItem", "position": 4, "name": "Post Interactions", "item": "https://xactions.app/scripts/post-interactions" }
     ]
   }
   </script>
@@ -116,24 +116,24 @@
 
     <main class="main-content" id="main-content">
       <header class="main-header">
-        <h1>💬 Post interaction tools</h1>
+        <h1>💬 Post Interactions</h1>
         <div class="breadcrumb">
-          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#engagement">Engagement</a> › Post interaction tools
+          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#engage">Engage</a> › Post Interactions
         </div>
       </header>
 
       <article class="article">
-        <span class="cat-badge">Engagement</span>
-        <span class="source-badge">browser</span>
+        <span class="cat-badge">Engage</span>
+        <span class="source-badge">browser/postInteractions.js</span>
 
         <div class="meta-row">
           
           
-          <span>918 lines</span>
+          <span>926 lines</span>
           <span>by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></span>
         </div>
 
-        <p>Post interaction tools — a free, open-source browser console script for X/Twitter automation. No API keys or fees required.</p>
+        <p>Post interaction tools: like, repost, bookmark, share, mute and report a post.</p>
 
         
 
@@ -171,6 +171,14 @@
           <div class="code-block">
             <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.querySelector('code').textContent).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy Script',2000)})">Copy Script</button>
             <pre><code>// Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
+/**
+ * @name        postInteractions.js
+ * @title       Post Interactions
+ * @description Post interaction tools: like, repost, bookmark, share, mute and report a post.
+ * @category    engage
+ * @page        x.com/*
+ * @writes      true
+ */
 // browser/postInteractions.js
 // Post interaction tools for X/Twitter
 // by nichxbt
@@ -1101,17 +1109,17 @@
 
     <aside class="sidebar-right">
       <div class="sidebar-card">
-        <h3>💬 Engagement</h3>
+        <h3>💬 Engage</h3>
         <a href="/scripts/auto-commenter">💬 Auto Commenter</a>
-<a href="/scripts/auto-reply-mentions">📨 Auto Reply Mentions</a>
-<a href="/scripts/auto-repost">🔁 Auto Repost (Retweet)</a>
-<a href="/scripts/auto-plug-replies">🔌 Auto-Plug Replies</a>
-<a href="/scripts/auto-reply">💬 Auto-Reply / Auto-Respond</a>
-<a href="/scripts/auto-engage">⚡ Browser console script for automated engagement</a>
-<a href="/scripts/comment-by-hashtag">💬 Comment By Hashtag</a>
-<a href="/scripts/comment-by-location">💬 Comment By Location</a>
-<a href="/scripts/engagement-booster">🚀 Engagement Booster v2</a>
-<a href="/scripts/engagement-leaderboard">🏆 Engagement Leaderboard</a>
+<a href="/scripts/auto-engage">💬 Auto Engage</a>
+<a href="/scripts/auto-liker">💬 Auto Liker</a>
+<a href="/scripts/auto-reply">💬 Auto Reply</a>
+<a href="/scripts/auto-repost">💬 Auto Repost</a>
+<a href="/scripts/auto-reply-mentions">💬 Auto-Reply Mentions</a>
+<a href="/scripts/comment-by-hashtag">💬 Comment by Hashtag</a>
+<a href="/scripts/comment-by-location">💬 Comment by Location</a>
+<a href="/scripts/community-notes">💬 Community Notes</a>
+<a href="/scripts/customer-service">💬 Customer Service Bot</a>
       </div>
       <div class="sidebar-card">
         <h3>🔗 Quick Links</h3>

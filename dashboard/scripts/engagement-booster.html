@@ -3,23 +3,23 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Engagement Booster v2 — Free X/Twitter Script | XActions</title>
-  <meta name="description" content="Systematically engage with tweets from target accounts to boost mutual engagement.">
-  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, engagement, booster, engagement">
+  <title>Engagement Booster — Free X/Twitter Script | XActions</title>
+  <meta name="description" content="Like, reply, retweet, bookmark and follow matching tweets from a floating panel, with scoring, drip scheduling and undo.">
+  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, engagement, booster, engage">
   <meta name="author" content="nich (@nichxbt)">
   <meta name="robots" content="index, follow">
 
   <meta property="og:type" content="article">
-  <meta property="og:title" content="Engagement Booster v2 — XActions">
-  <meta property="og:description" content="Systematically engage with tweets from target accounts to boost mutual engagement.">
+  <meta property="og:title" content="Engagement Booster — XActions">
+  <meta property="og:description" content="Like, reply, retweet, bookmark and follow matching tweets from a floating panel, with scoring, drip scheduling and undo.">
   <meta property="og:url" content="https://xactions.app/scripts/engagement-booster">
   <meta property="og:site_name" content="XActions">
   <meta property="og:image" content="https://xactions.app/og-run.png">
 
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@nichxbt">
-  <meta name="twitter:title" content="Engagement Booster v2 — XActions">
-  <meta name="twitter:description" content="Systematically engage with tweets from target accounts to boost mutual engagement.">
+  <meta name="twitter:title" content="Engagement Booster — XActions">
+  <meta name="twitter:description" content="Like, reply, retweet, bookmark and follow matching tweets from a floating panel, with scoring, drip scheduling and undo.">
   <meta name="twitter:image" content="https://xactions.app/og-run.png">
 
   <link rel="canonical" href="https://xactions.app/scripts/engagement-booster">
@@ -29,15 +29,15 @@
   {
     "@context": "https://schema.org",
     "@type": "TechArticle",
-    "headline": "Engagement Booster v2 — Free X/Twitter Script | XActions",
-    "description": "Systematically engage with tweets from target accounts to boost mutual engagement.",
+    "headline": "Engagement Booster — Free X/Twitter Script | XActions",
+    "description": "Like, reply, retweet, bookmark and follow matching tweets from a floating panel, with scoring, drip scheduling and undo.",
     "url": "https://xactions.app/scripts/engagement-booster",
     "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
     "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
     "datePublished": "2026-03-30",
     "dateModified": "2026-03-30",
-    "articleSection": "Engagement",
-    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, engagement, booster, engagement"
+    "articleSection": "Engage",
+    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, engagement, booster, engage"
   }
   </script>
   <script type="application/ld+json">
@@ -47,8 +47,8 @@
     "itemListElement": [
       { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
       { "@type": "ListItem", "position": 2, "name": "Scripts", "item": "https://xactions.app/scripts" },
-      { "@type": "ListItem", "position": 3, "name": "Engagement", "item": "https://xactions.app/scripts#engagement" },
-      { "@type": "ListItem", "position": 4, "name": "Engagement Booster v2", "item": "https://xactions.app/scripts/engagement-booster" }
+      { "@type": "ListItem", "position": 3, "name": "Engage", "item": "https://xactions.app/scripts#engage" },
+      { "@type": "ListItem", "position": 4, "name": "Engagement Booster", "item": "https://xactions.app/scripts/engagement-booster" }
     ]
   }
   </script>
@@ -116,33 +116,33 @@
 
     <main class="main-content" id="main-content">
       <header class="main-header">
-        <h1>🚀 Engagement Booster v2</h1>
+        <h1>💬 Engagement Booster</h1>
         <div class="breadcrumb">
-          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#engagement">Engagement</a> › Engagement Booster v2
+          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#engage">Engage</a> › Engagement Booster
         </div>
       </header>
 
       <article class="article">
-        <span class="cat-badge">Engagement</span>
-        <span class="source-badge">browser</span>
+        <span class="cat-badge">Engage</span>
+        <span class="source-badge">browser/engagementBooster.js</span>
 
         <div class="meta-row">
-          <span>v2.0.0</span>
-          <span>Updated: 2026-02-24</span>
-          <span>1343 lines</span>
+          <span>v2.1.0</span>
+          <span>Updated: 2026-11-26</span>
+          <span>1361 lines</span>
           <span>by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></span>
         </div>
 
-        <p>Systematically engage with tweets from target accounts to boost mutual engagement. Features a floating control panel, smart engagement scoring, retweet &amp; bookmark support, drip scheduling, undo rollback, persistent session history, and speed presets. Works standalone or with core.js.</p>
+        <p>Like, reply, retweet, bookmark and follow matching tweets from a floating panel, with scoring, drip scheduling and undo.</p>
 
         <div class="warning-box"><p>⚠️ Keep rates low. Twitter WILL flag excessive activity.</p></div>
 
         <h2>How to Use</h2>
         <ol class="usage-steps"><li>Go to any timeline, search, or user profile on x.com</li>
 <li>Open DevTools Console (F12)</li>
-<li>Paste and run — a floating panel will appear</li>
+<li>Paste browser/engagementBooster.js and run: a floating panel will appear</li>
 <li>Configure via the panel (or edit CONFIG below)</li>
-<li>Click ▶ Start</li></ol>
+<li>Click ▶ Start (or set CONFIG.autoStart = true to start on paste)</li></ol>
         
 
         
@@ -151,7 +151,9 @@
         <table>
           <thead><tr><th>Option</th><th>Default</th><th>Description</th></tr></thead>
           <tbody>
-            <tr><td><code>blockUsers</code></td><td><code>[]</code></td><td>Never interact with these accounts</td></tr>
+            <tr><td><code>autoStart</code></td><td><code>false</code></td><td>Start immediately on paste instead of waiting for ▶ Start</td></tr>
+<tr><td><code>humanTyping</code></td><td><code>false</code></td><td>Type replies one character at a time (20-50 ms per character)</td></tr>
+<tr><td><code>blockUsers</code></td><td><code>[]</code></td><td>Never interact with these accounts</td></tr>
 <tr><td><code>maxLikes</code></td><td><code>0</code></td><td>0 = no max — helps target smaller accounts</td></tr>
 <tr><td><code>maxFollowers</code></td><td><code>0</code></td><td>0 = no max — caps at big accounts</td></tr>
 <tr><td><code>bioKeywords</code></td><td><code>[]</code></td><td>Author bio must contain one of these</td></tr>
@@ -170,6 +172,8 @@
           <pre><code>const CONFIG = {
     maxInteractions: 15,
     dryRun: true,
+    autoStart: false,         // Start immediately on paste instead of waiting for ▶ Start
+    humanTyping: false,       // Type replies one character at a time (20-50 ms per character)
 
     actions: {
       like: true,
@@ -179,7 +183,8 @@
       follow: false,
     },
 
-    // Topic-aware reply templates: templates with `topics` match tweets containing those words
+    // Topic-aware reply templates: templates with `topics` match tweets containing those words.
+    // Plain strings are accepted too and treated as generic templates.
     replyTemplates: [
       { text: '🔥 Great point!', topics: [] },
       { text: '💯 Couldn\'t agree more.', topics: [] },
@@ -240,25 +245,30 @@
  * ============================================================
  *
  * @name        engagementBooster.js
- * @description Systematically engage with tweets from target
- *              accounts to boost mutual engagement. Features a
- *              floating control panel, smart engagement scoring,
- *              retweet &amp; bookmark support, drip scheduling, undo
- *              rollback, persistent session history, and speed
- *              presets. Works standalone or with core.js.
+ * @title       Engagement Booster
+ * @description Like, reply, retweet, bookmark and follow matching tweets from a floating panel, with scoring, drip scheduling and undo.
+ * @category    engage
+ * @page        x.com/home or x.com/search?q=&lt;query&gt; or x.com/&lt;username&gt;
+ * @writes      true
+ * @aliases     scripts/engagementBooster.js
  * @author      nichxbt (https://x.com/nichxbt)
- * @version     2.0.0
- * @date        2026-02-24
+ * @version     2.1.0
+ * @date        2026-11-26
  * @repository  https://github.com/nirholas/XActions
+ *
+ * Systematically engage with tweets from target accounts to boost mutual
+ * engagement. Features a floating control panel, smart engagement scoring,
+ * retweet &amp; bookmark support, drip scheduling, undo rollback, persistent
+ * session history, and speed presets. Works standalone or with core.js.
  *
  * ============================================================
  * 📋 USAGE:
  *
  * 1. Go to any timeline, search, or user profile on x.com
  * 2. Open DevTools Console (F12)
- * 3. Paste and run — a floating panel will appear
+ * 3. Paste browser/engagementBooster.js and run: a floating panel will appear
  * 4. Configure via the panel (or edit CONFIG below)
- * 5. Click ▶ Start
+ * 5. Click ▶ Start (or set CONFIG.autoStart = true to start on paste)
  *
  * Controls: ⏸ Pause · ▶ Resume · 🛑 Stop · ↩ Undo All
  *
@@ -281,6 +291,8 @@
   const CONFIG = {
     maxInteractions: 15,
     dryRun: true,
+    autoStart: false,         // Start immediately on paste instead of waiting for ▶ Start
+    humanTyping: false,       // Type replies one character at a time (20-50 ms per character)
 
     actions: {
       like: true,
@@ -290,7 +302,8 @@
       follow: false,
     },
 
-    // Topic-aware reply templates: templates with `topics` match tweets containing those words
+    // Topic-aware reply templates: templates with `topics` match tweets containing those words.
+    // Plain strings are accepted too and treated as generic templates.
     replyTemplates: [
       { text: '🔥 Great point!', topics: [] },
       { text: '💯 Couldn\'t agree more.', topics: [] },
@@ -1076,7 +1089,7 @@
   // Smart template picker — matches reply to tweet topic
   const pickReplyTemplate = (tweetText) =&gt; {
     const lower = tweetText.toLowerCase();
-    const templates = CONFIG.replyTemplates;
+    const templates = CONFIG.replyTemplates.map(t =&gt; (typeof t === 'string' ? { text: t, topics: [] } : t));
     // Try topic-matched templates first
     const topicMatches = templates.filter(t =&gt;
       t.topics &amp;&amp; t.topics.length &gt; 0 &amp;&amp; t.topics.some(kw =&gt; lower.includes(kw))
@@ -1143,7 +1156,15 @@
     const tweetBox = $(SEL.tweetBox);
     if (!tweetBox) { addLog('  ⚠️ Reply box not found', 'warn'); return false; }
     tweetBox.focus();
-    document.execCommand('insertText', false, replyText);
+    if (CONFIG.humanTyping) {
+      await sleep(200);
+      for (const ch of replyText) {
+        document.execCommand('insertText', false, ch);
+        await sleep(gaussian(20, 50));
+      }
+    } else {
+      document.execCommand('insertText', false, replyText);
+    }
     await sleep(800);
     const sendBtn = $(SEL.tweetButton);
     if (!sendBtn) { addLog('  ⚠️ Send button not found', 'warn'); return false; }
@@ -1573,6 +1594,8 @@
   console.log('║  Console: XActions.engagementBooster.*    ║');
   console.log('╚══════════════════════════════════════════╝');
 
+  if (CONFIG.autoStart) document.getElementById('xeb-startBtn').click();
+
 })();
 
 </code></pre>
@@ -1589,17 +1612,17 @@
 
     <aside class="sidebar-right">
       <div class="sidebar-card">
-        <h3>🚀 Engagement</h3>
+        <h3>💬 Engage</h3>
         <a href="/scripts/auto-commenter">💬 Auto Commenter</a>
-<a href="/scripts/auto-reply-mentions">📨 Auto Reply Mentions</a>
-<a href="/scripts/auto-repost">🔁 Auto Repost (Retweet)</a>
-<a href="/scripts/auto-plug-replies">🔌 Auto-Plug Replies</a>
-<a href="/scripts/auto-reply">💬 Auto-Reply / Auto-Respond</a>
-<a href="/scripts/auto-engage">⚡ Browser console script for automated engagement</a>
-<a href="/scripts/comment-by-hashtag">💬 Comment By Hashtag</a>
-<a href="/scripts/comment-by-location">💬 Comment By Location</a>
-<a href="/scripts/engagement-leaderboard">🏆 Engagement Leaderboard</a>
-<a href="/scripts/engagement-manager">⚡ Engagement Manager</a>
+<a href="/scripts/auto-engage">💬 Auto Engage</a>
+<a href="/scripts/auto-liker">💬 Auto Liker</a>
+<a href="/scripts/auto-reply">💬 Auto Reply</a>
+<a href="/scripts/auto-repost">💬 Auto Repost</a>
+<a href="/scripts/auto-reply-mentions">💬 Auto-Reply Mentions</a>
+<a href="/scripts/comment-by-hashtag">💬 Comment by Hashtag</a>
+<a href="/scripts/comment-by-location">💬 Comment by Location</a>
+<a href="/scripts/community-notes">💬 Community Notes</a>
+<a href="/scripts/customer-service">💬 Customer Service Bot</a>
       </div>
       <div class="sidebar-card">
         <h3>🔗 Quick Links</h3>

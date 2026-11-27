@@ -3,14 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Scrape Reposters — Free X/Twitter Script | XActions</title>
+  <title>Scrape Reposters and Quotes — Free X/Twitter Script | XActions</title>
   <meta name="description" content="Scroll a post's Reposts and Quotes tabs and export everyone who reposted or quote-tweeted it, each tagged repost or quote, to JSON and CSV.">
-  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, scrape, retweeters, scrapers">
+  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, scrape, retweeters, scrape and export">
   <meta name="author" content="nich (@nichxbt)">
   <meta name="robots" content="index, follow">
 
   <meta property="og:type" content="article">
-  <meta property="og:title" content="Scrape Reposters — XActions">
+  <meta property="og:title" content="Scrape Reposters and Quotes — XActions">
   <meta property="og:description" content="Scroll a post's Reposts and Quotes tabs and export everyone who reposted or quote-tweeted it, each tagged repost or quote, to JSON and CSV.">
   <meta property="og:url" content="https://xactions.app/scripts/scrape-retweeters">
   <meta property="og:site_name" content="XActions">
@@ -18,7 +18,7 @@
 
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@nichxbt">
-  <meta name="twitter:title" content="Scrape Reposters — XActions">
+  <meta name="twitter:title" content="Scrape Reposters and Quotes — XActions">
   <meta name="twitter:description" content="Scroll a post's Reposts and Quotes tabs and export everyone who reposted or quote-tweeted it, each tagged repost or quote, to JSON and CSV.">
   <meta name="twitter:image" content="https://xactions.app/og-run.png">
 
@@ -29,15 +29,15 @@
   {
     "@context": "https://schema.org",
     "@type": "TechArticle",
-    "headline": "Scrape Reposters — Free X/Twitter Script | XActions",
+    "headline": "Scrape Reposters and Quotes — Free X/Twitter Script | XActions",
     "description": "Scroll a post's Reposts and Quotes tabs and export everyone who reposted or quote-tweeted it, each tagged repost or quote, to JSON and CSV.",
     "url": "https://xactions.app/scripts/scrape-retweeters",
     "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
     "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
     "datePublished": "2026-03-30",
     "dateModified": "2026-03-30",
-    "articleSection": "Scrapers",
-    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, scrape, retweeters, scrapers"
+    "articleSection": "Scrape and Export",
+    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, scrape, retweeters, scrape and export"
   }
   </script>
   <script type="application/ld+json">
@@ -47,8 +47,8 @@
     "itemListElement": [
       { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
       { "@type": "ListItem", "position": 2, "name": "Scripts", "item": "https://xactions.app/scripts" },
-      { "@type": "ListItem", "position": 3, "name": "Scrapers", "item": "https://xactions.app/scripts#scrapers" },
-      { "@type": "ListItem", "position": 4, "name": "Scrape Reposters", "item": "https://xactions.app/scripts/scrape-retweeters" }
+      { "@type": "ListItem", "position": 3, "name": "Scrape and Export", "item": "https://xactions.app/scripts#scrape-and-export" },
+      { "@type": "ListItem", "position": 4, "name": "Scrape Reposters and Quotes", "item": "https://xactions.app/scripts/scrape-retweeters" }
     ]
   }
   </script>
@@ -116,20 +116,20 @@
 
     <main class="main-content" id="main-content">
       <header class="main-header">
-        <h1>🔁 Scrape Reposters</h1>
+        <h1>📥 Scrape Reposters and Quotes</h1>
         <div class="breadcrumb">
-          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#scrapers">Scrapers</a> › Scrape Reposters
+          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#scrape-and-export">Scrape and Export</a> › Scrape Reposters and Quotes
         </div>
       </header>
 
       <article class="article">
-        <span class="cat-badge">Scrapers</span>
-        <span class="source-badge">scripts/twitter</span>
+        <span class="cat-badge">Scrape and Export</span>
+        <span class="source-badge">browser/scrapeRetweeters.js</span>
 
         <div class="meta-row">
-          <span>v1.0.0</span>
-          <span>Updated: 2026-07-20</span>
-          <span>422 lines</span>
+          <span>v1.1.0</span>
+          <span>Updated: 2026-11-27</span>
+          <span>451 lines</span>
           <span>by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></span>
         </div>
 
@@ -141,7 +141,7 @@
         <ol class="usage-steps"><li>Open a post's Reposts page: x.com/&lt;user&gt;/status/&lt;id&gt;/retweets</li>
 <li>Open the browser console (F12 or Cmd+Option+I -&gt; Console)</li>
 <li>(Optional) edit the CONFIG options at the top of the script</li>
-<li>Paste this entire script and press Enter</li></ol>
+<li>Paste browser/scrapeRetweeters.js and press Enter</li></ol>
         
 
         
@@ -173,7 +173,10 @@
     maxScrollAttempts: 300,
 
     // Also trigger a browser download of the CSV file (JSON always downloads)
-    autoDownloadCsv: false
+    autoDownloadCsv: false,
+
+    // Order quote-tweets by likes, most liked first (reposters keep page order)
+    sortQuotesByLikes: false
   };</code></pre>
         </div>
       </section>
@@ -189,19 +192,26 @@
  * 🔁 Scrape Reposters + Quoters - XActions
  * ============================================
  *
- * @name         scrape-retweeters
- * @description  Scroll a post's Reposts and Quotes tabs and export everyone who reposted or quote-tweeted it, each tagged repost or quote, to JSON and CSV.
- * @author       nichxbt
- * @version      1.0.0
- * @date         2026-07-20
- * @website      https://xactions.app
+ * @name        scrapeRetweeters.js
+ * @title       Scrape Reposters and Quotes
+ * @description Scroll a post's Reposts and Quotes tabs and export everyone who reposted or quote-tweeted it, each tagged repost or quote, to JSON and CSV.
+ * @category    scrape
+ * @page        x.com/&lt;username&gt;/status/&lt;id&gt;/retweets or x.com/&lt;username&gt;/status/&lt;id&gt;/quotes
+ * @writes      false
+ * @aliases     scripts/scrapeQuoteRetweets.js, scripts/twitter/scrape-retweeters.js
+ * @author      nichxbt (https://x.com/nichxbt)
+ * @version     1.1.0
+ * @date        2026-11-27
+ * @website     https://xactions.app
  *
  * Usage:
  *   1. Open a post's Reposts page: x.com/&lt;user&gt;/status/&lt;id&gt;/retweets
  *      (open the post, tap the reposts count, choose &quot;Reposts&quot;)
+ *      For quote-tweets only, open x.com/&lt;user&gt;/status/&lt;id&gt;/quotes and set
+ *      collectReposts = false.
  *   2. Open the browser console (F12 or Cmd+Option+I -&gt; Console)
  *   3. (Optional) edit the CONFIG options at the top of the script
- *   4. Paste this entire script and press Enter
+ *   4. Paste browser/scrapeRetweeters.js and press Enter
  *
  * Example:
  *   On x.com/nasa/status/1234567890/retweets the script scrapes the reposters,
@@ -244,7 +254,10 @@
     maxScrollAttempts: 300,
 
     // Also trigger a browser download of the CSV file (JSON always downloads)
-    autoDownloadCsv: false
+    autoDownloadCsv: false,
+
+    // Order quote-tweets by likes, most liked first (reposters keep page order)
+    sortQuotesByLikes: false
   };
 
   // ============================================
@@ -320,12 +333,11 @@
     }
     if (!handle) return null;
 
-    let displayName = '';
     const nameAnchor = anchors.find((a) =&gt; {
       const t = a.textContent.trim();
       return t &amp;&amp; !t.startsWith('@');
     });
-    displayName = (nameAnchor &amp;&amp; nameAnchor.textContent.trim()) ||
+    const displayName = (nameAnchor &amp;&amp; nameAnchor.textContent.trim()) ||
       (cell.querySelector('div[dir=&quot;ltr&quot;] span')?.textContent.trim()) || '';
 
     let bio = cell.querySelector(SELECTORS.userDescription)?.textContent?.trim() || '';
@@ -360,13 +372,22 @@
     const text = article.querySelector(SELECTORS.tweetText)?.textContent || '';
     const time = timeEl ? timeEl.getAttribute('datetime') : '';
 
-    const getMetric = (testId) =&gt; {
+    // Fallback: read a count from the action bar's aria-labels (&quot;12 Likes&quot;)
+    const fromAriaLabel = (pattern) =&gt; {
+      for (const btn of article.querySelectorAll('[role=&quot;group&quot;] button, [role=&quot;group&quot;] a')) {
+        const label = btn.getAttribute('aria-label') || '';
+        if (pattern.test(label)) return parseNumber(label.match(/[\d,.]+[KM]?/i)?.[0] || '0');
+      }
+      return 0;
+    };
+    const getMetric = (testId, pattern) =&gt; {
       const el = article.querySelector(`[data-testid=&quot;${testId}&quot;]`);
       const span = el?.querySelector('span span');
+      if (!el) return fromAriaLabel(pattern);
       return parseNumber(span ? span.textContent : '0');
     };
     const viewsEl = article.querySelector('a[href$=&quot;/analytics&quot;]');
-    const views = parseNumber(viewsEl ? viewsEl.textContent : '0');
+    const views = viewsEl ? parseNumber(viewsEl.textContent) : fromAriaLabel(/view/i);
 
     return {
       type: 'quote',
@@ -377,9 +398,9 @@
       text,
       url,
       time,
-      replies: getMetric('reply'),
-      retweets: getMetric('retweet'),
-      likes: getMetric('like'),
+      replies: getMetric('reply', /repl/i),
+      retweets: getMetric('retweet', /repost|retweet/i),
+      likes: getMetric('like', /like/i),
       views
     };
   };
@@ -406,7 +427,9 @@
   `);
 
   const tweetId = getTweetId();
-  if (!tweetId || !/\/(retweets|quotes)\/?$/.test(window.location.pathname)) {
+  // A bare post page (x.com/&lt;user&gt;/status/&lt;id&gt;) is accepted too: the script
+  // then opens the Reposts/Quotes tabs itself through goToTab().
+  if (!tweetId || !/\/status\/\d+(\/(retweets|quotes))?\/?$/.test(window.location.pathname)) {
     log.warning('You are not on a post Reposts or Quotes page.');
     log.info('Open a post, tap its reposts count, and land on x.com/&lt;user&gt;/status/&lt;id&gt;/retweets (or /quotes), then run this again.');
     return;
@@ -513,10 +536,17 @@
     }
   }
 
-  const list = Array.from(items.values()).slice(0, CONFIG.maxEntries);
+  let list = Array.from(items.values()).slice(0, CONFIG.maxEntries);
+  if (CONFIG.sortQuotesByLikes) {
+    list = [
+      ...list.filter((e) =&gt; e.type !== 'quote'),
+      ...list.filter((e) =&gt; e.type === 'quote').sort((a, b) =&gt; (b.likes || 0) - (a.likes || 0))
+    ];
+  }
   stats.reposts = list.filter((e) =&gt; e.type === 'repost').length;
   stats.quotes = list.filter((e) =&gt; e.type === 'quote').length;
   stats.verified = list.filter((e) =&gt; e.verified).length;
+  stats.quoteLikes = list.reduce((sum, e) =&gt; sum + (e.type === 'quote' ? (e.likes || 0) : 0), 0);
 
   // ============================================
   // 📤 EXPORT
@@ -569,6 +599,7 @@
   }
 
   window.scrapedReposters = result;
+  window.scrapedQuotes = { tweetId, quotes: list.filter((e) =&gt; e.type === 'quote') };
   window.scrapeRepostersExportCSV = () =&gt; {
     download(csv, `tweet_${tweetId}_reposters_${dateStr}.csv`, 'text/csv');
     return csv;
@@ -583,6 +614,7 @@
 ╠══════════════════════════════════════════════════════════╣
 ║  🔁 Reposters:           ${String(stats.reposts).padEnd(30)}║
 ║  💬 Quote-tweets:        ${String(stats.quotes).padEnd(30)}║
+║  ❤️  Quote likes total:   ${String(stats.quoteLikes.toLocaleString()).padEnd(30)}║
 ║  ✔️  Verified (either):   ${String(stats.verified).padEnd(30)}║
 ║  📜 Scrolls:             ${String(stats.scrolls).padEnd(30)}║
 ║  ❌ Row errors:          ${String(stats.errors).padEnd(30)}║
@@ -600,7 +632,7 @@
 
   console.log('\n📋 CSV preview (full string via window.scrapeRepostersExportCSV()):');
   console.log(csv.split('\n').slice(0, 6).join('\n'));
-  console.log('\n💡 window.scrapedReposters = full data. window.scrapeRepostersExportCSV() = download + return CSV.');
+  console.log('\n💡 window.scrapedReposters = full data. window.scrapedQuotes = quote-tweets only. window.scrapeRepostersExportCSV() = download + return CSV.');
 
   return result;
 })();
@@ -618,17 +650,17 @@
 
     <aside class="sidebar-right">
       <div class="sidebar-card">
-        <h3>🔁 Scrapers</h3>
-        <a href="/scripts/scrape-bookmarks">🔖 Bookmarks Scraper</a>
-<a href="/scripts/scrape-analytics">📊 Browser console script to scrape X/Twitter analytics data</a>
-<a href="/scripts/scrape-dms">✉️ DM Scraper</a>
-<a href="/scripts/export-to-csv">📄 Export to CSV Utility</a>
-<a href="/scripts/scrape-followers">👥 Followers Scraper</a>
-<a href="/scripts/scrape-following">👥 Following Scraper</a>
-<a href="/scripts/scrape-hashtag">#️⃣ Hashtag Scraper</a>
-<a href="/scripts/scrape-likers">❤️ Likers Scraper</a>
-<a href="/scripts/scrape-likes">❤️ Likes Scraper</a>
-<a href="/scripts/link-scraper">🔗 Link Scraper</a>
+        <h3>📥 Scrape and Export</h3>
+        <a href="/scripts/backup-account">📥 Backup Account</a>
+<a href="/scripts/bookmark-exporter">📥 Bookmark Exporter</a>
+<a href="/scripts/bookmark-organizer">📥 Bookmark Organizer</a>
+<a href="/scripts/export-to-csv">📥 Export to CSV</a>
+<a href="/scripts/link-scraper">📥 Link Scraper</a>
+<a href="/scripts/manage-bookmarks">📥 Manage Bookmarks</a>
+<a href="/scripts/scrape-cashtag-search">📥 Scrape Cashtag Search</a>
+<a href="/scripts/scrape-explore">📥 Scrape Explore</a>
+<a href="/scripts/scrape-followers">📥 Scrape Followers</a>
+<a href="/scripts/scrape-following">📥 Scrape Following</a>
       </div>
       <div class="sidebar-card">
         <h3>🔗 Quick Links</h3>

@@ -3,23 +3,23 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Save Searches — Free X/Twitter Script | XActions</title>
-  <meta name="description" content="Save the current search query, list saved searches, and manage your saved search collection on X/Twitter.">
-  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, save, search, discovery">
+  <title>Save Search — Free X/Twitter Script | XActions</title>
+  <meta name="description" content="Save the current search query, list saved searches, or delete one. Free X/Twitter browser script, no API key needed.">
+  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, save, search, profile and settings">
   <meta name="author" content="nich (@nichxbt)">
   <meta name="robots" content="index, follow">
 
   <meta property="og:type" content="article">
-  <meta property="og:title" content="Save Searches — XActions">
-  <meta property="og:description" content="Save the current search query, list saved searches, and manage your saved search collection on X/Twitter.">
+  <meta property="og:title" content="Save Search — XActions">
+  <meta property="og:description" content="Save the current search query, list saved searches, or delete one. Free X/Twitter browser script, no API key needed.">
   <meta property="og:url" content="https://xactions.app/scripts/save-search">
   <meta property="og:site_name" content="XActions">
   <meta property="og:image" content="https://xactions.app/og-run.png">
 
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@nichxbt">
-  <meta name="twitter:title" content="Save Searches — XActions">
-  <meta name="twitter:description" content="Save the current search query, list saved searches, and manage your saved search collection on X/Twitter.">
+  <meta name="twitter:title" content="Save Search — XActions">
+  <meta name="twitter:description" content="Save the current search query, list saved searches, or delete one. Free X/Twitter browser script, no API key needed.">
   <meta name="twitter:image" content="https://xactions.app/og-run.png">
 
   <link rel="canonical" href="https://xactions.app/scripts/save-search">
@@ -29,15 +29,15 @@
   {
     "@context": "https://schema.org",
     "@type": "TechArticle",
-    "headline": "Save Searches — Free X/Twitter Script | XActions",
-    "description": "Save the current search query, list saved searches, and manage your saved search collection on X/Twitter.",
+    "headline": "Save Search — Free X/Twitter Script | XActions",
+    "description": "Save the current search query, list saved searches, or delete one. Free X/Twitter browser script, no API key needed.",
     "url": "https://xactions.app/scripts/save-search",
     "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
     "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
     "datePublished": "2026-03-30",
     "dateModified": "2026-03-30",
-    "articleSection": "Discovery",
-    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, save, search, discovery"
+    "articleSection": "Profile and Settings",
+    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, save, search, profile and settings"
   }
   </script>
   <script type="application/ld+json">
@@ -47,8 +47,8 @@
     "itemListElement": [
       { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
       { "@type": "ListItem", "position": 2, "name": "Scripts", "item": "https://xactions.app/scripts" },
-      { "@type": "ListItem", "position": 3, "name": "Discovery", "item": "https://xactions.app/scripts#discovery" },
-      { "@type": "ListItem", "position": 4, "name": "Save Searches", "item": "https://xactions.app/scripts/save-search" }
+      { "@type": "ListItem", "position": 3, "name": "Profile and Settings", "item": "https://xactions.app/scripts#profile-and-settings" },
+      { "@type": "ListItem", "position": 4, "name": "Save Search", "item": "https://xactions.app/scripts/save-search" }
     ]
   }
   </script>
@@ -116,24 +116,24 @@
 
     <main class="main-content" id="main-content">
       <header class="main-header">
-        <h1>🔍 Save Searches</h1>
+        <h1>🪪 Save Search</h1>
         <div class="breadcrumb">
-          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#discovery">Discovery</a> › Save Searches
+          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#profile-and-settings">Profile and Settings</a> › Save Search
         </div>
       </header>
 
       <article class="article">
-        <span class="cat-badge">Discovery</span>
-        <span class="source-badge">browser</span>
+        <span class="cat-badge">Profile and Settings</span>
+        <span class="source-badge">browser/saveSearch.js</span>
 
         <div class="meta-row">
           <span>v1.0.0</span>
           <span>Updated: 2026-03-30</span>
-          <span>330 lines</span>
+          <span>334 lines</span>
           <span>by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></span>
         </div>
 
-        <p>Save the current search query, list saved searches, and manage your saved search collection on X/Twitter.</p>
+        <p>Save the current search query, list saved searches, or delete one.</p>
 
         
 
@@ -196,7 +196,11 @@
  * ============================================================
  *
  * @name        saveSearch.js
- * @description Save the current search query, list saved searches,
+ * @description Save the current search query, list saved searches, or delete one.
+ * @title       Save Search
+ * @category    profile
+ * @page        x.com/search?q=&lt;query&gt;
+ * @writes      true
  *              and manage your saved search collection on X/Twitter.
  * @author      nichxbt (https://x.com/nichxbt)
  * @version     1.0.0
@@ -532,11 +536,17 @@
 
     <aside class="sidebar-right">
       <div class="sidebar-card">
-        <h3>🔍 Discovery</h3>
-        <a href="/scripts/discovery-explore">🔍 Discovery Explore</a>
-<a href="/scripts/topic-manager">🏷️ Topic Manager</a>
-<a href="/scripts/x-pro">⚡ X Pro (TweetDeck)</a>
-<a href="/scripts/x-pro-manager">⚡ X Pro (TweetDeck) automation</a>
+        <h3>🪪 Profile and Settings</h3>
+        <a href="/scripts/account-misc">🪪 Account Utilities</a>
+<a href="/scripts/advanced-profile">🪪 Advanced Profile Tools</a>
+<a href="/scripts/advanced-settings">🪪 Advanced Settings and Privacy</a>
+<a href="/scripts/delegate-access">🪪 Delegate Access</a>
+<a href="/scripts/download-account-data">🪪 Download Account Data</a>
+<a href="/scripts/id-verification">🪪 ID Verification</a>
+<a href="/scripts/multi-account">🪪 Multi-Account Manager</a>
+<a href="/scripts/advanced-notifications">🪪 Notification Settings</a>
+<a href="/scripts/pin-tweet-manager">🪪 Pin Tweet Manager</a>
+<a href="/scripts/account-settings">🪪 Privacy and Safety Settings</a>
       </div>
       <div class="sidebar-card">
         <h3>🔗 Quick Links</h3>

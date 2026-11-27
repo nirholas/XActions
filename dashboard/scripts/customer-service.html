@@ -4,14 +4,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Customer Service Bot — Free X/Twitter Script | XActions</title>
-  <meta name="description" content="Automate customer service responses on X for business accounts Monitor mentions, DMs, and provide templated responses">
-  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, customer, service, automation">
+  <meta name="description" content="Watch mentions and reply to customer questions from keyword rules. Free X/Twitter browser script, no API key needed.">
+  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, customer, service, engage">
   <meta name="author" content="nich (@nichxbt)">
   <meta name="robots" content="index, follow">
 
   <meta property="og:type" content="article">
   <meta property="og:title" content="Customer Service Bot — XActions">
-  <meta property="og:description" content="Automate customer service responses on X for business accounts Monitor mentions, DMs, and provide templated responses">
+  <meta property="og:description" content="Watch mentions and reply to customer questions from keyword rules. Free X/Twitter browser script, no API key needed.">
   <meta property="og:url" content="https://xactions.app/scripts/customer-service">
   <meta property="og:site_name" content="XActions">
   <meta property="og:image" content="https://xactions.app/og-run.png">
@@ -19,7 +19,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@nichxbt">
   <meta name="twitter:title" content="Customer Service Bot — XActions">
-  <meta name="twitter:description" content="Automate customer service responses on X for business accounts Monitor mentions, DMs, and provide templated responses">
+  <meta name="twitter:description" content="Watch mentions and reply to customer questions from keyword rules. Free X/Twitter browser script, no API key needed.">
   <meta name="twitter:image" content="https://xactions.app/og-run.png">
 
   <link rel="canonical" href="https://xactions.app/scripts/customer-service">
@@ -30,14 +30,14 @@
     "@context": "https://schema.org",
     "@type": "TechArticle",
     "headline": "Customer Service Bot — Free X/Twitter Script | XActions",
-    "description": "Automate customer service responses on X for business accounts Monitor mentions, DMs, and provide templated responses",
+    "description": "Watch mentions and reply to customer questions from keyword rules. Free X/Twitter browser script, no API key needed.",
     "url": "https://xactions.app/scripts/customer-service",
     "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
     "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
     "datePublished": "2026-03-30",
     "dateModified": "2026-03-30",
-    "articleSection": "Automation",
-    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, customer, service, automation"
+    "articleSection": "Engage",
+    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, customer, service, engage"
   }
   </script>
   <script type="application/ld+json">
@@ -47,7 +47,7 @@
     "itemListElement": [
       { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
       { "@type": "ListItem", "position": 2, "name": "Scripts", "item": "https://xactions.app/scripts" },
-      { "@type": "ListItem", "position": 3, "name": "Automation", "item": "https://xactions.app/scripts#automation" },
+      { "@type": "ListItem", "position": 3, "name": "Engage", "item": "https://xactions.app/scripts#engage" },
       { "@type": "ListItem", "position": 4, "name": "Customer Service Bot", "item": "https://xactions.app/scripts/customer-service" }
     ]
   }
@@ -116,24 +116,24 @@
 
     <main class="main-content" id="main-content">
       <header class="main-header">
-        <h1>🤝 Customer Service Bot</h1>
+        <h1>💬 Customer Service Bot</h1>
         <div class="breadcrumb">
-          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#automation">Automation</a> › Customer Service Bot
+          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#engage">Engage</a> › Customer Service Bot
         </div>
       </header>
 
       <article class="article">
-        <span class="cat-badge">Automation</span>
-        <span class="source-badge">src/automation</span>
+        <span class="cat-badge">Engage</span>
+        <span class="source-badge">browser/customerService.js</span>
 
         <div class="meta-row">
           
           
-          <span>512 lines</span>
+          <span>521 lines</span>
           <span>by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></span>
         </div>
 
-        <p>Automate customer service responses on X for business accounts Monitor mentions, DMs, and provide templated responses</p>
+        <p>Watch mentions and reply to customer questions from keyword rules.</p>
 
         
 
@@ -142,7 +142,7 @@
 <li>Paste core.js, then paste this script</li>
 <li>Configure your accounts and response templates below</li>
 <li>Run and let it handle customer inquiries!</li></ol>
-        <p><strong>Note:</strong> This script requires pasting <code>src/automation/core.js</code> first for shared utilities.</p>
+        <p><strong>Note:</strong> This script requires pasting <code>browser/core.js</code> first for shared utilities.</p>
 
         
         <section class="config-section">
@@ -221,6 +221,15 @@
           <div class="code-block">
             <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.querySelector('code').textContent).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy Script',2000)})">Copy Script</button>
             <pre><code>// Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
+/**
+ * @name        customerService.js
+ * @title       Customer Service Bot
+ * @description Watch mentions and reply to customer questions from keyword rules.
+ * @category    engage
+ * @page        x.com/notifications
+ * @writes      true
+ * @aliases     src/automation/customerService.js
+ */
 // XActions Automation - Customer Service Bot
 // https://github.com/nirholas/XActions
 //
@@ -241,7 +250,7 @@
     return;
   }
 
-  const { log, sleep, randomDelay, scrollBy, clickElement, waitForElement, storage, SELECTORS } = window.XActions.Core;
+  const { log, sleep, randomDelay, clickElement, waitForElement, storage } = window.XActions.Core;
 
   // ============================================
   // ACCOUNT CONFIGURATION
@@ -745,14 +754,17 @@ ${Object.entries(categories).map(([cat, count]) =&gt;
 
     <aside class="sidebar-right">
       <div class="sidebar-card">
-        <h3>🤝 Automation</h3>
-        <a href="/scripts/protect-active-users">🛡️ Don't Unfollow Active Users</a>
-<a href="/scripts/quota-supervisor">⚠️ Quota Supervisor</a>
-<a href="/scripts/rate-limiter">⏱️ Rate Limiter</a>
-<a href="/scripts/session-logger">📋 Session Logger &amp; Analytics</a>
-<a href="/scripts/actions">⚡ XActions Actions Library - Complete X/Twitter Actions</a>
-<a href="/scripts/core">⚙️ XActions Automation Framework - Core Utilities</a>
-<a href="/scripts/control-panel">🎛️ XActions Control Panel — Floating UI for Browser Automations</a>
+        <h3>💬 Engage</h3>
+        <a href="/scripts/auto-commenter">💬 Auto Commenter</a>
+<a href="/scripts/auto-engage">💬 Auto Engage</a>
+<a href="/scripts/auto-liker">💬 Auto Liker</a>
+<a href="/scripts/auto-reply">💬 Auto Reply</a>
+<a href="/scripts/auto-repost">💬 Auto Repost</a>
+<a href="/scripts/auto-reply-mentions">💬 Auto-Reply Mentions</a>
+<a href="/scripts/comment-by-hashtag">💬 Comment by Hashtag</a>
+<a href="/scripts/comment-by-location">💬 Comment by Location</a>
+<a href="/scripts/community-notes">💬 Community Notes</a>
+<a href="/scripts/engage-profile">💬 Engage Profile</a>
       </div>
       <div class="sidebar-card">
         <h3>🔗 Quick Links</h3>

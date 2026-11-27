@@ -3,23 +3,23 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Audience Demographics Analyzer — Free X/Twitter Script | XActions</title>
-  <meta name="description" content="Analyze your followers' demographics by scraping visible profile data: bio keywords, locations, account age, verified status, engagement level, and content…">
+  <title>Audience Demographics — Free X/Twitter Script | XActions</title>
+  <meta name="description" content="Profile your followers by niche, verification, avatar and bio quality, bot likelihood and top bio keywords, with a JSON export.">
   <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, audience, demographics, analytics">
   <meta name="author" content="nich (@nichxbt)">
   <meta name="robots" content="index, follow">
 
   <meta property="og:type" content="article">
-  <meta property="og:title" content="Audience Demographics Analyzer — XActions">
-  <meta property="og:description" content="Analyze your followers' demographics by scraping visible profile data: bio keywords, locations, account age, verified status, engagement level, and content…">
+  <meta property="og:title" content="Audience Demographics — XActions">
+  <meta property="og:description" content="Profile your followers by niche, verification, avatar and bio quality, bot likelihood and top bio keywords, with a JSON export.">
   <meta property="og:url" content="https://xactions.app/scripts/audience-demographics">
   <meta property="og:site_name" content="XActions">
   <meta property="og:image" content="https://xactions.app/og-run.png">
 
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@nichxbt">
-  <meta name="twitter:title" content="Audience Demographics Analyzer — XActions">
-  <meta name="twitter:description" content="Analyze your followers' demographics by scraping visible profile data: bio keywords, locations, account age, verified status, engagement level, and content…">
+  <meta name="twitter:title" content="Audience Demographics — XActions">
+  <meta name="twitter:description" content="Profile your followers by niche, verification, avatar and bio quality, bot likelihood and top bio keywords, with a JSON export.">
   <meta name="twitter:image" content="https://xactions.app/og-run.png">
 
   <link rel="canonical" href="https://xactions.app/scripts/audience-demographics">
@@ -29,8 +29,8 @@
   {
     "@context": "https://schema.org",
     "@type": "TechArticle",
-    "headline": "Audience Demographics Analyzer — Free X/Twitter Script | XActions",
-    "description": "Analyze your followers' demographics by scraping visible profile data: bio keywords, locations, account age, verified status, engagement level, and content…",
+    "headline": "Audience Demographics — Free X/Twitter Script | XActions",
+    "description": "Profile your followers by niche, verification, avatar and bio quality, bot likelihood and top bio keywords, with a JSON export.",
     "url": "https://xactions.app/scripts/audience-demographics",
     "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
     "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
@@ -48,7 +48,7 @@
       { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
       { "@type": "ListItem", "position": 2, "name": "Scripts", "item": "https://xactions.app/scripts" },
       { "@type": "ListItem", "position": 3, "name": "Analytics", "item": "https://xactions.app/scripts#analytics" },
-      { "@type": "ListItem", "position": 4, "name": "Audience Demographics Analyzer", "item": "https://xactions.app/scripts/audience-demographics" }
+      { "@type": "ListItem", "position": 4, "name": "Audience Demographics", "item": "https://xactions.app/scripts/audience-demographics" }
     ]
   }
   </script>
@@ -116,31 +116,31 @@
 
     <main class="main-content" id="main-content">
       <header class="main-header">
-        <h1>📊 Audience Demographics Analyzer</h1>
+        <h1>📊 Audience Demographics</h1>
         <div class="breadcrumb">
-          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#analytics">Analytics</a> › Audience Demographics Analyzer
+          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#analytics">Analytics</a> › Audience Demographics
         </div>
       </header>
 
       <article class="article">
         <span class="cat-badge">Analytics</span>
-        <span class="source-badge">browser</span>
+        <span class="source-badge">browser/audienceDemographics.js</span>
 
         <div class="meta-row">
           <span>v1.0.0</span>
-          <span>Updated: 2026-02-24</span>
-          <span>277 lines</span>
+          <span>Updated: 2026-11-26</span>
+          <span>278 lines</span>
           <span>by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></span>
         </div>
 
-        <p>Analyze your followers' demographics by scraping visible profile data: bio keywords, locations, account age, verified status, engagement level, and content niches. Builds a comprehensive audience profile without API access.</p>
+        <p>Profile your followers by niche, verification, avatar and bio quality, bot likelihood and top bio keywords, with a JSON export.</p>
 
         
 
         <h2>How to Use</h2>
         <ol class="usage-steps"><li>Go to: https://x.com/YOUR_USERNAME/followers</li>
 <li>Open DevTools Console (F12)</li>
-<li>Paste and run</li>
+<li>Paste browser/audienceDemographics.js and run</li>
 <li>Auto-scrolls to collect follower data</li></ol>
         
 
@@ -171,14 +171,15 @@
  * ============================================================
  *
  * @name        audienceDemographics.js
- * @description Analyze your followers' demographics by scraping
- *              visible profile data: bio keywords, locations,
- *              account age, verified status, engagement level,
- *              and content niches. Builds a comprehensive
- *              audience profile without API access.
+ * @title       Audience Demographics
+ * @description Profile your followers by niche, verification, avatar and bio quality, bot likelihood and top bio keywords, with a JSON export.
+ * @category    analytics
+ * @page        x.com/&lt;you&gt;/followers
+ * @writes      false
+ * @aliases     scripts/audienceDemographics.js
  * @author      nichxbt (https://x.com/nichxbt)
  * @version     1.0.0
- * @date        2026-02-24
+ * @date        2026-11-26
  * @repository  https://github.com/nirholas/XActions
  *
  * ============================================================
@@ -186,7 +187,7 @@
  *
  * 1. Go to: https://x.com/YOUR_USERNAME/followers
  * 2. Open DevTools Console (F12)
- * 3. Paste and run
+ * 3. Paste browser/audienceDemographics.js and run
  * 4. Auto-scrolls to collect follower data
  * ============================================================
  */
@@ -455,16 +456,16 @@
     <aside class="sidebar-right">
       <div class="sidebar-card">
         <h3>📊 Analytics</h3>
-        <a href="/scripts/account-health-monitor">🏥 Account Health Monitor</a>
-<a href="/scripts/audience-overlap">🔗 Audience Overlap Analyzer</a>
-<a href="/scripts/best-time-to-post">⏰ Best Time to Post</a>
-<a href="/scripts/competitor-analysis">🔍 Competitor Analysis</a>
-<a href="/scripts/engagement-analytics">📈 Engagement Analytics</a>
-<a href="/scripts/hashtag-analytics">#️⃣ Hashtag Analytics</a>
-<a href="/scripts/keyword-monitor">🔑 Keyword Monitor &amp; Alerts</a>
-<a href="/scripts/manage-notifications">🔔 Manage Notifications</a>
-<a href="/scripts/notification-manager">🔔 Notification Manager</a>
-<a href="/scripts/profile-stats">📊 Profile Stats</a>
+        <a href="/scripts/account-health-monitor">📊 Account Health Monitor</a>
+<a href="/scripts/audience-overlap">📊 Audience Overlap</a>
+<a href="/scripts/audit-followers">📊 Audit Followers</a>
+<a href="/scripts/best-time-to-post">📊 Best Time to Post</a>
+<a href="/scripts/business-analytics">📊 Business Analytics</a>
+<a href="/scripts/business-tools">📊 Business Tools</a>
+<a href="/scripts/competitor-analysis">📊 Competitor Analysis</a>
+<a href="/scripts/content-calendar">📊 Content Calendar</a>
+<a href="/scripts/creator-studio">📊 Creator Studio</a>
+<a href="/scripts/engagement-analytics">📊 Engagement Analytics</a>
       </div>
       <div class="sidebar-card">
         <h3>🔗 Quick Links</h3>

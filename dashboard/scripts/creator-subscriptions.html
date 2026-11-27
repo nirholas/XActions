@@ -3,23 +3,23 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Creator Subscriptions &amp; Revenue Sharing | XActions</title>
-  <meta name="description" content="Setup creator subscriptions, configure tiers, view subscriber analytics, and enroll in revenue sharing.">
-  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, creator, subscriptions, premium">
+  <title>Creator Subscriptions — Free X/Twitter Script | XActions</title>
+  <meta name="description" content="Review creator subscriptions, subscribers and revenue sharing. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
+  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, creator, subscriptions, premium and business">
   <meta name="author" content="nich (@nichxbt)">
   <meta name="robots" content="index, follow">
 
   <meta property="og:type" content="article">
-  <meta property="og:title" content="Creator Subscriptions &amp; Revenue Sharing — XActions">
-  <meta property="og:description" content="Setup creator subscriptions, configure tiers, view subscriber analytics, and enroll in revenue sharing.">
+  <meta property="og:title" content="Creator Subscriptions — XActions">
+  <meta property="og:description" content="Review creator subscriptions, subscribers and revenue sharing. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
   <meta property="og:url" content="https://xactions.app/scripts/creator-subscriptions">
   <meta property="og:site_name" content="XActions">
   <meta property="og:image" content="https://xactions.app/og-run.png">
 
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@nichxbt">
-  <meta name="twitter:title" content="Creator Subscriptions &amp; Revenue Sharing — XActions">
-  <meta name="twitter:description" content="Setup creator subscriptions, configure tiers, view subscriber analytics, and enroll in revenue sharing.">
+  <meta name="twitter:title" content="Creator Subscriptions — XActions">
+  <meta name="twitter:description" content="Review creator subscriptions, subscribers and revenue sharing. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
   <meta name="twitter:image" content="https://xactions.app/og-run.png">
 
   <link rel="canonical" href="https://xactions.app/scripts/creator-subscriptions">
@@ -29,15 +29,15 @@
   {
     "@context": "https://schema.org",
     "@type": "TechArticle",
-    "headline": "Creator Subscriptions & Revenue Sharing | XActions",
-    "description": "Setup creator subscriptions, configure tiers, view subscriber analytics, and enroll in revenue sharing.",
+    "headline": "Creator Subscriptions — Free X/Twitter Script | XActions",
+    "description": "Review creator subscriptions, subscribers and revenue sharing. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.",
     "url": "https://xactions.app/scripts/creator-subscriptions",
     "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
     "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
     "datePublished": "2026-03-30",
     "dateModified": "2026-03-30",
-    "articleSection": "Premium",
-    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, creator, subscriptions, premium"
+    "articleSection": "Premium and Business",
+    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, creator, subscriptions, premium and business"
   }
   </script>
   <script type="application/ld+json">
@@ -47,8 +47,8 @@
     "itemListElement": [
       { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
       { "@type": "ListItem", "position": 2, "name": "Scripts", "item": "https://xactions.app/scripts" },
-      { "@type": "ListItem", "position": 3, "name": "Premium", "item": "https://xactions.app/scripts#premium" },
-      { "@type": "ListItem", "position": 4, "name": "Creator Subscriptions & Revenue Sharing", "item": "https://xactions.app/scripts/creator-subscriptions" }
+      { "@type": "ListItem", "position": 3, "name": "Premium and Business", "item": "https://xactions.app/scripts#premium-and-business" },
+      { "@type": "ListItem", "position": 4, "name": "Creator Subscriptions", "item": "https://xactions.app/scripts/creator-subscriptions" }
     ]
   }
   </script>
@@ -116,24 +116,24 @@
 
     <main class="main-content" id="main-content">
       <header class="main-header">
-        <h1>💰 Creator Subscriptions &amp; Revenue Sharing</h1>
+        <h1>💎 Creator Subscriptions</h1>
         <div class="breadcrumb">
-          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#premium">Premium</a> › Creator Subscriptions &amp; Revenue Sharing
+          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#premium-and-business">Premium and Business</a> › Creator Subscriptions
         </div>
       </header>
 
       <article class="article">
-        <span class="cat-badge">Premium</span>
-        <span class="source-badge">browser</span>
+        <span class="cat-badge">Premium and Business</span>
+        <span class="source-badge">browser/creatorSubscriptions.js</span>
 
         <div class="meta-row">
           
           
-          <span>297 lines</span>
+          <span>305 lines</span>
           <span>by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></span>
         </div>
 
-        <p>Setup creator subscriptions, configure tiers, view subscriber analytics, and enroll in revenue sharing.</p>
+        <p>Review creator subscriptions, subscribers and revenue sharing.</p>
 
         
 
@@ -182,6 +182,14 @@
           <div class="code-block">
             <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.querySelector('code').textContent).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy Script',2000)})">Copy Script</button>
             <pre><code>// Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
+/**
+ * @name        creatorSubscriptions.js
+ * @title       Creator Subscriptions
+ * @description Review creator subscriptions, subscribers and revenue sharing.
+ * @category    premium
+ * @page        x.com/*
+ * @writes      false
+ */
 // Creator Subscriptions &amp; Revenue Sharing — by nichxbt
 // https://github.com/nirholas/XActions
 // Setup creator subscriptions, configure tiers, view subscriber analytics, and enroll in revenue sharing.
@@ -491,10 +499,16 @@
 
     <aside class="sidebar-right">
       <div class="sidebar-card">
-        <h3>💰 Premium</h3>
-        <a href="/scripts/premium-features">⭐ Premium Features</a>
-<a href="/scripts/premium-gifting">🎁 Premium Gifting</a>
-<a href="/scripts/premium-manager">⭐ Premium Manager</a>
+        <h3>💎 Premium and Business</h3>
+        <a href="/scripts/ad-campaign-manager">💎 Ad Campaign Manager</a>
+<a href="/scripts/ads-manager">💎 Ads and Campaigns</a>
+<a href="/scripts/advanced-creator">💎 Advanced Creator Tools</a>
+<a href="/scripts/advanced-premium">💎 Advanced Premium Tools</a>
+<a href="/scripts/premium-gifting">💎 Premium Gifting</a>
+<a href="/scripts/premium-manager">💎 Premium Manager</a>
+<a href="/scripts/subscribe-premium">💎 Subscribe to Premium</a>
+<a href="/scripts/x-pro">💎 X Pro</a>
+<a href="/scripts/x-pro-manager">💎 X Pro Manager</a>
       </div>
       <div class="sidebar-card">
         <h3>🔗 Quick Links</h3>

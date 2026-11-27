@@ -3,23 +3,23 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Download Account Data from X — Free X/Twitter Script | XActions</title>
-  <meta name="description" content="Trigger Twitter's built-in data download and monitor progress. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
-  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, download, account, data, account management">
+  <title>Download Account Data — Free X/Twitter Script | XActions</title>
+  <meta name="description" content="Request X's official data archive, report its status, and download it when it is ready. Free X/Twitter browser script, no API key needed.">
+  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, download, account, data, profile and settings">
   <meta name="author" content="nich (@nichxbt)">
   <meta name="robots" content="index, follow">
 
   <meta property="og:type" content="article">
-  <meta property="og:title" content="Download Account Data from X — XActions">
-  <meta property="og:description" content="Trigger Twitter's built-in data download and monitor progress. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
+  <meta property="og:title" content="Download Account Data — XActions">
+  <meta property="og:description" content="Request X's official data archive, report its status, and download it when it is ready. Free X/Twitter browser script, no API key needed.">
   <meta property="og:url" content="https://xactions.app/scripts/download-account-data">
   <meta property="og:site_name" content="XActions">
   <meta property="og:image" content="https://xactions.app/og-run.png">
 
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@nichxbt">
-  <meta name="twitter:title" content="Download Account Data from X — XActions">
-  <meta name="twitter:description" content="Trigger Twitter's built-in data download and monitor progress. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
+  <meta name="twitter:title" content="Download Account Data — XActions">
+  <meta name="twitter:description" content="Request X's official data archive, report its status, and download it when it is ready. Free X/Twitter browser script, no API key needed.">
   <meta name="twitter:image" content="https://xactions.app/og-run.png">
 
   <link rel="canonical" href="https://xactions.app/scripts/download-account-data">
@@ -29,15 +29,15 @@
   {
     "@context": "https://schema.org",
     "@type": "TechArticle",
-    "headline": "Download Account Data from X — Free X/Twitter Script | XActions",
-    "description": "Trigger Twitter's built-in data download and monitor progress. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.",
+    "headline": "Download Account Data — Free X/Twitter Script | XActions",
+    "description": "Request X's official data archive, report its status, and download it when it is ready. Free X/Twitter browser script, no API key needed.",
     "url": "https://xactions.app/scripts/download-account-data",
     "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
     "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
     "datePublished": "2026-03-30",
     "dateModified": "2026-03-30",
-    "articleSection": "Account Management",
-    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, download, account, data, account management"
+    "articleSection": "Profile and Settings",
+    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, download, account, data, profile and settings"
   }
   </script>
   <script type="application/ld+json">
@@ -47,8 +47,8 @@
     "itemListElement": [
       { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
       { "@type": "ListItem", "position": 2, "name": "Scripts", "item": "https://xactions.app/scripts" },
-      { "@type": "ListItem", "position": 3, "name": "Account Management", "item": "https://xactions.app/scripts#account-management" },
-      { "@type": "ListItem", "position": 4, "name": "Download Account Data from X", "item": "https://xactions.app/scripts/download-account-data" }
+      { "@type": "ListItem", "position": 3, "name": "Profile and Settings", "item": "https://xactions.app/scripts#profile-and-settings" },
+      { "@type": "ListItem", "position": 4, "name": "Download Account Data", "item": "https://xactions.app/scripts/download-account-data" }
     ]
   }
   </script>
@@ -116,24 +116,24 @@
 
     <main class="main-content" id="main-content">
       <header class="main-header">
-        <h1>📥 Download Account Data from X</h1>
+        <h1>🪪 Download Account Data</h1>
         <div class="breadcrumb">
-          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#account-management">Account Management</a> › Download Account Data from X
+          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#profile-and-settings">Profile and Settings</a> › Download Account Data
         </div>
       </header>
 
       <article class="article">
-        <span class="cat-badge">Account Management</span>
-        <span class="source-badge">browser</span>
+        <span class="cat-badge">Profile and Settings</span>
+        <span class="source-badge">browser/downloadAccountData.js</span>
 
         <div class="meta-row">
-          
-          
-          <span>82 lines</span>
+          <span>v1.1.0</span>
+          <span>Updated: 2026-11-26</span>
+          <span>128 lines</span>
           <span>by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></span>
         </div>
 
-        <p>Trigger Twitter's built-in data download and monitor progress</p>
+        <p>Request X's official data archive, report its status, and download it when it is ready.</p>
 
         
 
@@ -154,6 +154,7 @@
           <tbody>
             <tr><td><code>checkInterval</code></td><td><code>30000</code></td><td>Check every 30 seconds</td></tr>
 <tr><td><code>maxChecks</code></td><td><code>120</code></td><td>Stop after 60 minutes</td></tr>
+<tr><td><code>monitorWhilePreparing</code></td><td><code>false</code></td><td>Keep checking every checkInterval while the archive is prepared</td></tr>
           </tbody>
         </table>
       </section>
@@ -165,6 +166,7 @@
     checkInterval: 30000, // Check every 30 seconds
     maxChecks: 120,       // Stop after 60 minutes
     autoDownload: true,
+    monitorWhilePreparing: false, // Keep checking every checkInterval while the archive is prepared
   };</code></pre>
         </div>
       </section>
@@ -175,19 +177,32 @@
           <div class="code-block">
             <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.querySelector('code').textContent).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy Script',2000)})">Copy Script</button>
             <pre><code>// Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
-// Download Account Data from X - by nichxbt
-// https://github.com/nirholas/xactions
-// Trigger Twitter's built-in data download and monitor progress
-// 1. Go to https://x.com/settings/download_your_data
-// 2. Open the Developer Console (F12)
-// 3. Paste this into the Developer Console and run it
-//
-// Last Updated: 24 February 2026
+/**
+ * @name        downloadAccountData.js
+ * @title       Download Account Data
+ * @description Request X's official data archive, report its status, and download it when it is ready.
+ * @category    profile
+ * @page        x.com/settings/download_your_data
+ * @writes      false
+ * @aliases     scripts/downloadAccountData.js
+ * @author      nichxbt (https://x.com/nichxbt)
+ * @version     1.1.0
+ * @date        2026-11-26
+ * @repository  https://github.com/nirholas/XActions
+ *
+ * Usage:
+ * 1. Go to https://x.com/settings/download_your_data
+ * 2. Open the Developer Console (F12)
+ * 3. Paste browser/downloadAccountData.js into the Developer Console and run it
+ * Set CONFIG.monitorWhilePreparing to true to keep the tab polling while the archive
+ * is being prepared and download it as soon as it is ready.
+ */
 (() =&gt; {
   const CONFIG = {
     checkInterval: 30000, // Check every 30 seconds
     maxChecks: 120,       // Stop after 60 minutes
     autoDownload: true,
+    monitorWhilePreparing: false, // Keep checking every checkInterval while the archive is prepared
   };
 
   const sleep = (ms) =&gt; new Promise(r =&gt; setTimeout(r, ms));
@@ -242,8 +257,41 @@
 
       // Look for status indicators
       const pageText = document.body.textContent.toLowerCase();
-      if (pageText.includes('preparing') || pageText.includes('processing')) {
+      if ((pageText.includes('preparing') || pageText.includes('processing')) &amp;&amp; CONFIG.monitorWhilePreparing) {
+        console.log('🔄 Your data is being prepared.');
+        console.log(`⏳ Will check every ${CONFIG.checkInterval / 1000}s (up to ${Math.round(CONFIG.maxChecks * CONFIG.checkInterval / 60000)} min)...\n`);
+
+        let checks = 0;
+        while (checks &lt; CONFIG.maxChecks) {
+          await sleep(CONFIG.checkInterval);
+          checks++;
+
+          let readyBtn = null;
+          for (const btn of document.querySelectorAll('button, [role=&quot;button&quot;]')) {
+            const text = btn.textContent.toLowerCase();
+            if (text.includes('download') &amp;&amp; (text.includes('archive') || text.includes('data'))) readyBtn = btn;
+          }
+          if (readyBtn) {
+            console.log('🎉 Archive is ready!');
+            if (CONFIG.autoDownload) {
+              readyBtn.click();
+              console.log('📥 Download started!');
+            } else {
+              console.log('💡 Click the download button to save.');
+            }
+            return;
+          }
+
+          if (checks % 6 === 0) {
+            console.log(`   ⏳ Still waiting... (${checks}/${CONFIG.maxChecks} checks)`);
+          }
+        }
+
+        console.log('⏱️ Max checks reached. Archive may not be ready yet.');
+        console.log('💡 Try again later or check your email for a notification.');
+      } else if (pageText.includes('preparing') || pageText.includes('processing')) {
         console.log('🔄 Your data is being prepared. Check back later.');
+        console.log('💡 Set CONFIG.monitorWhilePreparing = true to keep checking from this tab.');
       } else if (pageText.includes('expired')) {
         console.log('⚠️ Previous archive has expired. You need to request a new one.');
       } else {
@@ -269,17 +317,17 @@
 
     <aside class="sidebar-right">
       <div class="sidebar-card">
-        <h3>📥 Account Management</h3>
-        <a href="/scripts/account-settings">⚙️ Account Settings</a>
-<a href="/scripts/backup-account">💾 Backup Account Data</a>
-<a href="/scripts/edit-profile">✏️ Browser console script to update X/Twitter profile fields</a>
-<a href="/scripts/delegate-access">🔑 Delegate Access</a>
-<a href="/scripts/multi-account">👥 Multi-Account Manager</a>
-<a href="/scripts/profile-manager">👤 Profile Manager</a>
-<a href="/scripts/qr-code-sharing">📱 QR Code Profile Sharing</a>
-<a href="/scripts/subscribe-premium">⭐ Subscribe to X Premium</a>
-<a href="/scripts/update-banner">🖼️ Update Banner Image</a>
-<a href="/scripts/update-profile">✏️ Update Profile</a>
+        <h3>🪪 Profile and Settings</h3>
+        <a href="/scripts/account-misc">🪪 Account Utilities</a>
+<a href="/scripts/advanced-profile">🪪 Advanced Profile Tools</a>
+<a href="/scripts/advanced-settings">🪪 Advanced Settings and Privacy</a>
+<a href="/scripts/delegate-access">🪪 Delegate Access</a>
+<a href="/scripts/id-verification">🪪 ID Verification</a>
+<a href="/scripts/multi-account">🪪 Multi-Account Manager</a>
+<a href="/scripts/advanced-notifications">🪪 Notification Settings</a>
+<a href="/scripts/pin-tweet-manager">🪪 Pin Tweet Manager</a>
+<a href="/scripts/account-settings">🪪 Privacy and Safety Settings</a>
+<a href="/scripts/qr-code-sharing">🪪 QR Code Profile Sharing</a>
       </div>
       <div class="sidebar-card">
         <h3>🔗 Quick Links</h3>

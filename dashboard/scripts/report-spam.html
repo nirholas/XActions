@@ -3,23 +3,23 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Report Spam Accounts — Free X/Twitter Script | XActions</title>
-  <meta name="description" content="Report multiple spam/bot accounts at once. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
-  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, report, spam, safety &amp; privacy">
+  <title>Report Spam — Free X/Twitter Script | XActions</title>
+  <meta name="description" content="Report a list of spam or bot accounts, or scan a user list for spam signals and report the matches, dry run by default.">
+  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, report, spam, safety">
   <meta name="author" content="nich (@nichxbt)">
   <meta name="robots" content="index, follow">
 
   <meta property="og:type" content="article">
-  <meta property="og:title" content="Report Spam Accounts — XActions">
-  <meta property="og:description" content="Report multiple spam/bot accounts at once. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
+  <meta property="og:title" content="Report Spam — XActions">
+  <meta property="og:description" content="Report a list of spam or bot accounts, or scan a user list for spam signals and report the matches, dry run by default.">
   <meta property="og:url" content="https://xactions.app/scripts/report-spam">
   <meta property="og:site_name" content="XActions">
   <meta property="og:image" content="https://xactions.app/og-run.png">
 
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@nichxbt">
-  <meta name="twitter:title" content="Report Spam Accounts — XActions">
-  <meta name="twitter:description" content="Report multiple spam/bot accounts at once. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
+  <meta name="twitter:title" content="Report Spam — XActions">
+  <meta name="twitter:description" content="Report a list of spam or bot accounts, or scan a user list for spam signals and report the matches, dry run by default.">
   <meta name="twitter:image" content="https://xactions.app/og-run.png">
 
   <link rel="canonical" href="https://xactions.app/scripts/report-spam">
@@ -29,15 +29,15 @@
   {
     "@context": "https://schema.org",
     "@type": "TechArticle",
-    "headline": "Report Spam Accounts — Free X/Twitter Script | XActions",
-    "description": "Report multiple spam/bot accounts at once. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.",
+    "headline": "Report Spam — Free X/Twitter Script | XActions",
+    "description": "Report a list of spam or bot accounts, or scan a user list for spam signals and report the matches, dry run by default.",
     "url": "https://xactions.app/scripts/report-spam",
     "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
     "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
     "datePublished": "2026-03-30",
     "dateModified": "2026-03-30",
-    "articleSection": "Safety & Privacy",
-    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, report, spam, safety & privacy"
+    "articleSection": "Safety",
+    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, report, spam, safety"
   }
   </script>
   <script type="application/ld+json">
@@ -47,8 +47,8 @@
     "itemListElement": [
       { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
       { "@type": "ListItem", "position": 2, "name": "Scripts", "item": "https://xactions.app/scripts" },
-      { "@type": "ListItem", "position": 3, "name": "Safety & Privacy", "item": "https://xactions.app/scripts#safety-privacy" },
-      { "@type": "ListItem", "position": 4, "name": "Report Spam Accounts", "item": "https://xactions.app/scripts/report-spam" }
+      { "@type": "ListItem", "position": 3, "name": "Safety", "item": "https://xactions.app/scripts#safety" },
+      { "@type": "ListItem", "position": 4, "name": "Report Spam", "item": "https://xactions.app/scripts/report-spam" }
     ]
   }
   </script>
@@ -116,24 +116,24 @@
 
     <main class="main-content" id="main-content">
       <header class="main-header">
-        <h1>⚠️ Report Spam Accounts</h1>
+        <h1>🛡️ Report Spam</h1>
         <div class="breadcrumb">
-          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#safety-privacy">Safety &amp; Privacy</a> › Report Spam Accounts
+          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#safety">Safety</a> › Report Spam
         </div>
       </header>
 
       <article class="article">
-        <span class="cat-badge">Safety &amp; Privacy</span>
-        <span class="source-badge">browser</span>
+        <span class="cat-badge">Safety</span>
+        <span class="source-badge">browser/reportSpam.js</span>
 
         <div class="meta-row">
-          
-          
-          <span>122 lines</span>
+          <span>v1.1.0</span>
+          <span>Updated: 2026-11-27</span>
+          <span>389 lines</span>
           <span>by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></span>
         </div>
 
-        <p>Report multiple spam/bot accounts at once</p>
+        <p>Report a list of spam or bot accounts, or scan a user list for spam signals and report the matches, dry run by default.</p>
 
         
 
@@ -147,7 +147,20 @@
         
 
         
-        
+        <section class="config-section">
+        <h2>Configuration Options</h2>
+        <table>
+          <thead><tr><th>Option</th><th>Default</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td><code>blockAfterReport</code></td><td><code>false</code></td><td>Also block the user after reporting (from the post-report flow)</td></tr>
+<tr><td><code>maxReports</code></td><td><code>10</code></td><td>Max accounts to report per run</td></tr>
+<tr><td><code>flagDefaultAvatar</code></td><td><code>true</code></td><td>Default profile picture adds to the spam score</td></tr>
+<tr><td><code>flagExternalLinks</code></td><td><code>false</code></td><td>A link in the bio adds to the spam score</td></tr>
+<tr><td><code>minSpamScore</code></td><td><code>30</code></td><td>A bio keyword scores 30, default avatar 10, external link 5</td></tr>
+<tr><td><code>saveToLocalStorage</code></td><td><code>false</code></td><td>Save detected/reported accounts to localStorage &quot;xactions_spam_reports&quot;</td></tr>
+          </tbody>
+        </table>
+      </section>
         <section class="config-code">
         <h2>Default Configuration</h2>
         <div class="code-block">
@@ -159,9 +172,30 @@
     ],
     // Report reason: 'spam', 'abuse', 'fake'
     reason: 'spam',
-    actionDelay: 4000,
-    blockAfterReport: false,
+    actionDelay: 5000,
+    blockAfterReport: false,  // Also block the user after reporting (from the post-report flow)
     dryRun: true,
+    maxReports: 10,           // Max accounts to report per run
+    // Scan mode: detect spam in the user list on screen instead of using usersToReport
+    scanList: {
+      enabled: false,
+      spamKeywords: [
+        'free giveaway',
+        'click my link',
+        'dm for cashapp',
+        'send nudes',
+        'sexchat',
+        'hot girls in',
+        'make $1000 daily',
+        'guaranteed profits',
+      ],
+      flagDefaultAvatar: true,    // Default profile picture adds to the spam score
+      flagExternalLinks: false,   // A link in the bio adds to the spam score
+      minSpamScore: 30,           // A bio keyword scores 30, default avatar 10, external link 5
+      scrollDelay: 1500,
+      maxScrolls: 20,
+    },
+    saveToLocalStorage: false,  // Save detected/reported accounts to localStorage &quot;xactions_spam_reports&quot;
   };</code></pre>
         </div>
       </section>
@@ -172,15 +206,34 @@
           <div class="code-block">
             <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.querySelector('code').textContent).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy Script',2000)})">Copy Script</button>
             <pre><code>// Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
+/**
+ * @name        reportSpam.js
+ * @title       Report Spam
+ * @description Report a list of spam or bot accounts, or scan a user list for spam signals and report the matches, dry run by default.
+ * @category    safety
+ * @page        x.com/* or x.com/&lt;you&gt;/followers
+ * @writes      true
+ * @aliases     scripts/reportSpam.js, scripts/twitter/report-spam.js
+ * @author      nichxbt (https://x.com/nichxbt)
+ * @version     1.1.0
+ * @date        2026-11-27
+ */
 // Report Spam Accounts on X - by nichxbt
 // https://github.com/nirholas/xactions
 // Report multiple spam/bot accounts at once
 // 1. Go to x.com (any page)
-// 2. Edit the USERS_TO_REPORT array below
+//    For scan mode (CONFIG.scanList.enabled), go to your followers or a post's
+//    likes/reposts list instead: the script scans the visible user cells.
+// 2. Edit the CONFIG.usersToReport array below (or enable scanList)
 // 3. Open the Developer Console (F12)
-// 4. Paste this into the Developer Console and run it
+// 4. Paste browser/reportSpam.js into the Developer Console and run it
 //
-// Last Updated: 24 February 2026
+// dryRun is ON by default and only lists who would be reported.
+// maxReports (10 by default) caps how many accounts one run reports.
+// ⚠️ Only report accounts that genuinely violate X's rules.
+//    False reports can result in action against YOUR account.
+//
+// Last Updated: 27 November 2026
 (() =&gt; {
   const CONFIG = {
     usersToReport: [
@@ -189,22 +242,88 @@
     ],
     // Report reason: 'spam', 'abuse', 'fake'
     reason: 'spam',
-    actionDelay: 4000,
-    blockAfterReport: false,
+    actionDelay: 5000,
+    blockAfterReport: false,  // Also block the user after reporting (from the post-report flow)
     dryRun: true,
+    maxReports: 10,           // Max accounts to report per run
+    // Scan mode: detect spam in the user list on screen instead of using usersToReport
+    scanList: {
+      enabled: false,
+      spamKeywords: [
+        'free giveaway',
+        'click my link',
+        'dm for cashapp',
+        'send nudes',
+        'sexchat',
+        'hot girls in',
+        'make $1000 daily',
+        'guaranteed profits',
+      ],
+      flagDefaultAvatar: true,    // Default profile picture adds to the spam score
+      flagExternalLinks: false,   // A link in the bio adds to the spam score
+      minSpamScore: 30,           // A bio keyword scores 30, default avatar 10, external link 5
+      scrollDelay: 1500,
+      maxScrolls: 20,
+    },
+    saveToLocalStorage: false,  // Save detected/reported accounts to localStorage &quot;xactions_spam_reports&quot;
   };
 
   const $moreButton = '[data-testid=&quot;userActions&quot;]';
   const $reportOption = '[data-testid=&quot;report&quot;]';
+  const $userCell = '[data-testid=&quot;UserCell&quot;]';
 
   const sleep = (ms) =&gt; new Promise(r =&gt; setTimeout(r, ms));
 
-  const results = { reported: [], failed: [] };
+  const results = { reported: [], failed: [], blocked: [] };
+
+  const matchesReason = (text) =&gt;
+    (CONFIG.reason === 'spam' &amp;&amp; text.includes('spam')) ||
+    (CONFIG.reason === 'abuse' &amp;&amp; (text.includes('abuse') || text.includes('harass'))) ||
+    (CONFIG.reason === 'fake' &amp;&amp; (text.includes('fake') || text.includes('impersonat')));
+
+  const blockAfter = async (username) =&gt; {
+    if (!CONFIG.blockAfterReport) return;
+    await sleep(1000);
+    // Check if there's a block option in the post-report flow
+    const blockOptions = document.querySelectorAll('button, [role=&quot;button&quot;]');
+    for (const opt of blockOptions) {
+      if (/block/i.test(opt.textContent) &amp;&amp; !/unblock/i.test(opt.textContent)) {
+        opt.click();
+        await sleep(600);
+        const confirmBtn = document.querySelector('[data-testid=&quot;confirmationSheetConfirm&quot;]');
+        if (confirmBtn) {
+          confirmBtn.click();
+          await sleep(500);
+        }
+        results.blocked.push(username);
+        console.log(`🚫 Also blocked @${username}`);
+        break;
+      }
+    }
+  };
+
+  const saveLog = (entries) =&gt; {
+    if (!CONFIG.saveToLocalStorage) return;
+    const storageKey = 'xactions_spam_reports';
+    try {
+      localStorage.setItem(storageKey, JSON.stringify(entries));
+      console.log(`\n💾 Results saved to localStorage &quot;${storageKey}&quot;`);
+    } catch (e) {
+      console.warn(`⚠️ Could not save to localStorage: ${e.message}`);
+    }
+  };
 
   const reportUser = async (username) =&gt; {
     try {
       window.location.href = `https://x.com/${username}`;
       await sleep(3000);
+
+      // Wait for profile to load
+      let attempts = 0;
+      while (!document.querySelector($moreButton) &amp;&amp; attempts &lt; 10) {
+        await sleep(500);
+        attempts++;
+      }
 
       const moreBtn = document.querySelector($moreButton);
       if (!moreBtn) {
@@ -235,11 +354,7 @@
         const reasonOptions = document.querySelectorAll('[role=&quot;radio&quot;], [role=&quot;option&quot;], button');
         for (const opt of reasonOptions) {
           const text = opt.textContent.toLowerCase();
-          if (
-            (CONFIG.reason === 'spam' &amp;&amp; text.includes('spam')) ||
-            (CONFIG.reason === 'abuse' &amp;&amp; (text.includes('abuse') || text.includes('harass'))) ||
-            (CONFIG.reason === 'fake' &amp;&amp; (text.includes('fake') || text.includes('impersonat')))
-          ) {
+          if (matchesReason(text)) {
             opt.click();
             await sleep(800);
             break;
@@ -252,41 +367,227 @@
 
         results.reported.push(username);
         console.log(`🚩 Reported @${username} for ${CONFIG.reason}`);
+        await blockAfter(username);
       } else {
         document.body.click();
         results.failed.push(username);
+        console.warn(`⚠️ @${username}: Report option not found`);
       }
 
       await sleep(1000);
     } catch (e) {
       results.failed.push(username);
+      console.warn(`⚠️ Error reporting @${username}`);
     }
+  };
+
+  // Report from a user cell on the current list page (scan mode)
+  const reportFromCell = async (spam) =&gt; {
+    // X virtualizes long lists: a cell captured early in the scan can be
+    // detached by now, and clicking a detached node is a silent no-op.
+    if (!document.body.contains(spam.element)) {
+      console.log(`   ⚠️ Skipped @${spam.username}: row scrolled out of the DOM. Re-run closer to this account.`);
+      results.failed.push(spam.username);
+      return;
+    }
+
+    try {
+      spam.element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      await sleep(500);
+
+      const moreButton = spam.element.querySelector($moreButton);
+      if (!moreButton) {
+        console.warn(`⚠️ @${spam.username}: no actions menu on this row`);
+        results.failed.push(spam.username);
+        return;
+      }
+      moreButton.click();
+      await sleep(500);
+
+      const reportOption = document.querySelector($reportOption);
+      if (reportOption) {
+        reportOption.click();
+        await sleep(1000);
+
+        // Match only short, clickable labels so a longer descriptive paragraph
+        // that also contains the reason word isn't clicked instead.
+        const reasonOption = Array.from(document.querySelectorAll('span'))
+          .find(el =&gt; {
+            const text = el.textContent.trim().toLowerCase();
+            if (!matchesReason(text) || text.length &gt; 40) return false;
+            return !!el.closest('[role=&quot;radio&quot;], [role=&quot;menuitem&quot;], [role=&quot;button&quot;], label');
+          });
+
+        let submitted = false;
+        if (reasonOption) {
+          reasonOption.click();
+          await sleep(500);
+          const submitBtn = document.querySelector('[data-testid=&quot;ChoiceSelectionNextButton&quot;]');
+          if (submitBtn) {
+            submitBtn.click();
+            submitted = true;
+            results.reported.push(spam.username);
+            console.log(`🚩 Reported @${spam.username} for ${CONFIG.reason}`);
+            await blockAfter(spam.username);
+          }
+        }
+        if (!submitted) {
+          results.failed.push(spam.username);
+          console.warn(`⚠️ @${spam.username}: could not complete the report flow`);
+        }
+
+        // Close dialog
+        const closeBtn = document.querySelector('[data-testid=&quot;app-bar-close&quot;]');
+        if (closeBtn) closeBtn.click();
+      } else {
+        results.failed.push(spam.username);
+        console.warn(`⚠️ @${spam.username}: Report option not found`);
+      }
+
+      // Close menu
+      document.body.click();
+    } catch (e) {
+      results.failed.push(spam.username);
+      console.warn(`⚠️ Failed to report @${spam.username}: ${e.message}`);
+    }
+  };
+
+  const scanForSpam = async () =&gt; {
+    const S = CONFIG.scanList;
+    console.log('🔍 Looking for spam indicators:');
+    S.spamKeywords.forEach(kw =&gt; console.log(`   • &quot;${kw}&quot;`));
+    console.log('');
+
+    const scanned = new Set();
+    const spamAccounts = [];
+    let retries = 0;
+    let scrollCount = 0;
+
+    while (scrollCount &lt; S.maxScrolls &amp;&amp; retries &lt; 3) {
+      const prevSize = scanned.size;
+
+      document.querySelectorAll($userCell).forEach(cell =&gt; {
+        try {
+          const link = cell.querySelector('a[href^=&quot;/&quot;]');
+          const username = link?.getAttribute('href')?.replace('/', '')?.split('/')[0];
+          if (!username || scanned.has(username)) return;
+          scanned.add(username);
+
+          const reasons = [];
+          let spamScore = 0;
+
+          const bioEl = cell.querySelector('[data-testid=&quot;UserDescription&quot;]');
+          const bio = (bioEl?.textContent || '').toLowerCase();
+
+          S.spamKeywords.forEach(kw =&gt; {
+            if (bio.includes(kw.toLowerCase())) {
+              spamScore += 30;
+              reasons.push(`Bio: &quot;${kw}&quot;`);
+            }
+          });
+
+          if (S.flagDefaultAvatar &amp;&amp; cell.querySelector('img[src*=&quot;default_profile&quot;]')) {
+            spamScore += 10;
+            reasons.push('Default avatar');
+          }
+
+          if (S.flagExternalLinks &amp;&amp; bio.match(/https?:\/\//)) {
+            spamScore += 5;
+            reasons.push('External link in bio');
+          }
+
+          if (spamScore &gt;= S.minSpamScore) {
+            spamAccounts.push({ username, bio: bioEl?.textContent || '', spamScore, reasons, element: cell });
+          }
+        } catch {
+          // One malformed cell must never abort the scan for every other cell in this pass.
+        }
+      });
+
+      if (scanned.size === prevSize) retries++;
+      else retries = 0;
+
+      console.log(`   Scanned: ${scanned.size} | Spam found: ${spamAccounts.length}`);
+
+      window.scrollTo(0, document.body.scrollHeight);
+      await sleep(S.scrollDelay);
+      scrollCount++;
+    }
+
+    console.log(`\n✅ Scan complete! Total scanned: ${scanned.size} | Spam accounts: ${spamAccounts.length}\n`);
+    spamAccounts.sort((a, b) =&gt; b.spamScore - a.spamScore);
+
+    spamAccounts.forEach((s, i) =&gt; {
+      console.log(`\n${i + 1}. @${s.username} (Score: ${s.spamScore})`);
+      console.log(`   Reasons: ${s.reasons.join(', ')}`);
+      console.log(`   Bio: &quot;${s.bio.slice(0, 80)}${s.bio.length &gt; 80 ? '...' : ''}&quot;`);
+      console.log(`   https://x.com/${s.username}`);
+    });
+
+    return spamAccounts;
   };
 
   const run = async () =&gt; {
     console.log('🚩 REPORT SPAM - XActions by nichxbt');
+    console.log('⚠️  IMPORTANT: Only report genuine spam/abuse! False reports can result in action against YOUR account.');
 
-    if (CONFIG.usersToReport.length === 0) {
-      console.error('❌ No users to report! Edit CONFIG.usersToReport.');
-      return;
+    if (CONFIG.scanList.enabled) {
+      const spamAccounts = await scanForSpam();
+      if (spamAccounts.length === 0) {
+        console.log('🎉 No spam accounts detected!');
+        return;
+      }
+
+      if (CONFIG.dryRun) {
+        console.log('\n⚠️ DRY RUN MODE - Review each account manually, then set CONFIG.dryRun = false to report.');
+      } else {
+        const toReport = spamAccounts.slice(0, CONFIG.maxReports);
+        console.log(`\n📋 Reporting ${toReport.length} of ${spamAccounts.length} (maxReports: ${CONFIG.maxReports}, reason: ${CONFIG.reason})`);
+        for (const spam of toReport) {
+          console.log(`\n⏳ Processing @${spam.username}...`);
+          await reportFromCell(spam);
+          await sleep(CONFIG.actionDelay);
+        }
+      }
+
+      saveLog(spamAccounts.map(s =&gt; ({
+        username: s.username,
+        spamScore: s.spamScore,
+        reasons: s.reasons,
+        reported: results.reported.includes(s.username),
+        timestamp: new Date().toISOString(),
+      })));
+    } else {
+      if (CONFIG.usersToReport.length === 0) {
+        console.error('❌ No users to report! Edit CONFIG.usersToReport.');
+        return;
+      }
+
+      if (CONFIG.dryRun) {
+        console.log('⚠️ DRY RUN MODE - Set CONFIG.dryRun = false to actually report');
+        CONFIG.usersToReport.forEach((u, i) =&gt; console.log(`   ${i + 1}. @${u} (${CONFIG.reason})`));
+        if (CONFIG.usersToReport.length &gt; CONFIG.maxReports) {
+          console.log(`   Only the first ${CONFIG.maxReports} would be reported (maxReports).`);
+        }
+        return;
+      }
+
+      const toReport = CONFIG.usersToReport.slice(0, CONFIG.maxReports);
+      console.log(`📋 Users to report: ${toReport.length} (reason: ${CONFIG.reason}, block after: ${CONFIG.blockAfterReport})`);
+
+      for (const username of toReport) {
+        console.log(`\n⏳ Processing @${username}...`);
+        await reportUser(username);
+        await sleep(CONFIG.actionDelay);
+      }
+
+      saveLog(results.reported.map(username =&gt; ({ username, reported: true, timestamp: new Date().toISOString() })));
     }
 
-    if (CONFIG.dryRun) {
-      console.log('⚠️ DRY RUN MODE - Set CONFIG.dryRun = false to actually report');
-      CONFIG.usersToReport.forEach((u, i) =&gt; console.log(`   ${i + 1}. @${u} (${CONFIG.reason})`));
-      return;
-    }
-
-    console.log(`📋 Users to report: ${CONFIG.usersToReport.length} (reason: ${CONFIG.reason})`);
-
-    for (const username of CONFIG.usersToReport) {
-      console.log(`\n⏳ Processing @${username}...`);
-      await reportUser(username);
-      await sleep(CONFIG.actionDelay);
-    }
-
+    if (CONFIG.dryRun) return;
     console.log('\n📊 RESULTS:');
     console.log(`   🚩 Reported: ${results.reported.length}`);
+    if (CONFIG.blockAfterReport) console.log(`   🚫 Blocked: ${results.blocked.length}`);
     console.log(`   ❌ Failed: ${results.failed.length}`);
   };
 
@@ -306,17 +607,16 @@
 
     <aside class="sidebar-right">
       <div class="sidebar-card">
-        <h3>⚠️ Safety &amp; Privacy</h3>
-        <a href="/scripts/blacklist">🚫 Blacklist Manager</a>
-<a href="/scripts/block-bots">🤖 Block Bot Accounts</a>
-<a href="/scripts/block-by-keywords">🚫 Block By Keywords</a>
-<a href="/scripts/block-by-ratio">🚫 Block By Ratio</a>
-<a href="/scripts/block-list-transfer">🧱 Block List Transfer</a>
-<a href="/scripts/filter-manager">🔍 Filter Manager</a>
-<a href="/scripts/id-verification">🪪 ID Verification management</a>
-<a href="/scripts/manage-muted-words">🔇 Manage Muted Words</a>
-<a href="/scripts/manage-settings">⚙️ Manage Settings</a>
-<a href="/scripts/mass-block">🚫 Mass Block Users</a>
+        <h3>🛡️ Safety</h3>
+        <a href="/scripts/block-bots">🛡️ Block Bots</a>
+<a href="/scripts/block-by-keywords">🛡️ Block by Keywords</a>
+<a href="/scripts/block-by-ratio">🛡️ Block by Ratio</a>
+<a href="/scripts/block-list-transfer">🛡️ Block List Import and Export</a>
+<a href="/scripts/block-list-manager">🛡️ Block List Manager</a>
+<a href="/scripts/manage-muted-words">🛡️ Manage Muted Words</a>
+<a href="/scripts/mass-block">🛡️ Mass Block</a>
+<a href="/scripts/mute-by-keywords">🛡️ Mute by Keywords</a>
+<a href="/scripts/shadowban-checker">🛡️ Shadowban Checker</a>
       </div>
       <div class="sidebar-card">
         <h3>🔗 Quick Links</h3>

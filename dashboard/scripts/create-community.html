@@ -3,23 +3,23 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Create Communities — Free X/Twitter Script | XActions</title>
-  <meta name="description" content="Create a new X Community with name, description, rules, and initial settings. Free X/Twitter browser script, no API key needed.">
-  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, create, community, lists &amp; communities">
+  <title>Create Community — Free X/Twitter Script | XActions</title>
+  <meta name="description" content="Create a new Community with a name, description and rules. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
+  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, create, community, communities">
   <meta name="author" content="nich (@nichxbt)">
   <meta name="robots" content="index, follow">
 
   <meta property="og:type" content="article">
-  <meta property="og:title" content="Create Communities — XActions">
-  <meta property="og:description" content="Create a new X Community with name, description, rules, and initial settings. Free X/Twitter browser script, no API key needed.">
+  <meta property="og:title" content="Create Community — XActions">
+  <meta property="og:description" content="Create a new Community with a name, description and rules. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
   <meta property="og:url" content="https://xactions.app/scripts/create-community">
   <meta property="og:site_name" content="XActions">
   <meta property="og:image" content="https://xactions.app/og-run.png">
 
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@nichxbt">
-  <meta name="twitter:title" content="Create Communities — XActions">
-  <meta name="twitter:description" content="Create a new X Community with name, description, rules, and initial settings. Free X/Twitter browser script, no API key needed.">
+  <meta name="twitter:title" content="Create Community — XActions">
+  <meta name="twitter:description" content="Create a new Community with a name, description and rules. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
   <meta name="twitter:image" content="https://xactions.app/og-run.png">
 
   <link rel="canonical" href="https://xactions.app/scripts/create-community">
@@ -29,15 +29,15 @@
   {
     "@context": "https://schema.org",
     "@type": "TechArticle",
-    "headline": "Create Communities — Free X/Twitter Script | XActions",
-    "description": "Create a new X Community with name, description, rules, and initial settings. Free X/Twitter browser script, no API key needed.",
+    "headline": "Create Community — Free X/Twitter Script | XActions",
+    "description": "Create a new Community with a name, description and rules. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.",
     "url": "https://xactions.app/scripts/create-community",
     "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
     "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
     "datePublished": "2026-03-30",
     "dateModified": "2026-03-30",
-    "articleSection": "Lists & Communities",
-    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, create, community, lists & communities"
+    "articleSection": "Communities",
+    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, create, community, communities"
   }
   </script>
   <script type="application/ld+json">
@@ -47,8 +47,8 @@
     "itemListElement": [
       { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
       { "@type": "ListItem", "position": 2, "name": "Scripts", "item": "https://xactions.app/scripts" },
-      { "@type": "ListItem", "position": 3, "name": "Lists & Communities", "item": "https://xactions.app/scripts#lists-communities" },
-      { "@type": "ListItem", "position": 4, "name": "Create Communities", "item": "https://xactions.app/scripts/create-community" }
+      { "@type": "ListItem", "position": 3, "name": "Communities", "item": "https://xactions.app/scripts#communities" },
+      { "@type": "ListItem", "position": 4, "name": "Create Community", "item": "https://xactions.app/scripts/create-community" }
     ]
   }
   </script>
@@ -116,24 +116,24 @@
 
     <main class="main-content" id="main-content">
       <header class="main-header">
-        <h1>🏘️ Create Communities</h1>
+        <h1>👥 Create Community</h1>
         <div class="breadcrumb">
-          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#lists-communities">Lists &amp; Communities</a> › Create Communities
+          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#communities">Communities</a> › Create Community
         </div>
       </header>
 
       <article class="article">
-        <span class="cat-badge">Lists &amp; Communities</span>
-        <span class="source-badge">browser</span>
+        <span class="cat-badge">Communities</span>
+        <span class="source-badge">browser/createCommunity.js</span>
 
         <div class="meta-row">
           <span>v1.0.0</span>
           <span>Updated: 2026-03-30</span>
-          <span>267 lines</span>
+          <span>271 lines</span>
           <span>by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></span>
         </div>
 
-        <p>Create a new X Community with name, description, rules, and initial settings.</p>
+        <p>Create a new Community with a name, description and rules.</p>
 
         
 
@@ -193,7 +193,11 @@
  * ============================================================
  *
  * @name        createCommunity.js
- * @description Create a new X Community with name, description,
+ * @description Create a new Community with a name, description and rules.
+ * @title       Create Community
+ * @category    communities
+ * @page        x.com/i/communities
+ * @writes      true
  *              rules, and initial settings.
  * @author      nichxbt (https://x.com/nichxbt)
  * @version     1.0.0
@@ -466,17 +470,12 @@
 
     <aside class="sidebar-right">
       <div class="sidebar-card">
-        <h3>🏘️ Lists &amp; Communities</h3>
-        <a href="/scripts/add-to-list">➕ Add To List</a>
-<a href="/scripts/advanced-lists">📝 Advanced list management</a>
-<a href="/scripts/block-list-manager">📝 Block list import/export/sharing</a>
-<a href="/scripts/manage-lists">📝 Browser console script to manage X/Twitter Lists</a>
-<a href="/scripts/follow-list-members">👣 Follow List Members</a>
-<a href="/scripts/join-communities">🏘️ Join Communities</a>
-<a href="/scripts/leave-all-communities">🚪 Leave All Communities</a>
-<a href="/scripts/leave-community">🚪 Leave Specific Community</a>
-<a href="/scripts/manage-community">🏘️ Manage Communities</a>
-<a href="/scripts/list-manager">📝 Manage Lists</a>
+        <h3>👥 Communities</h3>
+        <a href="/scripts/community-manager">👥 Community Manager</a>
+<a href="/scripts/join-communities">👥 Join Communities</a>
+<a href="/scripts/leave-community">👥 Leave a Community</a>
+<a href="/scripts/leave-all-communities">👥 Leave All Communities</a>
+<a href="/scripts/manage-community">👥 Manage Community</a>
       </div>
       <div class="sidebar-card">
         <h3>🔗 Quick Links</h3>

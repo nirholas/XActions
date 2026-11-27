@@ -3,23 +3,23 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Block List Transfer — Free X/Twitter Script | XActions</title>
-  <meta name="description" content="Export your block list to JSON, import and block a list of users, or block-chain an account's followers.">
-  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, block, list, transfer, safety &amp; privacy">
+  <title>Block List Import and Export — Free X/Twitter Script | XActions</title>
+  <meta name="description" content="Export your block list to JSON, import and block a list of users, or block the followers of an account.">
+  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, block, list, transfer, safety">
   <meta name="author" content="nich (@nichxbt)">
   <meta name="robots" content="index, follow">
 
   <meta property="og:type" content="article">
-  <meta property="og:title" content="Block List Transfer — XActions">
-  <meta property="og:description" content="Export your block list to JSON, import and block a list of users, or block-chain an account's followers.">
+  <meta property="og:title" content="Block List Import and Export — XActions">
+  <meta property="og:description" content="Export your block list to JSON, import and block a list of users, or block the followers of an account.">
   <meta property="og:url" content="https://xactions.app/scripts/block-list-transfer">
   <meta property="og:site_name" content="XActions">
   <meta property="og:image" content="https://xactions.app/og-run.png">
 
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@nichxbt">
-  <meta name="twitter:title" content="Block List Transfer — XActions">
-  <meta name="twitter:description" content="Export your block list to JSON, import and block a list of users, or block-chain an account's followers.">
+  <meta name="twitter:title" content="Block List Import and Export — XActions">
+  <meta name="twitter:description" content="Export your block list to JSON, import and block a list of users, or block the followers of an account.">
   <meta name="twitter:image" content="https://xactions.app/og-run.png">
 
   <link rel="canonical" href="https://xactions.app/scripts/block-list-transfer">
@@ -29,15 +29,15 @@
   {
     "@context": "https://schema.org",
     "@type": "TechArticle",
-    "headline": "Block List Transfer — Free X/Twitter Script | XActions",
-    "description": "Export your block list to JSON, import and block a list of users, or block-chain an account's followers.",
+    "headline": "Block List Import and Export — Free X/Twitter Script | XActions",
+    "description": "Export your block list to JSON, import and block a list of users, or block the followers of an account.",
     "url": "https://xactions.app/scripts/block-list-transfer",
     "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
     "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
     "datePublished": "2026-03-30",
     "dateModified": "2026-03-30",
-    "articleSection": "Safety & Privacy",
-    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, block, list, transfer, safety & privacy"
+    "articleSection": "Safety",
+    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, block, list, transfer, safety"
   }
   </script>
   <script type="application/ld+json">
@@ -47,8 +47,8 @@
     "itemListElement": [
       { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
       { "@type": "ListItem", "position": 2, "name": "Scripts", "item": "https://xactions.app/scripts" },
-      { "@type": "ListItem", "position": 3, "name": "Safety & Privacy", "item": "https://xactions.app/scripts#safety-privacy" },
-      { "@type": "ListItem", "position": 4, "name": "Block List Transfer", "item": "https://xactions.app/scripts/block-list-transfer" }
+      { "@type": "ListItem", "position": 3, "name": "Safety", "item": "https://xactions.app/scripts#safety" },
+      { "@type": "ListItem", "position": 4, "name": "Block List Import and Export", "item": "https://xactions.app/scripts/block-list-transfer" }
     ]
   }
   </script>
@@ -116,24 +116,24 @@
 
     <main class="main-content" id="main-content">
       <header class="main-header">
-        <h1>🧱 Block List Transfer</h1>
+        <h1>🛡️ Block List Import and Export</h1>
         <div class="breadcrumb">
-          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#safety-privacy">Safety &amp; Privacy</a> › Block List Transfer
+          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#safety">Safety</a> › Block List Import and Export
         </div>
       </header>
 
       <article class="article">
-        <span class="cat-badge">Safety &amp; Privacy</span>
-        <span class="source-badge">scripts/twitter</span>
+        <span class="cat-badge">Safety</span>
+        <span class="source-badge">browser/blockListTransfer.js</span>
 
         <div class="meta-row">
           <span>v1.0.0</span>
           <span>Updated: 2026-07-20</span>
-          <span>445 lines</span>
+          <span>450 lines</span>
           <span>by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></span>
         </div>
 
-        <p>Export your block list to JSON, import and block a list of users, or block-chain an account's followers.</p>
+        <p>Export your block list to JSON, import and block a list of users, or block the followers of an account.</p>
 
         <div class="warning-box"><p>⚠️ DESTRUCTIVE. Blocking is a real, visible action against real accounts. This</p></div>
 
@@ -195,8 +195,13 @@
  * 🚫 Block List Transfer - XActions
  * ============================================
  *
- * @name         block-list-transfer
- * @description  Export your block list to JSON, import and block a list of users, or block-chain an account's followers.
+ * @name        blockListTransfer.js
+ * @description Export your block list to JSON, import and block a list of users, or block the followers of an account.
+ * @title       Block List Import and Export
+ * @category    safety
+ * @page        x.com/settings/blocked/all
+ * @writes      true
+ * @aliases     scripts/twitter/block-list-transfer.js
  * @author       nichxbt
  * @version      1.0.0
  * @date         2026-07-20
@@ -647,17 +652,16 @@ ${CONFIG.mode === 'export' ? '║  📤 EXPORT MODE - read-only                 
 
     <aside class="sidebar-right">
       <div class="sidebar-card">
-        <h3>🧱 Safety &amp; Privacy</h3>
-        <a href="/scripts/blacklist">🚫 Blacklist Manager</a>
-<a href="/scripts/block-bots">🤖 Block Bot Accounts</a>
-<a href="/scripts/block-by-keywords">🚫 Block By Keywords</a>
-<a href="/scripts/block-by-ratio">🚫 Block By Ratio</a>
-<a href="/scripts/filter-manager">🔍 Filter Manager</a>
-<a href="/scripts/id-verification">🪪 ID Verification management</a>
-<a href="/scripts/manage-muted-words">🔇 Manage Muted Words</a>
-<a href="/scripts/manage-settings">⚙️ Manage Settings</a>
-<a href="/scripts/mass-block">🚫 Mass Block Users</a>
-<a href="/scripts/mass-unblock">🔓 Mass Unblock Users</a>
+        <h3>🛡️ Safety</h3>
+        <a href="/scripts/block-bots">🛡️ Block Bots</a>
+<a href="/scripts/block-by-keywords">🛡️ Block by Keywords</a>
+<a href="/scripts/block-by-ratio">🛡️ Block by Ratio</a>
+<a href="/scripts/block-list-manager">🛡️ Block List Manager</a>
+<a href="/scripts/manage-muted-words">🛡️ Manage Muted Words</a>
+<a href="/scripts/mass-block">🛡️ Mass Block</a>
+<a href="/scripts/mute-by-keywords">🛡️ Mute by Keywords</a>
+<a href="/scripts/report-spam">🛡️ Report Spam</a>
+<a href="/scripts/shadowban-checker">🛡️ Shadowban Checker</a>
       </div>
       <div class="sidebar-card">
         <h3>🔗 Quick Links</h3>

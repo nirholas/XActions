@@ -4,14 +4,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Engagement Analytics — Free X/Twitter Script | XActions</title>
-  <meta name="description" content="Analyze engagement metrics across your recent posts. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
+  <meta name="description" content="Analyze likes, retweets, replies, views and best posting times across a profile's recent posts.">
   <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, engagement, analytics, analytics">
   <meta name="author" content="nich (@nichxbt)">
   <meta name="robots" content="index, follow">
 
   <meta property="og:type" content="article">
   <meta property="og:title" content="Engagement Analytics — XActions">
-  <meta property="og:description" content="Analyze engagement metrics across your recent posts. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
+  <meta property="og:description" content="Analyze likes, retweets, replies, views and best posting times across a profile's recent posts.">
   <meta property="og:url" content="https://xactions.app/scripts/engagement-analytics">
   <meta property="og:site_name" content="XActions">
   <meta property="og:image" content="https://xactions.app/og-run.png">
@@ -19,7 +19,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@nichxbt">
   <meta name="twitter:title" content="Engagement Analytics — XActions">
-  <meta name="twitter:description" content="Analyze engagement metrics across your recent posts. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
+  <meta name="twitter:description" content="Analyze likes, retweets, replies, views and best posting times across a profile's recent posts.">
   <meta name="twitter:image" content="https://xactions.app/og-run.png">
 
   <link rel="canonical" href="https://xactions.app/scripts/engagement-analytics">
@@ -30,7 +30,7 @@
     "@context": "https://schema.org",
     "@type": "TechArticle",
     "headline": "Engagement Analytics — Free X/Twitter Script | XActions",
-    "description": "Analyze engagement metrics across your recent posts. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.",
+    "description": "Analyze likes, retweets, replies, views and best posting times across a profile's recent posts.",
     "url": "https://xactions.app/scripts/engagement-analytics",
     "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
     "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
@@ -116,7 +116,7 @@
 
     <main class="main-content" id="main-content">
       <header class="main-header">
-        <h1>📈 Engagement Analytics</h1>
+        <h1>📊 Engagement Analytics</h1>
         <div class="breadcrumb">
           <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#analytics">Analytics</a> › Engagement Analytics
         </div>
@@ -124,16 +124,16 @@
 
       <article class="article">
         <span class="cat-badge">Analytics</span>
-        <span class="source-badge">browser</span>
+        <span class="source-badge">browser/engagementAnalytics.js</span>
 
         <div class="meta-row">
-          
-          
-          <span>176 lines</span>
+          <span>v1.1.0</span>
+          <span>Updated: 2026-11-26</span>
+          <span>263 lines</span>
           <span>by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></span>
         </div>
 
-        <p>Analyze engagement metrics across your recent posts</p>
+        <p>Analyze likes, retweets, replies, views and best posting times across a profile's recent posts.</p>
 
         
 
@@ -147,7 +147,17 @@
         
 
         
-        
+        <section class="config-section">
+        <h2>Configuration Options</h2>
+        <table>
+          <thead><tr><th>Option</th><th>Default</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td><code>ownerOnly</code></td><td><code>false</code></td><td>Only count posts by the profile owner (skips reposts of others)</td></tr>
+<tr><td><code>detailedReport</code></td><td><code>false</code></td><td>Also print averages per post, top by retweets, top by engagement rate, worst 3, with URLs</td></tr>
+<tr><td><code>saveToLocalStorage</code></td><td><code>false</code></td><td>Save the analysis under xactions_engagement_&lt;username&gt; to compare over time</td></tr>
+          </tbody>
+        </table>
+      </section>
         <section class="config-code">
         <h2>Default Configuration</h2>
         <div class="code-block">
@@ -158,6 +168,9 @@
     maxScrollAttempts: 30,
     maxRetries: 3,
     exportResults: true,
+    ownerOnly: false,          // Only count posts by the profile owner (skips reposts of others)
+    detailedReport: false,     // Also print averages per post, top by retweets, top by engagement rate, worst 3, with URLs
+    saveToLocalStorage: false, // Save the analysis under xactions_engagement_&lt;username&gt; to compare over time
   };</code></pre>
         </div>
       </section>
@@ -168,14 +181,24 @@
           <div class="code-block">
             <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.querySelector('code').textContent).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy Script',2000)})">Copy Script</button>
             <pre><code>// Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
-// Engagement Analytics on X - by nichxbt
-// https://github.com/nirholas/xactions
-// Analyze engagement metrics across your recent posts
-// 1. Go to https://x.com/YOUR_USERNAME
-// 2. Open the Developer Console (F12)
-// 3. Paste this into the Developer Console and run it
-//
-// Last Updated: 24 February 2026
+/**
+ * @name        engagementAnalytics.js
+ * @title       Engagement Analytics
+ * @description Analyze likes, retweets, replies, views and best posting times across a profile's recent posts.
+ * @category    analytics
+ * @page        x.com/&lt;username&gt;
+ * @writes      false
+ * @aliases     scripts/engagementAnalytics.js, scripts/twitter/engagement-analytics.js
+ * @author      nichxbt (https://x.com/nichxbt)
+ * @version     1.1.0
+ * @date        2026-11-26
+ * @repository  https://github.com/nirholas/XActions
+ *
+ * Usage:
+ * 1. Go to https://x.com/YOUR_USERNAME
+ * 2. Open the Developer Console (F12)
+ * 3. Paste browser/engagementAnalytics.js into the Developer Console and run it
+ */
 (() =&gt; {
   const CONFIG = {
     maxPosts: 50,
@@ -183,6 +206,9 @@
     maxScrollAttempts: 30,
     maxRetries: 3,
     exportResults: true,
+    ownerOnly: false,          // Only count posts by the profile owner (skips reposts of others)
+    detailedReport: false,     // Also print averages per post, top by retweets, top by engagement rate, worst 3, with URLs
+    saveToLocalStorage: false, // Save the analysis under xactions_engagement_&lt;username&gt; to compare over time
   };
 
   const $tweet = 'article[data-testid=&quot;tweet&quot;]';
@@ -231,6 +257,14 @@
       const prevSize = posts.size;
 
       document.querySelectorAll($tweet).forEach(tweet =&gt; {
+        if (CONFIG.ownerOnly) {
+          let isOwner = false;
+          tweet.querySelectorAll('a[href^=&quot;/&quot;]').forEach(link =&gt; {
+            if (link.getAttribute('href')?.toLowerCase() === `/${username.toLowerCase()}`) isOwner = true;
+          });
+          if (!isOwner) return;
+        }
+
         const linkEl = tweet.querySelector('a[href*=&quot;/status/&quot;]');
         if (!linkEl) return;
         const tweetUrl = linkEl.href;
@@ -271,6 +305,10 @@
 
     // Analysis
     const postsArray = [...posts.values()];
+    if (postsArray.length === 0) {
+      console.error('❌ No posts found. Make sure you\'re on the correct profile page.');
+      return;
+    }
     const totalLikes = postsArray.reduce((s, p) =&gt; s + p.likes, 0);
     const totalRetweets = postsArray.reduce((s, p) =&gt; s + p.retweets, 0);
     const totalReplies = postsArray.reduce((s, p) =&gt; s + p.replies, 0);
@@ -322,6 +360,68 @@
       console.log(`   ${i + 1}. 📊 ${p.engagement} | &quot;${p.text.substring(0, 50)}...&quot;`);
     });
 
+    if (CONFIG.detailedReport) {
+      const n = postsArray.length;
+      const formatNum = (v) =&gt; {
+        if (v &gt;= 1000000) return (v / 1000000).toFixed(1) + 'M';
+        if (v &gt;= 1000) return (v / 1000).toFixed(1) + 'K';
+        return Math.round(v).toString();
+      };
+
+      console.log('\n📊 AVERAGES PER POST:');
+      console.log(`   ❤️  Likes:    ${(totalLikes / n).toFixed(1)}`);
+      console.log(`   🔄 Retweets: ${(totalRetweets / n).toFixed(1)}`);
+      console.log(`   💬 Replies:  ${(totalReplies / n).toFixed(1)}`);
+      console.log(`   👁️  Views:    ${formatNum(totalViews / n)}`);
+
+      console.log('\n🏆 TOP 5 BY LIKES (with links):');
+      topByLikes.forEach((p, i) =&gt; {
+        console.log(`   ${i + 1}. ${formatNum(p.likes)} likes | &quot;${p.text.slice(0, 50)}...&quot;`);
+        console.log(`      ${p.url}`);
+      });
+
+      const topByRetweets = [...postsArray].sort((a, b) =&gt; b.retweets - a.retweets).slice(0, 5);
+      console.log('\n🔄 TOP 5 BY RETWEETS:');
+      topByRetweets.forEach((p, i) =&gt; {
+        console.log(`   ${i + 1}. ${formatNum(p.retweets)} RTs | &quot;${p.text.slice(0, 50)}...&quot;`);
+        console.log(`      ${p.url}`);
+      });
+
+      const topByRate = postsArray
+        .filter(p =&gt; p.views &gt; 0)
+        .map(p =&gt; ({ ...p, rate: (p.engagement / p.views) * 100 }))
+        .sort((a, b) =&gt; b.rate - a.rate)
+        .slice(0, 5);
+      if (topByRate.length &gt; 0) {
+        console.log('\n📈 TOP 5 BY ENGAGEMENT RATE:');
+        topByRate.forEach((p, i) =&gt; {
+          console.log(`   ${i + 1}. ${p.rate.toFixed(2)}% | &quot;${p.text.slice(0, 50)}...&quot;`);
+          console.log(`      ${p.url}`);
+        });
+      }
+
+      console.log('\n📉 LOWEST PERFORMING (consider deleting or learning from):');
+      [...postsArray].sort((a, b) =&gt; a.likes - b.likes).slice(0, 3).forEach((p, i) =&gt; {
+        console.log(`   ${i + 1}. ${p.likes} likes | &quot;${p.text.slice(0, 50)}...&quot;`);
+        console.log(`      ${p.url}`);
+      });
+    }
+
+    if (CONFIG.saveToLocalStorage) {
+      const storageKey = `xactions_engagement_${username}`;
+      const n = postsArray.length;
+      localStorage.setItem(storageKey, JSON.stringify({
+        username,
+        timestamp: new Date().toISOString(),
+        postCount: n,
+        totals: { likes: totalLikes, retweets: totalRetweets, replies: totalReplies, views: totalViews },
+        averages: { likes: totalLikes / n, retweets: totalRetweets / n, replies: totalReplies / n, views: totalViews / n },
+        posts: postsArray,
+      }));
+      console.log('\n💾 Data saved! Run again to compare over time.');
+      console.log(`📥 Export: copy(localStorage.getItem(&quot;${storageKey}&quot;))`);
+    }
+
     if (CONFIG.exportResults) {
       const report = {
         username,
@@ -356,17 +456,17 @@
 
     <aside class="sidebar-right">
       <div class="sidebar-card">
-        <h3>📈 Analytics</h3>
-        <a href="/scripts/account-health-monitor">🏥 Account Health Monitor</a>
-<a href="/scripts/audience-demographics">📊 Audience Demographics Analyzer</a>
-<a href="/scripts/audience-overlap">🔗 Audience Overlap Analyzer</a>
-<a href="/scripts/best-time-to-post">⏰ Best Time to Post</a>
-<a href="/scripts/competitor-analysis">🔍 Competitor Analysis</a>
-<a href="/scripts/hashtag-analytics">#️⃣ Hashtag Analytics</a>
-<a href="/scripts/keyword-monitor">🔑 Keyword Monitor &amp; Alerts</a>
-<a href="/scripts/manage-notifications">🔔 Manage Notifications</a>
-<a href="/scripts/notification-manager">🔔 Notification Manager</a>
-<a href="/scripts/profile-stats">📊 Profile Stats</a>
+        <h3>📊 Analytics</h3>
+        <a href="/scripts/account-health-monitor">📊 Account Health Monitor</a>
+<a href="/scripts/audience-demographics">📊 Audience Demographics</a>
+<a href="/scripts/audience-overlap">📊 Audience Overlap</a>
+<a href="/scripts/audit-followers">📊 Audit Followers</a>
+<a href="/scripts/best-time-to-post">📊 Best Time to Post</a>
+<a href="/scripts/business-analytics">📊 Business Analytics</a>
+<a href="/scripts/business-tools">📊 Business Tools</a>
+<a href="/scripts/competitor-analysis">📊 Competitor Analysis</a>
+<a href="/scripts/content-calendar">📊 Content Calendar</a>
+<a href="/scripts/creator-studio">📊 Creator Studio</a>
       </div>
       <div class="sidebar-card">
         <h3>🔗 Quick Links</h3>

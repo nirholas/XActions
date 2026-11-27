@@ -4,14 +4,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Verified-Only Replies — Free X/Twitter Script | XActions</title>
-  <meta name="description" content="Toggle &quot;only verified users can reply&quot; on your posts and check verification status. Free X/Twitter browser script, no API key needed.">
-  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, verified, only, safety &amp; privacy">
+  <meta name="description" content="Set who can reply to a new post to verified accounts only. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
+  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, verified, only, post">
   <meta name="author" content="nich (@nichxbt)">
   <meta name="robots" content="index, follow">
 
   <meta property="og:type" content="article">
   <meta property="og:title" content="Verified-Only Replies — XActions">
-  <meta property="og:description" content="Toggle &quot;only verified users can reply&quot; on your posts and check verification status. Free X/Twitter browser script, no API key needed.">
+  <meta property="og:description" content="Set who can reply to a new post to verified accounts only. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
   <meta property="og:url" content="https://xactions.app/scripts/verified-only">
   <meta property="og:site_name" content="XActions">
   <meta property="og:image" content="https://xactions.app/og-run.png">
@@ -19,7 +19,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@nichxbt">
   <meta name="twitter:title" content="Verified-Only Replies — XActions">
-  <meta name="twitter:description" content="Toggle &quot;only verified users can reply&quot; on your posts and check verification status. Free X/Twitter browser script, no API key needed.">
+  <meta name="twitter:description" content="Set who can reply to a new post to verified accounts only. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
   <meta name="twitter:image" content="https://xactions.app/og-run.png">
 
   <link rel="canonical" href="https://xactions.app/scripts/verified-only">
@@ -30,14 +30,14 @@
     "@context": "https://schema.org",
     "@type": "TechArticle",
     "headline": "Verified-Only Replies — Free X/Twitter Script | XActions",
-    "description": "Toggle \"only verified users can reply\" on your posts and check verification status. Free X/Twitter browser script, no API key needed.",
+    "description": "Set who can reply to a new post to verified accounts only. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.",
     "url": "https://xactions.app/scripts/verified-only",
     "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
     "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
     "datePublished": "2026-03-30",
     "dateModified": "2026-03-30",
-    "articleSection": "Safety & Privacy",
-    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, verified, only, safety & privacy"
+    "articleSection": "Post",
+    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, verified, only, post"
   }
   </script>
   <script type="application/ld+json">
@@ -47,7 +47,7 @@
     "itemListElement": [
       { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
       { "@type": "ListItem", "position": 2, "name": "Scripts", "item": "https://xactions.app/scripts" },
-      { "@type": "ListItem", "position": 3, "name": "Safety & Privacy", "item": "https://xactions.app/scripts#safety-privacy" },
+      { "@type": "ListItem", "position": 3, "name": "Post", "item": "https://xactions.app/scripts#post" },
       { "@type": "ListItem", "position": 4, "name": "Verified-Only Replies", "item": "https://xactions.app/scripts/verified-only" }
     ]
   }
@@ -116,24 +116,24 @@
 
     <main class="main-content" id="main-content">
       <header class="main-header">
-        <h1>✅ Verified-Only Replies</h1>
+        <h1>✍️ Verified-Only Replies</h1>
         <div class="breadcrumb">
-          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#safety-privacy">Safety &amp; Privacy</a> › Verified-Only Replies
+          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#post">Post</a> › Verified-Only Replies
         </div>
       </header>
 
       <article class="article">
-        <span class="cat-badge">Safety &amp; Privacy</span>
-        <span class="source-badge">browser</span>
+        <span class="cat-badge">Post</span>
+        <span class="source-badge">browser/verifiedOnly.js</span>
 
         <div class="meta-row">
           
           
-          <span>179 lines</span>
+          <span>187 lines</span>
           <span>by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></span>
         </div>
 
-        <p>Toggle &quot;only verified users can reply&quot; on your posts and check verification status.</p>
+        <p>Set who can reply to a new post to verified accounts only.</p>
 
         
 
@@ -176,6 +176,14 @@
           <div class="code-block">
             <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.querySelector('code').textContent).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy Script',2000)})">Copy Script</button>
             <pre><code>// Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
+/**
+ * @name        verifiedOnly.js
+ * @title       Verified-Only Replies
+ * @description Set who can reply to a new post to verified accounts only.
+ * @category    post
+ * @page        x.com/*
+ * @writes      true
+ */
 // Verified-Only Replies — by nichxbt
 // https://github.com/nirholas/XActions
 // Toggle &quot;only verified users can reply&quot; on your posts and check verification status.
@@ -367,17 +375,17 @@
 
     <aside class="sidebar-right">
       <div class="sidebar-card">
-        <h3>✅ Safety &amp; Privacy</h3>
-        <a href="/scripts/blacklist">🚫 Blacklist Manager</a>
-<a href="/scripts/block-bots">🤖 Block Bot Accounts</a>
-<a href="/scripts/block-by-keywords">🚫 Block By Keywords</a>
-<a href="/scripts/block-by-ratio">🚫 Block By Ratio</a>
-<a href="/scripts/block-list-transfer">🧱 Block List Transfer</a>
-<a href="/scripts/filter-manager">🔍 Filter Manager</a>
-<a href="/scripts/id-verification">🪪 ID Verification management</a>
-<a href="/scripts/manage-muted-words">🔇 Manage Muted Words</a>
-<a href="/scripts/manage-settings">⚙️ Manage Settings</a>
-<a href="/scripts/mass-block">🚫 Mass Block Users</a>
+        <h3>✍️ Post</h3>
+        <a href="/scripts/post-advanced">✍️ Advanced Posting</a>
+<a href="/scripts/article-publisher">✍️ Article Publisher</a>
+<a href="/scripts/content-repurposer">✍️ Content Repurposer</a>
+<a href="/scripts/create-poll">✍️ Create Poll</a>
+<a href="/scripts/edit-post">✍️ Edit Post</a>
+<a href="/scripts/media-studio">✍️ Media Studio</a>
+<a href="/scripts/mention-users">✍️ Mention Users</a>
+<a href="/scripts/post-composer">✍️ Post Composer</a>
+<a href="/scripts/post-thread">✍️ Post Thread</a>
+<a href="/scripts/quote-tweet">✍️ Quote Post</a>
       </div>
       <div class="sidebar-card">
         <h3>🔗 Quick Links</h3>

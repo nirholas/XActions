@@ -3,23 +3,23 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Keyword Monitor &amp; Alerts — Free X/Twitter Script | XActions</title>
-  <meta name="description" content="Monitor any X/Twitter search for keyword mentions in real-time. Scrapes search results, detects new tweets matching your keywords, tracks mention frequency…">
-  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, keyword, monitor, analytics">
+  <title>Keyword Monitor — Free X/Twitter Script | XActions</title>
+  <meta name="description" content="Watch a search for keyword mentions, flag new ones, rank top mentioners and keep a history with optional auto-refresh.">
+  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, keyword, monitor, monitor">
   <meta name="author" content="nich (@nichxbt)">
   <meta name="robots" content="index, follow">
 
   <meta property="og:type" content="article">
-  <meta property="og:title" content="Keyword Monitor &amp; Alerts — XActions">
-  <meta property="og:description" content="Monitor any X/Twitter search for keyword mentions in real-time. Scrapes search results, detects new tweets matching your keywords, tracks mention frequency…">
+  <meta property="og:title" content="Keyword Monitor — XActions">
+  <meta property="og:description" content="Watch a search for keyword mentions, flag new ones, rank top mentioners and keep a history with optional auto-refresh.">
   <meta property="og:url" content="https://xactions.app/scripts/keyword-monitor">
   <meta property="og:site_name" content="XActions">
   <meta property="og:image" content="https://xactions.app/og-run.png">
 
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@nichxbt">
-  <meta name="twitter:title" content="Keyword Monitor &amp; Alerts — XActions">
-  <meta name="twitter:description" content="Monitor any X/Twitter search for keyword mentions in real-time. Scrapes search results, detects new tweets matching your keywords, tracks mention frequency…">
+  <meta name="twitter:title" content="Keyword Monitor — XActions">
+  <meta name="twitter:description" content="Watch a search for keyword mentions, flag new ones, rank top mentioners and keep a history with optional auto-refresh.">
   <meta name="twitter:image" content="https://xactions.app/og-run.png">
 
   <link rel="canonical" href="https://xactions.app/scripts/keyword-monitor">
@@ -29,15 +29,15 @@
   {
     "@context": "https://schema.org",
     "@type": "TechArticle",
-    "headline": "Keyword Monitor & Alerts — Free X/Twitter Script | XActions",
-    "description": "Monitor any X/Twitter search for keyword mentions in real-time. Scrapes search results, detects new tweets matching your keywords, tracks mention frequency…",
+    "headline": "Keyword Monitor — Free X/Twitter Script | XActions",
+    "description": "Watch a search for keyword mentions, flag new ones, rank top mentioners and keep a history with optional auto-refresh.",
     "url": "https://xactions.app/scripts/keyword-monitor",
     "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
     "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
     "datePublished": "2026-03-30",
     "dateModified": "2026-03-30",
-    "articleSection": "Analytics",
-    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, keyword, monitor, analytics"
+    "articleSection": "Monitor",
+    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, keyword, monitor, monitor"
   }
   </script>
   <script type="application/ld+json">
@@ -47,8 +47,8 @@
     "itemListElement": [
       { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
       { "@type": "ListItem", "position": 2, "name": "Scripts", "item": "https://xactions.app/scripts" },
-      { "@type": "ListItem", "position": 3, "name": "Analytics", "item": "https://xactions.app/scripts#analytics" },
-      { "@type": "ListItem", "position": 4, "name": "Keyword Monitor & Alerts", "item": "https://xactions.app/scripts/keyword-monitor" }
+      { "@type": "ListItem", "position": 3, "name": "Monitor", "item": "https://xactions.app/scripts#monitor" },
+      { "@type": "ListItem", "position": 4, "name": "Keyword Monitor", "item": "https://xactions.app/scripts/keyword-monitor" }
     ]
   }
   </script>
@@ -116,30 +116,30 @@
 
     <main class="main-content" id="main-content">
       <header class="main-header">
-        <h1>🔑 Keyword Monitor &amp; Alerts</h1>
+        <h1>👀 Keyword Monitor</h1>
         <div class="breadcrumb">
-          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#analytics">Analytics</a> › Keyword Monitor &amp; Alerts
+          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#monitor">Monitor</a> › Keyword Monitor
         </div>
       </header>
 
       <article class="article">
-        <span class="cat-badge">Analytics</span>
-        <span class="source-badge">browser</span>
+        <span class="cat-badge">Monitor</span>
+        <span class="source-badge">browser/keywordMonitor.js</span>
 
         <div class="meta-row">
-          <span>v1.0.0</span>
-          <span>Updated: 2026-02-24</span>
-          <span>337 lines</span>
+          <span>v1.1.0</span>
+          <span>Updated: 2026-11-26</span>
+          <span>350 lines</span>
           <span>by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></span>
         </div>
 
-        <p>Monitor any X/Twitter search for keyword mentions in real-time. Scrapes search results, detects new tweets matching your keywords, tracks mention frequency, identifies top mentioners, and persists history in localStorage. Supports auto-refresh intervals and engagement threshold filters.</p>
+        <p>Watch a search for keyword mentions, flag new ones, rank top mentioners and keep a history with optional auto-refresh.</p>
 
         
 
         <h2>How to Use</h2>
         <ol class="usage-steps"><li>Go to x.com/search?q=your+keyword</li>
-<li>Paste and run</li></ol>
+<li>Paste browser/keywordMonitor.js and run</li></ol>
         
 
         
@@ -151,6 +151,8 @@
             <tr><td><code>keywords</code></td><td><code>[]</code></td><td>Will be auto-detected from search URL</td></tr>
 <tr><td><code>minLikes</code></td><td><code>0</code></td><td>Min likes to include in results</td></tr>
 <tr><td><code>maxHistory</code></td><td><code>500</code></td><td>Max mentions to keep in history</td></tr>
+<tr><td><code>checkInterval</code></td><td><code>120000</code></td><td>Default XActions.autoRefresh() interval (ms)</td></tr>
+<tr><td><code>sound</code></td><td><code>false</code></td><td>Beep when a scan finds new mentions</td></tr>
           </tbody>
         </table>
       </section>
@@ -165,6 +167,8 @@
     minLikes: 0,               // Min likes to include in results
     exportResults: true,
     maxHistory: 500,           // Max mentions to keep in history
+    checkInterval: 120000,     // Default XActions.autoRefresh() interval (ms)
+    sound: false,              // Beep when a scan finds new mentions
   };</code></pre>
         </div>
       </section>
@@ -181,15 +185,15 @@
  * ============================================================
  *
  * @name        keywordMonitor.js
- * @description Monitor any X/Twitter search for keyword mentions
- *              in real-time. Scrapes search results, detects new
- *              tweets matching your keywords, tracks mention
- *              frequency, identifies top mentioners, and persists
- *              history in localStorage. Supports auto-refresh
- *              intervals and engagement threshold filters.
+ * @title       Keyword Monitor
+ * @description Watch a search for keyword mentions, flag new ones, rank top mentioners and keep a history with optional auto-refresh.
+ * @category    monitor
+ * @page        x.com/search?q=&lt;query&gt;&amp;f=live or x.com/home
+ * @writes      false
+ * @aliases     scripts/keywordMonitor.js
  * @author      nichxbt (https://x.com/nichxbt)
- * @version     1.0.0
- * @date        2026-02-24
+ * @version     1.1.0
+ * @date        2026-11-26
  * @repository  https://github.com/nirholas/XActions
  *
  * ============================================================
@@ -197,11 +201,12 @@
  *
  * MODE A — Run on existing search page:
  *   1. Go to x.com/search?q=your+keyword
- *   2. Paste and run
+ *   2. Paste browser/keywordMonitor.js and run
  *
  * MODE B — Use the API:
  *   XActions.monitor(['keyword1', 'keyword2'])
- *   XActions.autoRefresh(120000)  // Refresh every 2 min
+ *   XActions.scan()               // Scan the current page now
+ *   XActions.autoRefresh(120000)  // Refresh every 2 min (default CONFIG.checkInterval)
  *   XActions.stop()
  *   XActions.stats()
  *   XActions.history()
@@ -217,6 +222,8 @@
     minLikes: 0,               // Min likes to include in results
     exportResults: true,
     maxHistory: 500,           // Max mentions to keep in history
+    checkInterval: 120000,     // Default XActions.autoRefresh() interval (ms)
+    sound: false,              // Beep when a scan finds new mentions
   };
 
   const STORAGE_KEY = 'xactions_keyword_monitor';
@@ -239,6 +246,11 @@
     // Trim history
     while (data.mentions.length &gt; CONFIG.maxHistory) data.mentions.shift();
     localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  };
+
+  const beep = () =&gt; {
+    if (!CONFIG.sound) return;
+    try { const ctx = new AudioContext(); const o = ctx.createOscillator(); o.connect(ctx.destination); o.frequency.value = 800; o.start(); o.stop(ctx.currentTime + 0.15); } catch { /* audio unavailable */ }
   };
 
   let autoRefreshTimer = null;
@@ -367,6 +379,7 @@
       for (const m of newMentions.slice(0, 8)) {
         console.log(`  🔔 @${m.author}: &quot;${m.text.slice(0, 60)}...&quot; (${m.totalEng} eng)`);
       }
+      beep();
     }
 
     // ── Top mentioners ──────────────────────────────────────
@@ -413,6 +426,7 @@
 
     // ── Update stats ────────────────────────────────────────
     const kw = keywords.join(',');
+    if (!data.stats) data.stats = {}; // history saved by the older scripts/keywordMonitor.js has no stats
     if (!data.stats[kw]) data.stats[kw] = { scans: 0, totalMentions: 0, firstScan: new Date().toISOString() };
     data.stats[kw].scans++;
     data.stats[kw].totalMentions += newMentions.length;
@@ -454,7 +468,9 @@
     setTimeout(scan, 5000);
   };
 
-  window.XActions.autoRefresh = (intervalMs = 120000) =&gt; {
+  window.XActions.scan = scan;
+
+  window.XActions.autoRefresh = (intervalMs = CONFIG.checkInterval) =&gt; {
     if (autoRefreshTimer) clearInterval(autoRefreshTimer);
     console.log(`🔄 Auto-refreshing every ${(intervalMs / 60000).toFixed(1)} minutes.`);
     autoRefreshTimer = setInterval(() =&gt; {
@@ -471,7 +487,7 @@
 
   window.XActions.stats = () =&gt; {
     const data = loadData();
-    const kws = Object.keys(data.stats);
+    const kws = Object.keys(data.stats || {});
     if (kws.length === 0) { console.log('📭 No stats yet.'); return; }
     console.log(`\n📊 KEYWORD STATS (${kws.length} tracked keywords):\n`);
     for (const kw of kws) {
@@ -504,6 +520,7 @@
     console.log('╚════════════════════════════════════════════════════╝');
     console.log('\n📋 Commands:');
     console.log('  XActions.monitor([&quot;keyword1&quot;, &quot;keyword2&quot;])');
+    console.log('  XActions.scan()             (on a search page or x.com/home)');
     console.log('  XActions.autoRefresh(120000)');
     console.log('  XActions.stats()');
     console.log('  XActions.history()');
@@ -524,17 +541,13 @@
 
     <aside class="sidebar-right">
       <div class="sidebar-card">
-        <h3>🔑 Analytics</h3>
-        <a href="/scripts/account-health-monitor">🏥 Account Health Monitor</a>
-<a href="/scripts/audience-demographics">📊 Audience Demographics Analyzer</a>
-<a href="/scripts/audience-overlap">🔗 Audience Overlap Analyzer</a>
-<a href="/scripts/best-time-to-post">⏰ Best Time to Post</a>
-<a href="/scripts/competitor-analysis">🔍 Competitor Analysis</a>
-<a href="/scripts/engagement-analytics">📈 Engagement Analytics</a>
-<a href="/scripts/hashtag-analytics">#️⃣ Hashtag Analytics</a>
-<a href="/scripts/manage-notifications">🔔 Manage Notifications</a>
-<a href="/scripts/notification-manager">🔔 Notification Manager</a>
-<a href="/scripts/profile-stats">📊 Profile Stats</a>
+        <h3>👀 Monitor</h3>
+        <a href="/scripts/continuous-monitor">👀 Continuous Monitor</a>
+<a href="/scripts/detect-unfollowers">👀 Detect Unfollowers</a>
+<a href="/scripts/monitor-account">👀 Monitor Account</a>
+<a href="/scripts/new-followers-alert">👀 New Followers Alert</a>
+<a href="/scripts/notification-manager">👀 Notification Manager</a>
+<a href="/scripts/trending-topic-monitor">👀 Trending Topic Monitor</a>
       </div>
       <div class="sidebar-card">
         <h3>🔗 Quick Links</h3>

@@ -4,14 +4,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Update Profile — Free X/Twitter Script | XActions</title>
-  <meta name="description" content="Programmatically update your bio, display name, location, website. Free X/Twitter browser script, no API key needed.">
-  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, update, profile, account management">
+  <meta name="description" content="Update your display name, bio, location, website and birthdate in the Edit profile form, dry run by default.">
+  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, update, profile, profile and settings">
   <meta name="author" content="nich (@nichxbt)">
   <meta name="robots" content="index, follow">
 
   <meta property="og:type" content="article">
   <meta property="og:title" content="Update Profile — XActions">
-  <meta property="og:description" content="Programmatically update your bio, display name, location, website. Free X/Twitter browser script, no API key needed.">
+  <meta property="og:description" content="Update your display name, bio, location, website and birthdate in the Edit profile form, dry run by default.">
   <meta property="og:url" content="https://xactions.app/scripts/update-profile">
   <meta property="og:site_name" content="XActions">
   <meta property="og:image" content="https://xactions.app/og-run.png">
@@ -19,7 +19,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@nichxbt">
   <meta name="twitter:title" content="Update Profile — XActions">
-  <meta name="twitter:description" content="Programmatically update your bio, display name, location, website. Free X/Twitter browser script, no API key needed.">
+  <meta name="twitter:description" content="Update your display name, bio, location, website and birthdate in the Edit profile form, dry run by default.">
   <meta name="twitter:image" content="https://xactions.app/og-run.png">
 
   <link rel="canonical" href="https://xactions.app/scripts/update-profile">
@@ -30,14 +30,14 @@
     "@context": "https://schema.org",
     "@type": "TechArticle",
     "headline": "Update Profile — Free X/Twitter Script | XActions",
-    "description": "Programmatically update your bio, display name, location, website. Free X/Twitter browser script, no API key needed.",
+    "description": "Update your display name, bio, location, website and birthdate in the Edit profile form, dry run by default.",
     "url": "https://xactions.app/scripts/update-profile",
     "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
     "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
     "datePublished": "2026-03-30",
     "dateModified": "2026-03-30",
-    "articleSection": "Account Management",
-    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, update, profile, account management"
+    "articleSection": "Profile and Settings",
+    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, update, profile, profile and settings"
   }
   </script>
   <script type="application/ld+json">
@@ -47,7 +47,7 @@
     "itemListElement": [
       { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
       { "@type": "ListItem", "position": 2, "name": "Scripts", "item": "https://xactions.app/scripts" },
-      { "@type": "ListItem", "position": 3, "name": "Account Management", "item": "https://xactions.app/scripts#account-management" },
+      { "@type": "ListItem", "position": 3, "name": "Profile and Settings", "item": "https://xactions.app/scripts#profile-and-settings" },
       { "@type": "ListItem", "position": 4, "name": "Update Profile", "item": "https://xactions.app/scripts/update-profile" }
     ]
   }
@@ -116,24 +116,24 @@
 
     <main class="main-content" id="main-content">
       <header class="main-header">
-        <h1>✏️ Update Profile</h1>
+        <h1>🪪 Update Profile</h1>
         <div class="breadcrumb">
-          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#account-management">Account Management</a> › Update Profile
+          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#profile-and-settings">Profile and Settings</a> › Update Profile
         </div>
       </header>
 
       <article class="article">
-        <span class="cat-badge">Account Management</span>
-        <span class="source-badge">browser</span>
+        <span class="cat-badge">Profile and Settings</span>
+        <span class="source-badge">browser/updateProfile.js</span>
 
         <div class="meta-row">
-          
-          
-          <span>135 lines</span>
+          <span>v1.1.0</span>
+          <span>Updated: 2026-11-27</span>
+          <span>273 lines</span>
           <span>by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></span>
         </div>
 
-        <p>Programmatically update your bio, display name, location, website</p>
+        <p>Update your display name, bio, location, website and birthdate in the Edit profile form, dry run by default.</p>
 
         
 
@@ -156,6 +156,8 @@
 <tr><td><code>bio</code></td><td><code>null</code></td><td>'Your bio text' (max 160 chars)</td></tr>
 <tr><td><code>location</code></td><td><code>null</code></td><td>'San Francisco, CA'</td></tr>
 <tr><td><code>website</code></td><td><code>null</code></td><td>'https://yoursite.com'</td></tr>
+<tr><td><code>dryRun</code></td><td><code>true</code></td><td>true = only list the changes. false = fill the form (and save if autoSave)</td></tr>
+<tr><td><code>actionDelay</code></td><td><code>700</code></td><td>Delay for UI interactions (ms)</td></tr>
           </tbody>
         </table>
       </section>
@@ -164,12 +166,18 @@
         <div class="code-block">
           <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.querySelector('code').textContent).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy',2000)})">Copy</button>
           <pre><code>const CONFIG = {
-    // Set to null to skip updating a field
+    // Set to null to skip updating a field ('' clears it)
     displayName: null,    // 'Your Name' (max 50 chars)
     bio: null,            // 'Your bio text' (max 160 chars)
     location: null,       // 'San Francisco, CA'
     website: null,        // 'https://yoursite.com'
+    // Birthdate as { month: 'March', day: 14, year: 1990 }. null = leave unchanged.
+    // month accepts a full month name ('March') or number (3). Any subset of
+    // month/day/year you provide will be set; omitted parts are left as-is.
+    birthdate: null,
     autoSave: true,
+    dryRun: true,         // true = only list the changes. false = fill the form (and save if autoSave)
+    actionDelay: 700,     // Delay for UI interactions (ms)
   };</code></pre>
         </div>
       </section>
@@ -180,38 +188,87 @@
           <div class="code-block">
             <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.querySelector('code').textContent).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy Script',2000)})">Copy Script</button>
             <pre><code>// Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
+/**
+ * @name        updateProfile.js
+ * @title       Update Profile
+ * @description Update your display name, bio, location, website and birthdate in the Edit profile form, dry run by default.
+ * @category    profile
+ * @page        x.com/&lt;you&gt; or x.com/settings/profile
+ * @writes      true
+ * @aliases     scripts/editProfile.js, scripts/updateProfile.js, scripts/twitter/edit-profile.js, scripts/twitter/update-bio.js
+ * @author      nichxbt (https://x.com/nichxbt)
+ * @version     1.1.0
+ * @date        2026-11-27
+ */
 // Update Profile on X - by nichxbt
 // https://github.com/nirholas/xactions
-// Programmatically update your bio, display name, location, website
-// 1. Go to your profile page on x.com
+// Programmatically update your bio, display name, location, website, birthdate
+// 1. Go to your profile page on x.com (or x.com/settings/profile)
 // 2. Open the Developer Console (F12)
 // 3. Edit the CONFIG below
-// 4. Paste this into the Developer Console and run it
+// 4. Paste browser/updateProfile.js into the Developer Console and run it
+//    It starts as a dry run that only lists the changes: set
+//    CONFIG.dryRun = false to apply them.
 //
-// Last Updated: 24 February 2026
+// Last Updated: 27 November 2026
 (() =&gt; {
   const CONFIG = {
-    // Set to null to skip updating a field
+    // Set to null to skip updating a field ('' clears it)
     displayName: null,    // 'Your Name' (max 50 chars)
     bio: null,            // 'Your bio text' (max 160 chars)
     location: null,       // 'San Francisco, CA'
     website: null,        // 'https://yoursite.com'
+    // Birthdate as { month: 'March', day: 14, year: 1990 }. null = leave unchanged.
+    // month accepts a full month name ('March') or number (3). Any subset of
+    // month/day/year you provide will be set; omitted parts are left as-is.
+    birthdate: null,
     autoSave: true,
+    dryRun: true,         // true = only list the changes. false = fill the form (and save if autoSave)
+    actionDelay: 700,     // Delay for UI interactions (ms)
   };
 
   const $editProfileBtn = '[data-testid=&quot;editProfileButton&quot;]';
-  const $nameInput = 'input[name=&quot;displayName&quot;]';
-  const $bioTextarea = 'textarea[name=&quot;description&quot;]';
-  const $locationInput = 'input[name=&quot;location&quot;]';
-  const $websiteInput = 'input[name=&quot;url&quot;]';
+  // X has shipped several testids/name attrs over time; try each in order.
+  const $nameInput = ['input[name=&quot;displayName&quot;]', '[data-testid=&quot;displayNameInput&quot;]', 'input[name=&quot;name&quot;]'];
+  const $bioTextarea = ['textarea[name=&quot;description&quot;]', '[data-testid=&quot;bioTextarea&quot;]', '[data-testid=&quot;descriptionInput&quot;]', '[data-testid=&quot;ocf-bio-input&quot;]'];
+  const $locationInput = ['input[name=&quot;location&quot;]', '[data-testid=&quot;locationInput&quot;]'];
+  const $websiteInput = ['input[name=&quot;url&quot;]', '[data-testid=&quot;urlInput&quot;]'];
   const $saveButton = '[data-testid=&quot;Profile_Save_Button&quot;]';
 
   const sleep = (ms) =&gt; new Promise(r =&gt; setTimeout(r, ms));
 
+  // Resolve the first matching element from an array of selectors (or a single string).
+  const findFirst = (selectors) =&gt; {
+    const list = Array.isArray(selectors) ? selectors : [selectors];
+    for (const sel of list) {
+      const el = document.querySelector(sel);
+      if (el) return el;
+    }
+    return null;
+  };
+
+  // Set an input/textarea/select value through the native setter so React's
+  // value tracker registers the change.
+  const setNativeValue = (el, value) =&gt; {
+    const proto = el instanceof HTMLTextAreaElement
+      ? HTMLTextAreaElement.prototype
+      : el instanceof HTMLSelectElement
+        ? HTMLSelectElement.prototype
+        : HTMLInputElement.prototype;
+    const desc = Object.getOwnPropertyDescriptor(proto, 'value');
+    if (desc &amp;&amp; desc.set) desc.set.call(el, value);
+    else el.value = value;
+    el.dispatchEvent(new Event('input', { bubbles: true }));
+    el.dispatchEvent(new Event('change', { bubbles: true }));
+  };
+
+  const stats = { set: 0, notFound: 0 };
+
   const setInputValue = async (selector, value) =&gt; {
-    const el = document.querySelector(selector);
+    const el = findFirst(selector);
     if (!el) {
-      console.warn(`⚠️ Field not found: ${selector}`);
+      console.warn(`⚠️ Field not found: ${Array.isArray(selector) ? selector[0] : selector}`);
+      stats.notFound++;
       return false;
     }
 
@@ -230,7 +287,73 @@
     el.dispatchEvent(new Event('change', { bubbles: true }));
     await sleep(200);
 
+    // execCommand is ignored in some contexts: fall back to the native setter.
+    if (el.value !== value) {
+      setNativeValue(el, '');
+      await sleep(120);
+      setNativeValue(el, value);
+      await sleep(200);
+    }
+
+    stats.set++;
     return true;
+  };
+
+  // Set a native &lt;select&gt; to the option whose text or value matches `wanted`.
+  const setSelectByText = (selectEl, wanted) =&gt; {
+    const target = String(wanted).trim().toLowerCase();
+    for (const opt of selectEl.options) {
+      const txt = opt.textContent.trim().toLowerCase();
+      const val = String(opt.value).trim().toLowerCase();
+      if (txt === target || val === target) {
+        setNativeValue(selectEl, opt.value);
+        return true;
+      }
+    }
+    // Numeric fallback (e.g. month '3' matching option value/text '3').
+    for (const opt of selectEl.options) {
+      if (parseInt(opt.value, 10) === parseInt(wanted, 10) &amp;&amp; !Number.isNaN(parseInt(wanted, 10))) {
+        setNativeValue(selectEl, opt.value);
+        return true;
+      }
+    }
+    return false;
+  };
+
+  // Locate the three birthdate &lt;select&gt;s by their option content.
+  const findBirthdateSelects = () =&gt; {
+    const out = { month: null, day: null, year: null };
+    for (const sel of document.querySelectorAll('select')) {
+      const texts = Array.from(sel.options).map(o =&gt; o.textContent.trim().toLowerCase());
+      const joined = texts.join(' ');
+      if (!out.month &amp;&amp; (joined.includes('january') || joined.includes('month'))) out.month = sel;
+      else if (!out.year &amp;&amp; texts.some(t =&gt; /^(19|20)\d\d$/.test(t))) out.year = sel;
+      else if (!out.day &amp;&amp; texts.some(t =&gt; /^\d{1,2}$/.test(t)) &amp;&amp; sel.options.length &lt;= 40) out.day = sel;
+    }
+    return out;
+  };
+
+  const setBirthdate = async (bd) =&gt; {
+    const sel = findBirthdateSelects();
+    if (!sel.month &amp;&amp; !sel.day &amp;&amp; !sel.year) {
+      console.warn('⚠️ Birthdate dropdowns not found. If your profile has no birthdate yet, add one manually once, then this tool can update it.');
+      stats.notFound++;
+      return false;
+    }
+    let anyField = false;
+    for (const part of ['month', 'day', 'year']) {
+      if (bd[part] == null || !sel[part]) continue;
+      if (setSelectByText(sel[part], bd[part])) {
+        console.log(`✅ Birth ${part} updated (${bd[part]})`);
+        anyField = true;
+      } else {
+        console.warn(`⚠️ Birth ${part} &quot;${bd[part]}&quot; not found in the dropdown.`);
+      }
+      await sleep(CONFIG.actionDelay);
+    }
+    if (anyField) stats.set++;
+    else stats.notFound++;
+    return anyField;
   };
 
   const run = async () =&gt; {
@@ -251,6 +374,7 @@
     if (CONFIG.bio !== null) updates.push(`Bio: &quot;${CONFIG.bio.substring(0, 40)}...&quot;`);
     if (CONFIG.location !== null) updates.push(`Location: &quot;${CONFIG.location}&quot;`);
     if (CONFIG.website !== null) updates.push(`Website: &quot;${CONFIG.website}&quot;`);
+    if (CONFIG.birthdate !== null) updates.push(`Birthdate: ${['month', 'day', 'year'].filter(k =&gt; CONFIG.birthdate[k] != null).map(k =&gt; `${k} ${CONFIG.birthdate[k]}`).join(', ')}`);
 
     if (updates.length === 0) {
       console.log('❌ Nothing to update! Set values in CONFIG.');
@@ -261,16 +385,30 @@
     updates.forEach(u =&gt; console.log(`   • ${u}`));
     console.log('');
 
-    // Open edit profile dialog
-    const editBtn = document.querySelector($editProfileBtn);
-    if (editBtn) {
-      console.log('📍 Opening profile editor...');
-      editBtn.click();
-      await sleep(2000);
-    } else {
-      // Try navigating to settings
-      if (!window.location.href.includes('/settings/profile')) {
+    if (CONFIG.dryRun) {
+      console.log('🔒 DRY RUN: no changes made. Set CONFIG.dryRun = false to execute.');
+      return;
+    }
+
+    // Open edit profile dialog (unless the form is already mounted)
+    const formPresent = () =&gt; findFirst($nameInput) || findFirst($bioTextarea);
+    if (!formPresent()) {
+      const editBtn = document.querySelector($editProfileBtn);
+      if (editBtn) {
+        console.log('📍 Opening profile editor...');
+        editBtn.click();
+        await sleep(2000);
+      } else if (!window.location.href.includes('/settings/profile')) {
+        // Try navigating to settings
         console.error('❌ Cannot find Edit Profile button. Navigate to your profile page or x.com/settings/profile');
+        return;
+      }
+      // The dialog / settings form may still be mounting on first paint.
+      for (let waited = 0; !formPresent() &amp;&amp; waited &lt; 6; waited++) {
+        await sleep(CONFIG.actionDelay);
+      }
+      if (!formPresent()) {
+        console.error('❌ Could not find the profile form. Make sure you are on x.com/settings/profile or that the Edit profile dialog opened.');
         return;
       }
     }
@@ -296,8 +434,16 @@
       if (ok) console.log(`✅ Website updated`);
     }
 
+    if (CONFIG.birthdate !== null) {
+      await setBirthdate(CONFIG.birthdate);
+    }
+
+    console.log(`\n📊 Fields updated: ${stats.set} | Not found: ${stats.notFound}`);
+
     // Save
-    if (CONFIG.autoSave) {
+    if (stats.set === 0) {
+      console.log('\n⚠️ No fields were actually changed (none of the requested fields were found). Nothing to save.');
+    } else if (CONFIG.autoSave) {
       await sleep(500);
       const saveBtn = document.querySelector($saveButton);
       if (saveBtn) {
@@ -327,17 +473,17 @@
 
     <aside class="sidebar-right">
       <div class="sidebar-card">
-        <h3>✏️ Account Management</h3>
-        <a href="/scripts/account-settings">⚙️ Account Settings</a>
-<a href="/scripts/backup-account">💾 Backup Account Data</a>
-<a href="/scripts/edit-profile">✏️ Browser console script to update X/Twitter profile fields</a>
-<a href="/scripts/delegate-access">🔑 Delegate Access</a>
-<a href="/scripts/download-account-data">📥 Download Account Data from X</a>
-<a href="/scripts/multi-account">👥 Multi-Account Manager</a>
-<a href="/scripts/profile-manager">👤 Profile Manager</a>
-<a href="/scripts/qr-code-sharing">📱 QR Code Profile Sharing</a>
-<a href="/scripts/subscribe-premium">⭐ Subscribe to X Premium</a>
-<a href="/scripts/update-banner">🖼️ Update Banner Image</a>
+        <h3>🪪 Profile and Settings</h3>
+        <a href="/scripts/account-misc">🪪 Account Utilities</a>
+<a href="/scripts/advanced-profile">🪪 Advanced Profile Tools</a>
+<a href="/scripts/advanced-settings">🪪 Advanced Settings and Privacy</a>
+<a href="/scripts/delegate-access">🪪 Delegate Access</a>
+<a href="/scripts/download-account-data">🪪 Download Account Data</a>
+<a href="/scripts/id-verification">🪪 ID Verification</a>
+<a href="/scripts/multi-account">🪪 Multi-Account Manager</a>
+<a href="/scripts/advanced-notifications">🪪 Notification Settings</a>
+<a href="/scripts/pin-tweet-manager">🪪 Pin Tweet Manager</a>
+<a href="/scripts/account-settings">🪪 Privacy and Safety Settings</a>
       </div>
       <div class="sidebar-card">
         <h3>🔗 Quick Links</h3>

@@ -3,23 +3,23 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Thread Composer &amp; Publisher — Free X/Twitter Script | XActions</title>
-  <meta name="description" content="Compose and publish Twitter/X threads from the browser console. Manages multi-tweet threads with character counting, auto-numbering, preview mode, draft…">
-  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, thread, composer, posting">
+  <title>Thread Composer — Free X/Twitter Script | XActions</title>
+  <meta name="description" content="Compose, preview and publish a multi-post thread with character counts, numbering, saved drafts and a dry run by default.">
+  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, thread, composer, post">
   <meta name="author" content="nich (@nichxbt)">
   <meta name="robots" content="index, follow">
 
   <meta property="og:type" content="article">
-  <meta property="og:title" content="Thread Composer &amp; Publisher — XActions">
-  <meta property="og:description" content="Compose and publish Twitter/X threads from the browser console. Manages multi-tweet threads with character counting, auto-numbering, preview mode, draft…">
+  <meta property="og:title" content="Thread Composer — XActions">
+  <meta property="og:description" content="Compose, preview and publish a multi-post thread with character counts, numbering, saved drafts and a dry run by default.">
   <meta property="og:url" content="https://xactions.app/scripts/thread-composer">
   <meta property="og:site_name" content="XActions">
   <meta property="og:image" content="https://xactions.app/og-run.png">
 
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@nichxbt">
-  <meta name="twitter:title" content="Thread Composer &amp; Publisher — XActions">
-  <meta name="twitter:description" content="Compose and publish Twitter/X threads from the browser console. Manages multi-tweet threads with character counting, auto-numbering, preview mode, draft…">
+  <meta name="twitter:title" content="Thread Composer — XActions">
+  <meta name="twitter:description" content="Compose, preview and publish a multi-post thread with character counts, numbering, saved drafts and a dry run by default.">
   <meta name="twitter:image" content="https://xactions.app/og-run.png">
 
   <link rel="canonical" href="https://xactions.app/scripts/thread-composer">
@@ -29,15 +29,15 @@
   {
     "@context": "https://schema.org",
     "@type": "TechArticle",
-    "headline": "Thread Composer & Publisher — Free X/Twitter Script | XActions",
-    "description": "Compose and publish Twitter/X threads from the browser console. Manages multi-tweet threads with character counting, auto-numbering, preview mode, draft…",
+    "headline": "Thread Composer — Free X/Twitter Script | XActions",
+    "description": "Compose, preview and publish a multi-post thread with character counts, numbering, saved drafts and a dry run by default.",
     "url": "https://xactions.app/scripts/thread-composer",
     "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
     "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
     "datePublished": "2026-03-30",
     "dateModified": "2026-03-30",
-    "articleSection": "Posting",
-    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, thread, composer, posting"
+    "articleSection": "Post",
+    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, thread, composer, post"
   }
   </script>
   <script type="application/ld+json">
@@ -47,8 +47,8 @@
     "itemListElement": [
       { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
       { "@type": "ListItem", "position": 2, "name": "Scripts", "item": "https://xactions.app/scripts" },
-      { "@type": "ListItem", "position": 3, "name": "Posting", "item": "https://xactions.app/scripts#posting" },
-      { "@type": "ListItem", "position": 4, "name": "Thread Composer & Publisher", "item": "https://xactions.app/scripts/thread-composer" }
+      { "@type": "ListItem", "position": 3, "name": "Post", "item": "https://xactions.app/scripts#post" },
+      { "@type": "ListItem", "position": 4, "name": "Thread Composer", "item": "https://xactions.app/scripts/thread-composer" }
     ]
   }
   </script>
@@ -116,30 +116,30 @@
 
     <main class="main-content" id="main-content">
       <header class="main-header">
-        <h1>🧵 Thread Composer &amp; Publisher</h1>
+        <h1>✍️ Thread Composer</h1>
         <div class="breadcrumb">
-          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#posting">Posting</a> › Thread Composer &amp; Publisher
+          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#post">Post</a> › Thread Composer
         </div>
       </header>
 
       <article class="article">
-        <span class="cat-badge">Posting</span>
-        <span class="source-badge">browser</span>
+        <span class="cat-badge">Post</span>
+        <span class="source-badge">browser/threadComposer.js</span>
 
         <div class="meta-row">
-          <span>v1.0.0</span>
-          <span>Updated: 2026-02-24</span>
-          <span>317 lines</span>
+          <span>v1.1.0</span>
+          <span>Updated: 2026-11-26</span>
+          <span>340 lines</span>
           <span>by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></span>
         </div>
 
-        <p>Compose and publish Twitter/X threads from the browser console. Manages multi-tweet threads with character counting, auto-numbering, preview mode, draft persistence (localStorage), and sequential posting with human-like delays.</p>
+        <p>Compose, preview and publish a multi-post thread with character counts, numbering, saved drafts and a dry run by default.</p>
 
         
 
         <h2>How to Use</h2>
         <ol class="usage-steps"><li>Open x.com in browser</li>
-<li>Paste in DevTools Console</li>
+<li>Paste browser/threadComposer.js in DevTools Console</li>
 <li>Use window.XActions commands:</li></ol>
         
 
@@ -163,7 +163,7 @@
     dryRun: true,             // Set false to actually post
     autoNumber: false,         // Add &quot;1/N&quot; numbering
     addThreadEmoji: true,      // Add 🧵 to first tweet if missing
-    delayBetween: [3000, 6000], // Delay between posting each tweet
+    delayBetween: [3000, 6000], // Delay (ms range) after adding each tweet to the composer
     maxChars: 280,
   };</code></pre>
         </div>
@@ -181,21 +181,22 @@
  * ============================================================
  *
  * @name        threadComposer.js
- * @description Compose and publish Twitter/X threads from the
- *              browser console. Manages multi-tweet threads with
- *              character counting, auto-numbering, preview mode,
- *              draft persistence (localStorage), and sequential
- *              posting with human-like delays.
+ * @title       Thread Composer
+ * @description Compose, preview and publish a multi-post thread with character counts, numbering, saved drafts and a dry run by default.
+ * @category    post
+ * @page        x.com/*
+ * @writes      true
+ * @aliases     scripts/threadComposer.js
  * @author      nichxbt (https://x.com/nichxbt)
- * @version     1.0.0
- * @date        2026-02-24
+ * @version     1.1.0
+ * @date        2026-11-26
  * @repository  https://github.com/nirholas/XActions
  *
  * ============================================================
  * 📋 USAGE:
  *
  * 1. Open x.com in browser
- * 2. Paste in DevTools Console
+ * 2. Paste browser/threadComposer.js in DevTools Console
  * 3. Use window.XActions commands:
  *
  *   XActions.thread([
@@ -203,6 +204,8 @@
  *     &quot;Second tweet with more context...&quot;,
  *     &quot;Third tweet — the conclusion!&quot;,
  *   ])
+ *
+ *   XActions.thread(&quot;One more tweet&quot;) // Append a single tweet
  *
  *   XActions.preview()        // See the thread with char counts
  *   XActions.publish()        // Post the thread (dryRun by default)
@@ -219,7 +222,7 @@
     dryRun: true,             // Set false to actually post
     autoNumber: false,         // Add &quot;1/N&quot; numbering
     addThreadEmoji: true,      // Add 🧵 to first tweet if missing
-    delayBetween: [3000, 6000], // Delay between posting each tweet
+    delayBetween: [3000, 6000], // Delay (ms range) after adding each tweet to the composer
     maxChars: 280,
   };
 
@@ -237,35 +240,53 @@
   const $ = (sel, ctx = document) =&gt; ctx.querySelector(sel);
 
   let currentThread = [];
+  let rawThread = [];
   let aborted = false;
+
+  // Apply numbering and the thread emoji to the raw tweets. A leading
+  // &quot;N/M&quot; block this tool added earlier is replaced so appending a tweet
+  // renumbers the whole thread.
+  const formatThread = (tweets) =&gt; tweets.map((t, i) =&gt; {
+    let text = t.trim();
+
+    // Auto-numbering
+    if (CONFIG.autoNumber) {
+      const num = `${i + 1}/${tweets.length}`;
+      text = text.replace(/^\d+\/\d+\n\n/, '');
+      if (!text.startsWith(num)) {
+        text = `${num}\n\n${text}`;
+      }
+    }
+
+    // Thread emoji on first tweet
+    if (i === 0 &amp;&amp; CONFIG.addThreadEmoji &amp;&amp; !text.includes('🧵')) {
+      text = text + ' 🧵';
+    }
+
+    return text;
+  });
 
   // ── Thread management ──────────────────────────────────────
   window.XActions = window.XActions || {};
 
   window.XActions.thread = (tweets) =&gt; {
-    if (!Array.isArray(tweets) || tweets.length === 0) {
-      console.log('❌ Usage: XActions.thread([&quot;tweet1&quot;, &quot;tweet2&quot;, ...])');
+    if (typeof tweets === 'string' &amp;&amp; tweets.trim()) {
+      // Append one tweet to the thread being built
+      rawThread = [...rawThread, tweets.trim()];
+      currentThread = formatThread(rawThread);
+      const added = currentThread[currentThread.length - 1];
+      console.log(`➕ Tweet ${currentThread.length} added (${added.length}/${CONFIG.maxChars} chars)`);
+      window.XActions.preview();
       return;
     }
 
-    currentThread = tweets.map((t, i) =&gt; {
-      let text = t.trim();
+    if (!Array.isArray(tweets) || tweets.length === 0) {
+      console.log('❌ Usage: XActions.thread([&quot;tweet1&quot;, &quot;tweet2&quot;, ...]) or XActions.thread(&quot;tweet text&quot;)');
+      return;
+    }
 
-      // Auto-numbering
-      if (CONFIG.autoNumber) {
-        const num = `${i + 1}/${tweets.length}`;
-        if (!text.startsWith(num)) {
-          text = `${num}\n\n${text}`;
-        }
-      }
-
-      // Thread emoji on first tweet
-      if (i === 0 &amp;&amp; CONFIG.addThreadEmoji &amp;&amp; !text.includes('🧵')) {
-        text = text + ' 🧵';
-      }
-
-      return text;
-    });
+    rawThread = tweets.map(t =&gt; t.trim());
+    currentThread = formatThread(rawThread);
 
     console.log(`✅ Thread loaded: ${currentThread.length} tweets.`);
     window.XActions.preview();
@@ -367,7 +388,7 @@
         const addBtn = $(SEL.addTweet);
         if (addBtn) {
           addBtn.click();
-          await sleep(1500);
+          await sleep(gaussian(CONFIG.delayBetween[0], CONFIG.delayBetween[1]));
         } else {
           console.error('  ❌ &quot;Add tweet&quot; button not found. Cannot continue thread.');
           break;
@@ -419,6 +440,7 @@
     try {
       const draft = JSON.parse(raw);
       currentThread = draft.tweets;
+      rawThread = draft.tweets;
       console.log(`📂 Loaded draft &quot;${name}&quot; (${currentThread.length} tweets, saved ${draft.savedAt}).`);
       window.XActions.preview();
     } catch {
@@ -480,6 +502,7 @@
   console.log('╚' + '═'.repeat(W) + '╝');
   console.log('\n📋 Commands:');
   console.log('  XActions.thread([&quot;tweet1&quot;, &quot;tweet2&quot;, ...])');
+  console.log('  XActions.thread(&quot;tweet text&quot;)  (append one tweet)');
   console.log('  XActions.preview()');
   console.log('  XActions.publish()');
   console.log('  XActions.saveDraft(&quot;name&quot;)');
@@ -504,17 +527,17 @@
 
     <aside class="sidebar-right">
       <div class="sidebar-card">
-        <h3>🧵 Posting</h3>
-        <a href="/scripts/post-advanced">✏️ Advanced post features</a>
-<a href="/scripts/article-publisher">📰 Article Publisher</a>
-<a href="/scripts/poll-creator">📊 Browser console script to create polls</a>
-<a href="/scripts/content-calendar">📅 Content Calendar &amp; Tweet Scheduler</a>
-<a href="/scripts/create-poll">📊 Create Poll</a>
-<a href="/scripts/edit-post">✏️ Edit Post &amp; Undo Post</a>
-<a href="/scripts/pin-tweet">📌 Pin Tweet</a>
-<a href="/scripts/pin-tweet-manager">📌 Pin Tweet Manager</a>
-<a href="/scripts/post-composer">✏️ Post Composer</a>
-<a href="/scripts/post-thread">🧵 Post Thread</a>
+        <h3>✍️ Post</h3>
+        <a href="/scripts/post-advanced">✍️ Advanced Posting</a>
+<a href="/scripts/article-publisher">✍️ Article Publisher</a>
+<a href="/scripts/content-repurposer">✍️ Content Repurposer</a>
+<a href="/scripts/create-poll">✍️ Create Poll</a>
+<a href="/scripts/edit-post">✍️ Edit Post</a>
+<a href="/scripts/media-studio">✍️ Media Studio</a>
+<a href="/scripts/mention-users">✍️ Mention Users</a>
+<a href="/scripts/post-composer">✍️ Post Composer</a>
+<a href="/scripts/post-thread">✍️ Post Thread</a>
+<a href="/scripts/quote-tweet">✍️ Quote Post</a>
       </div>
       <div class="sidebar-card">
         <h3>🔗 Quick Links</h3>

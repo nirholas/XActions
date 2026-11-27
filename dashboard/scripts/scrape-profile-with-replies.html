@@ -3,23 +3,23 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>X/Twitter Profile — Free X/Twitter Script | XActions</title>
-  <meta name="description" content="Scrapes a user's posts (including their replies) from the /with_replies tab, then navigates into each post to collect all reply comments from other users.">
-  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, scrape, profile, with, replies, scrapers">
+  <title>Scrape Profile With Replies — Free X/Twitter Script | XActions</title>
+  <meta name="description" content="Scrape a profile's posts from the With replies tab, then open each post and collect the replies other users left, with JSON, CSV, Markdown, text and HTML…">
+  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, scrape, profile, with, replies, scrape and export">
   <meta name="author" content="nich (@nichxbt)">
   <meta name="robots" content="index, follow">
 
   <meta property="og:type" content="article">
-  <meta property="og:title" content="X/Twitter Profile — XActions">
-  <meta property="og:description" content="Scrapes a user's posts (including their replies) from the /with_replies tab, then navigates into each post to collect all reply comments from other users.">
+  <meta property="og:title" content="Scrape Profile With Replies — XActions">
+  <meta property="og:description" content="Scrape a profile's posts from the With replies tab, then open each post and collect the replies other users left, with JSON, CSV, Markdown, text and HTML…">
   <meta property="og:url" content="https://xactions.app/scripts/scrape-profile-with-replies">
   <meta property="og:site_name" content="XActions">
   <meta property="og:image" content="https://xactions.app/og-run.png">
 
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@nichxbt">
-  <meta name="twitter:title" content="X/Twitter Profile — XActions">
-  <meta name="twitter:description" content="Scrapes a user's posts (including their replies) from the /with_replies tab, then navigates into each post to collect all reply comments from other users.">
+  <meta name="twitter:title" content="Scrape Profile With Replies — XActions">
+  <meta name="twitter:description" content="Scrape a profile's posts from the With replies tab, then open each post and collect the replies other users left, with JSON, CSV, Markdown, text and HTML…">
   <meta name="twitter:image" content="https://xactions.app/og-run.png">
 
   <link rel="canonical" href="https://xactions.app/scripts/scrape-profile-with-replies">
@@ -29,15 +29,15 @@
   {
     "@context": "https://schema.org",
     "@type": "TechArticle",
-    "headline": "X/Twitter Profile — Free X/Twitter Script | XActions",
-    "description": "Scrapes a user's posts (including their replies) from the /with_replies tab, then navigates into each post to collect all reply comments from other users.",
+    "headline": "Scrape Profile With Replies — Free X/Twitter Script | XActions",
+    "description": "Scrape a profile's posts from the With replies tab, then open each post and collect the replies other users left, with JSON, CSV, Markdown, text and HTML…",
     "url": "https://xactions.app/scripts/scrape-profile-with-replies",
     "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
     "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
     "datePublished": "2026-03-30",
     "dateModified": "2026-03-30",
-    "articleSection": "Scrapers",
-    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, scrape, profile, with, replies, scrapers"
+    "articleSection": "Scrape and Export",
+    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, scrape, profile, with, replies, scrape and export"
   }
   </script>
   <script type="application/ld+json">
@@ -47,8 +47,8 @@
     "itemListElement": [
       { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
       { "@type": "ListItem", "position": 2, "name": "Scripts", "item": "https://xactions.app/scripts" },
-      { "@type": "ListItem", "position": 3, "name": "Scrapers", "item": "https://xactions.app/scripts#scrapers" },
-      { "@type": "ListItem", "position": 4, "name": "X/Twitter Profile", "item": "https://xactions.app/scripts/scrape-profile-with-replies" }
+      { "@type": "ListItem", "position": 3, "name": "Scrape and Export", "item": "https://xactions.app/scripts#scrape-and-export" },
+      { "@type": "ListItem", "position": 4, "name": "Scrape Profile With Replies", "item": "https://xactions.app/scripts/scrape-profile-with-replies" }
     ]
   }
   </script>
@@ -116,24 +116,24 @@
 
     <main class="main-content" id="main-content">
       <header class="main-header">
-        <h1>👤 X/Twitter Profile</h1>
+        <h1>📥 Scrape Profile With Replies</h1>
         <div class="breadcrumb">
-          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#scrapers">Scrapers</a> › X/Twitter Profile
+          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#scrape-and-export">Scrape and Export</a> › Scrape Profile With Replies
         </div>
       </header>
 
       <article class="article">
-        <span class="cat-badge">Scrapers</span>
-        <span class="source-badge">scripts</span>
+        <span class="cat-badge">Scrape and Export</span>
+        <span class="source-badge">browser/scrapeProfileWithReplies.js</span>
 
         <div class="meta-row">
-          
-          
-          <span>1321 lines</span>
+          <span>v1.1.0</span>
+          <span>Updated: 2026-11-27</span>
+          <span>1356 lines</span>
           <span>by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></span>
         </div>
 
-        <p>Scrapes a user's posts (including their replies) from the /with_replies tab, then navigates into each post to collect all reply comments from other users.</p>
+        <p>Scrape a profile's posts from the With replies tab, then open each post and collect the replies other users left, with JSON, CSV, Markdown, text and HTML export.</p>
 
         
 
@@ -148,119 +148,7 @@
 
         
         
-        <section class="config-code">
-        <h2>Default Configuration</h2>
-        <div class="code-block">
-          <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.querySelector('code').textContent).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy',2000)})">Copy</button>
-          <pre><code>const CONFIG = {
-
-  // ==========================================
-  // 📊 SCRAPING SETTINGS
-  // ==========================================
-
-  // Maximum number of the user's posts to collect from the profile feed.
-  // Set to Infinity to scrape everything until the feed ends.
-  targetPostCount: 50,
-
-  // Maximum replies to collect PER POST when drilling into a thread.
-  // Set higher for thorough sentiment analysis; lower for speed.
-  maxRepliesPerPost: 50,
-
-  // Maximum scroll attempts on the profile feed before giving up.
-  maxFeedScrollAttempts: 200,
-
-  // Maximum scroll attempts inside a single post's thread.
-  maxThreadScrollAttempts: 30,
-
-  // Delay between scrolls (ms). Increase if content doesn't load.
-  scrollDelay: 2000,
-
-  // Delay after navigating into/out of a post (ms). Lets the page settle.
-  navigationDelay: 3000,
-
-  // ==========================================
-  // 🎯 POST RANGE FILTER
-  // ==========================================
-  // Limit scraping to a range of posts by ID or URL.
-  // Leave null to scrape from the top of the feed.
-
-  range: {
-    // Start collecting posts AFTER this post (exclusive).
-    // Accepts a post ID (e.g. '1234567890') or full URL.
-    // null = start from the very first post in the feed.
-    startPostId: null,
-
-    // Stop collecting posts AFTER this post (inclusive).
-    // Accepts a post ID or full URL.
-    // null = scrape until targetPostCount or feed end.
-    endPostId: null,
-  },
-
-  // ==========================================
-  // 🔍 CONTENT FILTERS
-  // ==========================================
-
-  filters: {
-    // Only include posts containing at least one of these words.
-    // Empty array = include all.
-    whitelist: [],
-
-    // Exclude posts containing any of these words.
-    blacklist: [],
-
-    // Only posts from the last N days. 0 = no date limit.
-    daysBack: 0,
-
-    // Minimum engagement thresholds. 0 = no minimum.
-    minLikes: 0,
-    minRetweets: 0,
-
-    // true = skip retweets from the feed
-    excludeRetweets: false,
-  },
-
-  // ==========================================
-  // 📤 EXPORT SETTINGS
-  // ==========================================
-
-  export: {
-    json: true,
-    csv: true,
-    markdown: false,
-    text: false,
-    html: false,
-  },
-
-  // ==========================================
-  // 🖥️ CONTROL PANEL
-  // ==========================================
-
-  panel: {
-    // Show the floating control panel
-    enabled: true,
-
-    // Panel start position from top-right corner
-    top: 20,
-    right: 20,
-  },
-
-  // ==========================================
-  // 🔧 GENERAL
-  // ==========================================
-
-  // Copy primary export (JSON) to clipboard on completion
-  copyToClipboard: true,
-
-  // Show verbose progress in console
-  verbose: true,
-
-  // Also scrape replies for the user's own reply-tweets
-  // (when the user replied to someone else's post).
-  // If false, only scrapes replies on the user's original posts.
-  scrapeRepliesOnUserReplies: true,
-};</code></pre>
-        </div>
-      </section>
+        
 
         <section class="full-code">
           <h2>Full Script</h2>
@@ -281,6 +169,17 @@
  *
  * by nichxbt — https://github.com/nirholas/XActions
  *
+ * @name        scrapeProfileWithReplies.js
+ * @title       Scrape Profile With Replies
+ * @description Scrape a profile's posts from the With replies tab, then open each post and collect the replies other users left, with JSON, CSV, Markdown, text and HTML export.
+ * @category    scrape
+ * @page        x.com/&lt;username&gt;/with_replies or x.com/&lt;username&gt;
+ * @writes      false
+ * @aliases     scripts/scrape-profile-with-replies.js, scripts/twitter/scrape-profile-with-replies.js
+ * @author      nichxbt (https://x.com/nichxbt)
+ * @version     1.1.0
+ * @date        2026-11-27
+ *
  * ============================================================
  * 📖 HOW TO USE:
  * ============================================================
@@ -297,7 +196,8 @@
  *    allow pasting
  *    and press Enter
  *
- * 5. Copy this ENTIRE script and paste it into the console
+ * 5. Copy the ENTIRE browser/scrapeProfileWithReplies.js and paste it
+ *    into the console
  *
  * 6. Press Enter to run
  *
@@ -315,7 +215,9 @@
  * ============================================================
  */
 
-const CONFIG = {
+// `var` (not `const`): a repeated top-level `const` paste in the same
+// DevTools tab throws &quot;already been declared&quot; instead of re-running.
+var CONFIG = {
 
   // ==========================================
   // 📊 SCRAPING SETTINGS
@@ -455,6 +357,24 @@ const CONFIG = {
 
   function sleep(ms) {
     return new Promise(resolve =&gt; setTimeout(resolve, ms));
+  }
+
+  // Navigate within the SPA via history.pushState + a synthetic popstate.
+  // Assigning window.location.href triggers a full page reload, which wipes
+  // this console script's entire state (posts collected so far, panel, etc.)
+  // mid-run. Only fall back to a real navigation if the SPA route never
+  // takes (e.g. React hasn't mounted its popstate listener yet).
+  function spaNavigate(url) {
+    try {
+      const target = new URL(url, window.location.href);
+      if (target.origin === window.location.origin) {
+        window.history.pushState({}, '', target.href);
+        window.dispatchEvent(new PopStateEvent('popstate', { state: {} }));
+        return true;
+      }
+    } catch (e) { /* fall through to hard navigation */ }
+    window.location.href = url;
+    return false;
   }
 
   /** Wait while paused, checking every 200ms. */
@@ -930,7 +850,7 @@ const CONFIG = {
   // ─── Export helpers ─────────────────────────────────────
 
   function buildResult() {
-    const profileMatch = state.originalUrl.match(/x\.com\/([^\/]+)/);
+    const profileMatch = state.originalUrl.match(/x\.com\/([^/]+)/);
     const profileName = profileMatch ? profileMatch[1] : 'unknown';
 
     const totalReplyCount = state.posts.reduce((sum, p) =&gt; sum + (p.replies_scraped?.length || 0), 0);
@@ -1100,7 +1020,7 @@ const CONFIG = {
 &lt;/div&gt;
 `;
 
-    result.posts.forEach((p, i) =&gt; {
+    result.posts.forEach(p =&gt; {
       html += `&lt;div class=&quot;post&quot;&gt;
   &lt;div class=&quot;post-header&quot;&gt;
     &lt;span class=&quot;handle&quot;&gt;@${esc(p.author?.handle)}&lt;/span&gt;
@@ -1129,8 +1049,6 @@ const CONFIG = {
 
   function exportAllFormats() {
     const result = buildResult();
-    const dateStr = new Date().toISOString().split('T')[0];
-    const profileName = result.profile;
 
     console.log('');
     console.log('╔════════════════════════════════════════════════════════════╗');
@@ -1203,7 +1121,6 @@ const CONFIG = {
     panelLog('Phase 1: Collecting posts from feed');
 
     let noNewCount = 0;
-    let prevCount = 0;
 
     while (
       state.posts.length &lt; CONFIG.targetPostCount &amp;&amp;
@@ -1266,8 +1183,6 @@ const CONFIG = {
         }
       }
 
-      prevCount = state.posts.length;
-
       // Scroll
       window.scrollTo(0, document.body.scrollHeight);
       await sleep(CONFIG.scrollDelay);
@@ -1302,8 +1217,11 @@ const CONFIG = {
     if (targetLink) {
       targetLink.click();
     } else {
-      // Fallback: direct navigation
-      window.location.href = postUrl;
+      // Fallback: the post's own article scrolled out of view / was
+      // virtualized away, so there's no link to click. Use SPA navigation
+      // (not a hard window.location.href reload, which would kill this
+      // entire running scraper and lose all progress collected so far).
+      spaNavigate(postUrl);
     }
 
     await sleep(CONFIG.navigationDelay);
@@ -1409,8 +1327,11 @@ const CONFIG = {
         // Check we landed on the right page
         const onTweet = window.location.href.includes('/status/');
         if (!onTweet) {
-          panelLog(`⚠ Navigation failed for post ${i + 1}, retrying direct…`, 'warn');
-          window.location.href = post.url;
+          panelLog(`⚠ Navigation failed for post ${i + 1}, retrying…`, 'warn');
+          // SPA navigation, not window.location.href: a hard reload here
+          // would destroy this running script and lose every post/reply
+          // collected so far.
+          spaNavigate(post.url);
           await sleep(CONFIG.navigationDelay + 1000);
         }
 
@@ -1439,10 +1360,12 @@ const CONFIG = {
         panelLog(`⚠ Error on post ${i + 1}: ${err.message}`, 'err');
         state.errors.push({ postId: post.id, error: err.message });
 
-        // Try to get back to the profile
+        // Try to get back to the profile. SPA navigation, not a hard
+        // reload: this runs mid-loop, so destroying the script here would
+        // silently abandon every remaining post.
         try {
           if (!window.location.href.includes(state.originalUrl.split('x.com/')[1]?.split('/')[0])) {
-            window.location.href = state.originalUrl;
+            spaNavigate(state.originalUrl);
             await sleep(CONFIG.navigationDelay);
           }
         } catch (_) {
@@ -1468,7 +1391,7 @@ const CONFIG = {
     return;
   }
 
-  const profileMatch = window.location.pathname.match(/^\/([^\/]+)/);
+  const profileMatch = window.location.pathname.match(/^\/([^/]+)/);
   const profileName = profileMatch ? profileMatch[1] : 'unknown';
 
   console.log(`🎯 Profile: @${profileName}`);
@@ -1601,17 +1524,17 @@ const CONFIG = {
 
     <aside class="sidebar-right">
       <div class="sidebar-card">
-        <h3>👤 Scrapers</h3>
-        <a href="/scripts/scrape-bookmarks">🔖 Bookmarks Scraper</a>
-<a href="/scripts/scrape-analytics">📊 Browser console script to scrape X/Twitter analytics data</a>
-<a href="/scripts/scrape-dms">✉️ DM Scraper</a>
-<a href="/scripts/export-to-csv">📄 Export to CSV Utility</a>
-<a href="/scripts/scrape-followers">👥 Followers Scraper</a>
-<a href="/scripts/scrape-following">👥 Following Scraper</a>
-<a href="/scripts/scrape-hashtag">#️⃣ Hashtag Scraper</a>
-<a href="/scripts/scrape-likers">❤️ Likers Scraper</a>
-<a href="/scripts/scrape-likes">❤️ Likes Scraper</a>
-<a href="/scripts/link-scraper">🔗 Link Scraper</a>
+        <h3>📥 Scrape and Export</h3>
+        <a href="/scripts/backup-account">📥 Backup Account</a>
+<a href="/scripts/bookmark-exporter">📥 Bookmark Exporter</a>
+<a href="/scripts/bookmark-organizer">📥 Bookmark Organizer</a>
+<a href="/scripts/export-to-csv">📥 Export to CSV</a>
+<a href="/scripts/link-scraper">📥 Link Scraper</a>
+<a href="/scripts/manage-bookmarks">📥 Manage Bookmarks</a>
+<a href="/scripts/scrape-cashtag-search">📥 Scrape Cashtag Search</a>
+<a href="/scripts/scrape-explore">📥 Scrape Explore</a>
+<a href="/scripts/scrape-followers">📥 Scrape Followers</a>
+<a href="/scripts/scrape-following">📥 Scrape Following</a>
       </div>
       <div class="sidebar-card">
         <h3>🔗 Quick Links</h3>

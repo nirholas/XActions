@@ -4,14 +4,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Natural Flow — Free X/Twitter Script | XActions</title>
-  <meta name="description" content="Simulate a natural browsing session: scroll, like, reply, retweet, follow, and check notifications on a human rhythm">
-  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, natural, flow, growth">
+  <meta name="description" content="Simulate a natural browsing session: scroll, like, reply, repost, follow and check notifications at a human pace.">
+  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, natural, flow, grow">
   <meta name="author" content="nich (@nichxbt)">
   <meta name="robots" content="index, follow">
 
   <meta property="og:type" content="article">
   <meta property="og:title" content="Natural Flow — XActions">
-  <meta property="og:description" content="Simulate a natural browsing session: scroll, like, reply, retweet, follow, and check notifications on a human rhythm">
+  <meta property="og:description" content="Simulate a natural browsing session: scroll, like, reply, repost, follow and check notifications at a human pace.">
   <meta property="og:url" content="https://xactions.app/scripts/natural-flow">
   <meta property="og:site_name" content="XActions">
   <meta property="og:image" content="https://xactions.app/og-run.png">
@@ -19,7 +19,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@nichxbt">
   <meta name="twitter:title" content="Natural Flow — XActions">
-  <meta name="twitter:description" content="Simulate a natural browsing session: scroll, like, reply, retweet, follow, and check notifications on a human rhythm">
+  <meta name="twitter:description" content="Simulate a natural browsing session: scroll, like, reply, repost, follow and check notifications at a human pace.">
   <meta name="twitter:image" content="https://xactions.app/og-run.png">
 
   <link rel="canonical" href="https://xactions.app/scripts/natural-flow">
@@ -30,14 +30,14 @@
     "@context": "https://schema.org",
     "@type": "TechArticle",
     "headline": "Natural Flow — Free X/Twitter Script | XActions",
-    "description": "Simulate a natural browsing session: scroll, like, reply, retweet, follow, and check notifications on a human rhythm",
+    "description": "Simulate a natural browsing session: scroll, like, reply, repost, follow and check notifications at a human pace.",
     "url": "https://xactions.app/scripts/natural-flow",
     "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
     "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
     "datePublished": "2026-03-30",
     "dateModified": "2026-03-30",
-    "articleSection": "Growth",
-    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, natural, flow, growth"
+    "articleSection": "Grow",
+    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, natural, flow, grow"
   }
   </script>
   <script type="application/ld+json">
@@ -47,7 +47,7 @@
     "itemListElement": [
       { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
       { "@type": "ListItem", "position": 2, "name": "Scripts", "item": "https://xactions.app/scripts" },
-      { "@type": "ListItem", "position": 3, "name": "Growth", "item": "https://xactions.app/scripts#growth" },
+      { "@type": "ListItem", "position": 3, "name": "Grow", "item": "https://xactions.app/scripts#grow" },
       { "@type": "ListItem", "position": 4, "name": "Natural Flow", "item": "https://xactions.app/scripts/natural-flow" }
     ]
   }
@@ -116,24 +116,24 @@
 
     <main class="main-content" id="main-content">
       <header class="main-header">
-        <h1>🌊 Natural Flow</h1>
+        <h1>🌱 Natural Flow</h1>
         <div class="breadcrumb">
-          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#growth">Growth</a> › Natural Flow
+          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#grow">Grow</a> › Natural Flow
         </div>
       </header>
 
       <article class="article">
-        <span class="cat-badge">Growth</span>
-        <span class="source-badge">scripts</span>
+        <span class="cat-badge">Grow</span>
+        <span class="source-badge">browser/naturalFlow.js</span>
 
         <div class="meta-row">
           
           
-          <span>902 lines</span>
+          <span>910 lines</span>
           <span>by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></span>
         </div>
 
-        <p>Simulate a natural browsing session: scroll, like, reply, retweet, follow, and check notifications on a human rhythm</p>
+        <p>Simulate a natural browsing session: scroll, like, reply, repost, follow and check notifications at a human pace.</p>
 
         
 
@@ -156,7 +156,15 @@
           <div class="code-block">
             <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.querySelector('code').textContent).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy Script',2000)})">Copy Script</button>
             <pre><code>// Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
-// scripts/naturalFlow.js
+/**
+ * @name        naturalFlow.js
+ * @title       Natural Flow
+ * @description Simulate a natural browsing session: scroll, like, reply, repost, follow and check notifications at a human pace.
+ * @category    grow
+ * @page        x.com/home
+ * @writes      true
+ * @aliases     scripts/naturalFlow.js
+ */
 // Simulate a natural browsing session: scroll, like, reply, retweet, follow, and check notifications on a human rhythm
 // Paste in DevTools console on x.com/home
 // by nichxbt
@@ -901,7 +909,7 @@
         a.click();
         a.remove();
         console.log('📥 Session log exported.\n');
-      } catch {}
+      } catch { /* the export is optional; the summary is already printed */ }
     }
 
     removeHUD();
@@ -1070,17 +1078,17 @@
 
     <aside class="sidebar-right">
       <div class="sidebar-card">
-        <h3>🌊 Growth</h3>
-        <a href="/scripts/algorithm-builder">🧠 Algorithm Builder</a>
-<a href="/scripts/algorithm-trainer">🧠 Algorithm Trainer</a>
-<a href="/scripts/follow-list">📋 Follow &amp; Manage Lists</a>
-<a href="/scripts/follow-account">➕ Follow Accounts</a>
-<a href="/scripts/follow-back">🔗 Follow Back</a>
-<a href="/scripts/follow-target-users">🎯 Follow Followers/Following of Target Users</a>
-<a href="/scripts/follow-engagers">🎯 Follow Likers &amp; Commenters</a>
-<a href="/scripts/growth-suite">🚀 Growth Automation Suite</a>
-<a href="/scripts/keyword-follow">🔑 Keyword Search &amp; Follow</a>
-<a href="/scripts/persona-engine">🎭 Persona Engine</a>
+        <h3>🌱 Grow</h3>
+        <a href="/scripts/algorithm-builder">🌱 Algorithm Builder</a>
+<a href="/scripts/algorithm-trainer">🌱 Algorithm Trainer</a>
+<a href="/scripts/auto-plug-replies">🌱 Auto-Plug Replies</a>
+<a href="/scripts/follow-account">🌱 Follow Accounts</a>
+<a href="/scripts/follow-back">🌱 Follow Back</a>
+<a href="/scripts/follow-engagers">🌱 Follow Engagers</a>
+<a href="/scripts/follow-target-users">🌱 Follow Target Users</a>
+<a href="/scripts/follower-tools">🌱 Follower Tools</a>
+<a href="/scripts/growth-suite">🌱 Growth Suite</a>
+<a href="/scripts/keyword-follow">🌱 Keyword Follow</a>
       </div>
       <div class="sidebar-card">
         <h3>🔗 Quick Links</h3>

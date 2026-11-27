@@ -5,7 +5,13 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://xactions.app/scripts/account-settings</loc>
+    <loc>https://xactions.app/scripts/account-misc</loc>
+    <lastmod>2026-03-30</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://xactions.app/scripts/actions</loc>
     <lastmod>2026-03-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
@@ -14,7 +20,7 @@
     <loc>https://xactions.app/scripts/ad-campaign-manager</loc>
     <lastmod>2026-03-30</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://xactions.app/scripts/add-to-list</loc>
@@ -23,19 +29,19 @@
     <priority>0.7</priority>
   </url>
   <url>
+    <loc>https://xactions.app/scripts/ads-manager</loc>
+    <lastmod>2026-03-30</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://xactions.app/scripts/advanced-creator</loc>
     <lastmod>2026-03-30</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://xactions.app/scripts/advanced-dm</loc>
-    <lastmod>2026-03-30</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://xactions.app/scripts/follower-tools</loc>
     <lastmod>2026-03-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
@@ -44,19 +50,13 @@
     <loc>https://xactions.app/scripts/advanced-grok</loc>
     <lastmod>2026-03-30</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://xactions.app/scripts/advanced-lists</loc>
     <lastmod>2026-03-30</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://xactions.app/scripts/advanced-notifications</loc>
-    <lastmod>2026-03-30</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://xactions.app/scripts/post-advanced</loc>
@@ -68,43 +68,43 @@
     <loc>https://xactions.app/scripts/advanced-premium</loc>
     <lastmod>2026-03-30</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://xactions.app/scripts/advanced-profile</loc>
     <lastmod>2026-03-30</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://xactions.app/scripts/advanced-settings</loc>
     <lastmod>2026-03-30</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://xactions.app/scripts/advanced-spaces</loc>
     <lastmod>2026-03-30</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://xactions.app/scripts/algorithm-builder</loc>
     <lastmod>2026-03-30</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://xactions.app/scripts/algorithm-trainer</loc>
     <lastmod>2026-03-30</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://xactions.app/scripts/article-publisher</loc>
     <lastmod>2026-03-30</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://xactions.app/scripts/audience-demographics</loc>
@@ -131,13 +131,19 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://xactions.app/scripts/auto-reply-dms</loc>
+    <loc>https://xactions.app/scripts/auto-engage</loc>
     <lastmod>2026-03-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://xactions.app/scripts/auto-reply-mentions</loc>
+    <loc>https://xactions.app/scripts/auto-liker</loc>
+    <lastmod>2026-03-30</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://xactions.app/scripts/auto-reply</loc>
     <lastmod>2026-03-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
@@ -155,7 +161,25 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://xactions.app/scripts/auto-reply</loc>
+    <loc>https://xactions.app/scripts/auto-reply-dms</loc>
+    <lastmod>2026-03-30</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://xactions.app/scripts/auto-reply-mentions</loc>
+    <lastmod>2026-03-30</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://xactions.app/scripts/control-panel</loc>
+    <lastmod>2026-03-30</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://xactions.app/scripts/core</loc>
     <lastmod>2026-03-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
@@ -176,7 +200,7 @@
     <loc>https://xactions.app/scripts/blacklist</loc>
     <lastmod>2026-03-30</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://xactions.app/scripts/block-bots</loc>
@@ -188,22 +212,22 @@
     <loc>https://xactions.app/scripts/block-by-keywords</loc>
     <lastmod>2026-03-30</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://xactions.app/scripts/block-by-ratio</loc>
     <lastmod>2026-03-30</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://xactions.app/scripts/block-list-manager</loc>
-    <lastmod>2026-03-30</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://xactions.app/scripts/block-list-transfer</loc>
+    <lastmod>2026-03-30</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://xactions.app/scripts/block-list-manager</loc>
     <lastmod>2026-03-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
@@ -215,64 +239,10 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://xactions.app/scripts/bookmark-manager</loc>
-    <lastmod>2026-03-30</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
     <loc>https://xactions.app/scripts/bookmark-organizer</loc>
     <lastmod>2026-03-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://xactions.app/scripts/scrape-bookmarks</loc>
-    <lastmod>2026-03-30</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://xactions.app/scripts/auto-engage</loc>
-    <lastmod>2026-03-30</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://xactions.app/scripts/grok-integration</loc>
-    <lastmod>2026-03-30</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://xactions.app/scripts/poll-creator</loc>
-    <lastmod>2026-03-30</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://xactions.app/scripts/dm-exporter</loc>
-    <lastmod>2026-03-30</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://xactions.app/scripts/manage-lists</loc>
-    <lastmod>2026-03-30</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://xactions.app/scripts/scrape-analytics</loc>
-    <lastmod>2026-03-30</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://xactions.app/scripts/edit-profile</loc>
-    <lastmod>2026-03-30</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
   </url>
   <url>
     <loc>https://xactions.app/scripts/bulk-delete-tweets</loc>
@@ -287,70 +257,52 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://xactions.app/scripts/ads-manager</loc>
-    <lastmod>2026-03-30</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
     <loc>https://xactions.app/scripts/business-analytics</loc>
     <lastmod>2026-03-30</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://xactions.app/scripts/business-tools</loc>
     <lastmod>2026-03-30</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://xactions.app/scripts/clear-all-bookmarks</loc>
     <lastmod>2026-03-30</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://xactions.app/scripts/clear-all-likes</loc>
-    <lastmod>2026-03-30</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://xactions.app/scripts/clear-all-reposts</loc>
     <lastmod>2026-03-30</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://xactions.app/scripts/clear-all-retweets</loc>
-    <lastmod>2026-03-30</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://xactions.app/scripts/comment-by-hashtag</loc>
     <lastmod>2026-03-30</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://xactions.app/scripts/comment-by-location</loc>
     <lastmod>2026-03-30</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://xactions.app/scripts/community-manager</loc>
     <lastmod>2026-03-30</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://xactions.app/scripts/community-notes</loc>
     <lastmod>2026-03-30</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://xactions.app/scripts/competitor-analysis</loc>
@@ -380,61 +332,49 @@
     <loc>https://xactions.app/scripts/create-community</loc>
     <lastmod>2026-03-30</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://xactions.app/scripts/create-poll</loc>
     <lastmod>2026-03-30</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://xactions.app/scripts/creator-studio</loc>
     <lastmod>2026-03-30</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://xactions.app/scripts/creator-subscriptions</loc>
     <lastmod>2026-03-30</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://xactions.app/scripts/customer-service</loc>
     <lastmod>2026-03-30</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://xactions.app/scripts/delegate-access</loc>
     <lastmod>2026-03-30</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://xactions.app/scripts/delete-tweets</loc>
-    <lastmod>2026-03-30</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://xactions.app/scripts/detect-unfollowers</loc>
     <lastmod>2026-03-30</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://xactions.app/scripts/discovery-explore</loc>
-    <lastmod>2026-03-30</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://xactions.app/scripts/dm-calls</loc>
     <lastmod>2026-03-30</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://xactions.app/scripts/dm-manager</loc>
@@ -443,46 +383,28 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://xactions.app/scripts/scrape-dms</loc>
-    <lastmod>2026-03-30</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://xactions.app/scripts/protect-active-users</loc>
-    <lastmod>2026-03-30</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
     <loc>https://xactions.app/scripts/download-account-data</loc>
     <lastmod>2026-03-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://xactions.app/scripts/video-downloader-browser</loc>
-    <lastmod>2026-03-30</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
     <loc>https://xactions.app/scripts/edit-post</loc>
     <lastmod>2026-03-30</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://xactions.app/scripts/encrypted-dm</loc>
     <lastmod>2026-03-30</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://xactions.app/scripts/engage-profile</loc>
     <lastmod>2026-03-30</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://xactions.app/scripts/engagement-analytics</loc>
@@ -512,13 +434,7 @@
     <loc>https://xactions.app/scripts/export-to-csv</loc>
     <lastmod>2026-03-30</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://xactions.app/scripts/filter-manager</loc>
-    <lastmod>2026-03-30</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://xactions.app/scripts/find-fake-followers</loc>
@@ -527,25 +443,19 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://xactions.app/scripts/follow-list</loc>
-    <lastmod>2026-03-30</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://xactions.app/scripts/follow-account</loc>
-    <lastmod>2026-03-30</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://xactions.app/scripts/follow-back</loc>
+    <loc>https://xactions.app/scripts/filter-manager</loc>
     <lastmod>2026-03-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://xactions.app/scripts/follow-target-users</loc>
+    <loc>https://xactions.app/scripts/follow-account</loc>
+    <lastmod>2026-03-30</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://xactions.app/scripts/follow-back</loc>
     <lastmod>2026-03-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
@@ -563,7 +473,19 @@
     <priority>0.7</priority>
   </url>
   <url>
+    <loc>https://xactions.app/scripts/follow-list</loc>
+    <lastmod>2026-03-30</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://xactions.app/scripts/follow-ratio-manager</loc>
+    <lastmod>2026-03-30</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://xactions.app/scripts/follow-target-users</loc>
     <lastmod>2026-03-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
@@ -575,19 +497,13 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://xactions.app/scripts/followers-growth-tracker</loc>
+    <loc>https://xactions.app/scripts/follower-tools</loc>
     <lastmod>2026-03-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://xactions.app/scripts/scrape-followers</loc>
-    <lastmod>2026-03-30</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://xactions.app/scripts/scrape-following</loc>
+    <loc>https://xactions.app/scripts/grok-integration</loc>
     <lastmod>2026-03-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
@@ -596,13 +512,13 @@
     <loc>https://xactions.app/scripts/group-dm</loc>
     <lastmod>2026-03-30</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://xactions.app/scripts/growth-suite</loc>
     <lastmod>2026-03-30</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://xactions.app/scripts/hashtag-analytics</loc>
@@ -611,58 +527,58 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://xactions.app/scripts/scrape-hashtag</loc>
+    <loc>https://xactions.app/scripts/host-space</loc>
     <lastmod>2026-03-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://xactions.app/scripts/host-space</loc>
-    <lastmod>2026-03-30</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
     <loc>https://xactions.app/scripts/id-verification</loc>
     <lastmod>2026-03-30</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://xactions.app/scripts/interact-by-hashtag</loc>
     <lastmod>2026-03-30</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://xactions.app/scripts/interact-by-place</loc>
     <lastmod>2026-03-30</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://xactions.app/scripts/interact-by-users</loc>
-    <lastmod>2026-03-30</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://xactions.app/scripts/interact-with-likers</loc>
     <lastmod>2026-03-30</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://xactions.app/scripts/interact-by-users</loc>
+    <lastmod>2026-03-30</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://xactions.app/scripts/join-space</loc>
     <lastmod>2026-03-30</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://xactions.app/scripts/join-communities</loc>
     <lastmod>2026-03-30</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://xactions.app/scripts/keyword-follow</loc>
+    <lastmod>2026-03-30</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://xactions.app/scripts/keyword-liker</loc>
@@ -677,7 +593,7 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://xactions.app/scripts/keyword-follow</loc>
+    <loc>https://xactions.app/scripts/leave-community</loc>
     <lastmod>2026-03-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
@@ -686,64 +602,40 @@
     <loc>https://xactions.app/scripts/leave-all-communities</loc>
     <lastmod>2026-03-30</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://xactions.app/scripts/leave-community</loc>
-    <lastmod>2026-03-30</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://xactions.app/scripts/like-by-feed</loc>
-    <lastmod>2026-03-30</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://xactions.app/scripts/like-by-hashtag</loc>
-    <lastmod>2026-03-30</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://xactions.app/scripts/like-by-location</loc>
-    <lastmod>2026-03-30</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://xactions.app/scripts/like-by-user</loc>
     <lastmod>2026-03-30</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
+    <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://xactions.app/scripts/like-post</loc>
-    <lastmod>2026-03-30</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://xactions.app/scripts/multi-account-timeline-liker</loc>
-    <lastmod>2026-03-30</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://xactions.app/scripts/like-user-replies</loc>
-    <lastmod>2026-03-30</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://xactions.app/scripts/scrape-likers</loc>
+    <loc>https://xactions.app/scripts/like-by-hashtag</loc>
     <lastmod>2026-03-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://xactions.app/scripts/scrape-likes</loc>
+    <loc>https://xactions.app/scripts/like-by-location</loc>
+    <lastmod>2026-03-30</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://xactions.app/scripts/like-by-feed</loc>
+    <lastmod>2026-03-30</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://xactions.app/scripts/like-post</loc>
+    <lastmod>2026-03-30</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://xactions.app/scripts/like-user-replies</loc>
     <lastmod>2026-03-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
@@ -755,7 +647,7 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://xactions.app/scripts/scrape-list</loc>
+    <loc>https://xactions.app/scripts/list-manager</loc>
     <lastmod>2026-03-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
@@ -764,37 +656,19 @@
     <loc>https://xactions.app/scripts/manage-bookmarks</loc>
     <lastmod>2026-03-30</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://xactions.app/scripts/manage-community</loc>
     <lastmod>2026-03-30</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://xactions.app/scripts/list-manager</loc>
-    <lastmod>2026-03-30</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://xactions.app/scripts/manage-muted-words</loc>
     <lastmod>2026-03-30</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://xactions.app/scripts/manage-notifications</loc>
-    <lastmod>2026-03-30</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://xactions.app/scripts/manage-settings</loc>
-    <lastmod>2026-03-30</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://xactions.app/scripts/mass-block</loc>
@@ -806,16 +680,10 @@
     <loc>https://xactions.app/scripts/mass-unblock</loc>
     <lastmod>2026-03-30</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://xactions.app/scripts/mass-unmute</loc>
-    <lastmod>2026-03-30</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://xactions.app/scripts/scrape-media</loc>
     <lastmod>2026-03-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
@@ -824,19 +692,13 @@
     <loc>https://xactions.app/scripts/media-studio</loc>
     <lastmod>2026-03-30</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://xactions.app/scripts/mention-users</loc>
     <lastmod>2026-03-30</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://xactions.app/scripts/account-misc</loc>
-    <lastmod>2026-03-30</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://xactions.app/scripts/monitor-account</loc>
@@ -848,13 +710,19 @@
     <loc>https://xactions.app/scripts/multi-account</loc>
     <lastmod>2026-03-30</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://xactions.app/scripts/multi-account-timeline-liker</loc>
+    <lastmod>2026-03-30</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://xactions.app/scripts/mute-by-keywords</loc>
     <lastmod>2026-03-30</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://xactions.app/scripts/natural-flow</loc>
@@ -872,10 +740,10 @@
     <loc>https://xactions.app/scripts/notification-manager</loc>
     <lastmod>2026-03-30</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
+    <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://xactions.app/scripts/scrape-notifications</loc>
+    <loc>https://xactions.app/scripts/advanced-notifications</loc>
     <lastmod>2026-03-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
@@ -887,16 +755,16 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://xactions.app/scripts/pin-tweet</loc>
+    <loc>https://xactions.app/scripts/pin-tweet-manager</loc>
     <lastmod>2026-03-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://xactions.app/scripts/pin-tweet-manager</loc>
+    <loc>https://xactions.app/scripts/tweet-price-correlation</loc>
     <lastmod>2026-03-30</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://xactions.app/scripts/post-composer</loc>
@@ -908,7 +776,7 @@
     <loc>https://xactions.app/scripts/post-interactions</loc>
     <lastmod>2026-03-30</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://xactions.app/scripts/post-thread</loc>
@@ -917,37 +785,19 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://xactions.app/scripts/post-tweet</loc>
-    <lastmod>2026-03-30</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://xactions.app/scripts/premium-features</loc>
-    <lastmod>2026-03-30</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
     <loc>https://xactions.app/scripts/premium-gifting</loc>
     <lastmod>2026-03-30</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://xactions.app/scripts/premium-manager</loc>
     <lastmod>2026-03-30</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
+    <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://xactions.app/scripts/profile-manager</loc>
-    <lastmod>2026-03-30</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://xactions.app/scripts/scrape-profile</loc>
+    <loc>https://xactions.app/scripts/account-settings</loc>
     <lastmod>2026-03-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
@@ -956,28 +806,22 @@
     <loc>https://xactions.app/scripts/profile-stats</loc>
     <lastmod>2026-03-30</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
+    <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://xactions.app/scripts/publish-article</loc>
+    <loc>https://xactions.app/scripts/protect-active-users</loc>
     <lastmod>2026-03-30</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://xactions.app/scripts/qr-code-sharing</loc>
     <lastmod>2026-03-30</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://xactions.app/scripts/quota-supervisor</loc>
-    <lastmod>2026-03-30</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://xactions.app/scripts/scrape-quote-retweets</loc>
     <lastmod>2026-03-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
@@ -998,12 +842,6 @@
     <loc>https://xactions.app/scripts/rate-limiter</loc>
     <lastmod>2026-03-30</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://xactions.app/scripts/remove-follower</loc>
-    <lastmod>2026-03-30</lastmod>
-    <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
@@ -1013,43 +851,31 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://xactions.app/scripts/scrape-replies</loc>
+    <loc>https://xactions.app/scripts/report-spam</loc>
     <lastmod>2026-03-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://xactions.app/scripts/report-spam</loc>
-    <lastmod>2026-03-30</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
     <loc>https://xactions.app/scripts/repost-post</loc>
     <lastmod>2026-03-30</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://xactions.app/scripts/reputation-audit</loc>
     <lastmod>2026-03-30</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://xactions.app/scripts/save-search</loc>
     <lastmod>2026-03-30</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://xactions.app/scripts/saved-search-manager</loc>
-    <lastmod>2026-03-30</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://xactions.app/scripts/schedule-post</loc>
     <lastmod>2026-03-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
@@ -1061,7 +887,97 @@
     <priority>0.7</priority>
   </url>
   <url>
+    <loc>https://xactions.app/scripts/scrape-analytics</loc>
+    <lastmod>2026-03-30</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://xactions.app/scripts/scrape-cashtag-search</loc>
+    <lastmod>2026-03-30</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://xactions.app/scripts/scrape-dms</loc>
+    <lastmod>2026-03-30</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://xactions.app/scripts/scrape-explore</loc>
+    <lastmod>2026-03-30</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://xactions.app/scripts/scrape-followers</loc>
+    <lastmod>2026-03-30</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://xactions.app/scripts/scrape-following</loc>
+    <lastmod>2026-03-30</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://xactions.app/scripts/scrape-hashtag</loc>
+    <lastmod>2026-03-30</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://xactions.app/scripts/scrape-likers</loc>
+    <lastmod>2026-03-30</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://xactions.app/scripts/scrape-likes</loc>
+    <lastmod>2026-03-30</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://xactions.app/scripts/scrape-list</loc>
+    <lastmod>2026-03-30</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://xactions.app/scripts/scrape-media</loc>
+    <lastmod>2026-03-30</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://xactions.app/scripts/scrape-notifications</loc>
+    <lastmod>2026-03-30</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://xactions.app/scripts/scrape-profile</loc>
+    <lastmod>2026-03-30</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://xactions.app/scripts/scrape-profile-posts</loc>
+    <lastmod>2026-03-30</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://xactions.app/scripts/scrape-profile-with-replies</loc>
+    <lastmod>2026-03-30</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://xactions.app/scripts/scrape-replies</loc>
     <lastmod>2026-03-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
@@ -1073,19 +989,19 @@
     <priority>0.7</priority>
   </url>
   <url>
+    <loc>https://xactions.app/scripts/scrape-search</loc>
+    <lastmod>2026-03-30</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://xactions.app/scripts/scrape-spaces</loc>
     <lastmod>2026-03-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://xactions.app/scripts/scrape-user-likes</loc>
-    <lastmod>2026-03-30</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://xactions.app/scripts/scrape-search</loc>
+    <loc>https://xactions.app/scripts/scraper-toolbox</loc>
     <lastmod>2026-03-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
@@ -1094,25 +1010,31 @@
     <loc>https://xactions.app/scripts/search-sweep</loc>
     <lastmod>2026-03-30</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://xactions.app/scripts/send-direct-message</loc>
     <lastmod>2026-03-30</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://xactions.app/scripts/sentiment-analyzer</loc>
+    <lastmod>2026-03-30</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://xactions.app/scripts/session-logger</loc>
     <lastmod>2026-03-30</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://xactions.app/scripts/settings-manager</loc>
     <lastmod>2026-03-30</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://xactions.app/scripts/shadowban-checker</loc>
@@ -1124,31 +1046,25 @@
     <loc>https://xactions.app/scripts/share-embed</loc>
     <lastmod>2026-03-30</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://xactions.app/scripts/smart-unfollow</loc>
     <lastmod>2026-03-30</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://xactions.app/scripts/spaces-manager</loc>
-    <lastmod>2026-03-30</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://xactions.app/scripts/subscribe-premium</loc>
     <lastmod>2026-03-30</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://xactions.app/scripts/text-formatting</loc>
     <lastmod>2026-03-30</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://xactions.app/scripts/thought-leader-cultivator</loc>
@@ -1169,31 +1085,19 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://xactions.app/scripts/auto-liker</loc>
+    <loc>https://xactions.app/scripts/timeline-scraper</loc>
     <lastmod>2026-03-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://xactions.app/scripts/timeline-scraper</loc>
-    <lastmod>2026-03-30</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
     <loc>https://xactions.app/scripts/timeline-viewer</loc>
     <lastmod>2026-03-30</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://xactions.app/scripts/topic-manager</loc>
-    <lastmod>2026-03-30</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://xactions.app/scripts/trending-monitor</loc>
     <lastmod>2026-03-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
@@ -1208,7 +1112,7 @@
     <loc>https://xactions.app/scripts/tweet-abtester</loc>
     <lastmod>2026-03-30</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://xactions.app/scripts/tweet-performance</loc>
@@ -1217,25 +1121,7 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://xactions.app/scripts/tweet-price-correlation</loc>
-    <lastmod>2026-03-30</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
     <loc>https://xactions.app/scripts/tweet-schedule-optimizer</loc>
-    <lastmod>2026-03-30</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://xactions.app/scripts/sentiment-analyzer</loc>
-    <lastmod>2026-03-30</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://xactions.app/scripts/scrape-profile-posts</loc>
     <lastmod>2026-03-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
@@ -1244,28 +1130,16 @@
     <loc>https://xactions.app/scripts/unfollow-everyone</loc>
     <lastmod>2026-03-30</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://xactions.app/scripts/unfollowback</loc>
     <lastmod>2026-03-30</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://xactions.app/scripts/unfollow-non-followers</loc>
-    <lastmod>2026-03-30</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://xactions.app/scripts/unfollow-wdfblog</loc>
-    <lastmod>2026-03-30</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://xactions.app/scripts/unfollow-with-log</loc>
     <lastmod>2026-03-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
@@ -1274,61 +1148,55 @@
     <loc>https://xactions.app/scripts/unlike-all-posts</loc>
     <lastmod>2026-03-30</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://xactions.app/scripts/unlike-all</loc>
-    <lastmod>2026-03-30</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://xactions.app/scripts/unlike-old</loc>
     <lastmod>2026-03-30</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://xactions.app/scripts/update-banner</loc>
     <lastmod>2026-03-30</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://xactions.app/scripts/update-profile</loc>
     <lastmod>2026-03-30</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://xactions.app/scripts/update-bio</loc>
-    <lastmod>2026-03-30</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://xactions.app/scripts/update-profile-picture</loc>
     <lastmod>2026-03-30</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://xactions.app/scripts/upload-contacts</loc>
     <lastmod>2026-03-30</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://xactions.app/scripts/verified-only</loc>
     <lastmod>2026-03-30</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://xactions.app/scripts/video-captions</loc>
     <lastmod>2026-03-30</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://xactions.app/scripts/video-downloader</loc>
+    <lastmod>2026-03-30</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://xactions.app/scripts/view-analytics</loc>
@@ -1352,7 +1220,7 @@
     <loc>https://xactions.app/scripts/vote-in-polls</loc>
     <lastmod>2026-03-30</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://xactions.app/scripts/welcome-new-followers</loc>
@@ -1364,65 +1232,23 @@
     <loc>https://xactions.app/scripts/whitelist</loc>
     <lastmod>2026-03-30</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://xactions.app/scripts/scrape-cashtag-search</loc>
-    <lastmod>2026-03-30</lastmod>
-    <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://xactions.app/scripts/x-pro</loc>
     <lastmod>2026-03-30</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://xactions.app/scripts/x-pro-manager</loc>
     <lastmod>2026-03-30</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://xactions.app/scripts/video-downloader</loc>
-    <lastmod>2026-03-30</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://xactions.app/scripts/scrape-profile-with-replies</loc>
-    <lastmod>2026-03-30</lastmod>
-    <changefreq>monthly</changefreq>
     <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://xactions.app/scripts/actions</loc>
-    <lastmod>2026-03-30</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://xactions.app/scripts/core</loc>
-    <lastmod>2026-03-30</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://xactions.app/scripts/xactions-command-center</loc>
     <lastmod>2026-03-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>1</priority>
-  </url>
-  <url>
-    <loc>https://xactions.app/scripts/control-panel</loc>
-    <lastmod>2026-03-30</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://xactions.app/scripts/scraper-toolbox</loc>
-    <lastmod>2026-03-30</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
   </url>

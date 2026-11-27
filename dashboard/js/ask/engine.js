@@ -212,7 +212,7 @@ export function docsDigest(question, sources) {
   return `The model lanes are all busy right now, so here are the passages that match **${question.replace(/[*_`]/g, '')}**, straight from the documentation:\n\n${lines.join('\n\n')}\n\nOpen a source above for the full page, or ask again in a moment for a written answer.`;
 }
 
-const SYSTEM_PROMPT = `You are Ask XActions, the assistant for XActions (https://xactions.app), the open-source X/Twitter automation toolkit by @nichxbt: 94 browser console scripts, a CLI (npx xactions), an MCP server for AI agents, a Node.js library, a REST API and a browser extension. No X API fees.
+const SYSTEM_PROMPT = `You are Ask XActions, the assistant for XActions (https://xactions.app), the open-source X/Twitter automation toolkit by @nichxbt: 208 browser console scripts, a CLI (npx xactions), an MCP server for AI agents, a Node.js library, a REST API and a browser extension. No X API fees.
 
 Answer the user's question using the numbered SOURCES. Rules:
 - Be concrete: name the exact script file, command, page, or MCP tool. Give the steps. Include copy-pasteable commands or code when the sources contain them.

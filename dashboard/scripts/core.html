@@ -3,23 +3,23 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>XActions Automation Framework - Core Utilities | XActions</title>
-  <meta name="description" content="This is the foundation module. Paste this FIRST, then paste any automation script. All automations depend on this core module.">
-  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, core, automation">
+  <title>Automation Core — Free X/Twitter Script | XActions</title>
+  <meta name="description" content="Shared config, selectors, storage, logging and rate limiting that the automation scripts load from window.XActions.Core.">
+  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, core, automation suite">
   <meta name="author" content="nich (@nichxbt)">
   <meta name="robots" content="index, follow">
 
   <meta property="og:type" content="article">
-  <meta property="og:title" content="XActions Automation Framework - Core Utilities — XActions">
-  <meta property="og:description" content="This is the foundation module. Paste this FIRST, then paste any automation script. All automations depend on this core module.">
+  <meta property="og:title" content="Automation Core — XActions">
+  <meta property="og:description" content="Shared config, selectors, storage, logging and rate limiting that the automation scripts load from window.XActions.Core.">
   <meta property="og:url" content="https://xactions.app/scripts/core">
   <meta property="og:site_name" content="XActions">
   <meta property="og:image" content="https://xactions.app/og-run.png">
 
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@nichxbt">
-  <meta name="twitter:title" content="XActions Automation Framework - Core Utilities — XActions">
-  <meta name="twitter:description" content="This is the foundation module. Paste this FIRST, then paste any automation script. All automations depend on this core module.">
+  <meta name="twitter:title" content="Automation Core — XActions">
+  <meta name="twitter:description" content="Shared config, selectors, storage, logging and rate limiting that the automation scripts load from window.XActions.Core.">
   <meta name="twitter:image" content="https://xactions.app/og-run.png">
 
   <link rel="canonical" href="https://xactions.app/scripts/core">
@@ -29,15 +29,15 @@
   {
     "@context": "https://schema.org",
     "@type": "TechArticle",
-    "headline": "XActions Automation Framework - Core Utilities | XActions",
-    "description": "This is the foundation module. Paste this FIRST, then paste any automation script. All automations depend on this core module.",
+    "headline": "Automation Core — Free X/Twitter Script | XActions",
+    "description": "Shared config, selectors, storage, logging and rate limiting that the automation scripts load from window.XActions.Core.",
     "url": "https://xactions.app/scripts/core",
     "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
     "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
     "datePublished": "2026-03-30",
     "dateModified": "2026-03-30",
-    "articleSection": "Automation",
-    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, core, automation"
+    "articleSection": "Automation Suite",
+    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, core, automation suite"
   }
   </script>
   <script type="application/ld+json">
@@ -47,8 +47,8 @@
     "itemListElement": [
       { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
       { "@type": "ListItem", "position": 2, "name": "Scripts", "item": "https://xactions.app/scripts" },
-      { "@type": "ListItem", "position": 3, "name": "Automation", "item": "https://xactions.app/scripts#automation" },
-      { "@type": "ListItem", "position": 4, "name": "XActions Automation Framework - Core Utilities", "item": "https://xactions.app/scripts/core" }
+      { "@type": "ListItem", "position": 3, "name": "Automation Suite", "item": "https://xactions.app/scripts#automation-suite" },
+      { "@type": "ListItem", "position": 4, "name": "Automation Core", "item": "https://xactions.app/scripts/core" }
     ]
   }
   </script>
@@ -116,24 +116,24 @@
 
     <main class="main-content" id="main-content">
       <header class="main-header">
-        <h1>⚙️ XActions Automation Framework - Core Utilities</h1>
+        <h1>⚙️ Automation Core</h1>
         <div class="breadcrumb">
-          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#automation">Automation</a> › XActions Automation Framework - Core Utilities
+          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#automation-suite">Automation Suite</a> › Automation Core
         </div>
       </header>
 
       <article class="article">
-        <span class="cat-badge">Automation</span>
-        <span class="source-badge">src/automation</span>
+        <span class="cat-badge">Automation Suite</span>
+        <span class="source-badge">browser/core.js</span>
 
         <div class="meta-row">
           
           
-          <span>522 lines</span>
+          <span>531 lines</span>
           <span>by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></span>
         </div>
 
-        <p>This is the foundation module. Paste this FIRST, then paste any automation script. All automations depend on this core module.</p>
+        <p>Shared config, selectors, storage, logging and rate limiting that the automation scripts load from window.XActions.Core.</p>
 
         
 
@@ -141,10 +141,10 @@
         <ol class="usage-steps">
         <li>Navigate to <a href="https://x.com" rel="noopener">x.com</a> and log in</li>
         <li>Open DevTools Console (F12 or Cmd+Option+I)</li>
-        <li>Paste <code>src/automation/core.js</code> first</li>
+        
         <li>Paste the script below and press Enter</li>
       </ol>
-        <p><strong>Note:</strong> This script requires pasting <code>src/automation/core.js</code> first for shared utilities.</p>
+        
 
         
         
@@ -179,6 +179,15 @@
           <div class="code-block">
             <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.querySelector('code').textContent).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy Script',2000)})">Copy Script</button>
             <pre><code>// Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
+/**
+ * @name        core.js
+ * @title       Automation Core
+ * @description Shared config, selectors, storage, logging and rate limiting that the automation scripts load from window.XActions.Core.
+ * @category    automation
+ * @page        x.com/*
+ * @writes      false
+ * @aliases     src/automation/core.js
+ */
 // XActions Automation Framework - Core Utilities
 // https://github.com/nirholas/XActions
 //
@@ -713,14 +722,15 @@ console.log('✅ XActions Core loaded! Ready for automation scripts.');
 
     <aside class="sidebar-right">
       <div class="sidebar-card">
-        <h3>⚙️ Automation</h3>
-        <a href="/scripts/customer-service">🤝 Customer Service Bot</a>
-<a href="/scripts/protect-active-users">🛡️ Don't Unfollow Active Users</a>
-<a href="/scripts/quota-supervisor">⚠️ Quota Supervisor</a>
-<a href="/scripts/rate-limiter">⏱️ Rate Limiter</a>
-<a href="/scripts/session-logger">📋 Session Logger &amp; Analytics</a>
-<a href="/scripts/actions">⚡ XActions Actions Library - Complete X/Twitter Actions</a>
-<a href="/scripts/control-panel">🎛️ XActions Control Panel — Floating UI for Browser Automations</a>
+        <h3>⚙️ Automation Suite</h3>
+        <a href="/scripts/actions">⚙️ Actions Library</a>
+<a href="/scripts/control-panel">⚙️ Automation Control Panel</a>
+<a href="/scripts/blacklist">⚙️ Blacklist Manager</a>
+<a href="/scripts/filter-manager">⚙️ Filter Manager</a>
+<a href="/scripts/quota-supervisor">⚙️ Quota Supervisor</a>
+<a href="/scripts/rate-limiter">⚙️ Rate Limiter</a>
+<a href="/scripts/session-logger">⚙️ Session Logger</a>
+<a href="/scripts/whitelist">⚙️ Whitelist Manager</a>
       </div>
       <div class="sidebar-card">
         <h3>🔗 Quick Links</h3>

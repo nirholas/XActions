@@ -3,23 +3,23 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Advanced settings and privacy management | XActions</title>
-  <meta name="description" content="Advanced settings and privacy management. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
-  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, advanced, settings, other tools">
+  <title>Advanced Settings and Privacy — Free X/Twitter Script | XActions</title>
+  <meta name="description" content="Advanced settings and privacy management across the settings pages. Free X/Twitter browser script, no API key needed.">
+  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, advanced, settings, profile and settings">
   <meta name="author" content="nich (@nichxbt)">
   <meta name="robots" content="index, follow">
 
   <meta property="og:type" content="article">
-  <meta property="og:title" content="Advanced settings and privacy management — XActions">
-  <meta property="og:description" content="Advanced settings and privacy management. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
+  <meta property="og:title" content="Advanced Settings and Privacy — XActions">
+  <meta property="og:description" content="Advanced settings and privacy management across the settings pages. Free X/Twitter browser script, no API key needed.">
   <meta property="og:url" content="https://xactions.app/scripts/advanced-settings">
   <meta property="og:site_name" content="XActions">
   <meta property="og:image" content="https://xactions.app/og-run.png">
 
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@nichxbt">
-  <meta name="twitter:title" content="Advanced settings and privacy management — XActions">
-  <meta name="twitter:description" content="Advanced settings and privacy management. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
+  <meta name="twitter:title" content="Advanced Settings and Privacy — XActions">
+  <meta name="twitter:description" content="Advanced settings and privacy management across the settings pages. Free X/Twitter browser script, no API key needed.">
   <meta name="twitter:image" content="https://xactions.app/og-run.png">
 
   <link rel="canonical" href="https://xactions.app/scripts/advanced-settings">
@@ -29,15 +29,15 @@
   {
     "@context": "https://schema.org",
     "@type": "TechArticle",
-    "headline": "Advanced settings and privacy management | XActions",
-    "description": "Advanced settings and privacy management. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.",
+    "headline": "Advanced Settings and Privacy — Free X/Twitter Script | XActions",
+    "description": "Advanced settings and privacy management across the settings pages. Free X/Twitter browser script, no API key needed.",
     "url": "https://xactions.app/scripts/advanced-settings",
     "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
     "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
     "datePublished": "2026-03-30",
     "dateModified": "2026-03-30",
-    "articleSection": "Other Tools",
-    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, advanced, settings, other tools"
+    "articleSection": "Profile and Settings",
+    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, advanced, settings, profile and settings"
   }
   </script>
   <script type="application/ld+json">
@@ -47,8 +47,8 @@
     "itemListElement": [
       { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
       { "@type": "ListItem", "position": 2, "name": "Scripts", "item": "https://xactions.app/scripts" },
-      { "@type": "ListItem", "position": 3, "name": "Other Tools", "item": "https://xactions.app/scripts#other-tools" },
-      { "@type": "ListItem", "position": 4, "name": "Advanced settings and privacy management", "item": "https://xactions.app/scripts/advanced-settings" }
+      { "@type": "ListItem", "position": 3, "name": "Profile and Settings", "item": "https://xactions.app/scripts#profile-and-settings" },
+      { "@type": "ListItem", "position": 4, "name": "Advanced Settings and Privacy", "item": "https://xactions.app/scripts/advanced-settings" }
     ]
   }
   </script>
@@ -116,24 +116,24 @@
 
     <main class="main-content" id="main-content">
       <header class="main-header">
-        <h1>⚡ Advanced settings and privacy management</h1>
+        <h1>🪪 Advanced Settings and Privacy</h1>
         <div class="breadcrumb">
-          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#other-tools">Other Tools</a> › Advanced settings and privacy management
+          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#profile-and-settings">Profile and Settings</a> › Advanced Settings and Privacy
         </div>
       </header>
 
       <article class="article">
-        <span class="cat-badge">Other Tools</span>
-        <span class="source-badge">browser</span>
+        <span class="cat-badge">Profile and Settings</span>
+        <span class="source-badge">browser/advancedSettings.js</span>
 
         <div class="meta-row">
           
           
-          <span>1012 lines</span>
+          <span>1020 lines</span>
           <span>by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></span>
         </div>
 
-        <p>Advanced settings and privacy management — a free, open-source browser console script for X/Twitter automation. No API keys or fees required.</p>
+        <p>Advanced settings and privacy management across the settings pages.</p>
 
         
 
@@ -156,6 +156,14 @@
           <div class="code-block">
             <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.querySelector('code').textContent).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy Script',2000)})">Copy Script</button>
             <pre><code>// Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
+/**
+ * @name        advancedSettings.js
+ * @title       Advanced Settings and Privacy
+ * @description Advanced settings and privacy management across the settings pages.
+ * @category    profile
+ * @page        x.com/settings
+ * @writes      true
+ */
 // browser/advancedSettings.js
 // Advanced settings and privacy management for X/Twitter
 // by nichxbt
@@ -1180,17 +1188,17 @@
 
     <aside class="sidebar-right">
       <div class="sidebar-card">
-        <h3>⚡ Other Tools</h3>
-        <a href="/scripts/ad-campaign-manager">⚡ Ad campaign management</a>
-<a href="/scripts/advanced-creator">⚡ Advanced creator monetization</a>
-<a href="/scripts/advanced-dm">⚡ Advanced Direct Message features</a>
-<a href="/scripts/advanced-grok">⚡ Advanced Grok AI features</a>
-<a href="/scripts/advanced-notifications">⚡ Advanced notification management</a>
-<a href="/scripts/advanced-premium">⚡ Advanced Premium features</a>
-<a href="/scripts/advanced-profile">⚡ Advanced profile management</a>
-<a href="/scripts/advanced-spaces">⚡ Advanced Spaces features</a>
-<a href="/scripts/community-manager">⚡ Community management</a>
-<a href="/scripts/community-notes">⚡ Community Notes</a>
+        <h3>🪪 Profile and Settings</h3>
+        <a href="/scripts/account-misc">🪪 Account Utilities</a>
+<a href="/scripts/advanced-profile">🪪 Advanced Profile Tools</a>
+<a href="/scripts/delegate-access">🪪 Delegate Access</a>
+<a href="/scripts/download-account-data">🪪 Download Account Data</a>
+<a href="/scripts/id-verification">🪪 ID Verification</a>
+<a href="/scripts/multi-account">🪪 Multi-Account Manager</a>
+<a href="/scripts/advanced-notifications">🪪 Notification Settings</a>
+<a href="/scripts/pin-tweet-manager">🪪 Pin Tweet Manager</a>
+<a href="/scripts/account-settings">🪪 Privacy and Safety Settings</a>
+<a href="/scripts/qr-code-sharing">🪪 QR Code Profile Sharing</a>
       </div>
       <div class="sidebar-card">
         <h3>🔗 Quick Links</h3>

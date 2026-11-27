@@ -3,23 +3,23 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Add To List — Free X/Twitter Script | XActions</title>
-  <meta name="description" content="Add a batch of users to one of your Twitter Lists via the list's &quot;Manage members&quot; search, rate-limited.">
-  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, add, list, lists &amp; communities">
+  <title>Add Users to List — Free X/Twitter Script | XActions</title>
+  <meta name="description" content="Add a batch of users to one of your Lists through its Manage members search, rate-limited.">
+  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, add, list, lists">
   <meta name="author" content="nich (@nichxbt)">
   <meta name="robots" content="index, follow">
 
   <meta property="og:type" content="article">
-  <meta property="og:title" content="Add To List — XActions">
-  <meta property="og:description" content="Add a batch of users to one of your Twitter Lists via the list's &quot;Manage members&quot; search, rate-limited.">
+  <meta property="og:title" content="Add Users to List — XActions">
+  <meta property="og:description" content="Add a batch of users to one of your Lists through its Manage members search, rate-limited.">
   <meta property="og:url" content="https://xactions.app/scripts/add-to-list">
   <meta property="og:site_name" content="XActions">
   <meta property="og:image" content="https://xactions.app/og-run.png">
 
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@nichxbt">
-  <meta name="twitter:title" content="Add To List — XActions">
-  <meta name="twitter:description" content="Add a batch of users to one of your Twitter Lists via the list's &quot;Manage members&quot; search, rate-limited.">
+  <meta name="twitter:title" content="Add Users to List — XActions">
+  <meta name="twitter:description" content="Add a batch of users to one of your Lists through its Manage members search, rate-limited.">
   <meta name="twitter:image" content="https://xactions.app/og-run.png">
 
   <link rel="canonical" href="https://xactions.app/scripts/add-to-list">
@@ -29,15 +29,15 @@
   {
     "@context": "https://schema.org",
     "@type": "TechArticle",
-    "headline": "Add To List — Free X/Twitter Script | XActions",
-    "description": "Add a batch of users to one of your Twitter Lists via the list's \"Manage members\" search, rate-limited.",
+    "headline": "Add Users to List — Free X/Twitter Script | XActions",
+    "description": "Add a batch of users to one of your Lists through its Manage members search, rate-limited.",
     "url": "https://xactions.app/scripts/add-to-list",
     "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
     "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
     "datePublished": "2026-03-30",
     "dateModified": "2026-03-30",
-    "articleSection": "Lists & Communities",
-    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, add, list, lists & communities"
+    "articleSection": "Lists",
+    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, add, list, lists"
   }
   </script>
   <script type="application/ld+json">
@@ -47,8 +47,8 @@
     "itemListElement": [
       { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
       { "@type": "ListItem", "position": 2, "name": "Scripts", "item": "https://xactions.app/scripts" },
-      { "@type": "ListItem", "position": 3, "name": "Lists & Communities", "item": "https://xactions.app/scripts#lists-communities" },
-      { "@type": "ListItem", "position": 4, "name": "Add To List", "item": "https://xactions.app/scripts/add-to-list" }
+      { "@type": "ListItem", "position": 3, "name": "Lists", "item": "https://xactions.app/scripts#lists" },
+      { "@type": "ListItem", "position": 4, "name": "Add Users to List", "item": "https://xactions.app/scripts/add-to-list" }
     ]
   }
   </script>
@@ -116,24 +116,24 @@
 
     <main class="main-content" id="main-content">
       <header class="main-header">
-        <h1>➕ Add To List</h1>
+        <h1>🗂️ Add Users to List</h1>
         <div class="breadcrumb">
-          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#lists-communities">Lists &amp; Communities</a> › Add To List
+          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#lists">Lists</a> › Add Users to List
         </div>
       </header>
 
       <article class="article">
-        <span class="cat-badge">Lists &amp; Communities</span>
-        <span class="source-badge">scripts/twitter</span>
+        <span class="cat-badge">Lists</span>
+        <span class="source-badge">browser/addToList.js</span>
 
         <div class="meta-row">
           <span>v1.0.0</span>
           <span>Updated: 2026-07-20</span>
-          <span>279 lines</span>
+          <span>284 lines</span>
           <span>by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></span>
         </div>
 
-        <p>Add a batch of users to one of your Twitter Lists via the list's &quot;Manage members&quot; search, rate-limited.</p>
+        <p>Add a batch of users to one of your Lists through its Manage members search, rate-limited.</p>
 
         
 
@@ -188,8 +188,13 @@
  * ➕ Add To List - XActions
  * ============================================
  *
- * @name         add-to-list
- * @description  Add a batch of users to one of your Twitter Lists via the list's &quot;Manage members&quot; search, rate-limited.
+ * @name        addToList.js
+ * @description Add a batch of users to one of your Lists through its Manage members search, rate-limited.
+ * @title       Add Users to List
+ * @category    lists
+ * @page        x.com/i/lists/&lt;id&gt;
+ * @writes      true
+ * @aliases     scripts/twitter/add-to-list.js
  * @author       nichxbt
  * @version      1.0.0
  * @date         2026-07-20
@@ -443,7 +448,7 @@
 
   // 4) Save / close the manage-members dialog if a save control is present
   const saveBtn = findButtonByText(['done', 'save']);
-  if (saveBtn) { try { saveBtn.click(); } catch (e) {} }
+  if (saveBtn) { try { saveBtn.click(); } catch { /* the dialog saves on close as well, so a failed click loses nothing */ } }
 
   // ============================================
   // 📊 SUMMARY
@@ -474,17 +479,12 @@
 
     <aside class="sidebar-right">
       <div class="sidebar-card">
-        <h3>➕ Lists &amp; Communities</h3>
-        <a href="/scripts/advanced-lists">📝 Advanced list management</a>
-<a href="/scripts/block-list-manager">📝 Block list import/export/sharing</a>
-<a href="/scripts/manage-lists">📝 Browser console script to manage X/Twitter Lists</a>
-<a href="/scripts/create-community">🏘️ Create Communities</a>
-<a href="/scripts/follow-list-members">👣 Follow List Members</a>
-<a href="/scripts/join-communities">🏘️ Join Communities</a>
-<a href="/scripts/leave-all-communities">🚪 Leave All Communities</a>
-<a href="/scripts/leave-community">🚪 Leave Specific Community</a>
-<a href="/scripts/manage-community">🏘️ Manage Communities</a>
-<a href="/scripts/list-manager">📝 Manage Lists</a>
+        <h3>🗂️ Lists</h3>
+        <a href="/scripts/advanced-lists">🗂️ Advanced List Tools</a>
+<a href="/scripts/follow-list-members">🗂️ Follow List Members</a>
+<a href="/scripts/follow-list">🗂️ Follow Lists</a>
+<a href="/scripts/list-manager">🗂️ List Manager</a>
+<a href="/scripts/scrape-list">🗂️ Scrape List</a>
       </div>
       <div class="sidebar-card">
         <h3>🔗 Quick Links</h3>

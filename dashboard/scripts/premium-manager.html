@@ -4,14 +4,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Premium Manager — Free X/Twitter Script | XActions</title>
-  <meta name="description" content="Browser console script for detecting Premium tier and features on X/Twitter. Free X/Twitter browser script, no API key needed.">
-  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, premium, manager, premium">
+  <meta name="description" content="Detect your X Premium tier from on-page signals, list its features and what the next tier adds, and export the result.">
+  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, premium, manager, premium and business">
   <meta name="author" content="nich (@nichxbt)">
   <meta name="robots" content="index, follow">
 
   <meta property="og:type" content="article">
   <meta property="og:title" content="Premium Manager — XActions">
-  <meta property="og:description" content="Browser console script for detecting Premium tier and features on X/Twitter. Free X/Twitter browser script, no API key needed.">
+  <meta property="og:description" content="Detect your X Premium tier from on-page signals, list its features and what the next tier adds, and export the result.">
   <meta property="og:url" content="https://xactions.app/scripts/premium-manager">
   <meta property="og:site_name" content="XActions">
   <meta property="og:image" content="https://xactions.app/og-run.png">
@@ -19,7 +19,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@nichxbt">
   <meta name="twitter:title" content="Premium Manager — XActions">
-  <meta name="twitter:description" content="Browser console script for detecting Premium tier and features on X/Twitter. Free X/Twitter browser script, no API key needed.">
+  <meta name="twitter:description" content="Detect your X Premium tier from on-page signals, list its features and what the next tier adds, and export the result.">
   <meta name="twitter:image" content="https://xactions.app/og-run.png">
 
   <link rel="canonical" href="https://xactions.app/scripts/premium-manager">
@@ -30,14 +30,14 @@
     "@context": "https://schema.org",
     "@type": "TechArticle",
     "headline": "Premium Manager — Free X/Twitter Script | XActions",
-    "description": "Browser console script for detecting Premium tier and features on X/Twitter. Free X/Twitter browser script, no API key needed.",
+    "description": "Detect your X Premium tier from on-page signals, list its features and what the next tier adds, and export the result.",
     "url": "https://xactions.app/scripts/premium-manager",
     "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
     "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
     "datePublished": "2026-03-30",
     "dateModified": "2026-03-30",
-    "articleSection": "Premium",
-    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, premium, manager, premium"
+    "articleSection": "Premium and Business",
+    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, premium, manager, premium and business"
   }
   </script>
   <script type="application/ld+json">
@@ -47,7 +47,7 @@
     "itemListElement": [
       { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
       { "@type": "ListItem", "position": 2, "name": "Scripts", "item": "https://xactions.app/scripts" },
-      { "@type": "ListItem", "position": 3, "name": "Premium", "item": "https://xactions.app/scripts#premium" },
+      { "@type": "ListItem", "position": 3, "name": "Premium and Business", "item": "https://xactions.app/scripts#premium-and-business" },
       { "@type": "ListItem", "position": 4, "name": "Premium Manager", "item": "https://xactions.app/scripts/premium-manager" }
     ]
   }
@@ -116,24 +116,24 @@
 
     <main class="main-content" id="main-content">
       <header class="main-header">
-        <h1>⭐ Premium Manager</h1>
+        <h1>💎 Premium Manager</h1>
         <div class="breadcrumb">
-          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#premium">Premium</a> › Premium Manager
+          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#premium-and-business">Premium and Business</a> › Premium Manager
         </div>
       </header>
 
       <article class="article">
-        <span class="cat-badge">Premium</span>
-        <span class="source-badge">scripts</span>
+        <span class="cat-badge">Premium and Business</span>
+        <span class="source-badge">browser/premiumManager.js</span>
 
         <div class="meta-row">
-          
-          
-          <span>149 lines</span>
+          <span>v1.1.0</span>
+          <span>Updated: 2026-11-26</span>
+          <span>199 lines</span>
           <span>by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></span>
         </div>
 
-        <p>Browser console script for detecting Premium tier and features on X/Twitter</p>
+        <p>Detect your X Premium tier from on-page signals, list its features and what the next tier adds, and export the result.</p>
 
         
 
@@ -147,13 +147,24 @@
         
 
         
-        
+        <section class="config-section">
+        <h2>Configuration Options</h2>
+        <table>
+          <thead><tr><th>Option</th><th>Default</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td><code>showTierComparison</code></td><td><code>false</code></td><td>Print a side-by-side table of every tier and the pricing list</td></tr>
+<tr><td><code>logJson</code></td><td><code>false</code></td><td>Print the result object as JSON in the console</td></tr>
+          </tbody>
+        </table>
+      </section>
         <section class="config-code">
         <h2>Default Configuration</h2>
         <div class="code-block">
           <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.querySelector('code').textContent).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy',2000)})">Copy</button>
           <pre><code>const CONFIG = {
     exportResults: true,
+    showTierComparison: false, // Print a side-by-side table of every tier and the pricing list
+    logJson: false,            // Print the result object as JSON in the console
   };</code></pre>
         </div>
       </section>
@@ -164,19 +175,33 @@
           <div class="code-block">
             <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.querySelector('code').textContent).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy Script',2000)})">Copy Script</button>
             <pre><code>// Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
-// scripts/premiumManager.js
-// Browser console script for detecting Premium tier and features on X/Twitter
-// Paste in DevTools console on x.com
-// by nichxbt
+/**
+ * @name        premiumManager.js
+ * @title       Premium Manager
+ * @description Detect your X Premium tier from on-page signals, list its features and what the next tier adds, and export the result.
+ * @category    premium
+ * @page        x.com/*
+ * @writes      false
+ * @aliases     scripts/premiumFeatures.js, scripts/premiumManager.js
+ * @author      nichxbt (https://x.com/nichxbt)
+ * @version     1.1.0
+ * @date        2026-11-26
+ *
+ * Usage:
+ *   1. Open x.com (your own profile or a timeline with your posts gives the most signals)
+ *   2. Open DevTools Console (F12)
+ *   3. (Optional) edit CONFIG in browser/premiumManager.js
+ *   4. Paste this script and press Enter
+ */
 
 (() =&gt; {
-  const sleep = (ms) =&gt; new Promise(r =&gt; setTimeout(r, ms));
-
   // =============================================
   // CONFIGURATION
   // =============================================
   const CONFIG = {
     exportResults: true,
+    showTierComparison: false, // Print a side-by-side table of every tier and the pricing list
+    logJson: false,            // Print the result object as JSON in the console
   };
   // =============================================
 
@@ -193,19 +218,19 @@
   const TIER_FEATURES = {
     free: {
       tier: 'Free', price: '$0/mo',
-      features: { postLength: 280, videoLength: '140s', adReduction: 'None', verification: false, editPost: false, scheduling: false, bookmarkFolders: false, revenueShare: false, grokLevel: 'Basic (~10 queries/day)', replyBoost: 'None' },
+      features: { postLength: 280, videoLength: '140s', adReduction: 'None', verification: false, editPost: false, scheduling: false, bookmarkFolders: false, revenueShare: false, grokLevel: 'Basic (~10 queries/day)', replyBoost: 'None', articles: false },
     },
     basic: {
       tier: 'Basic', price: '$3/mo',
-      features: { postLength: 280, videoLength: '140s', adReduction: '50% fewer', verification: false, editPost: false, scheduling: false, bookmarkFolders: false, revenueShare: false, grokLevel: 'More queries', replyBoost: 'Small' },
+      features: { postLength: 280, videoLength: '140s', adReduction: '50% fewer', verification: false, editPost: false, scheduling: false, bookmarkFolders: false, revenueShare: false, grokLevel: 'More queries', replyBoost: 'Small', articles: false },
     },
     premium: {
       tier: 'Premium', price: '$8/mo',
-      features: { postLength: 25000, videoLength: '60min', adReduction: '50% fewer', verification: true, editPost: true, scheduling: true, bookmarkFolders: true, revenueShare: true, grokLevel: 'Higher (~100 queries/day)', replyBoost: 'Medium' },
+      features: { postLength: 25000, videoLength: '60min', adReduction: '50% fewer', verification: true, editPost: true, scheduling: true, bookmarkFolders: true, revenueShare: true, grokLevel: 'Higher (~100 queries/day)', replyBoost: 'Medium', articles: false },
     },
     'premium+': {
       tier: 'Premium+', price: '$16/mo',
-      features: { postLength: 25000, videoLength: '3hr', adReduction: 'No ads', verification: true, editPost: true, scheduling: true, bookmarkFolders: true, revenueShare: true, grokLevel: 'Highest (unlimited)', replyBoost: 'Largest' },
+      features: { postLength: 25000, videoLength: '3hr', adReduction: 'No ads', verification: true, editPost: true, scheduling: true, bookmarkFolders: true, revenueShare: true, grokLevel: 'Highest (unlimited)', replyBoost: 'Largest', articles: true },
     },
   };
 
@@ -217,6 +242,8 @@
       canEditPosts: false,
       hasBookmarkFolders: false,
       hasLongPostOption: false,
+      hasScheduleOption: false,
+      hasPremiumBadge: false,
     };
 
     // Check for verification badge on own profile
@@ -242,11 +269,18 @@
     const editBtn = document.querySelector('[data-testid=&quot;editTweet&quot;]');
     signals.canEditPosts = !!editBtn;
 
+    // Check for the post scheduling option and a Premium badge
+    signals.hasScheduleOption = !!document.querySelector('[data-testid=&quot;scheduleOption&quot;]');
+    signals.hasPremiumBadge = !!document.querySelector('[data-testid=&quot;premiumBadge&quot;]');
+
     // Infer tier
     let tier = 'free';
     if (signals.hasVerificationBadge &amp;&amp; signals.canEditPosts) {
       tier = 'premium';
     } else if (signals.hasVerificationBadge) {
+      tier = 'premium';
+    } else if (signals.canEditPosts || signals.hasScheduleOption) {
+      // Editing and scheduling posts are Premium features
       tier = 'premium';
     } else if (!signals.hasPremiumNav) {
       // If premium nav is absent, user might be subscribed
@@ -298,6 +332,33 @@
       });
     }
 
+    if (CONFIG.showTierComparison) {
+      console.log('\n📋 Tier comparison:');
+      console.log('┌────────────────┬──────┬───────┬─────────┬──────────┐');
+      console.log('│ Feature        │ Free │ Basic │ Premium │ Premium+ │');
+      console.log('├────────────────┼──────┼───────┼─────────┼──────────┤');
+      console.log('│ Post length    │  280 │   280 │  25,000 │   25,000 │');
+      console.log('│ Video          │ 140s │  140s │   60min │      3hr │');
+      console.log('│ Verification   │   ❌ │    ❌ │      ✅ │       ✅ │');
+      console.log('│ Edit posts     │   ❌ │    ❌ │      ✅ │       ✅ │');
+      console.log('│ Scheduling     │   ❌ │    ❌ │      ✅ │       ✅ │');
+      console.log('│ BM folders     │   ❌ │    ❌ │      ✅ │       ✅ │');
+      console.log('│ Articles       │   ❌ │    ❌ │      ❌ │       ✅ │');
+      console.log('│ Ad reduction   │ None │  50%  │    50%  │   No ads │');
+      console.log('└────────────────┴──────┴───────┴─────────┴──────────┘');
+
+      console.log('\n💰 Pricing:');
+      console.log('  Basic:    $3/mo');
+      console.log('  Premium:  $8/mo');
+      console.log('  Premium+: $16/mo');
+      console.log('  SuperGrok: $60/mo (separate xAI subscription)');
+    }
+
+    if (CONFIG.logJson) {
+      console.log('\n📦 JSON:');
+      console.log(JSON.stringify({ detectedTier: tier, tierInfo, signals, allTiers: TIER_FEATURES, checkedAt: new Date().toISOString() }, null, 2));
+    }
+
     if (CONFIG.exportResults) {
       const date = new Date().toISOString().slice(0, 10);
       download(
@@ -325,10 +386,16 @@
 
     <aside class="sidebar-right">
       <div class="sidebar-card">
-        <h3>⭐ Premium</h3>
-        <a href="/scripts/creator-subscriptions">💰 Creator Subscriptions &amp; Revenue Sharing</a>
-<a href="/scripts/premium-features">⭐ Premium Features</a>
-<a href="/scripts/premium-gifting">🎁 Premium Gifting</a>
+        <h3>💎 Premium and Business</h3>
+        <a href="/scripts/ad-campaign-manager">💎 Ad Campaign Manager</a>
+<a href="/scripts/ads-manager">💎 Ads and Campaigns</a>
+<a href="/scripts/advanced-creator">💎 Advanced Creator Tools</a>
+<a href="/scripts/advanced-premium">💎 Advanced Premium Tools</a>
+<a href="/scripts/creator-subscriptions">💎 Creator Subscriptions</a>
+<a href="/scripts/premium-gifting">💎 Premium Gifting</a>
+<a href="/scripts/subscribe-premium">💎 Subscribe to Premium</a>
+<a href="/scripts/x-pro">💎 X Pro</a>
+<a href="/scripts/x-pro-manager">💎 X Pro Manager</a>
       </div>
       <div class="sidebar-card">
         <h3>🔗 Quick Links</h3>

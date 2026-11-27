@@ -3,23 +3,23 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Browser console script for interacting with Grok AI | XActions</title>
-  <meta name="description" content="Browser console script for interacting with Grok AI. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
-  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, grok, integration, ai &amp; developer">
+  <title>Grok Integration — Free X/Twitter Script | XActions</title>
+  <meta name="description" content="Send prompts to Grok and collect its responses. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
+  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, grok, integration, ai">
   <meta name="author" content="nich (@nichxbt)">
   <meta name="robots" content="index, follow">
 
   <meta property="og:type" content="article">
-  <meta property="og:title" content="Browser console script for interacting with Grok AI — XActions">
-  <meta property="og:description" content="Browser console script for interacting with Grok AI. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
+  <meta property="og:title" content="Grok Integration — XActions">
+  <meta property="og:description" content="Send prompts to Grok and collect its responses. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
   <meta property="og:url" content="https://xactions.app/scripts/grok-integration">
   <meta property="og:site_name" content="XActions">
   <meta property="og:image" content="https://xactions.app/og-run.png">
 
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@nichxbt">
-  <meta name="twitter:title" content="Browser console script for interacting with Grok AI — XActions">
-  <meta name="twitter:description" content="Browser console script for interacting with Grok AI. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
+  <meta name="twitter:title" content="Grok Integration — XActions">
+  <meta name="twitter:description" content="Send prompts to Grok and collect its responses. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
   <meta name="twitter:image" content="https://xactions.app/og-run.png">
 
   <link rel="canonical" href="https://xactions.app/scripts/grok-integration">
@@ -29,15 +29,15 @@
   {
     "@context": "https://schema.org",
     "@type": "TechArticle",
-    "headline": "Browser console script for interacting with Grok AI | XActions",
-    "description": "Browser console script for interacting with Grok AI. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.",
+    "headline": "Grok Integration — Free X/Twitter Script | XActions",
+    "description": "Send prompts to Grok and collect its responses. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.",
     "url": "https://xactions.app/scripts/grok-integration",
     "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
     "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
     "datePublished": "2026-03-30",
     "dateModified": "2026-03-30",
-    "articleSection": "AI & Developer",
-    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, grok, integration, ai & developer"
+    "articleSection": "AI",
+    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, grok, integration, ai"
   }
   </script>
   <script type="application/ld+json">
@@ -47,8 +47,8 @@
     "itemListElement": [
       { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
       { "@type": "ListItem", "position": 2, "name": "Scripts", "item": "https://xactions.app/scripts" },
-      { "@type": "ListItem", "position": 3, "name": "AI & Developer", "item": "https://xactions.app/scripts#ai-developer" },
-      { "@type": "ListItem", "position": 4, "name": "Browser console script for interacting with Grok AI", "item": "https://xactions.app/scripts/grok-integration" }
+      { "@type": "ListItem", "position": 3, "name": "AI", "item": "https://xactions.app/scripts#ai" },
+      { "@type": "ListItem", "position": 4, "name": "Grok Integration", "item": "https://xactions.app/scripts/grok-integration" }
     ]
   }
   </script>
@@ -116,24 +116,24 @@
 
     <main class="main-content" id="main-content">
       <header class="main-header">
-        <h1>🧠 Browser console script for interacting with Grok AI</h1>
+        <h1>🤖 Grok Integration</h1>
         <div class="breadcrumb">
-          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#ai-developer">AI &amp; Developer</a> › Browser console script for interacting with Grok AI
+          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#ai">AI</a> › Grok Integration
         </div>
       </header>
 
       <article class="article">
-        <span class="cat-badge">AI &amp; Developer</span>
-        <span class="source-badge">scripts</span>
+        <span class="cat-badge">AI</span>
+        <span class="source-badge">browser/grokIntegration.js</span>
 
         <div class="meta-row">
           
           
-          <span>187 lines</span>
+          <span>195 lines</span>
           <span>by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></span>
         </div>
 
-        <p>Browser console script for interacting with Grok AI — a free, open-source browser console script for X/Twitter automation. No API keys or fees required.</p>
+        <p>Send prompts to Grok and collect its responses.</p>
 
         
 
@@ -166,7 +166,15 @@
           <div class="code-block">
             <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.querySelector('code').textContent).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy Script',2000)})">Copy Script</button>
             <pre><code>// Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
-// scripts/grokIntegration.js
+/**
+ * @name        grokIntegration.js
+ * @title       Grok Integration
+ * @description Send prompts to Grok and collect its responses.
+ * @category    ai
+ * @page        x.com/i/grok
+ * @writes      false
+ * @aliases     scripts/grokIntegration.js
+ */
 // Browser console script for interacting with Grok AI on X
 // Paste in DevTools console on x.com/i/grok
 // by nichxbt
@@ -335,7 +343,7 @@
         try {
           await navigator.clipboard.writeText(response);
           console.log('📋 Response copied to clipboard!');
-        } catch (e) {}
+        } catch { /* clipboard needs page focus; the response is already printed above */ }
       } else {
         console.log('❌ No response received within timeout.');
         console.log(`   Try increasing CONFIG.maxWaitMs (currently ${CONFIG.maxWaitMs}ms).`);
@@ -365,8 +373,9 @@
 
     <aside class="sidebar-right">
       <div class="sidebar-card">
-        <h3>🧠 AI &amp; Developer</h3>
-        <a href="/scripts">Browse all scripts</a>
+        <h3>🤖 AI</h3>
+        <a href="/scripts/advanced-grok">🤖 Advanced Grok Tools</a>
+<a href="/scripts/persona-engine">🤖 Persona Engine</a>
       </div>
       <div class="sidebar-card">
         <h3>🔗 Quick Links</h3>

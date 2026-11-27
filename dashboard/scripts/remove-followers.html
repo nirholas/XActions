@@ -4,14 +4,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Remove Followers — Free X/Twitter Script | XActions</title>
-  <meta name="description" content="Remove specific or all followers using the soft-block technique (block → unblock).">
-  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, remove, followers, follower monitoring">
+  <meta name="description" content="Remove specific, all or low-quality followers with X's native Remove this follower, with an optional soft-block fallback.">
+  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, remove, followers, clean up">
   <meta name="author" content="nich (@nichxbt)">
   <meta name="robots" content="index, follow">
 
   <meta property="og:type" content="article">
   <meta property="og:title" content="Remove Followers — XActions">
-  <meta property="og:description" content="Remove specific or all followers using the soft-block technique (block → unblock).">
+  <meta property="og:description" content="Remove specific, all or low-quality followers with X's native Remove this follower, with an optional soft-block fallback.">
   <meta property="og:url" content="https://xactions.app/scripts/remove-followers">
   <meta property="og:site_name" content="XActions">
   <meta property="og:image" content="https://xactions.app/og-run.png">
@@ -19,7 +19,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@nichxbt">
   <meta name="twitter:title" content="Remove Followers — XActions">
-  <meta name="twitter:description" content="Remove specific or all followers using the soft-block technique (block → unblock).">
+  <meta name="twitter:description" content="Remove specific, all or low-quality followers with X's native Remove this follower, with an optional soft-block fallback.">
   <meta name="twitter:image" content="https://xactions.app/og-run.png">
 
   <link rel="canonical" href="https://xactions.app/scripts/remove-followers">
@@ -30,14 +30,14 @@
     "@context": "https://schema.org",
     "@type": "TechArticle",
     "headline": "Remove Followers — Free X/Twitter Script | XActions",
-    "description": "Remove specific or all followers using the soft-block technique (block → unblock).",
+    "description": "Remove specific, all or low-quality followers with X's native Remove this follower, with an optional soft-block fallback.",
     "url": "https://xactions.app/scripts/remove-followers",
     "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
     "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
     "datePublished": "2026-03-30",
     "dateModified": "2026-03-30",
-    "articleSection": "Follower Monitoring",
-    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, remove, followers, follower monitoring"
+    "articleSection": "Clean Up",
+    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, remove, followers, clean up"
   }
   </script>
   <script type="application/ld+json">
@@ -47,7 +47,7 @@
     "itemListElement": [
       { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
       { "@type": "ListItem", "position": 2, "name": "Scripts", "item": "https://xactions.app/scripts" },
-      { "@type": "ListItem", "position": 3, "name": "Follower Monitoring", "item": "https://xactions.app/scripts#follower-monitoring" },
+      { "@type": "ListItem", "position": 3, "name": "Clean Up", "item": "https://xactions.app/scripts#clean-up" },
       { "@type": "ListItem", "position": 4, "name": "Remove Followers", "item": "https://xactions.app/scripts/remove-followers" }
     ]
   }
@@ -116,37 +116,38 @@
 
     <main class="main-content" id="main-content">
       <header class="main-header">
-        <h1>🚫 Remove Followers</h1>
+        <h1>🧹 Remove Followers</h1>
         <div class="breadcrumb">
-          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#follower-monitoring">Follower Monitoring</a> › Remove Followers
+          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#clean-up">Clean Up</a> › Remove Followers
         </div>
       </header>
 
       <article class="article">
-        <span class="cat-badge">Follower Monitoring</span>
-        <span class="source-badge">browser</span>
+        <span class="cat-badge">Clean Up</span>
+        <span class="source-badge">browser/removeFollowers.js</span>
 
         <div class="meta-row">
-          <span>v2.0.0</span>
-          <span>Updated: 2026-02-24</span>
-          <span>266 lines</span>
+          <span>v2.1.0</span>
+          <span>Updated: 2026-11-26</span>
+          <span>356 lines</span>
           <span>by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></span>
         </div>
 
-        <p>Remove specific or all followers using the soft-block technique (block → unblock). Includes smart filtering: remove bots, low-quality, or inactive followers based on heuristics.</p>
+        <p>Remove specific, all or low-quality followers with X's native Remove this follower, with an optional soft-block fallback.</p>
 
         
 
         <h2>How to Use</h2>
         <ol class="usage-steps"><li>Go to: https://x.com/YOUR_USERNAME/followers</li>
 <li>Open DevTools Console (F12)</li>
-<li>Edit CONFIG as needed</li>
+<li>Edit CONFIG in browser/removeFollowers.js as needed</li>
 <li>Paste and run</li></ol>
         
 
         <div class="controls-box">
         <h3>Runtime Controls</h3>
-        <pre><code>window.XActions.pause()  / .resume() / .abort() / .status()</code></pre>
+        <pre><code>window.XActions.pause()  / .resume() / .abort() / .status()
+window.stopRemoveFollower()  stop after the current follower</code></pre>
       </div>
         <section class="config-section">
         <h2>Configuration Options</h2>
@@ -156,6 +157,9 @@
             <tr><td><code>mode</code></td><td><code>'list'</code></td><td>'list' | 'all' | 'smart'</td></tr>
 <tr><td><code>whitelist</code></td><td><code>[]</code></td><td>Never remove these</td></tr>
 <tr><td><code>dryRun</code></td><td><code>true</code></td><td>SET FALSE TO EXECUTE</td></tr>
+<tr><td><code>confirm</code></td><td><code>true</code></td><td>confirm() prompt before the first live removal</td></tr>
+<tr><td><code>softBlockFallback</code></td><td><code>false</code></td><td>Block, confirm, then unblock when &quot;Remove this follower&quot; is missing</td></tr>
+<tr><td><code>maxScrollRounds</code></td><td><code>40</code></td><td>Stop after this many scrolls in total</td></tr>
 <tr><td><code>noAvatar</code></td><td><code>true</code></td><td>Remove users with default avatar</td></tr>
 <tr><td><code>noBio</code></td><td><code>true</code></td><td>Remove users with empty bio</td></tr>
 <tr><td><code>followingRatioAbove</code></td><td><code>20</code></td><td>Remove if following/followers &gt; N</td></tr>
@@ -173,12 +177,15 @@
       // 'spambot123',
     ],
     whitelist: [],                    // Never remove these
-    maxRemovals: 50,
+    maxRemovals: 25,
     dryRun: true,                     // SET FALSE TO EXECUTE
-    minDelay: 2000,
-    maxDelay: 4000,
+    confirm: true,                    // confirm() prompt before the first live removal
+    softBlockFallback: false,         // Block, confirm, then unblock when &quot;Remove this follower&quot; is missing
+    minDelay: 2500,
+    maxDelay: 5000,
     scrollDelay: 2000,
     maxEmptyScrolls: 8,
+    maxScrollRounds: 40,              // Stop after this many scrolls in total
     maxConsecutiveErrors: 5,
     rateLimitCooldown: 60000,
     exportOnComplete: true,
@@ -206,13 +213,15 @@
  * ============================================================
  *
  * @name        removeFollowers.js
- * @description Remove specific or all followers using the
- *              soft-block technique (block → unblock). Includes
- *              smart filtering: remove bots, low-quality, or
- *              inactive followers based on heuristics.
+ * @title       Remove Followers
+ * @description Remove specific, all or low-quality followers with X's native Remove this follower, with an optional soft-block fallback.
+ * @category    cleanup
+ * @page        x.com/&lt;you&gt;/followers
+ * @writes      true
+ * @aliases     scripts/removeFollowers.js, scripts/twitter/remove-follower.js
  * @author      nichxbt (https://x.com/nichxbt)
- * @version     2.0.0
- * @date        2026-02-24
+ * @version     2.1.0
+ * @date        2026-11-26
  * @repository  https://github.com/nirholas/XActions
  *
  * ============================================================
@@ -220,8 +229,14 @@
  *
  * 1. Go to: https://x.com/YOUR_USERNAME/followers
  * 2. Open DevTools Console (F12)
- * 3. Edit CONFIG as needed
+ * 3. Edit CONFIG in browser/removeFollowers.js as needed
  * 4. Paste and run
+ *
+ * It DEFAULTS TO A DRY RUN (previews only). Nothing is removed until you set
+ * CONFIG.dryRun = false, and a live run asks for confirmation first
+ * (CONFIG.confirm). Each follower is removed with X's native &quot;Remove this
+ * follower&quot;. Set CONFIG.softBlockFallback = true to soft-block (block, confirm,
+ * unblock) the rows where that option is missing.
  *
  * MODES:
  *   'list'  — Remove specific usernames from usersToRemove[]
@@ -230,6 +245,7 @@
  *
  * 🎮 CONTROLS:
  *   window.XActions.pause()  / .resume() / .abort() / .status()
+ *   window.stopRemoveFollower()  stop after the current follower
  * ============================================================
  */
 (() =&gt; {
@@ -241,12 +257,15 @@
       // 'spambot123',
     ],
     whitelist: [],                    // Never remove these
-    maxRemovals: 50,
+    maxRemovals: 25,
     dryRun: true,                     // SET FALSE TO EXECUTE
-    minDelay: 2000,
-    maxDelay: 4000,
+    confirm: true,                    // confirm() prompt before the first live removal
+    softBlockFallback: false,         // Block, confirm, then unblock when &quot;Remove this follower&quot; is missing
+    minDelay: 2500,
+    maxDelay: 5000,
     scrollDelay: 2000,
     maxEmptyScrolls: 8,
+    maxScrollRounds: 40,              // Stop after this many scrolls in total
     maxConsecutiveErrors: 5,
     rateLimitCooldown: 60000,
     exportOnComplete: true,
@@ -274,7 +293,7 @@
   const isRateLimited = () =&gt; { const t = $(SEL.toast); return t &amp;&amp; /rate limit|try again|too many|slow down/i.test(t.textContent); };
 
   let paused = false, aborted = false;
-  let removed = 0, scanned = 0, skipped = 0, errors = 0, consecutiveErrors = 0;
+  let removed = 0, scanned = 0, skipped = 0, errors = 0, consecutiveErrors = 0, notFound = 0;
   const startTime = Date.now();
   const results = { removed: [], failed: [], skipped: [] };
   const processedUsers = new Set();
@@ -291,6 +310,12 @@
     },
   };
 
+  // Stop switch: run window.stopRemoveFollower() to abort after the current row.
+  window.stopRemoveFollower = () =&gt; {
+    aborted = true;
+    console.log('🛑 Stop requested. Finishing the current follower, then exiting.');
+  };
+
   const shouldContinue = async () =&gt; { while (paused &amp;&amp; !aborted) await sleep(500); return !aborted; };
 
   const extractUserData = (cell) =&gt; {
@@ -299,7 +324,7 @@
     const link = cell.querySelector('a[href^=&quot;/&quot;][role=&quot;link&quot;]') || cell.querySelector('a[href^=&quot;/&quot;]');
     if (link) {
       const m = (link.getAttribute('href') || '').match(/^\/([A-Za-z0-9_]+)/);
-      if (m &amp;&amp; !['home', 'explore', 'notifications', 'messages', 'i'].includes(m[1])) data.username = m[1];
+      if (m &amp;&amp; !['home', 'explore', 'notifications', 'messages', 'i', 'search', 'settings'].includes(m[1])) data.username = m[1];
     }
 
     const nameSpans = cell.querySelectorAll('a[href^=&quot;/&quot;] span');
@@ -327,7 +352,7 @@
 
   const removeFollower = async (cell, userData) =&gt; {
     const moreBtn = cell.querySelector('[data-testid=&quot;userActions&quot;]') || cell.querySelector('button[aria-label=&quot;More&quot;]');
-    if (!moreBtn) { errors++; consecutiveErrors++; results.failed.push(userData.username); return false; }
+    if (!moreBtn) { errors++; consecutiveErrors++; notFound++; results.failed.push(userData.username); return false; }
 
     moreBtn.click();
     await sleep(gaussian(600, 1000));
@@ -339,12 +364,51 @@
       if (item.textContent.toLowerCase().includes('remove')) { removeBtn = item; break; }
     }
 
+    if (!removeBtn &amp;&amp; CONFIG.softBlockFallback) {
+      // Soft-block: block, confirm, then reopen the menu on the same row and unblock.
+      let blockBtn = null;
+      for (const item of menuItems) {
+        if (/\bblock\b/i.test(item.textContent) &amp;&amp; !/unblock/i.test(item.textContent)) { blockBtn = item; break; }
+      }
+      if (blockBtn) {
+        blockBtn.click();
+        await sleep(gaussian(500, 800));
+        const blockConfirm = $(SEL.confirmBtn);
+        if (blockConfirm) { blockConfirm.click(); await sleep(gaussian(700, 1000)); }
+
+        const moreBtn2 = cell.querySelector('[data-testid=&quot;userActions&quot;]') || cell.querySelector('button[aria-label=&quot;More&quot;]');
+        if (moreBtn2) {
+          moreBtn2.click();
+          await sleep(gaussian(600, 1000));
+          let unblockBtn = null;
+          for (const item of document.querySelectorAll('[role=&quot;menuitem&quot;]')) {
+            if (/unblock/i.test(item.textContent)) { unblockBtn = item; break; }
+          }
+          if (unblockBtn) {
+            unblockBtn.click();
+            await sleep(gaussian(400, 700));
+            const unblockConfirm = $(SEL.confirmBtn);
+            if (unblockConfirm) { unblockConfirm.click(); await sleep(gaussian(400, 700)); }
+          } else {
+            document.body.click();
+            await sleep(300);
+          }
+        }
+
+        removed++;
+        consecutiveErrors = 0;
+        results.removed.push({ ...userData, method: 'soft-block', timestamp: new Date().toISOString() });
+        return true;
+      }
+    }
+
     if (!removeBtn) {
       document.body.click();
       await sleep(300);
       results.failed.push(userData.username);
       errors++;
       consecutiveErrors++;
+      notFound++;
       return false;
     }
 
@@ -377,10 +441,22 @@
       console.error('❌ No users specified! Add usernames to CONFIG.usersToRemove or change mode.');
       return;
     }
+    if (CONFIG.dryRun) console.log('⚠️ DRY RUN: no followers will be removed.\n');
+
+    if (!CONFIG.dryRun &amp;&amp; CONFIG.confirm) {
+      const proceed = window.confirm(
+        `Remove up to ${CONFIG.maxRemovals} follower(s) for real? This cannot be auto-undone.`
+      );
+      if (!proceed) {
+        console.warn('⚠️ Cancelled at confirmation prompt. Nothing removed.');
+        return;
+      }
+    }
 
     let emptyScrolls = 0;
+    let scrollRounds = 0;
 
-    while (removed &lt; CONFIG.maxRemovals &amp;&amp; emptyScrolls &lt; CONFIG.maxEmptyScrolls) {
+    while (removed &lt; CONFIG.maxRemovals &amp;&amp; emptyScrolls &lt; CONFIG.maxEmptyScrolls &amp;&amp; scrollRounds &lt; CONFIG.maxScrollRounds) {
       if (!(await shouldContinue())) break;
       if (isRateLimited()) { console.warn('🚨 Rate limit!'); await sleep(CONFIG.rateLimitCooldown); continue; }
 
@@ -427,7 +503,17 @@
           continue;
         }
 
-        const success = await removeFollower(cell, userData);
+        let success = false;
+        try {
+          success = await removeFollower(cell, userData);
+        } catch (e) {
+          console.warn(`⚠️ Error removing @${userData.username}: ${e.message}`);
+          errors++;
+          consecutiveErrors++;
+          results.failed.push(userData.username);
+          document.body.click();
+          await sleep(300);
+        }
         if (success) {
           console.log(`   👋 Removed @${userData.username}${reason ? ` (${reason})` : ''} [${removed}/${CONFIG.maxRemovals}]`);
         }
@@ -439,6 +525,7 @@
       if (consecutiveErrors &gt;= CONFIG.maxConsecutiveErrors) break;
       if (!foundNew) emptyScrolls++; else emptyScrolls = 0;
       window.scrollTo(0, document.body.scrollHeight);
+      scrollRounds++;
       await sleep(gaussian(CONFIG.scrollDelay, CONFIG.scrollDelay + 800));
     }
 
@@ -450,16 +537,26 @@
     console.log(`║  Scanned:     ${String(scanned).padEnd(31)}║`);
     console.log(`║  Skipped:     ${String(skipped).padEnd(31)}║`);
     console.log(`║  Failed:      ${String(results.failed.length).padEnd(31)}║`);
+    console.log(`║  Not found:   ${String(notFound).padEnd(31)}║`);
+    console.log(`║  Dry run:     ${String(CONFIG.dryRun).padEnd(31)}║`);
     console.log(`║  Duration:    ${(elapsed + 's').padEnd(31)}║`);
     console.log('╚' + '═'.repeat(48) + '╝');
 
     if (CONFIG.exportOnComplete &amp;&amp; results.removed.length &gt; 0) {
-      const blob = new Blob([JSON.stringify(results, null, 2)], { type: 'application/json' });
+      const exportData = {
+        ...results,
+        stats: { removed, scanned, skipped, failed: results.failed.length, notFound, errors, dryRun: CONFIG.dryRun },
+        dryRun: CONFIG.dryRun,
+        exportedAt: new Date().toISOString(),
+      };
+      const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
       const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
       a.download = `xactions-removed-followers-${CONFIG.dryRun ? 'preview' : 'results'}-${new Date().toISOString().slice(0, 10)}.json`;
       document.body.appendChild(a); a.click(); a.remove();
       console.log('📥 Results exported.');
     }
+
+    if (CONFIG.dryRun) console.warn('⚠️ This was a DRY RUN. Set CONFIG.dryRun = false to actually remove.');
   };
 
   run();
@@ -478,17 +575,17 @@
 
     <aside class="sidebar-right">
       <div class="sidebar-card">
-        <h3>🚫 Follower Monitoring</h3>
-        <a href="/scripts/follower-tools">👥 Advanced follower tools</a>
-<a href="/scripts/audit-followers">📊 Audit Followers</a>
-<a href="/scripts/continuous-monitor">🔄 Continuous Monitor</a>
-<a href="/scripts/detect-unfollowers">🔍 Detect Unfollowers</a>
-<a href="/scripts/find-fake-followers">🤖 Find Fake Followers</a>
-<a href="/scripts/follower-growth-tracker">📈 Follower Growth Tracker</a>
-<a href="/scripts/followers-growth-tracker">📈 Followers Growth Tracker</a>
-<a href="/scripts/monitor-account">📊 Monitor Account</a>
-<a href="/scripts/new-followers-alert">🔔 New Followers Alert</a>
-<a href="/scripts/welcome-new-followers">👋 Welcome New Followers</a>
+        <h3>🧹 Clean Up</h3>
+        <a href="/scripts/bulk-delete-tweets">🧹 Bulk Delete Tweets</a>
+<a href="/scripts/clear-all-bookmarks">🧹 Clear All Bookmarks</a>
+<a href="/scripts/clear-all-reposts">🧹 Clear All Reposts</a>
+<a href="/scripts/mass-unblock">🧹 Mass Unblock</a>
+<a href="/scripts/mass-unmute">🧹 Mass Unmute</a>
+<a href="/scripts/protect-active-users">🧹 Protect Active Users</a>
+<a href="/scripts/search-sweep">🧹 Search Sweep</a>
+<a href="/scripts/smart-unfollow">🧹 Smart Unfollow</a>
+<a href="/scripts/unfollow-everyone">🧹 Unfollow Everyone</a>
+<a href="/scripts/unfollowback">🧹 Unfollow Non-Followers</a>
       </div>
       <div class="sidebar-card">
         <h3>🔗 Quick Links</h3>

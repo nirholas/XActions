@@ -3,23 +3,23 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Follow Likers &amp; Commenters — Free X/Twitter Script | XActions</title>
-  <meta name="description" content="Find users who engage with specific posts and follow them. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
-  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, follow, engagers, growth">
+  <title>Follow Engagers — Free X/Twitter Script | XActions</title>
+  <meta name="description" content="Follow the people who liked, reposted or quoted a post, or the recent posts on a profile, with filters and a cap.">
+  <meta name="keywords" content="xactions, twitter automation, x automation, browser script, devtools console, free, open source, follow, engagers, grow">
   <meta name="author" content="nich (@nichxbt)">
   <meta name="robots" content="index, follow">
 
   <meta property="og:type" content="article">
-  <meta property="og:title" content="Follow Likers &amp; Commenters — XActions">
-  <meta property="og:description" content="Find users who engage with specific posts and follow them. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
+  <meta property="og:title" content="Follow Engagers — XActions">
+  <meta property="og:description" content="Follow the people who liked, reposted or quoted a post, or the recent posts on a profile, with filters and a cap.">
   <meta property="og:url" content="https://xactions.app/scripts/follow-engagers">
   <meta property="og:site_name" content="XActions">
   <meta property="og:image" content="https://xactions.app/og-run.png">
 
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@nichxbt">
-  <meta name="twitter:title" content="Follow Likers &amp; Commenters — XActions">
-  <meta name="twitter:description" content="Find users who engage with specific posts and follow them. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.">
+  <meta name="twitter:title" content="Follow Engagers — XActions">
+  <meta name="twitter:description" content="Follow the people who liked, reposted or quoted a post, or the recent posts on a profile, with filters and a cap.">
   <meta name="twitter:image" content="https://xactions.app/og-run.png">
 
   <link rel="canonical" href="https://xactions.app/scripts/follow-engagers">
@@ -29,15 +29,15 @@
   {
     "@context": "https://schema.org",
     "@type": "TechArticle",
-    "headline": "Follow Likers & Commenters — Free X/Twitter Script | XActions",
-    "description": "Find users who engage with specific posts and follow them. Free browser console script for X/Twitter: paste it into DevTools on x.com, no API key needed.",
+    "headline": "Follow Engagers — Free X/Twitter Script | XActions",
+    "description": "Follow the people who liked, reposted or quoted a post, or the recent posts on a profile, with filters and a cap.",
     "url": "https://xactions.app/scripts/follow-engagers",
     "author": { "@type": "Person", "name": "nich", "url": "https://x.com/nichxbt" },
     "publisher": { "@type": "Organization", "name": "XActions", "url": "https://xactions.app" },
     "datePublished": "2026-03-30",
     "dateModified": "2026-03-30",
-    "articleSection": "Growth",
-    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, follow, engagers, growth"
+    "articleSection": "Grow",
+    "keywords": "xactions, twitter automation, x automation, browser script, devtools console, free, open source, follow, engagers, grow"
   }
   </script>
   <script type="application/ld+json">
@@ -47,8 +47,8 @@
     "itemListElement": [
       { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://xactions.app" },
       { "@type": "ListItem", "position": 2, "name": "Scripts", "item": "https://xactions.app/scripts" },
-      { "@type": "ListItem", "position": 3, "name": "Growth", "item": "https://xactions.app/scripts#growth" },
-      { "@type": "ListItem", "position": 4, "name": "Follow Likers & Commenters", "item": "https://xactions.app/scripts/follow-engagers" }
+      { "@type": "ListItem", "position": 3, "name": "Grow", "item": "https://xactions.app/scripts#grow" },
+      { "@type": "ListItem", "position": 4, "name": "Follow Engagers", "item": "https://xactions.app/scripts/follow-engagers" }
     ]
   }
   </script>
@@ -116,32 +116,33 @@
 
     <main class="main-content" id="main-content">
       <header class="main-header">
-        <h1>🎯 Follow Likers &amp; Commenters</h1>
+        <h1>🌱 Follow Engagers</h1>
         <div class="breadcrumb">
-          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#growth">Growth</a> › Follow Likers &amp; Commenters
+          <a href="/">Home</a> › <a href="/scripts">Scripts</a> › <a href="/scripts#grow">Grow</a> › Follow Engagers
         </div>
       </header>
 
       <article class="article">
-        <span class="cat-badge">Growth</span>
-        <span class="source-badge">src/automation</span>
+        <span class="cat-badge">Grow</span>
+        <span class="source-badge">browser/followEngagers.js</span>
 
         <div class="meta-row">
-          
-          
-          <span>361 lines</span>
+          <span>v1.1.0</span>
+          <span>Updated: 2026-11-27</span>
+          <span>472 lines</span>
           <span>by <a href="https://x.com/nichxbt" rel="noopener">@nichxbt</a></span>
         </div>
 
-        <p>Find users who engage with specific posts and follow them</p>
+        <p>Follow the people who liked, reposted or quoted a post, or the recent posts on a profile, with filters and a cap.</p>
 
         
 
         <h2>How to Use</h2>
-        <ol class="usage-steps"><li>Open any X post you want to analyze</li>
-<li>Paste core.js, then paste this script</li>
-<li>Configure and run</li></ol>
-        <p><strong>Note:</strong> This script requires pasting <code>src/automation/core.js</code> first for shared utilities.</p>
+        <ol class="usage-steps"><li>Open any X post you want to analyze (or a profile, to use its</li>
+<li>Configure CONFIG below</li>
+<li>Paste browser/followEngagers.js into the DevTools console and press Enter</li>
+<li>Run stopEngager() to stop early</li></ol>
+        
 
         
         <section class="config-section">
@@ -172,7 +173,7 @@
     MAX_FOLLOWS_PER_POST: 15,
     
     // Total maximum follows
-    TOTAL_MAX_FOLLOWS: 30,
+    TOTAL_MAX_FOLLOWS: 20,
     
     // -------- FILTERS --------
     FILTERS: {
@@ -200,25 +201,97 @@
           <div class="code-block">
             <button class="copy-btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.querySelector('code').textContent).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy Script',2000)})">Copy Script</button>
             <pre><code>// Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
-// XActions Automation - Follow Likers &amp; Commenters
-// https://github.com/nirholas/XActions
-//
-// REQUIRES: Paste core.js first!
-//
-// Find users who engage with specific posts and follow them
-//
-// HOW TO USE:
-// 1. Open any X post you want to analyze
-// 2. Paste core.js, then paste this script
-// 3. Configure and run
+/**
+ * ============================================================
+ * 💬 Follow Likers &amp; Engagers
+ * ============================================================
+ *
+ * @name        followEngagers.js
+ * @title       Follow Engagers
+ * @description Follow the people who liked, reposted or quoted a post, or the recent posts on a profile, with filters and a cap.
+ * @category    grow
+ * @page        x.com/&lt;username&gt;/status/&lt;id&gt; or x.com/&lt;username&gt;
+ * @writes      true
+ * @aliases     src/automation/followEngagers.js, scripts/twitter/follow-engagers.js
+ * @author      nichxbt (https://x.com/nichxbt)
+ * @version     1.1.0
+ * @date        2026-11-27
+ * @repository  https://github.com/nirholas/XActions
+ *
+ * ============================================================
+ * 📋 USAGE:
+ *
+ * Find users who engage with specific posts and follow them.
+ *
+ * 1. Open any X post you want to analyze (or a profile, to use its
+ *    most recent posts)
+ * 2. Configure CONFIG below
+ * 3. Paste browser/followEngagers.js into the DevTools console and press Enter
+ *    (src/automation/core.js is optional: when it is pasted first its
+ *    logger, storage and selectors are used)
+ * 4. Run stopEngager() to stop early
+ * ============================================================
+ */
 
 (() =&gt; {
-  if (!window.XActions?.Core) {
-    console.error('❌ Core module not loaded! Paste core.js first.');
-    return;
-  }
+  // ============================================
+  // CORE (optional): use core.js when present, built-ins otherwise
+  // ============================================
+  const Core = window.XActions?.Core;
 
-  const { log, sleep, randomDelay, scrollBy, clickElement, waitForElement, storage, SELECTORS } = window.XActions.Core;
+  const sleep = Core?.sleep || ((ms) =&gt; new Promise(resolve =&gt; setTimeout(resolve, ms)));
+  const randomDelay = Core?.randomDelay || ((min, max) =&gt; sleep(Math.floor(Math.random() * (max - min + 1)) + min));
+  const log = Core?.log || ((message, type = 'info') =&gt; {
+    const prefix = { info: '📘', success: '✅', warning: '⚠️', error: '❌', action: '🔧' }[type] || '📘';
+    console.log(`${prefix} [${new Date().toLocaleTimeString()}] ${message}`);
+  });
+  const scrollBy = Core?.scrollBy || ((pixels) =&gt; window.scrollBy({ top: pixels, behavior: 'smooth' }));
+  const clickElement = Core?.clickElement || (async (element) =&gt; {
+    if (!element) return false;
+    try {
+      element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      await sleep(300);
+      element.click();
+      return true;
+    } catch (e) {
+      log(`Click error: ${e.message}`, 'error');
+      return false;
+    }
+  });
+  const waitForElement = Core?.waitForElement || (async (selector, timeout = 10000) =&gt; {
+    const startTime = Date.now();
+    while (Date.now() - startTime &lt; timeout) {
+      const element = document.querySelector(selector);
+      if (element) return element;
+      await sleep(100);
+    }
+    return null;
+  });
+  // Same key layout as core.js storage (xactions_ prefix, JSON values)
+  const storage = Core?.storage || {
+    get: (key) =&gt; {
+      try {
+        const data = localStorage.getItem('xactions_' + key);
+        return data ? JSON.parse(data) : null;
+      } catch {
+        return null;
+      }
+    },
+    set: (key, value) =&gt; {
+      try {
+        localStorage.setItem('xactions_' + key, JSON.stringify(value));
+        return true;
+      } catch {
+        return false;
+      }
+    },
+  };
+  const SELECTORS = Core?.SELECTORS || {
+    followButton: '[data-testid$=&quot;-follow&quot;]',
+    unfollowButton: '[data-testid$=&quot;-unfollow&quot;]',
+    tweet: '[data-testid=&quot;tweet&quot;]',
+    userCell: '[data-testid=&quot;UserCell&quot;]',
+  };
 
   // ============================================
   // CONFIGURATION
@@ -238,7 +311,7 @@
     MAX_FOLLOWS_PER_POST: 15,
     
     // Total maximum follows
-    TOTAL_MAX_FOLLOWS: 30,
+    TOTAL_MAX_FOLLOWS: 20,
     
     // -------- FILTERS --------
     FILTERS: {
@@ -268,19 +341,55 @@
     isRunning: true,
   };
 
+  // Flat list of followed usernames written by the scripts/twitter variant
+  const LEGACY_STORAGE_KEY = 'xactions_followed_engagers';
+  const loadLegacyFollowed = () =&gt; {
+    try {
+      const saved = localStorage.getItem(LEGACY_STORAGE_KEY);
+      return saved ? JSON.parse(saved) : [];
+    } catch {
+      return [];
+    }
+  };
+  const legacyFollowed = new Set(loadLegacyFollowed());
+
   const tracked = {
     followed: new Map(Object.entries(storage.get('engager_followed') || {})),
-    processed: new Set(storage.get('engager_processed') || []),
+    processed: new Set([
+      ...(storage.get('engager_processed') || []),
+      ...Array.from(legacyFollowed, u =&gt; String(u).toLowerCase()),
+    ]),
   };
 
   const saveTracked = () =&gt; {
     storage.set('engager_followed', Object.fromEntries(tracked.followed));
     storage.set('engager_processed', Array.from(tracked.processed));
+    try {
+      localStorage.setItem(LEGACY_STORAGE_KEY, JSON.stringify([...legacyFollowed]));
+    } catch {
+      // storage full or blocked: engager_followed above still has it
+    }
   };
 
   // ============================================
   // HELPERS
   // ============================================
+  // Navigate within the SPA. Assigning window.location.href triggers a full
+  // page load, which destroys this console script before it can continue.
+  const spaNavigate = (url) =&gt; {
+    try {
+      const target = new URL(url, window.location.href);
+      if (target.origin === window.location.origin) {
+        if (target.href !== window.location.href) {
+          window.history.pushState({}, '', target.href);
+          window.dispatchEvent(new PopStateEvent('popstate', { state: {} }));
+        }
+        return;
+      }
+    } catch { /* fall through to a full page load below */ }
+    window.location.href = url;
+  };
+
   const extractPostId = (url) =&gt; {
     const match = url.match(/status\/(\d+)/);
     return match ? match[1] : null;
@@ -295,7 +404,7 @@
     
     const link = cell.querySelector('a[href^=&quot;/&quot;]');
     if (link) {
-      info.username = link.getAttribute('href').replace('/', '').toLowerCase();
+      info.username = link.getAttribute('href').replace('/', '').split('/')[0].toLowerCase();
     }
     
     info.isProtected = !!cell.querySelector('[data-testid=&quot;icon-lock&quot;]');
@@ -331,7 +440,7 @@
     }
     
     // Navigate to the post first
-    window.location.href = postUrl;
+    spaNavigate(postUrl);
     await sleep(3000);
     
     // Find and click the appropriate button based on type
@@ -347,7 +456,7 @@
       }
       
       // Alternative: navigate directly
-      window.location.href = `${postUrl}/likes`;
+      spaNavigate(`${postUrl}/likes`);
       await sleep(3000);
       return true;
     } else if (type === 'retweeters') {
@@ -360,11 +469,11 @@
         }
       }
       
-      window.location.href = `${postUrl}/retweets`;
+      spaNavigate(`${postUrl}/retweets`);
       await sleep(3000);
       return true;
     } else if (type === 'quoters') {
-      window.location.href = `${postUrl}/retweets/with_comments`;
+      spaNavigate(`${postUrl}/retweets/with_comments`);
       await sleep(3000);
       return true;
     }
@@ -423,6 +532,7 @@
         }
         
         if (!meetsFilters(userInfo)) {
+          log(`⏭️ Skipping @${userInfo.username} (filtered)`, 'info');
           tracked.processed.add(userInfo.username);
           continue;
         }
@@ -440,6 +550,7 @@
           postUrl: postUrl,
         });
         tracked.processed.add(userInfo.username);
+        legacyFollowed.add(userInfo.username);
         saveTracked();
         
         log(`✅ Followed @${userInfo.username} [${state.totalFollowed}/${CONFIG.TOTAL_MAX_FOLLOWS}]`, 'success');
@@ -494,7 +605,7 @@
     let posts = CONFIG.TARGET_POSTS;
     
     if (posts.length === 0) {
-      const currentUrl = window.location.href;
+      const currentUrl = window.location.href.split('?')[0];
       if (currentUrl.includes('/status/')) {
         posts = [currentUrl];
         log('Using current post', 'info');
@@ -553,6 +664,7 @@
     log('Stopping engager follow...', 'warning');
   };
 
+  window.XActions = window.XActions || {};
   window.XActions.Engager = {
     state: () =&gt; state,
     tracked: () =&gt; tracked,
@@ -573,17 +685,17 @@
 
     <aside class="sidebar-right">
       <div class="sidebar-card">
-        <h3>🎯 Growth</h3>
-        <a href="/scripts/algorithm-builder">🧠 Algorithm Builder</a>
-<a href="/scripts/algorithm-trainer">🧠 Algorithm Trainer</a>
-<a href="/scripts/follow-list">📋 Follow &amp; Manage Lists</a>
-<a href="/scripts/follow-account">➕ Follow Accounts</a>
-<a href="/scripts/follow-back">🔗 Follow Back</a>
-<a href="/scripts/follow-target-users">🎯 Follow Followers/Following of Target Users</a>
-<a href="/scripts/growth-suite">🚀 Growth Automation Suite</a>
-<a href="/scripts/keyword-follow">🔑 Keyword Search &amp; Follow</a>
-<a href="/scripts/natural-flow">🌊 Natural Flow</a>
-<a href="/scripts/persona-engine">🎭 Persona Engine</a>
+        <h3>🌱 Grow</h3>
+        <a href="/scripts/algorithm-builder">🌱 Algorithm Builder</a>
+<a href="/scripts/algorithm-trainer">🌱 Algorithm Trainer</a>
+<a href="/scripts/auto-plug-replies">🌱 Auto-Plug Replies</a>
+<a href="/scripts/follow-account">🌱 Follow Accounts</a>
+<a href="/scripts/follow-back">🌱 Follow Back</a>
+<a href="/scripts/follow-target-users">🌱 Follow Target Users</a>
+<a href="/scripts/follower-tools">🌱 Follower Tools</a>
+<a href="/scripts/growth-suite">🌱 Growth Suite</a>
+<a href="/scripts/keyword-follow">🌱 Keyword Follow</a>
+<a href="/scripts/natural-flow">🌱 Natural Flow</a>
       </div>
       <div class="sidebar-card">
         <h3>🔗 Quick Links</h3>
