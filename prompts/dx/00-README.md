@@ -1,6 +1,6 @@
 # prompts/dx: make XActions easier to use
 
-23 prompts, one task each. Together they make the tools, scripts and APIs in this
+16 open prompts, one task each. Together they make the tools, scripts and APIs in this
 repository easier to find, install and run. Every prompt is self-contained: hand one
 file to one agent with a fresh context.
 
@@ -15,26 +15,19 @@ wave starts after the prompts it names have merged.
 **Wave 1 (parallel)**
 
 - `01` browser scripts: one home, one manifest
-- `06` README: merge repeated sections
 - `10` split `src/mcp/server.js`
 - `13` split `src/cli/index.js`
 - `16` static `openapi.json`
-- `17` nightly live verification
-- `18` CLI and MCP Docker image
-- `20` devcontainer
 - `23` `node:sqlite` evaluation
 
 **Wave 2**
 
 - `02` `xactions script` command (needs 01 and 13)
-- `03` userscript build (needs 01)
 - `04` extension generated from the manifest (needs 01)
 - `05` browser script safety defaults (needs 01)
 - `07` docs restructured by lane (needs 06)
 - `11` MCP tool annotations (needs 10)
-- `12` MCP presets and prompts (needs 10)
 - `14` CLI output contract (needs 13)
-- `15` `doctor --report` and issue forms (needs 13)
 - `19` plugin and workflow scaffolds (needs 13)
 
 **Wave 3**
@@ -42,7 +35,20 @@ wave starts after the prompts it names have merged.
 - `08` docs site and generated pages (needs 01 and 07)
 - `09` library types and exports (needs 10 and 13)
 - `21` sibling projects extraction (owner decisions inside)
-- `22` root layout and deploy configs (needs 18)
+- `22` root layout and deploy configs (needs 18, done)
+
+## Done
+
+These are finished and their prompt files removed. Each is committed on its branch,
+waiting to merge:
+
+- `03` userscript build: `dx/03-userscripts`
+- `06` README: merge repeated sections: `dx/06-readme-merge`
+- `12` MCP presets and prompts: `dx/12-mcp-presets`
+- `15` `doctor --report` and issue forms: `dx/15-doctor-report`
+- `17` nightly live verification: `dx/17-live-check`
+- `18` CLI and MCP Docker image: `dx/18-docker-cli`
+- `20` devcontainer: `dx/20-devcontainer`
 
 ## How to run one
 
