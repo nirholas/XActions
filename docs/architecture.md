@@ -89,7 +89,7 @@ xactions/
 │   ├── graph/              # Social network graph
 │   └── *.js                # index.js (library entry) and Node modules
 │
-├── browser/                # 112 standalone browser console scripts (IIFEs)
+├── browser/                # 208 standalone browser console scripts (IIFEs)
 │
 ├── dashboard/              # Static HTML frontend
 │   ├── index.html          # Main dashboard

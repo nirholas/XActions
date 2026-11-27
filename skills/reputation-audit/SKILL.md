@@ -50,7 +50,7 @@ gives.
 
 ## Browser script (with the shareable score card)
 
-**File:** `scripts/reputationAudit.js` — full guide: `docs/reputation-audit.md`
+**File:** `browser/reputationAudit.js` — full guide: `docs/reputation-audit.md`
 
 The only surface that renders the downloadable/copyable PNG score card.
 
@@ -68,7 +68,7 @@ The only surface that renders the downloadable/copyable PNG score card.
 
 - Scanning only reads and scores. Nothing is touched until Cleanup runs, and
   that starts in dry run.
-- Cleanup reuses the same verified-delete logic as `scripts/searchSweep.js`
+- Cleanup reuses the same verified-delete logic as `browser/searchSweep.js`
   and only ever touches the account's own posts.
 - The card downloads as a 1200x675 PNG (X's own card ratio) or copies straight
   to the clipboard to paste into a new post.

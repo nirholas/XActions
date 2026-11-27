@@ -655,49 +655,19 @@ bookmarks and DMs need a session.
 
 ## 8. DevTools Console Scripts
 
-> `scripts/` holds 95 browser console scripts you paste into DevTools on x.com,
-> and `scripts/twitter/` holds 110 standalone `.js` variants of the same ideas.
+> `browser/` holds 208 browser console scripts you paste into DevTools on x.com,
+> one file per tool, listed in `browser/index.json`. The old paths in `scripts/`,
+> `scripts/twitter/` and `src/automation/` are generated copies of them.
 > The full catalogue with a description and the page each one runs on is
 > generated from the script headers themselves into
 > [browser-scripts.md](browser-scripts.md) by `npm run docs:scripts`. A
-> hand-kept list of a hundred files is a list that is wrong within a month, so
-> this section covers only what is unique to `scripts/twitter/`.
-
-### 8.1 Scripts UNIQUE to `scripts/twitter/` (not in `browser/`)
-
-| # | File | What It Does | Page Required |
-|---|------|-------------|---------------|
-| 1 | `blacklist.js` (293 lines) | Manage a blacklist: users to never follow/like/RT | Any x.com page |
-| 2 | `whitelist.js` (270 lines) | Manage a whitelist: protected users to never unfollow/block | Any x.com page |
-| 3 | `filter-manager.js` (394 lines) | Configure filters (follower count, age, language, bio keywords, verified, default pic, tweet count) | Any x.com page |
-| 4 | `rate-limiter.js` (388 lines) | Rate limiting utility: tracks actions per hour/day, enforces quotas, cooldowns | Any (paste first) |
-| 5 | `block-by-keywords.js` (203 lines) | Block users with specific keywords in their bio | Followers/following page |
-| 6 | `block-by-ratio.js` (235 lines) | Block accounts by follower/following ratio (spam detection) | `x.com/USERNAME/followers` |
-| 7 | `comment-by-hashtag.js` (289 lines) | Search hashtags and auto-comment with custom messages | `x.com` (logged in) |
-| 8 | `comment-by-location.js` (348 lines) | Search by location and auto-comment on matching tweets | `x.com` (logged in) |
-| 9 | `interact-by-hashtag.js` (315 lines) | Like + RT + follow users posting with specific hashtags | Any x.com page |
-| 10 | `interact-by-place.js` (267 lines) | Like + follow users from specific locations (great for local business) | Any x.com page |
-| 11 | `interact-by-users.js` (321 lines) | Full interaction suite for target users: like, reply, RT, follow | Any x.com page |
-| 12 | `interact-with-likers.js` (258 lines) | Follow users who liked specific tweets (competitor audience building) | Tweet likes page |
-| 13 | `like-by-feed.js` (277 lines) | Auto-like tweets from home timeline | `x.com/home` |
-| 14 | `like-by-hashtag.js` (265 lines) | Auto-like tweets containing specific hashtags | Search page |
-| 15 | `like-by-location.js` (296 lines) | Auto-like tweets from specific geographic locations (uses `near:` operator) | `x.com` |
-| 16 | `like-by-user.js` (328 lines) | Auto-like all tweets from a specific user's profile | `x.com/USERNAME` |
-| 17 | `like-user-replies.js` (357 lines) | Auto-like replies/comments on a specific tweet | Tweet page (`x.com/user/status/xxx`) |
-| 18 | `find-fake-followers.js` (359 lines) | Advanced fake/bot follower detection with scoring system | `x.com/USERNAME/followers` |
-| 19 | `followers-growth-tracker.js` (278 lines) | Track follower growth over time with historical data in localStorage | Any profile page |
-| 20 | `profile-stats.js` (308 lines) | Comprehensive profile statistics dashboard | Any profile page |
-| 21 | `unlike-old.js` (246 lines) | Unlike tweets older than N days | `x.com/USERNAME/likes` |
-| 22 | `leave-community.js` (123 lines) | Leave a specific community by ID | Community page |
-| 23 | `update-banner.js` (161 lines) | Helper for updating profile banner image | `x.com/USERNAME` |
-| 24 | `update-bio.js` (147 lines) | Update profile bio text | `x.com/settings/profile` |
-| 25 | `update-profile-picture.js` (162 lines) | Helper for updating profile picture | `x.com/USERNAME` |
-| 26 | `scrape-profile-posts.js` (887 lines) | Advanced tweet scraper with filtering, analytics, multi-format export | Any profile page |
-| 27 | `scraper-toolbox.js` (1765 lines) | Interactive scraper control panel: GraphQL capture (exact counts, full long-post text, follower counts), reply-to-parent linking with in-page parent fetching, quoted-post context, Retry on rate limits, start/pause/stop, live filters, user exclusions, 5 export formats + clipboard | Any timeline (profile, search, list, likes, bookmarks, home) |
-
-### 8.2 Scripts that MIRROR `browser/` features (shared as standalone versions)
-
-`unfollow-everyone.js`, `unfollow-non-followers.js`, `unfollow-with-log.js`, `smart-unfollow.js`, `detect-unfollowers.js`, `monitor-account.js`, `continuous-monitor.js`, `new-followers-alert.js`, `auto-liker.js`, `auto-commenter.js`, `follow-engagers.js`, `follow-target-users.js`, `keyword-follow.js`, `protect-active-users.js`, `growth-suite.js`, `multi-account.js`, `audit-followers.js`, `block-bots.js`, `mass-block.js`, `mass-unblock.js`, `mass-unmute.js`, `mute-by-keywords.js`, `report-spam.js`, `clear-all-bookmarks.js`, `clear-all-likes.js`, `clear-all-retweets.js`, `leave-all-communities.js`, `join-communities.js`, `send-direct-message.js`, `backup-account.js`, `best-time-to-post.js`, `competitor-analysis.js`, `engagement-analytics.js`, `hashtag-analytics.js`, `bookmark-exporter.js`, `thread-unroller.js`, `video-downloader.js`, `viral-tweets-scraper.js`, `link-scraper.js`
+> hand-kept list of a hundred files is a list that is wrong within a month.
+>
+> The tools that used to exist only in `scripts/twitter/` (blacklist, whitelist,
+> filter manager, rate limiter, the like, comment and interact-by scripts, the
+> scraper toolbox and the rest) each have a `browser/` file now. To find where
+> an old file name went, search `browser/index.json` for it: every script lists
+> the old paths it replaces under `aliases`.
 
 ---
 

@@ -39,7 +39,7 @@ Same non-follower detection as `unfollowback.js` but collects usernames and auto
 
 ## smartUnfollow.js
 
-**Requires:** Paste `src/automation/core.js` first.
+**Requires:** Nothing. It uses `browser/core.js` when that is pasted first.
 
 Uses follow timestamps from `keywordFollow.js` to only unfollow users who haven't followed you back within a configurable grace period. Supports a whitelist to protect VIP accounts.
 

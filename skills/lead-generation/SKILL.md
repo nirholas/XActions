@@ -46,7 +46,7 @@ Enhance MCP workflows with browser scripts:
 | Analyze potential lead's audience | `browser/audienceDemographics.js` |
 | Check overlap with your audience | `browser/audienceOverlap.js` |
 | Engage with leads' content | `browser/engagementBooster.js` |
-| Auto-follow qualified leads | `src/automation/keywordFollow.js` |
+| Auto-follow qualified leads | `browser/keywordFollow.js` |
 
 ## Output Template
 

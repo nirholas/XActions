@@ -16,8 +16,8 @@ Browser console scripts and MCP tools for exploring trends, searching content, a
 | Goal | File | Navigate to |
 |------|------|-------------|
 | Monitor trending topics | `browser/trendingTopicMonitor.js` | `x.com/explore/tabs/trending` |
-| Search tweets | `scripts/scrapeSearch.js` | Search results page |
-| Scrape hashtag | `scripts/scrapeHashtag.js` | `x.com/hashtag/TAG` |
+| Search tweets | `browser/scrapeSearch.js` | Search results page |
+| Scrape hashtag | `browser/scrapeHashtag.js` | `x.com/hashtag/TAG` |
 | Find viral tweets | `browser/viralTweetDetector.js` | Any profile |
 | Keyword monitoring | `browser/keywordMonitor.js` | Any page |
 | Scrape explore page | `src/exploreScraper.js` | `x.com/explore` |
@@ -73,7 +73,7 @@ Monitors X for mentions of specific keywords with sentiment classification.
 5. Track performance with `browser/tweetPerformance.js`
 
 ### Content ideation from search
-1. Use `scripts/scrapeSearch.js` or `x_search_tweets` for niche keywords
+1. Use `browser/scrapeSearch.js` or `x_search_tweets` for niche keywords
 2. Analyze top results for content gaps
 3. Use `browser/viralTweetDetector.js` on popular accounts in your niche
 4. Repurpose successful formats with `browser/contentRepurposer.js`

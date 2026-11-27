@@ -15,14 +15,14 @@ Browser console scripts for managing, organizing, exporting, and clearing X/Twit
 
 | Goal | File | Navigate to |
 |------|------|-------------|
-| Export bookmarks (full metadata) | `scripts/scrapeBookmarks.js` | `x.com/i/bookmarks` |
+| Export bookmarks (full metadata) | `browser/bookmarkExporter.js` | `x.com/i/bookmarks` |
 | Organize bookmarks by category | `browser/bookmarkOrganizer.js` | `x.com/i/bookmarks` |
 | Clear all bookmarks | `browser/clearAllBookmarks.js` | `x.com/i/bookmarks` |
 | Manage bookmarks (Puppeteer) | `src/bookmarkManager.js` | `x.com/i/bookmarks` |
 
 ## Scrape Bookmarks
 
-**File:** `scripts/scrapeBookmarks.js`
+**File:** `browser/bookmarkExporter.js`
 
 Scrolls through your bookmarks and exports all posts with full metadata: text, author, engagement metrics, media URLs, external links, hashtags, and mentions. Exports as JSON, CSV, or both.
 
@@ -106,7 +106,7 @@ Node.js/Puppeteer module for programmatic bookmark operations.
 - 1.5s scroll delay between pagination cycles
 - 0.8–2.2s delay between individual removals (gaussian randomized)
 - Rate limit detection via `[data-testid="toast"]` with 60s cooldown
-- **Clearing is irreversible** — export first with `scripts/scrapeBookmarks.js`
+- **Clearing is irreversible** — export first with `browser/bookmarkExporter.js`
 
 ## Troubleshooting
 

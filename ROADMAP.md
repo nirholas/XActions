@@ -30,7 +30,7 @@ that no longer exists. A roadmap nobody trusts is worse than no roadmap.
 - Account pool with per-account, per-operation rate-limit windows read from X's own `x-rate-limit-*` headers, rotating on a 429 and locking on a 401: `src/scrapers/twitter/http/accountPool.js`
 - Resumable scrapes: a cursor checkpoint written after every page, so a killed 50,000-follower job restarts where it stopped: `src/scrapers/twitter/http/checkpoint.js`
 - Per-account daily action caps held on disk, so the budget survives a restart and an over-cap call is refused before it reaches X: `src/mcp/action-caps.js`
-- 95 browser console scripts and an MV3 extension, for people who never open a terminal
+- 208 browser console scripts and an MV3 extension, for people who never open a terminal
 
 ### Agents
 - MCP server: `src/mcp/server.js`, over stdio or Streamable HTTP on `/mcp` (`--http`, bearer auth via `XACTIONS_MCP_TOKEN`)

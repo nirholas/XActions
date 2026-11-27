@@ -1,115 +1,76 @@
-# 🛠️ Chrome DevTools Console Scripts
+# scripts/
 
-This folder contains ready-to-use scripts that you can copy-paste directly into Chrome DevTools Console to perform various automation tasks.
+Build, check and maintenance tools for this repository, run with Node.
 
-## 📋 What's in This Folder?
+**Looking for a console script to paste into DevTools on x.com?** They live in
+[`browser/`](../browser/), one file per tool, and
+[`browser/index.json`](../browser/index.json) lists every one with its title,
+the page to run it on, whether it changes your account, and its options. The
+catalog with descriptions is [`docs/browser-scripts.md`](../docs/browser-scripts.md).
 
-| Folder | Description |
-|--------|-------------|
-| `twitter/` | Scripts for Twitter/X automation (scraping, data extraction) |
-| `templates/` | Template files for creating your own scripts |
+## The `.js` console scripts here are copies
 
-## 🚀 How to Use These Scripts
+Console scripts used to live in four places: `browser/`, this folder,
+`scripts/twitter/` and `src/automation/`. The same tool often existed in two or
+three of them with different code. Each tool now has one source,
+`browser/<id>.js`, and every old path is kept as a generated copy of it so a
+raw GitHub URL someone saved still pastes and runs. A copy's first line says:
 
-### Step 1: Open the Target Website
-Navigate to the website where you want to run the script (e.g., `twitter.com/username` for Twitter scripts).
+```js
+// GENERATED FILE: a copy of browser/unfollowEveryone.js, written by scripts/build-script-manifest.mjs. ...
+```
 
-### Step 2: Open Chrome DevTools
-- **Windows/Linux:** Press `F12` or `Ctrl + Shift + I`
-- **Mac:** Press `Cmd + Option + I`
+Do not edit a copy; the next build overwrites it. Edit the `browser/` file,
+then:
 
-### Step 3: Go to Console Tab
-Click on the "Console" tab in DevTools.
+```bash
+npm run browser:build   # rewrite browser/index.json and every copy
+npm run browser:check   # fail if either is stale (part of npm run docs:check)
+```
 
-### Step 4: Paste and Run
-1. Copy the entire script from this folder
-2. Paste it into the Console
-3. Press `Enter` to run
+Each script lists the old paths it replaces in its `@aliases` header tag. To
+find which file a copy comes from, read its first line or search
+`browser/index.json` for the path.
 
-### Step 5: Follow Console Output
-Watch the console for progress messages and results!
+## What is here
 
-## ⚠️ Important Security Warning
+| File | What it does |
+|------|--------------|
+| `build-script-manifest.mjs` | Builds `browser/index.json` from the header and `CONFIG` of each `browser/` script, and writes the legacy copies |
+| `build-browser-scripts-doc.mjs` | The catalog in `docs/browser-scripts.md`, from the manifest |
+| `build-script-pages.js` | The `/scripts/<slug>` pages on xactions.app, from the manifest, with redirects for old file names |
+| `build-toolkit.mjs` | `scripts/twitter/xactions-command-center.js`, the one-paste palette of every standalone script |
+| `build-ask-index.mjs`, `build-ask-actions.mjs` | The Ask XActions search index and action catalog |
+| `audit-docs.mjs` | Dead links, stale counts and missing references in the docs |
+| `check-*.mjs`, `sync-*.mjs` | Release, site, endpoint and registry checks, and the syncs they rely on |
+| `build-*.js`, `build-*.mjs` | Site, docs, bundle and package builds |
+| `lib/` | Helpers shared by the tools above |
+| `templates/` | A starting point for a new console script |
+| `twitter/` | The command center (`_command-center-shell.js` and its generated bundle) and generated copies of `browser/` scripts |
 
-> **Only run scripts from sources you trust!**
-> 
-> Malicious scripts can steal your data, compromise your accounts, or perform unwanted actions. Always:
-> - Read and understand what a script does before running it
-> - Only use scripts from trusted sources
-> - Never paste scripts from random websites or strangers
+## Writing a new console script
 
-## 📁 Available Scripts
+Put it in `browser/`, not here. Start from
+[`templates/script-template.js`](templates/script-template.js) and give the
+first doc block these tags, one per line:
 
-### Twitter/X Scripts (`twitter/`)
+```js
+// Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
+/**
+ * @name        myScript.js
+ * @title       My Script
+ * @description One sentence on what it does.
+ * @category    cleanup
+ * @page        x.com/<you>/following
+ * @writes      true
+ */
+```
 
-#### 🗑️ Unfollow & Cleanup
-| Script | Description |
-|--------|-------------|
-| `unfollow-everyone.js` | Mass unfollow all accounts you follow |
-| `unfollow-non-followers.js` | Unfollow accounts that don't follow you back |
-| `unfollow-with-log.js` | Unfollow with a downloadable log of all actions |
-| `smart-unfollow.js` | Time-based smart unfollow for non-followers after grace period |
-| `leave-all-communities.js` | Leave all X Communities you've joined |
-
-#### 👀 Monitoring & Tracking
-| Script | Description |
-|--------|-------------|
-| `detect-unfollowers.js` | Compare follower snapshots to detect who unfollowed you |
-| `monitor-account.js` | Track any account's follower/following changes |
-| `continuous-monitor.js` | Auto-refresh monitoring with browser notifications |
-| `new-followers-alert.js` | New follower alerts with welcome message templates |
-
-#### 🤖 Automation
-| Script | Description |
-|--------|-------------|
-| `auto-liker.js` | Auto-like tweets with keyword/user filtering |
-| `auto-commenter.js` | Auto-comment on target user's posts |
-| `follow-engagers.js` | Follow likers/retweeters of specific posts |
-| `follow-target-users.js` | Follow followers/following of target accounts |
-| `keyword-follow.js` | Follow users from keyword search results |
-| `protect-active-users.js` | Find engaged users to protect from unfollow |
-
-#### � Analytics
-| Script | Description |
-|--------|-------------|
-| `tweet-price-correlation.js` | Correlate founder tweets with token price movements (CoinGecko/GeckoTerminal) |
-
-#### �📊 Scrapers
-| Script | Description |
-|--------|-------------|
-| `scrape-profile-posts.js` | Advanced tweet scraper with filtering, analytics, multi-format export |
-| `viral-tweets-scraper.js` | Find top-performing viral tweets by engagement |
-| `link-scraper.js` | Extract all links shared by a specific user |
-| `bookmark-exporter.js` | Export all your bookmarks to JSON and CSV |
-| `thread-unroller.js` | Save Twitter threads as markdown, text, or JSON |
-| `video-downloader.js` | Download videos from any X/Twitter post |
-
-### Templates (`templates/`)
-
-| Template | Description |
-|----------|-------------|
-| `script-template.js` | Boilerplate template for creating new DevTools scripts |
-
-## 💡 Tips
-
-- **Rate Limiting:** Most scripts include delays to avoid triggering rate limits
-- **Console Logs:** Scripts use emoji prefixes for easy reading (🚀 start, ✅ success, ❌ error)
-- **Data Export:** Scripts typically offer multiple export options (JSON download, clipboard copy)
-- **Scrolling:** Twitter scripts auto-scroll to load more content
-
-## 🔧 Creating Your Own Scripts
-
-Check out `templates/script-template.js` for a starting point. Follow the patterns established there for:
-- Header comments with usage instructions
-- Progress logging
-- Error handling
-- Data export options
-
-## 📚 Related Resources
-
-- [XActions Documentation](../docs/)
-- [Browser Console Scripts (src/)](../src/)
-- [AGENTS.md](../AGENTS.md) - Selector references and patterns
+`@category` is one of the ids in `browser/index.json` under `categories`.
+`@page` is the x.com page to run it on, with `<you>`, `<username>`, `<id>` or
+`<query>` placeholders and alternatives joined by ` or `. Keep every option in
+a `CONFIG` object literal; a `dryRun` key there marks the script as supporting
+a dry run. Then run `npm run browser:build`.
 
 ---
 

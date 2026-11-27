@@ -16,7 +16,7 @@ Browser console script for managing and filtering X/Twitter notifications.
 | Goal | File | Navigate to |
 |------|------|-------------|
 | Filter and manage notifications | `src/notificationManager.js` | `x.com/notifications` |
-| Scrape notification data | `scripts/scrapeNotifications.js` | `x.com/notifications` |
+| Scrape notification data | `browser/scrapeNotifications.js` | `x.com/notifications` |
 | Welcome new followers | `browser/welcomeNewFollowers.js` | `x.com/USERNAME/followers` |
 
 ## Notification Manager
@@ -52,7 +52,7 @@ const CONFIG = {
 
 ## Notification Scraper
 
-**File:** `scripts/scrapeNotifications.js`
+**File:** `browser/scrapeNotifications.js`
 
 Standalone scraper that exports all visible notifications as structured JSON with author, type, content, and timestamp.
 

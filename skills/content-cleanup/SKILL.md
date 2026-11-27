@@ -15,7 +15,7 @@ Browser console scripts for mass-cleaning your X/Twitter account history.
 
 | Script | File | Purpose |
 |--------|------|---------|
-| Search Sweep | `scripts/searchSweep.js` | Delete (or like/repost/reply to) every post an X search returns |
+| Search Sweep | `browser/searchSweep.js` | Delete (or like/repost/reply to) every post an X search returns |
 | Bulk Delete Tweets | `browser/bulkDeleteTweets.js` | Delete your own posts from your profile timeline by age, keyword, or engagement |
 | Unlike All Posts | `browser/unlikeAllPosts.js` | Remove all likes from your likes page |
 | Clear All Reposts | `browser/clearAllReposts.js` | Remove all retweets/reposts |
@@ -24,7 +24,7 @@ Browser console scripts for mass-cleaning your X/Twitter account history.
 
 ## Search Sweep: delete everything matching a search
 
-**File:** `scripts/searchSweep.js` (full guide: `docs/search-sweep.md`)
+**File:** `browser/searchSweep.js` (full guide: `docs/search-sweep.md`)
 
 The one to reach for when the user wants "delete every reply I sent @someone",
 "remove all my posts mentioning X", or "delete everything I posted before 2024".
@@ -38,7 +38,7 @@ https://x.com/search?q=from%3AYOUR_HANDLE%20%40someone&src=typed_query&f=live
 
 1. Open that search on x.com (use the Latest tab, `f=live`; Top ranking hides most results)
 2. Open DevTools (F12) then Console
-3. Paste `scripts/searchSweep.js`. A panel appears bottom-right, pre-filled with the query already in the address bar
+3. Paste `browser/searchSweep.js`. A panel appears bottom-right, pre-filled with the query already in the address bar
 4. Pick the action: Delete, Like, Repost, or Reply. Leave Dry run ON and click Start
 5. Read the log, untick Dry run, start again
 
@@ -50,7 +50,7 @@ https://x.com/search?q=from%3AYOUR_HANDLE%20%40someone&src=typed_query&f=live
   every id it acted on, so running it again a day later only picks up stragglers.
 - **Filters protect posts worth keeping**: minimum age, likes/reposts ceiling, keyword
   exclusions, and the pinned post is always skipped.
-- **Deletion is permanent.** Back up first with `scripts/backupAccount.js`.
+- **Deletion is permanent.** Back up first with `browser/backupAccount.js`.
 
 ### Query building
 

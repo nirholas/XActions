@@ -22,9 +22,9 @@ Train your X/Twitter algorithm for a specific niche. Three approaches:
 | Create a persona (CLI) | `xactions persona create` |
 | Run 24/7 with LLM (CLI) | `xactions persona run <id>` |
 | Check persona status | `xactions persona status <id>` |
-| Browser console (with core.js) | `src/automation/algorithmBuilder.js` |
-| Browser console (standalone) | `scripts/thoughtLeaderCultivator.js` |
-| Browser console (algorithm trainer) | `src/automation/algorithmTrainer.js` |
+| Browser console (full-featured) | `browser/algorithmBuilder.js` |
+| Browser console (standalone) | `browser/thoughtLeaderCultivator.js` |
+| Browser console (algorithm trainer) | `browser/algorithmTrainer.js` |
 | Persona Engine (Node.js module) | `src/personaEngine.js` |
 | Algorithm Builder (Node.js module) | `src/algorithmBuilder.js` |
 
@@ -53,9 +53,9 @@ await startAlgorithmBuilder({
 
 Comments and posts are written by free models (no key needed). Optional free-tier keys (`GROQ_API_KEY`, `NVIDIA_API_KEY`, `OPENROUTER_API_KEY`) add capacity.
 
-## Algorithm Trainer -- `src/automation/algorithmTrainer.js`
+## Algorithm Trainer -- `browser/algorithmTrainer.js`
 
-Browser console script for manual training sessions. Requires `src/automation/core.js` pasted first.
+Browser console script for manual training sessions. Requires `browser/core.js` pasted first.
 
 ### Training Phases (cycles through all 8)
 1. Search top tweets for niche keywords
@@ -90,8 +90,8 @@ Browser console script for manual training sessions. Requires `src/automation/co
 
 ### Established account pivoting niches
 1. Aggressively engage with new niche content for 1-2 weeks
-2. Use `src/automation/algorithmTrainer.js` on `active` intensity
-3. Unfollow accounts from the old niche gradually with `src/automation/smartUnfollow.js`
+2. Use `browser/algorithmTrainer.js` on `active` intensity
+3. Unfollow accounts from the old niche gradually with `browser/smartUnfollow.js`
 4. The algorithm typically adjusts within 3-7 days of consistent signals
 
 ### Running 24/7 with LLM
@@ -120,7 +120,7 @@ Load these on demand for deeper context:
 
 ## Notes
 - Browser scripts require navigating to x.com first
-- `algorithmBuilder.js` and `algorithmTrainer.js` require pasting `src/automation/core.js` first
+- `algorithmTrainer.js` requires pasting `browser/core.js` first; `algorithmBuilder.js` uses it when present and runs without it
 - `thoughtLeaderCultivator.js` is standalone (no dependencies)
 - Default engagement strategy: 1-3s delays between actions
 - Fresh accounts should start with conservative strategy for 1-2 weeks

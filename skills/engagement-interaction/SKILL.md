@@ -20,7 +20,7 @@ Browser automation for X/Twitter engagement — liking, replying, bookmarking, h
 | Get engagement analytics for a post | `src/engagementManager.js` | Tweet URL |
 | Hide replies on your posts | `src/engagementManager.js` | Reply URL |
 | Unlike ALL liked posts | `browser/unlikeAllPosts.js` | `x.com/USERNAME/likes` |
-| Like + repost + reply to EVERY post in a feed (profile, search, list, hashtag, home) | `scripts/engageProfile.js`, `xactions engage` , or MCP `x_engage` | the feed itself, or any terminal |
+| Like + repost + reply to EVERY post in a feed (profile, search, list, hashtag, home) | `browser/engageProfile.js`, `xactions engage` , or MCP `x_engage` | the feed itself, or any terminal |
 
 ## Engagement Manager
 

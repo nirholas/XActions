@@ -230,7 +230,7 @@ No install needed. Copy-paste scripts into your browser console on x.com
 - [Space Agent (AI Voice)](#-autonomous-space-agent): AI agents in live Spaces
 - [CLI Reference](#-cli-reference): Command line usage
 - [Node.js API](#-nodejs-api): Programmatic access
-- [Browser Scripts](docs/browser-scripts.md): 95 console scripts, no install
+- [Browser Scripts](docs/browser-scripts.md): 208 console scripts, no install
 - [Docker](#-docker): One-command deployment
 - [API Reference](#-api-reference): Full function documentation
 - [Claude Tutorials](#-claude-tutorials): 23 ready-to-paste prompts
@@ -1361,8 +1361,8 @@ examples/       Runnable programs, from a profile lookup to the MCP draft gate
 prompts/        Prompt library for coding agents
 
 tests/          Vitest suite
-scripts/        The 95 browser console scripts, plus build, docs and
-                maintenance tooling. twitter/ holds standalone console variants
+scripts/        Build, docs and maintenance tooling. The console scripts that used
+                to live here and in twitter/ are generated copies of browser/ files
 config/         Agent, niche and persona configuration
 prisma/         Database schema and migrations
 deploy/         Cloudflare and GCP deployment assets

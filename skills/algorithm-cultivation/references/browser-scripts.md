@@ -4,8 +4,8 @@ Three browser console scripts for algorithm cultivation, with different trade-of
 
 ## algorithmBuilder.js (Full-featured)
 
-**File:** `src/automation/algorithmBuilder.js`
-**Requires:** Paste `src/automation/core.js` first.
+**File:** `browser/algorithmBuilder.js`
+**Requires:** Nothing. It uses `browser/core.js` when that is pasted first, and built-in helpers otherwise.
 
 969-line browser automation with LLM-powered comment generation.
 
@@ -39,7 +39,7 @@ Three browser console scripts for algorithm cultivation, with different trade-of
 
 ## thoughtLeaderCultivator.js (Standalone)
 
-**File:** `scripts/thoughtLeaderCultivator.js`
+**File:** `browser/thoughtLeaderCultivator.js`
 
 Zero dependencies. Paste directly into DevTools console on x.com.
 
@@ -51,8 +51,8 @@ Zero dependencies. Paste directly into DevTools console on x.com.
 
 ## algorithmTrainer.js (Multi-niche)
 
-**File:** `src/automation/algorithmTrainer.js`
-**Requires:** Paste `src/automation/core.js` first.
+**File:** `browser/algorithmTrainer.js`
+**Requires:** Paste `browser/core.js` first.
 
 Multi-niche rotation, intensity presets, cycle-based architecture.
 

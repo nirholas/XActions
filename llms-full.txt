@@ -4,7 +4,7 @@
 
 ## Overview
 
-XActions automates X/Twitter without official API access. It combines 95 browser-paste console scripts, HTTP and Puppeteer scrapers, an MCP server with 165 tools, a CLI with 60 commands, 50 agent skills, and a full-stack Express.js dashboard backed by PostgreSQL.
+XActions automates X/Twitter without official API access. It combines 208 browser-paste console scripts, HTTP and Puppeteer scrapers, an MCP server with 165 tools, a CLI with 60 commands, 50 agent skills, and a full-stack Express.js dashboard backed by PostgreSQL.
 
 Two lanes lead into the same engine, and picking the right one matters for an agent: shell out to the CLI for a handful of reads, load the MCP server for long sessions and writes. AGENTS.md is the single source of truth on that choice and on the repository layout.
 
@@ -48,14 +48,14 @@ src/                 Core library
   workflows/         Multi-step automation
   spaces/            AI voice agent for live X Spaces
   utils/             Shared utilities
-browser/             112 browser console scripts (IIFEs pasted into DevTools on x.com)
+browser/             208 browser console scripts (IIFEs pasted into DevTools on x.com)
 api/                 Express.js backend
   server.js          Main entry
   routes/            41 REST route modules
   services/          Business logic, job queue, payments
   middleware/        Auth, rate limiting, error handling
   realtime/          Socket.io handlers
-scripts/             95 browser console scripts, plus build and maintenance scripts
+scripts/             Build and maintenance scripts; old console script paths are generated copies of browser/
 dashboard/           Static HTML frontend
 extension/           Chrome and Edge extension (Manifest V3)
 skills/              50 Agent Skills (skills/*/SKILL.md)

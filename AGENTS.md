@@ -1,7 +1,7 @@
 # XActions for agents
 
 X/Twitter automation with no X API key: a 60-command CLI, a Node library, 165
-MCP tools, 50 agent skills, 95 browser console scripts, and a web dashboard.
+MCP tools, 50 agent skills, 208 browser console scripts, and a web dashboard.
 Apache-2.0, by nichxbt.
 
 It also carries an optional keyed lane: the official X API v2 with the user's
@@ -325,13 +325,14 @@ is not, that is a bug in this table.
 
 | Request | Answer |
 |---|---|
+| Find a browser script by what it does, the page it runs on, or its options | [`browser/index.json`](browser/index.json), one entry per script. See [`docs/browser-scripts.md`](docs/browser-scripts.md) |
 | Unfollow everyone | `browser/unfollowEveryone.js` |
 | Unfollow people who do not follow back | `browser/unfollowback.js`, or `xactions non-followers` |
 | Who unfollowed me | `browser/detectUnfollowers.js` |
-| Download a video | `scripts/videoDownloader.js` |
-| Like, repost and reply to every post on a profile | `scripts/engageProfile.js` (browser panel) or `xactions engage <user> --like --repost --comment --prompt "..."`. See [`docs/engage.md`](docs/engage.md) |
-| Act on every result of a search | `scripts/searchSweep.js`. See [`docs/search-sweep.md`](docs/search-sweep.md) |
-| Train the algorithm for a niche | `src/automation/algorithmBuilder.js`, or `xactions persona create` |
+| Download a video | `browser/videoDownloader.js` |
+| Like, repost and reply to every post on a profile | `browser/engageProfile.js` (browser panel) or `xactions engage <user> --like --repost --comment --prompt "..."`. See [`docs/engage.md`](docs/engage.md) |
+| Act on every result of a search | `browser/searchSweep.js`. See [`docs/search-sweep.md`](docs/search-sweep.md) |
+| Train the algorithm for a niche | `browser/algorithmBuilder.js`, or `xactions persona create` |
 | Grow an account over time | [`skills/algorithm-cultivation/SKILL.md`](skills/algorithm-cultivation/SKILL.md) |
 | Run a long-lived LLM-driven agent | `src/algorithmBuilder.js` with `src/personaEngine.js`, via `xactions persona run <id>` |
 | Read an account without logging in | `xactions profile <user>`, `xactions tweets <user>` |
@@ -387,21 +388,25 @@ src/scrapers/     HTTP and browser scrapers
 src/client/       The low-level HTTP Twitter client
 src/xapi/         The official X API v2 client, generated from X's OpenAPI
                   document by scripts/sync-x-api.mjs (needs developer keys)
-src/automation/   Browser console scripts (paste core.js first)
+src/automation/   Old home of the automation suite: generated copies of browser/
+                  scripts, plus two Node modules (rssMonitor, evergreenRecycler)
 src/a2a/          Agent-to-Agent protocol server
 src/*.js          Node modules only: index.js (the library entry), version.js,
                   and the Puppeteer *Manager.js-style modules index.js re-exports
-browser/          112 standalone browser console scripts (IIFEs you paste into
-                  DevTools on x.com). Not in the npm package; linted with browser
-                  globals only, so `process` or `require` there is an error
+browser/          The 208 browser console scripts (IIFEs you paste into DevTools
+                  on x.com), one canonical file per tool, and index.json, the
+                  manifest every other script list reads. Not in the npm
+                  package; linted with browser globals only, so `process` or
+                  `require` there is an error
 skills/           50 Agent Skills, one directory each
 api/              Express backend (routes/, services/, middleware/). Its
                   dependencies are in api/package.json, an npm workspace:
                   the root `npm ci` installs them, `npm install xactions`
                   never does
 dashboard/        Static frontend
-scripts/          The 95 browser console scripts, plus build and maintenance
-                  scripts (twitter/ holds standalone console variants)
+scripts/          Build and maintenance tools. The console scripts that used to
+                  live here and in scripts/twitter/ are generated copies of
+                  browser/ files, kept so saved raw URLs still work
 docs/             Documentation
 extension/        Browser extension
 prisma/           Database schema
@@ -411,7 +416,7 @@ The three runtime contexts, because code that is correct in one is broken in ano
 
 | Context | Runs in | Entry point | Hard constraint |
 |---|---|---|---|
-| Browser scripts | the DevTools console on x.com | an IIFE you paste, from `browser/`, `scripts/` or `src/automation/` | no Node APIs; DOM and `sessionStorage` only |
+| Browser scripts | the DevTools console on x.com | an IIFE you paste from `browser/`, listed in `browser/index.json` | no Node APIs; DOM and `sessionStorage` only |
 | Library, CLI, MCP | your machine | `src/cli/index.js`, `src/mcp/server.js` | Node >= 22.19, ESM throughout |
 | API server | an Express process | `api/server.js` | PostgreSQL via Prisma, Redis for the queue |
 
@@ -425,9 +430,17 @@ Deeper map: [`docs/`](docs/), starting with
 
 ## Things that will bite you
 
-- **Browser scripts run in the DevTools console on x.com**, not in Node. Paste
-  `src/automation/core.js` first; it provides the config, selectors, utilities
-  and rate limiting the others assume.
+- **Browser scripts run in the DevTools console on x.com**, not in Node. A few
+  (`needsCore: true` in `browser/index.json`) need `browser/core.js` pasted
+  first; it provides the config, selectors, utilities and rate limiting they
+  assume. The rest stand alone.
+- **Edit the browser/ file, never a copy.** Each script has one source,
+  `browser/<id>.js`. The same file under `scripts/`, `scripts/twitter/` or
+  `src/automation/` is a generated mirror (its first line says so), rewritten
+  by `npm run browser:build`. A new script goes in `browser/` with the header
+  tags `@name @title @description @category @page @writes`; `npm run
+  browser:check` (part of `docs:check`) fails on a missing tag, a drifted
+  mirror, or a console script added anywhere else.
 - **X's DOM changes often.** Prefer `data-testid` selectors. Current ones:
   [`docs/agents/selectors.md`](docs/agents/selectors.md).
 - **Rate limits are real.** Every automation path keeps delays between actions.

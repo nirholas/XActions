@@ -18,7 +18,7 @@ Browser console scripts for managing who you follow on X/Twitter. All scripts ru
 | Unfollow ALL accounts | `browser/unfollowEveryone.js` | `x.com/USERNAME/following` |
 | Unfollow only non-followers | `browser/unfollowback.js` | `x.com/USERNAME/following` |
 | Unfollow non-followers + download log | `browser/unfollowWDFBLog.js` | `x.com/USERNAME/following` |
-| Time-based smart unfollow with whitelist | `src/automation/smartUnfollow.js` | `x.com/USERNAME/following` |
+| Time-based smart unfollow with whitelist | `browser/smartUnfollow.js` | `x.com/USERNAME/following` |
 | Detect who unfollowed you | `browser/detectUnfollowers.js` | `x.com/USERNAME/followers` |
 | Monitor follow/following ratio + plan | `browser/followRatioManager.js` | `x.com/USERNAME` |
 | Remove specific followers from YOUR list | `browser/removeFollowers.js` | `x.com/USERNAME/followers` |
@@ -55,7 +55,7 @@ For detailed algorithms, controls, configurations, and DOM selectors for each sc
 
 ### Before a big unfollow session
 
-1. Export your following list first: `scripts/scrapeFollowing.js`
+1. Export your following list first: `browser/scrapeFollowing.js`
 2. Run `browser/unfollowWDFBLog.js` (saves log of who was unfollowed)
 3. Review the downloaded log for any mistakes
 4. Use `browser/followRatioManager.js` to verify improvements

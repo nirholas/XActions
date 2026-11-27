@@ -50,26 +50,26 @@ Standalone IIFEs -- paste into DevTools console on x.com. No dependencies.
 | Export bookmarks | `src/scrapers/bookmarkExporter.js` | `x.com/i/bookmarks` |
 | Unroll thread | `src/scrapers/threadUnroller.js` | Any thread |
 | Find viral tweets | `src/scrapers/viralTweets.js` | User profile |
-| Scrape followers | `scripts/scrapeFollowers.js` | `x.com/USER/followers` |
-| Scrape following | `scripts/scrapeFollowing.js` | `x.com/USER/following` |
-| Scrape profile | `scripts/scrapeProfile.js` | User profile |
-| Scrape search | `scripts/scrapeSearch.js` | Search results |
-| Scrape hashtag | `scripts/scrapeHashtag.js` | `x.com/hashtag/TAG` |
-| Scrape likes | `scripts/scrapeLikes.js` | `x.com/USER/likes` |
-| Scrape likers | `scripts/scrapeLikers.js` | Any tweet |
-| Scrape replies | `scripts/scrapeReplies.js` | Any tweet |
-| Scrape media | `scripts/scrapeMedia.js` | User media tab |
-| Scrape DMs | `scripts/scrapeDMs.js` | `x.com/messages` |
-| Scrape notifications | `scripts/scrapeNotifications.js` | `x.com/notifications` |
-| Scrape list | `scripts/scrapeList.js` | Any X List |
-| Scrape bookmarks | `scripts/scrapeBookmarks.js` | `x.com/i/bookmarks` |
-| Export to CSV | `scripts/exportToCSV.js` | After any scrape |
-| Link scraper | `scripts/linkScraper.js` | Any timeline |
-| Quote retweets | `scripts/scrapeQuoteRetweets.js` | Any tweet |
+| Scrape followers | `browser/scrapeFollowers.js` | `x.com/USER/followers` |
+| Scrape following | `browser/scrapeFollowing.js` | `x.com/USER/following` |
+| Scrape profile | `browser/scrapeProfile.js` | User profile |
+| Scrape search | `browser/scrapeSearch.js` | Search results |
+| Scrape hashtag | `browser/scrapeHashtag.js` | `x.com/hashtag/TAG` |
+| Scrape likes | `browser/scrapeLikes.js` | `x.com/USER/likes` |
+| Scrape likers | `browser/scrapeLikers.js` | Any tweet |
+| Scrape replies | `browser/scrapeReplies.js` | Any tweet |
+| Scrape media | `browser/scrapeMedia.js` | User media tab |
+| Scrape DMs | `browser/scrapeDMs.js` | `x.com/messages` |
+| Scrape notifications | `browser/scrapeNotifications.js` | `x.com/notifications` |
+| Scrape list | `browser/scrapeList.js` | Any X List |
+| Scrape bookmarks | `browser/bookmarkExporter.js` | `x.com/i/bookmarks` |
+| Export to CSV | `browser/exportToCSV.js` | After any scrape |
+| Link scraper | `browser/linkScraper.js` | Any timeline |
+| Quote retweets | `browser/scrapeRetweeters.js` | Any tweet |
 
 ## Interactive browser toolbox (recommended for console scraping)
 
-For paste-in-console scraping, prefer `scripts/twitter/scraper-toolbox.js`: an on-page
+For paste-in-console scraping, prefer `browser/scraperToolbox.js`: an on-page
 control panel (start/pause/stop, live filters, user exclusions, keyword rules) that
 captures X's own GraphQL responses, so counts are exact integers and long posts are
 untruncated. Exports JSON/CSV/Markdown/TXT/HTML and copies to clipboard. Works on any
