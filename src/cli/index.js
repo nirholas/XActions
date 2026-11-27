@@ -23,6 +23,7 @@ import { fileURLToPath } from 'node:url';
 import scrapers from '../scrapers/index.js';
 import { registerConnectCommand } from './commands/connect.js';
 import { registerDoctorCommand } from './commands/doctor.js';
+import { installFailureHint, reportFatal } from './failure-hint.js';
 import { registerAskCommand } from './commands/ask.js';
 import { registerDownloadCommand } from './commands/download.js';
 import { registerReportCommand } from './commands/report.js';
@@ -4032,9 +4033,12 @@ function isEntryPoint() {
 }
 
 // Importing `xactions/cli` must not run the CLI: parse() would read the host
-// process's argv and could exit it. Only parse when run as the binary.
+// process's argv and could exit it. Only parse when run as the binary. A
+// failed run ends with a pointer to `xactions doctor --report`, and an error
+// no command caught prints its message rather than an unhandled rejection.
 if (isEntryPoint()) {
-  program.parse();
+  installFailureHint(program);
+  program.parseAsync().catch((error) => reportFatal(error));
 }
 
 export { program, isEntryPoint, createMediaScrapers };

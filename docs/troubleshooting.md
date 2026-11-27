@@ -1,8 +1,35 @@
 # Troubleshooting
 
-Symptoms in the left column, causes and fixes below. If your problem is not
-here, [open an issue](https://github.com/nirholas/XActions/issues) with the
-command you ran and its full output.
+Start with one command:
+
+```bash
+xactions doctor --report       # or: npx xactions doctor --report
+```
+
+It checks the install, Node, the native SQLite module, `XACTIONS_HOME`, your
+clock, the guest tier, the saved session, the query-ID cache and the MCP
+server, and prints the result as a Markdown block. Every failing line in
+plain `xactions doctor` has its fix next to it; `--report` is the same
+checks in a form made to paste.
+
+The report leaves out cookies, tokens, usernames, account ids, proxy URLs,
+home directory paths and environment variable values, so it is safe to post
+in a public issue. Nothing is sent anywhere.
+
+If your problem is not in the table below, open a bug report with the report
+already filled in:
+
+```bash
+xactions doctor --issue        # prints the report and a prefilled new-issue link
+xactions doctor --issue --open # the same, and opens the link in your browser
+```
+
+The [bug report form](https://github.com/nirholas/XActions/issues/new?template=bug_report.yml)
+asks for that report, the command you ran, what happened and what you
+expected. A browser console script that stopped finding buttons on x.com has
+[its own form](https://github.com/nirholas/XActions/issues/new?template=script_broken.yml).
+
+Symptoms in the left column, causes and fixes below.
 
 | Symptom | Jump to |
 |---------|---------|

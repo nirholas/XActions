@@ -160,13 +160,14 @@ mistakes that have cost people time here. Read it before your first PR.
 
 ## 🐛 Reporting Issues
 
-When filing an issue, please include:
+Run `xactions doctor --issue`. It prints a redacted report of your install
+(version, how it was installed, Node, OS, optional packages, session and
+cache state) and a link that opens the bug form with it filled in. The form
+then asks for the command you ran, what happened and what you expected.
 
-- **Clear title** describing the problem
-- **Steps to reproduce** the issue
-- **Expected vs actual** behavior
-- **Screenshots** if applicable
-- **Environment** (browser, Node version, etc.)
+A browser console script that stopped working on x.com has its own form,
+which asks for the script, the page and the console output. Questions go to
+[Discussions](https://github.com/nirholas/XActions/discussions).
 
 ## Releasing
 

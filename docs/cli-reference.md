@@ -2743,6 +2743,85 @@ xactions archive migrate twitter-2026-01-01-abc123.zip --to mastodon --execute -
 
 A spinner tracks the scan (`Scanning 4/12 data/tweets.js`, `Parsed tweets (18,204 records) from data/tweets.js`). Under `--json` with stdout piped, the spinner is silent and only the document is printed, so `xactions archive summary me.zip --json | jq .counts` works as expected.
 
+## Doctor: reports, JSON and the checks
+
+```bash
+xactions doctor                  # every check, with the fix next to each failure
+xactions doctor --json           # every check as JSON
+xactions doctor --report         # a redacted Markdown block to paste into an issue
+xactions doctor --issue          # the report plus a prefilled new-issue link
+xactions doctor --issue --open   # the same, and open the link in your browser
+xactions doctor --offline        # skip the checks that reach x.com
+xactions doctor --refresh-ids    # rediscover GraphQL query IDs first
+```
+
+Every form exits `1` when any check fails and `0` otherwise. `--json`
+cannot be combined with `--report` or `--issue`; `--open` implies `--issue`.
+
+**`--json`** prints one document on stdout:
+
+```json
+{
+  "version": "5.0.0",
+  "checks": [
+    { "id": "node", "group": "environment", "name": "Node", "status": "ok", "detail": "Node 22.19.0 satisfies >=22.19", "fix": null }
+  ],
+  "summary": { "ok": 9, "warn": 5, "fail": 0 }
+}
+```
+
+`status` is `ok`, `warn` or `fail`; `fix` is a string or `null`. The JSON is
+not redacted (details carry local paths and the signed-in handle); share
+`--report` instead. The ids are stable, in this order:
+
+| id | Group | Checks |
+|---|---|---|
+| `node` | environment | Node against `engines.node` in package.json |
+| `sqlite` | environment | The native `better-sqlite3` module loads and opens a database. A Node upgrade leaves it built for the old ABI; the fix is `npm rebuild better-sqlite3` |
+| `home` | environment | `XACTIONS_HOME` (default `~/.xactions`) is writable, or can be created. Doctor never creates it |
+| `shadowed-install` | environment | An older `xactions` earlier on PATH is not hiding a newer one, and the one on PATH matches this run |
+| `browser` | environment | Puppeteer and Chromium, for `connect` and the browser-driven writes |
+| `mcp` | environment | The MCP server loads and lists its tools |
+| `skills` | environment | Agent skills installed for Claude, Cursor, Codex or Windsurf |
+| `query-ids` | environment | Age of the GraphQL query-ID cache |
+| `clock` | environment | This machine's clock against x.com's `Date` header. Warns past 30 seconds, fails past five minutes: signed requests carry a timestamp |
+| `guest-profile` | guest | A logged-out profile read |
+| `guest-timeline` | guest | A logged-out timeline read |
+| `session-saved` | session | A session is saved, and carries `ct0` |
+| `session-valid` | session | The saved session still authenticates |
+| `accounts` | session | The multi-account pool, if there is one |
+
+`--offline` reports `clock`, `guest-profile`, `guest-timeline` and
+`session-valid` as `warn` with the detail `Skipped: --offline`.
+
+**`--report`** prints the XActions version, how it was installed (global
+npm, npx, local clone with its commit, project dependency, and Docker when
+it runs in a container), the Node version against `engines`, OS and
+architecture, which optional packages are present (the browser stack,
+`ioredis`, `bull`, `nodemailer`, `exceljs`, the Bluesky and x402 packages),
+the guest tier result, whether a session is saved and carries `ct0`, the
+query-ID cache age, the MCP self-test, the installed skills count, and a
+table of every check. Before it is printed, every environment variable
+value, saved cookie and config value, the home directory (shown as `~`),
+the OS account name, the hostname and the signed-in handle and id are
+removed, and then anything shaped like a URL, a credential, an email
+address, an @handle, an account id, a token or an IP address. Version
+strings, and values equal to facts the report prints on purpose (npm
+exports `npm_package_name=xactions`), are kept.
+
+**`--issue`** prints the report, then a link to the bug form with the title
+(the first failing check) and the report field filled in. It opens nothing
+unless you pass `--open`, and sends nothing anywhere. When the report is too
+long for a link, the link carries the summary and asks you to paste the rest.
+
+Any other command that fails ends with one line on stderr pointing here:
+
+```
+If this looks like a bug in XActions, run `xactions doctor --report` and paste the result into a new issue.
+```
+
+Usage errors (an unknown command, a missing argument) do not get the line.
+
 ## Doctor: query IDs and account pool
 
 `xactions doctor` has two extra lines beyond the environment and session checks:

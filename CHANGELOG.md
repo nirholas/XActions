@@ -21,6 +21,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Fixed
 
+- **`xactions doctor` checks Node against the version XActions requires.** It passed anything from Node 20, while package.json requires `>=22.19`, so Node 20 and 21 users were told everything was fine and then hit syntax and API errors. It now reads `engines.node`.
 - **The AI features work again.** Seven OpenRouter model ids in the code had been retired: `google/gemini-flash-1.5`, `google/gemini-flash-2.0`, `meta-llama/llama-3-8b-instruct:free`, `meta-llama/llama-3.1-8b-instruct:free`, `x-ai/grok-2-vision-1212`, `anthropic/claude-3.5-haiku` and `anthropic/claude-sonnet-4`. The lane chain's Groq model (`llama-3.3-70b-versatile`) and LLM7 model (`gemini-3.1-flash-lite`) were gone too. So every call with a key failed, and each feature fell back to its offline path or answered "temporarily unavailable". Groq now runs `openai/gpt-oss-120b`, and LLM7 runs its `default` alias.
 - **Free reasoning models finish their answers.** NVIDIA's Nemotron spent 488 of 500 tokens reasoning and stopped mid-sentence. The OpenRouter, NVIDIA and Groq gpt-oss lanes now ask for reasoning off or low.
 - **The optimizer answers 400, not 500, to a request without `text`.** `hashtags`, `predict` and `variations` crashed with a TypeError; all four now validate `text`, `count` and `goal`.
@@ -30,6 +31,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - **The scraper toolbox reads follower counts from both user shapes X sends.** It read only `legacy.followers_count`, which X is moving to `relationship_counts`, so newer responses exported no follower count at all.
 
 ### Added
+
+- **`xactions doctor --report` prints a bug report that is safe to paste.** It carries the XActions version, how it was installed (global npm, npx, local clone, project dependency, Docker), the Node version against `engines`, OS and architecture, which optional packages are present, the guest tier result, whether a session is saved and carries `ct0`, the query-ID cache age, the MCP self-test and the installed skills count. Cookies, tokens, usernames, account ids, proxy URLs, home paths and environment variable values are removed. `--issue` adds a link to the bug form with the report filled in, and `--open` opens it. Nothing is sent anywhere. See [docs/cli-reference.md](docs/cli-reference.md#doctor-reports-json-and-the-checks).
+- **`xactions doctor --json`** prints every check as `{id, group, name, status, detail, fix}` with stable ids and exits 1 when any check fails. `--offline` skips the checks that reach x.com.
+- **Four new doctor checks**, each with a fix line: the native SQLite module loads (a Node upgrade breaks it), `XACTIONS_HOME` is writable, the clock agrees with x.com (signed requests carry a timestamp), and an older global install is not shadowing a newer one on PATH.
+- **Issue forms.** Bug reports, feature requests and "a script stopped working on x.com" are GitHub issue forms. The bug form requires the doctor report, the command, what happened and what you expected, and asks which part of XActions (CLI, MCP server, browser script, extension, library, API, hosted). Blank issues are off; questions go to Discussions.
+- **A failed command points at the report.** Any CLI command that exits non-zero ends with one line on stderr suggesting `xactions doctor --report`. Usage errors do not get it. An error no command caught now prints its message instead of an unhandled-rejection stack (set `DEBUG=1` for the stack).
 
 - **An optional lane for the official X API v2.** Users with their own developer credentials can now reach every operation in X's published OpenAPI document (274 operations in 23 areas, spec 2.175) by operation id. Nothing in the no-key lane depends on it. Docs: [docs/x-api/README.md](docs/x-api/README.md).
   - **Command line:** `xactions xapi` with `tags`, `list`, `describe`, `call`, `stream`, `upload` and `auth login|status|logout`. Writes need `--yes`, and `--dry-run` prints the request without sending it.

@@ -9,54 +9,50 @@
  * being rate limited. Rather than making people discover these one failure at
  * a time, this runs every check and prints the exact fix for whatever failed.
  *
- * Each check reports one of three states, and the process exit code follows:
- * 0 when nothing failed, 1 when something did.
+ * Each check has a stable id and reports one of three states, and the process
+ * exit code follows: 0 when nothing failed, 1 when something did. The same
+ * results print four ways: for a person (the default), as JSON (`--json`), as
+ * a redacted Markdown block to paste into an issue (`--report`), and as that
+ * block plus a prefilled new-issue link (`--issue`). Nothing is ever sent
+ * anywhere; the link is printed and opened only with `--open`.
  *
  * @author nich (@nichxbt) - https://github.com/nirholas
  * @license Apache-2.0
  */
 
 import chalk from 'chalk';
+import { Option } from 'commander';
 import fs from 'node:fs/promises';
+import os from 'node:os';
 import path from 'node:path';
 import { xactionsHome } from '../../utils/savedSession.js';
 import { BROWSER_INSTALL, isMissingPackage } from '../../utils/optionalDeps.js';
+import { openUrl } from '../../utils/openUrl.js';
 
 import { VERSION } from '../../version.js';
 import { countInstalledSkills } from './skills.js';
+import {
+  checkClock,
+  checkHome,
+  checkNode,
+  checkShadowing,
+  checkSqlite,
+  gatherInstall,
+  optionalDepsInventory,
+  readOwnPackage,
+} from '../doctor/checks.js';
+import { issueUrl, readSessionSecrets, renderReport, reportTitle } from '../doctor/report.js';
 
 const CONFIG_DIR = xactionsHome();
 const COOKIE_FILE = path.join(CONFIG_DIR, 'cookies.json');
 const CONFIG_FILE = path.join(CONFIG_DIR, 'config.json');
 
-/** Minimum Node the client's syntax and APIs require. */
-const MIN_NODE_MAJOR = 20;
-
 /** A stable, public, high-traffic account to probe the guest tier with. */
 const PROBE_ACCOUNT = 'nasa';
 
 /**
- * @typedef {object} CheckResult
- * @property {'ok'|'warn'|'fail'} status
- * @property {string} detail
- * @property {string} [fix]
+ * @typedef {import('../doctor/checks.js').CheckResult} CheckResult
  */
-
-/**
- * Is the runtime new enough.
- * @returns {CheckResult}
- */
-function checkNode() {
-  const major = Number(process.versions.node.split('.')[0]);
-  if (major >= MIN_NODE_MAJOR) {
-    return { status: 'ok', detail: `Node ${process.versions.node}` };
-  }
-  return {
-    status: 'fail',
-    detail: `Node ${process.versions.node}, which is below the minimum of ${MIN_NODE_MAJOR}`,
-    fix: `Install Node ${MIN_NODE_MAJOR} or newer: https://nodejs.org`,
-  };
-}
 
 /**
  * Can a logged-out client still read public data. This is the check that
@@ -132,25 +128,35 @@ async function checkTimeline() {
 }
 
 /**
- * Is a session saved, and does it carry both cookies.
- * @returns {Promise<CheckResult & {cookies?: Record<string, string>}>}
+ * Is a session saved, and does it carry both cookies. `facts` says so in a
+ * form the report can print without printing the cookies.
+ * @returns {Promise<CheckResult>}
  */
 async function checkSessionStored() {
   try {
     const jar = JSON.parse(await fs.readFile(COOKIE_FILE, 'utf-8'));
     const cookies = Object.fromEntries(jar.map((c) => [c.name, c.value]));
     if (!cookies.auth_token) {
-      return { status: 'fail', detail: 'Cookie jar exists but has no auth_token', fix: 'Run `xactions connect`.' };
+      return {
+        status: 'fail',
+        detail: 'Cookie jar exists but has no auth_token',
+        fix: 'Run `xactions connect`.',
+        facts: { saved: false, ct0: Boolean(cookies.ct0), source: 'cookies.json' },
+      };
     }
     if (!cookies.ct0) {
       return {
         status: 'fail',
         detail: 'Session has auth_token but no ct0',
         fix: 'X treats a session without ct0 as logged out, so search, followers and DMs all fail with a bare 404. Run `xactions connect` to capture both.',
-        cookies,
+        facts: { saved: true, ct0: false, source: 'cookies.json' },
       };
     }
-    return { status: 'ok', detail: `Both cookies present in ${COOKIE_FILE}`, cookies };
+    return {
+      status: 'ok',
+      detail: `Both cookies present in ${COOKIE_FILE}`,
+      facts: { saved: true, ct0: true, source: 'cookies.json' },
+    };
   } catch {
     // Fall back to the values `xactions login` writes.
     try {
@@ -161,14 +167,20 @@ async function checkSessionStored() {
           status: 'fail',
           detail: 'config.json has auth_token but no ct0',
           fix: 'Run `xactions connect` to capture both in one step.',
+          facts: { saved: true, ct0: false, source: 'config.json' },
         };
       }
-      return { status: 'ok', detail: `Both cookies present in ${CONFIG_FILE}` };
+      return {
+        status: 'ok',
+        detail: `Both cookies present in ${CONFIG_FILE}`,
+        facts: { saved: true, ct0: true, source: 'config.json' },
+      };
     } catch {
       return {
         status: 'warn',
         detail: 'No session saved, so only the guest tier is available',
         fix: 'Run `xactions connect` to unlock search, followers, following, likes, bookmarks and DMs.',
+        facts: { saved: false, ct0: false, source: null },
       };
     }
   }
@@ -193,7 +205,11 @@ async function checkSessionLive(stored) {
     });
     const me = await scraper.me();
     if (!me?.username) throw new Error('X returned no account for this session');
-    return { status: 'ok', detail: `Signed in as @${me.username}` };
+    return {
+      status: 'ok',
+      detail: `Signed in as @${me.username}`,
+      secrets: [me.username, me.name, me.id].filter((v) => typeof v === 'string' && v),
+    };
   } catch (error) {
     return {
       status: 'fail',
@@ -246,7 +262,7 @@ async function checkMcp() {
     if (!Array.isArray(tools) || tools.length === 0) {
       return { status: 'warn', detail: 'MCP server loaded but exposed no tool list' };
     }
-    return { status: 'ok', detail: `MCP server exposes ${tools.length} tools` };
+    return { status: 'ok', detail: `MCP server exposes ${tools.length} tools`, facts: { tools: tools.length } };
   } catch (error) {
     return {
       status: 'fail',
@@ -269,9 +285,14 @@ async function checkSkills() {
         status: 'warn',
         detail: `No skills installed (${perTarget})`,
         fix: 'Run `xactions skills install --all --global` so your agent knows which script to reach for.',
+        facts: { total: 0 },
       };
     }
-    return { status: 'ok', detail: `${counts.total} skill install${counts.total === 1 ? '' : 's'} found (${perTarget})` };
+    return {
+      status: 'ok',
+      detail: `${counts.total} skill install${counts.total === 1 ? '' : 's'} found (${perTarget})`,
+      facts: { total: counts.total },
+    };
   } catch (error) {
     return { status: 'fail', detail: `Could not read the skills catalogue: ${error.message}`, fix: 'Reinstall with `npm install -g xactions`.' };
   }
@@ -328,15 +349,24 @@ export function describeQueryIds(status, now = Date.now()) {
  */
 async function checkQueryIds({ refresh = false } = {}) {
   const { queryIdStatus, refreshQueryIds } = await import('../../scrapers/twitter/http/queryIds.js');
+  const facts = () => {
+    const status = queryIdStatus();
+    return {
+      cached: status.cached,
+      count: status.count,
+      age: status.fetchedAt ? formatCacheAge(status.fetchedAt) : 'unknown age',
+      stale: status.stale,
+    };
+  };
   if (refresh) {
     try {
       const result = await refreshQueryIds();
-      return { status: 'ok', detail: `Refreshed ${result.count} query IDs from x.com into ${result.cachePath}` };
+      return { status: 'ok', detail: `Refreshed ${result.count} query IDs from x.com into ${result.cachePath}`, facts: facts() };
     } catch (error) {
-      return describeRefreshFailure(error, describeQueryIds(queryIdStatus()));
+      return { ...describeRefreshFailure(error, describeQueryIds(queryIdStatus())), facts: facts() };
     }
   }
-  return describeQueryIds(queryIdStatus());
+  return { ...describeQueryIds(queryIdStatus()), facts: facts() };
 }
 
 /**
@@ -426,6 +456,124 @@ async function checkAccounts() {
 }
 
 /**
+ * @typedef {object} CheckSpec
+ * @property {string} id - Stable: scripts, `--json` consumers and issue triage key on it
+ * @property {'environment'|'guest'|'session'} group
+ * @property {string} name - Label in the human output
+ * @property {boolean} [network] - Reaches x.com, so `--offline` skips it
+ * @property {(ctx: {refreshIds: boolean, offline: boolean}, done: Map<string, CheckResult>) => CheckResult|Promise<CheckResult>} run
+ */
+
+/**
+ * Every check, in the order it runs and prints. Ids never change once
+ * published; a new check gets a new id.
+ * @type {CheckSpec[]}
+ */
+const CHECKS = [
+  { id: 'node', group: 'environment', name: 'Node', run: () => checkNode() },
+  { id: 'sqlite', group: 'environment', name: 'SQLite module', run: () => checkSqlite() },
+  { id: 'home', group: 'environment', name: 'XACTIONS_HOME', run: () => checkHome(xactionsHome()) },
+  { id: 'shadowed-install', group: 'environment', name: 'Install on PATH', run: () => checkShadowing(VERSION) },
+  { id: 'browser', group: 'environment', name: 'Browser', run: () => checkBrowser() },
+  { id: 'mcp', group: 'environment', name: 'MCP server', run: () => checkMcp() },
+  { id: 'skills', group: 'environment', name: 'Skills', run: () => checkSkills() },
+  {
+    id: 'query-ids',
+    group: 'environment',
+    name: 'GraphQL query IDs',
+    run: (ctx) => checkQueryIds({ refresh: ctx.refreshIds && !ctx.offline }),
+  },
+  { id: 'clock', group: 'environment', name: 'Clock', network: true, run: () => checkClock() },
+  { id: 'guest-profile', group: 'guest', name: 'Profile read', network: true, run: () => checkGuestTier() },
+  { id: 'guest-timeline', group: 'guest', name: 'Timeline read', network: true, run: () => checkTimeline() },
+  { id: 'session-saved', group: 'session', name: 'Session saved', run: () => checkSessionStored() },
+  {
+    id: 'session-valid',
+    group: 'session',
+    name: 'Session valid',
+    network: true,
+    run: (_ctx, done) => checkSessionLive(/** @type {CheckResult} */ (done.get('session-saved'))),
+  },
+  { id: 'accounts', group: 'session', name: 'Accounts', run: () => checkAccounts() },
+];
+
+/** The ids `--json` reports, in order. */
+export const CHECK_IDS = CHECKS.map((c) => c.id);
+
+const GROUP_HEADINGS = {
+  environment: ['Environment', ''],
+  guest: ['Guest tier', '(works with no account)'],
+  session: ['Session tier', '(search, followers, DMs)'],
+};
+
+/**
+ * @typedef {CheckResult & {id: string, group: string, name: string, fix: string|null}} DoctorResult
+ */
+
+/**
+ * Run every check in order. A check that throws is reported as failed, so
+ * one broken check never hides the rest.
+ * @param {{refreshIds?: boolean, offline?: boolean, onResult?: (result: DoctorResult) => void}} [options]
+ * @returns {Promise<DoctorResult[]>}
+ */
+export async function collectChecks({ refreshIds = false, offline = false, onResult } = {}) {
+  const ctx = { refreshIds, offline };
+  /** @type {Map<string, CheckResult>} */
+  const done = new Map();
+  const results = [];
+  for (const spec of CHECKS) {
+    /** @type {CheckResult} */
+    let result;
+    if (spec.network && offline) {
+      result = { status: 'warn', detail: 'Skipped: --offline' };
+    } else {
+      try {
+        result = await spec.run(ctx, done);
+      } catch (error) {
+        result = { status: 'fail', detail: `The check itself failed: ${error.message}`, fix: 'Open an issue with `xactions doctor --issue`.' };
+      }
+    }
+    done.set(spec.id, result);
+    const full = { ...result, id: spec.id, group: spec.group, name: spec.name, fix: result.fix ?? null };
+    results.push(full);
+    onResult?.(full);
+  }
+  return results;
+}
+
+/**
+ * Process exit code for a set of results: 1 when anything failed.
+ * @param {Array<{status: string}>} results
+ * @returns {number}
+ */
+export function exitCodeFor(results) {
+  return results.some((r) => r.status === 'fail') ? 1 : 0;
+}
+
+/**
+ * @param {Array<{status: 'ok'|'warn'|'fail'}>} results
+ * @returns {{ok: number, warn: number, fail: number}}
+ */
+function summarise(results) {
+  const counts = { ok: 0, warn: 0, fail: 0 };
+  for (const r of results) counts[r.status] += 1;
+  return counts;
+}
+
+/**
+ * The `--json` document: the public fields only, never facts or secrets.
+ * @param {DoctorResult[]} results
+ * @returns {{version: string, checks: Array<{id: string, group: string, name: string, status: string, detail: string, fix: string|null}>, summary: {ok: number, warn: number, fail: number}}}
+ */
+export function toJson(results) {
+  return {
+    version: VERSION,
+    checks: results.map(({ id, group, name, status, detail, fix }) => ({ id, group, name, status, detail, fix })),
+    summary: summarise(results),
+  };
+}
+
+/**
  * Print the result of one check.
  * @param {string} name
  * @param {CheckResult} result
@@ -437,50 +585,107 @@ function printCheck(name, result) {
 }
 
 /**
- * Run every check and summarise.
- * @param {{refreshIds?: boolean}} [options]
+ * Everything the report needs beyond the check results.
+ * @param {DoctorResult[]} results
+ * @returns {Promise<import('../doctor/report.js').ReportState>}
+ */
+async function reportState(results) {
+  let username = '';
+  try {
+    username = os.userInfo().username;
+  } catch {
+    // No passwd entry (some containers): nothing to redact by that name.
+  }
+  const node = results.find((r) => r.id === 'node')?.facts || {};
+  return {
+    version: VERSION,
+    install: gatherInstall(),
+    node: { version: process.versions.node, engines: node.engines || 'unknown' },
+    os: { platform: process.platform, release: os.release(), arch: process.arch },
+    optionalDeps: optionalDepsInventory(),
+    env: process.env,
+    homedir: os.homedir(),
+    username,
+    hostname: os.hostname(),
+    sessionValues: await readSessionSecrets(xactionsHome()),
+    checks: results,
+  };
+}
+
+/**
+ * Where new issues go, from package.json.
+ * @returns {string}
+ */
+function bugsUrl() {
+  try {
+    const url = readOwnPackage().bugs?.url;
+    if (url) return url;
+  } catch {
+    // Fall through to the canonical repository.
+  }
+  return 'https://github.com/nirholas/xactions/issues';
+}
+
+/**
+ * Run every check and print the result in the requested form.
+ *
+ * - default: the human report, printed as each check finishes
+ * - `json`: one JSON document on stdout
+ * - `report`: redacted Markdown on stdout, ready to paste
+ * - `issue`: the report plus a prefilled new-issue link; `open` also opens it
+ *
+ * Every form exits 1 when a check failed.
+ *
+ * @param {{refreshIds?: boolean, offline?: boolean, json?: boolean, report?: boolean, issue?: boolean, open?: boolean}} [options]
  * @returns {Promise<void>}
  */
 export async function doctorCommand(options = {}) {
+  const collect = { refreshIds: Boolean(options.refreshIds), offline: Boolean(options.offline) };
+
+  if (options.json) {
+    const results = await collectChecks(collect);
+    console.log(JSON.stringify(toJson(results), null, 2));
+    process.exitCode = exitCodeFor(results);
+    return;
+  }
+
+  if (options.report || options.issue) {
+    const results = await collectChecks(collect);
+    const state = await reportState(results);
+    const report = renderReport(state);
+    console.log(report);
+    if (options.issue) {
+      const url = issueUrl({ bugsUrl: bugsUrl(), title: reportTitle(state), report });
+      console.log('');
+      console.log(url);
+      if (options.open) {
+        console.error(openUrl(url) ? 'Opening the issue form in your browser.' : 'Could not start a browser; open the link above.');
+      } else {
+        console.error('Open the link above to start an issue with this report filled in (or pass --open).');
+      }
+    } else {
+      console.error(`Paste everything above into the doctor report field of a new issue: ${bugsUrl().replace(/\/+$/, '')}/new/choose`);
+    }
+    process.exitCode = exitCodeFor(results);
+    return;
+  }
+
   console.log(chalk.cyan(`\n⚡ XActions doctor  ${chalk.gray(`v${VERSION}`)}\n`));
+  let group = null;
+  const results = await collectChecks({
+    ...collect,
+    onResult(result) {
+      if (result.group !== group) {
+        if (group) console.log('');
+        const [title, note] = GROUP_HEADINGS[result.group];
+        console.log(chalk.bold(`  ${title}`), note ? chalk.gray(note) : '');
+        group = result.group;
+      }
+      printCheck(result.name, result);
+    },
+  });
 
-  const results = [];
-
-  /**
-   * @param {string} name
-   * @param {CheckResult|Promise<CheckResult>} check
-   * @returns {Promise<CheckResult>}
-   */
-  const run = async (name, check) => {
-    const result = await check;
-    printCheck(name, result);
-    results.push(result);
-    return result;
-  };
-
-  console.log(chalk.bold('  Environment'));
-  await run('Node', checkNode());
-  await run('Browser', await checkBrowser());
-  await run('MCP server', await checkMcp());
-  await run('Skills', await checkSkills());
-  await run('GraphQL query IDs', await checkQueryIds({ refresh: Boolean(options.refreshIds) }));
-
-  console.log('');
-  console.log(chalk.bold('  Guest tier'), chalk.gray('(works with no account)'));
-  await run('Profile read', await checkGuestTier());
-  await run('Timeline read', await checkTimeline());
-
-  console.log('');
-  console.log(chalk.bold('  Session tier'), chalk.gray('(search, followers, DMs)'));
-  const stored = await checkSessionStored();
-  printCheck('Session saved', stored);
-  results.push(stored);
-  await run('Session valid', await checkSessionLive(stored));
-  await run('Accounts', await checkAccounts());
-
-  const failed = results.filter((r) => r.status === 'fail').length;
-  const warned = results.filter((r) => r.status === 'warn').length;
-
+  const { fail: failed, warn: warned } = summarise(results);
   console.log('');
   if (failed === 0 && warned === 0) {
     console.log(chalk.green('  Everything checks out.\n'));
@@ -488,9 +693,9 @@ export async function doctorCommand(options = {}) {
     console.log(chalk.yellow(`  ${warned} thing${warned === 1 ? '' : 's'} to look at, nothing broken.\n`));
   } else {
     console.log(chalk.red(`  ${failed} failure${failed === 1 ? '' : 's'}, ${warned} warning${warned === 1 ? '' : 's'}.`));
-    console.log(chalk.gray('  Each one above has the fix next to it.\n'));
-    process.exitCode = 1;
+    console.log(chalk.gray('  Each one above has the fix next to it. To report a bug: xactions doctor --issue\n'));
   }
+  process.exitCode = exitCodeFor(results);
 }
 
 /**
@@ -502,5 +707,10 @@ export function registerDoctorCommand(program) {
     .command('doctor')
     .description('Check the install, the guest tier, the saved session, the query-ID cache and the MCP server')
     .option('--refresh-ids', 'Discover the current GraphQL query IDs from x.com before checking them')
+    .option('--offline', 'Skip the checks that reach x.com (clock, guest tier, session)')
+    .addOption(new Option('--json', 'Print every check as JSON: id, status, detail, fix (not redacted; share --report instead)').conflicts(['report', 'issue']))
+    .option('--report', 'Print a redacted Markdown report to paste into a bug report')
+    .option('--issue', 'Print the report and a prefilled new-issue link')
+    .addOption(new Option('--open', 'With --issue, also open the link in your browser').implies({ issue: true }))
     .action((options) => doctorCommand(options));
 }

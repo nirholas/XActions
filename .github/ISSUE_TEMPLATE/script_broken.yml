@@ -1,0 +1,62 @@
+# XActions form for browser console scripts that x.com changes broke.
+# by nichxbt
+name: "🧩 A script stopped working on x.com"
+description: A browser console script, userscript or extension action no longer finds what it needs on the page.
+title: "[script] "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        X changes its page markup often, and a script that matched yesterday's buttons can miss today's. The page, the script and the console output are usually enough to fix it.
+
+        Before you paste anything, replace your own handle with `<you>`. Never paste a cookie.
+  - type: input
+    id: script
+    attributes:
+      label: Script
+      description: Its file name or id, as you got it from the repository or the docs.
+      placeholder: browser/unfollowback.js
+    validations:
+      required: true
+  - type: input
+    id: page
+    attributes:
+      label: The x.com page
+      description: The address the tab was on when you ran it, with your handle replaced.
+      placeholder: https://x.com/<you>/following
+    validations:
+      required: true
+  - type: textarea
+    id: console-error
+    attributes:
+      label: Console output
+      description: Everything the DevTools console printed after you ran it, red lines included.
+      render: text
+    validations:
+      required: true
+  - type: dropdown
+    id: how-run
+    attributes:
+      label: How you ran it
+      options:
+        - Pasted into the DevTools console
+        - Userscript manager
+        - XActions browser extension
+        - Something else
+    validations:
+      required: true
+  - type: input
+    id: browser
+    attributes:
+      label: Browser and version
+      placeholder: Chrome 131 on macOS
+    validations:
+      required: false
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What it did
+      description: Nothing at all, stopped part way, clicked the wrong thing? Roughly how many items did it get through?
+    validations:
+      required: false

@@ -1,15 +1,19 @@
-# XActions — Issue Template Configuration
+# XActions issue chooser. Bugs, feature requests and broken scripts each have
+# a form; questions go to Discussions.
 # by nichxbt
 
-blank_issues_enabled: true
+blank_issues_enabled: false
 
 contact_links:
+  - name: "💬 Questions and help"
+    url: "https://github.com/nirholas/XActions/discussions"
+    about: "How do I, is this possible, show and tell. Ask in Discussions."
   - name: "📖 Documentation"
     url: "https://github.com/nirholas/XActions/blob/main/docs/getting-started.md"
     about: "Read the docs before opening an issue"
-  - name: "💬 Discussions"
-    url: "https://github.com/nirholas/XActions/discussions"
-    about: "Ask questions, share ideas, show what you built"
+  - name: "🩺 Troubleshooting"
+    url: "https://github.com/nirholas/XActions/blob/main/docs/troubleshooting.md"
+    about: "Known symptoms and their fixes, starting with xactions doctor --report"
   - name: "🐦 Twitter / X"
     url: "https://x.com/nichxbt"
     about: "Follow @nichxbt for updates and support"

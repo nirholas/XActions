@@ -188,6 +188,7 @@ bookmarks and DMs need a session.
 
 ```bash
 xactions doctor    # what works right now, and what each failure needs
+xactions doctor --json     # the same checks as JSON with stable ids; exits 1 on any failure
 xactions connect   # log in through a real browser and save the session
 xactions login     # or paste an auth_token cookie
 ```
@@ -227,7 +228,10 @@ enough that a rate-limit wall is a matter of when, not if.
 
 `xactions doctor` is the first command to run when something returns nothing:
 it reports the guest tier, the saved session, the query-ID cache and the
-installed skills, with the fix next to each failure.
+installed skills, with the fix next to each failure. When the user needs to
+file a bug, `xactions doctor --report` prints a redacted Markdown block for
+the issue and `xactions doctor --issue` adds a prefilled new-issue link;
+neither sends anything.
 
 ---
 
@@ -346,6 +350,7 @@ is not, that is a bug in this table.
 | Keep a big scrape alive across rate limits | `src/scrapers/twitter/http/accountPool.js` and `checkpoint.js` |
 | Call the official X API with the user's own keys | `xactions xapi call <operationId> key=value`, `XApiClient` in `src/xapi/client.js`, or the `x_api_get` / `x_api_write` MCP tools. See [`docs/x-api/README.md`](docs/x-api/README.md) |
 | Find which official X API endpoint does something | `xactions xapi list <words>` then `xactions xapi describe <operationId>`, or [`docs/x-api/endpoints.md`](docs/x-api/endpoints.md) |
+| Report a bug with the facts a maintainer needs | `xactions doctor --issue`. The report is redacted; the forms are in `.github/ISSUE_TEMPLATE/` |
 | Receive X webhooks (CRC check and signature) | `createWebhookHandler` in `src/xapi/webhooks.js`. See [`docs/x-api/guides/webhooks-and-activity.md`](docs/x-api/guides/webhooks-and-activity.md) |
 
 ---

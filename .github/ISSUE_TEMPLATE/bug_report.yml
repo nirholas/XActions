@@ -1,0 +1,73 @@
+# XActions bug report form. `xactions doctor --issue` links here with the
+# title and the doctor-report field filled in; keep that field's id.
+# by nichxbt
+name: "🐛 Bug report"
+description: Something in XActions is not working. Starts with the output of `xactions doctor --report`.
+title: "[bug] "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting. One command collects what the first reply would otherwise ask for:
+
+        ```bash
+        xactions doctor --report      # or: npx xactions doctor --report
+        xactions doctor --issue       # the same, plus a link that opens this form filled in
+        ```
+
+        The report leaves out cookies, tokens, usernames, account ids, proxy URLs, home paths and environment values. Never paste an `auth_token` or `ct0` cookie into an issue.
+
+        A browser console script stopped finding buttons on x.com? Use the **A script stopped working on x.com** form instead.
+  - type: textarea
+    id: doctor-report
+    attributes:
+      label: Doctor report
+      description: Paste everything `xactions doctor --report` printed. Without the CLI, `npx xactions doctor --report` works from any folder.
+      placeholder: "### xactions doctor report"
+    validations:
+      required: true
+  - type: dropdown
+    id: lane
+    attributes:
+      label: Which part of XActions
+      description: Where you hit the problem.
+      options:
+        - CLI
+        - MCP server
+        - Browser script
+        - Browser extension
+        - Node library
+        - HTTP API
+        - Hosted (xactions.app)
+    validations:
+      required: true
+  - type: textarea
+    id: command
+    attributes:
+      label: What you ran
+      description: The exact command, MCP tool call, script or code. Replace your handle and any secret with a placeholder.
+      placeholder: xactions followers someuser --limit 500 --json
+      render: shell
+    validations:
+      required: true
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened
+      description: The full output or error, not a summary of it.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: What you expected
+    validations:
+      required: true
+  - type: textarea
+    id: context
+    attributes:
+      label: Anything else
+      description: Does it happen every time? Did it work in an earlier version? Screenshots help for the dashboard and the extension.
+    validations:
+      required: false

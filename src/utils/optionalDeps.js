@@ -27,6 +27,28 @@
 export const BROWSER_INSTALL = 'npm install puppeteer puppeteer-extra puppeteer-extra-plugin-stealth';
 
 /**
+ * Every package a feature loads on first use, and what needs it. `xactions
+ * doctor --report` lists which of these are present, because "is Puppeteer
+ * there" settles a large share of install questions.
+ * @type {ReadonlyArray<{name: string, feature: string}>}
+ */
+export const OPTIONAL_PACKAGES = Object.freeze([
+  { name: 'puppeteer', feature: '`xactions connect` and the browser-driven write tools' },
+  { name: 'puppeteer-extra', feature: 'the stealth browser' },
+  { name: 'puppeteer-extra-plugin-stealth', feature: 'the stealth browser' },
+  { name: 'puppeteer-core', feature: 'a system Chromium in place of Puppeteer' },
+  { name: 'ioredis', feature: 'streams, which keep their state in Redis' },
+  { name: 'bull', feature: 'poll-transport streams' },
+  { name: 'nodemailer', feature: 'email notifications' },
+  { name: 'exceljs', feature: 'the Excel plugin' },
+  { name: '@atproto/api', feature: 'the Bluesky scraper and importer' },
+  { name: 'viem', feature: 'x402 payments' },
+  { name: '@x402/core', feature: 'x402 payments' },
+  { name: '@x402/evm', feature: 'x402 payments' },
+  { name: '@x402/express', feature: 'the x402 payment gate' },
+]);
+
+/**
  * Thrown when a feature needs a package that is not installed.
  */
 export class MissingDependencyError extends Error {

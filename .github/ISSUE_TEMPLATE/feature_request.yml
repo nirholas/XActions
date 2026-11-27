@@ -1,0 +1,49 @@
+# XActions feature request form.
+# by nichxbt
+name: "🚀 Feature request"
+description: Suggest something XActions should do, or do better.
+title: "[feat] "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Questions and "how do I" belong in [Discussions](https://github.com/nirholas/XActions/discussions); a request here is for a change to XActions itself.
+  - type: textarea
+    id: problem
+    attributes:
+      label: What you are trying to do
+      description: The job, not the solution. What is missing or awkward today?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: How it could work
+      description: A command, an MCP tool, a script, an option. Examples of the input and output you want help most.
+    validations:
+      required: true
+  - type: dropdown
+    id: lane
+    attributes:
+      label: Which parts of XActions
+      multiple: true
+      options:
+        - CLI
+        - MCP server
+        - Browser script
+        - Browser extension
+        - Node library
+        - HTTP API
+        - Hosted (xactions.app)
+        - Skills
+        - Documentation
+    validations:
+      required: false
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: What you tried instead
+      description: Workarounds, other tools, or existing XActions features that come close.
+    validations:
+      required: false
