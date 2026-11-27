@@ -203,7 +203,10 @@ Chromium download. Every HTTP read and the MCP server work without them;
 <td><strong>Browser</strong></td>
 <td>
 
-No install needed. Copy-paste scripts into your browser console on x.com
+No install needed. Copy-paste scripts into your browser console on x.com,
+or [install them as userscripts](docs/browser-scripts.md#install-as-a-userscript)
+in Tampermonkey or Violentmonkey to run them from a menu, keep their settings,
+and get updates.
 
 </td>
 </tr>

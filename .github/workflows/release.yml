@@ -163,6 +163,88 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+  # One userscript per browser script, plus xactions.user.js with all of them,
+  # built from browser/index.json. Each file's @updateURL and @downloadURL point
+  # at releases/latest/download/<id>.user.js, so the assets have to be on every
+  # release under exactly those names for installed copies to update. Built in a
+  # read-only job (npm ci runs dependency code) and attached by a job that holds
+  # the write token but installs nothing, the same split as the jobs above.
+  userscripts-build:
+    name: Build userscripts
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    needs: [verify-version, test]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: '22'
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci --ignore-scripts
+        env:
+          PUPPETEER_SKIP_DOWNLOAD: '1'
+
+      # Rebuilds browser/index.json from the scripts, writes dist/userscripts/,
+      # and runs node --check on every file; a script the wrapper breaks fails here.
+      - name: Build userscripts
+        run: npm run build:userscripts
+
+      - name: Write checksums
+        working-directory: dist/userscripts
+        run: sha256sum *.user.js > USERSCRIPTS-SHA256SUMS.txt
+
+      - name: Upload workflow artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: userscripts
+          path: dist/userscripts/
+          if-no-files-found: error
+          retention-days: 30
+
+  userscripts-attach:
+    name: Attach userscripts to the release
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    needs: [release, userscripts-build]
+
+    permissions:
+      contents: write
+
+    steps:
+      - name: Download userscripts
+        uses: actions/download-artifact@v8
+        with:
+          name: userscripts
+          path: userscripts
+
+      - name: Attach to release
+        uses: softprops/action-gh-release@v3
+        with:
+          files: |
+            userscripts/*.user.js
+            userscripts/USERSCRIPTS-SHA256SUMS.txt
+          fail_on_unmatched_files: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Summary
+        run: |
+          {
+            echo "### Userscripts"
+            echo ""
+            echo "$(ls userscripts/*.user.js | wc -l) files attached, including xactions.user.js (all tools)."
+            echo ""
+            echo "Install links resolve through releases/latest/download/<id>.user.js."
+          } >> $GITHUB_STEP_SUMMARY
+
   # A tag must not publish code the suite has never run against. `needs: [release, test]`
   # is the whole gate: a red test job stops the publish instead of shipping past it.
   publish-npm:
