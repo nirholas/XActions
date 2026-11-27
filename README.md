@@ -97,6 +97,57 @@ npx xactions search "your brand" --limit 50               # what people are sayi
 
 ---
 
+### 🧭 Pick your lane
+
+- **Hosted, no install**: run scripts from [xactions.app](https://xactions.app) in your browser. [Don't Want to Code?](#-dont-want-to-code)
+- **Paste a browser script**: into the DevTools console on x.com. [Quick Start Examples](#-quick-start-examples), or [all 95 scripts](docs/browser-scripts.md)
+- **CLI**: `npx xactions` in any terminal. [CLI Reference](#-cli-reference)
+- **MCP for agents**: Claude, Cursor, Windsurf, VS Code. [MCP Server](#-mcp-server-ai-agents)
+- **Node library**: `npm install xactions`. [Node.js API](#-nodejs-api)
+- **Self-hosted API**: the Express backend in Docker. [Docker](#-docker)
+
+### 📖 Table of Contents
+
+**Learn**
+
+- [Tutorials](tutorials/): six guided walkthroughs, from a first scrape with no account to scripting XActions in your own pipelines
+- [Examples](examples/): 9 runnable programs, from a first profile lookup to the MCP draft-approval gate
+- [Getting started](docs/getting-started.md): install, authenticate, first command
+- [Troubleshooting](docs/troubleshooting.md): what to do when something does not work
+- [Browser Scripts](docs/browser-scripts.md): 95 console scripts, no install
+
+**On this page**
+
+- [How XActions Compares](#-how-xactions-compares): vs every alternative
+- [What's New](#-whats-new): recent changes
+- [Installation](#-installation): npm, CLI, or browser
+- [How It Works](#-how-it-works): paste, run, done
+- [Pricing](#-pricing): free, with optional x402 for a self-hosted remote API
+- [Docker](#-docker): the CLI, the MCP server and the self-hosted API in a container
+- [Claude Tutorials](#-claude-tutorials): 23 ready-to-paste prompts
+- [Common Questions](#-common-questions-for-ai-search): the questions people search for
+- [Disclaimer](#-disclaimer): read before you run anything on a real account
+- [Quick Start Examples](#-quick-start-examples): copy-paste and go
+- [Complete Feature List](#-complete-feature-list): every feature, every platform
+- [MCP Server (AI Agents)](#-mcp-server-ai-agents): for Claude, GPT, Cursor
+- [Autonomous Space Agent](#-autonomous-space-agent): AI agents in live Spaces
+- [CLI Reference](#-cli-reference): command line usage
+- [Node.js API](#-nodejs-api): programmatic access, every function
+- [Don't Want to Code?](#-dont-want-to-code): xactions.app and the one-click script runner
+- [Safety & Best Practices](#-safety--best-practices): delays, batches, what not to do
+- [Built With](#-built-with): the stack
+- [Project Structure](#-project-structure): every top-level directory
+- [Contributing](#-contributing): help make XActions better
+- [Star History](#-star-history): star, share, support
+- [Full Tutorial Library](#-full-tutorial-library): tutorials, all documentation, example docs
+- [Built for AI agents too](#built-for-ai-agents-too): AGENTS.md and llms.txt
+- [More from the same author](#more-from-the-same-author): related projects
+
+---
+
+<a id="-why-xactions"></a>
+<a id="-full-comparison-matrix"></a>
+
 ## 🏆 How XActions Compares
 
 > Why build with XActions instead of the alternatives?
@@ -114,11 +165,26 @@ npx xactions search "your brand" --limit 50               # what people are sayi
 | **Resumable long scrapes** | ✅ Cursor checkpoints | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
 | **Cookies from your installed browser** | ✅ `--from-browser`, `--cookies-file` | ❌ | ❌ | ❌ | ❌ | ✅ | ✅ | ❌ |
 | **Official X archive import** | ✅ `xactions archive` | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
+| **Node.js Library** | ✅ | ❌ Python | ❌ Python | ✅ | ✅ | ✅ | ❌ Python | ❌ Python |
+| **Workflow Engine** | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
+| **Sentiment Analysis** | ✅ Built-in, plus reputation monitoring | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
+| **Real-Time Streaming** | ✅ Polling streams + x.com's live event pipeline | ✅ live_pipeline | ❌ | ❌ | ✅ API only | ❌ | ❌ | ❌ |
+| **Account Export/Migration** | ✅ JSON, CSV, Markdown, HTML, plus the official X archive zip; migrate to Bluesky or Mastodon from a live account or the archive | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
+| **Dashboard (No-Code)** | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
+| **Grok AI Integration** | ✅ | ✅ Separate pkg | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
+| **Docker Support** | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
+| **TypeScript Types** | ✅ | ❌ | ❌ | ✅ | ✅ | ✅ | ❌ | ❌ |
+| **MCP tool allowlist** | ✅ 19 groups | n/a | n/a | ❌ | ✅ | n/a | n/a | n/a |
+| **MCP over Streamable HTTP** | ✅ `--http` on `/mcp` | n/a | n/a | ❌ | ✅ | n/a | n/a | n/a |
+| **Signed outbound webhooks** | ✅ HMAC-SHA256, retries, replay | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
+| **Claude Tutorials** | ✅ 23 prompts | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
+| **Multi-platform (X + others)** | ✅ Bluesky, Mastodon, Threads | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ |
 | **Language** | JavaScript | Python | Python | TypeScript | TypeScript | TypeScript | Python | Python |
+| **Cost** | **Free** | Free | Free | Free | Free + X API plan | Free | Free + X API plan | Free |
 
 **XActions is the only toolkit that works in the browser, terminal, and with AI agents, all without an API key.**
 
-Competitor columns come from the [competitive audit](docs/audits/2026-08-27-competitive-and-structural-audit.md), which names each project and what it does better than us. Where a rival led, we built it: the approval gate and the daily caps follow x-use, the account pool follows twscrape, cursor resume follows Scweet, and browser cookie import follows bird and twitter-cli.
+Competitor columns come from the [competitive audit](docs/audits/2026-08-27-competitive-and-structural-audit.md), which names each project and what it does better than us. Where a rival led, we built it: the approval gate and the daily caps follow x-use, the account pool follows twscrape, cursor resume follows Scweet, and browser cookie import follows bird and twitter-cli. The comparison reflects each project's public README at time of writing (August 2026); open an issue if a column is out of date.
 
 ---
 
@@ -189,8 +255,8 @@ npm install xactions
 
 ```bash
 npm install -g xactions
-xactions quickstart          # guided first run
-xactions doctor              # check what works right now
+xactions quickstart          # guided first run, adapts to what you already have
+xactions doctor              # check what works right now, and why
 ```
 
 Only reading? `npm install -g xactions --omit=optional` skips Puppeteer and its
@@ -208,33 +274,6 @@ No install needed. Copy-paste scripts into your browser console on x.com
 </td>
 </tr>
 </table>
-
----
-
-### 📖 Table of Contents
-
-**Learn**
-
-- [Tutorials](tutorials/): six guided walkthroughs, from a first scrape with no account to scripting XActions in your own pipelines
-- [Examples](examples/): 9 runnable programs, from a first profile lookup to the MCP draft-approval gate
-- [Getting started](docs/getting-started.md): install, authenticate, first command
-- [Troubleshooting](docs/troubleshooting.md): what to do when something does not work
-
-**Reference**
-
-- [How XActions Compares](#-how-xactions-compares): vs every alternative
-- [Quick Start (30 seconds)](#-quick-start-examples): Copy-paste and go
-- [Installation](#-installation): npm, CLI, Docker, or browser
-- [Feature Matrix](#-complete-feature-list): Every feature, every platform
-- [MCP Server (AI)](#-mcp-server-ai-agents): For Claude, GPT, Cursor
-- [Space Agent (AI Voice)](#-autonomous-space-agent): AI agents in live Spaces
-- [CLI Reference](#-cli-reference): Command line usage
-- [Node.js API](#-nodejs-api): Programmatic access
-- [Browser Scripts](docs/browser-scripts.md): 95 console scripts, no install
-- [Docker](#-docker): One-command deployment
-- [API Reference](#-api-reference): Full function documentation
-- [Claude Tutorials](#-claude-tutorials): 23 ready-to-paste prompts
-- [Contributing](#-contributing): Help make XActions better
 
 ---
 
@@ -282,76 +321,44 @@ This only applies to the hosted remote API. Local mode is always free.
 
 ---
 
-## 🎯 Why XActions?
-
-<table>
-<tr>
-<td></td>
-<td align="center"><strong>XActions</strong></td>
-<td align="center"><strong>Others</strong></td>
-</tr>
-<tr><td><strong>Scope</strong></td><td>Browser + CLI + Node.js + MCP + Extension</td><td>Usually 1 thing</td></tr>
-<tr><td><strong>API Key</strong></td><td>Not needed</td><td>Most need Twitter API ($100/mo)</td></tr>
-<tr><td><strong>MCP Tools</strong></td><td>152 for Claude, GPT, Cursor</td><td>0-2 tools</td></tr>
-<tr><td><strong>AI Features</strong></td><td>Sentiment, Grok, reputation</td><td>None</td></tr>
-<tr><td><strong>Export</strong></td><td>JSON, CSV, Markdown, HTML</td><td>JSON only (if any)</td></tr>
-<tr><td><strong>Migration</strong></td><td>Bluesky and Mastodon, from a live account or an X archive zip</td><td>None</td></tr>
-<tr><td><strong>Tutorials</strong></td><td>23 Claude prompts</td><td>None</td></tr>
-</table>
-
----
+<a id="self-hosting"></a>
 
 ## 🐳 Docker
 
-Run XActions anywhere with one command:
+Run XActions anywhere with one command. The image carries the CLI, the MCP
+server and the API backend; the CLI is not on the image's `PATH`, so call it
+through `node`:
 
 ```bash
 # Quick start
 docker build -t xactions .
-docker run -it xactions xactions profile elonmusk
+docker run --rm xactions node src/cli/index.js profile nasa
 
-# Run the MCP server
-docker run -p 3000:3000 xactions npm run mcp
+# Run the MCP server over stdio for a local client (-i keeps stdin open)
+docker run -i --rm -e XACTIONS_SESSION_COOKIE=your_cookie xactions node src/mcp/server.js
 
-# With environment variables
-docker run -e XACTIONS_SESSION_COOKIE=your_cookie xactions xactions followers elonmusk
+# Run the MCP server over HTTP on port 8787 (it binds 127.0.0.1 unless told otherwise)
+docker run --rm -p 8787:8787 -e XACTIONS_SESSION_COOKIE=your_cookie -e XACTIONS_MCP_TOKEN=your_token \
+  xactions node src/mcp/server.js --http --host 0.0.0.0
 ```
 
-Or use Docker Compose:
+`XACTIONS_SESSION_COOKIE` is read by the MCP server. The CLI reads its session
+from `XACTIONS_HOME` instead (see `xactions login`), so a public read such as
+`profile` needs nothing and a logged-in read needs that directory.
+
+With no command, the container starts the self-hosted API backend
+(`api/server.js`) on port 3001, which exits unless `DATABASE_URL` and
+`JWT_SECRET` are set. Docker Compose provides the database and runs the API with
+PostgreSQL, Redis and the job worker; set `JWT_SECRET` and `SESSION_SECRET` in `.env` first
+(start from `.env.example`), because Compose refuses to start without them:
 
 ```bash
 docker compose up
 ```
 
-See [Dockerfile](Dockerfile) for details.
-
----
-
-## 📖 API Reference
-
-Full TypeScript-compatible API with type declarations included.
-
-```typescript
-import { createBrowser, createPage, scrapeProfile, scrapeFollowers } from 'xactions';
-import { scrapeFollowing, scrapeTweets, searchTweets } from 'xactions/scrapers';
-```
-
-**Core Functions:**
-
-| Function | Description | Returns |
-|----------|-------------|---------|
-| `createBrowser(options?)` | Launch Puppeteer browser | `Browser` |
-| `createPage(browser)` | Create stealth page | `Page` |
-| `scrapeProfile(page, username)` | Get user profile data | `Profile` |
-| `scrapeFollowers(page, username, options?)` | List followers | `User[]` |
-| `scrapeFollowing(page, username, options?)` | List following | `User[]` |
-| `scrapeTweets(page, username, options?)` | Get user tweets | `Tweet[]` |
-| `searchTweets(page, query, options?)` | Search tweets | `Tweet[]` |
-| `downloadVideo(page, tweetUrl)` | Extract video URLs | `VideoResult` |
-| `exportBookmarks(page, options?)` | Export bookmarks | `Bookmark[]` |
-| `unrollThread(page, tweetUrl)` | Unroll a thread | `Thread` |
-
-See [docs/api-reference.md](docs/api-reference.md) for the complete reference with all parameters and return types.
+See [Dockerfile](Dockerfile) for details, and
+[docs/deployment.md](docs/deployment.md) for Railway, Fly.io, Render and
+Cloudflare.
 
 ---
 
@@ -573,6 +580,8 @@ XActions is open-source and completely free for humans. AI agents pay micropayme
 
 ---
 
+<a id="-disclaimer"></a>
+
 ## ⚠️ Disclaimer
 
 > [!WARNING]
@@ -595,12 +604,9 @@ XActions is open-source and completely free for humans. AI agents pay micropayme
 
 ### Sixty seconds, no account
 
-Most reads work the moment you install. You do not need an X account, an API key, or a browser.
+Most reads work the moment you install (see [Installation](#-installation)). You do not need an X account, an API key, or a browser.
 
 ```bash
-npm install -g xactions
-
-xactions doctor                      # what works right now, and why
 xactions profile NASA                # any public account
 xactions analyze NASA                # engagement rate, cadence, content mix, best hour
 xactions tweets NASA --limit 50 --json | jq -r '.[].text'
@@ -613,7 +619,7 @@ xactions connect
 xactions search "your topic" --limit 50
 ```
 
-Running `xactions` with no arguments prints all 60 commands grouped by task. `xactions completion bash` (or `zsh`, `fish`) turns on tab completion.
+All 60 commands, grouped by task, and tab completion: [CLI Reference](#-cli-reference).
 
 ### Example 1: Unfollow Non-Followers (30 seconds)
 
@@ -966,7 +972,9 @@ npx xactions mcp-config --client cursor
 npx xactions mcp-config --client windsurf
 ```
 
-### Available MCP Tools (152)
+<a id="available-mcp-tools-152"></a>
+
+### Available MCP Tools (165)
 
 | Category | Tools |
 |----------|-------|
@@ -994,8 +1002,9 @@ XACTIONS_MCP_TOOLS=read npx xactions-mcp    # same thing through the environment
 
 A filtered tool is neither advertised nor callable. Groups, largest first:
 `read`, `analytics`, `write`, `monitoring`, `data`, `workflows`, `automation`,
-`ai`, `persona`, `spaces`, `graph`, `drafts`, `dm`, `grok`, `lists`, `auth`,
-plus `x402` when the server runs in remote mode.
+`ai`, `persona`, `spaces`, `xapi`, `graph`, `orgs`, `drafts`, `dm`, `grok`,
+`lists`, `auth`, plus `x402`, which the filter accepts but which holds no tools
+today. `npx xactions-mcp --list-groups` prints every group with its tools.
 
 ### Hold every write for a human
 
@@ -1013,15 +1022,61 @@ Independently of that gate, every write is charged against a rolling 24 hour
 per-account cap held in a file under `~/.xactions`, so it survives a restart
 and a call that would exceed it never reaches X.
 
+<a id="-run-the-mcp-server-over-http"></a>
+
 ### Run the server over HTTP
+
+stdio is the default transport and is what a local client wants. For a remote
+or hosted client, the same server speaks
+[MCP Streamable HTTP](https://modelcontextprotocol.io/specification/2025-03-26/basic/transports#streamable-http)
+on `/mcp`, with the same 165 tools and the same tool-group filtering:
 
 ```bash
 npx xactions-mcp --http --port 3000    # Streamable HTTP on /mcp
+# or: MCP_TRANSPORT=http PORT=3000 npx xactions-mcp
 ```
 
-stdio is the default and is what a local client wants. `--http` (or
-`MCP_TRANSPORT=http`) is for remote and hosted clients; set
-`XACTIONS_MCP_TOKEN` to require `Authorization: Bearer <token>` on it.
+Without `--port` or `PORT` it listens on 8787. Require a token on it by setting
+`XACTIONS_MCP_TOKEN`; clients then send `Authorization: Bearer <token>`.
+
+#### Connect from any MCP client
+
+```json
+{
+  "mcpServers": {
+    "xactions": {
+      "type": "http",
+      "url": "http://localhost:3000/mcp"
+    }
+  }
+}
+```
+
+#### Check it from the shell
+
+Every session starts with `initialize`; the server answers with an
+`mcp-session-id` header that later requests carry:
+
+```bash
+curl -si -X POST http://localhost:3000/mcp \
+  -H "Content-Type: application/json" \
+  -H "Accept: application/json, text/event-stream" \
+  -d '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2025-03-26","capabilities":{},"clientInfo":{"name":"curl","version":"1"}}}' \
+  | grep -i '^mcp-session-id'
+
+curl -X POST http://localhost:3000/mcp \
+  -H "Content-Type: application/json" \
+  -H "Accept: application/json, text/event-stream" \
+  -H "mcp-session-id: <id from the first call>" \
+  -d '{"jsonrpc":"2.0","id":2,"method":"tools/list"}'
+```
+
+Deploying it somewhere public? It binds `127.0.0.1` unless you pass
+`--host 0.0.0.0` (or set `XACTIONS_MCP_HOST`). Run it behind TLS with
+`XACTIONS_MCP_TOKEN` set, and prefer a narrow tool set
+(`--tools read,analytics`) over the full list. [Docker](#-docker) and
+[docs/deployment.md](docs/deployment.md) cover Railway, Fly.io, Docker and
+Cloudflare.
 
 ### Install into Claude Desktop with no config file
 
@@ -1044,6 +1099,8 @@ onto Claude Desktop > Settings > Extensions.
 📖 **Full setup guide**: [docs/mcp-setup.md](docs/mcp-setup.md)
 
 ---
+
+<a id="-autonomous-space-agent"></a>
 
 ## 🎙️ Autonomous Space Agent
 
@@ -1208,6 +1265,14 @@ bookmarks and DMs need a session. Full reference:
 
 ## 📚 Node.js API
 
+Full TypeScript-compatible API with type declarations included. The same
+functions are exported from the package root and from `xactions/scrapers`:
+
+```typescript
+import { createBrowser, createPage, scrapeProfile, scrapeFollowers } from 'xactions';
+import { scrapeFollowing, scrapeTweets, searchTweets } from 'xactions/scrapers';
+```
+
 ### Quick Start
 ```javascript
 import { 
@@ -1246,33 +1311,33 @@ await exportToCSV(followers, 'followers.csv');
 await browser.close();
 ```
 
+<a id="-api-reference"></a>
+
 ### All Scraper Functions
 
-```javascript
-// Profile
-scrapeProfile(page, username)
+| Function | Description | Returns |
+|----------|-------------|---------|
+| `createBrowser(options?)` | Launch Puppeteer browser | `Browser` |
+| `createPage(browser)` | Create stealth page | `Page` |
+| `loginWithCookie(page, authToken)` | Log the page in with an `auth_token` cookie | `void` |
+| `scrapeProfile(page, username)` | Get user profile data | `Profile` |
+| `scrapeFollowers(page, username, { limit, onProgress })` | List followers | `User[]` |
+| `scrapeFollowing(page, username, { limit, onProgress })` | List following | `User[]` |
+| `scrapeTweets(page, username, { limit, includeReplies, onProgress })` | Get user tweets | `Tweet[]` |
+| `searchTweets(page, query, { limit, filter: 'latest'\|'top' })` | Search tweets | `Tweet[]` |
+| `scrapeThread(page, tweetUrl)` | Unroll a thread | `ThreadTweet[]` |
+| `scrapeHashtag(page, hashtag, { limit, filter })` | Tweets for a hashtag | `Tweet[]` |
+| `scrapeMedia(page, username, { limit })` | A profile's photos and videos | `MediaItem[]` |
+| `scrapeLikes(page, tweetUrl, { limit })` | Who liked a tweet | `User[]` |
+| `scrapeListMembers(page, listUrl, { limit })` | Members of a list | `User[]` |
+| `scrapeBookmarks(page, options?)` | Export bookmarks | `Tweet[]` |
+| `exportToJSON(data, filename)` | Write data to a JSON file | `string` |
+| `exportToCSV(data, filename)` | Write rows to a CSV file | `string` |
 
-// Followers & Following
-scrapeFollowers(page, username, { limit, onProgress })
-scrapeFollowing(page, username, { limit, onProgress })
+To download a tweet's video, or a whole profile's media, use `downloadMediaFor`
+from `xactions/media` ([docs/media-archive.md](docs/media-archive.md)).
 
-// Tweets
-scrapeTweets(page, username, { limit, includeReplies, onProgress })
-searchTweets(page, query, { limit, filter: 'latest'|'top' })
-scrapeThread(page, tweetUrl)
-scrapeHashtag(page, hashtag, { limit, filter })
-
-// Media
-scrapeMedia(page, username, { limit })
-scrapeLikes(page, tweetUrl, { limit })
-
-// Lists
-scrapeListMembers(page, listUrl, { limit })
-
-// Export
-exportToJSON(data, filename)
-exportToCSV(data, filename)
-```
+See [docs/api-reference.md](docs/api-reference.md) for the complete reference with all parameters and return types.
 
 ---
 
@@ -1287,6 +1352,18 @@ Use browser scripts &nbsp;·&nbsp; Copy-paste console scripts &nbsp;·&nbsp; Vie
 **100% Free.** No API keys, no payments, no limits.
 
 </div>
+
+<a id="-one-click-script-runner"></a>
+
+### 🚀 One-Click Script Runner
+
+**NEW!** Run scripts without any coding knowledge:
+
+1. Visit [xactions.app/run.html](https://xactions.app/run.html)
+2. Drag any blue button to your bookmarks bar
+3. Go to x.com and click the bookmarklet
+
+No console, no code, no setup!
 
 ---
 
@@ -1303,7 +1380,7 @@ Use browser scripts &nbsp;·&nbsp; Copy-paste console scripts &nbsp;·&nbsp; Vie
 <tr>
 <td>
 
-**Auth Token**: `x.com` → DevTools (F12) → Application → Cookies → copy `auth_token`
+**Auth Token**: where to find it is under [MCP Server > Quick Setup](#quick-setup-30-seconds)
 
 </td>
 </tr>
@@ -1315,6 +1392,8 @@ Use browser scripts &nbsp;·&nbsp; Copy-paste console scripts &nbsp;·&nbsp; Vie
 > **Don't:** Mass-follow thousands/day · Run 24/7 · Spam comments
 
 ---
+
+<a id="-built-with"></a>
 
 ## 🛠️ Built With
 
@@ -1411,11 +1490,17 @@ better, including [@RandyLu87](https://github.com/RandyLu87),
 each person found or built, is in [CONTRIBUTORS.md](CONTRIBUTORS.md). A precise
 bug report earns a place there as surely as a merged PR.
 
+[![Contributors](https://contrib.rocks/image?repo=nirholas/XActions)](https://github.com/nirholas/XActions/graphs/contributors)
+
 ---
+
+<a id="support-the-project"></a>
 
 ## ⭐ Star History
 
-If XActions saved you from paying $100/mo for Twitter's API, **star the repo**: it's how open source grows.
+If XActions saved you from paying $100/mo for Twitter's API, **[star it on GitHub](https://github.com/nirholas/XActions)**. Stars are how other developers and AI agents find the repositories worth trusting, and they cost you one click.
+
+Know someone who would use it? [Post on X](https://twitter.com/intent/tweet?text=XActions%3A%20%E2%9A%A1%20The%20Complete%20X%2FTwitter%20Automation%20Toolkit%3A%20Scrapers%2C%20MCP%20server%20for%20AI%20agents%20(Claude%2FGPT)%2C%20CLI&url=https%3A%2F%2Fgithub.com%2Fnirholas%2FXActions) · [Share on Bluesky](https://bsky.app/intent/compose?text=XActions%3A%20%E2%9A%A1%20The%20Complete%20X%2FTwitter%20Automation%20Toolkit%3A%20Scrapers%2C%20MCP%20server%20for%20AI%20agents%20(Claude%2FGPT)%2C%20CLI%20https%3A%2F%2Fgithub.com%2Fnirholas%2FXActions) · [Share on LinkedIn](https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fgithub.com%2Fnirholas%2FXActions) · [Submit to Hacker News](https://news.ycombinator.com/submitlink?u=https%3A%2F%2Fgithub.com%2Fnirholas%2FXActions&t=XActions%3A%20%E2%9A%A1%20The%20Complete%20X%2FTwitter%20Automation%20Toolkit%3A%20Scrapers%2C%20MCP%20server%20for%20AI%20agents%20(Claude%2FGPT)%2C%20CLI) · [Share on Reddit](https://www.reddit.com/submit?url=https%3A%2F%2Fgithub.com%2Fnirholas%2FXActions&title=XActions%3A%20%E2%9A%A1%20The%20Complete%20X%2FTwitter%20Automation%20Toolkit%3A%20Scrapers%2C%20MCP%20server%20for%20AI%20agents%20(Claude%2FGPT)%2C%20CLI)
 
 <a href="https://star-history.com/#nirholas/xactions&Date">
   <picture>
@@ -1429,17 +1514,7 @@ If XActions saved you from paying $100/mo for Twitter's API, **star the repo**: 
 
 ## 📚 Full Tutorial Library
 
-**XActions is 100% free and open source.** Visit [xactions.app](https://xactions.app) for interactive tutorials.
-
-### 🚀 One-Click Script Runner
-
-**NEW!** Run scripts without any coding knowledge:
-
-1. Visit [xactions.app/run.html](https://xactions.app/run.html)
-2. Drag any blue button to your bookmarks bar
-3. Go to x.com and click the bookmarklet
-
-No console, no code, no setup!
+**XActions is 100% free and open source.** Visit [xactions.app](https://xactions.app) for interactive tutorials, or run scripts from bookmarks with the [One-Click Script Runner](#-one-click-script-runner).
 
 ### Quick Links by Category
 
@@ -1452,12 +1527,18 @@ No console, no code, no setup!
 | **Communities** | Leave All Communities | [Tutorial](https://xactions.app/tutorials/communities) |
 | **AI/MCP** | Claude Desktop, GPT Integration | [Tutorial](https://xactions.app/tutorials/mcp) |
 
+<a id="documentation"></a>
+
 ### All Documentation
 
-- [Getting Started](docs/getting-started.md)
+Full documentation site: **https://nirholas.github.io/XActions/**
+
+- [Getting Started](docs/getting-started.md) covers install and first run.
 - [CLI Reference](docs/cli-reference.md)
 - [Automation Guide](docs/automation.md)
 - [Monitoring Guide](docs/monitoring.md)
+- [Examples](docs/examples.md) has copy-paste snippets.
+- [The official X API](docs/x-api/README.md) covers the optional keyed lane: every API v2 endpoint, authentication, rate limits, streaming and webhooks.
 
 ### Example Docs (Full Code)
 
@@ -1490,91 +1571,7 @@ No console, no code, no setup!
   <a href="https://github.com/nirholas/xactions/issues"><img src="https://img.shields.io/badge/💡_Request_Feature-3b82f6?style=for-the-badge" alt="Request Feature"></a>
 </p>
 
----
-
-## 🌐 Run the MCP server over HTTP
-
-stdio is the default transport and is what a local client wants. For a remote
-or hosted client, the same server speaks
-[MCP Streamable HTTP](https://modelcontextprotocol.io/specification/2025-03-26/basic/transports#streamable-http)
-on `/mcp`, with the same 165 tools and the same tool-group filtering:
-
-```bash
-npx xactions-mcp --http --port 3000
-# or: MCP_TRANSPORT=http PORT=3000 npx xactions-mcp
-```
-
-Require a token on it by setting `XACTIONS_MCP_TOKEN`; clients then send
-`Authorization: Bearer <token>`.
-
-### Connect from any MCP client
-
-```json
-{
-  "mcpServers": {
-    "xactions": {
-      "type": "http",
-      "url": "http://localhost:3000/mcp"
-    }
-  }
-}
-```
-
-### Check it from the shell
-
-```bash
-curl -X POST http://localhost:3000/mcp \
-  -H "Content-Type: application/json" \
-  -H "Accept: application/json, text/event-stream" \
-  -d '{"jsonrpc":"2.0","id":1,"method":"tools/list"}'
-```
-
-Deploying it somewhere public? Run it behind TLS with `XACTIONS_MCP_TOKEN` set,
-and prefer a narrow tool set (`--tools read,analytics`) over the full list.
-[Dockerfile](Dockerfile) and [docs/deployment.md](docs/deployment.md) cover
-Railway, Fly.io, Docker and Cloudflare.
-
----
-
-## 🏆 Full Comparison Matrix
-
-> Extended feature-by-feature comparison with every alternative.
-
-| Feature | **XActions** | twikit | twscrape | x-use | xmcp (official) | bird | twitter-cli | Agent-Reach |
-|---------|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
-| **Node.js Library** | ✅ | ❌ Python | ❌ Python | ✅ | ✅ | ✅ | ❌ Python | ❌ Python |
-| **Workflow Engine** | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
-| **Sentiment Analysis** | ✅ Built-in | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
-| **Real-Time Streaming** | ✅ Polling streams + x.com's live event pipeline | ✅ live_pipeline | ❌ | ❌ | ✅ API only | ❌ | ❌ | ❌ |
-| **Account Export/Migration** | ✅ JSON/CSV/HTML, plus the official X archive zip | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
-| **Dashboard (No-Code)** | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
-| **Grok AI Integration** | ✅ | ✅ Separate pkg | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
-| **Docker Support** | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
-| **TypeScript Types** | ✅ | ❌ | ❌ | ✅ | ✅ | ✅ | ❌ | ❌ |
-| **MCP tool allowlist** | ✅ 17 groups | n/a | n/a | ❌ | ✅ | n/a | n/a | n/a |
-| **MCP over Streamable HTTP** | ✅ `--http` on `/mcp` | n/a | n/a | ❌ | ✅ | n/a | n/a | n/a |
-| **Signed outbound webhooks** | ✅ HMAC-SHA256, retries, replay | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
-| **Claude Tutorials** | ✅ 23 prompts | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
-| **Multi-platform (X + others)** | ✅ Bluesky, Mastodon, Threads | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ |
-| **Cost** | **Free** | Free | Free | Free | Free + X API plan | Free | Free + X API plan | Free |
-
-Comparison reflects each project's public README at time of writing (August 2026); open an issue if a column is out of date.
-
-## Documentation
-
-Full documentation site: **https://nirholas.github.io/XActions/**
-
-- [Getting started](docs/getting-started.md) covers install and first run.
-- [Examples](docs/examples.md) has copy-paste snippets.
-- [The official X API](docs/x-api/README.md) covers the optional keyed lane: every API v2 endpoint, authentication, rate limits, streaming and webhooks.
-
 <!-- three.ws:growth -->
-## Support the project
-
-If XActions saves you time, **[star it on GitHub](https://github.com/nirholas/XActions)**. Stars are how other developers and AI agents find the repositories worth trusting, and they cost you one click.
-
-Know someone who would use it? [Post on X](https://twitter.com/intent/tweet?text=XActions%3A%20%E2%9A%A1%20The%20Complete%20X%2FTwitter%20Automation%20Toolkit%3A%20Scrapers%2C%20MCP%20server%20for%20AI%20agents%20(Claude%2FGPT)%2C%20CLI&url=https%3A%2F%2Fgithub.com%2Fnirholas%2FXActions) · [Share on Bluesky](https://bsky.app/intent/compose?text=XActions%3A%20%E2%9A%A1%20The%20Complete%20X%2FTwitter%20Automation%20Toolkit%3A%20Scrapers%2C%20MCP%20server%20for%20AI%20agents%20(Claude%2FGPT)%2C%20CLI%20https%3A%2F%2Fgithub.com%2Fnirholas%2FXActions) · [Share on LinkedIn](https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fgithub.com%2Fnirholas%2FXActions) · [Submit to Hacker News](https://news.ycombinator.com/submitlink?u=https%3A%2F%2Fgithub.com%2Fnirholas%2FXActions&t=XActions%3A%20%E2%9A%A1%20The%20Complete%20X%2FTwitter%20Automation%20Toolkit%3A%20Scrapers%2C%20MCP%20server%20for%20AI%20agents%20(Claude%2FGPT)%2C%20CLI) · [Share on Reddit](https://www.reddit.com/submit?url=https%3A%2F%2Fgithub.com%2Fnirholas%2FXActions&title=XActions%3A%20%E2%9A%A1%20The%20Complete%20X%2FTwitter%20Automation%20Toolkit%3A%20Scrapers%2C%20MCP%20server%20for%20AI%20agents%20(Claude%2FGPT)%2C%20CLI)
-
 ## Built for AI agents too
 
 Coding agents and LLM tooling can read this repo directly: [AGENTS.md](./AGENTS.md), [llms.txt](./llms.txt), [llms-full.txt](./llms-full.txt). Point an agent at `https://github.com/nirholas/XActions` and it has the context it needs.
@@ -1584,10 +1581,6 @@ Coding agents and LLM tooling can read this repo directly: [AGENTS.md](./AGENTS.
 - [All repositories by nirholas](https://github.com/nirholas/nirholas#readme): the full catalog, grouped by topic
 - [three.ws](https://three.ws): the platform for 3D AI agents with Solana wallets, a skill marketplace and x402 payments
 - Questions or ideas: [open an issue](https://github.com/nirholas/XActions/issues) or [start a discussion](https://github.com/nirholas/XActions/discussions)
-
-## Contributors
-
-[![Contributors](https://contrib.rocks/image?repo=nirholas/XActions)](https://github.com/nirholas/XActions/graphs/contributors)
 
 <!-- /three.ws:growth -->
 
