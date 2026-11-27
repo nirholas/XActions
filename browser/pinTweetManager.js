@@ -5,33 +5,44 @@
  * ============================================================
  *
  * @name        pinTweetManager.js
- * @description Pin/unpin tweets, auto-rotate pinned content,
- *              and pin your best-performing tweet.
+ * @title       Pin Tweet Manager
+ * @description Pin your best-performing post, pin a post by URL or status id, or unpin your pinned post, with a dry run.
+ * @category    profile
+ * @page        x.com/<you> or x.com/<you>/status/<id>
+ * @writes      true
+ * @aliases     scripts/pinTweetManager.js, scripts/twitter/pin-tweet.js
  * @author      nichxbt (https://x.com/nichxbt)
- * @version     1.0.0
- * @date        2026-02-24
+ * @version     1.1.0
+ * @date        2026-11-27
  * @repository  https://github.com/nirholas/XActions
  *
  * ============================================================
  * 📋 USAGE:
  *
  * 1. Go to: https://x.com/YOUR_USERNAME
- * 2. Configure action: 'pinBest', 'pinUrl', or 'unpin'
+ * 2. Configure action: 'pinBest', 'pinUrl', 'pin', or 'unpin'
  * 3. Open DevTools Console (F12)
- * 4. Paste and run
+ * 4. Paste browser/pinTweetManager.js and run
+ *
+ * Starts as a DRY RUN. Set dryRun: false to really pin or unpin.
+ * 'pinUrl' pins the post in tweetUrl (a URL or a bare status id) when it is
+ * on the current page, and otherwise opens it so you can re-run there.
+ * 'pin' does the same, or pins the first post on the page when tweetUrl is ''.
+ * 'unpin' unpins the pinned post, or the post in tweetUrl when set.
+ * Action names are case-insensitive; an unknown action stops the run.
  * ============================================================
  */
 (() => {
   'use strict';
 
   const CONFIG = {
-    action: 'pinBest',              // 'pinBest' | 'pinUrl' | 'unpin'
-    tweetUrl: '',                   // For 'pinUrl': full URL of tweet to pin
+    action: 'pinBest',              // 'pinBest' | 'pinUrl' | 'pin' | 'unpin'
+    tweetUrl: '',                   // For 'pinUrl'/'pin'/'unpin': URL or status id of your tweet
     metric: 'likes',                // For 'pinBest': 'likes', 'retweets', 'engagement', 'views'
     postsToScan: 30,                // How many recent posts to evaluate
     scrollDelay: 1500,
     maxScrolls: 20,
-    dryRun: false,
+    dryRun: true,                   // Preview without pinning or unpinning
   };
 
   const sleep = ms => new Promise(r => setTimeout(r, ms + ms * 0.1 * Math.random()));
@@ -46,6 +57,38 @@
     return Math.round(n);
   };
 
+  const waitForSelector = async (selector, timeoutMs = 4000) => {
+    const start = Date.now();
+    while (Date.now() - start < timeoutMs) {
+      const el = document.querySelector(selector);
+      if (el) return el;
+      await sleep(200);
+    }
+    return null;
+  };
+
+  const extractStatusId = (urlOrId) => {
+    if (!urlOrId) return '';
+    const m = String(urlOrId).match(/status\/(\d+)/);
+    if (m) return m[1];
+    const digits = String(urlOrId).trim().match(/^\d{5,}$/);
+    return digits ? digits[0] : '';
+  };
+
+  // Locate the article for a given status id, scrolling to find it if needed.
+  const findArticleById = async (statusId) => {
+    for (let i = 0; i < 12; i++) {
+      for (const a of document.querySelectorAll('article[data-testid="tweet"]')) {
+        const link = a.querySelector('a[href*="/status/"]');
+        const href = link ? link.getAttribute('href') : '';
+        if (href && href.includes(`/status/${statusId}`)) return a;
+      }
+      window.scrollBy(0, window.innerHeight * 0.8);
+      await sleep(700);
+    }
+    return null;
+  };
+
   (async () => {
     const W = 60;
     console.log('╔' + '═'.repeat(W) + '╗');
@@ -53,21 +96,47 @@
     console.log('║  by nichxbt — v1.0' + ' '.repeat(W - 21) + '║');
     console.log('╚' + '═'.repeat(W) + '╝');
 
-    const pathMatch = window.location.pathname.match(/^\/([A-Za-z0-9_]+)/);
-    if (!pathMatch || ['home', 'explore', 'notifications', 'messages', 'i'].includes(pathMatch[1])) {
-      console.error('❌ Go to your profile page first!');
+    if (!/(^|\.)(x|twitter)\.com$/.test(window.location.hostname)) {
+      console.warn('⚠️ Not on x.com. Open your profile page, then re-run.');
       return;
     }
-    const username = pathMatch[1];
+
+    // Action names are matched case-insensitively; a typo stops the run
+    // instead of falling through to 'pinBest'.
+    const ACTIONS = ['pinBest', 'pinUrl', 'pin', 'unpin'];
+    const action = ACTIONS.find(a => a.toLowerCase() === String(CONFIG.action || '').trim().toLowerCase());
+    if (!action) {
+      console.error(`❌ CONFIG.action must be one of ${ACTIONS.map(a => `'${a}'`).join(', ')}. Got '${CONFIG.action}'.`);
+      return;
+    }
+
+    const pathMatch = window.location.pathname.match(/^\/([A-Za-z0-9_]+)/);
+    // x.com/i/status/<id> (where a bare status id is opened) is fine for the
+    // actions that target a single post.
+    const onStatusById = /^\/i\/status\/\d+/.test(window.location.pathname) && action !== 'pinBest';
+    if (!onStatusById && (!pathMatch || ['home', 'explore', 'notifications', 'messages', 'i', 'search', 'settings'].includes(pathMatch[1]))) {
+      console.error('❌ Go to your profile page first! (x.com/YOUR_USERNAME)');
+      return;
+    }
+    const username = onStatusById ? '' : pathMatch[1];
+    if (username) console.log(`👤 Profile: @${username}`);
+    if (CONFIG.dryRun) console.log('🔍 DRY RUN: nothing will be pinned or unpinned. Set dryRun: false to act.');
 
     // ── Action: Unpin ───────────────────────────────────────
 
-    if (CONFIG.action === 'unpin') {
+    if (action === 'unpin') {
       console.log('\n🔓 Looking for pinned tweet to unpin...');
 
-      const pinnedArticle = document.querySelector('article[data-testid="tweet"]');
+      const unpinId = extractStatusId(CONFIG.tweetUrl);
+      const pinnedArticle = unpinId
+        ? await findArticleById(unpinId)
+        : document.querySelector('article[data-testid="tweet"]');
+      if (unpinId && !pinnedArticle) {
+        console.error(`❌ Tweet ${unpinId} not found on this page. Open its status page or your profile and re-run.`);
+        return;
+      }
       const socialCtx = pinnedArticle?.querySelector('[data-testid="socialContext"]');
-      if (!socialCtx || !/pinned/i.test(socialCtx.textContent)) {
+      if (!unpinId && (!socialCtx || !/pinned/i.test(socialCtx.textContent))) {
         console.log('ℹ️ No pinned tweet found.');
         return;
       }
@@ -88,31 +157,88 @@
           if (/unpin/i.test(item.textContent)) {
             item.click();
             await sleep(800);
-            const confirm = document.querySelector('[data-testid="confirmationSheetConfirm"]');
+            const confirm = await waitForSelector('[data-testid="confirmationSheetConfirm"]', 2500);
             if (confirm) confirm.click();
             console.log('✅ Tweet unpinned!');
             return;
           }
         }
         document.body.click();
-        console.warn('⚠️ Could not find Unpin option in menu.');
+        console.warn('⚠️ Could not find Unpin option in menu. Is this your own pinned tweet?');
+      } else {
+        console.warn('⚠️ Menu button not found.');
       }
       return;
     }
 
     // ── Action: Pin Specific URL ────────────────────────────
 
-    if (CONFIG.action === 'pinUrl') {
-      if (!CONFIG.tweetUrl) {
-        console.error('❌ Set CONFIG.tweetUrl to the full tweet URL.');
+    if (action === 'pinUrl' || action === 'pin') {
+      const statusId = extractStatusId(CONFIG.tweetUrl);
+      if (action === 'pinUrl' && !statusId) {
+        console.error('❌ Set CONFIG.tweetUrl to the full tweet URL (or its status id).');
         return;
       }
 
-      console.log(`\n📌 Navigating to tweet: ${CONFIG.tweetUrl}`);
-      window.location.href = CONFIG.tweetUrl;
-      // User needs to re-run after navigation — or use this as guidance
-      console.log('⏳ After the page loads, the tweet will be visible.');
-      console.log('   Use the ⋯ menu → Pin to your profile.');
+      let article;
+      if (statusId) {
+        console.log(`\n📌 Looking for tweet ${statusId} on this page...`);
+        article = await findArticleById(statusId);
+        if (!article) {
+          const target = /^https?:\/\//.test(CONFIG.tweetUrl) ? CONFIG.tweetUrl : `https://x.com/i/status/${statusId}`;
+          console.log(`\n📌 Navigating to tweet: ${target}`);
+          window.location.href = target;
+          console.log('⏳ After the page loads, paste and run this script again to pin it.');
+          console.log('   Or use the ⋯ menu → Pin to your profile.');
+          return;
+        }
+      } else {
+        article = document.querySelector('article[data-testid="tweet"]');
+        if (!article) {
+          console.error('❌ No tweet found on this page. Open your profile (x.com/YOUR_USERNAME) and re-run.');
+          return;
+        }
+        console.log('\nℹ️ No tweetUrl set. Using the first tweet on the page.');
+      }
+
+      const preview = (article.querySelector('[data-testid="tweetText"]')?.textContent || '').slice(0, 60);
+      console.log(`   Target: "${preview}${preview.length >= 60 ? '...' : ''}"`);
+
+      if (/pinned/i.test(article.querySelector('[data-testid="socialContext"]')?.textContent || '')) {
+        console.log('\n✅ This tweet is already pinned!');
+        return;
+      }
+
+      if (CONFIG.dryRun) {
+        console.log('\n🔍 [DRY RUN] Would pin this tweet. Set dryRun = false to pin.');
+        return;
+      }
+
+      const pinCaret = article.querySelector('[data-testid="caret"]');
+      if (!pinCaret) {
+        console.warn('⚠️ Could not find menu button on tweet.');
+        return;
+      }
+      pinCaret.scrollIntoView({ block: 'center' });
+      await sleep(300);
+      pinCaret.click();
+      await sleep(800);
+
+      const pinItem = [...document.querySelectorAll('[role="menuitem"]')]
+        .find(el => /(^|\s)pin/i.test(el.textContent || '') && !/unpin/i.test(el.textContent || ''));
+      if (!pinItem) {
+        document.body.click();
+        console.warn('⚠️ Could not find "Pin" option in menu. Is this your own tweet?');
+        return;
+      }
+      pinItem.click();
+      await sleep(800);
+      const pinConfirm = await waitForSelector('[data-testid="confirmationSheetConfirm"]', 2500);
+      if (pinConfirm) {
+        pinConfirm.click();
+        await sleep(800);
+      }
+      console.log('\n✅ Tweet pinned successfully!');
       return;
     }
 
@@ -189,6 +315,7 @@
       postsArray.slice(0, 5).forEach((p, i) => {
         console.log(`   ${i + 1}. ${CONFIG.metric}: ${p[CONFIG.metric]} — "${p.text.slice(0, 50)}..."`);
       });
+      console.log('⚡ Set dryRun = false to pin.');
       return;
     }
 
@@ -234,7 +361,7 @@
       if (/pin/i.test(item.textContent) && !/unpin/i.test(item.textContent)) {
         item.click();
         await sleep(800);
-        const confirm = document.querySelector('[data-testid="confirmationSheetConfirm"]');
+        const confirm = await waitForSelector('[data-testid="confirmationSheetConfirm"]', 2500);
         if (confirm) {
           confirm.click();
           console.log('\n✅ Tweet pinned successfully!');

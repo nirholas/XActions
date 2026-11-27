@@ -1,4 +1,12 @@
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
+/**
+ * @name        videoCaptions.js
+ * @title       Video Captions
+ * @description Upload caption files to your videos.
+ * @category    post
+ * @page        x.com/*
+ * @writes      true
+ */
 // Video Captions Uploader on X - by nichxbt
 // https://github.com/nirholas/xactions
 // Add captions/subtitles to a video when composing a tweet

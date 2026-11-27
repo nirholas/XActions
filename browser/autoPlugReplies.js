@@ -5,14 +5,15 @@
  * ============================================================
  *
  * @name        autoPlugReplies.js
- * @description Automatically reply to your own tweets that go
- *              viral with a "plug" (link, CTA, product pitch).
- *              Monitors your recent tweets for engagement spikes,
- *              and when a tweet exceeds a threshold, posts a
- *              follow-up reply to capitalize on the visibility.
+ * @title       Auto-Plug Replies
+ * @description Reply to your own tweets that pass a like threshold with a plug message (link, CTA, product pitch).
+ * @category    grow
+ * @page        x.com/<you>
+ * @writes      true
+ * @aliases     scripts/autoPlugReplies.js
  * @author      nichxbt (https://x.com/nichxbt)
- * @version     1.0.0
- * @date        2026-02-24
+ * @version     1.1.0
+ * @date        2026-11-26
  * @repository  https://github.com/nirholas/XActions
  *
  * ============================================================
@@ -21,7 +22,7 @@
  * 1. Go to your profile: x.com/YOUR_USERNAME
  * 2. Open DevTools Console (F12)
  * 3. Configure your plug message and threshold
- * 4. Paste and run
+ * 4. Paste browser/autoPlugReplies.js and run
  *
  * Controls:
  *   XActions.setPlug("Check out my new project → link")
@@ -30,6 +31,7 @@
  *   XActions.autoScan(600000)    // Auto-scan every 10min
  *   XActions.stop()              // Stop auto-scanning
  *   XActions.history()           // View plug history
+ *   XActions.exportHistory()     // Download the full plug history as JSON
  * ============================================================
  */
 (() => {
@@ -43,6 +45,7 @@
     replyDelay: 3000,        // Delay before posting reply (ms)
     scrollRounds: 5,
     scrollDelay: 2000,
+    autoDownloadHistory: false, // Download this scan's plugs as JSON when a scan ends
   };
 
   const STORAGE_KEY = 'xactions_plug_history';
@@ -216,19 +219,22 @@
     console.log(`\n🔌 Plugging ${toPlug.length} tweet(s)...\n`);
 
     const history = loadHistory();
+    const scanPlugs = [];
 
     for (const tweet of toPlug) {
       const ok = await postPlug(tweet);
       if (ok) {
         plugsThisSession++;
-        history.push({
+        const entry = {
           tweetUrl: tweet.fullUrl,
           tweetText: tweet.text,
           likes: tweet.likes,
           plugMessage: CONFIG.plugMessage,
           pluggedAt: new Date().toISOString(),
           dryRun: CONFIG.dryRun,
-        });
+        };
+        history.push(entry);
+        scanPlugs.push(entry);
         console.log('  ✅ Plugged!');
       } else {
         console.log('  ❌ Failed to plug.');
@@ -243,6 +249,14 @@
     console.log(`  ✅ Plugged: ${toPlug.length} | Session total: ${plugsThisSession}/${CONFIG.maxPlugsPerSession}`);
     if (CONFIG.dryRun) console.log('  🏃 (Dry run — nothing was posted)');
     console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n');
+
+    if (CONFIG.autoDownloadHistory && scanPlugs.length > 0) {
+      const blob = new Blob([JSON.stringify(scanPlugs, null, 2)], { type: 'application/json' });
+      const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+      a.download = `xactions-plug-history-${Date.now()}.json`;
+      document.body.appendChild(a); a.click(); a.remove();
+      console.log(`📥 Downloaded: ${a.download}`);
+    }
   };
 
   // ── Controls ───────────────────────────────────────────────

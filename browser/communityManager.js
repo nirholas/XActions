@@ -1,4 +1,12 @@
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
+/**
+ * @name        communityManager.js
+ * @title       Community Manager
+ * @description Community management: join, leave, post, moderate and export Communities.
+ * @category    communities
+ * @page        x.com/i/communities
+ * @writes      true
+ */
 // browser/communityManager.js
 // Community management for X/Twitter
 // by nichxbt

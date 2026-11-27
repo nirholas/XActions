@@ -5,14 +5,15 @@
  * ============================================================
  *
  * @name        audienceDemographics.js
- * @description Analyze your followers' demographics by scraping
- *              visible profile data: bio keywords, locations,
- *              account age, verified status, engagement level,
- *              and content niches. Builds a comprehensive
- *              audience profile without API access.
+ * @title       Audience Demographics
+ * @description Profile your followers by niche, verification, avatar and bio quality, bot likelihood and top bio keywords, with a JSON export.
+ * @category    analytics
+ * @page        x.com/<you>/followers
+ * @writes      false
+ * @aliases     scripts/audienceDemographics.js
  * @author      nichxbt (https://x.com/nichxbt)
  * @version     1.0.0
- * @date        2026-02-24
+ * @date        2026-11-26
  * @repository  https://github.com/nirholas/XActions
  *
  * ============================================================
@@ -20,7 +21,7 @@
  *
  * 1. Go to: https://x.com/YOUR_USERNAME/followers
  * 2. Open DevTools Console (F12)
- * 3. Paste and run
+ * 3. Paste browser/audienceDemographics.js and run
  * 4. Auto-scrolls to collect follower data
  * ============================================================
  */

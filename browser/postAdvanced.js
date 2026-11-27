@@ -1,4 +1,12 @@
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
+/**
+ * @name        postAdvanced.js
+ * @title       Advanced Posting
+ * @description Advanced post features: drafts, scheduling, media, polls, location and reply settings.
+ * @category    post
+ * @page        x.com/*
+ * @writes      true
+ */
 // browser/postAdvanced.js
 // Advanced post features for X/Twitter
 // by nichxbt

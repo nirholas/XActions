@@ -1,4 +1,12 @@
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
+/**
+ * @name        advancedProfile.js
+ * @title       Advanced Profile Tools
+ * @description Advanced profile management: header, avatar, pinned post, professional profile and profile export.
+ * @category    profile
+ * @page        x.com/<you>
+ * @writes      true
+ */
 // browser/advancedProfile.js
 // Advanced profile management for X/Twitter
 // by nichxbt

@@ -5,14 +5,15 @@
  * ============================================================
  *
  * @name        sentimentAnalyzer.js
- * @description Analyze the sentiment of your recent tweets,
- *              mentions, or any visible timeline. Categorizes
- *              posts as positive/negative/neutral using a
- *              battle-tested lexicon-based approach. Shows trends,
- *              toxicity flags, and emotional distribution.
+ * @title       Sentiment Analyzer
+ * @description Score the sentiment of posts on any timeline, search or profile with a weighted lexicon, and report the distribution, extremes, emotional words and toxicity.
+ * @category    analytics
+ * @page        x.com/* or x.com/search?q=<query>
+ * @writes      false
+ * @aliases     scripts/sentimentAnalyzer.js, scripts/twitter/sentiment-analyzer.js
  * @author      nichxbt (https://x.com/nichxbt)
- * @version     1.0.0
- * @date        2026-02-24
+ * @version     1.1.0
+ * @date        2026-11-27
  * @repository  https://github.com/nirholas/XActions
  *
  * ============================================================
@@ -20,8 +21,12 @@
  *
  * 1. Go to any timeline, profile, or search results on x.com
  * 2. Open DevTools Console (F12)
- * 3. Paste and run
+ * 3. Paste browser/sentimentAnalyzer.js and run
  * 4. Auto-scrolls and analyzes visible tweets
+ *
+ * Scoring is a word lexicon, so sarcasm and slang are not detected.
+ * To stop the scroll early: window.stopSentimentAnalyzer()
+ * The full report object is left in window.xactionsSentiment.
  * ============================================================
  */
 (() => {
@@ -31,6 +36,8 @@
     maxTweets: 100,                   // Max tweets to analyze
     scrollRounds: 5,                  // Number of scroll rounds to collect
     scrollDelay: 2000,
+    noNewThreshold: 5,                // Stop scrolling after this many rounds in a row that add no posts
+    examples: 3,                      // How many most-positive / most-negative posts to show
     exportResults: true,
   };
 
@@ -50,6 +57,7 @@
     'interesting': 1, 'cool': 1, 'agree': 1, 'support': 1, 'hope': 1, 'enjoy': 1,
     'fun': 1, 'smart': 1, 'useful': 1, 'solid': 1, 'strong': 1, 'clean': 1, 'better': 1,
     'congrats': 1, 'well': 1, 'glad': 1, 'fair': 1, 'kind': 1, 'sweet': 1, 'gain': 1,
+    'bullish': 2,
   };
 
   const NEGATIVE = {
@@ -66,6 +74,7 @@
     'sad': 1, 'boring': 1, 'wrong': 1, 'slow': 1, 'confusing': 1, 'worried': 1,
     'difficult': 1, 'problem': 1, 'issue': 1, 'miss': 1, 'lost': 1, 'hard': 1,
     'doubt': 1, 'concern': 1, 'risk': 1, 'fear': 1, 'weak': 1, 'lack': 1, 'worse': 1,
+    'bearish': 2,
   };
 
   const NEGATORS = new Set(['not', "n't", 'no', 'never', 'neither', 'nobody', 'nothing', 'hardly', 'barely', 'rarely']);
@@ -140,7 +149,7 @@
       seen.add(text);
 
       const authorLink = article.querySelector('a[href^="/"][role="link"]');
-      const author = authorLink ? (authorLink.getAttribute('href') || '').replace('/', '') : 'unknown';
+      const author = authorLink ? (authorLink.getAttribute('href') || '').replace('/', '').split('/')[0] : 'unknown';
 
       tweets.push({ text, author });
     }
@@ -155,20 +164,48 @@
     console.log('║  by nichxbt — v1.0' + ' '.repeat(W - 21) + '║');
     console.log('╚' + '═'.repeat(W) + '╝');
 
-    console.log(`\n📊 Collecting up to ${CONFIG.maxTweets} tweets (${CONFIG.scrollRounds} scroll rounds)...\n`);
+    if (!/(^|\.)x\.com$/.test(location.hostname) && !/(^|\.)twitter\.com$/.test(location.hostname)) {
+      console.warn('⚠️ Not on x.com. Open a timeline, search, or profile and run again.');
+      return;
+    }
+
+    console.log(`\n📊 Collecting up to ${CONFIG.maxTweets} tweets (${CONFIG.scrollRounds} scroll rounds)...`);
+    console.log('⚠️ Lexicon-based scoring. It cannot detect sarcasm, slang, or context.');
+    console.log('💡 To stop early: window.stopSentimentAnalyzer()\n');
+
+    let stopped = false;
+    window.stopSentimentAnalyzer = () => {
+      stopped = true;
+      console.warn('⚠️ Stop requested. Finishing the current pass, then reporting.');
+    };
 
     const allTweets = new Map();
-
-    for (let round = 0; round < CONFIG.scrollRounds && allTweets.size < CONFIG.maxTweets; round++) {
-      const found = collectTweets();
-      for (const t of found) {
+    const addFound = () => {
+      for (const t of collectTweets()) {
         if (allTweets.size >= CONFIG.maxTweets) break;
         if (!allTweets.has(t.text)) allTweets.set(t.text, t);
       }
+    };
+    let stalls = 0;
+
+    for (let round = 0; round < CONFIG.scrollRounds && allTweets.size < CONFIG.maxTweets && !stopped; round++) {
+      const before = allTweets.size;
+      addFound();
       console.log(`   📜 Round ${round + 1}: ${allTweets.size} tweets collected`);
+      if (allTweets.size === before) {
+        stalls++;
+        if (stalls >= CONFIG.noNewThreshold) {
+          console.warn('⚠️ No new posts after several scrolls. Reached the end of what loaded.');
+          break;
+        }
+      } else {
+        stalls = 0;
+      }
       window.scrollTo(0, document.body.scrollHeight);
       await new Promise(r => setTimeout(r, CONFIG.scrollDelay));
     }
+    // Pick up the posts the last scroll loaded
+    addFound();
 
     if (allTweets.size === 0) {
       console.error('❌ No tweets found on this page!');
@@ -213,12 +250,12 @@
     // Top positive tweets
     const sorted = [...results].sort((a, b) => b.score - a.score);
     console.log('\n  🏆 Most Positive Tweets:');
-    for (const t of sorted.slice(0, 3)) {
+    for (const t of sorted.slice(0, CONFIG.examples)) {
       console.log(`    [${t.score.toFixed(2)}] @${t.author}: "${t.text.slice(0, 100)}..."`);
     }
 
     console.log('\n  💀 Most Negative Tweets:');
-    for (const t of sorted.slice(-3).reverse()) {
+    for (const t of sorted.slice(-CONFIG.examples).reverse()) {
       console.log(`    [${t.score.toFixed(2)}] @${t.author}: "${t.text.slice(0, 100)}..."`);
     }
 
@@ -246,19 +283,23 @@
 
     console.log('\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n');
 
+    const data = {
+      summary: { total, positive, negative, neutral, avgScore: parseFloat(avgScore), toxicCount },
+      topWords,
+      tweets: results,
+      analyzedAt: new Date().toISOString(),
+      page: window.location.href,
+    };
+    window.xactionsSentiment = data;
+
     if (CONFIG.exportResults) {
-      const data = {
-        summary: { total, positive, negative, neutral, avgScore: parseFloat(avgScore), toxicCount },
-        tweets: results,
-        analyzedAt: new Date().toISOString(),
-        page: window.location.href,
-      };
       const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
       const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
       a.download = `xactions-sentiment-${new Date().toISOString().slice(0, 10)}.json`;
       document.body.appendChild(a); a.click(); a.remove();
       console.log('📥 Full results exported as JSON.');
     }
+    console.log('💡 Full report object: window.xactionsSentiment');
   };
 
   run();

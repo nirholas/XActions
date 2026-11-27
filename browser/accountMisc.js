@@ -1,4 +1,12 @@
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
+/**
+ * @name        accountMisc.js
+ * @title       Account Utilities
+ * @description Account utilities: join date, login history, connected accounts, account age, and a JSON account summary.
+ * @category    profile
+ * @page        x.com/*
+ * @writes      false
+ */
 // browser/accountMisc.js
 // Miscellaneous account tools for X/Twitter
 // by nichxbt

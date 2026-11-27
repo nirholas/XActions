@@ -1,4 +1,12 @@
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
+/**
+ * @name        premiumGifting.js
+ * @title       Premium Gifting
+ * @description Open the flow for gifting Premium to another account.
+ * @category    premium
+ * @page        x.com/*
+ * @writes      false
+ */
 // Premium Gifting — by nichxbt
 // https://github.com/nirholas/XActions
 // Gift an X Premium subscription to another user from their profile.

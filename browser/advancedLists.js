@@ -1,4 +1,12 @@
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
+/**
+ * @name        advancedLists.js
+ * @title       Advanced List Tools
+ * @description Advanced List management: create, copy, pin, follow and export Lists.
+ * @category    lists
+ * @page        x.com/i/lists
+ * @writes      true
+ */
 // browser/advancedLists.js
 // Advanced list management for X/Twitter
 // by nichxbt

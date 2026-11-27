@@ -5,7 +5,11 @@
  * ============================================================
  *
  * @name        groupDM.js
- * @description Create group DM conversations and send messages
+ * @description Create group DM conversations and send messages to them.
+ * @title       Group DM
+ * @category    messages
+ * @page        x.com/messages
+ * @writes      true
  *              to multiple users at once on X/Twitter.
  * @author      nichxbt (https://x.com/nichxbt)
  * @version     1.0.0

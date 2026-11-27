@@ -5,15 +5,15 @@
  * ============================================================
  *
  * @name        keywordMonitor.js
- * @description Monitor any X/Twitter search for keyword mentions
- *              in real-time. Scrapes search results, detects new
- *              tweets matching your keywords, tracks mention
- *              frequency, identifies top mentioners, and persists
- *              history in localStorage. Supports auto-refresh
- *              intervals and engagement threshold filters.
+ * @title       Keyword Monitor
+ * @description Watch a search for keyword mentions, flag new ones, rank top mentioners and keep a history with optional auto-refresh.
+ * @category    monitor
+ * @page        x.com/search?q=<query>&f=live or x.com/home
+ * @writes      false
+ * @aliases     scripts/keywordMonitor.js
  * @author      nichxbt (https://x.com/nichxbt)
- * @version     1.0.0
- * @date        2026-02-24
+ * @version     1.1.0
+ * @date        2026-11-26
  * @repository  https://github.com/nirholas/XActions
  *
  * ============================================================
@@ -21,11 +21,12 @@
  *
  * MODE A — Run on existing search page:
  *   1. Go to x.com/search?q=your+keyword
- *   2. Paste and run
+ *   2. Paste browser/keywordMonitor.js and run
  *
  * MODE B — Use the API:
  *   XActions.monitor(['keyword1', 'keyword2'])
- *   XActions.autoRefresh(120000)  // Refresh every 2 min
+ *   XActions.scan()               // Scan the current page now
+ *   XActions.autoRefresh(120000)  // Refresh every 2 min (default CONFIG.checkInterval)
  *   XActions.stop()
  *   XActions.stats()
  *   XActions.history()
@@ -41,6 +42,8 @@
     minLikes: 0,               // Min likes to include in results
     exportResults: true,
     maxHistory: 500,           // Max mentions to keep in history
+    checkInterval: 120000,     // Default XActions.autoRefresh() interval (ms)
+    sound: false,              // Beep when a scan finds new mentions
   };
 
   const STORAGE_KEY = 'xactions_keyword_monitor';
@@ -63,6 +66,11 @@
     // Trim history
     while (data.mentions.length > CONFIG.maxHistory) data.mentions.shift();
     localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  };
+
+  const beep = () => {
+    if (!CONFIG.sound) return;
+    try { const ctx = new AudioContext(); const o = ctx.createOscillator(); o.connect(ctx.destination); o.frequency.value = 800; o.start(); o.stop(ctx.currentTime + 0.15); } catch { /* audio unavailable */ }
   };
 
   let autoRefreshTimer = null;
@@ -191,6 +199,7 @@
       for (const m of newMentions.slice(0, 8)) {
         console.log(`  🔔 @${m.author}: "${m.text.slice(0, 60)}..." (${m.totalEng} eng)`);
       }
+      beep();
     }
 
     // ── Top mentioners ──────────────────────────────────────
@@ -237,6 +246,7 @@
 
     // ── Update stats ────────────────────────────────────────
     const kw = keywords.join(',');
+    if (!data.stats) data.stats = {}; // history saved by the older scripts/keywordMonitor.js has no stats
     if (!data.stats[kw]) data.stats[kw] = { scans: 0, totalMentions: 0, firstScan: new Date().toISOString() };
     data.stats[kw].scans++;
     data.stats[kw].totalMentions += newMentions.length;
@@ -278,7 +288,9 @@
     setTimeout(scan, 5000);
   };
 
-  window.XActions.autoRefresh = (intervalMs = 120000) => {
+  window.XActions.scan = scan;
+
+  window.XActions.autoRefresh = (intervalMs = CONFIG.checkInterval) => {
     if (autoRefreshTimer) clearInterval(autoRefreshTimer);
     console.log(`🔄 Auto-refreshing every ${(intervalMs / 60000).toFixed(1)} minutes.`);
     autoRefreshTimer = setInterval(() => {
@@ -295,7 +307,7 @@
 
   window.XActions.stats = () => {
     const data = loadData();
-    const kws = Object.keys(data.stats);
+    const kws = Object.keys(data.stats || {});
     if (kws.length === 0) { console.log('📭 No stats yet.'); return; }
     console.log(`\n📊 KEYWORD STATS (${kws.length} tracked keywords):\n`);
     for (const kw of kws) {
@@ -328,6 +340,7 @@
     console.log('╚════════════════════════════════════════════════════╝');
     console.log('\n📋 Commands:');
     console.log('  XActions.monitor(["keyword1", "keyword2"])');
+    console.log('  XActions.scan()             (on a search page or x.com/home)');
     console.log('  XActions.autoRefresh(120000)');
     console.log('  XActions.stats()');
     console.log('  XActions.history()');

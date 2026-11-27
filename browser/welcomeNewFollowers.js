@@ -5,13 +5,15 @@
  * ============================================================
  *
  * @name        welcomeNewFollowers.js
- * @description Automatically send DM welcome messages to new
- *              followers. Monitors the followers list, detects
- *              new ones via localStorage diff, and sends a
- *              personalized greeting. Rate-limited to avoid spam.
+ * @title       Welcome New Followers
+ * @description Detect followers who are new since the last run and draft a personalized welcome DM for each, with a dry run, a cap and long delays.
+ * @category    messages
+ * @page        x.com/<you>/followers
+ * @writes      false
+ * @aliases     scripts/welcomeNewFollowers.js
  * @author      nichxbt (https://x.com/nichxbt)
- * @version     1.0.0
- * @date        2026-02-24
+ * @version     1.1.0
+ * @date        2026-11-27
  * @repository  https://github.com/nirholas/XActions
  *
  * ============================================================
@@ -20,7 +22,7 @@
  * 1. Go to: https://x.com/YOUR_USERNAME/followers
  * 2. Open DevTools Console (F12)
  * 3. Customize CONFIG.messageTemplates
- * 4. Paste and run
+ * 4. Paste browser/welcomeNewFollowers.js and press Enter
  *
  * First run: Records existing followers as "known."
  * Next run:  Detects NEW followers and optionally sends DMs.
@@ -186,6 +188,7 @@
     // Send welcome DMs if configured
     if (CONFIG.sendDMs && !CONFIG.dryRun && CONFIG.messageTemplates.length > 0) {
       console.log(`\n📬 Sending welcome DMs (max ${CONFIG.maxDMs})...`);
+      console.log('⚠️ NOTE: Mass DMing may violate X ToS. Use responsibly.\n');
 
       for (const follower of newFollowersList.slice(0, CONFIG.maxDMs)) {
         if (!(await shouldContinue())) break;

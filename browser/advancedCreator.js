@@ -1,4 +1,12 @@
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
+/**
+ * @name        advancedCreator.js
+ * @title       Advanced Creator Tools
+ * @description Creator monetization tools: subscriptions, revenue sharing and Media Studio helpers.
+ * @category    premium
+ * @page        x.com/*
+ * @writes      true
+ */
 // browser/advancedCreator.js
 // Advanced creator monetization for X/Twitter
 // by nichxbt

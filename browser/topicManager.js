@@ -5,7 +5,11 @@
  * ============================================================
  *
  * @name        topicManager.js
- * @description Browse, follow, and unfollow X Topics. Manage
+ * @description Browse, follow and unfollow Topics.
+ * @title       Topic Manager
+ * @category    profile
+ * @page        x.com/i/topics
+ * @writes      true
  *              your followed topics list and discover new ones.
  * @author      nichxbt (https://x.com/nichxbt)
  * @version     1.0.0

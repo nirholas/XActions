@@ -5,13 +5,15 @@
  * ============================================================
  *
  * @name        viralTweetDetector.js
- * @description Scan any timeline and identify tweets going viral
- *              in real-time. Calculates velocity (engagement/hour)
- *              and flags tweets with abnormally high engagement
- *              relative to the author's follower count.
+ * @title       Viral Tweet Detector
+ * @description Scan a timeline or search and rank posts going viral by engagement rate and velocity (engagement per hour), with a JSON export.
+ * @category    analytics
+ * @page        x.com/home or x.com/search?q=<query>&f=live or x.com/explore
+ * @writes      false
+ * @aliases     scripts/viralTweetDetector.js
  * @author      nichxbt (https://x.com/nichxbt)
  * @version     1.0.0
- * @date        2026-02-24
+ * @date        2026-11-27
  * @repository  https://github.com/nirholas/XActions
  *
  * ============================================================
@@ -19,7 +21,7 @@
  *
  * 1. Go to any timeline, search, or explore page on x.com
  * 2. Open DevTools Console (F12)
- * 3. Paste and run
+ * 3. Paste browser/viralTweetDetector.js and run
  * 4. Identifies tweets with viral potential
  * ============================================================
  */

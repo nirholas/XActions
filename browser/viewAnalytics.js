@@ -1,4 +1,12 @@
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
+/**
+ * @name        viewAnalytics.js
+ * @title       View Analytics
+ * @description Open the analytics pages and scrape overview and per-post metrics (Premium).
+ * @category    analytics
+ * @page        x.com/*
+ * @writes      false
+ */
 // View Analytics (Premium) — by nichxbt
 // https://github.com/nirholas/XActions
 // Navigate to analytics dashboard, scrape impressions/engagements/followers, and export data.

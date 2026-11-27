@@ -5,7 +5,11 @@
  * ============================================================
  *
  * @name        dmCalls.js
- * @description Navigate to a DM conversation and initiate
+ * @description Open a DM conversation and start an audio or video call.
+ * @title       DM Calls
+ * @category    messages
+ * @page        x.com/messages
+ * @writes      true
  *              audio or video calls on X/Twitter.
  * @author      nichxbt (https://x.com/nichxbt)
  * @version     1.0.0

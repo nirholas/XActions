@@ -5,14 +5,15 @@
  * ============================================================
  *
  * @name        followRatioManager.js
- * @description Monitor and manage your follow/following ratio.
- *              Scrapes follower and following counts, calculates
- *              your ratio, tracks it over time in localStorage,
- *              identifies who to unfollow to improve your ratio,
- *              and provides actionable recommendations.
+ * @title       Follow Ratio Manager
+ * @description Grade your followers to following ratio, track it over time and plan how to reach a target ratio.
+ * @category    analytics
+ * @page        x.com/<you>
+ * @writes      false
+ * @aliases     scripts/followRatioManager.js
  * @author      nichxbt (https://x.com/nichxbt)
- * @version     1.0.0
- * @date        2026-02-24
+ * @version     1.1.0
+ * @date        2026-11-26
  * @repository  https://github.com/nirholas/XActions
  *
  * ============================================================
@@ -20,7 +21,7 @@
  *
  * 1. Go to your profile: x.com/YOUR_USERNAME
  * 2. Open DevTools Console (F12)
- * 3. Paste and run
+ * 3. Paste browser/followRatioManager.js and run
  *
  * Controls:
  *   XActions.setTarget(2.0)        — target ratio (followers/following)
@@ -206,7 +207,7 @@
       }
 
       // Direction
-      if (history.length >= 3) {
+      if (history.length >= 2) {
         const prev = history[history.length - 2];
         const diff = snapshot.ratio - prev.ratio;
         if (diff > 0.01) console.log(`  📈 Ratio improving: +${diff.toFixed(3)} since last check`);

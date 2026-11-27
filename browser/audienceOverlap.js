@@ -5,14 +5,15 @@
  * ============================================================
  *
  * @name        audienceOverlap.js
- * @description Compare the follower lists of two X/Twitter
- *              accounts to find shared followers, unique-to-each
- *              audiences, and overlap percentage. Useful for
- *              identifying collaboration opportunities, competitor
- *              analysis, and audience expansion targets.
+ * @title       Audience Overlap
+ * @description Compare two accounts' followers, or two pasted handle lists, to find shared and unique audiences and the overlap percentage.
+ * @category    analytics
+ * @page        x.com/<username>/followers or x.com/*
+ * @writes      false
+ * @aliases     scripts/audienceOverlap.js, scripts/twitter/audience-overlap.js
  * @author      nichxbt (https://x.com/nichxbt)
- * @version     1.0.0
- * @date        2026-02-24
+ * @version     1.1.0
+ * @date        2026-11-27
  * @repository  https://github.com/nirholas/XActions
  *
  * ============================================================
@@ -26,6 +27,17 @@
  *
  * Or use the quick method:
  *   XActions.analyze('accountA', 'accountB')
+ *   (with no arguments it uses CONFIG.accounts)
+ *
+ * List mode (any x.com page, no scraping):
+ *   Put two arrays of handles in CONFIG.listA / CONFIG.listB, or two
+ *   localStorage keys holding JSON arrays of handles in
+ *   CONFIG.storageKeyA / storageKeyB, then paste browser/audienceOverlap.js.
+ *   The comparison runs at once. Or call
+ *   XActions.compareLists(['alice','bob'], ['bob','dave']).
+ *   Set CONFIG.promptForLists = true to be asked for two comma-separated
+ *   lists when neither is configured. The report is kept on
+ *   window.xactionsOverlap.
  * ============================================================
  */
 (() => {
@@ -36,6 +48,22 @@
     scrollDelay: 2000,
     maxFollowers: 300,   // Per account (browser limitation)
     exportResults: true,
+
+    // Default accounts for XActions.analyze() called with no arguments
+    accounts: [],
+
+    // ── List mode ─────────────────────────────────────────────
+    // Two arrays of handles (with or without @, profile URLs, or objects with
+    // a username/handle/screen_name field). When both resolve, the
+    // comparison runs as soon as the script is pasted.
+    listA: [],
+    listB: [],
+    labelA: 'A',              // Labels used in the report and filename
+    labelB: 'B',
+    storageKeyA: '',          // localStorage keys used when listA / listB are empty
+    storageKeyB: '',
+    printLimit: 20,           // Handle examples printed per section
+    promptForLists: false,    // Ask for comma-separated lists when none are configured
   };
 
   const sleep = (ms) => new Promise(r => setTimeout(r, ms));
@@ -212,12 +240,145 @@
     }
   };
 
+  // ── List mode helpers ──────────────────────────────────────
+  // Turn any handle-ish value into a clean lowercase key. Accepts strings
+  // ("@alice", "/alice", "https://x.com/alice") and objects from scrapers.
+  const normalizeHandle = (raw) => {
+    let value = raw;
+    if (value && typeof value === 'object') {
+      value = value.username || value.handle || value.screen_name || value.screenName || '';
+    }
+    if (typeof value !== 'string') return null;
+    let handle = value.trim();
+    if (!handle) return null;
+    const urlMatch = handle.match(/(?:x\.com|twitter\.com)\/([A-Za-z0-9_]+)/i);
+    if (urlMatch) handle = urlMatch[1];
+    handle = handle.replace(/^\//, '').replace(/^@/, '').split(/[/?#]/)[0].trim();
+    if (!/^[A-Za-z0-9_]{1,15}$/.test(handle)) return null;
+    return handle.toLowerCase();
+  };
+
+  // Build a Map of normalizedKey -> original display handle, dropping dupes.
+  const toHandleMap = (list) => {
+    const map = new Map();
+    (Array.isArray(list) ? list : []).forEach((raw) => {
+      const key = normalizeHandle(raw);
+      if (!key || map.has(key)) return;
+      const display = (raw && typeof raw === 'object')
+        ? (raw.username || raw.handle || raw.screen_name || raw.screenName || key)
+        : key;
+      map.set(key, String(display).replace(/^@/, ''));
+    });
+    return map;
+  };
+
+  const readStorageList = (key) => {
+    if (!key) return null;
+    try {
+      const parsed = JSON.parse(localStorage.getItem(key) || 'null');
+      if (Array.isArray(parsed)) return parsed;
+      if (parsed && Array.isArray(parsed.followers)) return parsed.followers;
+      if (parsed && Array.isArray(parsed.handles)) return parsed.handles;
+      return null;
+    } catch (e) {
+      console.log(`⚠️ Could not read localStorage key "${key}": ${e.message}`);
+      return null;
+    }
+  };
+
+  // ── Compare two handle lists ───────────────────────────────
+  const compareLists = (listA, listB, labelA = CONFIG.labelA, labelB = CONFIG.labelB) => {
+    const mapA = toHandleMap(listA);
+    const mapB = toHandleMap(listB);
+
+    if (mapA.size === 0 || mapB.size === 0) {
+      console.log('❌ Both sets need at least one valid handle.');
+      console.log(`   Parsed: "${labelA}" = ${mapA.size} handles, "${labelB}" = ${mapB.size} handles.`);
+      console.log('   Set CONFIG.listA and CONFIG.listB to arrays of handles and run again.');
+      return null;
+    }
+
+    const keysA = new Set(mapA.keys());
+    const keysB = new Set(mapB.keys());
+    const shared = [...keysA].filter((k) => keysB.has(k));
+    const onlyA = [...keysA].filter((k) => !keysB.has(k));
+    const onlyB = [...keysB].filter((k) => !keysA.has(k));
+    const union = new Set([...keysA, ...keysB]);
+
+    const jaccardPct = Math.round((shared.length / union.size) * 1000) / 10;
+    const sharedOfAPct = Math.round((shared.length / keysA.size) * 1000) / 10;
+    const sharedOfBPct = Math.round((shared.length / keysB.size) * 1000) / 10;
+
+    const displayA = (k) => '@' + (mapA.get(k) || k);
+    const displayB = (k) => '@' + (mapB.get(k) || k);
+    const preview = (keys, disp) => keys.slice(0, CONFIG.printLimit).map(disp).join(', ') +
+      (keys.length > CONFIG.printLimit ? ` ... (+${keys.length - CONFIG.printLimit} more)` : '');
+
+    console.log('\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+    console.log('  🔀 AUDIENCE OVERLAP (lists)');
+    console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+    console.log(`  Set "${labelA}": ${keysA.size} unique handles`);
+    console.log(`  Set "${labelB}": ${keysB.size} unique handles`);
+    console.log(`  Shared:        ${shared.length}`);
+    console.log(`  Only in ${labelA}:    ${onlyA.length}`);
+    console.log(`  Only in ${labelB}:    ${onlyB.length}`);
+    console.log(`  Overlap (Jaccard):       ${jaccardPct}%`);
+    console.log(`  Shared as % of "${labelA}":   ${sharedOfAPct}%`);
+    console.log(`  Shared as % of "${labelB}":   ${sharedOfBPct}%`);
+
+    if (shared.length > 0) {
+      console.log(`\n  👥 SHARED (${shared.length}):`);
+      console.log('     ' + preview(shared, displayA));
+    }
+    console.log(`\n  🅰️ ONLY IN "${labelA}" (${onlyA.length}):`);
+    console.log('     ' + (onlyA.length ? preview(onlyA, displayA) : '(none)'));
+    console.log(`\n  🅱️ ONLY IN "${labelB}" (${onlyB.length}):`);
+    console.log('     ' + (onlyB.length ? preview(onlyB, displayB) : '(none)'));
+
+    if (jaccardPct > 50) console.log('\n  💡 HIGH overlap. These audiences are largely the same crowd.');
+    else if (jaccardPct > 20) console.log('\n  💡 MODERATE overlap. Cross-promotion would reach some new people.');
+    else console.log('\n  💡 LOW overlap. Big opportunity for cross-pollination.');
+
+    const report = {
+      labelA,
+      labelB,
+      analyzedAt: new Date().toISOString(),
+      counts: {
+        setA: keysA.size,
+        setB: keysB.size,
+        shared: shared.length,
+        onlyA: onlyA.length,
+        onlyB: onlyB.length,
+        union: union.size,
+      },
+      overlap: { jaccardPct, sharedOfAPct, sharedOfBPct },
+      sharedHandles: shared.map(displayA).map((h) => h.slice(1)),
+      uniqueToA: onlyA.map(displayA).map((h) => h.slice(1)),
+      uniqueToB: onlyB.map(displayB).map((h) => h.slice(1)),
+    };
+
+    if (CONFIG.exportResults) {
+      const safe = (s) => String(s).replace(/[^A-Za-z0-9_-]/g, '');
+      const blob = new Blob([JSON.stringify(report, null, 2)], { type: 'application/json' });
+      const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+      a.download = `xactions-overlap-${safe(labelA)}-vs-${safe(labelB)}.json`;
+      document.body.appendChild(a); a.click(); a.remove();
+      console.log('📥 Overlap analysis exported.');
+    }
+
+    window.xactionsOverlap = report;
+    console.log('  Full report object: window.xactionsOverlap\n');
+    return report;
+  };
+
   // ── Controls ───────────────────────────────────────────────
   window.XActions = window.XActions || {};
 
   window.XActions.analyze = async (accountA, accountB) => {
+    accountA = accountA || CONFIG.accounts[0];
+    accountB = accountB || CONFIG.accounts[1];
     if (!accountA || !accountB) {
-      console.log('❌ Usage: XActions.analyze("accountA", "accountB")');
+      console.log('❌ Usage: XActions.analyze("accountA", "accountB") or set CONFIG.accounts');
       return;
     }
 
@@ -260,6 +421,7 @@
   };
 
   window.XActions.compare = compareDatasets;
+  window.XActions.compareLists = compareLists;
 
   // ── Init ───────────────────────────────────────────────────
   console.log('╔════════════════════════════════════════════════════╗');
@@ -272,4 +434,30 @@
   console.log('  1. Go to x.com/accountA/followers → XActions.scrapeHere("a")');
   console.log('  2. Go to x.com/accountB/followers → XActions.scrapeHere("b")');
   console.log('  3. XActions.compare()');
+  console.log('\n📋 List mode:');
+  console.log('  XActions.compareLists(["alice","bob"], ["bob","dave"])');
+
+  // ── List mode autorun ──────────────────────────────────────
+  // Resolve the two source lists in priority order:
+  // 1) CONFIG arrays  2) localStorage keys  3) prompt (promptForLists only).
+  let rawA = Array.isArray(CONFIG.listA) && CONFIG.listA.length ? CONFIG.listA : null;
+  let rawB = Array.isArray(CONFIG.listB) && CONFIG.listB.length ? CONFIG.listB : null;
+  if (!rawA && CONFIG.storageKeyA) rawA = readStorageList(CONFIG.storageKeyA);
+  if (!rawB && CONFIG.storageKeyB) rawB = readStorageList(CONFIG.storageKeyB);
+
+  if ((!rawA || !rawB) && CONFIG.promptForLists) {
+    if (!rawA) {
+      const inputA = window.prompt(`Paste comma-separated handles for set "${CONFIG.labelA}":`, '');
+      rawA = inputA ? inputA.split(/[\s,]+/) : [];
+    }
+    if (!rawB) {
+      const inputB = window.prompt(`Paste comma-separated handles for set "${CONFIG.labelB}":`, '');
+      rawB = inputB ? inputB.split(/[\s,]+/) : [];
+    }
+  }
+
+  if (rawA || rawB) {
+    if (rawA && rawB) compareLists(rawA, rawB);
+    else console.log('⚠️ List mode needs both CONFIG.listA and CONFIG.listB (or both storage keys).');
+  }
 })();

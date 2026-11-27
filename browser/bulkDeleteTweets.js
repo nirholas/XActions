@@ -5,11 +5,15 @@
  * ============================================================
  *
  * @name        bulkDeleteTweets.js
- * @description Delete your tweets by age, keyword, or engagement threshold.
- *              The #1 most-requested Twitter automation feature.
+ * @title       Bulk Delete Tweets
+ * @description Delete your own posts by age, keyword, type or engagement, with a dry run, a cap and a countdown.
+ * @category    cleanup
+ * @page        x.com/<you>
+ * @writes      true
+ * @aliases     scripts/bulkDeleteTweets.js, scripts/twitter/delete-tweets.js
  * @author      nichxbt (https://x.com/nichxbt)
- * @version     1.0.0
- * @date        2026-02-24
+ * @version     1.1.0
+ * @date        2026-11-26
  * @repository  https://github.com/nirholas/XActions
  *
  * ============================================================
@@ -18,8 +22,10 @@
  * 1. Go to: https://x.com/YOUR_USERNAME (its tabs work too, e.g. /with_replies)
  * 2. Open DevTools Console (F12)
  * 3. Configure the filters below. This deletes for real: set dryRun = true
- *    for a preview run that removes nothing.
- * 4. Paste this script and press Enter
+ *    for a preview run that removes nothing. maxDeletes (10 by default) caps
+ *    how many posts one run removes; raise it once the filters are right.
+ * 4. Paste browser/bulkDeleteTweets.js and press Enter. Live mode counts
+ *    down countdownSeconds before the first deletion.
  *
  * ⚠️ DELETION IS PERMANENT. There is no undo. Export first!
  *    Use browser/backupAccount.js to save your tweets before deleting.
@@ -28,6 +34,7 @@
  *   XActionsUtils.pause()   — pause
  *   XActionsUtils.resume()  — resume
  *   XActionsUtils.abort()   — stop
+ *   window.stopDeleteTweets() - stop after the current post
  * ============================================================
  */
 (() => {
@@ -39,7 +46,7 @@
       olderThanDays: null,          // Delete tweets older than N days (null = ignore)
       beforeDate: null,             // Delete tweets before this date: 'YYYY-MM-DD' (null = ignore)
       afterDate: null,              // Delete tweets after this date: 'YYYY-MM-DD' (null = ignore)
-      maxLikes: null,               // Only delete if likes <= this (null = ignore)
+      maxLikes: null,               // Only delete if likes <= this (null = ignore); protects high performers
       maxRetweets: null,            // Only delete if retweets <= this (null = ignore)
       containsKeywords: [],         // Delete if text contains ANY of these (empty = ignore)
       excludeKeywords: [],          // NEVER delete if text contains ANY of these
@@ -50,13 +57,14 @@
     },
 
     // ── Limits ──────────────────────────────────────────────
-    maxDeletes: Infinity,           // Stop after this many deletions
+    maxDeletes: 10,                 // Stop after this many deletions (raise once your filters are right)
     scrollCycles: 100,              // Maximum scroll attempts
+    noNewPostsThreshold: 0,         // Stop after N consecutive scrolls that load no new posts (0 = never)
 
     // ── Timing ──────────────────────────────────────────────
     // X throttles bursts of deletions and starts failing them silently, so
     // these are deliberately unhurried.
-    minDelay: 3000,
+    minDelay: 5000,
     maxDelay: 7000,
     scrollDelay: 4000,
     menuDelay: 1200,
@@ -64,6 +72,7 @@
     // ── Safety ──────────────────────────────────────────────
     dryRun: false,                  // false = PERMANENT deletion. true = preview only.
     confirmEvery: 50,               // Pause for user confirmation every N deletes (0 = never)
+    countdownSeconds: 5,            // Live mode: seconds to wait before the first deletion (0 = start immediately)
 
     // ── Recovery ────────────────────────────────────────────
     maxConsecutiveErrors: 5,
@@ -150,13 +159,21 @@
     console.log('║  by nichxbt — v1.0' + ' '.repeat(W - 21) + '║');
     console.log('╚' + '═'.repeat(W) + '╝');
 
+    // Stop switch: window.stopDeleteTweets() halts after the current post.
+    let stopped = false;
+    window.stopDeleteTweets = () => {
+      stopped = true;
+      console.warn('🛑 Stop requested. Finishing the current post, then exiting.');
+    };
+    const keepGoing = async () => !stopped && (await U.shouldContinue());
+
     // Live mode deletes for real, so give the run a stoppable head start.
     if (!CONFIG.dryRun) {
-      for (let i = 5; i > 0; i--) {
-        console.warn(`⚠️  Starting in ${i}s. Call XActionsUtils.abort() now to stop.`);
+      for (let i = CONFIG.countdownSeconds; i > 0 && !stopped; i--) {
+        console.warn(`⚠️  Starting in ${i}s. Call XActionsUtils.abort() or window.stopDeleteTweets() now to stop.`);
         await U.sleep(1000);
       }
-      if (!(await U.shouldContinue())) { console.log('🛑 Aborted before deleting anything.'); return; }
+      if (!(await keepGoing())) { console.log('🛑 Aborted before deleting anything.'); return; }
     }
 
     // Detect profile. X serves it at /<handle> and its tabs at /<handle>/<tab>,
@@ -164,7 +181,7 @@
     // profile timeline. The signed-in handle comes from the left nav.
     const PROFILE_TABS = ['with_replies', 'media', 'likes', 'highlights', 'articles', 'superfollows', 'affiliates'];
     const RESERVED = ['home', 'explore', 'notifications', 'messages', 'i', 'search', 'settings', 'compose',
-      'hashtag', 'bookmarks', 'lists', 'topics', 'communities', 'jobs'];
+      'hashtag', 'bookmarks', 'lists', 'topics', 'communities', 'jobs', 'tos', 'privacy'];
     const pathMatch = window.location.pathname.match(/^\/([A-Za-z0-9_]{1,15})(?:\/([A-Za-z0-9_]+))?\/?$/);
     const pathUser = pathMatch && !RESERVED.includes(pathMatch[1].toLowerCase()) ? pathMatch[1] : null;
     const onProfile = Boolean(pathUser) && (!pathMatch[2] || PROFILE_TABS.includes(pathMatch[2].toLowerCase()));
@@ -185,6 +202,9 @@
     }
     const profileUser = ownHandle || pathUser;
     console.log(`\n👤 Profile: @${profileUser}`);
+    if (!ownHandle) {
+      console.warn('⚠️  Could not confirm the signed-in account from the page. Make sure this is YOUR profile before letting the countdown finish.');
+    }
 
     // Log active filters
     const f = CONFIG.filters;
@@ -203,6 +223,8 @@
         f.maxRetweets === null && !f.containsKeywords.length && !f.onlyRetweets && !f.onlyReplies) {
       console.log('   ⚠️  NO FILTERS SET — ALL tweets will be deleted!');
     }
+    console.log(`   • Max deletes this run: ${CONFIG.maxDeletes}`);
+    console.log('   • To stop early: window.stopDeleteTweets()');
     console.log('');
 
     // Helpers
@@ -210,39 +232,43 @@
     const beforeDate = f.beforeDate ? new Date(f.beforeDate) : null;
     const afterDate = f.afterDate ? new Date(f.afterDate) : null;
 
-    const shouldDelete = (tweetData) => {
+    // Returns null when the post should be deleted, otherwise the reason it
+    // is kept (a key of skipReasons, reported in the summary).
+    const skipReason = (tweetData) => {
       const { text, likes, retweets, timestamp, isRetweet, isReply, isPinned } = tweetData;
 
-      if (f.excludePinned && isPinned) return false;
-      if (f.onlyRetweets && !isRetweet) return false;
-      if (f.onlyReplies && !isReply) return false;
+      if (f.excludePinned && isPinned) return 'pinned';
+      if (f.onlyRetweets && !isRetweet) return 'type';
+      if (f.onlyReplies && !isReply) return 'type';
 
       if (timestamp) {
         const d = new Date(timestamp);
-        if (cutoffDate && d > cutoffDate) return false;
-        if (beforeDate && d > beforeDate) return false;
-        if (afterDate && d < afterDate) return false;
+        if (cutoffDate && d > cutoffDate) return 'date';
+        if (beforeDate && d > beforeDate) return 'date';
+        if (afterDate && d < afterDate) return 'date';
       }
 
-      if (f.maxLikes !== null && likes > f.maxLikes) return false;
-      if (f.maxRetweets !== null && retweets > f.maxRetweets) return false;
+      if (f.maxLikes !== null && likes > f.maxLikes) return 'engagement';
+      if (f.maxRetweets !== null && retweets > f.maxRetweets) return 'engagement';
 
       const lowerText = text.toLowerCase();
       if (f.containsKeywords.length > 0) {
-        if (!f.containsKeywords.some(kw => lowerText.includes(kw.toLowerCase()))) return false;
+        if (!f.containsKeywords.some(kw => lowerText.includes(kw.toLowerCase()))) return 'keyword';
       }
       if (f.excludeKeywords.length > 0) {
-        if (f.excludeKeywords.some(kw => lowerText.includes(kw.toLowerCase()))) return false;
+        if (f.excludeKeywords.some(kw => lowerText.includes(kw.toLowerCase()))) return 'keyword';
       }
 
-      return true;
+      return null;
     };
 
     const extractTweetData = (article) => {
       const text = U.$('tweetText', article)?.textContent || '';
       const timeEl = article.querySelector('time');
       const timestamp = timeEl?.getAttribute('datetime') || '';
-      const tweetLink = article.querySelector('a[href*="/status/"]');
+      // The timestamp's anchor is the post's own permalink; the first /status/
+      // link can belong to a quoted post.
+      const tweetLink = timeEl?.closest('a[href*="/status/"]') || article.querySelector('a[href*="/status/"]');
       const tweetUrl = tweetLink?.getAttribute('href') || '';
       const tweetId = tweetUrl.split('/status/')[1]?.split(/[?/]/)[0] || '';
 
@@ -263,11 +289,25 @@
     const deletedLog = [];
     const processed = new Set();
     let deleted = 0, skippedCount = 0, errors = 0, consErr = 0;
+    const skipReasons = { pinned: 0, notYours: 0, type: 0, date: 0, engagement: 0, keyword: 0, noMenu: 0 };
+    let noNewPostsCount = 0;
     const t0 = Date.now();
+
+    // The timeline hydrates after the shell paints, so poll instead of giving
+    // up on the first empty query.
+    if (!U.$('tweet')) {
+      console.log('⏳ Waiting for your posts to render...');
+      const deadline = Date.now() + 15000;
+      while (!U.$('tweet') && Date.now() < deadline) await U.sleep(500);
+      if (!U.$('tweet')) {
+        console.warn('⚠️ No posts rendered after 15s. Reload the page, let the timeline appear, then run this again.');
+        return;
+      }
+    }
 
     for (let scroll = 0; scroll < CONFIG.scrollCycles; scroll++) {
       if (deleted >= CONFIG.maxDeletes) break;
-      if (!(await U.shouldContinue())) break;
+      if (!(await keepGoing())) break;
 
       if (U.isRateLimited()) {
         console.warn(`⏳ Rate-limited — waiting ${CONFIG.rateLimitPauseMs / 1000}s...`);
@@ -277,21 +317,29 @@
 
       const articles = U.$$('tweet');
       let actedThisScroll = false;
+      let foundNewPost = false;
 
       for (const article of articles) {
         if (deleted >= CONFIG.maxDeletes) break;
-        if (!(await U.shouldContinue())) break;
+        if (!(await keepGoing())) break;
+
+        // A live deletion re-renders the timeline, which detaches nodes still
+        // held by this snapshot; clicking one does nothing.
+        if (!article.isConnected) continue;
 
         const data = extractTweetData(article);
         if (!data.tweetId || processed.has(data.tweetId)) continue;
         processed.add(data.tweetId);
+        foundNewPost = true;
 
         // Check if it belongs to profile owner
-        const authorLink = article.querySelector(`a[href="/${profileUser}"]`);
-        if (!authorLink && !data.isRetweet) continue;
+        const authorLink = article.querySelector(`a[href="/${profileUser}" i]`);
+        if (!authorLink && !data.isRetweet) { skipReasons.notYours++; continue; }
 
-        if (!shouldDelete(data)) {
+        const reason = skipReason(data);
+        if (reason) {
           skippedCount++;
+          skipReasons[reason]++;
           continue;
         }
 
@@ -307,7 +355,7 @@
         try {
           // Find and click the "more" menu (caret)
           const caret = U.$('caret', article);
-          if (!caret) { skippedCount++; continue; }
+          if (!caret) { skippedCount++; skipReasons.noMenu++; continue; }
 
           caret.scrollIntoView({ block: 'center', behavior: 'smooth' });
           await U.sleep(300);
@@ -339,16 +387,20 @@
             document.body.click();
             await U.sleep(300);
             skippedCount++;
+            skipReasons.noMenu++;
             continue;
           }
 
+          const wasRepost = /undo repost|undo retweet/i.test(deleteBtn.textContent);
           deleteBtn.click();
           await U.sleep(CONFIG.menuDelay);
 
-          // Confirm deletion
-          const confirmBtn = U.$('confirmBtn');
-          if (confirmBtn) {
-            confirmBtn.click();
+          // Confirm deletion. Deleting an original post asks for
+          // confirmation; undoing a repost is instant.
+          const confirmBtn = wasRepost ? null : U.$('confirmBtn');
+          if (confirmBtn || wasRepost) {
+            if (confirmBtn) confirmBtn.click();
+            data.repost = wasRepost;
             deleted++;
             consErr = 0;
             actedThisScroll = true;
@@ -390,6 +442,16 @@
 
       if (consErr >= CONFIG.maxConsecutiveErrors) break;
 
+      if (!foundNewPost) {
+        noNewPostsCount++;
+        if (CONFIG.noNewPostsThreshold > 0 && noNewPostsCount >= CONFIG.noNewPostsThreshold) {
+          console.warn('⚠️ No new posts found after multiple scrolls. Stopping.');
+          break;
+        }
+      } else {
+        noNewPostsCount = 0;
+      }
+
       window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
       await U.sleep(CONFIG.scrollDelay);
 
@@ -408,6 +470,13 @@
     console.log('╚' + '═'.repeat(W) + '╝');
     console.log(`  🗑️  Deleted:    ${deleted}`);
     console.log(`  ⏭️  Skipped:    ${skippedCount}`);
+    console.log(`     └─ Pinned:      ${skipReasons.pinned}`);
+    console.log(`     └─ Type:        ${skipReasons.type}`);
+    console.log(`     └─ Date:        ${skipReasons.date}`);
+    console.log(`     └─ Engagement:  ${skipReasons.engagement}`);
+    console.log(`     └─ Keyword:     ${skipReasons.keyword}`);
+    console.log(`     └─ No menu:     ${skipReasons.noMenu}`);
+    console.log(`  👤 Not yours:  ${skipReasons.notYours}`);
     console.log(`  ⚠️  Errors:     ${errors}`);
     console.log(`  📝 Processed:  ${processed.size}`);
     console.log(`  ⏱️  Time:       ${elapsed}s`);
@@ -415,13 +484,17 @@
 
     if (CONFIG.exportOnComplete && deletedLog.length > 0) {
       U.download(
-        { deleted: deletedLog, stats: { count: deleted, skipped: skippedCount, errors, elapsed: elapsed + 's' } },
+        { profile: profileUser, dryRun: CONFIG.dryRun, deleted: deletedLog, stats: { count: deleted, skipped: skippedCount, skipReasons, errors, elapsed: elapsed + 's' } },
         `xactions-deleted-tweets-${new Date().toISOString().slice(0, 10)}.json`
       );
     }
 
     if (CONFIG.dryRun && deleted > 0) {
       console.log(`\n  ⚡ Set dryRun = false and re-run to actually delete ${deleted} tweets.\n`);
+    } else if (!CONFIG.dryRun && deleted >= CONFIG.maxDeletes) {
+      console.log(`\n  ℹ️ Hit maxDeletes (${CONFIG.maxDeletes}) for this run. Re-run the script to continue where it stopped.\n`);
+    } else if (deleted === 0) {
+      console.log('\n  ℹ️ Nothing matched your filters. Loosen the date, keyword or engagement filters.\n');
     }
   })();
 })();

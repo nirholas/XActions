@@ -5,7 +5,11 @@
  * ============================================================
  *
  * @name        manageCommunity.js
- * @description Manage X Community members, roles, settings,
+ * @description Manage Community members, roles, settings and rules.
+ * @title       Manage Community
+ * @category    communities
+ * @page        x.com/i/communities/<id>
+ * @writes      true
  *              pin posts, and update rules.
  * @author      nichxbt (https://x.com/nichxbt)
  * @version     1.0.0

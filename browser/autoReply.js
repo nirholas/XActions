@@ -5,11 +5,15 @@
  * ============================================================
  *
  * @name        autoReply.js
- * @description Automatically reply to tweets matching filters.
- *              Monitors timeline/search and posts contextual replies.
+ * @title       Auto Reply
+ * @description Reply automatically to timeline or search tweets that match keyword triggers, dry run by default.
+ * @category    engage
+ * @page        x.com/home or x.com/search?q=<query>&f=live
+ * @writes      true
+ * @aliases     scripts/autoReply.js
  * @author      nichxbt (https://x.com/nichxbt)
- * @version     1.0.0
- * @date        2026-02-24
+ * @version     1.1.0
+ * @date        2026-11-26
  * @repository  https://github.com/nirholas/XActions
  *
  * ============================================================
@@ -18,7 +22,7 @@
  * 1. Go to: https://x.com/home (or a search page)
  * 2. Configure triggers and reply templates
  * 3. Set dryRun = false when ready
- * 4. Paste and run
+ * 4. Paste browser/autoReply.js into the DevTools console and run
  *
  * ⚠️ AUTOMATED REPLIES CAN GET YOU RESTRICTED!
  * - Use sparingly, with long delays
@@ -38,6 +42,7 @@
       },
       // Add more trigger/reply pairs here:
       // { keywords: ['keyword'], reply: 'Your reply text' },
+      // (`response` is accepted as an alias for `reply`.)
     ],
 
     // ── Targeting ───────────────────────────────────────────
@@ -49,7 +54,7 @@
     ignoreUsers: [],                // Never reply to these users
 
     // ── Limits ──────────────────────────────────────────────
-    maxReplies: 10,                 // Max replies per session
+    maxReplies: 5,                  // Max replies per session
     scrollCycles: 20,               // How far to scroll
     minDelay: 30000,                // 30s minimum between replies (CRITICAL for safety)
     maxDelay: 60000,                // 60s maximum between replies
@@ -151,7 +156,7 @@
         const trigger = matchTrigger(text);
         if (!trigger) continue;
 
-        let replyText = trigger.reply;
+        let replyText = trigger.reply ?? trigger.response ?? '';
         if (CONFIG.addRandomEmoji) {
           replyText += ' ' + emojis[Math.floor(Math.random() * emojis.length)];
         }

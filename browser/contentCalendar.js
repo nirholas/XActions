@@ -5,14 +5,15 @@
  * ============================================================
  *
  * @name        contentCalendar.js
- * @description Plan and visualize your posting schedule. Tracks
- *              tweet frequency by day/hour, identifies posting
- *              gaps, suggests optimal posting times based on
- *              historical engagement, and manages a localStorage-
- *              persisted content queue.
+ * @title       Content Calendar
+ * @description Analyze your posting pattern by day and hour, find gaps and the best times to post, and keep a local queue of planned tweets.
+ * @category    analytics
+ * @page        x.com/<you>
+ * @writes      false
+ * @aliases     scripts/contentCalendar.js
  * @author      nichxbt (https://x.com/nichxbt)
- * @version     1.0.0
- * @date        2026-02-24
+ * @version     1.1.0
+ * @date        2026-11-26
  * @repository  https://github.com/nirholas/XActions
  *
  * ============================================================
@@ -20,7 +21,9 @@
  *
  * MODE 1 — Analyze posting patterns:
  *   1. Go to your profile (x.com/YOUR_USERNAME)
- *   2. Paste and run → analyzes visible timeline
+ *   2. Paste browser/contentCalendar.js and run → analyzes visible timeline
+ *   Set extendedReport: true for day/hour distributions, posting
+ *   streaks and extra stats in the export.
  *
  * MODE 2 — Manage content queue:
  *   window.XActions.addTweet({ text: '...', scheduledFor: '2026-02-25T14:00' })
@@ -35,6 +38,9 @@
     mode: 'analyze',   // 'analyze' | 'queue'
     scrollRounds: 8,
     scrollDelay: 2000,
+    maxTweets: Infinity,     // Stop collecting after this many tweets
+    exportResults: true,     // Download the analysis as JSON
+    extendedReport: false,   // Day/hour distributions, streaks, extra export stats
   };
 
   const STORAGE_KEY = 'xactions_content_calendar';
@@ -83,6 +89,7 @@
       const articles = document.querySelectorAll('article[data-testid="tweet"]');
 
       for (const article of articles) {
+        if (tweets.length >= CONFIG.maxTweets) break;
         const timeEl = article.querySelector('time');
         if (!timeEl) continue;
 
@@ -249,6 +256,52 @@
     } else if (consistencyPct > 75) {
       console.log('  ✅ Great consistency! Keep it up.');
     }
+
+    return { gaps, consistency: consistencyPct };
+  };
+
+  // ── Day / hour distributions (extendedReport) ──────────────
+  const showDistributions = (tweets) => {
+    const dayCounts = Array(7).fill(0);
+    const dayEng = Array(7).fill(0);
+    for (const t of tweets) { dayCounts[t.dayOfWeek]++; dayEng[t.dayOfWeek] += t.engagement; }
+
+    console.log('\n━━━ 📅 DAY-OF-WEEK DISTRIBUTION ━━━');
+    const maxDay = Math.max(...dayCounts, 1);
+    for (let i = 0; i < 7; i++) {
+      const bar = '█'.repeat(Math.round((dayCounts[i] / maxDay) * 20));
+      const avgE = dayCounts[i] > 0 ? (dayEng[i] / dayCounts[i]).toFixed(1) : '0';
+      console.log(`  ${DAYS[i]}  ${bar.padEnd(20)} ${dayCounts[i]} tweets (avg eng: ${avgE})`);
+    }
+
+    const hourCounts = Array(24).fill(0);
+    for (const t of tweets) hourCounts[t.hour]++;
+
+    console.log('\n━━━ ⏰ TIME-OF-DAY DISTRIBUTION ━━━');
+    const maxHour = Math.max(...hourCounts, 1);
+    for (let h = 0; h < 24; h++) {
+      if (hourCounts[h] === 0) continue;
+      const bar = '█'.repeat(Math.round((hourCounts[h] / maxHour) * 15));
+      console.log(`  ${String(h).padStart(2, '0')}:00  ${bar.padEnd(15)} ${hourCounts[h]}`);
+    }
+
+    return Object.fromEntries(DAYS.map((d, i) => [d, dayCounts[i]]));
+  };
+
+  // ── Posting streaks (extendedReport) ───────────────────────
+  const analyzeStreaks = (tweets) => {
+    console.log('\n━━━ 🔥 STREAK ANALYSIS ━━━');
+    const postDays = new Set(tweets.map(t => t.date.toISOString().slice(0, 10)));
+    const sortedDays = [...postDays].sort();
+    let currentStreak = 1, maxStreak = 1, bestStart = sortedDays[0], streakStart = sortedDays[0];
+    for (let i = 1; i < sortedDays.length; i++) {
+      if ((new Date(sortedDays[i]) - new Date(sortedDays[i - 1])) / 86400000 <= 1) {
+        currentStreak++;
+        if (currentStreak > maxStreak) { maxStreak = currentStreak; bestStart = streakStart; }
+      } else { currentStreak = 1; streakStart = sortedDays[i]; }
+    }
+    console.log(`  Posting days: ${sortedDays.length} | Longest streak: ${maxStreak} days (from ${bestStart})`);
+    return { postingDays: sortedDays.length, longestStreak: maxStreak };
   };
 
   // ── Media Impact ───────────────────────────────────────────
@@ -364,10 +417,15 @@
 
     console.log(`\n✅ Collected ${tweets.length} tweets for analysis.\n`);
 
+    let dayDistribution = null;
+    if (CONFIG.extendedReport) dayDistribution = showDistributions(tweets);
+
     generateHeatmap(tweets);
     findOptimalTimes(tweets);
-    analyzeGaps(tweets);
+    const gapStats = analyzeGaps(tweets);
     analyzeMediaImpact(tweets);
+
+    const streaks = CONFIG.extendedReport ? analyzeStreaks(tweets) : null;
 
     // Suggested schedule
     console.log('\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
@@ -401,6 +459,13 @@
       stats: { totalTweets: tweets.length, daySpan: daySpan.toFixed(1), tweetsPerDay },
       analyzedAt: new Date().toISOString(),
     };
+    if (CONFIG.extendedReport) {
+      if (gapStats) data.stats.consistency = gapStats.consistency.toFixed(0) + '%';
+      Object.assign(data.stats, streaks);
+      data.dayDistribution = dayDistribution;
+      if (gapStats) data.gaps = gapStats.gaps.slice(0, 5).map(g => ({ hours: g.hours.toFixed(1), after: g.after }));
+    }
+    if (!CONFIG.exportResults) return;
     const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
     const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
     a.download = `xactions-content-calendar-${new Date().toISOString().slice(0, 10)}.json`;

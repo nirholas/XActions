@@ -1,4 +1,12 @@
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
+/**
+ * @name        advancedSpaces.js
+ * @title       Advanced Spaces Tools
+ * @description Join, leave, speak, co-host, record, caption, react in and end Spaces.
+ * @category    spaces
+ * @page        x.com/*
+ * @writes      true
+ */
 // browser/advancedSpaces.js
 // Advanced Spaces features for X/Twitter
 // by nichxbt

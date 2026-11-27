@@ -5,10 +5,15 @@
  * ============================================================
  *
  * @name        unfollowEveryone.js
- * @description Unfollow every account you follow on X/Twitter.
+ * @title       Unfollow Everyone
+ * @description Unfollow every account you follow, with a whitelist, a cap, a start confirmation and a JSON export.
+ * @category    cleanup
+ * @page        x.com/<you>/following
+ * @writes      true
+ * @aliases     scripts/unfollowEveryone.js, scripts/twitter/unfollow-everyone.js
  * @author      nichxbt (https://x.com/nichxbt)
- * @version     3.0.0
- * @date        2026-02-24
+ * @version     3.1.0
+ * @date        2026-11-27
  * @repository  https://github.com/nirholas/XActions
  *
  * ============================================================
@@ -17,12 +22,16 @@
  * 1. Go to: https://x.com/YOUR_USERNAME/following
  * 2. Open DevTools Console (F12)
  * 3. (Optional) Paste src/utils/core.js first for pause/resume
- * 4. Paste this script and press Enter
+ * 4. Paste browser/unfollowEveryone.js and press Enter. A live run asks
+ *    for a browser confirmation first (confirmStart).
+ *
+ * ⚠️ WARNING: This will unfollow EVERYONE you follow (except the whitelist)!
  *
  * CONTROLS (while running):
  *   XActionsUtils.pause()   — pause the script
  *   XActionsUtils.resume()  — resume the script
  *   XActionsUtils.abort()   — stop entirely
+ *   window.stopUnfollow()   - stop after the current unfollow
  *
  * ============================================================
  */
@@ -35,7 +44,7 @@
 
   const CONFIG = {
     maxUnfollows: Infinity,         // Set to e.g. 50 for testing
-    minDelay: 1200,                 // Minimum ms between unfollows
+    minDelay: 2500,                 // Minimum ms between unfollows
     maxDelay: 3000,                 // Maximum ms between unfollows
     scrollDelay: 2000,              // Delay after scrolling for new content
     confirmDelay: 600,              // Wait after clicking confirm dialog
@@ -45,6 +54,7 @@
       // 'nichxbt',
     ],
     dryRun: false,                  // true = log what WOULD happen, don't act
+    confirmStart: true,             // Live mode: ask for a browser confirm() before starting
 
     maxRetries: 8,                  // Empty scrolls before giving up
     maxConsecutiveErrors: 5,        // Errors in a row before aborting
@@ -52,6 +62,7 @@
 
     trackUnfollowed: true,          // Persist log to localStorage
     exportOnComplete: true,         // Auto-download JSON when done
+    exportDryRun: false,            // Also download the dry-run preview list as JSON
   };
 
   // ══════════════════════════════════════════════════════════
@@ -118,12 +129,33 @@
       return;
     }
 
+    if (!CONFIG.dryRun && CONFIG.confirmStart) {
+      const confirmed = window.confirm(
+        '⚠️ WARNING: This will unfollow EVERYONE!\n\n' +
+        'Are you sure you want to continue?\n\n' +
+        'Click OK to start unfollowing.'
+      );
+      if (!confirmed) {
+        console.log('❌ Cancelled by user.');
+        return;
+      }
+    }
+
+    let stopped = false;
+    window.stopUnfollow = () => {
+      stopped = true;
+      U.abort();
+      console.log('🛑 Stopping after the current unfollow...');
+    };
+    console.log('💡 To stop early: window.stopUnfollow()');
+
     console.log(`\n⚙️  Max: ${CONFIG.maxUnfollows === Infinity ? '∞' : CONFIG.maxUnfollows} | ` +
       `Delay: ${CONFIG.minDelay}-${CONFIG.maxDelay}ms | Whitelist: ${CONFIG.whitelist.length} | ` +
       `Dry: ${CONFIG.dryRun}\n`);
 
     const whiteSet = new Set(CONFIG.whitelist.map(u => u.toLowerCase()));
     const log = CONFIG.trackUnfollowed ? U.loadState('unfollow_everyone_log', []) : [];
+    const preview = [];
     let unfollowed = 0, skipped = 0, errors = 0, consErr = 0, retries = 0;
     const t0 = Date.now();
 
@@ -136,7 +168,7 @@
     };
 
     while (unfollowed < CONFIG.maxUnfollows) {
-      if (!(await U.shouldContinue())) break;
+      if (stopped || !(await U.shouldContinue())) { stopped = true; break; }
 
       if (U.isRateLimited()) {
         console.warn(`⏳ Rate-limited — cooling down ${CONFIG.rateLimitPauseMs / 1000}s...`);
@@ -149,7 +181,7 @@
 
       for (const cell of cells) {
         if (unfollowed >= CONFIG.maxUnfollows) break;
-        if (!(await U.shouldContinue())) break;
+        if (stopped || !(await U.shouldContinue())) { stopped = true; break; }
 
         const user = getUser(cell);
         if (user && whiteSet.has(user.toLowerCase())) { skipped++; continue; }
@@ -159,6 +191,7 @@
 
         if (CONFIG.dryRun) {
           console.log(`🔍 [DRY] Would unfollow @${user || '?'}`);
+          preview.push({ username: user || '?', timestamp: new Date().toISOString(), dryRun: true });
           unfollowed++; acted = true; continue;
         }
 
@@ -205,7 +238,7 @@
         }
       }
 
-      if (consErr >= CONFIG.maxConsecutiveErrors) break;
+      if (consErr >= CONFIG.maxConsecutiveErrors || stopped) break;
 
       if (!acted) {
         retries++;
@@ -227,7 +260,9 @@
     const rate = unfollowed > 0 ? (unfollowed / ((Date.now() - t0) / 60000)).toFixed(1) : '0';
 
     console.log('\n╔' + '═'.repeat(W) + '╗');
-    console.log('║  ✅ COMPLETE' + ' '.repeat(W - 13) + '║');
+    console.log(stopped
+      ? '║  🛑 STOPPED BY USER' + ' '.repeat(W - 20) + '║'
+      : '║  ✅ COMPLETE' + ' '.repeat(W - 13) + '║');
     console.log('╚' + '═'.repeat(W) + '╝');
     console.log(`  🚫 Unfollowed: ${unfollowed}`);
     console.log(`  ⏭️  Skipped:    ${skipped}`);
@@ -246,6 +281,14 @@
       );
     }
 
+    if (CONFIG.exportDryRun && CONFIG.dryRun && preview.length > 0) {
+      U.download(
+        { unfollowed: preview, stats: { total: unfollowed, skipped }, exportedAt: new Date().toISOString() },
+        `xactions-unfollow-everyone-preview-${new Date().toISOString().slice(0, 10)}.json`
+      );
+    }
+
+    delete window.stopUnfollow;
     console.log('\n  💡 Reload & re-run if any were missed.\n');
   })();
 })();

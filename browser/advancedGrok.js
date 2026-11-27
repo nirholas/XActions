@@ -1,4 +1,12 @@
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
+/**
+ * @name        advancedGrok.js
+ * @title       Advanced Grok Tools
+ * @description Advanced Grok features: prompts, image generation, conversation history and exports.
+ * @category    ai
+ * @page        x.com/i/grok
+ * @writes      false
+ */
 // browser/advancedGrok.js
 // Advanced Grok AI features for X/Twitter
 // by nichxbt

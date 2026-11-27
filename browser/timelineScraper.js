@@ -1,4 +1,12 @@
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
+/**
+ * @name        timelineScraper.js
+ * @title       Timeline Scraper
+ * @description Scrape posts from the home timeline and other feeds.
+ * @category    scrape
+ * @page        x.com/home
+ * @writes      false
+ */
 // browser/timelineScraper.js
 // Timeline scraping tools for X/Twitter
 // by nichxbt

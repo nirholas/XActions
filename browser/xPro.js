@@ -1,4 +1,12 @@
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
+/**
+ * @name        xPro.js
+ * @title       X Pro
+ * @description Open X Pro (TweetDeck) and add search columns.
+ * @category    premium
+ * @page        x.com/*
+ * @writes      true
+ */
 // X Pro (TweetDeck) — by nichxbt
 // https://github.com/nirholas/XActions
 // Navigate to X Pro / TweetDeck, setup monitoring columns, and multi-column view helpers.

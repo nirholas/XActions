@@ -5,25 +5,30 @@
  * ============================================================
  *
  * @name        engagementBooster.js
- * @description Systematically engage with tweets from target
- *              accounts to boost mutual engagement. Features a
- *              floating control panel, smart engagement scoring,
- *              retweet & bookmark support, drip scheduling, undo
- *              rollback, persistent session history, and speed
- *              presets. Works standalone or with core.js.
+ * @title       Engagement Booster
+ * @description Like, reply, retweet, bookmark and follow matching tweets from a floating panel, with scoring, drip scheduling and undo.
+ * @category    engage
+ * @page        x.com/home or x.com/search?q=<query> or x.com/<username>
+ * @writes      true
+ * @aliases     scripts/engagementBooster.js
  * @author      nichxbt (https://x.com/nichxbt)
- * @version     2.0.0
- * @date        2026-02-24
+ * @version     2.1.0
+ * @date        2026-11-26
  * @repository  https://github.com/nirholas/XActions
+ *
+ * Systematically engage with tweets from target accounts to boost mutual
+ * engagement. Features a floating control panel, smart engagement scoring,
+ * retweet & bookmark support, drip scheduling, undo rollback, persistent
+ * session history, and speed presets. Works standalone or with core.js.
  *
  * ============================================================
  * 📋 USAGE:
  *
  * 1. Go to any timeline, search, or user profile on x.com
  * 2. Open DevTools Console (F12)
- * 3. Paste and run — a floating panel will appear
+ * 3. Paste browser/engagementBooster.js and run: a floating panel will appear
  * 4. Configure via the panel (or edit CONFIG below)
- * 5. Click ▶ Start
+ * 5. Click ▶ Start (or set CONFIG.autoStart = true to start on paste)
  *
  * Controls: ⏸ Pause · ▶ Resume · 🛑 Stop · ↩ Undo All
  *
@@ -46,6 +51,8 @@
   const CONFIG = {
     maxInteractions: 15,
     dryRun: true,
+    autoStart: false,         // Start immediately on paste instead of waiting for ▶ Start
+    humanTyping: false,       // Type replies one character at a time (20-50 ms per character)
 
     actions: {
       like: true,
@@ -55,7 +62,8 @@
       follow: false,
     },
 
-    // Topic-aware reply templates: templates with `topics` match tweets containing those words
+    // Topic-aware reply templates: templates with `topics` match tweets containing those words.
+    // Plain strings are accepted too and treated as generic templates.
     replyTemplates: [
       { text: '🔥 Great point!', topics: [] },
       { text: '💯 Couldn\'t agree more.', topics: [] },
@@ -841,7 +849,7 @@
   // Smart template picker — matches reply to tweet topic
   const pickReplyTemplate = (tweetText) => {
     const lower = tweetText.toLowerCase();
-    const templates = CONFIG.replyTemplates;
+    const templates = CONFIG.replyTemplates.map(t => (typeof t === 'string' ? { text: t, topics: [] } : t));
     // Try topic-matched templates first
     const topicMatches = templates.filter(t =>
       t.topics && t.topics.length > 0 && t.topics.some(kw => lower.includes(kw))
@@ -908,7 +916,15 @@
     const tweetBox = $(SEL.tweetBox);
     if (!tweetBox) { addLog('  ⚠️ Reply box not found', 'warn'); return false; }
     tweetBox.focus();
-    document.execCommand('insertText', false, replyText);
+    if (CONFIG.humanTyping) {
+      await sleep(200);
+      for (const ch of replyText) {
+        document.execCommand('insertText', false, ch);
+        await sleep(gaussian(20, 50));
+      }
+    } else {
+      document.execCommand('insertText', false, replyText);
+    }
     await sleep(800);
     const sendBtn = $(SEL.tweetButton);
     if (!sendBtn) { addLog('  ⚠️ Send button not found', 'warn'); return false; }
@@ -1337,6 +1353,8 @@
   console.log('║  by nichxbt — floating panel active      ║');
   console.log('║  Console: XActions.engagementBooster.*    ║');
   console.log('╚══════════════════════════════════════════╝');
+
+  if (CONFIG.autoStart) document.getElementById('xeb-startBtn').click();
 
 })();
 

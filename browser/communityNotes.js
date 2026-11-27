@@ -5,7 +5,11 @@
  * ============================================================
  *
  * @name        communityNotes.js
- * @description View and contribute to Community Notes on posts,
+ * @description View Community Notes on posts and rate or contribute notes.
+ * @title       Community Notes
+ * @category    engage
+ * @page        x.com/home
+ * @writes      true
  *              rate existing notes, and browse noted tweets.
  * @author      nichxbt (https://x.com/nichxbt)
  * @version     1.0.0

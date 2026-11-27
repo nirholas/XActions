@@ -1,4 +1,12 @@
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
+/**
+ * @name        likePost.js
+ * @title       Like Posts
+ * @description Like specific posts by URL, or the posts on screen that match keywords.
+ * @category    engage
+ * @page        x.com/*
+ * @writes      true
+ */
 // Like Posts on X - by nichxbt
 // https://github.com/nirholas/xactions
 // Like specific posts by URL or like visible posts matching keywords

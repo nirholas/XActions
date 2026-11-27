@@ -5,21 +5,22 @@
  * ============================================================
  *
  * @name        threadComposer.js
- * @description Compose and publish Twitter/X threads from the
- *              browser console. Manages multi-tweet threads with
- *              character counting, auto-numbering, preview mode,
- *              draft persistence (localStorage), and sequential
- *              posting with human-like delays.
+ * @title       Thread Composer
+ * @description Compose, preview and publish a multi-post thread with character counts, numbering, saved drafts and a dry run by default.
+ * @category    post
+ * @page        x.com/*
+ * @writes      true
+ * @aliases     scripts/threadComposer.js
  * @author      nichxbt (https://x.com/nichxbt)
- * @version     1.0.0
- * @date        2026-02-24
+ * @version     1.1.0
+ * @date        2026-11-26
  * @repository  https://github.com/nirholas/XActions
  *
  * ============================================================
  * 📋 USAGE:
  *
  * 1. Open x.com in browser
- * 2. Paste in DevTools Console
+ * 2. Paste browser/threadComposer.js in DevTools Console
  * 3. Use window.XActions commands:
  *
  *   XActions.thread([
@@ -27,6 +28,8 @@
  *     "Second tweet with more context...",
  *     "Third tweet — the conclusion!",
  *   ])
+ *
+ *   XActions.thread("One more tweet") // Append a single tweet
  *
  *   XActions.preview()        // See the thread with char counts
  *   XActions.publish()        // Post the thread (dryRun by default)
@@ -43,7 +46,7 @@
     dryRun: true,             // Set false to actually post
     autoNumber: false,         // Add "1/N" numbering
     addThreadEmoji: true,      // Add 🧵 to first tweet if missing
-    delayBetween: [3000, 6000], // Delay between posting each tweet
+    delayBetween: [3000, 6000], // Delay (ms range) after adding each tweet to the composer
     maxChars: 280,
   };
 
@@ -61,35 +64,53 @@
   const $ = (sel, ctx = document) => ctx.querySelector(sel);
 
   let currentThread = [];
+  let rawThread = [];
   let aborted = false;
+
+  // Apply numbering and the thread emoji to the raw tweets. A leading
+  // "N/M" block this tool added earlier is replaced so appending a tweet
+  // renumbers the whole thread.
+  const formatThread = (tweets) => tweets.map((t, i) => {
+    let text = t.trim();
+
+    // Auto-numbering
+    if (CONFIG.autoNumber) {
+      const num = `${i + 1}/${tweets.length}`;
+      text = text.replace(/^\d+\/\d+\n\n/, '');
+      if (!text.startsWith(num)) {
+        text = `${num}\n\n${text}`;
+      }
+    }
+
+    // Thread emoji on first tweet
+    if (i === 0 && CONFIG.addThreadEmoji && !text.includes('🧵')) {
+      text = text + ' 🧵';
+    }
+
+    return text;
+  });
 
   // ── Thread management ──────────────────────────────────────
   window.XActions = window.XActions || {};
 
   window.XActions.thread = (tweets) => {
-    if (!Array.isArray(tweets) || tweets.length === 0) {
-      console.log('❌ Usage: XActions.thread(["tweet1", "tweet2", ...])');
+    if (typeof tweets === 'string' && tweets.trim()) {
+      // Append one tweet to the thread being built
+      rawThread = [...rawThread, tweets.trim()];
+      currentThread = formatThread(rawThread);
+      const added = currentThread[currentThread.length - 1];
+      console.log(`➕ Tweet ${currentThread.length} added (${added.length}/${CONFIG.maxChars} chars)`);
+      window.XActions.preview();
       return;
     }
 
-    currentThread = tweets.map((t, i) => {
-      let text = t.trim();
+    if (!Array.isArray(tweets) || tweets.length === 0) {
+      console.log('❌ Usage: XActions.thread(["tweet1", "tweet2", ...]) or XActions.thread("tweet text")');
+      return;
+    }
 
-      // Auto-numbering
-      if (CONFIG.autoNumber) {
-        const num = `${i + 1}/${tweets.length}`;
-        if (!text.startsWith(num)) {
-          text = `${num}\n\n${text}`;
-        }
-      }
-
-      // Thread emoji on first tweet
-      if (i === 0 && CONFIG.addThreadEmoji && !text.includes('🧵')) {
-        text = text + ' 🧵';
-      }
-
-      return text;
-    });
+    rawThread = tweets.map(t => t.trim());
+    currentThread = formatThread(rawThread);
 
     console.log(`✅ Thread loaded: ${currentThread.length} tweets.`);
     window.XActions.preview();
@@ -191,7 +212,7 @@
         const addBtn = $(SEL.addTweet);
         if (addBtn) {
           addBtn.click();
-          await sleep(1500);
+          await sleep(gaussian(CONFIG.delayBetween[0], CONFIG.delayBetween[1]));
         } else {
           console.error('  ❌ "Add tweet" button not found. Cannot continue thread.');
           break;
@@ -243,6 +264,7 @@
     try {
       const draft = JSON.parse(raw);
       currentThread = draft.tweets;
+      rawThread = draft.tweets;
       console.log(`📂 Loaded draft "${name}" (${currentThread.length} tweets, saved ${draft.savedAt}).`);
       window.XActions.preview();
     } catch {
@@ -304,6 +326,7 @@
   console.log('╚' + '═'.repeat(W) + '╝');
   console.log('\n📋 Commands:');
   console.log('  XActions.thread(["tweet1", "tweet2", ...])');
+  console.log('  XActions.thread("tweet text")  (append one tweet)');
   console.log('  XActions.preview()');
   console.log('  XActions.publish()');
   console.log('  XActions.saveDraft("name")');

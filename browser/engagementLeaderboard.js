@@ -5,14 +5,15 @@
  * ============================================================
  *
  * @name        engagementLeaderboard.js
- * @description Analyze who engages with your tweets the most.
- *              Scrapes your recent tweets to build a leaderboard
- *              of top repliers, likers, and retweeters. Exports
- *              a VIP list for relationship building. Identifies
- *              superfans, dormant followers, and engagement tiers.
+ * @title       Engagement Leaderboard
+ * @description Rank who replies to your posts most, sort them into engagement tiers and export a VIP list.
+ * @category    analytics
+ * @page        x.com/<you>
+ * @writes      false
+ * @aliases     scripts/engagementLeaderboard.js
  * @author      nichxbt (https://x.com/nichxbt)
- * @version     1.0.0
- * @date        2026-02-24
+ * @version     1.1.0
+ * @date        2026-11-27
  * @repository  https://github.com/nirholas/XActions
  *
  * ============================================================
@@ -20,7 +21,7 @@
  *
  * 1. Go to your profile: x.com/YOUR_USERNAME
  * 2. Open DevTools Console (F12)
- * 3. Paste and run — auto-scrolls your timeline
+ * 3. Paste browser/engagementLeaderboard.js and run — auto-scrolls your timeline
  * 4. Outputs leaderboard + exports VIP list
  * ============================================================
  */
@@ -29,6 +30,7 @@
 
   const CONFIG = {
     scrollRounds: 12,
+    maxPosts: 15,          // Max tweet threads to drill into for repliers
     scrollDelay: 2000,
     topN: 20,              // Show top N users per category
     vipThreshold: 3,       // Min interactions to be considered VIP
@@ -96,7 +98,7 @@
     const processed = [];
 
     // Only drill into tweets that have replies and links
-    const withReplies = tweetData.filter(t => t.replies > 0 && t.href).slice(0, 15);
+    const withReplies = tweetData.filter(t => t.replies > 0 && t.href).slice(0, CONFIG.maxPosts);
     console.log(`\n🔍 Drilling into ${withReplies.length} tweet threads for replier data...\n`);
 
     for (let i = 0; i < withReplies.length; i++) {

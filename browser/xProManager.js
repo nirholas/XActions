@@ -1,4 +1,12 @@
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
+/**
+ * @name        xProManager.js
+ * @title       X Pro Manager
+ * @description X Pro (TweetDeck) automation: decks, columns and layouts.
+ * @category    premium
+ * @page        x.com/*
+ * @writes      true
+ */
 // browser/xProManager.js
 // X Pro (TweetDeck) automation for X/Twitter
 // by nichxbt

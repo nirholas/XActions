@@ -5,7 +5,11 @@
  * ============================================================
  *
  * @name        joinSpace.js
- * @description Find and join live X Spaces by topic, keyword,
+ * @description Find and join live Spaces by topic, keyword or host.
+ * @title       Join a Space
+ * @category    spaces
+ * @page        x.com/search?q=<query>
+ * @writes      true
  *              or specific host username.
  * @author      nichxbt (https://x.com/nichxbt)
  * @version     1.0.0

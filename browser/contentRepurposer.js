@@ -5,14 +5,19 @@
  * ============================================================
  *
  * @name        contentRepurposer.js
- * @description Transform existing tweets into new content formats.
- *              Convert single tweets → threads, threads → single
- *              tweets, long tweets → tweet storms, tweets → blog
- *              outlines, tweets → quote-tweet templates. Maximize
- *              content ROI by repurposing your top-performing posts.
+ * @title       Content Repurposer
+ * @description Turn your existing posts into thread, summary, tweet storm, blog outline and quote-post drafts, exported as JSON.
+ * @category    post
+ * @page        x.com/<you>
+ * @writes      false
+ * @aliases     scripts/contentRepurposer.js
  * @author      nichxbt (https://x.com/nichxbt)
  * @version     1.0.0
- * @date        2026-02-24
+ * @date        2026-11-26
+ *
+ * Converts single tweets to threads, threads to single tweets, long
+ * tweets to tweet storms, tweets to blog outlines, and tweets to
+ * quote-tweet templates. Nothing is posted: the drafts are printed and exported.
  * @repository  https://github.com/nirholas/XActions
  *
  * ============================================================

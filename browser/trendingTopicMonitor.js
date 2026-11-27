@@ -5,14 +5,15 @@
  * ============================================================
  *
  * @name        trendingTopicMonitor.js
- * @description Scrape and monitor X/Twitter trending topics in
- *              real-time. Tracks trend velocity (rising/falling),
- *              categorizes by niche, detects opportunities,
- *              persists history in localStorage for comparison,
- *              and alerts on trends matching your keywords.
+ * @title       Trending Topic Monitor
+ * @description Capture the current trends with post counts and niches, flag watched keywords, compare against past snapshots and optionally re-scan on an interval.
+ * @category    monitor
+ * @page        x.com/explore/tabs/trending or x.com/explore
+ * @writes      false
+ * @aliases     scripts/trendingTopicMonitor.js, scripts/twitter/trending-monitor.js
  * @author      nichxbt (https://x.com/nichxbt)
- * @version     1.0.0
- * @date        2026-02-24
+ * @version     1.1.0
+ * @date        2026-11-26
  * @repository  https://github.com/nirholas/XActions
  *
  * ============================================================
@@ -21,14 +22,18 @@
  * 1. Go to: https://x.com/explore/tabs/trending
  *    (or x.com/explore → "Trending" tab)
  * 2. Open DevTools Console (F12)
- * 3. Paste and run
+ * 3. (Optional) set CONFIG.watchKeywords and CONFIG.repeatIntervalMs
+ * 4. Paste browser/trendingTopicMonitor.js and run
  *
  * Controls:
  *   XActions.watch(['AI', 'crypto', 'startup'])  — set alert keywords
  *   XActions.history()                            — view trend history
  *   XActions.compare()                            — compare vs last snapshot
  *   XActions.autoRefresh(300000)                  — auto-refresh every 5min
+ *                                                   (no argument: CONFIG.checkInterval)
  *   XActions.stop()                               — stop auto-refresh
+ *   window.stopTrendingMonitor()                  - same as XActions.stop()
+ *   window.xactionsTrends                         - the latest scan snapshot
  * ============================================================
  */
 (() => {
@@ -40,19 +45,23 @@
     watchKeywords: [],      // Alert when trends match these
     exportResults: true,
     maxHistory: 50,         // Keep last N snapshots
+    checkInterval: 300000,  // Default XActions.autoRefresh() interval (ms)
+    repeatIntervalMs: 0,    // Re-scan every N ms after the first scan; 0 = single scan. Stop with window.stopTrendingMonitor()
   };
 
   const STORAGE_KEY = 'xactions_trend_history';
+  // History key used by the older standalone trending monitor; merged in once.
+  const LEGACY_STORAGE_KEY = 'xactions_trends_history';
   const sleep = (ms) => new Promise(r => setTimeout(r, ms));
 
   // ── Niche classification ───────────────────────────────────
   const NICHE_KEYWORDS = {
-    'Tech':       ['ai', 'artificial intelligence', 'chatgpt', 'openai', 'google', 'apple', 'microsoft', 'meta', 'tesla', 'nvidia', 'coding', 'developer', 'software', 'app', 'web3', 'blockchain', 'crypto', 'bitcoin', 'ethereum', 'saas'],
+    'Tech':       ['ai', 'artificial intelligence', 'chatgpt', 'openai', 'google', 'apple', 'microsoft', 'meta', 'tesla', 'nvidia', 'coding', 'developer', 'software', 'app', 'web3', 'blockchain', 'crypto', 'bitcoin', 'ethereum', 'solana', 'saas'],
     'Politics':   ['trump', 'biden', 'congress', 'senate', 'election', 'vote', 'democrat', 'republican', 'president', 'breaking', 'government', 'policy', 'law'],
-    'Sports':     ['nfl', 'nba', 'mlb', 'soccer', 'football', 'basketball', 'baseball', 'game', 'championship', 'playoffs', 'fifa', 'ufc', 'boxing', 'f1', 'premier league'],
-    'Entertainment': ['movie', 'film', 'music', 'album', 'concert', 'series', 'netflix', 'disney', 'grammy', 'oscar', 'emmy', 'celebrity', 'singer', 'rapper', 'actor'],
+    'Sports':     ['nfl', 'nba', 'mlb', 'soccer', 'football', 'basketball', 'baseball', 'game', 'championship', 'playoffs', 'fifa', 'ufc', 'boxing', 'f1', 'premier league', 'olympics'],
+    'Entertainment': ['movie', 'film', 'music', 'album', 'concert', 'series', 'netflix', 'disney', 'grammy', 'oscar', 'emmy', 'celebrity', 'singer', 'rapper', 'actor', 'tour'],
     'Business':   ['market', 'stock', 'earnings', 'ipo', 'startup', 'funding', 'recession', 'inflation', 'fed', 'wall street', 'investor', 'economy'],
-    'Gaming':     ['game', 'gaming', 'playstation', 'xbox', 'nintendo', 'steam', 'esports', 'twitch', 'streamer', 'dlc'],
+    'Gaming':     ['game', 'gaming', 'playstation', 'xbox', 'nintendo', 'steam', 'esports', 'twitch', 'streamer', 'dlc', 'minecraft'],
     'Science':    ['nasa', 'space', 'climate', 'research', 'study', 'vaccine', 'health', 'medical', 'discovery', 'quantum'],
     'Culture':    ['meme', 'viral', 'trend', 'tiktok', 'instagram', 'influencer', 'cancel', 'discourse', 'ratio'],
   };
@@ -88,11 +97,12 @@
             category = text.split('·')[0].trim();
           }
           // Tweet count (e.g., "125K posts")
-          if (/[\d,.]+[KM]?\s*(posts|tweets)/i.test(text)) {
+          if (/[\d,.]+[KMB]?\s*(posts|tweets)/i.test(text)) {
             tweetCount = text;
           }
-          // Topic: usually the boldest / largest text, starts with # or is prominently displayed
-          if (text.startsWith('#') || (text.length > 2 && text.length < 80 && !text.includes('·') && !text.includes('Trending') && !/posts|tweets/i.test(text) && !/^\d+$/.test(text))) {
+          // Topic: usually the boldest / largest text, starts with # or is prominently displayed.
+          // Two-letter trends (AI, F1) count; "Only on X" and "Promoted" labels are metadata.
+          if (text.startsWith('#') || (text.length > 1 && text.length < 80 && !text.includes('·') && !text.includes('Trending') && !/Only on X|Promoted/i.test(text) && !/posts|tweets/i.test(text) && !/^\d+$/.test(text))) {
             if (text.length > topic.length) topic = text;
           }
         }
@@ -102,11 +112,12 @@
 
         // Parse tweet count
         let postCount = 0;
-        const countMatch = tweetCount.match(/([\d,.]+)\s*([KM])?/i);
+        const countMatch = tweetCount.match(/([\d,.]+)\s*([KMB])?/i);
         if (countMatch) {
           postCount = parseFloat(countMatch[1].replace(/,/g, ''));
           if (countMatch[2] === 'K') postCount *= 1000;
           if (countMatch[2] === 'M') postCount *= 1000000;
+          if (countMatch[2] === 'B') postCount *= 1000000000;
         }
 
         const niche = classifyNiche(topic);
@@ -136,15 +147,42 @@
     catch { return []; }
   };
 
+  // Merge snapshots saved by the older standalone monitor (which stored
+  // `category` where this one stores `niche`) into this history, once.
+  const migrateLegacyHistory = () => {
+    try {
+      const legacyRaw = localStorage.getItem(LEGACY_STORAGE_KEY);
+      if (!legacyRaw) return;
+      const legacy = JSON.parse(legacyRaw);
+      if (Array.isArray(legacy) && legacy.length > 0) {
+        const converted = legacy.map(snap => ({
+          timestamp: snap.timestamp,
+          trends: (snap.trends || []).map(t => ({ topic: t.topic, rank: t.rank, postCount: t.postCount, niche: t.niche || t.category || classifyNiche(t.topic) })),
+        }));
+        const merged = [...loadHistory(), ...converted].sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
+        while (merged.length > CONFIG.maxHistory) merged.shift();
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(merged));
+        console.log(`📦 Merged ${legacy.length} snapshot(s) from the older trending monitor history.`);
+      }
+      localStorage.removeItem(LEGACY_STORAGE_KEY);
+    } catch (e) {
+      console.warn(`⚠️ Could not merge older trend history: ${e.message}`);
+    }
+  };
+
   const saveSnapshot = (trends) => {
-    const history = loadHistory();
-    history.push({
-      timestamp: new Date().toISOString(),
-      trends: trends.map(t => ({ topic: t.topic, rank: t.rank, postCount: t.postCount, niche: t.niche })),
-    });
-    // Keep only last N
-    while (history.length > CONFIG.maxHistory) history.shift();
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(history));
+    try {
+      const history = loadHistory();
+      history.push({
+        timestamp: new Date().toISOString(),
+        trends: trends.map(t => ({ topic: t.topic, rank: t.rank, postCount: t.postCount, niche: t.niche })),
+      });
+      // Keep only last N
+      while (history.length > CONFIG.maxHistory) history.shift();
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(history));
+    } catch (e) {
+      console.warn(`⚠️ Could not save trend history: ${e.message}`);
+    }
   };
 
   // ── Compare with last snapshot ─────────────────────────────
@@ -239,7 +277,8 @@
     compareWithLast(latest.trends);
   };
 
-  window.XActions.autoRefresh = (intervalMs = 300000) => {
+  window.XActions.autoRefresh = (intervalMs) => {
+    intervalMs = intervalMs || CONFIG.checkInterval;
     if (autoRefreshTimer) clearInterval(autoRefreshTimer);
     console.log(`🔄 Auto-refreshing every ${(intervalMs / 60000).toFixed(1)} minutes.`);
     autoRefreshTimer = setInterval(() => {
@@ -253,7 +292,12 @@
     console.log('⏹️ Auto-refresh stopped.');
   };
 
+  // Stop switch for the repeating monitor (also used by the command center).
+  window.stopTrendingMonitor = () => window.XActions.stop();
+
   // ── Main ───────────────────────────────────────────────────
+  let scanCount = 0;
+
   const run = async () => {
     const W = 60;
     console.log('╔' + '═'.repeat(W) + '╗');
@@ -261,7 +305,8 @@
     console.log('║  by nichxbt — v1.0' + ' '.repeat(W - 21) + '║');
     console.log('╚' + '═'.repeat(W) + '╝');
 
-    console.log('\n📊 Scraping trending topics...\n');
+    scanCount++;
+    console.log(`\n📊 Scan ${scanCount} at ${new Date().toLocaleTimeString()}: scraping trending topics...\n`);
     const trends = await scrapeTrends();
 
     if (trends.length === 0) {
@@ -291,6 +336,7 @@
     }
 
     // ── Keyword alerts ──────────────────────────────────────
+    const keywordMatches = [];
     if (CONFIG.watchKeywords.length > 0) {
       console.log('\n━━━ 🔔 KEYWORD ALERTS ━━━');
       let found = 0;
@@ -298,6 +344,7 @@
         for (const kw of CONFIG.watchKeywords) {
           if (t.topic.toLowerCase().includes(kw.toLowerCase())) {
             console.log(`  🚨 MATCH: "${t.topic}" matches keyword "${kw}" (rank #${t.rank})`);
+            keywordMatches.push({ topic: t.topic, keyword: kw, rank: t.rank, postCount: t.postCount });
             found++;
           }
         }
@@ -327,11 +374,23 @@
     console.log('  XActions.compare()                  — compare last 2 snapshots');
     console.log('  XActions.autoRefresh(300000)        — refresh every 5min');
     console.log('  XActions.stop()                     — stop auto-refresh');
+    console.log('  window.xactionsTrends               - latest scan snapshot');
     console.log('');
+
+    const snapshot = {
+      trends,
+      analyzedAt: new Date().toISOString(),
+      page: window.location.href,
+      totalTrends: trends.length,
+      watchKeywords: CONFIG.watchKeywords,
+      keywordMatches,
+      nicheMix: nicheCounts,
+    };
+    window.xactionsTrends = snapshot;
 
     // Export
     if (CONFIG.exportResults) {
-      const blob = new Blob([JSON.stringify({ trends, analyzedAt: new Date().toISOString() }, null, 2)], { type: 'application/json' });
+      const blob = new Blob([JSON.stringify(snapshot, null, 2)], { type: 'application/json' });
       const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
       a.download = `xactions-trends-${new Date().toISOString().slice(0, 10)}.json`;
       document.body.appendChild(a); a.click(); a.remove();
@@ -339,5 +398,22 @@
     }
   };
 
-  run();
+  // ── Page check ─────────────────────────────────────────────
+  if (!/(^|\.)x\.com$/.test(location.hostname) && !/(^|\.)twitter\.com$/.test(location.hostname)) {
+    console.warn('⚠️ Not on x.com. Open x.com/explore/tabs/trending and run again.');
+    return;
+  }
+  if (!/\/explore/.test(location.pathname)) {
+    console.warn('⚠️ You are not on the Explore/Trends page. Go to x.com/explore/tabs/trending for the full list.');
+    console.log('ℹ️ Continuing anyway in case trends are rendered in a sidebar.');
+  }
+
+  migrateLegacyHistory();
+
+  run().then(() => {
+    if (CONFIG.repeatIntervalMs > 0) {
+      console.log('ℹ️ Repeat mode ON. To stop: window.stopTrendingMonitor()');
+      window.XActions.autoRefresh(CONFIG.repeatIntervalMs);
+    }
+  });
 })();

@@ -5,12 +5,15 @@
  * ============================================================
  *
  * @name        clearAllReposts.js
- * @description Remove all reposts/retweets from your profile.
- *              Supports filters (keyword, date range), rate-limit
- *              detection, pause/resume/abort, and full export.
+ * @title       Clear All Reposts
+ * @description Undo the reposts on your profile, with a keyword skip list, a cap, a dry run and a JSON export.
+ * @category    cleanup
+ * @page        x.com/<you>
+ * @writes      true
+ * @aliases     scripts/clearAllReposts.js, scripts/twitter/clear-all-retweets.js
  * @author      nichxbt (https://x.com/nichxbt)
- * @version     2.0.0
- * @date        2026-02-24
+ * @version     2.1.0
+ * @date        2026-11-26
  * @repository  https://github.com/nirholas/XActions
  *
  * ============================================================
@@ -18,7 +21,11 @@
  *
  * 1. Go to: https://x.com/YOUR_USERNAME (your profile page)
  * 2. Open DevTools Console (F12)
- * 3. Paste and run
+ * 3. Paste browser/clearAllReposts.js and run
+ *
+ * Starts as a DRY RUN capped at 50. Set dryRun: false to remove
+ * reposts for real (you are asked to confirm first when
+ * confirmStart is true).
  *
  * 🎮 CONTROLS:
  *   window.XActions.pause()  / .resume() / .abort() / .status()
@@ -28,12 +35,13 @@
   'use strict';
 
   const CONFIG = {
-    maxRemovals: Infinity,
-    dryRun: false,
+    maxRemovals: 50,                  // Cap per run (Infinity = no cap)
+    dryRun: true,                     // Preview without removing; set false to remove
+    confirmStart: true,               // Ask for confirmation before a live run
     skipKeywords: [],                 // Keep reposts containing these words
-    minDelay: 1200,
+    minDelay: 2000,
     maxDelay: 3000,
-    scrollDelay: 2000,
+    scrollDelay: 2500,
     maxEmptyScrolls: 6,
     maxConsecutiveErrors: 10,
     rateLimitCooldown: 60000,
@@ -78,7 +86,20 @@
     console.log('║  by nichxbt — v2.0' + ' '.repeat(W - 21) + '║');
     console.log('╚' + '═'.repeat(W) + '╝');
 
-    console.log(`⚙️ Max: ${CONFIG.maxRemovals === Infinity ? '∞' : CONFIG.maxRemovals} | Dry run: ${CONFIG.dryRun}`);
+    console.log(CONFIG.dryRun ? '🔍 DRY RUN: preview only' : '⚠️ LIVE MODE: reposts WILL be removed!');
+    console.log(`⚙️ Max: ${CONFIG.maxRemovals === Infinity ? '∞' : CONFIG.maxRemovals} | Dry run: ${CONFIG.dryRun} | Skip keywords: ${CONFIG.skipKeywords.length}`);
+
+    if (!CONFIG.dryRun && CONFIG.confirmStart) {
+      const confirmed = confirm(
+        '⚠️ WARNING: This will undo your reposts!\n\n' +
+        'This removes reposts from your timeline.\n\n' +
+        'Are you sure you want to continue?'
+      );
+      if (!confirmed) {
+        console.log('❌ Cancelled by user.');
+        return;
+      }
+    }
 
     let emptyScrolls = 0;
     let lastHeight = document.body.scrollHeight;
@@ -140,6 +161,7 @@
           }
           await sleep(gaussian(CONFIG.minDelay, CONFIG.maxDelay));
         } catch (e) {
+          console.warn(`⚠️ Error removing repost: ${e.message}`);
           errors++;
           consecutiveErrors++;
           if (consecutiveErrors >= CONFIG.maxConsecutiveErrors) { console.error('❌ Too many errors — aborting.'); break; }
@@ -164,11 +186,18 @@
     console.log('╚' + '═'.repeat(48) + '╝');
 
     if (CONFIG.exportOnComplete && removedLog.length > 0) {
-      const blob = new Blob([JSON.stringify({ summary: { removed, scanned, skipped, errors }, reposts: removedLog }, null, 2)], { type: 'application/json' });
+      const blob = new Blob([JSON.stringify({ summary: { removed, scanned, skipped, errors, dryRun: CONFIG.dryRun }, reposts: removedLog }, null, 2)], { type: 'application/json' });
       const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
       a.download = `xactions-reposts-cleared-${new Date().toISOString().slice(0, 10)}.json`;
       document.body.appendChild(a); a.click(); a.remove();
       console.log('📥 Log exported.');
+    }
+
+    if (CONFIG.dryRun && removed > 0) {
+      console.log(`\n⚡ Set dryRun = false and re-run to actually remove ${removed} reposts.`);
+    }
+    if (emptyScrolls >= CONFIG.maxEmptyScrolls) {
+      console.log('💡 No more reposts found on the visible timeline. If you have more, scroll down and run again.');
     }
   };
 

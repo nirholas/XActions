@@ -5,14 +5,15 @@
  * ============================================================
  *
  * @name        quoteTweetAutomation.js
- * @description Auto-retweet with quote using customizable
- *              templates. Scrape tweets from a timeline/search
- *              and quote-RT them with personalized commentary.
- *              Supports keyword targeting, skip filters,
- *              template rotation, and human-like delays.
+ * @title       Quote Tweet Automation
+ * @description Quote-post tweets from a timeline or search with rotating templates, keyword and engagement filters, a dry run and long delays.
+ * @category    engage
+ * @page        x.com/search?q=<query> or x.com/home or x.com/<username>
+ * @writes      true
+ * @aliases     scripts/quoteTweetAutomation.js
  * @author      nichxbt (https://x.com/nichxbt)
- * @version     1.0.0
- * @date        2026-02-24
+ * @version     1.1.0
+ * @date        2026-11-27
  * @repository  https://github.com/nirholas/XActions
  *
  * ============================================================
@@ -21,7 +22,7 @@
  * 1. Go to a search result / user timeline / list
  * 2. Open DevTools Console (F12)
  * 3. Configure templates and filters below
- * 4. Paste and run
+ * 4. Paste browser/quoteTweetAutomation.js and press Enter
  *
  * ⚠️ Use responsibly — excessive quote tweeting will get you
  *     flagged. Keep maxQuotes low and delays high.
@@ -87,6 +88,7 @@
     text = text.trim().replace(/,/g, '');
     if (text.endsWith('K')) return Math.round(parseFloat(text) * 1000);
     if (text.endsWith('M')) return Math.round(parseFloat(text) * 1000000);
+    if (text.endsWith('B')) return Math.round(parseFloat(text) * 1000000000);
     return parseInt(text) || 0;
   };
 
@@ -314,6 +316,9 @@
     console.log('\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
     console.log(`  ✅ Quoted: ${success} | ❌ Failed: ${fail}`);
     if (CONFIG.dryRun) console.log('  🏃 (Dry run — nothing was posted)');
+    if (CONFIG.dryRun && success > 0) {
+      console.log(`  ⚡ Set dryRun = false to post ${success} quotes for real.`);
+    }
     console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n');
 
     if (results.length > 0) {

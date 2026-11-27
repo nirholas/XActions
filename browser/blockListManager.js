@@ -1,4 +1,12 @@
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
+/**
+ * @name        blockListManager.js
+ * @title       Block List Manager
+ * @description Import, export and share block lists.
+ * @category    safety
+ * @page        x.com/settings/blocked/all
+ * @writes      true
+ */
 // browser/blockListManager.js
 // Block list import/export/sharing for X/Twitter
 // by nichxbt

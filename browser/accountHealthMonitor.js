@@ -5,12 +5,15 @@
  * ============================================================
  *
  * @name        accountHealthMonitor.js
- * @description Comprehensive health check for your X/Twitter account.
- *              Generates a composite health score (0–100) across
- *              engagement, growth, content quality, and risk factors.
+ * @title       Account Health Monitor
+ * @description Score your account from 0 to 100 across engagement, profile, content, growth and risk, with recommendations.
+ * @category    analytics
+ * @page        x.com/<you>
+ * @writes      false
+ * @aliases     scripts/accountHealthMonitor.js
  * @author      nichxbt (https://x.com/nichxbt)
  * @version     1.0.0
- * @date        2026-02-24
+ * @date        2026-11-26
  * @repository  https://github.com/nirholas/XActions
  *
  * ============================================================

@@ -5,7 +5,11 @@
  * ============================================================
  *
  * @name        uploadContacts.js
- * @description Navigate to the contact upload page on X/Twitter
+ * @description Open the contact upload page, start a contact upload, or disconnect synced contacts.
+ * @title       Upload Contacts
+ * @category    profile
+ * @page        x.com/*
+ * @writes      true
  *              and trigger the contact sync / upload flow.
  * @author      nichxbt (https://x.com/nichxbt)
  * @version     1.0.0

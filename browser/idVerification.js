@@ -1,4 +1,12 @@
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
+/**
+ * @name        idVerification.js
+ * @title       ID Verification
+ * @description Start ID verification, check its status and manage documents.
+ * @category    profile
+ * @page        x.com/*
+ * @writes      true
+ */
 // browser/idVerification.js
 // ID Verification management for X/Twitter
 // by nichxbt

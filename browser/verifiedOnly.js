@@ -1,4 +1,12 @@
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
+/**
+ * @name        verifiedOnly.js
+ * @title       Verified-Only Replies
+ * @description Set who can reply to a new post to verified accounts only.
+ * @category    post
+ * @page        x.com/*
+ * @writes      true
+ */
 // Verified-Only Replies — by nichxbt
 // https://github.com/nirholas/XActions
 // Toggle "only verified users can reply" on your posts and check verification status.

@@ -5,12 +5,15 @@
  * ============================================================
  *
  * @name        followerGrowthTracker.js
- * @description Track follower count over time, detect growth/loss
- *              trends, and calculate velocity. Stores snapshots
- *              in localStorage for long-term historical analysis.
+ * @title       Follower Growth Tracker
+ * @description Snapshot a profile's follower count on each run and report growth, velocity, projections and a trendline from the saved history.
+ * @category    analytics
+ * @page        x.com/<username>
+ * @writes      false
+ * @aliases     scripts/followerGrowthTracker.js, scripts/twitter/followers-growth-tracker.js
  * @author      nichxbt (https://x.com/nichxbt)
- * @version     1.0.0
- * @date        2026-02-24
+ * @version     1.1.0
+ * @date        2026-11-27
  * @repository  https://github.com/nirholas/XActions
  *
  * ============================================================
@@ -18,7 +21,7 @@
  *
  * 1. Go to: https://x.com/YOUR_USERNAME (or any profile)
  * 2. Open DevTools Console (F12)
- * 3. Paste and run
+ * 3. Paste browser/followerGrowthTracker.js and press Enter
  * 4. Run again daily/weekly to build trendline
  *
  * Each run takes a snapshot. Over time, you'll see:
@@ -35,6 +38,10 @@
     autoSchedule: false,            // If true, auto-runs every intervalMs (keep tab open)
     intervalMs: 3600000,            // 1 hour between auto-snapshots
     exportHistory: true,            // Download full history as JSON
+    showChart: true,                // Print the ASCII trendline (needs 3+ snapshots)
+    maxHistory: 0,                  // Keep only the last N snapshots (0 = keep all)
+    onePerDay: false,               // true = replace today's snapshot instead of adding another
+    legacyStorageKey: 'xactions_growth_tracker', // Import history saved by the old followers-growth-tracker script ('' = skip)
   };
 
   const parseCount = (str) => {
@@ -53,17 +60,22 @@
 
   const takeSnapshot = () => {
     const pathMatch = window.location.pathname.match(/^\/([A-Za-z0-9_]+)/);
-    if (!pathMatch || ['home', 'explore', 'notifications', 'messages', 'i'].includes(pathMatch[1])) return null;
+    if (!pathMatch || ['home', 'explore', 'notifications', 'messages', 'i', 'settings', 'search'].includes(pathMatch[1])) return null;
     const username = pathMatch[1];
 
     let followers = 0, following = 0;
+    let verifiedFollowers = 0, foundFollowers = false;
     const links = document.querySelectorAll('a[href*="/followers"], a[href*="/following"]');
     for (const link of links) {
       const href = link.getAttribute('href') || '';
       const count = parseCount(link.textContent);
       if (href.includes('/following')) following = count;
-      else if (href.includes('/followers') && !href.includes('/verified')) followers = count;
+      else if (href.includes('/followers') && !href.includes('/verified')) { followers = count; foundFollowers = true; }
+      else if (href.endsWith('/verified_followers')) verifiedFollowers = count;
     }
+    // Some profiles only link the follower count through /verified_followers
+    if (!foundFollowers && verifiedFollowers > 0) { followers = verifiedFollowers; foundFollowers = true; }
+    if (!foundFollowers) return { username, missing: true };
 
     return {
       username,
@@ -87,6 +99,11 @@
       console.error('❌ Navigate to a profile page first!');
       return;
     }
+    if (snapshot.missing) {
+      console.warn('⚠️ Could not detect the follower count. Make sure you\'re on a profile page.');
+      console.log('   Try scrolling up so the profile header is visible. Nothing was saved.');
+      return;
+    }
 
     console.log(`\n👤 @${snapshot.username}`);
     console.log(`📊 Current: ${fmt(snapshot.followers)} followers | ${fmt(snapshot.following)} following | ratio: ${snapshot.ratio}`);
@@ -98,13 +115,53 @@
       history = JSON.parse(localStorage.getItem(storageKey) || '[]');
     } catch { history = []; }
 
+    // Import history saved by the old followers-growth-tracker script
+    // (key `${legacyStorageKey}_<lowercase username>`, entries { date, followers, following })
+    if (CONFIG.legacyStorageKey) {
+      let legacy = [];
+      try {
+        legacy = JSON.parse(localStorage.getItem(`${CONFIG.legacyStorageKey}_${snapshot.username.toLowerCase()}`) || '[]');
+      } catch { legacy = []; }
+      const known = new Set(history.map(h => h.epoch));
+      let imported = 0;
+      for (const h of Array.isArray(legacy) ? legacy : []) {
+        const epoch = new Date(h.date).getTime();
+        if (!h.date || Number.isNaN(epoch) || known.has(epoch)) continue;
+        history.push({
+          username: snapshot.username,
+          followers: h.followers || 0,
+          following: h.following || 0,
+          ratio: h.following > 0 ? (h.followers / h.following).toFixed(3) : '∞',
+          timestamp: new Date(epoch).toISOString(),
+          epoch,
+        });
+        known.add(epoch);
+        imported++;
+      }
+      if (imported > 0) {
+        history.sort((a, b) => a.epoch - b.epoch);
+        localStorage.setItem(storageKey, JSON.stringify(history));
+        console.log(`\n📦 Imported ${imported} snapshot(s) from ${CONFIG.legacyStorageKey}_${snapshot.username.toLowerCase()}.`);
+      }
+    }
+
+    const saveHistory = () => {
+      if (CONFIG.maxHistory > 0 && history.length > CONFIG.maxHistory) history = history.slice(-CONFIG.maxHistory);
+      localStorage.setItem(storageKey, JSON.stringify(history));
+    };
+
     // Deduplicate (don't save if last snapshot was < 10 min ago)
     const lastSnap = history[history.length - 1];
-    if (lastSnap && (snapshot.epoch - lastSnap.epoch) < 600000) {
+    const today = snapshot.timestamp.slice(0, 10);
+    if (CONFIG.onePerDay && lastSnap && lastSnap.timestamp.slice(0, 10) === today) {
+      history[history.length - 1] = snapshot;
+      saveHistory();
+      console.log('\n📝 Updated today\'s snapshot.');
+    } else if (lastSnap && (snapshot.epoch - lastSnap.epoch) < 600000) {
       console.log('\nℹ️ Snapshot already taken within last 10 minutes. Showing existing data.\n');
     } else {
       history.push(snapshot);
-      localStorage.setItem(storageKey, JSON.stringify(history));
+      saveHistory();
       console.log(`\n💾 Snapshot #${history.length} saved.`);
     }
 
@@ -135,6 +192,8 @@
     const allTimeGrowth = curr.followers - first.followers;
     const totalDays = (curr.epoch - first.epoch) / 86400000;
     console.log(`\n📈 All-time (${totalDays.toFixed(1)} days, ${history.length} snapshots):`);
+    console.log(`   From: ${new Date(first.timestamp).toLocaleDateString()} (${fmt(first.followers)} followers)`);
+    console.log(`   To:   ${new Date(curr.timestamp).toLocaleDateString()} (${fmt(curr.followers)} followers)`);
     console.log(`   Total growth: ${sign(allTimeGrowth)}`);
 
     if (totalDays > 0) {
@@ -164,7 +223,7 @@
 
     // ── Trend Chart (ASCII) ─────────────────────────────────
 
-    if (history.length >= 3) {
+    if (CONFIG.showChart && history.length >= 3) {
       console.log('\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
       console.log('  📉 GROWTH TRENDLINE');
       console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');

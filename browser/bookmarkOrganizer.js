@@ -1,17 +1,27 @@
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
-// Bookmark Organizer on X - by nichxbt
-// https://github.com/nirholas/xactions
-// Organize bookmarks into folders (Premium feature)
-// Also export all bookmarks with categorization
-// 1. Go to https://x.com/i/bookmarks
-// 2. Open the Developer Console (F12)
-// 3. Paste this into the Developer Console and run it
-//
-// Last Updated: 24 February 2026
+/**
+ * @name        bookmarkOrganizer.js
+ * @title       Bookmark Organizer
+ * @description Scan your bookmarks, sort them into keyword categories and export them as JSON or CSV.
+ * @category    scrape
+ * @page        x.com/i/bookmarks
+ * @writes      false
+ * @aliases     scripts/bookmarkOrganizer.js
+ * @author      nichxbt (https://x.com/nichxbt)
+ * @version     1.1.0
+ * @date        2026-11-26
+ * @repository  https://github.com/nirholas/XActions
+ *
+ * Usage (browser/bookmarkOrganizer.js):
+ * 1. Go to https://x.com/i/bookmarks
+ * 2. Open the Developer Console (F12)
+ * 3. Paste this into the Developer Console and run it
+ */
 (() => {
   const CONFIG = {
     maxBookmarks: 200,
     scrollDelay: 1500,
+    maxScrollRetries: 5,  // Stop after this many scrolls in a row that load no new bookmarks
     exportFormat: 'json', // 'json' or 'csv'
     // Auto-categorize by keywords
     categories: {
@@ -63,7 +73,7 @@
     const bookmarks = new Map();
     let retries = 0;
 
-    while (bookmarks.size < CONFIG.maxBookmarks && retries < 5) {
+    while (bookmarks.size < CONFIG.maxBookmarks && retries < CONFIG.maxScrollRetries) {
       const prevSize = bookmarks.size;
 
       document.querySelectorAll($tweet).forEach(tweet => {
@@ -133,7 +143,9 @@
       const a = document.createElement('a');
       a.href = url;
       a.download = `xactions-bookmarks-${new Date().toISOString().slice(0, 10)}.csv`;
+      document.body.appendChild(a);
       a.click();
+      a.remove();
       console.log('\n📥 Bookmarks exported as CSV');
     } else {
       const report = {
@@ -147,9 +159,13 @@
       const a = document.createElement('a');
       a.href = url;
       a.download = `xactions-bookmarks-${new Date().toISOString().slice(0, 10)}.json`;
+      document.body.appendChild(a);
       a.click();
+      a.remove();
       console.log('\n📥 Bookmarks exported as JSON');
     }
+
+    console.log('\n🏁 Done!');
   };
 
   run();

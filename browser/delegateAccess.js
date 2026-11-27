@@ -1,4 +1,12 @@
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
+/**
+ * @name        delegateAccess.js
+ * @title       Delegate Access
+ * @description Open the delegate settings and list the accounts that can act for you.
+ * @category    profile
+ * @page        x.com/*
+ * @writes      false
+ */
 // Delegate Access — by nichxbt
 // https://github.com/nirholas/XActions
 // Manage delegate access for your account: add/remove delegates and configure permissions.

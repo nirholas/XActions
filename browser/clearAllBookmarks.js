@@ -5,13 +5,15 @@
  * ============================================================
  *
  * @name        clearAllBookmarks.js
- * @description Remove all bookmarked posts. Tries the built-in
- *              "Clear All" button first, then falls back to
- *              individual removal. Supports keyword keep-filters,
- *              rate-limit detection, pause/resume, full export.
+ * @title       Clear All Bookmarks
+ * @description Remove your bookmarked posts one by one or with the built-in Clear All button, with keyword keep-filters, a cap, a dry run, rate-limit cooldowns and a JSON log.
+ * @category    cleanup
+ * @page        x.com/i/bookmarks
+ * @writes      true
+ * @aliases     scripts/clearAllBookmarks.js, scripts/twitter/clear-all-bookmarks.js
  * @author      nichxbt (https://x.com/nichxbt)
- * @version     2.0.0
- * @date        2026-02-24
+ * @version     2.1.0
+ * @date        2026-11-26
  * @repository  https://github.com/nirholas/XActions
  *
  * ============================================================
@@ -19,7 +21,13 @@
  *
  * 1. Go to: https://x.com/i/bookmarks
  * 2. Open DevTools Console (F12)
- * 3. Paste and run
+ * 3. Paste browser/clearAllBookmarks.js and run
+ *
+ * ⚠️ Starts as a DRY RUN capped at 100 bookmarks. Set dryRun: false
+ *    (and raise maxRemovals, Infinity for all) to really remove them;
+ *    a live run asks for confirmation first (confirmStart).
+ *    The built-in "Clear All" button is only used for an uncapped
+ *    live run with no keepKeywords.
  *
  * 🎮 CONTROLS:
  *   window.XActions.pause()  / .resume() / .abort() / .status()
@@ -29,13 +37,14 @@
   'use strict';
 
   const CONFIG = {
-    maxRemovals: Infinity,
+    maxRemovals: 100,                 // Infinity = no cap
     keepKeywords: [],                 // Keep bookmarks containing these words
-    dryRun: false,
-    useBulkClear: true,              // Try built-in "Clear all bookmarks" first
-    minDelay: 800,
+    dryRun: true,                     // Preview without removing
+    confirmStart: true,               // Ask before a live run starts
+    useBulkClear: true,              // Try built-in "Clear all bookmarks" first (uncapped live runs only)
+    minDelay: 1500,
     maxDelay: 2200,
-    scrollDelay: 1800,
+    scrollDelay: 2000,
     maxEmptyScrolls: 6,
     maxConsecutiveErrors: 10,
     rateLimitCooldown: 60000,
@@ -49,6 +58,7 @@
     tweet:          ['article[data-testid="tweet"]'],
     tweetText:      ['[data-testid="tweetText"]'],
     toast:          ['[data-testid="toast"]', '[role="alert"]'],
+    emptyState:     ['[data-testid="emptyState"]'],
   };
 
   const $ = (s, c = document) => { for (const x of (Array.isArray(s) ? s : [s])) { const e = c.querySelector(x); if (e) return e; } return null; };
@@ -78,8 +88,9 @@
     const W = 60;
     console.log('╔' + '═'.repeat(W) + '╗');
     console.log('║  🔖 CLEAR ALL BOOKMARKS' + ' '.repeat(W - 25) + '║');
-    console.log('║  by nichxbt — v2.0' + ' '.repeat(W - 21) + '║');
+    console.log('║  by nichxbt — v2.1' + ' '.repeat(W - 21) + '║');
     console.log('╚' + '═'.repeat(W) + '╝');
+    console.log(CONFIG.dryRun ? '🔍 DRY RUN — preview only' : '⚠️ LIVE MODE — bookmarks WILL be removed!');
 
     // Some accounts are redirected from the bookmarks page to /i/history
     // (reported in https://github.com/nirholas/XActions/pull/88); the list
@@ -91,9 +102,25 @@
       return;
     }
 
-    // Try bulk clear first
-    if (CONFIG.useBulkClear && CONFIG.keepKeywords.length === 0 && !CONFIG.dryRun) {
+    if (CONFIG.confirmStart && !CONFIG.dryRun) {
+      const confirmed = window.confirm(
+        '⚠️ WARNING: This will remove your bookmarks' +
+        (CONFIG.maxRemovals === Infinity ? ' (ALL of them)' : ` (up to ${CONFIG.maxRemovals})`) + '!\n\n' +
+        'This action cannot be undone.\n\n' +
+        'Are you sure you want to continue?'
+      );
+      if (!confirmed) {
+        console.log('❌ Cancelled by user.');
+        return;
+      }
+    }
+
+    // Try bulk clear first (it removes everything, so only for an uncapped run)
+    if (CONFIG.useBulkClear && CONFIG.keepKeywords.length === 0 && !CONFIG.dryRun && CONFIG.maxRemovals === Infinity) {
       const clearAllBtn = $(SEL.clearAll);
+      if (!clearAllBtn) {
+        console.log('ℹ️ Bulk clear button not found — falling back to individual removal.');
+      }
       if (clearAllBtn) {
         console.log('🗑️ Found "Clear All" button...');
         clearAllBtn.click();
@@ -118,6 +145,7 @@
 
       const buttons = $$(SEL.removeBookmark);
       if (buttons.length === 0) {
+        if ($(SEL.emptyState)) { console.log('📭 Bookmarks page is empty!'); break; }
         emptyScrolls++;
         window.scrollTo(0, document.body.scrollHeight);
         await sleep(gaussian(CONFIG.scrollDelay, CONFIG.scrollDelay + 800));
@@ -141,7 +169,7 @@
         }
 
         if (CONFIG.dryRun) {
-          console.log(`   🔍 Would remove: "${text.slice(0, 80)}..."`);
+          console.log(`   🔍 Would remove: "${text.slice(0, 80).replace(/\n/g, ' ')}..."`);
           removedLog.push({ text: text.slice(0, 200), timestamp: new Date().toISOString(), dryRun: true });
           removed++;
           continue;
@@ -159,6 +187,7 @@
           }
           await sleep(gaussian(CONFIG.minDelay, CONFIG.maxDelay));
         } catch (e) {
+          console.warn(`⚠️ Error removing bookmark: ${e.message}`);
           errors++;
           consecutiveErrors++;
           if (consecutiveErrors >= CONFIG.maxConsecutiveErrors) { console.error('❌ Too many errors — aborting.'); break; }
@@ -178,14 +207,19 @@
     console.log(`║  Kept:        ${String(kept).padEnd(31)}║`);
     console.log(`║  Errors:      ${String(errors).padEnd(31)}║`);
     console.log(`║  Duration:    ${(elapsed + 's').padEnd(31)}║`);
+    console.log(`║  Dry run:     ${String(CONFIG.dryRun).padEnd(31)}║`);
     console.log('╚' + '═'.repeat(48) + '╝');
 
     if (CONFIG.exportOnComplete && removedLog.length > 0) {
-      const blob = new Blob([JSON.stringify({ summary: { removed, kept, errors }, bookmarks: removedLog }, null, 2)], { type: 'application/json' });
+      const blob = new Blob([JSON.stringify({ summary: { removed, kept, errors, dryRun: CONFIG.dryRun }, bookmarks: removedLog }, null, 2)], { type: 'application/json' });
       const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
       a.download = `xactions-bookmarks-cleared-${new Date().toISOString().slice(0, 10)}.json`;
       document.body.appendChild(a); a.click(); a.remove();
       console.log('📥 Log exported.');
+    }
+
+    if (CONFIG.dryRun && removed > 0) {
+      console.log(`\n⚡ Set dryRun = false and re-run to actually remove ${removed} bookmarks.`);
     }
   };
 

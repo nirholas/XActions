@@ -1,4 +1,12 @@
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
+/**
+ * @name        creatorSubscriptions.js
+ * @title       Creator Subscriptions
+ * @description Review creator subscriptions, subscribers and revenue sharing.
+ * @category    premium
+ * @page        x.com/*
+ * @writes      false
+ */
 // Creator Subscriptions & Revenue Sharing — by nichxbt
 // https://github.com/nirholas/XActions
 // Setup creator subscriptions, configure tiers, view subscriber analytics, and enroll in revenue sharing.

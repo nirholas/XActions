@@ -5,7 +5,11 @@
  * ============================================================
  *
  * @name        saveSearch.js
- * @description Save the current search query, list saved searches,
+ * @description Save the current search query, list saved searches, or delete one.
+ * @title       Save Search
+ * @category    profile
+ * @page        x.com/search?q=<query>
+ * @writes      true
  *              and manage your saved search collection on X/Twitter.
  * @author      nichxbt (https://x.com/nichxbt)
  * @version     1.0.0

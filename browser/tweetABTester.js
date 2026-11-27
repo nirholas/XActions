@@ -5,21 +5,22 @@
  * ============================================================
  *
  * @name        tweetABTester.js
- * @description A/B test tweet performance. Post two variations
- *              of a tweet, track their engagement over time,
- *              and determine a statistical winner. Persists
- *              test data in localStorage. Supports multiple
- *              concurrent tests with unique IDs.
+ * @title       Tweet A/B Tester
+ * @description Track the engagement of two posted tweet variants over time and pick a winner, with tests saved in localStorage.
+ * @category    analytics
+ * @page        x.com/*
+ * @writes      false
+ * @aliases     scripts/tweetABTester.js
  * @author      nichxbt (https://x.com/nichxbt)
  * @version     1.0.0
- * @date        2026-02-24
+ * @date        2026-11-27
  * @repository  https://github.com/nirholas/XActions
  *
  * ============================================================
  * 📋 USAGE:
  *
  * 1. Open x.com in DevTools Console
- * 2. Paste this script
+ * 2. Paste browser/tweetABTester.js
  * 3. Use the interactive API:
  *
  *   XActions.createTest({

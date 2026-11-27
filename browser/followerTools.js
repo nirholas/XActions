@@ -1,4 +1,12 @@
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
+/**
+ * @name        followerTools.js
+ * @title       Follower Tools
+ * @description Follower tools: remove, soft-block, compare and export followers.
+ * @category    grow
+ * @page        x.com/<you>/followers
+ * @writes      true
+ */
 // browser/followerTools.js
 // Advanced follower tools for X/Twitter
 // by nichxbt

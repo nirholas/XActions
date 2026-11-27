@@ -1,4 +1,12 @@
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
+/**
+ * @name        savedSearchManager.js
+ * @title       Saved Search Manager
+ * @description Save, list, run and delete saved searches.
+ * @category    profile
+ * @page        x.com/*
+ * @writes      true
+ */
 // browser/savedSearchManager.js
 // Saved search and discovery tools for X/Twitter
 // by nichxbt

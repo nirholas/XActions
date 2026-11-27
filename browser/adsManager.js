@@ -1,4 +1,12 @@
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
+/**
+ * @name        adsManager.js
+ * @title       Ads and Campaigns
+ * @description Scan your ad campaigns and find posts worth boosting.
+ * @category    premium
+ * @page        x.com/*
+ * @writes      false
+ */
 // Business Ads & Campaigns — by nichxbt
 // https://github.com/nirholas/XActions
 // Navigate to ads dashboard, create campaigns, boost posts, and view campaign analytics.

@@ -5,7 +5,11 @@
  * ============================================================
  *
  * @name        encryptedDM.js
- * @description Enable encrypted DM mode, send encrypted messages,
+ * @description Turn on encrypted DMs and send encrypted messages.
+ * @title       Encrypted DMs
+ * @category    messages
+ * @page        x.com/messages
+ * @writes      true
  *              and check encryption status on X/Twitter.
  * @author      nichxbt (https://x.com/nichxbt)
  * @version     1.0.0

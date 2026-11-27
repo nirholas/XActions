@@ -1,4 +1,12 @@
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
+/**
+ * @name        editPost.js
+ * @title       Edit Post
+ * @description Edit a recent post, or undo a post during the undo window.
+ * @category    post
+ * @page        x.com/<you>/status/<id>
+ * @writes      true
+ */
 // Edit Post & Undo Post on X - by nichxbt
 // https://github.com/nirholas/xactions
 // Edit an existing post or undo a recently posted tweet (Premium feature, 30s window)

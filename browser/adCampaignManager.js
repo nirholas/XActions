@@ -1,4 +1,12 @@
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
+/**
+ * @name        adCampaignManager.js
+ * @title       Ad Campaign Manager
+ * @description Create, review and manage ad campaigns on ads.x.com.
+ * @category    premium
+ * @page        x.com/*
+ * @writes      true
+ */
 // browser/adCampaignManager.js
 // Ad campaign management for X/Twitter
 // by nichxbt

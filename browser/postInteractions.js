@@ -1,4 +1,12 @@
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
+/**
+ * @name        postInteractions.js
+ * @title       Post Interactions
+ * @description Post interaction tools: like, repost, bookmark, share, mute and report a post.
+ * @category    engage
+ * @page        x.com/*
+ * @writes      true
+ */
 // browser/postInteractions.js
 // Post interaction tools for X/Twitter
 // by nichxbt

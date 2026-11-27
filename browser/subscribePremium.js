@@ -1,4 +1,12 @@
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
+/**
+ * @name        subscribePremium.js
+ * @title       Subscribe to Premium
+ * @description Open the Premium subscription page and show the plans.
+ * @category    premium
+ * @page        x.com/*
+ * @writes      false
+ */
 // Subscribe to X Premium — by nichxbt
 // https://github.com/nirholas/XActions
 // Navigate to Premium subscription page, compare tiers, check status, and guide through signup.

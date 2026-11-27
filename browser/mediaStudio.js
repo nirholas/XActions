@@ -1,4 +1,12 @@
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
+/**
+ * @name        mediaStudio.js
+ * @title       Media Studio
+ * @description Upload, organize and publish media in Media Studio on studio.x.com.
+ * @category    post
+ * @page        x.com/*
+ * @writes      true
+ */
 // browser/mediaStudio.js
 // Media Studio automation for X/Twitter
 // by nichxbt

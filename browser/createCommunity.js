@@ -5,7 +5,11 @@
  * ============================================================
  *
  * @name        createCommunity.js
- * @description Create a new X Community with name, description,
+ * @description Create a new Community with a name, description and rules.
+ * @title       Create Community
+ * @category    communities
+ * @page        x.com/i/communities
+ * @writes      true
  *              rules, and initial settings.
  * @author      nichxbt (https://x.com/nichxbt)
  * @version     1.0.0

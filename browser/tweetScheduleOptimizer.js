@@ -5,15 +5,15 @@
  * ============================================================
  *
  * @name        tweetScheduleOptimizer.js
- * @description Analyzes your historical tweet performance by
- *              time of day and day of week, then generates a
- *              personalized optimal posting schedule. Uses
- *              weighted scoring across engagement rate, reply
- *              ratio, and retweet ratio to surface the best
- *              time slots for maximum reach.
+ * @title       Tweet Schedule Optimizer
+ * @description Score your past posts by day and hour, weighting engagement, replies and reposts, and build a personalized weekly posting schedule.
+ * @category    analytics
+ * @page        x.com/<you>
+ * @writes      false
+ * @aliases     scripts/tweetScheduleOptimizer.js
  * @author      nichxbt (https://x.com/nichxbt)
  * @version     1.0.0
- * @date        2026-02-24
+ * @date        2026-11-27
  * @repository  https://github.com/nirholas/XActions
  *
  * ============================================================
@@ -21,7 +21,7 @@
  *
  * 1. Go to your profile (x.com/YOUR_USERNAME)
  * 2. Open DevTools Console (F12)
- * 3. Paste and run — auto-scrolls and collects data
+ * 3. Paste browser/tweetScheduleOptimizer.js and run: auto-scrolls and collects data
  * 4. Outputs your personalized optimal schedule
  * ============================================================
  */

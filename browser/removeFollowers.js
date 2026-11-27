@@ -5,13 +5,15 @@
  * ============================================================
  *
  * @name        removeFollowers.js
- * @description Remove specific or all followers using the
- *              soft-block technique (block → unblock). Includes
- *              smart filtering: remove bots, low-quality, or
- *              inactive followers based on heuristics.
+ * @title       Remove Followers
+ * @description Remove specific, all or low-quality followers with X's native Remove this follower, with an optional soft-block fallback.
+ * @category    cleanup
+ * @page        x.com/<you>/followers
+ * @writes      true
+ * @aliases     scripts/removeFollowers.js, scripts/twitter/remove-follower.js
  * @author      nichxbt (https://x.com/nichxbt)
- * @version     2.0.0
- * @date        2026-02-24
+ * @version     2.1.0
+ * @date        2026-11-26
  * @repository  https://github.com/nirholas/XActions
  *
  * ============================================================
@@ -19,8 +21,14 @@
  *
  * 1. Go to: https://x.com/YOUR_USERNAME/followers
  * 2. Open DevTools Console (F12)
- * 3. Edit CONFIG as needed
+ * 3. Edit CONFIG in browser/removeFollowers.js as needed
  * 4. Paste and run
+ *
+ * It DEFAULTS TO A DRY RUN (previews only). Nothing is removed until you set
+ * CONFIG.dryRun = false, and a live run asks for confirmation first
+ * (CONFIG.confirm). Each follower is removed with X's native "Remove this
+ * follower". Set CONFIG.softBlockFallback = true to soft-block (block, confirm,
+ * unblock) the rows where that option is missing.
  *
  * MODES:
  *   'list'  — Remove specific usernames from usersToRemove[]
@@ -29,6 +37,7 @@
  *
  * 🎮 CONTROLS:
  *   window.XActions.pause()  / .resume() / .abort() / .status()
+ *   window.stopRemoveFollower()  stop after the current follower
  * ============================================================
  */
 (() => {
@@ -40,12 +49,15 @@
       // 'spambot123',
     ],
     whitelist: [],                    // Never remove these
-    maxRemovals: 50,
+    maxRemovals: 25,
     dryRun: true,                     // SET FALSE TO EXECUTE
-    minDelay: 2000,
-    maxDelay: 4000,
+    confirm: true,                    // confirm() prompt before the first live removal
+    softBlockFallback: false,         // Block, confirm, then unblock when "Remove this follower" is missing
+    minDelay: 2500,
+    maxDelay: 5000,
     scrollDelay: 2000,
     maxEmptyScrolls: 8,
+    maxScrollRounds: 40,              // Stop after this many scrolls in total
     maxConsecutiveErrors: 5,
     rateLimitCooldown: 60000,
     exportOnComplete: true,
@@ -73,7 +85,7 @@
   const isRateLimited = () => { const t = $(SEL.toast); return t && /rate limit|try again|too many|slow down/i.test(t.textContent); };
 
   let paused = false, aborted = false;
-  let removed = 0, scanned = 0, skipped = 0, errors = 0, consecutiveErrors = 0;
+  let removed = 0, scanned = 0, skipped = 0, errors = 0, consecutiveErrors = 0, notFound = 0;
   const startTime = Date.now();
   const results = { removed: [], failed: [], skipped: [] };
   const processedUsers = new Set();
@@ -90,6 +102,12 @@
     },
   };
 
+  // Stop switch: run window.stopRemoveFollower() to abort after the current row.
+  window.stopRemoveFollower = () => {
+    aborted = true;
+    console.log('🛑 Stop requested. Finishing the current follower, then exiting.');
+  };
+
   const shouldContinue = async () => { while (paused && !aborted) await sleep(500); return !aborted; };
 
   const extractUserData = (cell) => {
@@ -98,7 +116,7 @@
     const link = cell.querySelector('a[href^="/"][role="link"]') || cell.querySelector('a[href^="/"]');
     if (link) {
       const m = (link.getAttribute('href') || '').match(/^\/([A-Za-z0-9_]+)/);
-      if (m && !['home', 'explore', 'notifications', 'messages', 'i'].includes(m[1])) data.username = m[1];
+      if (m && !['home', 'explore', 'notifications', 'messages', 'i', 'search', 'settings'].includes(m[1])) data.username = m[1];
     }
 
     const nameSpans = cell.querySelectorAll('a[href^="/"] span');
@@ -126,7 +144,7 @@
 
   const removeFollower = async (cell, userData) => {
     const moreBtn = cell.querySelector('[data-testid="userActions"]') || cell.querySelector('button[aria-label="More"]');
-    if (!moreBtn) { errors++; consecutiveErrors++; results.failed.push(userData.username); return false; }
+    if (!moreBtn) { errors++; consecutiveErrors++; notFound++; results.failed.push(userData.username); return false; }
 
     moreBtn.click();
     await sleep(gaussian(600, 1000));
@@ -138,12 +156,51 @@
       if (item.textContent.toLowerCase().includes('remove')) { removeBtn = item; break; }
     }
 
+    if (!removeBtn && CONFIG.softBlockFallback) {
+      // Soft-block: block, confirm, then reopen the menu on the same row and unblock.
+      let blockBtn = null;
+      for (const item of menuItems) {
+        if (/\bblock\b/i.test(item.textContent) && !/unblock/i.test(item.textContent)) { blockBtn = item; break; }
+      }
+      if (blockBtn) {
+        blockBtn.click();
+        await sleep(gaussian(500, 800));
+        const blockConfirm = $(SEL.confirmBtn);
+        if (blockConfirm) { blockConfirm.click(); await sleep(gaussian(700, 1000)); }
+
+        const moreBtn2 = cell.querySelector('[data-testid="userActions"]') || cell.querySelector('button[aria-label="More"]');
+        if (moreBtn2) {
+          moreBtn2.click();
+          await sleep(gaussian(600, 1000));
+          let unblockBtn = null;
+          for (const item of document.querySelectorAll('[role="menuitem"]')) {
+            if (/unblock/i.test(item.textContent)) { unblockBtn = item; break; }
+          }
+          if (unblockBtn) {
+            unblockBtn.click();
+            await sleep(gaussian(400, 700));
+            const unblockConfirm = $(SEL.confirmBtn);
+            if (unblockConfirm) { unblockConfirm.click(); await sleep(gaussian(400, 700)); }
+          } else {
+            document.body.click();
+            await sleep(300);
+          }
+        }
+
+        removed++;
+        consecutiveErrors = 0;
+        results.removed.push({ ...userData, method: 'soft-block', timestamp: new Date().toISOString() });
+        return true;
+      }
+    }
+
     if (!removeBtn) {
       document.body.click();
       await sleep(300);
       results.failed.push(userData.username);
       errors++;
       consecutiveErrors++;
+      notFound++;
       return false;
     }
 
@@ -176,10 +233,22 @@
       console.error('❌ No users specified! Add usernames to CONFIG.usersToRemove or change mode.');
       return;
     }
+    if (CONFIG.dryRun) console.log('⚠️ DRY RUN: no followers will be removed.\n');
+
+    if (!CONFIG.dryRun && CONFIG.confirm) {
+      const proceed = window.confirm(
+        `Remove up to ${CONFIG.maxRemovals} follower(s) for real? This cannot be auto-undone.`
+      );
+      if (!proceed) {
+        console.warn('⚠️ Cancelled at confirmation prompt. Nothing removed.');
+        return;
+      }
+    }
 
     let emptyScrolls = 0;
+    let scrollRounds = 0;
 
-    while (removed < CONFIG.maxRemovals && emptyScrolls < CONFIG.maxEmptyScrolls) {
+    while (removed < CONFIG.maxRemovals && emptyScrolls < CONFIG.maxEmptyScrolls && scrollRounds < CONFIG.maxScrollRounds) {
       if (!(await shouldContinue())) break;
       if (isRateLimited()) { console.warn('🚨 Rate limit!'); await sleep(CONFIG.rateLimitCooldown); continue; }
 
@@ -226,7 +295,17 @@
           continue;
         }
 
-        const success = await removeFollower(cell, userData);
+        let success = false;
+        try {
+          success = await removeFollower(cell, userData);
+        } catch (e) {
+          console.warn(`⚠️ Error removing @${userData.username}: ${e.message}`);
+          errors++;
+          consecutiveErrors++;
+          results.failed.push(userData.username);
+          document.body.click();
+          await sleep(300);
+        }
         if (success) {
           console.log(`   👋 Removed @${userData.username}${reason ? ` (${reason})` : ''} [${removed}/${CONFIG.maxRemovals}]`);
         }
@@ -238,6 +317,7 @@
       if (consecutiveErrors >= CONFIG.maxConsecutiveErrors) break;
       if (!foundNew) emptyScrolls++; else emptyScrolls = 0;
       window.scrollTo(0, document.body.scrollHeight);
+      scrollRounds++;
       await sleep(gaussian(CONFIG.scrollDelay, CONFIG.scrollDelay + 800));
     }
 
@@ -249,16 +329,26 @@
     console.log(`║  Scanned:     ${String(scanned).padEnd(31)}║`);
     console.log(`║  Skipped:     ${String(skipped).padEnd(31)}║`);
     console.log(`║  Failed:      ${String(results.failed.length).padEnd(31)}║`);
+    console.log(`║  Not found:   ${String(notFound).padEnd(31)}║`);
+    console.log(`║  Dry run:     ${String(CONFIG.dryRun).padEnd(31)}║`);
     console.log(`║  Duration:    ${(elapsed + 's').padEnd(31)}║`);
     console.log('╚' + '═'.repeat(48) + '╝');
 
     if (CONFIG.exportOnComplete && results.removed.length > 0) {
-      const blob = new Blob([JSON.stringify(results, null, 2)], { type: 'application/json' });
+      const exportData = {
+        ...results,
+        stats: { removed, scanned, skipped, failed: results.failed.length, notFound, errors, dryRun: CONFIG.dryRun },
+        dryRun: CONFIG.dryRun,
+        exportedAt: new Date().toISOString(),
+      };
+      const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
       const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
       a.download = `xactions-removed-followers-${CONFIG.dryRun ? 'preview' : 'results'}-${new Date().toISOString().slice(0, 10)}.json`;
       document.body.appendChild(a); a.click(); a.remove();
       console.log('📥 Results exported.');
     }
+
+    if (CONFIG.dryRun) console.warn('⚠️ This was a DRY RUN. Set CONFIG.dryRun = false to actually remove.');
   };
 
   run();

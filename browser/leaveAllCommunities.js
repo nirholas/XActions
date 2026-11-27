@@ -5,13 +5,15 @@
  * ============================================================
  *
  * @name        leaveAllCommunities.js
- * @description Leave all X Communities you've joined. Navigates
- *              into each community, clicks "Leave", and returns.
- *              Supports whitelist, rate-limit detection,
- *              pause/resume, and persistence across page reloads.
+ * @title       Leave All Communities
+ * @description Leave every X Community you have joined, with a whitelist, a cap, a dry run and progress that survives reloads.
+ * @category    communities
+ * @page        x.com/<you>/communities
+ * @writes      true
+ * @aliases     scripts/leaveAllCommunities.js, scripts/twitter/leave-all-communities.js
  * @author      nichxbt (https://x.com/nichxbt)
- * @version     2.0.0
- * @date        2026-02-24
+ * @version     2.1.0
+ * @date        2026-11-26
  * @repository  https://github.com/nirholas/XActions
  *
  * ============================================================
@@ -19,14 +21,18 @@
  *
  * 1. Go to: https://x.com/YOUR_USERNAME/communities
  * 2. Open DevTools Console (F12)
- * 3. Paste and run
+ * 3. Paste browser/leaveAllCommunities.js and run
+ *
+ * Starts as a DRY RUN capped at 50. Set dryRun: false to leave
+ * communities for real. A dry run does not record progress.
  *
  * NOTE: This script persists progress in localStorage so if
  * the page reloads mid-process, you can re-run it and it will
  * skip already-left communities.
  *
  * 🎮 CONTROLS:
- *   window.XActions.pause()  / .resume() / .abort() / .status()
+ *   window.XActions.pause()  / .resume() / .abort() / .status() / .reset()
+ *   window.stopLeaveCommunities()   (same as abort)
  * ============================================================
  */
 (() => {
@@ -34,10 +40,12 @@
 
   const CONFIG = {
     whitelist: [],                    // Community IDs to keep (from URL)
-    dryRun: false,
-    maxLeaves: Infinity,
+    dryRun: true,                     // Preview without leaving; set false to leave
+    maxLeaves: 50,                    // Cap per run (Infinity = no cap)
     navigationDelay: 3000,
     actionDelay: 2000,
+    leaveDelay: 1500,                 // Wait after opening the Joined menu (ms)
+    confirmDelay: 2000,               // Wait after confirming a leave (ms)
     maxConsecutiveErrors: 5,
     rateLimitCooldown: 60000,
     exportOnComplete: true,
@@ -75,6 +83,7 @@
   };
   const leftIds = getLeftIds();
   const whitelistSet = new Set(CONFIG.whitelist.map(String));
+  const skippedIds = new Set();       // This run only: dry-run previews and communities that could not be left
 
   window.XActions = {
     pause()  { paused = true;  console.log('⏸️ Paused.'); },
@@ -89,6 +98,11 @@
     },
   };
 
+  window.stopLeaveCommunities = () => {
+    aborted = true;
+    console.log('🛑 [Leave Communities] Stop requested. Finishing the current step, then exiting.');
+  };
+
   const shouldContinue = async () => { while (paused && !aborted) await sleep(500); return !aborted; };
 
   const findNextCommunity = () => {
@@ -97,15 +111,16 @@
       const match = (link.href || '').match(/\/i\/communities\/(\d+)/);
       if (match) {
         const id = match[1];
-        if (!leftIds.has(id) && !whitelistSet.has(id)) {
-          return { id, element: link, href: link.href };
+        if (!leftIds.has(id) && !whitelistSet.has(id) && !skippedIds.has(id)) {
+          const name = link.textContent?.trim()?.substring(0, 60) || `Community ${id}`;
+          return { id, name, element: link, href: link.href };
         }
       }
     }
     return null;
   };
 
-  const leaveCurrent = async () => {
+  const leaveCurrent = async (name) => {
     const urlMatch = window.location.href.match(/\/i\/communities\/(\d+)/);
     const communityId = urlMatch ? urlMatch[1] : null;
 
@@ -114,7 +129,7 @@
     if (!joinedBtn) return false;
 
     joinedBtn.click();
-    await sleep(gaussian(800, 1200));
+    await sleep(gaussian(CONFIG.leaveDelay, CONFIG.leaveDelay + 400));
 
     // Look for "Leave" in dropdown menu
     const menuItems = document.querySelectorAll('[role="menuitem"]');
@@ -132,13 +147,13 @@
     const confirm = $(SEL.confirmBtn);
     if (confirm) {
       confirm.click();
-      await sleep(gaussian(800, 1200));
+      await sleep(gaussian(CONFIG.confirmDelay, CONFIG.confirmDelay + 400));
     }
 
     if (communityId) {
       markAsLeft(communityId);
       leftIds.add(communityId);
-      leftLog.push({ id: communityId, timestamp: new Date().toISOString() });
+      leftLog.push({ id: communityId, ...(name ? { name } : {}), timestamp: new Date().toISOString() });
     }
 
     return true;
@@ -152,6 +167,8 @@
     console.log('╚' + '═'.repeat(W) + '╝');
 
     console.log(`📋 Previously left: ${leftIds.size} | Whitelist: ${whitelistSet.size} | Dry run: ${CONFIG.dryRun}`);
+    if (CONFIG.dryRun) console.log('   ⚠️ DRY RUN: set CONFIG.dryRun = false to actually leave');
+    console.log('   💡 To stop early: window.stopLeaveCommunities()');
     if (leftIds.size > 0) console.log('   ℹ️ Resuming — will skip already-left communities');
     console.log('   💡 Call XActions.reset() to clear progress.\n');
 
@@ -168,12 +185,17 @@
         console.log(`   🛡️ Whitelisted: community ${id}`);
       } else if (CONFIG.dryRun) {
         console.log(`   🔍 Would leave: community ${id}`);
-        if (id) { markAsLeft(id); leftIds.add(id); left++; }
+        if (id) { skippedIds.add(id); leftLog.push({ id, timestamp: new Date().toISOString(), dryRun: true }); left++; }
       } else {
         console.log(`   📍 Inside community ${id}, leaving...`);
-        await leaveCurrent();
-        left++;
-        console.log(`   ✅ Left community ${id}`);
+        if (await leaveCurrent()) {
+          left++;
+          console.log(`   ✅ Left community ${id}`);
+        } else {
+          errors++;
+          if (id) skippedIds.add(id);
+          console.warn(`   ⚠️ "Joined" button not found (admin or load issue). Skipping community ${id}.`);
+        }
       }
 
       // Navigate back to communities list
@@ -197,7 +219,7 @@
 
       // Scroll to load more
       window.scrollTo(0, document.body.scrollHeight);
-      await sleep(gaussian(1500, 2500));
+      await sleep(gaussian(2000, 2500));
 
       const community = findNextCommunity();
       if (!community) {
@@ -210,27 +232,27 @@
       emptyAttempts = 0;
 
       if (CONFIG.dryRun) {
-        console.log(`   🔍 Would leave: community ${community.id}`);
-        markAsLeft(community.id);
-        leftIds.add(community.id);
-        leftLog.push({ id: community.id, timestamp: new Date().toISOString(), dryRun: true });
+        console.log(`   🔍 Would leave: ${community.name} (${community.id})`);
+        skippedIds.add(community.id);
+        leftLog.push({ id: community.id, name: community.name, timestamp: new Date().toISOString(), dryRun: true });
         left++;
         continue;
       }
 
-      console.log(`   🏠 Entering community ${community.id}...`);
+      console.log(`   🏠 Entering ${community.name} (${community.id})...`);
       community.element.click();
       await sleep(CONFIG.navigationDelay);
 
-      const success = await leaveCurrent();
+      const success = await leaveCurrent(community.name);
       if (success) {
         left++;
         consecutiveErrors = 0;
-        console.log(`   ✅ Left community ${community.id} [${left} total]`);
+        console.log(`   ✅ Left ${community.name} (${community.id}) [${left} total]`);
       } else {
         errors++;
         consecutiveErrors++;
-        console.warn(`   ⚠️ Failed to leave community ${community.id}`);
+        skippedIds.add(community.id);
+        console.warn(`   ⚠️ Failed to leave ${community.name} (${community.id}): "Joined" button not found (admin or load issue). Skipping it.`);
       }
 
       await sleep(gaussian(CONFIG.actionDelay * 0.8, CONFIG.actionDelay * 1.2));
@@ -253,15 +275,20 @@
     console.log(`║  Left this run:    ${String(left).padEnd(28)}║`);
     console.log(`║  Total left:       ${String(leftIds.size).padEnd(28)}║`);
     console.log(`║  Errors:           ${String(errors).padEnd(28)}║`);
+    console.log(`║  Whitelisted:      ${String(whitelistSet.size).padEnd(28)}║`);
     console.log(`║  Duration:         ${(elapsed + 's').padEnd(28)}║`);
     console.log('╚' + '═'.repeat(50) + '╝');
 
     if (CONFIG.exportOnComplete && leftLog.length > 0) {
-      const blob = new Blob([JSON.stringify({ summary: { leftThisRun: left, totalLeft: leftIds.size, errors }, communities: leftLog }, null, 2)], { type: 'application/json' });
+      const blob = new Blob([JSON.stringify({ summary: { leftThisRun: left, totalLeft: leftIds.size, errors, whitelisted: whitelistSet.size, dryRun: CONFIG.dryRun }, communities: leftLog }, null, 2)], { type: 'application/json' });
       const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
       a.download = `xactions-communities-left-${new Date().toISOString().slice(0, 10)}.json`;
       document.body.appendChild(a); a.click(); a.remove();
       console.log('📥 Results exported.');
+    }
+
+    if (CONFIG.dryRun && left > 0) {
+      console.log(`\n⚡ Set dryRun = false and re-run to actually leave ${left} communities.`);
     }
 
     console.log('🐬 So long, and thanks for all the communities!');

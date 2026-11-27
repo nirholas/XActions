@@ -5,7 +5,11 @@
  * ============================================================
  *
  * @name        hostSpace.js
- * @description Start a new X Space with title, topic, and
+ * @description Start a new Space with a title, topic and settings.
+ * @title       Host a Space
+ * @category    spaces
+ * @page        x.com/home
+ * @writes      true
  *              optional recording and scheduling configuration.
  * @author      nichxbt (https://x.com/nichxbt)
  * @version     1.0.0

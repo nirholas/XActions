@@ -1,4 +1,12 @@
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
+/**
+ * @name        advancedDM.js
+ * @title       Advanced DM Tools
+ * @description Advanced direct message features: reactions, search, pinning, requests and exports.
+ * @category    messages
+ * @page        x.com/messages
+ * @writes      true
+ */
 // browser/advancedDM.js
 // Advanced Direct Message features for X/Twitter
 // by nichxbt

@@ -1,4 +1,12 @@
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
+/**
+ * @name        advancedNotifications.js
+ * @title       Notification Settings
+ * @description Clear notifications and configure email, push, desktop and verified-only notification settings.
+ * @category    profile
+ * @page        x.com/settings/notifications
+ * @writes      true
+ */
 // browser/advancedNotifications.js
 // Advanced notification management for X/Twitter
 // by nichxbt

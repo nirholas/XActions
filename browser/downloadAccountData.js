@@ -1,17 +1,30 @@
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
-// Download Account Data from X - by nichxbt
-// https://github.com/nirholas/xactions
-// Trigger Twitter's built-in data download and monitor progress
-// 1. Go to https://x.com/settings/download_your_data
-// 2. Open the Developer Console (F12)
-// 3. Paste this into the Developer Console and run it
-//
-// Last Updated: 24 February 2026
+/**
+ * @name        downloadAccountData.js
+ * @title       Download Account Data
+ * @description Request X's official data archive, report its status, and download it when it is ready.
+ * @category    profile
+ * @page        x.com/settings/download_your_data
+ * @writes      false
+ * @aliases     scripts/downloadAccountData.js
+ * @author      nichxbt (https://x.com/nichxbt)
+ * @version     1.1.0
+ * @date        2026-11-26
+ * @repository  https://github.com/nirholas/XActions
+ *
+ * Usage:
+ * 1. Go to https://x.com/settings/download_your_data
+ * 2. Open the Developer Console (F12)
+ * 3. Paste browser/downloadAccountData.js into the Developer Console and run it
+ * Set CONFIG.monitorWhilePreparing to true to keep the tab polling while the archive
+ * is being prepared and download it as soon as it is ready.
+ */
 (() => {
   const CONFIG = {
     checkInterval: 30000, // Check every 30 seconds
     maxChecks: 120,       // Stop after 60 minutes
     autoDownload: true,
+    monitorWhilePreparing: false, // Keep checking every checkInterval while the archive is prepared
   };
 
   const sleep = (ms) => new Promise(r => setTimeout(r, ms));
@@ -66,8 +79,41 @@
 
       // Look for status indicators
       const pageText = document.body.textContent.toLowerCase();
-      if (pageText.includes('preparing') || pageText.includes('processing')) {
+      if ((pageText.includes('preparing') || pageText.includes('processing')) && CONFIG.monitorWhilePreparing) {
+        console.log('🔄 Your data is being prepared.');
+        console.log(`⏳ Will check every ${CONFIG.checkInterval / 1000}s (up to ${Math.round(CONFIG.maxChecks * CONFIG.checkInterval / 60000)} min)...\n`);
+
+        let checks = 0;
+        while (checks < CONFIG.maxChecks) {
+          await sleep(CONFIG.checkInterval);
+          checks++;
+
+          let readyBtn = null;
+          for (const btn of document.querySelectorAll('button, [role="button"]')) {
+            const text = btn.textContent.toLowerCase();
+            if (text.includes('download') && (text.includes('archive') || text.includes('data'))) readyBtn = btn;
+          }
+          if (readyBtn) {
+            console.log('🎉 Archive is ready!');
+            if (CONFIG.autoDownload) {
+              readyBtn.click();
+              console.log('📥 Download started!');
+            } else {
+              console.log('💡 Click the download button to save.');
+            }
+            return;
+          }
+
+          if (checks % 6 === 0) {
+            console.log(`   ⏳ Still waiting... (${checks}/${CONFIG.maxChecks} checks)`);
+          }
+        }
+
+        console.log('⏱️ Max checks reached. Archive may not be ready yet.');
+        console.log('💡 Try again later or check your email for a notification.');
+      } else if (pageText.includes('preparing') || pageText.includes('processing')) {
         console.log('🔄 Your data is being prepared. Check back later.');
+        console.log('💡 Set CONFIG.monitorWhilePreparing = true to keep checking from this tab.');
       } else if (pageText.includes('expired')) {
         console.log('⚠️ Previous archive has expired. You need to request a new one.');
       } else {

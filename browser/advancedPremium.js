@@ -1,4 +1,12 @@
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
+/**
+ * @name        advancedPremium.js
+ * @title       Advanced Premium Tools
+ * @description Premium features: change or cancel a tier, gift Premium, reader mode, undo timer and verified-only replies.
+ * @category    premium
+ * @page        x.com/*
+ * @writes      true
+ */
 // browser/advancedPremium.js
 // Advanced Premium features for X/Twitter
 // by nichxbt

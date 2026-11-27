@@ -5,14 +5,15 @@
  * ============================================================
  *
  * @name        unfollowWDFBLog.js
- * @description Unfollow accounts that don't follow back, with
- *              comprehensive logging: username, display name,
- *              follower count, bio, timestamp. Downloads both
- *              JSON and CSV. Designed for auditing who you
- *              unfollowed and why.
+ * @title       Unfollow Non-Followers With Log
+ * @description Unfollow accounts that don't follow you back and download a JSON, CSV or text log of every account, with a dry run and a whitelist.
+ * @category    cleanup
+ * @page        x.com/<you>/following
+ * @writes      true
+ * @aliases     scripts/unfollowWDFBLog.js, scripts/twitter/unfollow-with-log.js
  * @author      nichxbt (https://x.com/nichxbt)
- * @version     2.0.0
- * @date        2026-02-24
+ * @version     2.1.0
+ * @date        2026-11-27
  * @repository  https://github.com/nirholas/XActions
  *
  * ============================================================
@@ -20,7 +21,9 @@
  *
  * 1. Go to: https://x.com/YOUR_USERNAME/following
  * 2. Open DevTools Console (F12)
- * 3. Paste and run. Results auto-download as JSON+CSV.
+ * 3. Paste browser/unfollowWDFBLog.js and run. Results auto-download as JSON+CSV.
+ *    It starts as a dry run (dryRun: true). With dryRun false it asks for
+ *    confirmation before the first unfollow (confirmBeforeStart).
  *
  * 🎮 CONTROLS:
  *   window.XActions.pause()   — Pause
@@ -28,6 +31,7 @@
  *   window.XActions.abort()   — Stop
  *   window.XActions.status()  — Progress
  *   window.XActions.export()  — Force export now
+ *   window.stopUnfollow()     - Stop after the current account
  * ============================================================
  */
 (() => {
@@ -37,7 +41,8 @@
     maxUnfollows: Infinity,
     whitelist: [],
     dryRun: true,
-    minDelay: 1500,
+    confirmBeforeStart: true,     // Live mode: ask for confirmation before the first unfollow
+    minDelay: 2000,
     maxDelay: 4000,
     scrollDelay: 2000,
     maxConsecutiveErrors: 8,
@@ -45,6 +50,9 @@
     rateLimitCooldown: 60000,
     logLevel: 'verbose',          // 'verbose' | 'normal' | 'quiet'
     exportFormat: 'both',         // 'json' | 'csv' | 'both'
+    exportTxt: false,             // Also download a plain-text log (unfollowed + kept mutuals)
+    includeTimestamp: true,       // Text log: add the unfollow time to each line
+    logKept: false,               // Print each mutual follower that is kept
   };
 
   const SEL = {
@@ -87,6 +95,7 @@
   let unfollowed = 0, scanned = 0, errors = 0, consecutiveErrors = 0;
   const startTime = Date.now();
   const log = [];       // Full log of unfollowed accounts
+  const keptList = [];  // Mutual followers seen and kept this run
   const processedUsers = new Set();
   const whitelistSet = new Set(CONFIG.whitelist.map(u => u.toLowerCase().replace(/^@/, '')));
 
@@ -121,7 +130,7 @@
     const tag = CONFIG.dryRun ? 'preview' : 'results';
 
     if (CONFIG.exportFormat === 'json' || CONFIG.exportFormat === 'both') {
-      const data = { summary: { scanned, unfollowed, errors, dryRun: CONFIG.dryRun, exportedAt: new Date().toISOString() }, accounts: log };
+      const data = { summary: { scanned, unfollowed, kept: keptList.length, errors, dryRun: CONFIG.dryRun, exportedAt: new Date().toISOString() }, accounts: log, kept: keptList };
       const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
       const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
       a.download = `xactions-unfollowlog-${tag}-${ts}.json`;
@@ -129,9 +138,9 @@
     }
 
     if (CONFIG.exportFormat === 'csv' || CONFIG.exportFormat === 'both') {
-      const header = 'username,displayName,bio,followers,following,unfollowedAt\n';
+      const header = 'username,displayName,bio,followers,following,unfollowedAt,hasAvatar\n';
       const rows = log.map(r =>
-        `"${r.username}","${(r.displayName || '').replace(/"/g, '""')}","${(r.bio || '').replace(/"/g, '""').replace(/\n/g, ' ')}",${r.followers || 0},${r.following || 0},"${r.timestamp}"`
+        `"${r.username}","${(r.displayName || '').replace(/"/g, '""')}","${(r.bio || '').replace(/"/g, '""').replace(/\n/g, ' ')}",${r.followers || 0},${r.following || 0},"${r.timestamp}",${r.hasAvatar !== false}`
       ).join('\n');
       const blob = new Blob([header + rows], { type: 'text/csv' });
       const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
@@ -139,7 +148,31 @@
       document.body.appendChild(a); a.click(); a.remove();
     }
 
-    console.log('📥 Exported.');
+    if (CONFIG.exportTxt) {
+      const duration = Math.round((Date.now() - startTime) / 1000 / 60);
+      let txt = `UNFOLLOW LOG${CONFIG.dryRun ? ' (DRY RUN PREVIEW)' : ''}\n`;
+      txt += `${'='.repeat(50)}\n`;
+      txt += `Date: ${new Date(startTime).toISOString()}\n`;
+      txt += `Total Unfollowed: ${log.length}\n`;
+      txt += `Total Kept (Mutual): ${keptList.length}\n`;
+      txt += `Duration: ${duration} minutes\n`;
+      txt += `${'='.repeat(50)}\n\n`;
+      txt += `UNFOLLOWED ACCOUNTS:\n${'-'.repeat(30)}\n`;
+      log.forEach((u, i) => {
+        txt += `${i + 1}. @${u.username} (${u.displayName || 'Unknown'})${CONFIG.includeTimestamp ? ` - ${u.timestamp}` : ''}\n`;
+      });
+      txt += `\n\nKEPT ACCOUNTS (MUTUAL FOLLOWERS):\n${'-'.repeat(30)}\n`;
+      keptList.forEach((u, i) => {
+        txt += `${i + 1}. @${u.username} (${u.displayName || 'Unknown'})\n`;
+      });
+      const blob = new Blob([txt], { type: 'text/plain' });
+      const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+      a.download = `xactions-unfollowlog-${tag}-${ts}.txt`;
+      document.body.appendChild(a); a.click(); a.remove();
+    }
+
+    window.unfollowLog = { unfollowed: log, kept: keptList };
+    console.log('📥 Exported. Data also in window.unfollowLog');
   };
 
   window.XActions = {
@@ -149,6 +182,10 @@
     status:  showStatus,
     export:  exportNow,
   };
+  window.stopUnfollow = () => {
+    aborted = true;
+    console.log('🛑 Stopping after the current account...');
+  };
 
   const shouldContinue = async () => {
     while (paused && !aborted) await sleep(500);
@@ -157,7 +194,7 @@
 
   // ── Extract Rich User Data from Cell ────────────────────
   const extractUserData = (cell) => {
-    const data = { username: null, displayName: null, bio: null, followers: 0, following: 0 };
+    const data = { username: null, displayName: null, bio: null, followers: 0, following: 0, hasAvatar: true };
 
     // Username
     const link = cell.querySelector('a[href^="/"][role="link"]') || cell.querySelector('a[href^="/"]');
@@ -177,8 +214,11 @@
     if (nameSpans.length > 0) data.displayName = nameSpans[0].textContent.trim();
 
     // Bio (usually in a div after the name links)
-    const bioEl = cell.querySelector('[dir="auto"]:not(a [dir="auto"])');
+    const bioEl = cell.querySelector('[data-testid="UserDescription"]') || cell.querySelector('[dir="auto"]:not(a [dir="auto"])');
     if (bioEl && bioEl.textContent.length > 5) data.bio = bioEl.textContent.trim().slice(0, 300);
+
+    // Default (egg) avatar
+    data.hasAvatar = !cell.querySelector('img[src*="default_profile"]');
 
     return data;
   };
@@ -198,6 +238,19 @@
 
     console.log(`\n⚙️ Dry run: ${CONFIG.dryRun ? 'YES' : 'NO'}  |  Whitelist: ${whitelistSet.size}  |  Export: ${CONFIG.exportFormat}`);
     if (CONFIG.dryRun) console.log('   ⚠️ Preview only. Set dryRun=false to execute.\n');
+    console.log('   💡 To stop early: window.stopUnfollow()');
+
+    if (!CONFIG.dryRun && CONFIG.confirmBeforeStart) {
+      const ok = window.confirm(
+        '📝 UNFOLLOW WITH LOG\n\n' +
+        'This will unfollow accounts that do not follow you back and save a log file.\n\n' +
+        'Click OK to start.'
+      );
+      if (!ok) {
+        console.log('❌ Cancelled by user.');
+        return;
+      }
+    }
 
     let emptyScrolls = 0;
 
@@ -227,7 +280,11 @@
         scanned++;
 
         // Skip if follows back
-        if ($(SEL.followsYou, cell)) continue;
+        if ($(SEL.followsYou, cell)) {
+          keptList.push({ username: userData.username, displayName: userData.displayName });
+          if (CONFIG.logKept) console.log(`   💚 Keeping: @${userData.username}${userData.displayName ? ` (${userData.displayName})` : ''}`);
+          continue;
+        }
 
         // Skip if whitelisted
         if (whitelistSet.has(uLower)) {
@@ -273,6 +330,7 @@
         } catch (e) {
           errors++;
           consecutiveErrors++;
+          console.warn(`   ⚠️ Error unfollowing @${userData.username}: ${e.message}`);
           if (consecutiveErrors >= CONFIG.maxConsecutiveErrors) {
             console.error(`❌ ${CONFIG.maxConsecutiveErrors} consecutive errors — aborting.`);
             break;
@@ -294,6 +352,7 @@
     console.log('╠' + '═'.repeat(52) + '╣');
     console.log(`║  Scanned:       ${String(scanned).padEnd(33)}║`);
     console.log(`║  Unfollowed:    ${String(unfollowed).padEnd(33)}║`);
+    console.log(`║  Kept (mutual): ${String(keptList.length).padEnd(33)}║`);
     console.log(`║  Errors:        ${String(errors).padEnd(33)}║`);
     console.log(`║  Duration:      ${(elapsed + 's').padEnd(33)}║`);
     console.log(`║  Mode:          ${(CONFIG.dryRun ? 'DRY RUN' : 'LIVE').padEnd(33)}║`);
@@ -301,6 +360,8 @@
 
     persist();
     if (log.length > 0) exportNow();
+    else window.unfollowLog = { unfollowed: log, kept: keptList };
+    delete window.stopUnfollow;
   };
 
   run();

@@ -1,4 +1,12 @@
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
+/**
+ * @name        textFormatting.js
+ * @title       Text Formatting
+ * @description Format post text with Unicode bold, italic and other styles.
+ * @category    post
+ * @page        x.com/compose/post
+ * @writes      false
+ */
 // Text Formatting Helper for X - by nichxbt
 // https://github.com/nirholas/xactions
 // Format text with bold, italic, strikethrough, monospace using Unicode characters

@@ -1,4 +1,12 @@
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
+/**
+ * @name        timelineViewer.js
+ * @title       Timeline Viewer
+ * @description Switch between the For you and Following timelines and collect the posts shown.
+ * @category    scrape
+ * @page        x.com/home
+ * @writes      false
+ */
 // Timeline Viewer — by nichxbt
 // https://github.com/nirholas/XActions
 // Switch between For You / Following timelines, auto-scroll and collect posts, and export data.

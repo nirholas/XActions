@@ -1,4 +1,12 @@
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
+/**
+ * @name        mentionUsers.js
+ * @title       Mention Users
+ * @description Compose posts that mention a list of users.
+ * @category    post
+ * @page        x.com/*
+ * @writes      true
+ */
 // Mention Users in Posts on X - by nichxbt
 // https://github.com/nirholas/xactions
 // Compose a post mentioning multiple users with auto @mentions

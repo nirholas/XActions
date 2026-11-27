@@ -1,4 +1,12 @@
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
+/**
+ * @name        followAccount.js
+ * @title       Follow Accounts
+ * @description Follow accounts by username, or the accounts on screen that match your filters.
+ * @category    grow
+ * @page        x.com/*
+ * @writes      true
+ */
 // Follow Accounts on X - by nichxbt
 // https://github.com/nirholas/xactions
 // Follow a list of specific usernames, navigating to each profile

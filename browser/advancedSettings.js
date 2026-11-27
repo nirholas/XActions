@@ -1,4 +1,12 @@
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
+/**
+ * @name        advancedSettings.js
+ * @title       Advanced Settings and Privacy
+ * @description Advanced settings and privacy management across the settings pages.
+ * @category    profile
+ * @page        x.com/settings
+ * @writes      true
+ */
 // browser/advancedSettings.js
 // Advanced settings and privacy management for X/Twitter
 // by nichxbt

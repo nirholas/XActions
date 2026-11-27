@@ -5,7 +5,11 @@
  * ============================================================
  *
  * @name        followList.js
- * @description Follow/unfollow X Lists, pin lists to your
+ * @description Follow or unfollow Lists and pin them to your timeline.
+ * @title       Follow Lists
+ * @category    lists
+ * @page        x.com/i/lists
+ * @writes      true
  *              timeline, and browse list feeds.
  * @author      nichxbt (https://x.com/nichxbt)
  * @version     1.0.0

@@ -1,12 +1,22 @@
 // Copyright (c) 2024-2026 nich (@nichxbt). Licensed under the Apache License, Version 2.0.
-// Engagement Analytics on X - by nichxbt
-// https://github.com/nirholas/xactions
-// Analyze engagement metrics across your recent posts
-// 1. Go to https://x.com/YOUR_USERNAME
-// 2. Open the Developer Console (F12)
-// 3. Paste this into the Developer Console and run it
-//
-// Last Updated: 24 February 2026
+/**
+ * @name        engagementAnalytics.js
+ * @title       Engagement Analytics
+ * @description Analyze likes, retweets, replies, views and best posting times across a profile's recent posts.
+ * @category    analytics
+ * @page        x.com/<username>
+ * @writes      false
+ * @aliases     scripts/engagementAnalytics.js, scripts/twitter/engagement-analytics.js
+ * @author      nichxbt (https://x.com/nichxbt)
+ * @version     1.1.0
+ * @date        2026-11-26
+ * @repository  https://github.com/nirholas/XActions
+ *
+ * Usage:
+ * 1. Go to https://x.com/YOUR_USERNAME
+ * 2. Open the Developer Console (F12)
+ * 3. Paste browser/engagementAnalytics.js into the Developer Console and run it
+ */
 (() => {
   const CONFIG = {
     maxPosts: 50,
@@ -14,6 +24,9 @@
     maxScrollAttempts: 30,
     maxRetries: 3,
     exportResults: true,
+    ownerOnly: false,          // Only count posts by the profile owner (skips reposts of others)
+    detailedReport: false,     // Also print averages per post, top by retweets, top by engagement rate, worst 3, with URLs
+    saveToLocalStorage: false, // Save the analysis under xactions_engagement_<username> to compare over time
   };
 
   const $tweet = 'article[data-testid="tweet"]';
@@ -62,6 +75,14 @@
       const prevSize = posts.size;
 
       document.querySelectorAll($tweet).forEach(tweet => {
+        if (CONFIG.ownerOnly) {
+          let isOwner = false;
+          tweet.querySelectorAll('a[href^="/"]').forEach(link => {
+            if (link.getAttribute('href')?.toLowerCase() === `/${username.toLowerCase()}`) isOwner = true;
+          });
+          if (!isOwner) return;
+        }
+
         const linkEl = tweet.querySelector('a[href*="/status/"]');
         if (!linkEl) return;
         const tweetUrl = linkEl.href;
@@ -102,6 +123,10 @@
 
     // Analysis
     const postsArray = [...posts.values()];
+    if (postsArray.length === 0) {
+      console.error('❌ No posts found. Make sure you\'re on the correct profile page.');
+      return;
+    }
     const totalLikes = postsArray.reduce((s, p) => s + p.likes, 0);
     const totalRetweets = postsArray.reduce((s, p) => s + p.retweets, 0);
     const totalReplies = postsArray.reduce((s, p) => s + p.replies, 0);
@@ -152,6 +177,68 @@
     topByEngagement.forEach((p, i) => {
       console.log(`   ${i + 1}. 📊 ${p.engagement} | "${p.text.substring(0, 50)}..."`);
     });
+
+    if (CONFIG.detailedReport) {
+      const n = postsArray.length;
+      const formatNum = (v) => {
+        if (v >= 1000000) return (v / 1000000).toFixed(1) + 'M';
+        if (v >= 1000) return (v / 1000).toFixed(1) + 'K';
+        return Math.round(v).toString();
+      };
+
+      console.log('\n📊 AVERAGES PER POST:');
+      console.log(`   ❤️  Likes:    ${(totalLikes / n).toFixed(1)}`);
+      console.log(`   🔄 Retweets: ${(totalRetweets / n).toFixed(1)}`);
+      console.log(`   💬 Replies:  ${(totalReplies / n).toFixed(1)}`);
+      console.log(`   👁️  Views:    ${formatNum(totalViews / n)}`);
+
+      console.log('\n🏆 TOP 5 BY LIKES (with links):');
+      topByLikes.forEach((p, i) => {
+        console.log(`   ${i + 1}. ${formatNum(p.likes)} likes | "${p.text.slice(0, 50)}..."`);
+        console.log(`      ${p.url}`);
+      });
+
+      const topByRetweets = [...postsArray].sort((a, b) => b.retweets - a.retweets).slice(0, 5);
+      console.log('\n🔄 TOP 5 BY RETWEETS:');
+      topByRetweets.forEach((p, i) => {
+        console.log(`   ${i + 1}. ${formatNum(p.retweets)} RTs | "${p.text.slice(0, 50)}..."`);
+        console.log(`      ${p.url}`);
+      });
+
+      const topByRate = postsArray
+        .filter(p => p.views > 0)
+        .map(p => ({ ...p, rate: (p.engagement / p.views) * 100 }))
+        .sort((a, b) => b.rate - a.rate)
+        .slice(0, 5);
+      if (topByRate.length > 0) {
+        console.log('\n📈 TOP 5 BY ENGAGEMENT RATE:');
+        topByRate.forEach((p, i) => {
+          console.log(`   ${i + 1}. ${p.rate.toFixed(2)}% | "${p.text.slice(0, 50)}..."`);
+          console.log(`      ${p.url}`);
+        });
+      }
+
+      console.log('\n📉 LOWEST PERFORMING (consider deleting or learning from):');
+      [...postsArray].sort((a, b) => a.likes - b.likes).slice(0, 3).forEach((p, i) => {
+        console.log(`   ${i + 1}. ${p.likes} likes | "${p.text.slice(0, 50)}..."`);
+        console.log(`      ${p.url}`);
+      });
+    }
+
+    if (CONFIG.saveToLocalStorage) {
+      const storageKey = `xactions_engagement_${username}`;
+      const n = postsArray.length;
+      localStorage.setItem(storageKey, JSON.stringify({
+        username,
+        timestamp: new Date().toISOString(),
+        postCount: n,
+        totals: { likes: totalLikes, retweets: totalRetweets, replies: totalReplies, views: totalViews },
+        averages: { likes: totalLikes / n, retweets: totalRetweets / n, replies: totalReplies / n, views: totalViews / n },
+        posts: postsArray,
+      }));
+      console.log('\n💾 Data saved! Run again to compare over time.');
+      console.log(`📥 Export: copy(localStorage.getItem("${storageKey}"))`);
+    }
 
     if (CONFIG.exportResults) {
       const report = {
