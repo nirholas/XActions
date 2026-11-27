@@ -1,0 +1,27 @@
+{
+  "recordedAt": "2026-11-26T23:14:41.494Z",
+  "note": "Guest-tier UserByScreenName for @NASA, recorded from x.com; guest token replaced",
+  "responses": [
+    {
+      "method": "POST",
+      "url": "https://api.x.com/1.1/guest/activate.json",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"guest_token\":\"1990000000000000000\"}"
+    },
+    {
+      "method": "GET",
+      "url": "https://x.com/i/api/graphql/Gb-d6r0vxPOADdG62OEBpQ/UserByScreenName",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json",
+        "x-rate-limit-limit": "150",
+        "x-rate-limit-remaining": "149",
+        "x-rate-limit-reset": "1795735781"
+      },
+      "body": "{\"data\":{\"user\":{\"result\":{\"__typename\":\"User\",\"action_counts\":{\"favorites_count\":17126},\"affiliates_highlighted_label\":{},\"avatar\":{\"image_url\":\"https://pbs.twimg.com/profile_images/1321163587679784960/0ZxKlEKB_normal.jpg\"},\"banner\":{\"image_url\":\"https://pbs.twimg.com/profile_banners/11348282/1788992290\"},\"business_account\":{\"affiliates_count\":85},\"core\":{\"created_at\":\"Wed Dec 19 20:20:32 +0000 2007\",\"name\":\"NASA\",\"screen_name\":\"NASA\"},\"creator_subscriptions_count\":0,\"dm_permissions\":{\"can_dm\":false},\"follow_request_sent\":false,\"has_graduated_access\":true,\"has_hidden_subscriptions_on_profile\":false,\"highlights_info\":{\"can_highlight_tweets\":true,\"highlighted_tweets\":\"296\"},\"id\":\"VXNlcjoxMTM0ODI4Mg==\",\"is_blue_verified\":true,\"is_profile_translatable\":false,\"legacy_extended_profile\":{\"birthdate\":{\"day\":1,\"month\":10,\"visibility\":\"Public\",\"year\":1958,\"year_visibility\":\"Public\"}},\"location\":{\"location\":\"Pale Blue Dot\"},\"media_permissions\":{\"can_media_tag\":false},\"notifications_settings\":{\"notifications_enabled\":false},\"pinned_items\":{},\"possibly_sensitive\":false,\"privacy\":{\"protected\":false},\"profile_bio\":{\"description\":\"Making the seemingly impossible, possible. ✨\",\"entities\":{\"description\":{},\"url\":{\"urls\":[{\"display_url\":\"nasa.gov\",\"expanded_url\":\"http://www.nasa.gov/\",\"indices\":[0,23],\"url\":\"https://t.co/9NkQJKAnuU\"}]}}},\"profile_description_language\":\"en\",\"profile_image_shape\":\"Square\",\"profile_metadata\":{\"profile_interstitial_type\":\"\"},\"profile_sort_enabled\":true,\"profile_translation\":{\"translator_type\":\"regular\"},\"relationship_counts\":{\"followers\":92082544,\"following\":115},\"relationship_perspectives\":{\"blocked_by\":false,\"blocking\":false,\"followed_by\":false,\"following\":false,\"live_following\":false,\"muting\":false},\"rest_id\":\"11348282\",\"super_follow_eligible\":false,\"super_followed_by\":false,\"super_following\":false,\"tipjar_settings\":{\"bandcamp_handle\":\"\",\"bitcoin_handle\":\"\",\"cash_app_handle\":\"\",\"ethereum_handle\":\"\",\"gofundme_handle\":\"\",\"is_enabled\":false,\"patreon_handle\":\"\",\"pay_pal_handle\":\"\",\"venmo_handle\":\"\"},\"tweet_counts\":{\"media_tweets\":28267,\"tweets\":74589},\"user_seed_tweet_count\":0,\"verification\":{\"verified\":false,\"verified_type\":\"Government\"},\"verification_info\":{\"is_identity_verified\":false,\"reason\":{\"description\":{\"entities\":[{\"from_index\":91,\"ref\":{\"url\":\"https://help.twitter.com/en/rules-and-policies/profile-labels\",\"url_type\":\"ExternalUrl\"},\"to_index\":101}],\"text\":\"This account is verified because it is a government or multilateral organization account.  Learn more\"},\"verified_since_msec\":\"1249674830941\"}},\"website\":{\"url\":\"https://t.co/9NkQJKAnuU\"}}}}}"
+    }
+  ]
+}

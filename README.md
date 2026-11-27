@@ -24,7 +24,8 @@ Scrapers &nbsp;·&nbsp; MCP Server for AI Agents &nbsp;·&nbsp; CLI &nbsp;·&nbs
   <a href="https://www.npmjs.com/package/xactions"><img src="https://img.shields.io/npm/v/xactions.svg?style=flat-square&color=cb3837&label=npm" alt="npm version"></a>&nbsp;
   <a href="https://www.npmjs.com/package/xactions"><img src="https://img.shields.io/npm/dm/xactions.svg?style=flat-square&color=cb3837&label=downloads" alt="npm downloads"></a>&nbsp;
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-Apache_2.0-green?style=flat-square" alt="Apache 2.0 License"></a>&nbsp;
-  <a href="https://github.com/nirholas/xactions"><img src="https://img.shields.io/github/stars/nirholas/xactions?style=flat-square&color=f5c542&label=stars" alt="Stars"></a>
+  <a href="https://github.com/nirholas/xactions"><img src="https://img.shields.io/github/stars/nirholas/xactions?style=flat-square&color=f5c542&label=stars" alt="Stars"></a>&nbsp;
+  <a href="https://xactions.app/status"><img src="https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Fnirholas%2FXActions%2Fstatus%2Fbadge.json&style=flat-square" alt="Verified against x.com: date of the last nightly check"></a>
 </p>
 
 <p>

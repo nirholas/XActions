@@ -3,15 +3,15 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>System Status — XActions Service Health</title>
-  <meta name="description" content="Current operational status of XActions services. Check if the website, API server, MCP server, CLI, and browser scripts are working.">
+  <title>Status: verified against x.com nightly | XActions</title>
+  <meta name="description" content="Which XActions features work against x.com today. Every night an automated run exercises the real read paths against the live site and publishes the result here.">
   <meta name="keywords" content="XActions status, XActions uptime, XActions API status, XActions service health, twitter automation status">
   <meta name="author" content="nich (@nichxbt)">
   <meta name="robots" content="index, follow">
 
   <meta property="og:type" content="website">
   <meta property="og:title" content="System Status — XActions">
-  <meta property="og:description" content="Current operational status of all XActions services.">
+  <meta property="og:description" content="Which XActions features work against x.com today, verified nightly against the live site.">
   <meta property="og:url" content="https://xactions.app/status">
   <meta property="og:site_name" content="XActions">
   <meta property="og:image" content="https://xactions.app/og-status.png">
@@ -23,7 +23,7 @@
   <meta name="twitter:site" content="@nichxbt">
   <meta name="twitter:creator" content="@nichxbt">
   <meta name="twitter:title" content="System Status — XActions">
-  <meta name="twitter:description" content="Check the operational status of XActions services.">
+  <meta name="twitter:description" content="Which XActions features work against x.com today, verified nightly.">
   <meta name="twitter:image" content="https://xactions.app/og-status.png">
 
   <link rel="canonical" href="https://xactions.app/status">
@@ -35,7 +35,7 @@
     "@context": "https://schema.org",
     "@type": "WebPage",
     "name": "XActions System Status",
-    "description": "Current operational status of XActions services.",
+    "description": "Which XActions features work against x.com today, verified nightly against the live site.",
     "url": "https://xactions.app/status"
   }
   </script>
@@ -152,6 +152,32 @@
     .legend-dot.partial { background: var(--warning); }
     .legend-dot.outage { background: var(--error); }
 
+    .status-indicator.unknown { background: var(--bg-secondary); color: var(--text-secondary); }
+    .status-dot.grey { background: var(--text-secondary); animation: none; }
+    .verified-meta { color: var(--text-secondary); font-size: 0.8125rem; margin-top: 8px; line-height: 1.6; }
+    .verified-meta a { color: var(--accent); }
+
+    .check-table { width: 100%; border-collapse: collapse; font-size: 0.875rem; }
+    .check-table caption { text-align: left; font-weight: 700; padding: 16px 0 8px; color: var(--text-secondary); font-size: 0.8125rem; }
+    .check-table th { text-align: left; font-size: 0.75rem; color: var(--text-secondary); font-weight: 600; padding: 6px 8px; border-bottom: 1px solid var(--border); }
+    .check-table td { padding: 10px 8px; border-bottom: 1px solid var(--border); vertical-align: top; }
+    .check-table .check-name { font-weight: 600; }
+    .check-table .check-feature, .check-table .check-detail { color: var(--text-secondary); font-size: 0.75rem; margin-top: 2px; overflow-wrap: anywhere; }
+    .check-table .check-ms { color: var(--text-secondary); font-size: 0.75rem; text-align: right; white-space: nowrap; font-variant-numeric: tabular-nums; }
+    .check-table details { margin-top: 6px; font-size: 0.75rem; color: var(--text-secondary); }
+    .check-table details ul { margin: 6px 0 0 16px; padding: 0; }
+    .check-table details code { font-size: 0.7rem; }
+    .pill { display: inline-block; padding: 2px 10px; border-radius: 9999px; font-size: 0.75rem; font-weight: 700; white-space: nowrap; }
+    .pill.pass { background: rgba(0,186,124,0.12); color: var(--success); }
+    .pill.fail { background: rgba(244,33,46,0.12); color: var(--error); }
+    .pill.limited { background: rgba(255,173,31,0.12); color: var(--warning); }
+    .pill.skipped { background: var(--bg-secondary); color: var(--text-secondary); }
+    .pill .new { margin-left: 4px; }
+    .empty-state { color: var(--text-secondary); font-size: 0.875rem; line-height: 1.6; }
+    .empty-state code { font-size: 0.8125rem; }
+    .uptime-day.none { background: var(--bg-secondary); border: 1px solid var(--border); }
+    .legend-dot.none { background: var(--bg-secondary); border: 1px solid var(--border); }
+
     .report-section { text-align: center; padding: 32px 16px; }
     .report-section p { color: var(--text-secondary); margin-bottom: 16px; font-size: 0.9375rem; }
     .report-btn {
@@ -194,104 +220,53 @@
     <main class="main-content" id="main-content">
       <header class="main-header"><h1>📡 System Status</h1></header>
 
-      <!-- Overall Status -->
+      <!-- Overall: the latest nightly run against x.com -->
       <div class="overall-status">
-        <div class="status-indicator operational" id="overall-indicator">
-          <span class="status-dot green" id="overall-dot"></span>
-          <span id="overall-text">All Systems Operational</span>
+        <div class="status-indicator unknown" id="overall-indicator">
+          <span class="status-dot grey" id="overall-dot"></span>
+          <span id="overall-text">Loading the last verification</span>
         </div>
-        <div class="last-checked">Last checked: <span id="last-checked">loading...</span></div>
+        <div class="verified-meta" id="verified-meta">Reading status.json from the nightly run.</div>
       </div>
 
-      <!-- Services -->
-      <section class="section">
-        <h2 class="section-title">Services</h2>
+      <!-- Per-feature result -->
+      <section class="section" aria-labelledby="checks-title">
+        <h2 class="section-title" id="checks-title">Verified against x.com, nightly</h2>
+        <p class="empty-state">Every night an automated run exercises the real read paths against the live site, with no account, and records what works. A failure here is everyone's, not your machine's. Check from your own machine with <code>node scripts/live-check.mjs</code>, or run <code>xactions doctor</code>.</p>
+        <div id="checks"></div>
+      </section>
+
+      <!-- History from history.json -->
+      <section class="section" aria-labelledby="history-title">
+        <h2 class="section-title" id="history-title">Last 30 days</h2>
+        <div class="uptime-grid" id="uptime-grid" aria-label="Nightly results for the last 30 days"></div>
+        <div class="uptime-legend">
+          <span><span class="legend-dot ok"></span> Every check passed</span>
+          <span><span class="legend-dot partial"></span> Some failing</span>
+          <span><span class="legend-dot outage"></span> Something broke that night</span>
+          <span><span class="legend-dot none"></span> No run</span>
+        </div>
+      </section>
+
+      <!-- Hosted services: checked live from this page -->
+      <section class="section" aria-labelledby="hosted-title">
+        <h2 class="section-title" id="hosted-title">Hosted API</h2>
         <div class="service-list">
-
-          <div class="service-row">
-            <div class="service-info">
-              <span class="icon">🌐</span>
-              <div>
-                <div class="service-name">Website</div>
-                <div class="service-desc">xactions.app</div>
-              </div>
-            </div>
-            <div class="service-status ok">🟢 Operational</div>
-          </div>
-
           <div class="service-row">
             <div class="service-info">
               <span class="icon">⚡</span>
               <div>
                 <div class="service-name">API Server</div>
-                <div class="service-desc">Video download, thread unroll, AI features</div>
+                <div class="service-desc">Video download, thread unroll, AI features. Checked from your browser just now.</div>
               </div>
             </div>
             <div class="service-status checking" id="api-status">⏳ Checking...</div>
           </div>
-
-          <div class="service-row">
-            <div class="service-info">
-              <span class="icon">🤖</span>
-              <div>
-                <div class="service-name">MCP Server</div>
-                <div class="service-desc">Runs locally on your machine</div>
-              </div>
-            </div>
-            <div class="service-status ok">🟢 Operational</div>
-          </div>
-
-          <div class="service-row">
-            <div class="service-info">
-              <span class="icon">🖥️</span>
-              <div>
-                <div class="service-name">Browser Scripts</div>
-                <div class="service-desc">Runs in your browser's DevTools</div>
-              </div>
-            </div>
-            <div class="service-status ok">🟢 Operational</div>
-          </div>
-
-          <div class="service-row">
-            <div class="service-info">
-              <span class="icon">💻</span>
-              <div>
-                <div class="service-name">CLI Tool</div>
-                <div class="service-desc">npx xactions — runs locally</div>
-              </div>
-            </div>
-            <div class="service-status ok">🟢 Operational</div>
-          </div>
-
-          <div class="service-row">
-            <div class="service-info">
-              <span class="icon">🧩</span>
-              <div>
-                <div class="service-name">Browser Extension</div>
-                <div class="service-desc">Chrome / Edge extension</div>
-              </div>
-            </div>
-            <div class="service-status ok">🟢 Operational</div>
-          </div>
-
         </div>
 
         <div class="note-box">
           <h3>ℹ️ Most tools run locally</h3>
-          <p>Browser scripts, MCP server, CLI, and the extension all run entirely on your machine. They don't depend on our servers. The API server is only used for video downloading, thread unrolling, and AI-powered features.</p>
-        </div>
-      </section>
-
-      <!-- Uptime History -->
-      <section class="section">
-        <h2 class="section-title">Uptime — Last 30 Days</h2>
-        <div class="uptime-grid" id="uptime-grid" aria-label="Uptime history for the last 30 days">
-          <!-- Filled by JS -->
-        </div>
-        <div class="uptime-legend">
-          <span><span class="legend-dot ok"></span> Operational</span>
-          <span><span class="legend-dot partial"></span> Partial</span>
-          <span><span class="legend-dot outage"></span> Outage</span>
+          <p>Browser scripts, the MCP server, the CLI and the extension run on your machine and do not depend on our servers. What they depend on is x.com, which is what the nightly check above verifies.</p>
         </div>
       </section>
 
@@ -316,60 +291,174 @@
   </footer>
 
   <script>
-    // Check API health
+    // Published by .github/workflows/live-check.yml on the repository's
+    // `status` branch. The shape is documented in src/utils/liveStatus.js.
+    const STATUS_URL = 'https://raw.githubusercontent.com/nirholas/XActions/status/status.json';
+    const HISTORY_URL = 'https://raw.githubusercontent.com/nirholas/XActions/status/history.json';
+    const PILL_TEXT = { pass: 'Works', fail: 'Broken', limited: 'Rate limited', skipped: 'Not checked' };
+
+    function el(tag, className, text) {
+      const node = document.createElement(tag);
+      if (className) node.className = className;
+      if (text !== undefined) node.textContent = text;
+      return node;
+    }
+
+    // Feature strings carry `backticked` command names; render those as code.
+    function withCode(className, text) {
+      const node = el('div', className);
+      String(text).split('`').forEach((part, i) => {
+        if (part) node.append(i % 2 ? el('code', '', part) : part);
+      });
+      return node;
+    }
+
+    async function getJson(url) {
+      const controller = new AbortController();
+      const timer = setTimeout(() => controller.abort(), 8000);
+      try {
+        const res = await fetch(url, { cache: 'no-cache', signal: controller.signal });
+        return res.ok ? await res.json() : null;
+      } catch (e) {
+        return null;
+      } finally {
+        clearTimeout(timer);
+      }
+    }
+
+    function ago(iso) {
+      const hours = Math.floor((Date.now() - Date.parse(iso)) / 3600000);
+      if (hours < 1) return 'under an hour ago';
+      if (hours < 48) return hours + 'h ago';
+      return Math.floor(hours / 24) + ' days ago';
+    }
+
+    function setOverall(state, text) {
+      const classes = { ok: ['operational', 'green'], degraded: ['degraded', 'yellow'], down: ['down', 'red'], unknown: ['unknown', 'grey'] }[state];
+      document.getElementById('overall-indicator').className = 'status-indicator ' + classes[0];
+      document.getElementById('overall-dot').className = 'status-dot ' + classes[1];
+      document.getElementById('overall-text').textContent = text;
+    }
+
+    function renderOverall(status) {
+      const s = status.summary;
+      if (status.openRegressions.length > 0) {
+        setOverall('down', 'x.com changed: ' + status.openRegressions.join(', ') + ' broke');
+      } else if (s.fail > 0) {
+        setOverall('degraded', s.fail + ' of ' + s.checked + ' checks failing');
+      } else {
+        setOverall('ok', 'All ' + s.checked + ' checks pass');
+      }
+      const meta = document.getElementById('verified-meta');
+      meta.textContent = '';
+      const when = new Date(status.generatedAt);
+      meta.append('Verified against x.com on ' + status.date + ' at ' + when.toISOString().slice(11, 16) + ' UTC (' + ago(status.generatedAt) + '), xactions ' + status.package.version + '. ');
+      if (s.limited) meta.append(s.limited + ' rate limited, ');
+      meta.append(s.skipped + ' not checked. ');
+      if (status.run && /^https:\/\/github\.com\//.test(status.run.url)) {
+        const link = el('a', '', 'See the run');
+        link.href = status.run.url;
+        link.rel = 'noopener noreferrer';
+        link.target = '_blank';
+        meta.append(link);
+      }
+    }
+
+    function renderTable(container, caption, checks, fresh) {
+      if (checks.length === 0) return;
+      const table = el('table', 'check-table');
+      table.append(el('caption', '', caption));
+      const head = el('tr');
+      ['Feature', 'Result', 'Time'].forEach((h) => head.append(el('th', '', h)));
+      const thead = el('thead');
+      thead.append(head);
+      table.append(thead);
+      const tbody = el('tbody');
+      for (const c of checks) {
+        const tr = el('tr');
+        const name = el('td');
+        name.append(el('div', 'check-name', c.label), withCode('check-feature', c.feature), el('div', 'check-detail', c.detail));
+        if (Array.isArray(c.items) && c.items.length) {
+          const details = el('details');
+          const matched = c.items.filter((i) => i.matched).length;
+          details.append(el('summary', '', matched + ' of ' + c.items.length + ' selectors match'));
+          const list = el('ul');
+          for (const item of c.items) {
+            const li = el('li', '', (item.matched ? 'match ' : 'missing ') + item.name + ' ');
+            li.append(el('code', '', item.selector));
+            list.append(li);
+          }
+          details.append(list);
+          name.append(details);
+        }
+        if (c.status !== 'pass' && c.lastPassedAt) {
+          name.append(el('div', 'check-feature', 'Last worked ' + c.lastPassedAt.slice(0, 10)));
+        }
+        const result = el('td');
+        const pill = el('span', 'pill ' + c.status, PILL_TEXT[c.status] || c.status);
+        if (fresh.has(c.id)) pill.append(el('span', 'new', '(new)'));
+        result.append(pill);
+        tr.append(name, result, el('td', 'check-ms', c.status === 'skipped' ? '' : (c.ms / 1000).toFixed(1) + 's'));
+        tbody.append(tr);
+      }
+      table.append(tbody);
+      container.append(table);
+    }
+
+    function renderHistory(history) {
+      const grid = document.getElementById('uptime-grid');
+      grid.textContent = '';
+      const byDay = new Map();
+      for (const entry of Array.isArray(history) ? history : []) {
+        if (entry && typeof entry.date === 'string') byDay.set(entry.date, entry);
+      }
+      for (let i = 29; i >= 0; i--) {
+        const d = new Date(Date.now() - i * 86400000).toISOString().slice(0, 10);
+        const entry = byDay.get(d);
+        const day = el('div', 'uptime-day');
+        if (!entry) {
+          day.classList.add('none');
+          day.title = d + ': no run';
+        } else {
+          if (entry.regressions && entry.regressions.length) day.classList.add('down');
+          else if (entry.fail > 0) day.classList.add('partial');
+          day.title = d + ': ' + entry.pass + '/' + (entry.pass + entry.fail) + ' pass' + (entry.failing && entry.failing.length ? ', failing ' + entry.failing.join(', ') : '');
+        }
+        grid.append(day);
+      }
+    }
+
+    (async function renderLiveCheck() {
+      const [status, history] = await Promise.all([getJson(STATUS_URL), getJson(HISTORY_URL)]);
+      const container = document.getElementById('checks');
+      if (!status || status.version !== 1 || !Array.isArray(status.checks)) {
+        setOverall('unknown', 'No verification published yet');
+        document.getElementById('verified-meta').textContent = 'The nightly run has not published a result, or it could not be reached from this browser.';
+        renderHistory([]);
+        return;
+      }
+      renderOverall(status);
+      const fresh = new Set(status.regressions);
+      renderTable(container, 'No account', status.checks.filter((c) => c.tier === 'guest'), fresh);
+      renderTable(container, 'With a dedicated test account', status.checks.filter((c) => c.tier === 'session'), fresh);
+      renderHistory(history);
+    })();
+
+    // The hosted API, checked from this browser.
     (async function checkAPI() {
-      const el = document.getElementById('api-status');
+      const node = document.getElementById('api-status');
       try {
         const controller = new AbortController();
         const timeout = setTimeout(() => controller.abort(), 8000);
         const res = await fetch('/api/health', { signal: controller.signal });
         clearTimeout(timeout);
-        if (res.ok) {
-          el.className = 'service-status ok';
-          el.textContent = '🟢 Operational';
-        } else {
-          el.className = 'service-status error';
-          el.textContent = '🟡 Degraded';
-          updateOverall('degraded');
-        }
+        node.className = res.ok ? 'service-status ok' : 'service-status error';
+        node.textContent = res.ok ? '🟢 Operational' : '🟡 Degraded';
       } catch (e) {
-        el.className = 'service-status error';
-        el.textContent = '🔴 Unavailable';
-        updateOverall('degraded');
+        node.className = 'service-status error';
+        node.textContent = '🔴 Unavailable';
       }
     })();
-
-    function updateOverall(state) {
-      const indicator = document.getElementById('overall-indicator');
-      const dot = document.getElementById('overall-dot');
-      const text = document.getElementById('overall-text');
-      if (state === 'degraded') {
-        indicator.className = 'status-indicator degraded';
-        dot.className = 'status-dot yellow';
-        text.textContent = 'Partial System Degradation';
-      } else if (state === 'down') {
-        indicator.className = 'status-indicator down';
-        dot.className = 'status-dot red';
-        text.textContent = 'Major Outage';
-      }
-    }
-
-    // Timestamp
-    document.getElementById('last-checked').textContent = new Date().toLocaleString();
-
-    // Uptime grid — generate 30 green days (simulated)
-    const grid = document.getElementById('uptime-grid');
-    for (let i = 29; i >= 0; i--) {
-      const day = document.createElement('div');
-      day.className = 'uptime-day';
-      const d = new Date();
-      d.setDate(d.getDate() - i);
-      day.title = d.toLocaleDateString();
-      grid.appendChild(day);
-    }
-
-    // Auto-refresh every 60 seconds
-    setTimeout(() => location.reload(), 60000);
   </script>
 </body>
 </html>

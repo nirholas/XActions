@@ -1,0 +1,24 @@
+{
+  "recordedAt": "2026-11-26T23:14:41.494Z",
+  "note": "The recorded guest activation, then the UserByScreenName call answered the way X answers a rotated query ID: HTTP 404, Query not found",
+  "responses": [
+    {
+      "method": "POST",
+      "url": "https://api.x.com/1.1/guest/activate.json",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"guest_token\":\"1990000000000000000\"}"
+    },
+    {
+      "method": "GET",
+      "url": "https://x.com/i/api/graphql/Gb-d6r0vxPOADdG62OEBpQ/UserByScreenName",
+      "status": 404,
+      "headers": {
+        "content-type": "application/json"
+      },
+      "body": "{\"errors\":[{\"message\":\"Query not found\"}]}"
+    }
+  ]
+}

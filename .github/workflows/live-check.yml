@@ -1,0 +1,122 @@
+# ═══════════════════════════════════════════════════════════════════════════════
+# XActions — Nightly live check against x.com
+# by nichxbt
+# ═══════════════════════════════════════════════════════════════════════════════
+#
+# X changing its site is the main way this project breaks, and nobody can tell
+# from the repository whether a failure is theirs or everyone's. Every night
+# this runs scripts/live-check.mjs: the real read paths against x.com, guest
+# tier, no account, nothing written to X.
+#
+# Where the result goes, and why there: an orphan `status` branch holding
+# status.json, badge.json and history.json. raw.githubusercontent.com serves
+# it with CORS open, so the status page and the README badge read it directly;
+# main gets no nightly commit; and it needs nothing but this workflow's own
+# token. A release asset on a fixed tag is served through a redirect without
+# CORS, so the page could not read it, and the Pages deployment needs the
+# Cloudflare secrets and would tie the status to a site deploy.
+#
+# On a check that passed last time and fails now, it opens one issue labelled
+# x-changed, or comments on the one already open, and closes it once those
+# checks pass again (scripts/live-check-notify.mjs). The run itself goes red on
+# a regression only, so a failure already on the status page does not turn
+# every night red.
+#
+# Optional: add a repository secret XACTIONS_LIVE_CHECK_COOKIES holding a
+# dedicated test account's cookie string (auth_token=...; ct0=...) and the run
+# also checks search, followers and the selectors on signed-in pages. Never a
+# personal account. Without the secret those checks are reported as skipped.
+
+name: Live check
+
+on:
+  schedule:
+    - cron: '17 4 * * *'
+  workflow_dispatch:
+
+permissions: {}
+
+concurrency:
+  group: live-check
+  cancel-in-progress: false
+
+jobs:
+  live-check:
+    name: Verify against x.com
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    # Schedules never run in forks; a fork owner can still start it by hand.
+    if: github.repository == 'nirholas/XActions' || github.event_name == 'workflow_dispatch'
+
+    permissions:
+      contents: write   # push the status branch
+      issues: write     # the x-changed issue
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
+
+      - name: Setup Node.js
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Chromium for the browser checks
+        run: npx puppeteer browsers install chrome
+
+      # Anonymous: the repository is public, and the token is only handed to
+      # git in the step that pushes.
+      - name: Fetch the last published status
+        run: |
+          mkdir publish
+          cd publish
+          git init -q -b status
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          if git fetch -q --depth=1 origin status; then
+            git reset -q --hard FETCH_HEAD
+          else
+            echo "No status branch yet; this run starts it."
+          fi
+
+      - name: Run the live check
+        id: probe
+        env:
+          XACTIONS_LIVE_CHECK_COOKIES: ${{ secrets.XACTIONS_LIVE_CHECK_COOKIES }}
+        run: |
+          set +e
+          node scripts/live-check.mjs --previous publish/status.json --history publish/history.json --out out
+          code=$?
+          echo "exit=${code}" >> "$GITHUB_OUTPUT"
+          # 1 is a regression, which is still published. 2 means the probe
+          # itself crashed and wrote nothing worth publishing.
+          if [ "$code" -ge 2 ]; then exit "$code"; fi
+
+      - name: Publish to the status branch
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          cp out/status.json out/badge.json out/history.json publish/
+          cd publish
+          git add status.json badge.json history.json
+          git -c user.name='github-actions[bot]' \
+              -c user.email='41898282+github-actions[bot]@users.noreply.github.com' \
+              commit -q -m "Live check $(node -p "require('./status.json').generatedAt")"
+          auth="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -c "http.https://github.com/.extraheader=AUTHORIZATION: basic ${auth}" push -q origin HEAD:status
+
+      - name: Open, update or close the x-changed issue
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: node scripts/live-check-notify.mjs out/status.json
+
+      - name: Fail the run on a regression
+        if: steps.probe.outputs.exit == '1'
+        run: |
+          echo "::error::A check that passed last time fails now. See the job summary and the x-changed issue."
+          exit 1

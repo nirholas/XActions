@@ -1,0 +1,27 @@
+{
+  "recordedAt": "2026-11-26T23:14:41.494Z",
+  "note": "The recorded guest activation, then the UserByScreenName call answered the way X answers a spent guest window: HTTP 429, error code 88, x-rate-limit-remaining 0",
+  "responses": [
+    {
+      "method": "POST",
+      "url": "https://api.x.com/1.1/guest/activate.json",
+      "status": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": "{\"guest_token\":\"1990000000000000000\"}"
+    },
+    {
+      "method": "GET",
+      "url": "https://x.com/i/api/graphql/Gb-d6r0vxPOADdG62OEBpQ/UserByScreenName",
+      "status": 429,
+      "headers": {
+        "content-type": "application/json",
+        "x-rate-limit-limit": "150",
+        "x-rate-limit-remaining": "0",
+        "x-rate-limit-reset": "1795735781"
+      },
+      "body": "{\"errors\":[{\"message\":\"Rate limit exceeded\",\"code\":88}]}"
+    }
+  ]
+}

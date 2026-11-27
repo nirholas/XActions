@@ -23,6 +23,7 @@ import { xactionsHome } from '../../utils/savedSession.js';
 import { BROWSER_INSTALL, isMissingPackage } from '../../utils/optionalDeps.js';
 
 import { VERSION } from '../../version.js';
+import { LIVE_STATUS_PAGE, LIVE_STATUS_URL, validateStatus } from '../../utils/liveStatus.js';
 import { countInstalledSkills } from './skills.js';
 
 const CONFIG_DIR = xactionsHome();
@@ -34,6 +35,12 @@ const MIN_NODE_MAJOR = 20;
 
 /** A stable, public, high-traffic account to probe the guest tier with. */
 const PROBE_ACCOUNT = 'nasa';
+
+/** How long doctor waits for the published live-check result before skipping it. */
+const PUBLIC_VERIFICATION_TIMEOUT_MS = 2500;
+
+/** A nightly result older than this means the check itself has stopped reporting. */
+const PUBLIC_VERIFICATION_STALE_DAYS = 3;
 
 /**
  * @typedef {object} CheckResult
@@ -400,6 +407,58 @@ export function describeAccounts(stats, storePath, now = Date.now()) {
 }
 
 /**
+ * Fetch the last published nightly live-check result (status.json on the
+ * repository's `status` branch). Returns null, without a word, when offline,
+ * when the request times out, or when the answer is not a status file: the
+ * line is a convenience and must never slow doctor down or fail it.
+ *
+ * @param {{fetch?: typeof globalThis.fetch, timeoutMs?: number}} [options]
+ * @returns {Promise<import('../../utils/liveStatus.js').LiveStatus|null>}
+ */
+export async function fetchPublicVerification({ fetch: fetchFn = globalThis.fetch, timeoutMs = PUBLIC_VERIFICATION_TIMEOUT_MS } = {}) {
+  try {
+    const res = await fetchFn(LIVE_STATUS_URL, { signal: AbortSignal.timeout(timeoutMs), headers: { accept: 'application/json' } });
+    if (!res.ok) return null;
+    const status = JSON.parse(await res.text());
+    return validateStatus(status).length === 0 ? status : null;
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Turn the published live-check result into a doctor line. Pure, for tests.
+ *
+ * A failure here is everyone's, not this machine's, so it is at most a
+ * warning and the fix says so.
+ *
+ * @param {import('../../utils/liveStatus.js').LiveStatus|null} status  Parsed status.json, or null
+ * @param {number} [now=Date.now()]
+ * @returns {CheckResult|null}  null when there is nothing to print
+ */
+export function describePublicVerification(status, now = Date.now()) {
+  if (!status || validateStatus(status).length > 0) return null;
+  const { pass, checked } = status.summary;
+  const days = Math.floor((now - Date.parse(status.generatedAt)) / 86_400_000);
+  if (days >= PUBLIC_VERIFICATION_STALE_DAYS) {
+    return {
+      status: 'warn',
+      detail: `Last verified against x.com on ${status.date}, ${days}d ago (${pass}/${checked} passed); the nightly check has not reported since`,
+      fix: `See ${LIVE_STATUS_PAGE} for the last result.`,
+    };
+  }
+  const failing = status.checks.filter((c) => c.status === 'fail').map((c) => c.id);
+  if (failing.length > 0) {
+    return {
+      status: 'warn',
+      detail: `Verified against x.com on ${status.date}: ${pass}/${checked} passed, failing: ${failing.join(', ')}`,
+      fix: `Not caused by this machine: the public nightly check sees the same failure. Details at ${LIVE_STATUS_PAGE}.`,
+    };
+  }
+  return { status: 'ok', detail: `Verified against x.com on ${status.date}: all ${checked} checks passed` };
+}
+
+/**
  * Is a multi-account pool configured, and how much of it can serve right now.
  * Only opens the database when one already exists, so doctor never creates one.
  * @returns {Promise<CheckResult>}
@@ -469,6 +528,9 @@ export async function doctorCommand(options = {}) {
   console.log(chalk.bold('  Guest tier'), chalk.gray('(works with no account)'));
   await run('Profile read', await checkGuestTier());
   await run('Timeline read', await checkTimeline());
+  // Skipped silently offline: whether x.com broke for everyone, not just here.
+  const publicLine = describePublicVerification(await fetchPublicVerification());
+  if (publicLine) await run('Public check', publicLine);
 
   console.log('');
   console.log(chalk.bold('  Session tier'), chalk.gray('(search, followers, DMs)'));

@@ -3,7 +3,15 @@
 
 import { describe, it, expect } from 'vitest';
 
-import { describeAccounts, describeQueryIds, describeRefreshFailure, formatCacheAge } from '../../src/cli/commands/doctor.js';
+import {
+  describeAccounts,
+  describePublicVerification,
+  describeQueryIds,
+  describeRefreshFailure,
+  fetchPublicVerification,
+  formatCacheAge,
+} from '../../src/cli/commands/doctor.js';
+import { buildStatus, LIVE_STATUS_URL } from '../../src/utils/liveStatus.js';
 
 const NOW = Date.parse('2026-08-27T12:00:00.000Z');
 const CACHE = '/tmp/xactions-home/query-ids.json';
@@ -96,6 +104,67 @@ describe('doctor', () => {
       const result = describeAccounts({ total: 2, locked: 2, leased: 0, available: 0, coolingDown: 0, nextResetAt: null }, store, NOW);
       expect(result.status).toBe('fail');
       expect(result.detail).toBe('2 accounts, 0 available, 2 locked');
+    });
+  });
+
+  describe('public verification line', () => {
+    const check = (id, status, detail = `${id} ${status}`) => ({ id, label: id, feature: id, tier: 'guest', status, ms: 10, detail });
+    const published = (checks, generatedAt = '2026-08-27T04:17:00.000Z') =>
+      buildStatus({ checks, generatedAt, packageVersion: '5.0.0', node: 'v22', durationMs: 1 });
+
+    it('says when x.com was last verified and that every check passed', () => {
+      const result = describePublicVerification(published([check('profile', 'pass'), check('tweets', 'pass')]), NOW);
+      expect(result).toEqual({ status: 'ok', detail: 'Verified against x.com on 2026-08-27: all 2 checks passed' });
+    });
+
+    it('warns and names the failing checks, pointing at the status page rather than this machine', () => {
+      const result = describePublicVerification(published([check('profile', 'pass'), check('hashtag', 'fail')]), NOW);
+      expect(result.status).toBe('warn');
+      expect(result.detail).toBe('Verified against x.com on 2026-08-27: 1/2 passed, failing: hashtag');
+      expect(result.fix).toContain('https://xactions.app/status');
+      expect(result.fix).toMatch(/not.*this machine/i);
+    });
+
+    it('warns when the nightly run has gone quiet', () => {
+      const result = describePublicVerification(published([check('profile', 'pass')], '2026-08-20T04:17:00.000Z'), NOW);
+      expect(result.status).toBe('warn');
+      expect(result.detail).toContain('2026-08-20');
+      expect(result.detail).toContain('7d ago');
+    });
+
+    it('prints nothing for a missing or unreadable file', () => {
+      expect(describePublicVerification(null, NOW)).toBeNull();
+      expect(describePublicVerification({ version: 9 }, NOW)).toBeNull();
+    });
+
+    it('fetches the published file with a timeout', async () => {
+      const body = published([check('profile', 'pass')]);
+      const seen = [];
+      const fetchFn = async (url, init) => {
+        seen.push({ url, hasSignal: Boolean(init?.signal) });
+        return new Response(JSON.stringify(body), { status: 200, headers: { 'content-type': 'text/plain' } });
+      };
+      expect(await fetchPublicVerification({ fetch: fetchFn })).toEqual(body);
+      expect(seen).toEqual([{ url: LIVE_STATUS_URL, hasSignal: true }]);
+    });
+
+    it('returns null, silently, offline or on a bad answer', async () => {
+      const offline = async () => {
+        throw new TypeError('fetch failed');
+      };
+      expect(await fetchPublicVerification({ fetch: offline })).toBeNull();
+      expect(await fetchPublicVerification({ fetch: async () => new Response('Not Found', { status: 404 }) })).toBeNull();
+      expect(await fetchPublicVerification({ fetch: async () => new Response('<html>', { status: 200 }) })).toBeNull();
+    });
+
+    it('gives up at the timeout instead of holding doctor open', async () => {
+      const hang = (url, init) =>
+        new Promise((resolve, reject) => {
+          init.signal.addEventListener('abort', () => reject(init.signal.reason));
+        });
+      const started = Date.now();
+      expect(await fetchPublicVerification({ fetch: hang, timeoutMs: 50 })).toBeNull();
+      expect(Date.now() - started).toBeLessThan(2000);
     });
   });
 });
